@@ -37,13 +37,13 @@ int test_happy_path ()
 
 	auto surface = create_surface_glfw (instance.instance, window);
 
-	vkbs::PhysicalDeviceSelector phys_device_selector;
-	auto phys_device_ret = phys_device_selector.set_instance (instance).set_surface (surface).select ();
+	vkbs::PhysicalDeviceSelector phys_device_selector (instance);
+	auto phys_device_ret = phys_device_selector.set_surface (surface).select ();
 	if (!phys_device_ret) return -2; // couldn't select physical device
 	vkbs::PhysicalDevice physical_device = phys_device_ret.value ();
 
-	vkbs::DeviceBuilder device_builder;
-	auto device_ret = device_builder.set_physical_device (physical_device).build ();
+	vkbs::DeviceBuilder device_builder (physical_device);
+	auto device_ret = device_builder.build ();
 	if (!device_ret) return -3; // couldn't create device
 	vkbs::Device device = device_ret.value ();
 
@@ -110,9 +110,8 @@ int test_physical_device_selection ()
 	auto window = create_window_glfw ();
 	auto surface = create_surface_glfw (instance.instance, window);
 
-	vkbs::PhysicalDeviceSelector selector;
-	auto phys_dev_ret = selector.set_instance (instance)
-	                        .set_surface (surface)
+	vkbs::PhysicalDeviceSelector selector (instance);
+	auto phys_dev_ret = selector.set_surface (surface)
 	                        .add_desired_extension (VK_KHR_MULTIVIEW_EXTENSION_NAME)
 	                        .add_required_extension (VK_KHR_DRIVER_PROPERTIES_EXTENSION_NAME)
 	                        .set_minimum_version (1, 0)
@@ -135,12 +134,12 @@ int test_device_creation ()
 	auto window = create_window_glfw ();
 	auto surface = create_surface_glfw (instance.instance, window);
 
-	vkbs::PhysicalDeviceSelector selector;
-	auto phys_dev_ret = selector.set_instance (instance).set_surface (surface).select ();
+	vkbs::PhysicalDeviceSelector selector (instance);
+	auto phys_dev_ret = selector.set_surface (surface).select ();
 	auto phys_dev = phys_dev_ret.value ();
 
-	vkbs::DeviceBuilder device_builder;
-	auto dev_ret = device_builder.set_physical_device (phys_dev).build ();
+	vkbs::DeviceBuilder device_builder (phys_dev);
+	auto dev_ret = device_builder.build ();
 	if (!dev_ret.has_value ())
 	{
 		printf ("%s\n", dev_ret.error ().msg);

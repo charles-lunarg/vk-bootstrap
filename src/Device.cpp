@@ -276,6 +276,13 @@ PhysicalDeviceSelector::Suitable PhysicalDeviceSelector::is_device_suitable (VkP
 	return suitable;
 }
 
+PhysicalDeviceSelector::PhysicalDeviceSelector (Instance instance)
+{
+	info.instance = instance.instance;
+	info.headless = instance.headless;
+	criteria.require_present = !instance.headless;
+}
+
 detail::Expected<PhysicalDevice, VkResult> PhysicalDeviceSelector::select ()
 {
 	auto physical_devices = detail::get_vector<VkPhysicalDevice> (vkEnumeratePhysicalDevices, info.instance);
@@ -311,13 +318,6 @@ detail::Expected<PhysicalDevice, VkResult> PhysicalDeviceSelector::select ()
 	return physical_device;
 }
 
-PhysicalDeviceSelector& PhysicalDeviceSelector::set_instance (Instance instance)
-{
-	info.instance = instance.instance;
-	info.headless = instance.headless;
-	criteria.require_present = !instance.headless;
-	return *this;
-}
 PhysicalDeviceSelector& PhysicalDeviceSelector::set_surface (VkSurfaceKHR surface)
 {
 	info.surface = surface;
@@ -399,6 +399,8 @@ struct QueueFamily
 	int32_t family;
 	uint32_t count;
 };
+DeviceBuilder::DeviceBuilder (PhysicalDevice device) { info.physical_device = device; }
+
 detail::Expected<Device, VkResult> DeviceBuilder::build ()
 {
 	auto& queue_properties = info.physical_device.queue_family_properties;
@@ -447,12 +449,6 @@ detail::Expected<Device, VkResult> DeviceBuilder::build ()
 		return detail::Error<VkResult>{ res, "Couldn't create device" };
 	}
 	return device;
-}
-
-DeviceBuilder& DeviceBuilder::set_physical_device (PhysicalDevice const& phys_device)
-{
-	info.physical_device = phys_device;
-	return *this;
 }
 
 template <typename T> DeviceBuilder& DeviceBuilder::add_pNext (T* structure)

@@ -67,9 +67,10 @@ void populate_physical_device_details (PhysicalDevice physical_device);
 struct PhysicalDeviceSelector
 {
 	public:
+	PhysicalDeviceSelector (Instance instance);
+
 	detail::Expected<PhysicalDevice, VkResult> select ();
 
-	PhysicalDeviceSelector& set_instance (Instance instance);
 	PhysicalDeviceSelector& set_surface (VkSurfaceKHR instance);
 
 	PhysicalDeviceSelector& prefer_discrete (bool prefer_discrete = true);
@@ -145,9 +146,8 @@ void destroy_device (Device device);
 class DeviceBuilder
 {
 	public:
+	DeviceBuilder (PhysicalDevice device);
 	detail::Expected<Device, VkResult> build ();
-
-	DeviceBuilder& set_physical_device (PhysicalDevice const& phys_device);
 
 	template <typename T> DeviceBuilder& add_pNext (T* structure);
 

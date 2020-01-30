@@ -52,6 +52,14 @@ VkExtent2D choose_swap_extent (
 	}
 }
 } // namespace detail
+
+SwapchainBuilder::SwapchainBuilder (Device const& device)
+{
+	info.device = device.device;
+	info.physical_device = device.physical_device;
+	info.surface = device.surface;
+}
+
 detail::Expected<Swapchain, VkResult> SwapchainBuilder::build ()
 {
 	auto surface_support =

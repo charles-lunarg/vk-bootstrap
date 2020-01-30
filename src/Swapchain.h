@@ -26,11 +26,11 @@ struct Swapchain
 class SwapchainBuilder
 {
 	public:
+	SwapchainBuilder (Device const& device);
+
 	detail::Expected<Swapchain, VkResult> build ();
 	detail::Expected<Swapchain, VkResult> recreate (Swapchain const& swapchain);
 	void destroy (Swapchain const& swapchain);
-
-	SwapchainBuilder& set_device (Device const& device);
 
 	SwapchainBuilder& set_desired_format (VkFormat format);
 	SwapchainBuilder& set_fallback_format (VkFormat format);

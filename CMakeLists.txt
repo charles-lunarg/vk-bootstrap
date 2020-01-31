@@ -3,15 +3,7 @@ project(VulkanBootstrap)
 
 find_package(Vulkan REQUIRED)
 
-add_library(vk-bootstrap 
-    src/VkBootstrap.h
-    src/Util.h
-    src/Instance.h
-    src/Device.h
-    src/Swapchain.h
-    src/Instance.cpp
-    src/Device.cpp
-    src/Swapchain.cpp)
+add_library(vk-bootstrap src/VkBootstrap.h src/VkBootstrap.cpp)
 
 target_include_directories(vk-bootstrap PUBLIC src)
 
@@ -31,5 +23,6 @@ add_executable(vk-bootstrap-test tests/run_tests.cpp)
 
 target_link_libraries(vk-bootstrap-test vk-bootstrap)
 target_link_libraries(vk-bootstrap-test glfw)
+target_link_libraries(vk-bootstrap-test Catch2)
 
-endif(VK_BOOTSTRAP_TEST)
+endif()

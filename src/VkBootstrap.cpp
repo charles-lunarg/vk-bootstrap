@@ -1,9 +1,368 @@
-#include "Device.h"
+#include "VkBootstrap.h"
 
-#include <set>
+#include <stdio.h>
+#include <string.h>
 
-namespace vkbs
+namespace vkb
 {
+
+const char* DebugMessageSeverity (VkDebugUtilsMessageSeverityFlagBitsEXT s)
+{
+	switch (s)
+	{
+		case VkDebugUtilsMessageSeverityFlagBitsEXT::VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT:
+			return "VERBOSE";
+		case VkDebugUtilsMessageSeverityFlagBitsEXT::VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT:
+			return "ERROR";
+		case VkDebugUtilsMessageSeverityFlagBitsEXT::VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT:
+			return "WARNING";
+		case VkDebugUtilsMessageSeverityFlagBitsEXT::VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT:
+			return "INFO";
+		default:
+			return "UNKNOWN";
+	}
+}
+const char* DebugMessageType (VkDebugUtilsMessageTypeFlagsEXT s)
+{
+	switch (s)
+	{
+		case VkDebugUtilsMessageTypeFlagBitsEXT::VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT:
+			return "General";
+		case VkDebugUtilsMessageTypeFlagBitsEXT::VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT:
+			return "Validation";
+		case VkDebugUtilsMessageTypeFlagBitsEXT::VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT:
+			return "Performance";
+		default:
+			return "Unknown";
+	}
+}
+
+namespace detail
+{
+
+VkResult create_debug_utils_messenger (VkInstance instance,
+    PFN_vkDebugUtilsMessengerCallbackEXT debug_callback,
+    VkDebugUtilsMessageSeverityFlagsEXT severity,
+    VkDebugUtilsMessageTypeFlagsEXT type,
+    const VkAllocationCallbacks* pAllocator,
+    VkDebugUtilsMessengerEXT* pDebugMessenger)
+{
+	if (debug_callback == nullptr) debug_callback = default_debug_callback;
+	VkDebugUtilsMessengerCreateInfoEXT messengerCreateInfo = {};
+	messengerCreateInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
+	messengerCreateInfo.pNext = nullptr;
+	messengerCreateInfo.messageSeverity = severity;
+	messengerCreateInfo.messageType = type;
+	messengerCreateInfo.pfnUserCallback = debug_callback;
+
+
+	auto vkCreateDebugUtilsMessengerEXT_func = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr (
+	    instance, "vkCreateDebugUtilsMessengerEXT");
+	if (vkCreateDebugUtilsMessengerEXT_func != nullptr)
+	{
+		return vkCreateDebugUtilsMessengerEXT_func (instance, &messengerCreateInfo, pAllocator, pDebugMessenger);
+	}
+	else
+	{
+		return VK_ERROR_EXTENSION_NOT_PRESENT;
+	}
+}
+
+void destroy_debug_utils_messenger (
+    VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator)
+{
+	auto vkDestroyDebugUtilsMessengerEXT_func = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr (
+	    instance, "vkDestroyDebugUtilsMessengerEXT");
+	if (vkDestroyDebugUtilsMessengerEXT_func != nullptr)
+	{
+		vkDestroyDebugUtilsMessengerEXT_func (instance, debugMessenger, pAllocator);
+	}
+}
+
+VkBool32 default_debug_callback (VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
+    VkDebugUtilsMessageTypeFlagsEXT messageType,
+    const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
+    void* pUserData)
+{
+	auto ms = DebugMessageSeverity (messageSeverity);
+	auto mt = DebugMessageType (messageType);
+	printf ("[%s: %s]\n%s\n", ms, mt, pCallbackData->pMessage);
+	return VK_FALSE;
+}
+
+bool check_layers_supported (std::vector<const char*> layer_names)
+{
+	auto available_layers = detail::get_vector<VkLayerProperties> (vkEnumerateInstanceLayerProperties);
+	if (!available_layers.has_value ())
+	{
+		return false; // maybe report error?
+	}
+	bool all_found = true;
+	for (const auto& layer_name : layer_names)
+	{
+		bool found = false;
+		for (const auto& layer_properties : available_layers.value ())
+		{
+			if (strcmp (layer_name, layer_properties.layerName) == 0)
+			{
+				found = true;
+				break;
+			}
+		}
+		if (!found) all_found = false;
+	}
+
+	return all_found;
+}
+template <typename T>
+void setup_pNext_chain (T& structure, std::vector<VkBaseOutStructure*>& structs)
+{
+	structure.pNext = nullptr;
+	if (structs.size () <= 0) return;
+	for (int i = 0; i < structs.size () - 1; i++)
+	{
+		VkBaseOutStructure* cur = reinterpret_cast<VkBaseOutStructure*> (&structs[i]);
+		cur = reinterpret_cast<VkBaseOutStructure*> (&structs[i + 1]);
+	}
+	structure.pNext = &structs.at (0);
+}
+} // namespace detail
+
+void destroy_instance (Instance instance)
+{
+	if (instance.debug_messenger != nullptr)
+		detail::destroy_debug_utils_messenger (instance.instance, instance.debug_messenger, instance.allocator);
+	if (instance.instance != VK_NULL_HANDLE)
+		vkDestroyInstance (instance.instance, instance.allocator);
+}
+
+detail::Expected<Instance, VkResult> InstanceBuilder::build ()
+{
+
+	VkApplicationInfo app_info = {};
+	app_info.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+	app_info.pNext = nullptr;
+	app_info.pApplicationName = info.app_name.c_str ();
+	app_info.applicationVersion = info.application_version;
+	app_info.pEngineName = info.engine_name.c_str ();
+	app_info.engineVersion = info.engine_version;
+	app_info.apiVersion = info.api_version;
+
+	std::vector<const char*> extensions;
+	for (auto& ext : info.extensions)
+		extensions.push_back (ext.c_str ());
+	if (info.debug_callback != nullptr)
+	{
+		extensions.push_back ("VK_EXT_debug_utils");
+	}
+
+	if (!info.headless_context)
+	{
+		extensions.push_back (VK_KHR_SURFACE_EXTENSION_NAME);
+#if defined(_WIN32)
+		extensions.push_back (VK_KHR_WIN32_SURFACE_EXTENSION_NAME);
+#elif defined(VK_USE_PLATFORM_ANDROID_KHR)
+		extensions.push_back (VK_KHR_ANDROID_SURFACE_EXTENSION_NAME);
+#elif defined(_DIRECT2DISPLAY)
+		extensions.push_back (VK_KHR_DISPLAY_EXTENSION_NAME);
+#elif defined(VK_USE_PLATFORM_WAYLAND_KHR)
+		extensions.push_back (VK_KHR_WAYLAND_SURFACE_EXTENSION_NAME);
+#elif defined(VK_USE_PLATFORM_XCB_KHR)
+		extensions.push_back (VK_KHR_XCB_SURFACE_EXTENSION_NAME);
+#elif defined(VK_USE_PLATFORM_X11_HKR)
+		extensions.push_back (VK_KHR_X11_SURFACE_EXTENSION_NAME);
+#elif defined(VK_USE_PLATFORM_IOS_MVK)
+		extensions.push_back (VK_MVK_IOS_SURFACE_EXTENSION_NAME);
+#elif defined(VK_USE_PLATFORM_MACOS_MVK)
+		extensions.push_back (VK_MVK_MACOS_SURFACE_EXTENSION_NAME);
+#endif
+	}
+	std::vector<const char*> layers;
+	for (auto& layer : info.layers)
+		layers.push_back (layer.c_str ());
+
+	if (info.enable_validation_layers)
+	{
+		layers.push_back ("VK_LAYER_KHRONOS_validation");
+	}
+	bool all_layers_supported = detail::check_layers_supported (layers);
+	if (!all_layers_supported)
+	{
+		return detail::Error<VkResult>{ VK_ERROR_LAYER_NOT_PRESENT, "Not all layers supported!" };
+	}
+
+	VkDebugUtilsMessengerCreateInfoEXT messengerCreateInfo = {};
+	if (info.use_debug_messenger)
+	{
+		messengerCreateInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
+		messengerCreateInfo.pNext = nullptr;
+		messengerCreateInfo.messageSeverity = info.debug_message_severity;
+		messengerCreateInfo.messageType = info.debug_message_type;
+		messengerCreateInfo.pfnUserCallback = info.debug_callback;
+		info.pNext_elements.push_back (reinterpret_cast<VkBaseOutStructure*> (&messengerCreateInfo));
+	}
+
+	VkValidationFeaturesEXT features{};
+	if (info.enabled_validation_features.size () != 0 || info.disabled_validation_features.size ())
+	{
+		features.sType = VK_STRUCTURE_TYPE_VALIDATION_FEATURES_EXT;
+		features.pNext = nullptr;
+		features.enabledValidationFeatureCount = info.enabled_validation_features.size ();
+		features.pEnabledValidationFeatures = info.enabled_validation_features.data ();
+		features.disabledValidationFeatureCount = info.disabled_validation_features.size ();
+		features.pDisabledValidationFeatures = info.disabled_validation_features.data ();
+		info.pNext_elements.push_back (reinterpret_cast<VkBaseOutStructure*> (&features));
+	}
+
+	VkValidationFlagsEXT checks{};
+	if (info.disabled_validation_checks.size () != 0)
+	{
+		checks.sType = VK_STRUCTURE_TYPE_VALIDATION_FLAGS_EXT;
+		checks.pNext = nullptr;
+		checks.disabledValidationCheckCount = info.disabled_validation_checks.size ();
+		checks.pDisabledValidationChecks = info.disabled_validation_checks.data ();
+		info.pNext_elements.push_back (reinterpret_cast<VkBaseOutStructure*> (&checks));
+	}
+
+	VkInstanceCreateInfo instance_create_info = {};
+	instance_create_info.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+	detail::setup_pNext_chain (instance_create_info, info.pNext_elements);
+	instance_create_info.flags = info.flags;
+	instance_create_info.pApplicationInfo = &app_info;
+	instance_create_info.enabledExtensionCount = static_cast<uint32_t> (extensions.size ());
+	instance_create_info.ppEnabledExtensionNames = extensions.data ();
+	instance_create_info.enabledLayerCount = static_cast<uint32_t> (layers.size ());
+	instance_create_info.ppEnabledLayerNames = layers.data ();
+
+	Instance instance;
+	VkResult res = vkCreateInstance (&instance_create_info, nullptr, &instance.instance);
+	if (res != VK_SUCCESS) return detail::Error<VkResult>{ res, "Failed to create instance" };
+
+	if (info.use_debug_messenger)
+	{
+		res = detail::create_debug_utils_messenger (instance.instance,
+		    info.debug_callback,
+		    info.debug_message_severity,
+		    info.debug_message_type,
+		    info.allocator,
+		    &instance.debug_messenger);
+		if (res != VK_SUCCESS)
+		{
+			return detail::Error<VkResult>{ res, "Failed to create setup debug callback" };
+		}
+	}
+
+	if (info.headless_context)
+	{
+		instance.headless = true;
+	}
+	return instance;
+}
+
+InstanceBuilder& InstanceBuilder::set_app_name (std::string app_name)
+{
+	info.app_name = app_name;
+	return *this;
+}
+InstanceBuilder& InstanceBuilder::set_engine_name (std::string engine_name)
+{
+	info.engine_name = engine_name;
+	return *this;
+}
+
+InstanceBuilder& InstanceBuilder::set_app_version (uint32_t major, uint32_t minor, uint32_t patch)
+{
+	info.application_version = VK_MAKE_VERSION (major, minor, patch);
+	return *this;
+}
+InstanceBuilder& InstanceBuilder::set_engine_version (uint32_t major, uint32_t minor, uint32_t patch)
+{
+	info.engine_version = VK_MAKE_VERSION (major, minor, patch);
+	return *this;
+}
+InstanceBuilder& InstanceBuilder::set_api_version (uint32_t major, uint32_t minor, uint32_t patch)
+{
+	info.api_version = VK_MAKE_VERSION (major, minor, patch);
+	return *this;
+}
+
+InstanceBuilder& InstanceBuilder::add_layer (std::string layer_name)
+{
+	info.layers.push_back (layer_name);
+	return *this;
+}
+InstanceBuilder& InstanceBuilder::add_extension (std::string extension_name)
+{
+	info.extensions.push_back (extension_name);
+	return *this;
+}
+
+InstanceBuilder& InstanceBuilder::setup_validation_layers (bool enable_validation)
+{
+	info.enable_validation_layers = enable_validation;
+	return *this;
+}
+InstanceBuilder& InstanceBuilder::set_default_debug_messenger ()
+{
+	info.use_debug_messenger = true;
+	info.debug_callback = detail::default_debug_callback;
+	return *this;
+}
+
+InstanceBuilder& InstanceBuilder::set_debug_callback (PFN_vkDebugUtilsMessengerCallbackEXT callback)
+{
+	info.use_debug_messenger = true;
+	info.debug_callback = callback;
+	return *this;
+}
+InstanceBuilder& InstanceBuilder::set_headless (bool headless)
+{
+	info.headless_context = headless;
+	return *this;
+}
+
+InstanceBuilder& InstanceBuilder::set_debug_messenger_severity (VkDebugUtilsMessageSeverityFlagsEXT severity)
+{
+	info.debug_message_severity = severity;
+	return *this;
+}
+InstanceBuilder& InstanceBuilder::add_debug_messenger_severity (VkDebugUtilsMessageSeverityFlagsEXT severity)
+{
+	info.debug_message_severity = info.debug_message_severity | severity;
+	return *this;
+}
+InstanceBuilder& InstanceBuilder::set_debug_messenger_type (VkDebugUtilsMessageTypeFlagsEXT type)
+{
+	info.debug_message_type = type;
+	return *this;
+}
+InstanceBuilder& InstanceBuilder::add_debug_messenger_type (VkDebugUtilsMessageTypeFlagsEXT type)
+{
+	info.debug_message_type = info.debug_message_type | type;
+	return *this;
+}
+
+InstanceBuilder& InstanceBuilder::add_validation_disable (VkValidationCheckEXT check)
+{
+	info.disabled_validation_checks.push_back (check);
+	return *this;
+}
+InstanceBuilder& InstanceBuilder::add_validation_feature_enable (VkValidationFeatureEnableEXT enable)
+{
+	info.enabled_validation_features.push_back (enable);
+	return *this;
+}
+InstanceBuilder& InstanceBuilder::add_validation_feature_disable (VkValidationFeatureDisableEXT disable)
+{
+	info.disabled_validation_features.push_back (disable);
+	return *this;
+}
+
+InstanceBuilder& InstanceBuilder::set_allocator_callback (VkAllocationCallbacks* allocator)
+{
+	info.allocator = allocator;
+	return *this;
+}
 
 namespace detail
 {
@@ -428,12 +787,12 @@ detail::Expected<Device, VkResult> DeviceBuilder::build ()
 	std::vector<const char*> extensions;
 	for (auto& ext : info.extensions)
 		extensions.push_back (ext.c_str ());
-	if (info.physical_device.surface != VK_NULL_HANDLE)
-		extensions.push_back ({ VK_KHR_SWAPCHAIN_EXTENSION_NAME });
+	// if (info.physical_device.surface != VK_NULL_HANDLE)
+	//	extensions.push_back ({ VK_KHR_SWAPCHAIN_EXTENSION_NAME });
 
 	VkDeviceCreateInfo device_create_info = {};
 	device_create_info.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
-	device_create_info.pNext = info.pNext_chain;
+	detail::setup_pNext_chain (device_create_info, info.pNext_chain);
 	device_create_info.flags = info.flags;
 	device_create_info.queueCreateInfoCount = static_cast<uint32_t> (queueCreateInfos.size ());
 	device_create_info.pQueueCreateInfos = queueCreateInfos.data ();
@@ -453,10 +812,7 @@ detail::Expected<Device, VkResult> DeviceBuilder::build ()
 
 template <typename T> DeviceBuilder& DeviceBuilder::add_pNext (T* structure)
 {
-	if (info.pNext_chain == nullptr)
-		info.pNext_chain = (VkBaseOutStructure*)structure;
-	else
-		detail::pNext_append (info.pNext_chain, structure);
+	info.pNext_chain.push_back (reinterpret_cast<VkBaseOutStructure*> (structure));
 	return *this;
 }
 
@@ -505,5 +861,162 @@ detail::Expected<VkQueue, VkResult> get_queue_sparse (Device const& device, uint
 	return detail::get_queue (device, device.physical_device.queue_family_properties.sparse, index);
 }
 
+namespace detail
+{
+VkSurfaceFormatKHR choose_swapchain_surface_format (std::vector<VkSurfaceFormatKHR> const& availableFormats)
+{
+	for (const auto& availableFormat : availableFormats)
+	{
+		if (availableFormat.format == VK_FORMAT_B8G8R8A8_UNORM && availableFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR)
+		{
+			return availableFormat;
+		}
+	}
 
-} // namespace vkbs
+	return availableFormats[0];
+}
+
+VkPresentModeKHR choose_swap_present_mode (std::vector<VkPresentModeKHR> const& availablePresentModes)
+{
+	for (const auto& availablePresentMode : availablePresentModes)
+	{
+		if (availablePresentMode == VK_PRESENT_MODE_MAILBOX_KHR)
+		{
+			return availablePresentMode;
+		}
+	}
+
+	return VK_PRESENT_MODE_FIFO_KHR;
+}
+
+VkExtent2D choose_swap_extent (
+    VkSurfaceCapabilitiesKHR const& capabilities, uint32_t desired_width, uint32_t desired_height)
+{
+	if (capabilities.currentExtent.width != UINT32_MAX)
+	{
+		return capabilities.currentExtent;
+	}
+	else
+	{
+		const int WIDTH = 800;
+		const int HEIGHT = 600;
+		VkExtent2D actualExtent = { WIDTH, HEIGHT };
+
+		actualExtent.width = std::max (capabilities.minImageExtent.width,
+		    std::min (capabilities.maxImageExtent.width, actualExtent.width));
+		actualExtent.height = std::max (capabilities.minImageExtent.height,
+		    std::min (capabilities.maxImageExtent.height, actualExtent.height));
+
+		return actualExtent;
+	}
+}
+} // namespace detail
+
+SwapchainBuilder::SwapchainBuilder (Device const& device)
+{
+	info.device = device.device;
+	info.physical_device = device.physical_device;
+	info.surface = device.surface;
+}
+
+detail::Expected<Swapchain, VkResult> SwapchainBuilder::build ()
+{
+	auto surface_support =
+	    detail::query_surface_support_details (info.physical_device.phys_device, info.surface);
+	if (!surface_support.has_value ())
+		return detail::Error<VkResult>{ surface_support.error ().error_code, "can't get surface support" };
+	VkSurfaceFormatKHR surfaceFormat =
+	    detail::choose_swapchain_surface_format (surface_support.value ().formats);
+	VkPresentModeKHR presentMode = detail::choose_swap_present_mode (surface_support.value ().present_modes);
+	VkExtent2D extent = detail::choose_swap_extent (
+	    surface_support.value ().capabilities, info.desired_width, info.desired_height);
+
+	uint32_t imageCount = surface_support.value ().capabilities.minImageCount + 1;
+	if (surface_support.value ().capabilities.maxImageCount > 0 &&
+	    imageCount > surface_support.value ().capabilities.maxImageCount)
+	{
+		imageCount = surface_support.value ().capabilities.maxImageCount;
+	}
+
+	VkSwapchainCreateInfoKHR swapchain_create_info = {};
+	swapchain_create_info.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
+	swapchain_create_info.surface = info.surface;
+
+	swapchain_create_info.minImageCount = imageCount;
+	swapchain_create_info.imageFormat = surfaceFormat.format;
+	swapchain_create_info.imageColorSpace = surfaceFormat.colorSpace;
+	swapchain_create_info.imageExtent = extent;
+	swapchain_create_info.imageArrayLayers = 1;
+	swapchain_create_info.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+
+	detail::QueueFamilies indices =
+	    detail::find_queue_families (info.physical_device.phys_device, info.surface);
+	uint32_t queueFamilyIndices[] = { static_cast<uint32_t> (indices.graphics),
+		static_cast<uint32_t> (indices.present) };
+
+	if (indices.graphics != indices.present)
+	{
+		swapchain_create_info.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
+		swapchain_create_info.queueFamilyIndexCount = 2;
+		swapchain_create_info.pQueueFamilyIndices = queueFamilyIndices;
+	}
+	else
+	{
+		swapchain_create_info.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
+	}
+
+	swapchain_create_info.preTransform = surface_support.value ().capabilities.currentTransform;
+	swapchain_create_info.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
+	swapchain_create_info.presentMode = presentMode;
+	swapchain_create_info.clipped = VK_TRUE;
+	swapchain_create_info.oldSwapchain = info.old_swapchain;
+	Swapchain swapchain;
+	VkResult res = vkCreateSwapchainKHR (info.device, &swapchain_create_info, nullptr, &swapchain.swapchain);
+	if (res != VK_SUCCESS)
+	{
+		return detail::Error<VkResult>{ res, "Failed to create swapchain" };
+	}
+	auto swapchain_images =
+	    detail::get_vector<VkImage> (vkGetSwapchainImagesKHR, info.device, swapchain.swapchain);
+
+	swapchain.image_format = surfaceFormat.format;
+	swapchain.extent = extent;
+
+	return swapchain;
+}
+detail::Expected<Swapchain, VkResult> SwapchainBuilder::recreate (Swapchain const& swapchain)
+{
+	info.old_swapchain = swapchain.swapchain;
+	return build ();
+}
+
+void SwapchainBuilder::destroy (Swapchain const& swapchain)
+{
+	vkDestroySwapchainKHR (swapchain.device, swapchain.swapchain, swapchain.allocator);
+}
+
+
+SwapchainBuilder& SwapchainBuilder::set_desired_format (VkFormat format)
+{
+	info.desired_format = format;
+	return *this;
+}
+SwapchainBuilder& SwapchainBuilder::set_fallback_format (VkFormat format)
+{
+	info.fallback_format = format;
+	return *this;
+}
+SwapchainBuilder& SwapchainBuilder::set_desired_present_mode (VkPresentModeKHR present_mode)
+{
+	info.desired_present_mode = present_mode;
+	return *this;
+}
+SwapchainBuilder& SwapchainBuilder::set_fallback_present_mode (VkPresentModeKHR present_mode)
+{
+	info.fallback_present_mode = present_mode;
+	return *this;
+}
+
+
+
+} // namespace vkb

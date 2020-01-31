@@ -1,9 +1,14 @@
 #include <stdio.h>
 
+#include <memory>
+#include <iostream>
+
 #include "VkBootstrap.h"
 
 #define GLFW_INCLUDE_VULKAN
 #include "GLFW/glfw3.h"
+
+#include "catch2/catch.hpp"
 
 GLFWwindow* create_window_glfw ()
 {
@@ -30,27 +35,34 @@ int test_happy_path ()
 {
 	auto window = create_window_glfw ();
 
-	vkbs::InstanceBuilder instance_builder;
+	vkb::InstanceBuilder instance_builder;
 	auto instance_ret = instance_builder.set_default_debug_messenger ().build ();
-	if (!instance_ret) return -1; // couldn't make instance
-	vkbs::Instance instance = instance_ret.value ();
+	if (!instance_ret)
+	{
+		std::cout << instance_ret.error ().msg << "\n";
+		return -1; // couldn't make instance
+	}
+	vkb::Instance instance = instance_ret.value ();
+	printf ("made instance\n");
 
 	auto surface = create_surface_glfw (instance.instance, window);
 
-	vkbs::PhysicalDeviceSelector phys_device_selector (instance);
+	vkb::PhysicalDeviceSelector phys_device_selector (instance);
 	auto phys_device_ret = phys_device_selector.set_surface (surface).select ();
 	if (!phys_device_ret) return -2; // couldn't select physical device
-	vkbs::PhysicalDevice physical_device = phys_device_ret.value ();
+	vkb::PhysicalDevice physical_device = phys_device_ret.value ();
+	printf ("made physical device\n");
 
-	vkbs::DeviceBuilder device_builder (physical_device);
+	vkb::DeviceBuilder device_builder (physical_device);
 	auto device_ret = device_builder.build ();
-	if (!device_ret) return -3; // couldn't create device
-	vkbs::Device device = device_ret.value ();
+	if (!device_ret) return -1; // couldn't create device
+	vkb::Device device = device_ret.value ();
+	printf ("made device\n");
 
 	// possible swapchain creation...
 
-	vkbs::destroy_device (device);
-	vkbs::destroy_instance (instance);
+	vkb::destroy_device (device);
+	vkb::destroy_instance (instance);
 	destroy_window_glfw (window);
 	return 0;
 }
@@ -59,7 +71,7 @@ int test_happy_path ()
 int test_instance_basic ()
 {
 
-	vkbs::InstanceBuilder builder;
+	vkb::InstanceBuilder builder;
 
 	auto instance_ret =
 	    builder.setup_validation_layers ()
@@ -68,8 +80,8 @@ int test_instance_basic ()
 	                                 VkDebugUtilsMessageTypeFlagsEXT messageType,
 	                                 const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
 	                                 void* pUserData) -> VkBool32 {
-		        auto ms = vkbs::DebugMessageSeverity (messageSeverity);
-		        auto mt = vkbs::DebugMessageType (messageType);
+		        auto ms = vkb::DebugMessageSeverity (messageSeverity);
+		        auto mt = vkb::DebugMessageType (messageType);
 		        printf ("[%s: %s](user defined)\n%s\n", ms, mt, pCallbackData->pMessage);
 		        return VK_FALSE;
 	        })
@@ -85,7 +97,7 @@ int test_instance_basic ()
 int test_instance_headless ()
 {
 
-	vkbs::InstanceBuilder builder;
+	vkb::InstanceBuilder builder;
 
 	auto instance_ret = builder.setup_validation_layers ()
 	                        .set_headless ()
@@ -104,13 +116,13 @@ int test_instance_headless ()
 
 int test_physical_device_selection ()
 {
-	vkbs::InstanceBuilder instance_builder;
+	vkb::InstanceBuilder instance_builder;
 	auto instance_ret = instance_builder.set_default_debug_messenger ().build ();
 	auto instance = instance_ret.value ();
 	auto window = create_window_glfw ();
 	auto surface = create_surface_glfw (instance.instance, window);
 
-	vkbs::PhysicalDeviceSelector selector (instance);
+	vkb::PhysicalDeviceSelector selector (instance);
 	auto phys_dev_ret = selector.set_surface (surface)
 	                        .add_desired_extension (VK_KHR_MULTIVIEW_EXTENSION_NAME)
 	                        .add_required_extension (VK_KHR_DRIVER_PROPERTIES_EXTENSION_NAME)
@@ -121,24 +133,24 @@ int test_physical_device_selection ()
 	{
 		return -1;
 	}
-	vkbs::destroy_instance (instance);
+	vkb::destroy_instance (instance);
 	destroy_window_glfw (window);
 	return 0;
 }
 
 int test_device_creation ()
 {
-	vkbs::InstanceBuilder instance_builder;
+	vkb::InstanceBuilder instance_builder;
 	auto instance_ret = instance_builder.set_default_debug_messenger ().build ();
 	auto instance = instance_ret.value ();
 	auto window = create_window_glfw ();
 	auto surface = create_surface_glfw (instance.instance, window);
 
-	vkbs::PhysicalDeviceSelector selector (instance);
+	vkb::PhysicalDeviceSelector selector (instance);
 	auto phys_dev_ret = selector.set_surface (surface).select ();
 	auto phys_dev = phys_dev_ret.value ();
 
-	vkbs::DeviceBuilder device_builder (phys_dev);
+	vkb::DeviceBuilder device_builder (phys_dev);
 	auto dev_ret = device_builder.build ();
 	if (!dev_ret.has_value ())
 	{
@@ -146,8 +158,8 @@ int test_device_creation ()
 		return -1;
 	}
 
-	vkbs::destroy_device (dev_ret.value ());
-	vkbs::destroy_instance (instance);
+	vkb::destroy_device (dev_ret.value ());
+	vkb::destroy_instance (instance);
 	destroy_window_glfw (window);
 	return 0;
 }

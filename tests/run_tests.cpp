@@ -1,36 +1,5 @@
-#include <stdio.h>
+#include "common.h"
 
-#include <memory>
-#include <iostream>
-
-#include "VkBootstrap.h"
-
-#define GLFW_INCLUDE_VULKAN
-#include "GLFW/glfw3.h"
-
-#include "catch2/catch.hpp"
-
-GLFWwindow* create_window_glfw ()
-{
-	glfwInit ();
-	glfwWindowHint (GLFW_CLIENT_API, GLFW_NO_API);
-	return glfwCreateWindow (640, 480, "Window Title", NULL, NULL);
-}
-void destroy_window_glfw (GLFWwindow* window)
-{
-	glfwDestroyWindow (window);
-	glfwTerminate ();
-}
-VkSurfaceKHR create_surface_glfw (VkInstance instance, GLFWwindow* window)
-{
-	VkSurfaceKHR surface = nullptr;
-	VkResult err = glfwCreateWindowSurface (instance, window, NULL, &surface);
-	if (err)
-	{
-		surface = nullptr;
-	}
-	return surface;
-}
 int test_happy_path ()
 {
 	auto window = create_window_glfw ();

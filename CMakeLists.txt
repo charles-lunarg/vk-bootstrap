@@ -25,4 +25,13 @@ target_link_libraries(vk-bootstrap-test vk-bootstrap)
 target_link_libraries(vk-bootstrap-test glfw)
 target_link_libraries(vk-bootstrap-test Catch2)
 
+add_executable(vk-bootstrap-triangle tests/triangle.cpp)
+target_link_libraries(vk-bootstrap-triangle vk-bootstrap)
+target_link_libraries(vk-bootstrap-triangle glfw)
+
+add_custom_command(
+ TARGET vk-bootstrap-triangle POST_BUILD
+ COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/tests/shaders ${CMAKE_CURRENT_BINARY_DIR} 
+ DEPENDS ${CMAKE_CURRENT_BINARY_DIR}
+)
 endif()

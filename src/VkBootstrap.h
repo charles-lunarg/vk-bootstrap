@@ -14,9 +14,14 @@ namespace vkb
 namespace detail
 {
 
-template <typename T> struct Error
+enum class BootstrapErrorType : uint32_t
 {
-	T error_code;
+
+};
+
+struct Error
+{
+	VkResult error_code;
 	const char* msg;
 };
 template <typename E, typename U> class Expected
@@ -24,22 +29,22 @@ template <typename E, typename U> class Expected
 	public:
 	Expected (const E& expect) : m_expect{ expect }, m_init{ true } {}
 	Expected (E&& expect) : m_expect{ std::move (expect) }, m_init{ true } {}
-	Expected (const Error<U>& error) : m_error{ error }, m_init{ false } {}
-	Expected (Error<U>&& error) : m_error{ std::move (error) }, m_init{ false } {}
+	Expected (const Error& error) : m_error{ error }, m_init{ false } {}
+	Expected (Error&& error) : m_error{ std::move (error) }, m_init{ false } {}
 	~Expected () { destroy (); }
 	Expected (Expected const& expected) : m_init (expected.m_init)
 	{
 		if (m_init)
 			new (&m_expect) E{ expected.m_expect };
 		else
-			new (&m_error) Error<U>{ expected.m_error };
+			new (&m_error) Error{ expected.m_error };
 	}
 	Expected (Expected&& expected) : m_init (expected.m_init)
 	{
 		if (m_init)
 			new (&m_expect) E{ std::move (expected.m_expect) };
 		else
-			new (&m_error) Error<U>{ std::move (expected.m_error) };
+			new (&m_error) Error{ std::move (expected.m_error) };
 		expected.destroy ();
 	}
 
@@ -57,18 +62,18 @@ template <typename E, typename U> class Expected
 		new (&m_expect) E{ std::move (expect) };
 		return *this;
 	}
-	Expected& operator= (const Error<U>& error)
+	Expected& operator= (const Error& error)
 	{
 		destroy ();
 		m_init = false;
-		new (&m_error) Error<U>{ error };
+		new (&m_error) Error{ error };
 		return *this;
 	}
-	Expected& operator= (Error<U>&& error)
+	Expected& operator= (Error&& error)
 	{
 		destroy ();
 		m_init = false;
-		new (&m_error) Error<U>{ std::move (error) };
+		new (&m_error) Error{ std::move (error) };
 		return *this;
 	}
 	// clang-format off
@@ -81,10 +86,10 @@ template <typename E, typename U> class Expected
 	E&        value () &         { assert (m_init); return m_expect; }
 	const E&& value () const&&   { assert (m_init); return std::move (m_expect); }
 	E&&       value () &&        { assert (m_init); return std::move (m_expect); }
-	const Error<U>&  error () const&  { assert (!m_init); return m_error; }
-	Error<U>&        error () &       { assert (!m_init); return m_error; }
-	const Error<U>&& error () const&& { assert (!m_init); return std::move (m_error); }
-	Error<U>&&       error () &&      { assert (!m_init); return move (m_error); }
+	const Error&  error () const&  { assert (!m_init); return m_error; }
+	Error&        error () &       { assert (!m_init); return m_error; }
+	const Error&& error () const&& { assert (!m_init); return std::move (m_error); }
+	Error&&       error () &&      { assert (!m_init); return std::move (m_error); }
 	// clang-format on
 	bool has_value () const { return m_init; }
 	explicit operator bool () const { return m_init; }
@@ -95,12 +100,12 @@ template <typename E, typename U> class Expected
 		if (m_init)
 			m_expect.~E ();
 		else
-			m_error.~Error<U> ();
+			m_error.~Error ();
 	}
 	union
 	{
 		E m_expect;
-		Error<U> m_error;
+		Error m_error;
 	};
 	bool m_init;
 };
@@ -120,14 +125,14 @@ auto get_vector_init (F&& f, T init, Ts&&... ts) -> Expected<std::vector<T>, VkR
 		err = f (ts..., &count, nullptr);
 		if (err)
 		{
-			return Error<VkResult>{ err, "" };
+			return Error{ err, "" };
 		};
 		results.resize (count, init);
 		err = f (ts..., &count, results.data ());
 	} while (err == VK_INCOMPLETE);
 	if (err)
 	{
-		return Error<VkResult>{ err, "" };
+		return Error{ err, "" };
 	};
 	return results;
 }
@@ -289,7 +294,7 @@ VkFormat find_supported_format (VkPhysicalDevice physical_device,
     VkImageTiling tiling,
     VkFormatFeatureFlags features);
 
-bool check_device_extension_support (VkPhysicalDevice device, std::vector<std::string> extensions);
+std::vector<std::string> device_extension_support (VkPhysicalDevice device, std::vector<std::string> extensions);
 
 detail::QueueFamilies find_queue_families (VkPhysicalDevice physDevice, VkSurfaceKHR windowSurface);
 
@@ -304,11 +309,13 @@ struct PhysicalDevice
 	VkPhysicalDevice phys_device = VK_NULL_HANDLE;
 	VkSurfaceKHR surface = VK_NULL_HANDLE;
 
-	VkPhysicalDeviceProperties physical_device_properties{};
 	VkPhysicalDeviceFeatures physical_device_features{};
+	VkPhysicalDeviceProperties physical_device_properties{};
 	VkPhysicalDeviceMemoryProperties memory_properties{};
 
 	detail::QueueFamilies queue_family_properties;
+
+	std::vector<std::string> extensions_to_enable;
 };
 
 namespace detail
@@ -421,6 +428,12 @@ namespace detail
 VkQueue get_queue (Device const& device, uint32_t family, uint32_t index = 0);
 }
 
+uint32_t get_queue_index_present (Device const& device);
+uint32_t get_queue_index_graphics (Device const& device);
+uint32_t get_queue_index_compute (Device const& device);
+uint32_t get_queue_index_transfer (Device const& device);
+uint32_t get_queue_index_sparse (Device const& device);
+
 detail::Expected<VkQueue, VkResult> get_queue_present (Device const& device);
 detail::Expected<VkQueue, VkResult> get_queue_graphics (Device const& device, uint32_t index = 0);
 detail::Expected<VkQueue, VkResult> get_queue_compute (Device const& device, uint32_t index = 0);
@@ -430,9 +443,10 @@ detail::Expected<VkQueue, VkResult> get_queue_sparse (Device const& device, uint
 
 namespace detail
 {
-VkSurfaceFormatKHR choose_swapchain_surface_format (std::vector<VkSurfaceFormatKHR> const& availableFormats);
-VkPresentModeKHR choose_swap_present_mode (std::vector<VkPresentModeKHR> const& availablePresentModes);
-VkExtent2D choose_swap_extent (
+VkSurfaceFormatKHR find_surface_format (std::vector<VkFormat> const& available_formats);
+VkPresentModeKHR find_present_mode (std::vector<VkPresentModeKHR> const& available_present_modes,
+    std::vector<VkPresentModeKHR> const& desired_present_modes);
+VkExtent2D find_extent (
     VkSurfaceCapabilitiesKHR const& capabilities, uint32_t desired_width, uint32_t desired_height);
 } // namespace detail
 
@@ -446,6 +460,8 @@ struct Swapchain
 	VkExtent2D extent = { 0, 0 };
 };
 
+void destroy_swapchain (Swapchain const& swapchain);
+
 class SwapchainBuilder
 {
 	public:
@@ -453,13 +469,18 @@ class SwapchainBuilder
 
 	detail::Expected<Swapchain, VkResult> build ();
 	detail::Expected<Swapchain, VkResult> recreate (Swapchain const& swapchain);
-	void destroy (Swapchain const& swapchain);
 
-	SwapchainBuilder& set_desired_format (VkFormat format);
-	SwapchainBuilder& set_fallback_format (VkFormat format);
+	// SwapchainBuilder& set_desired_image_count (uint32_t count);
+	// SwapchainBuilder& set_maximum_image_count (uint32_t count);
+
+	SwapchainBuilder& set_desired_format (VkSurfaceFormatKHR format);
+	SwapchainBuilder& add_fallback_format (VkSurfaceFormatKHR format);
+	SwapchainBuilder& use_default_format_selection ();
 
 	SwapchainBuilder& set_desired_present_mode (VkPresentModeKHR present_mode);
-	SwapchainBuilder& set_fallback_present_mode (VkPresentModeKHR present_mode);
+	SwapchainBuilder& add_fallback_present_mode (VkPresentModeKHR present_mode);
+	SwapchainBuilder& use_default_present_mode_selection ();
+
 
 
 	private:
@@ -469,11 +490,8 @@ class SwapchainBuilder
 		PhysicalDevice physical_device;
 		VkSurfaceKHR surface = VK_NULL_HANDLE;
 		VkSwapchainKHR old_swapchain = VK_NULL_HANDLE;
-		VkFormat desired_format = VK_FORMAT_R8G8B8A8_UNORM;
-		VkFormat fallback_format = VK_FORMAT_R8G8B8A8_UNORM;
-		VkPresentModeKHR desired_present_mode = VK_PRESENT_MODE_FIFO_KHR;
-		VkPresentModeKHR fallback_present_mode = VK_PRESENT_MODE_FIFO_KHR;
-		std::vector<VkPresentModeKHR> acceptable_present_modes;
+		std::vector<VkSurfaceFormatKHR> desired_formats;
+		std::vector<VkPresentModeKHR> desired_present_modes;
 		uint32_t desired_width = 256;
 		uint32_t desired_height = 256;
 	} info;

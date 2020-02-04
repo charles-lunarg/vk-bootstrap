@@ -767,7 +767,7 @@ void destroy_device (Device device) { vkDestroyDevice (device.device, device.all
 struct QueueFamily
 {
 	int32_t family;
-	uint32_t count;
+	std::vector<float> priorities;
 };
 DeviceBuilder::DeviceBuilder (PhysicalDevice phys_device)
 {
@@ -779,23 +779,25 @@ detail::Expected<Device, VkResult> DeviceBuilder::build ()
 {
 	auto& queue_properties = info.physical_device.queue_family_properties;
 	std::vector<QueueFamily> families;
-	families.push_back ({ queue_properties.graphics, queue_properties.count_graphics });
+	families.push_back ({ queue_properties.graphics, std::vector<float> (queue_properties.count_graphics) });
 	if (queue_properties.compute != -1 && queue_properties.compute != queue_properties.graphics)
-		families.push_back ({ queue_properties.compute, queue_properties.count_compute });
-	if (queue_properties.transfer != -1 && queue_properties.transfer != queue_properties.graphics)
-		families.push_back ({ queue_properties.transfer, queue_properties.count_transfer });
-	if (queue_properties.sparse != -1)
-		families.push_back ({ queue_properties.sparse, queue_properties.count_sparse });
+		families.push_back ({ queue_properties.compute, std::vector<float> (queue_properties.count_compute) });
+	if (queue_properties.transfer != -1 && queue_properties.transfer != queue_properties.graphics &&
+	    queue_properties.transfer != queue_properties.compute)
+		families.push_back ({ queue_properties.transfer, std::vector<float> (queue_properties.count_transfer) });
+	if (queue_properties.sparse != -1 && queue_properties.sparse != queue_properties.graphics &&
+	    queue_properties.sparse != queue_properties.compute &&
+	    queue_properties.sparse != queue_properties.transfer)
+		families.push_back ({ queue_properties.sparse, std::vector<float> (queue_properties.count_sparse) });
 
 	std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
-	float queuePriority = 1.0f;
 	for (auto& queue : families)
 	{
 		VkDeviceQueueCreateInfo queue_create_info = {};
 		queue_create_info.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
 		queue_create_info.queueFamilyIndex = static_cast<uint32_t> (queue.family);
-		queue_create_info.queueCount = queue.count;
-		queue_create_info.pQueuePriorities = &queuePriority;
+		queue_create_info.queueCount = queue.priorities.size ();
+		queue_create_info.pQueuePriorities = queue.priorities.data ();
 		queueCreateInfos.push_back (queue_create_info);
 	}
 

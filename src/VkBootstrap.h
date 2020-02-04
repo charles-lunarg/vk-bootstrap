@@ -178,9 +178,8 @@ bool check_layers_supported (std::vector<const char*> layer_names);
 
 } // namespace detail
 
-const char* DebugMessageSeverity (VkDebugUtilsMessageSeverityFlagBitsEXT s);
-const char* DebugMessageType (VkDebugUtilsMessageTypeFlagsEXT s);
-
+const char* to_string_message_severity (VkDebugUtilsMessageSeverityFlagBitsEXT s);
+const char* to_string_message_type (VkDebugUtilsMessageTypeFlagsEXT s);
 
 struct Instance
 {
@@ -455,12 +454,15 @@ struct Swapchain
 	VkDevice device = VK_NULL_HANDLE;
 	VkSwapchainKHR swapchain = VK_NULL_HANDLE;
 	VkAllocationCallbacks* allocator = VK_NULL_HANDLE;
-	std::vector<VkImage> images;
+	uint32_t image_count = 0;
 	VkFormat image_format = VK_FORMAT_UNDEFINED;
 	VkExtent2D extent = { 0, 0 };
 };
 
 void destroy_swapchain (Swapchain const& swapchain);
+detail::Expected<std::vector<VkImage>, VkResult> get_swapchain_images (Swapchain const& swapchain);
+detail::Expected<std::vector<VkImageView>, VkResult> get_swapchain_image_views (
+    Swapchain const& swapchain, std::vector<VkImage> const& images);
 
 class SwapchainBuilder
 {
@@ -480,8 +482,6 @@ class SwapchainBuilder
 	SwapchainBuilder& set_desired_present_mode (VkPresentModeKHR present_mode);
 	SwapchainBuilder& add_fallback_present_mode (VkPresentModeKHR present_mode);
 	SwapchainBuilder& use_default_present_mode_selection ();
-
-
 
 	private:
 	struct SwapchainInfo

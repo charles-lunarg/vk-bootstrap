@@ -10,6 +10,13 @@ This library simplifies the tedious process of:
 * Getting Queues
 * Swapchain Creation
 
+It also adds several convenience for:
+
+* enabling validation layers
+* setting up a debug callback
+* automate getting a drawable surface
+* selecting a gpu based on a small set of common criteria
+
 ## Example
 
 ```cpp
@@ -17,29 +24,33 @@ vkb::InstanceBuilder builder;
 builder.setup_validation_layers()
        .set_app_name ("example")
        .set_default_debug_messenger ();
-auto inst_ret = builder.build ();
-vkb::Instance inst;
-if (inst_ret.has_value()) {
-    // successfully created instance
-    inst = inst_ret.value();
+auto inst_ret = builder.build();
+if (!inst_ret.has_value()) {
+    // error
 }
+vkb::Instance inst = inst_ret.value();
 
-vkb::PhysicalDeviceSelector(inst);
+vkb::PhysicalDeviceSelector selector{ inst };
 selector.set_surface (/* from user created window*/)
-    .set_minimum_version (1, 0)
-    .require_dedicated_transfer_queue();
+        .set_minimum_version (1, 0)
+        .require_dedicated_transfer_queue();
 auto phys_ret = selector.select ();
-vkb::PhysicalDevice phys;
-if (phys_ret.has_value()) {
-    // successfully selected a sufficient physical device
-    phys = phys_ret.value();
+if (!phys_ret.has_value()) {
+    // error
 }
+vkb::PhysicalDevice physical_device = phys_ret.value();
 
-vkb::DeviceBuilder device_builder(phys_dev); 
+vkb::DeviceBuilder device_builder{ physical_device };
 auto dev_ret = device_builder.build ();
-if(dev_ret.has_value()){
-    // successfully created a vulkan device
+if (!dev_ret.has_value()){
+    // error
 }
+vkb::Device device = dev_ret.value();
+
+VkQueue graphics_queue = get_queue_graphics(device).value();
+VkQueue compute_queue = get_queue_compute(device).value();
+VkQueue transfer_queue = get_queue_transfer(device).value();
+
 ```
 
 ## Building
@@ -70,4 +81,10 @@ Then return to the build directory and enable tests with `VK_BOOTSTRAP_TEST`
 cmake ../path/to/vk-bootstrap/ -DVK_BOOTSTRAP_TEST=ON
 ```
 
+## Todo's
 
+* Package library to be usable
+* More examples
+* Testing
+* Documenting API
+* Fleshing out device configuration

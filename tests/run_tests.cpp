@@ -49,8 +49,8 @@ int test_instance_basic ()
 	                                 VkDebugUtilsMessageTypeFlagsEXT messageType,
 	                                 const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
 	                                 void* pUserData) -> VkBool32 {
-		        auto ms = vkb::DebugMessageSeverity (messageSeverity);
-		        auto mt = vkb::DebugMessageType (messageType);
+		        auto ms = vkb::to_string_message_severity (messageSeverity);
+		        auto mt = vkb::to_string_message_type (messageType);
 		        printf ("[%s: %s](user defined)\n%s\n", ms, mt, pCallbackData->pMessage);
 		        return VK_FALSE;
 	        })

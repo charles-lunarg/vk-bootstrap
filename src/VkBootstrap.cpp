@@ -6,7 +6,7 @@
 namespace vkb
 {
 
-const char* DebugMessageSeverity (VkDebugUtilsMessageSeverityFlagBitsEXT s)
+const char* to_string_message_severity (VkDebugUtilsMessageSeverityFlagBitsEXT s)
 {
 	switch (s)
 	{
@@ -22,7 +22,7 @@ const char* DebugMessageSeverity (VkDebugUtilsMessageSeverityFlagBitsEXT s)
 			return "UNKNOWN";
 	}
 }
-const char* DebugMessageType (VkDebugUtilsMessageTypeFlagsEXT s)
+const char* to_string_message_type (VkDebugUtilsMessageTypeFlagsEXT s)
 {
 	switch (s)
 	{
@@ -84,8 +84,8 @@ VkBool32 default_debug_callback (VkDebugUtilsMessageSeverityFlagBitsEXT messageS
     const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
     void* pUserData)
 {
-	auto ms = DebugMessageSeverity (messageSeverity);
-	auto mt = DebugMessageType (messageType);
+	auto ms = to_string_message_severity (messageSeverity);
+	auto mt = to_string_message_type (messageType);
 	printf ("[%s: %s]\n%s\n", ms, mt, pCallbackData->pMessage);
 	return VK_FALSE;
 }
@@ -130,10 +130,13 @@ void setup_pNext_chain (T& structure, std::vector<VkBaseOutStructure*>& structs)
 
 void destroy_instance (Instance instance)
 {
-	if (instance.debug_messenger != nullptr)
-		detail::destroy_debug_utils_messenger (instance.instance, instance.debug_messenger, instance.allocator);
 	if (instance.instance != VK_NULL_HANDLE)
+	{
+		if (instance.debug_messenger != nullptr)
+			detail::destroy_debug_utils_messenger (
+			    instance.instance, instance.debug_messenger, instance.allocator);
 		vkDestroyInstance (instance.instance, instance.allocator);
+	}
 }
 
 detail::Expected<Instance, VkResult> InstanceBuilder::build ()
@@ -485,31 +488,31 @@ detail::QueueFamilies find_queue_families (VkPhysicalDevice phys_device, VkSurfa
 bool supports_features (VkPhysicalDeviceFeatures supported, VkPhysicalDeviceFeatures requested)
 {
 	// clang-format off
-    if (requested.robustBufferAccess && ! supported.robustBufferAccess) return false;
-    if (requested.fullDrawIndexUint32 && ! supported.fullDrawIndexUint32) return false;
-    if (requested.imageCubeArray && ! supported.imageCubeArray) return false;
-    if (requested.independentBlend && ! supported.independentBlend) return false;
-    if (requested.geometryShader && ! supported.geometryShader) return false;
-    if (requested.tessellationShader && ! supported.tessellationShader) return false;
-    if (requested.sampleRateShading && ! supported.sampleRateShading) return false;
-    if (requested.dualSrcBlend && ! supported.dualSrcBlend) return false;
-    if (requested.logicOp && ! supported.logicOp) return false;
-    if (requested.multiDrawIndirect && ! supported.multiDrawIndirect) return false;
-    if (requested.drawIndirectFirstInstance && ! supported.drawIndirectFirstInstance) return false;
-    if (requested.depthClamp && ! supported.depthClamp) return false;
-    if (requested.depthBiasClamp && ! supported.depthBiasClamp) return false;
-    if (requested.fillModeNonSolid && ! supported.fillModeNonSolid) return false;
-    if (requested.depthBounds && ! supported.depthBounds) return false;
-    if (requested.wideLines && ! supported.wideLines) return false;
-    if (requested.largePoints && ! supported.largePoints) return false;
-    if (requested.alphaToOne && ! supported.alphaToOne) return false;
-    if (requested.multiViewport && ! supported.multiViewport) return false;
-    if (requested.samplerAnisotropy && ! supported.samplerAnisotropy) return false;
-    if (requested.textureCompressionETC2 && ! supported.textureCompressionETC2) return false;
-    if (requested.textureCompressionASTC_LDR && ! supported.textureCompressionASTC_LDR) return false;
-    if (requested.textureCompressionBC && ! supported.textureCompressionBC) return false;
-    if (requested.occlusionQueryPrecise && ! supported.occlusionQueryPrecise) return false;
-    if (requested.pipelineStatisticsQuery && ! supported.pipelineStatisticsQuery) return false;
+    if (requested.robustBufferAccess && !supported.robustBufferAccess) return false;
+    if (requested.fullDrawIndexUint32 && !supported.fullDrawIndexUint32) return false;
+    if (requested.imageCubeArray && !supported.imageCubeArray) return false;
+    if (requested.independentBlend && !supported.independentBlend) return false;
+    if (requested.geometryShader && !supported.geometryShader) return false;
+    if (requested.tessellationShader && !supported.tessellationShader) return false;
+    if (requested.sampleRateShading && !supported.sampleRateShading) return false;
+    if (requested.dualSrcBlend && !supported.dualSrcBlend) return false;
+    if (requested.logicOp && !supported.logicOp) return false;
+    if (requested.multiDrawIndirect && !supported.multiDrawIndirect) return false;
+    if (requested.drawIndirectFirstInstance && !supported.drawIndirectFirstInstance) return false;
+    if (requested.depthClamp && !supported.depthClamp) return false;
+    if (requested.depthBiasClamp && !supported.depthBiasClamp) return false;
+    if (requested.fillModeNonSolid && !supported.fillModeNonSolid) return false;
+    if (requested.depthBounds && !supported.depthBounds) return false;
+    if (requested.wideLines && !supported.wideLines) return false;
+    if (requested.largePoints && !supported.largePoints) return false;
+    if (requested.alphaToOne && !supported.alphaToOne) return false;
+    if (requested.multiViewport && !supported.multiViewport) return false;
+    if (requested.samplerAnisotropy && !supported.samplerAnisotropy) return false;
+    if (requested.textureCompressionETC2 && !supported.textureCompressionETC2) return false;
+    if (requested.textureCompressionASTC_LDR && !supported.textureCompressionASTC_LDR) return false;
+    if (requested.textureCompressionBC && !supported.textureCompressionBC) return false;
+    if (requested.occlusionQueryPrecise && !supported.occlusionQueryPrecise) return false;
+    if (requested.pipelineStatisticsQuery && !supported.pipelineStatisticsQuery) return false;
     if (requested.vertexPipelineStoresAndAtomics && !supported.vertexPipelineStoresAndAtomics) return false;
     if (requested.fragmentStoresAndAtomics && !supported.fragmentStoresAndAtomics) return false;
     if (requested.shaderTessellationAndGeometryPointSize && !supported.shaderTessellationAndGeometryPointSize) return false;
@@ -961,6 +964,9 @@ SwapchainBuilder::SwapchainBuilder (Device const& device)
 
 detail::Expected<Swapchain, VkResult> SwapchainBuilder::build ()
 {
+	if (info.desired_formats.size () == 0) use_default_format_selection ();
+	if (info.desired_present_modes.size () == 0) use_default_present_mode_selection ();
+
 	auto surface_support =
 	    detail::query_surface_support_details (info.physical_device.phys_device, info.surface);
 	if (!surface_support.has_value ()) return surface_support.error ();
@@ -1016,16 +1022,12 @@ detail::Expected<Swapchain, VkResult> SwapchainBuilder::build ()
 	{
 		return detail::Error{ res, "Failed to create swapchain" };
 	}
-	auto swapchain_images =
-	    detail::get_vector<VkImage> (vkGetSwapchainImagesKHR, info.device, swapchain.swapchain);
-	if (!swapchain_images)
-	{
-		return detail::Error{ VK_ERROR_INITIALIZATION_FAILED, "Failed to get swapchain Images" };
-	}
-	swapchain.images = swapchain_images.value ();
+	swapchain.device = info.device;
 	swapchain.image_format = surface_format.format;
 	swapchain.extent = extent;
 
+	auto images = get_swapchain_images (swapchain);
+	swapchain.image_count = images.value ().size ();
 	return swapchain;
 }
 detail::Expected<Swapchain, VkResult> SwapchainBuilder::recreate (Swapchain const& swapchain)
@@ -1033,11 +1035,52 @@ detail::Expected<Swapchain, VkResult> SwapchainBuilder::recreate (Swapchain cons
 	info.old_swapchain = swapchain.swapchain;
 	return build ();
 }
+detail::Expected<std::vector<VkImage>, VkResult> get_swapchain_images (Swapchain const& swapchain)
+{
+	auto swapchain_images =
+	    detail::get_vector<VkImage> (vkGetSwapchainImagesKHR, swapchain.device, swapchain.swapchain);
+	if (!swapchain_images)
+	{
+		return detail::Error{ VK_ERROR_INITIALIZATION_FAILED, "Failed to get swapchain Images" };
+	}
+	return swapchain_images.value ();
+}
+
+detail::Expected<std::vector<VkImageView>, VkResult> get_swapchain_image_views (
+    Swapchain const& swapchain, std::vector<VkImage> const& images)
+{
+	std::vector<VkImageView> views;
+	views.resize (swapchain.image_count);
+
+	for (size_t i = 0; i < swapchain.image_count; i++)
+	{
+		VkImageViewCreateInfo createInfo = {};
+		createInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+		createInfo.image = images[i];
+		createInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+		createInfo.format = swapchain.image_format;
+		createInfo.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
+		createInfo.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
+		createInfo.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
+		createInfo.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
+		createInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+		createInfo.subresourceRange.baseMipLevel = 0;
+		createInfo.subresourceRange.levelCount = 1;
+		createInfo.subresourceRange.baseArrayLayer = 0;
+		createInfo.subresourceRange.layerCount = 1;
+
+		if (vkCreateImageView (swapchain.device, &createInfo, nullptr, &views[i]) != VK_SUCCESS)
+		{
+			return detail::Error{ VK_ERROR_INITIALIZATION_FAILED, "Failed to create image views" };
+		}
+	}
+	return views;
+}
+
 
 void destroy_swapchain (Swapchain const& swapchain)
 {
-	if (swapchain.device != VK_NULL_HANDLE && swapchain.swapchain != VK_NULL_HANDLE &&
-	    swapchain.allocator != VK_NULL_HANDLE)
+	if (swapchain.device != VK_NULL_HANDLE && swapchain.swapchain != VK_NULL_HANDLE)
 		vkDestroySwapchainKHR (swapchain.device, swapchain.swapchain, swapchain.allocator);
 }
 
@@ -1072,8 +1115,6 @@ SwapchainBuilder& SwapchainBuilder::use_default_present_mode_selection ()
 {
 	info.desired_present_modes.push_back (VK_PRESENT_MODE_MAILBOX_KHR);
 	info.desired_present_modes.push_back (VK_PRESENT_MODE_FIFO_KHR);
-	info.desired_present_modes.push_back (VK_PRESENT_MODE_FIFO_RELAXED_KHR);
-	info.desired_present_modes.push_back (VK_PRESENT_MODE_IMMEDIATE_KHR);
 	return *this;
 }
 

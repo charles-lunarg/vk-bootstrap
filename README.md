@@ -1,6 +1,6 @@
 # Vk-Bootstrap
 
-A Vulkan Utility library meant to jump start a Vulkan Application
+A Vulkan utility library meant to jump start a Vulkan Application
 
 This library simplifies the tedious process of:
 
@@ -10,52 +10,73 @@ This library simplifies the tedious process of:
 * Getting Queues
 * Swapchain Creation
 
-It also adds several convenience for:
+It also adds several conveniences for:
 
 * enabling validation layers
 * setting up a debug callback
-* automate getting a drawable surface
 * selecting a gpu based on a small set of common criteria
 
 ## Example
 
 ```cpp
-vkb::InstanceBuilder builder;
-builder.setup_validation_layers()
-       .set_app_name ("example")
-       .set_default_debug_messenger ();
-auto inst_ret = builder.build();
-if (!inst_ret.has_value()) {
-    // error
-}
-vkb::Instance inst = inst_ret.value();
 
-vkb::PhysicalDeviceSelector selector{ inst };
-selector.set_surface (/* from user created window*/)
-        .set_minimum_version (1, 0)
-        .require_dedicated_transfer_queue();
-auto phys_ret = selector.select ();
-if (!phys_ret.has_value()) {
-    // error
-}
-vkb::PhysicalDevice physical_device = phys_ret.value();
+#include "VkBootstrap.h"
 
-vkb::DeviceBuilder device_builder{ physical_device };
-auto dev_ret = device_builder.build ();
-if (!dev_ret.has_value()){
-    // error
-}
-vkb::Device device = dev_ret.value();
+void device_init()
+{
+    vkb::InstanceBuilder builder;
+    builder.setup_validation_layers()
+           .set_app_name ("example")
+           .set_default_debug_messenger ();
+    auto inst_ret = builder.build();
+    if (!inst_ret.has_value()) {
+        // error
+    }
+    vkb::Instance inst = inst_ret.value();
 
-VkQueue graphics_queue = get_queue_graphics(device).value();
-VkQueue compute_queue = get_queue_compute(device).value();
-VkQueue transfer_queue = get_queue_transfer(device).value();
+    vkb::PhysicalDeviceSelector selector{ inst };
+    selector.set_surface (/* from user created window*/)
+            .set_minimum_version (1, 0)
+            .require_dedicated_transfer_queue();
+    auto phys_ret = selector.select ();
+    if (!phys_ret.has_value()) {
+        // error
+    }
+    vkb::PhysicalDevice physical_device = phys_ret.value();
+
+    vkb::DeviceBuilder device_builder{ physical_device };
+    auto dev_ret = device_builder.build ();
+    if (!dev_ret.has_value()){
+        // error
+    }
+    vkb::Device device = dev_ret.value();
+
+    VkQueue graphics_queue = get_queue_graphics(device).value();
+    VkQueue compute_queue = get_queue_compute(device).value();
+    VkQueue transfer_queue = get_queue_transfer(device).value();
+}
 
 ```
 
-## Building
+## Using
 
-Requires CMake and Vulkan installed on your system.
+Simply copy the `src/VkBootstrap.h` and `src/VkBootstrap.cpp` into your project
+
+Alternatively, add this project as a git-submodule
+
+```bash
+git submodule add https://github.com/charles-lunarg/vk-bootstrap
+```
+
+Then add the project with cmake
+
+```cmake
+add_subdirectory(vk-bootstrap)
+```
+
+## Manually Building
+
+Simple setup
 
 ```bash
 git clone https://github.com/charles-lunarg/vk-bootstrap

@@ -58,11 +58,15 @@ void device_init()
 
 ```
 
-## Using
+## Using this library
 
-Simply copy the `src/VkBootstrap.h` and `src/VkBootstrap.cpp` into your project
+#### Simple
 
-Alternatively, add this project as a git-submodule
+Copy the `src/VkBootstrap.h` and `src/VkBootstrap.cpp` into your project
+
+#### With git-submodule + CMake
+
+add this project as a git-submodule
 
 ```bash
 git submodule add https://github.com/charles-lunarg/vk-bootstrap
@@ -76,8 +80,6 @@ add_subdirectory(vk-bootstrap)
 
 ## Manually Building
 
-Simple setup
-
 ```bash
 git clone https://github.com/charles-lunarg/vk-bootstrap
 cd vk-bootstrap
@@ -86,7 +88,7 @@ cd build
 cmake ..
 ```
 
-To test, glfw and Catch2 are used and automatically included using git submodules.
+To test, glfw and Catch2 are needed and automatically included using git submodules.
 
 In the project directory, run
 

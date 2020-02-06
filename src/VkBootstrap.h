@@ -236,11 +236,9 @@ struct PhysicalDeviceSelector {
 
 	PhysicalDeviceSelector& set_surface (VkSurfaceKHR instance);
 
-	PhysicalDeviceSelector& prefer_discrete ();
-	PhysicalDeviceSelector& prefer_integrated ();
-	PhysicalDeviceSelector& prefer_virtual_gpu ();
-
-	PhysicalDeviceSelector& allow_fallback (bool fallback = true);
+	enum PreferredDeviceType { discrete, integrated, virtual_gpu, cpu, dont_care };
+	PhysicalDeviceSelector& prefer_gpu_device_type (PreferredDeviceType type = PreferredDeviceType::discrete);
+	PhysicalDeviceSelector& allow_fallback_gpu (bool fallback = true);
 
 	PhysicalDeviceSelector& require_present (bool require = true);
 	PhysicalDeviceSelector& require_dedicated_transfer_queue ();
@@ -250,12 +248,18 @@ struct PhysicalDeviceSelector {
 	PhysicalDeviceSelector& desired_device_memory_size (VkDeviceSize size);
 
 	PhysicalDeviceSelector& add_required_extension (std::string extension);
+	PhysicalDeviceSelector& add_required_extensions (std::vector<std::string> extensions);
+
 	PhysicalDeviceSelector& add_desired_extension (std::string extension);
+	PhysicalDeviceSelector& add_desired_extensions (std::vector<std::string> extensions);
 
 	PhysicalDeviceSelector& set_desired_version (uint32_t major, uint32_t minor);
 	PhysicalDeviceSelector& set_minimum_version (uint32_t major = 1, uint32_t minor = 0);
 
 	PhysicalDeviceSelector& set_required_features (VkPhysicalDeviceFeatures features);
+	PhysicalDeviceSelector& set_desired_features (VkPhysicalDeviceFeatures features);
+
+	PhysicalDeviceSelector& select_first_device_unconditionally (bool unconditionally = true);
 
 	private:
 	struct PhysicalDeviceInfo {
@@ -264,10 +268,8 @@ struct PhysicalDeviceSelector {
 		bool headless = false;
 	} info;
 
-	enum PreferredDevice { discrete, integrated, virtual_gpu, cpu, dont_care };
-
 	struct SelectionCriteria {
-		PreferredDevice preferred_type = PreferredDevice::discrete;
+		PreferredDeviceType preferred_type = PreferredDeviceType::discrete;
 		bool allow_fallback = true;
 		bool require_present = true;
 		bool require_dedicated_transfer_queue = false;
@@ -284,6 +286,7 @@ struct PhysicalDeviceSelector {
 		VkPhysicalDeviceFeatures required_features{};
 		VkPhysicalDeviceFeatures desired_features{};
 
+		bool use_first_gpu_unconditionally = false;
 	} criteria;
 
 	enum class Suitable { yes, partial, no };
@@ -308,12 +311,27 @@ class DeviceBuilder {
 
 	template <typename T> DeviceBuilder& add_pNext (T* structure);
 
+	DeviceBuilder& use_multiple_queues_per_family (bool multi_queue = true);
+
+	DeviceBuilder& set_graphics_queue_priorities (std::vector<float> priorities);
+	DeviceBuilder& set_compute_queue_priorities (std::vector<float> priorities);
+	DeviceBuilder& set_transfer_queue_priorities (std::vector<float> priorities);
+	DeviceBuilder& set_sparse_queue_priorities (std::vector<float> priorities);
+
+
 	private:
 	struct DeviceInfo {
 		VkDeviceCreateFlags flags;
 		std::vector<VkBaseOutStructure*> pNext_chain;
 		PhysicalDevice physical_device;
 		std::vector<std::string> extensions;
+
+		bool use_multiple_queues_per_family = false;
+		std::vector<float> graphics_queue_priorities;
+		std::vector<float> compute_queue_priorities;
+		std::vector<float> transfer_queue_priorities;
+		std::vector<float> sparse_queue_priorities;
+
 	} info;
 };
 

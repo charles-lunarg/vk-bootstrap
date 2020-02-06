@@ -560,11 +560,11 @@ PhysicalDeviceSelector::Suitable PhysicalDeviceSelector::is_device_suitable (VkP
 
 	VkPhysicalDeviceProperties device_properties;
 	vkGetPhysicalDeviceProperties (phys_device, &device_properties);
-	if ((criteria.preferred_type == PreferredDevice::discrete &&
+	if ((criteria.preferred_type == PreferredDeviceType::discrete &&
 	        device_properties.deviceType != VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU) ||
-	    (criteria.preferred_type == PreferredDevice::integrated &&
+	    (criteria.preferred_type == PreferredDeviceType::integrated &&
 	        device_properties.deviceType != VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU) ||
-	    (criteria.preferred_type == PreferredDevice::virtual_gpu &&
+	    (criteria.preferred_type == PreferredDeviceType::virtual_gpu &&
 	        device_properties.deviceType != VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU)) {
 		if (criteria.allow_fallback)
 			suitable = Suitable::partial;
@@ -598,15 +598,22 @@ detail::Expected<PhysicalDevice, VkResult> PhysicalDeviceSelector::select () {
 	if (!physical_devices.has_value ()) {
 		return detail::Error{ physical_devices.error ().error_code, "Failed to find physical devices" };
 	}
+	if (physical_devices.value ().size () == 0) {
+		return detail::Error{ VK_ERROR_INITIALIZATION_FAILED, "No physical devices found" };
+	}
 
 	PhysicalDevice physical_device;
-	for (const auto& device : physical_devices.value ()) {
-		auto suitable = is_device_suitable (device);
-		if (suitable == Suitable::yes) {
-			physical_device.phys_device = device;
-			break;
-		} else if (suitable == Suitable::partial) {
-			physical_device.phys_device = device;
+	if (criteria.use_first_gpu_unconditionally) {
+		physical_device.phys_device = physical_devices.value ().at (0);
+	} else {
+		for (const auto& device : physical_devices.value ()) {
+			auto suitable = is_device_suitable (device);
+			if (suitable == Suitable::yes) {
+				physical_device.phys_device = device;
+				break;
+			} else if (suitable == Suitable::partial) {
+				physical_device.phys_device = device;
+			}
 		}
 	}
 
@@ -638,19 +645,11 @@ PhysicalDeviceSelector& PhysicalDeviceSelector::set_surface (VkSurfaceKHR surfac
 	info.headless = false;
 	return *this;
 }
-PhysicalDeviceSelector& PhysicalDeviceSelector::prefer_discrete () {
-	criteria.preferred_type = PreferredDevice::discrete;
+PhysicalDeviceSelector& PhysicalDeviceSelector::prefer_gpu_device_type (PreferredDeviceType type) {
+	criteria.preferred_type = type;
 	return *this;
 }
-PhysicalDeviceSelector& PhysicalDeviceSelector::prefer_integrated () {
-	criteria.preferred_type = PreferredDevice::integrated;
-	return *this;
-}
-PhysicalDeviceSelector& PhysicalDeviceSelector::prefer_virtual_gpu () {
-	criteria.preferred_type = PreferredDevice::virtual_gpu;
-	return *this;
-}
-PhysicalDeviceSelector& PhysicalDeviceSelector::allow_fallback (bool fallback) {
+PhysicalDeviceSelector& PhysicalDeviceSelector::allow_fallback_gpu (bool fallback) {
 	criteria.allow_fallback = fallback;
 	return *this;
 }
@@ -678,8 +677,18 @@ PhysicalDeviceSelector& PhysicalDeviceSelector::add_required_extension (std::str
 	criteria.required_extensions.push_back (extension);
 	return *this;
 }
+PhysicalDeviceSelector& PhysicalDeviceSelector::add_required_extensions (std::vector<std::string> extensions) {
+	criteria.required_extensions.insert (
+	    criteria.required_extensions.end (), extensions.begin (), extensions.end ());
+	return *this;
+}
 PhysicalDeviceSelector& PhysicalDeviceSelector::add_desired_extension (std::string extension) {
 	criteria.desired_extensions.push_back (extension);
+	return *this;
+}
+PhysicalDeviceSelector& PhysicalDeviceSelector::add_desired_extensions (std::vector<std::string> extensions) {
+	criteria.desired_extensions.insert (
+	    criteria.desired_extensions.end (), extensions.begin (), extensions.end ());
 	return *this;
 }
 PhysicalDeviceSelector& PhysicalDeviceSelector::set_minimum_version (uint32_t major, uint32_t minor) {
@@ -692,6 +701,14 @@ PhysicalDeviceSelector& PhysicalDeviceSelector::set_desired_version (uint32_t ma
 }
 PhysicalDeviceSelector& PhysicalDeviceSelector::set_required_features (VkPhysicalDeviceFeatures features) {
 	criteria.required_features = features;
+	return *this;
+}
+PhysicalDeviceSelector& PhysicalDeviceSelector::set_desired_features (VkPhysicalDeviceFeatures features) {
+	criteria.desired_features = features;
+	return *this;
+}
+PhysicalDeviceSelector& PhysicalDeviceSelector::select_first_device_unconditionally (bool unconditionally) {
+	criteria.use_first_gpu_unconditionally = unconditionally;
 	return *this;
 }
 
@@ -711,16 +728,33 @@ DeviceBuilder::DeviceBuilder (PhysicalDevice phys_device) {
 detail::Expected<Device, VkResult> DeviceBuilder::build () {
 	auto& queue_properties = info.physical_device.queue_family_properties;
 	std::vector<QueueFamily> families;
-	families.push_back ({ queue_properties.graphics, std::vector<float> (queue_properties.count_graphics) });
-	if (queue_properties.compute != -1 && queue_properties.compute != queue_properties.graphics)
-		families.push_back ({ queue_properties.compute, std::vector<float> (queue_properties.count_compute) });
+
+	families.push_back ({ queue_properties.graphics,
+	    info.graphics_queue_priorities.size () == 0 ?
+	        std::vector<float> (info.use_multiple_queues_per_family ? queue_properties.count_graphics : 1, 1.0f) :
+	        info.graphics_queue_priorities });
+
+	if (queue_properties.compute != -1 && queue_properties.compute != queue_properties.graphics) {
+		families.push_back ({ queue_properties.compute,
+		    info.compute_queue_priorities.size () == 0 ?
+		        std::vector<float> (info.use_multiple_queues_per_family ? queue_properties.count_compute : 1, 1.0f) :
+		        info.compute_queue_priorities });
+	}
+
 	if (queue_properties.transfer != -1 && queue_properties.transfer != queue_properties.graphics &&
 	    queue_properties.transfer != queue_properties.compute)
-		families.push_back ({ queue_properties.transfer, std::vector<float> (queue_properties.count_transfer) });
+		families.push_back ({ queue_properties.transfer,
+		    info.transfer_queue_priorities.size () == 0 ?
+		        std::vector<float> (info.use_multiple_queues_per_family ? queue_properties.count_transfer : 1, 1.0f) :
+		        info.transfer_queue_priorities });
+
 	if (queue_properties.sparse != -1 && queue_properties.sparse != queue_properties.graphics &&
 	    queue_properties.sparse != queue_properties.compute &&
 	    queue_properties.sparse != queue_properties.transfer)
-		families.push_back ({ queue_properties.sparse, std::vector<float> (queue_properties.count_sparse) });
+		families.push_back ({ queue_properties.sparse,
+		    info.sparse_queue_priorities.size () == 0 ?
+		        std::vector<float> (info.use_multiple_queues_per_family ? queue_properties.count_sparse : 1, 1.0f) :
+		        info.sparse_queue_priorities });
 
 	std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
 	for (auto& queue : families) {
@@ -763,6 +797,31 @@ template <typename T> DeviceBuilder& DeviceBuilder::add_pNext (T* structure) {
 	info.pNext_chain.push_back (reinterpret_cast<VkBaseOutStructure*> (structure));
 	return *this;
 }
+DeviceBuilder& DeviceBuilder::use_multiple_queues_per_family (bool multi_queue) {
+	info.use_multiple_queues_per_family = true;
+	return *this;
+}
+DeviceBuilder& DeviceBuilder::set_graphics_queue_priorities (std::vector<float> priorities) {
+	if (info.physical_device.queue_family_properties.count_graphics >= priorities.size ())
+		info.graphics_queue_priorities = priorities;
+	return *this;
+}
+DeviceBuilder& DeviceBuilder::set_compute_queue_priorities (std::vector<float> priorities) {
+	if (info.physical_device.queue_family_properties.count_compute >= priorities.size ())
+		info.compute_queue_priorities = priorities;
+	return *this;
+}
+DeviceBuilder& DeviceBuilder::set_transfer_queue_priorities (std::vector<float> priorities) {
+	if (info.physical_device.queue_family_properties.count_transfer >= priorities.size ())
+		info.transfer_queue_priorities = priorities;
+	return *this;
+}
+DeviceBuilder& DeviceBuilder::set_sparse_queue_priorities (std::vector<float> priorities) {
+	if (info.physical_device.queue_family_properties.count_sparse >= priorities.size ())
+		info.sparse_queue_priorities = priorities;
+	return *this;
+}
+
 
 // ---- Queue ---- //
 

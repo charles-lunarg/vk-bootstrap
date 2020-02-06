@@ -44,7 +44,6 @@ VkResult create_debug_utils_messenger (VkInstance instance,
     PFN_vkDebugUtilsMessengerCallbackEXT debug_callback,
     VkDebugUtilsMessageSeverityFlagsEXT severity,
     VkDebugUtilsMessageTypeFlagsEXT type,
-    const VkAllocationCallbacks* pAllocator,
     VkDebugUtilsMessengerEXT* pDebugMessenger)
 {
 	if (debug_callback == nullptr) debug_callback = default_debug_callback;
@@ -60,7 +59,7 @@ VkResult create_debug_utils_messenger (VkInstance instance,
 	    instance, "vkCreateDebugUtilsMessengerEXT");
 	if (vkCreateDebugUtilsMessengerEXT_func != nullptr)
 	{
-		return vkCreateDebugUtilsMessengerEXT_func (instance, &messengerCreateInfo, pAllocator, pDebugMessenger);
+		return vkCreateDebugUtilsMessengerEXT_func (instance, &messengerCreateInfo, nullptr, pDebugMessenger);
 	}
 	else
 	{
@@ -68,14 +67,13 @@ VkResult create_debug_utils_messenger (VkInstance instance,
 	}
 }
 
-void destroy_debug_utils_messenger (
-    VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator)
+void destroy_debug_utils_messenger (VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger)
 {
 	auto vkDestroyDebugUtilsMessengerEXT_func = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr (
 	    instance, "vkDestroyDebugUtilsMessengerEXT");
 	if (vkDestroyDebugUtilsMessengerEXT_func != nullptr)
 	{
-		vkDestroyDebugUtilsMessengerEXT_func (instance, debugMessenger, pAllocator);
+		vkDestroyDebugUtilsMessengerEXT_func (instance, debugMessenger, nullptr);
 	}
 }
 
@@ -133,9 +131,8 @@ void destroy_instance (Instance instance)
 	if (instance.instance != VK_NULL_HANDLE)
 	{
 		if (instance.debug_messenger != nullptr)
-			detail::destroy_debug_utils_messenger (
-			    instance.instance, instance.debug_messenger, instance.allocator);
-		vkDestroyInstance (instance.instance, instance.allocator);
+			detail::destroy_debug_utils_messenger (instance.instance, instance.debug_messenger);
+		vkDestroyInstance (instance.instance, nullptr);
 	}
 }
 
@@ -243,7 +240,6 @@ detail::Expected<Instance, VkResult> InstanceBuilder::build ()
 		    info.debug_callback,
 		    info.debug_message_severity,
 		    info.debug_message_type,
-		    info.allocator,
 		    &instance.debug_messenger);
 		if (res != VK_SUCCESS)
 		{
@@ -354,12 +350,6 @@ InstanceBuilder& InstanceBuilder::add_validation_feature_enable (VkValidationFea
 InstanceBuilder& InstanceBuilder::add_validation_feature_disable (VkValidationFeatureDisableEXT disable)
 {
 	info.disabled_validation_features.push_back (disable);
-	return *this;
-}
-
-InstanceBuilder& InstanceBuilder::set_allocator_callback (VkAllocationCallbacks* allocator)
-{
-	info.allocator = allocator;
 	return *this;
 }
 
@@ -762,7 +752,7 @@ PhysicalDeviceSelector& PhysicalDeviceSelector::set_required_features (VkPhysica
 
 // ---- Device ---- //
 
-void destroy_device (Device device) { vkDestroyDevice (device.device, device.allocator); }
+void destroy_device (Device device) { vkDestroyDevice (device.device, nullptr); }
 
 struct QueueFamily
 {
@@ -824,7 +814,6 @@ detail::Expected<Device, VkResult> DeviceBuilder::build ()
 	{
 		return detail::Error{ res, "Couldn't create device" };
 	}
-	device.allocator = info.allocator;
 	device.physical_device = info.physical_device;
 	device.surface = info.physical_device.surface;
 	return device;
@@ -960,8 +949,16 @@ VkExtent2D find_extent (VkSurfaceCapabilitiesKHR const& capabilities, uint32_t d
 SwapchainBuilder::SwapchainBuilder (Device const& device)
 {
 	info.device = device.device;
-	info.physical_device = device.physical_device;
+	info.physical_device = device.physical_device.phys_device;
 	info.surface = device.surface;
+}
+
+SwapchainBuilder::SwapchainBuilder (
+    VkPhysicalDevice const physical_device, VkDevice const device, VkSurfaceKHR const surface)
+{
+	info.physical_device = physical_device;
+	info.device = device;
+	info.surface = surface;
 }
 
 detail::Expected<Swapchain, VkResult> SwapchainBuilder::build ()
@@ -969,8 +966,7 @@ detail::Expected<Swapchain, VkResult> SwapchainBuilder::build ()
 	if (info.desired_formats.size () == 0) use_default_format_selection ();
 	if (info.desired_present_modes.size () == 0) use_default_present_mode_selection ();
 
-	auto surface_support =
-	    detail::query_surface_support_details (info.physical_device.phys_device, info.surface);
+	auto surface_support = detail::query_surface_support_details (info.physical_device, info.surface);
 	if (!surface_support.has_value ()) return surface_support.error ();
 	VkSurfaceFormatKHR surface_format =
 	    detail::find_surface_format (surface_support.value ().formats, info.desired_formats);
@@ -997,8 +993,7 @@ detail::Expected<Swapchain, VkResult> SwapchainBuilder::build ()
 	swapchain_create_info.imageArrayLayers = 1;
 	swapchain_create_info.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 
-	detail::QueueFamilies indices =
-	    detail::find_queue_families (info.physical_device.phys_device, info.surface);
+	detail::QueueFamilies indices = detail::find_queue_families (info.physical_device, info.surface);
 	uint32_t queueFamilyIndices[] = { static_cast<uint32_t> (indices.graphics),
 		static_cast<uint32_t> (indices.present) };
 
@@ -1083,7 +1078,7 @@ detail::Expected<std::vector<VkImageView>, VkResult> get_swapchain_image_views (
 void destroy_swapchain (Swapchain const& swapchain)
 {
 	if (swapchain.device != VK_NULL_HANDLE && swapchain.swapchain != VK_NULL_HANDLE)
-		vkDestroySwapchainKHR (swapchain.device, swapchain.swapchain, swapchain.allocator);
+		vkDestroySwapchainKHR (swapchain.device, swapchain.swapchain, nullptr);
 }
 
 SwapchainBuilder& SwapchainBuilder::set_desired_format (VkSurfaceFormatKHR format)

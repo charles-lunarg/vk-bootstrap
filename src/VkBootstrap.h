@@ -102,8 +102,7 @@ template <typename E, typename U> class Expected
 		else
 			m_error.~Error ();
 	}
-	union
-	{
+	union {
 		E m_expect;
 		Error m_error;
 	};
@@ -163,11 +162,9 @@ VkResult create_debug_utils_messenger (VkInstance instance,
     PFN_vkDebugUtilsMessengerCallbackEXT debug_callback,
     VkDebugUtilsMessageSeverityFlagsEXT severity,
     VkDebugUtilsMessageTypeFlagsEXT type,
-    const VkAllocationCallbacks* pAllocator,
     VkDebugUtilsMessengerEXT* pDebugMessenger);
 
-void destroy_debug_utils_messenger (
-    VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator);
+void destroy_debug_utils_messenger (VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger);
 
 static VKAPI_ATTR VkBool32 VKAPI_CALL default_debug_callback (VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
     VkDebugUtilsMessageTypeFlagsEXT messageType,
@@ -184,7 +181,6 @@ const char* to_string_message_type (VkDebugUtilsMessageTypeFlagsEXT s);
 struct Instance
 {
 	VkInstance instance = VK_NULL_HANDLE;
-	VkAllocationCallbacks* allocator = VK_NULL_HANDLE;
 	VkDebugUtilsMessengerEXT debug_messenger = VK_NULL_HANDLE;
 	bool headless = false;
 	bool validation_enabled = false;
@@ -222,8 +218,6 @@ class InstanceBuilder
 	InstanceBuilder& add_validation_feature_enable (VkValidationFeatureEnableEXT enable);
 	InstanceBuilder& add_validation_feature_disable (VkValidationFeatureDisableEXT disable);
 
-	InstanceBuilder& set_allocator_callback (VkAllocationCallbacks* allocator);
-
 	private:
 	struct InstanceInfo
 	{
@@ -239,7 +233,6 @@ class InstanceBuilder
 		std::vector<std::string> extensions;
 		VkInstanceCreateFlags flags = 0;
 		std::vector<VkBaseOutStructure*> pNext_elements;
-		VkAllocationCallbacks* allocator = nullptr;
 
 		// debug callback
 		PFN_vkDebugUtilsMessengerCallbackEXT debug_callback = nullptr;
@@ -394,7 +387,6 @@ struct PhysicalDeviceSelector
 struct Device
 {
 	VkDevice device = VK_NULL_HANDLE;
-	VkAllocationCallbacks* allocator = VK_NULL_HANDLE;
 	PhysicalDevice physical_device;
 	VkSurfaceKHR surface = VK_NULL_HANDLE;
 };
@@ -414,7 +406,6 @@ class DeviceBuilder
 	{
 		VkDeviceCreateFlags flags;
 		std::vector<VkBaseOutStructure*> pNext_chain;
-		VkAllocationCallbacks* allocator = VK_NULL_HANDLE;
 		PhysicalDevice physical_device;
 		std::vector<std::string> extensions;
 	} info;
@@ -453,7 +444,6 @@ struct Swapchain
 {
 	VkDevice device = VK_NULL_HANDLE;
 	VkSwapchainKHR swapchain = VK_NULL_HANDLE;
-	VkAllocationCallbacks* allocator = VK_NULL_HANDLE;
 	uint32_t image_count = 0;
 	VkFormat image_format = VK_FORMAT_UNDEFINED;
 	VkExtent2D extent = { 0, 0 };
@@ -468,6 +458,7 @@ class SwapchainBuilder
 {
 	public:
 	SwapchainBuilder (Device const& device);
+	SwapchainBuilder (VkPhysicalDevice const physical_device, VkDevice const device, VkSurfaceKHR const surface);
 
 	detail::Expected<Swapchain, VkResult> build ();
 	detail::Expected<Swapchain, VkResult> recreate (Swapchain const& swapchain);
@@ -486,8 +477,8 @@ class SwapchainBuilder
 	private:
 	struct SwapchainInfo
 	{
+		VkPhysicalDevice physical_device = VK_NULL_HANDLE;
 		VkDevice device = VK_NULL_HANDLE;
-		PhysicalDevice physical_device;
 		VkSurfaceKHR surface = VK_NULL_HANDLE;
 		VkSwapchainKHR old_swapchain = VK_NULL_HANDLE;
 		std::vector<VkSurfaceFormatKHR> desired_formats;

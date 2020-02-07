@@ -7,17 +7,12 @@ AlignAfterOpenBracket: DontAlign
 AllowAllParametersOfDeclarationOnNextLine: true
 AllowShortFunctionsOnASingleLine: true
 AllowShortIfStatementsOnASingleLine: true
-AllowShortLoopsOnASingleLine: false
-AlwaysBreakBeforeMultilineStrings: false
-AlwaysBreakTemplateDeclarations: false
 BinPackArguments: false
 BinPackParameters: false
 BreakBeforeBinaryOperators: false
-BreakBeforeBraces: Allman
 BreakBeforeTernaryOperators: false
 BreakConstructorInitializersBeforeComma: false
 ColumnLimit: 100
-CommentPragmas: ''
 ConstructorInitializerAllOnOneLineOrOnePerLine: true
 ConstructorInitializerIndentWidth: 0
 ContinuationIndentWidth: 4
@@ -28,7 +23,6 @@ IndentFunctionDeclarationAfterType: false
 IndentWidth: 4
 Language: Cpp
 MaxEmptyLinesToKeep: 4
-NamespaceIndentation: None
 PenaltyBreakBeforeFirstCallParameter: 100
 PenaltyBreakComment: 100
 PenaltyBreakFirstLessLess: 0

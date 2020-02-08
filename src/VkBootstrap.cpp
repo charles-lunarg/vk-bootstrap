@@ -460,63 +460,53 @@ bool supports_features (VkPhysicalDeviceFeatures supported, VkPhysicalDeviceFeat
 }
 } // namespace detail
 
-QueueFamilies find_queue_families (VkPhysicalDevice phys_device, VkSurfaceKHR surface) {
-	auto queue_families = detail::get_vector_noerror<VkQueueFamilyProperties> (
-	    vkGetPhysicalDeviceQueueFamilyProperties, phys_device);
-
-	QueueFamilies families;
-	int dedicated_compute = -1;
-	int dedicated_transfer = -1;
-
-	for (int i = 0; i < queue_families.size (); i++) {
-		auto& queueFlags = queue_families[i].queueFlags;
-		if (queueFlags & VK_QUEUE_GRAPHICS_BIT) families.graphics = i;
-		if (queueFlags & VK_QUEUE_COMPUTE_BIT) families.compute = i;
-		if (queueFlags & VK_QUEUE_TRANSFER_BIT) families.transfer = i;
-		if (queueFlags & VK_QUEUE_SPARSE_BINDING_BIT) families.sparse = i;
-
-		// compute that isn't graphics
-		if (queueFlags & VK_QUEUE_COMPUTE_BIT && ((queueFlags & VK_QUEUE_GRAPHICS_BIT) == 0))
-			dedicated_compute = i;
-
-		// transfer that isn't computer or graphics
-		if (queueFlags & VK_QUEUE_TRANSFER_BIT && ((queueFlags & VK_QUEUE_COMPUTE_BIT) == 0) &&
-		    ((queueFlags & VK_QUEUE_GRAPHICS_BIT) == 0))
-			dedicated_transfer = i;
-
+int get_graphics_queue_index (std::vector<VkQueueFamilyProperties> const& families) {
+	for (int i = 0; i < families.size (); i++) {
+		if (families[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) return i;
+	}
+	return -1;
+}
+int get_distinct_compute_queue_index (std::vector<VkQueueFamilyProperties> const& families) {
+	for (int i = 0; i < families.size (); i++) {
+		if ((families[i].queueFlags & VK_QUEUE_COMPUTE_BIT) &&
+		    ((families[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) == 0))
+			return i;
+	}
+	return -1;
+}
+int get_distinct_transfer_queue_index (std::vector<VkQueueFamilyProperties> const& families) {
+	for (int i = 0; i < families.size (); i++) {
+		if ((families[i].queueFlags & VK_QUEUE_TRANSFER_BIT) &&
+		    ((families[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) == 0))
+			return true;
+	}
+	return -1;
+}
+int get_present_queue_index (VkPhysicalDevice const phys_device,
+    VkSurfaceKHR const surface,
+    std::vector<VkQueueFamilyProperties> const& families) {
+	for (int i = 0; i < families.size (); i++) {
 		VkBool32 presentSupport = false;
 		if (surface != VK_NULL_HANDLE) {
 			VkResult res = vkGetPhysicalDeviceSurfaceSupportKHR (phys_device, i, surface, &presentSupport);
 		}
-		if (presentSupport == true) families.present = i;
+		if (presentSupport == true) return i;
 	}
-
-	if (dedicated_compute != -1) families.compute = dedicated_compute;
-	if (dedicated_transfer != -1) families.transfer = dedicated_transfer;
-
-	// compute and transfer always supported on the graphics family
-	if (families.compute != -1 && queue_families[families.graphics].queueFlags & VK_QUEUE_COMPUTE_BIT)
-		families.compute = families.graphics;
-	if (families.transfer != -1 && queue_families[families.graphics].queueFlags & VK_QUEUE_TRANSFER_BIT)
-		families.transfer = families.graphics;
-
-	families.count_graphics = queue_families[families.graphics].queueCount;
-	families.count_transfer = queue_families[families.transfer].queueCount;
-	families.count_compute = queue_families[families.compute].queueCount;
-	if (families.sparse != -1) families.count_sparse = queue_families[families.sparse].queueCount;
-	return families;
+	return -1;
 }
 
 PhysicalDeviceSelector::Suitable PhysicalDeviceSelector::is_device_suitable (VkPhysicalDevice phys_device) {
 	Suitable suitable = Suitable::yes;
 
-	QueueFamilies indices = find_queue_families (phys_device, info.surface);
+	auto queue_families = detail::get_vector_noerror<VkQueueFamilyProperties> (
+	    vkGetPhysicalDeviceQueueFamilyProperties, phys_device);
+	bool dedicated_compute = get_distinct_compute_queue_index (queue_families);
+	bool dedicated_transfer = get_distinct_transfer_queue_index (queue_families);
+	bool present_queue = get_present_queue_index (phys_device, info.surface, queue_families);
 
-	if (criteria.require_dedicated_compute_queue && indices.graphics != indices.compute)
-		suitable = Suitable::no;
-	if (criteria.require_dedicated_transfer_queue && indices.graphics != indices.transfer)
-		suitable = Suitable::no;
-	if (criteria.require_present && indices.present == -1) suitable = Suitable::no;
+	if (criteria.require_dedicated_compute_queue && !dedicated_compute) suitable = Suitable::no;
+	if (criteria.require_dedicated_transfer_queue && !dedicated_transfer) suitable = Suitable::no;
+	if (criteria.require_present && !present_queue) suitable = Suitable::no;
 
 	auto required_extensions_supported =
 	    detail::check_device_extension_support (phys_device, criteria.required_extensions);
@@ -580,9 +570,6 @@ PhysicalDeviceSelector::Suitable PhysicalDeviceSelector::is_device_suitable (VkP
 	bool required_features_supported =
 	    detail::supports_features (supported_features, criteria.required_features);
 	if (!required_features_supported) suitable = Suitable::no;
-	bool desired_features_supported = detail::supports_features (supported_features, criteria.desired_features);
-	if (!desired_features_supported) suitable = Suitable::partial;
-
 
 	return suitable;
 }
@@ -620,14 +607,9 @@ detail::Expected<PhysicalDevice, VkResult> PhysicalDeviceSelector::select () {
 	if (physical_device.phys_device == VK_NULL_HANDLE) {
 		return detail::Error{ VK_ERROR_INITIALIZATION_FAILED, "Failed to find a suitable GPU!" };
 	}
-	// vkGetPhysicalDeviceFeatures (physical_device.phys_device, &physical_device.features);
-	vkGetPhysicalDeviceProperties (physical_device.phys_device, &physical_device.properties);
-	vkGetPhysicalDeviceMemoryProperties (physical_device.phys_device, &physical_device.memory_properties);
 
 	physical_device.surface = info.surface;
 	physical_device.features = criteria.required_features;
-
-	physical_device.queue_family_properties = find_queue_families (physical_device.phys_device, info.surface);
 
 	physical_device.extensions_to_enable.insert (physical_device.extensions_to_enable.end (),
 	    criteria.required_extensions.begin (),
@@ -703,66 +685,37 @@ PhysicalDeviceSelector& PhysicalDeviceSelector::set_required_features (VkPhysica
 	criteria.required_features = features;
 	return *this;
 }
-PhysicalDeviceSelector& PhysicalDeviceSelector::set_desired_features (VkPhysicalDeviceFeatures features) {
-	criteria.desired_features = features;
-	return *this;
-}
 PhysicalDeviceSelector& PhysicalDeviceSelector::select_first_device_unconditionally (bool unconditionally) {
 	criteria.use_first_gpu_unconditionally = unconditionally;
 	return *this;
 }
 
+// ---- Queue Selection ---- //
+
+
+
 // ---- Device ---- //
 
 void destroy_device (Device device) { vkDestroyDevice (device.device, nullptr); }
 
-struct QueueFamily {
-	int32_t family;
-	std::vector<float> priorities;
-};
 DeviceBuilder::DeviceBuilder (PhysicalDevice phys_device) {
 	info.physical_device = phys_device;
 	info.extensions = phys_device.extensions_to_enable;
 }
 
 detail::Expected<Device, VkResult> DeviceBuilder::build () {
-	auto& queue_properties = info.physical_device.queue_family_properties;
-	std::vector<QueueFamily> families;
 
-	families.push_back ({ queue_properties.graphics,
-	    info.graphics_queue_priorities.size () == 0 ?
-	        std::vector<float> (info.use_multiple_queues_per_family ? queue_properties.count_graphics : 1, 1.0f) :
-	        info.graphics_queue_priorities });
-
-	if (queue_properties.compute != -1 && queue_properties.compute != queue_properties.graphics) {
-		families.push_back ({ queue_properties.compute,
-		    info.compute_queue_priorities.size () == 0 ?
-		        std::vector<float> (info.use_multiple_queues_per_family ? queue_properties.count_compute : 1, 1.0f) :
-		        info.compute_queue_priorities });
-	}
-
-	if (queue_properties.transfer != -1 && queue_properties.transfer != queue_properties.graphics &&
-	    queue_properties.transfer != queue_properties.compute)
-		families.push_back ({ queue_properties.transfer,
-		    info.transfer_queue_priorities.size () == 0 ?
-		        std::vector<float> (info.use_multiple_queues_per_family ? queue_properties.count_transfer : 1, 1.0f) :
-		        info.transfer_queue_priorities });
-
-	if (queue_properties.sparse != -1 && queue_properties.sparse != queue_properties.graphics &&
-	    queue_properties.sparse != queue_properties.compute &&
-	    queue_properties.sparse != queue_properties.transfer)
-		families.push_back ({ queue_properties.sparse,
-		    info.sparse_queue_priorities.size () == 0 ?
-		        std::vector<float> (info.use_multiple_queues_per_family ? queue_properties.count_sparse : 1, 1.0f) :
-		        info.sparse_queue_priorities });
+	auto queue_families = detail::get_vector_noerror<VkQueueFamilyProperties> (
+	    vkGetPhysicalDeviceQueueFamilyProperties, info.physical_device.phys_device);
 
 	std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
-	for (auto& queue : families) {
+	float priority = 1.0f;
+	for (int i = 0; i < queue_families.size (); i++) {
 		VkDeviceQueueCreateInfo queue_create_info = {};
 		queue_create_info.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
-		queue_create_info.queueFamilyIndex = static_cast<uint32_t> (queue.family);
-		queue_create_info.queueCount = queue.priorities.size ();
-		queue_create_info.pQueuePriorities = queue.priorities.data ();
+		queue_create_info.queueFamilyIndex = static_cast<uint32_t> (i);
+		queue_create_info.queueCount = 1;
+		queue_create_info.pQueuePriorities = &priority;
 		queueCreateInfos.push_back (queue_create_info);
 	}
 
@@ -797,80 +750,43 @@ template <typename T> DeviceBuilder& DeviceBuilder::add_pNext (T* structure) {
 	info.pNext_chain.push_back (reinterpret_cast<VkBaseOutStructure*> (structure));
 	return *this;
 }
-DeviceBuilder& DeviceBuilder::use_multiple_queues_per_family (bool multi_queue) {
-	info.use_multiple_queues_per_family = true;
-	return *this;
+
+// ---- Getting Queues ---- //
+
+VkQueue get_queue (VkDevice device, int32_t family) {
+	VkQueue out_queue;
+	vkGetDeviceQueue (device, family, 0, &out_queue);
+	return out_queue;
 }
-DeviceBuilder& DeviceBuilder::set_graphics_queue_priorities (std::vector<float> priorities) {
-	if (info.physical_device.queue_family_properties.count_graphics >= priorities.size ())
-		info.graphics_queue_priorities = priorities;
-	return *this;
+detail::Expected<VkQueue, VkResult> get_present_queue (Device const& device) {
+	int present = get_present_queue_index (device.physical_device, device.surface, device.queue_families);
+	if (present >= 0) {
+		return get_queue (device.device, present);
+	}
+	return detail::Error{ VK_ERROR_INITIALIZATION_FAILED, "presentation queue is not available" };
 }
-DeviceBuilder& DeviceBuilder::set_compute_queue_priorities (std::vector<float> priorities) {
-	if (info.physical_device.queue_family_properties.count_compute >= priorities.size ())
-		info.compute_queue_priorities = priorities;
-	return *this;
+detail::Expected<VkQueue, VkResult> get_graphics_queue (Device const& device) {
+	int graphics = get_graphics_queue_index (device.physical_device, device.surface, device.queue_families);
+	if (graphics >= 0) {
+		return get_queue (device.device, graphics);
+	}
+	return detail::Error{ VK_ERROR_INITIALIZATION_FAILED, "requested queue family is not available" };
 }
-DeviceBuilder& DeviceBuilder::set_transfer_queue_priorities (std::vector<float> priorities) {
-	if (info.physical_device.queue_family_properties.count_transfer >= priorities.size ())
-		info.transfer_queue_priorities = priorities;
-	return *this;
+detail::Expected<VkQueue, VkResult> get_compute_queue (Device const& device) {
+	int compute = get_distinct_compute_queue_index (device.physical_device, device.surface, device.queue_families);
+	if (compute >= 0) {
+		return get_queue (device.device, compute);
+	}
+	return detail::Error{ VK_ERROR_INITIALIZATION_FAILED, "requested queue family is not available" };
 }
-DeviceBuilder& DeviceBuilder::set_sparse_queue_priorities (std::vector<float> priorities) {
-	if (info.physical_device.queue_family_properties.count_sparse >= priorities.size ())
-		info.sparse_queue_priorities = priorities;
-	return *this;
+detail::Expected<VkQueue, VkResult> get_transfer_queue (Device const& device) {
+	int transfer = get_distinct_transfer_queue_index (device.physical_device, device.surface, device.queue_families);
+	if (transfer >= 0) {
+		return get_queue (device.device, transfer);
+	}
+	return detail::Error{ VK_ERROR_INITIALIZATION_FAILED, "requested queue family is not available" };
 }
 
-
-// ---- Queue ---- //
-
-uint32_t get_queue_index_present (Device const& device) {
-	return device.physical_device.queue_family_properties.present;
-}
-uint32_t get_queue_index_graphics (Device const& device) {
-	return device.physical_device.queue_family_properties.graphics;
-}
-uint32_t get_queue_index_compute (Device const& device) {
-	return device.physical_device.queue_family_properties.compute;
-}
-uint32_t get_queue_index_transfer (Device const& device) {
-	return device.physical_device.queue_family_properties.transfer;
-}
-uint32_t get_queue_index_sparse (Device const& device) {
-	return device.physical_device.queue_family_properties.sparse;
-}
-
-namespace detail {
-VkQueue get_queue (Device const& device, uint32_t family, uint32_t index) {
-	VkQueue queue;
-	vkGetDeviceQueue (device.device, family, index, &queue);
-	return queue;
-}
-} // namespace detail
-detail::Expected<VkQueue, VkResult> get_queue_present (Device const& device) {
-	return detail::get_queue (device, device.physical_device.queue_family_properties.present, 0);
-}
-detail::Expected<VkQueue, VkResult> get_queue_graphics (Device const& device, uint32_t index) {
-	if (index >= device.physical_device.queue_family_properties.count_graphics)
-		return detail::Error{ VK_ERROR_INITIALIZATION_FAILED, "requested graphics queue index is out of bounds" };
-	return detail::get_queue (device, device.physical_device.queue_family_properties.graphics, index);
-}
-detail::Expected<VkQueue, VkResult> get_queue_compute (Device const& device, uint32_t index) {
-	if (index >= device.physical_device.queue_family_properties.count_compute)
-		return detail::Error{ VK_ERROR_INITIALIZATION_FAILED, "requested compute queue index is out of bounds" };
-	return detail::get_queue (device, device.physical_device.queue_family_properties.compute, index);
-}
-detail::Expected<VkQueue, VkResult> get_queue_transfer (Device const& device, uint32_t index) {
-	if (index >= device.physical_device.queue_family_properties.count_transfer)
-		return detail::Error{ VK_ERROR_INITIALIZATION_FAILED, "requested transfer queue index is out of bounds" };
-	return detail::get_queue (device, device.physical_device.queue_family_properties.transfer, index);
-}
-detail::Expected<VkQueue, VkResult> get_queue_sparse (Device const& device, uint32_t index) {
-	if (index >= device.physical_device.queue_family_properties.count_sparse)
-		return detail::Error{ VK_ERROR_INITIALIZATION_FAILED, "requested sparse queue index is out of bounds" };
-	return detail::get_queue (device, device.physical_device.queue_family_properties.sparse, index);
-}
 
 namespace detail {
 VkSurfaceFormatKHR find_surface_format (std::vector<VkSurfaceFormatKHR> const& available_formats,

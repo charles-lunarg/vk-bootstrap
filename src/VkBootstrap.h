@@ -199,33 +199,19 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL default_debug_callback (VkDebugUtilsMessag
     const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
     void* pUserData);
 
-struct QueueFamilies {
-	int graphics = -1;
-	int present = -1;
-	int transfer = -1;
-	int compute = -1;
-	int sparse = -1;
-	uint32_t count_graphics = 0;
-	uint32_t count_transfer = 0;
-	uint32_t count_compute = 0;
-	uint32_t count_sparse = 0;
-};
-
-QueueFamilies find_queue_families (VkPhysicalDevice phys_device, VkSurfaceKHR surface);
-
 // ---- Physical Device ---- //
+class PhysicalDeviceSelector;
+class DeviceBuilder;
 
 struct PhysicalDevice {
 	VkPhysicalDevice phys_device = VK_NULL_HANDLE;
 	VkSurfaceKHR surface = VK_NULL_HANDLE;
 
+	private:
 	VkPhysicalDeviceFeatures features{};
-	VkPhysicalDeviceProperties properties{};
-	VkPhysicalDeviceMemoryProperties memory_properties{};
-
-	QueueFamilies queue_family_properties;
-
 	std::vector<std::string> extensions_to_enable;
+	friend class PhysicalDeviceSelector;
+	friend class DeviceBuilder;
 };
 
 struct PhysicalDeviceSelector {
@@ -257,7 +243,6 @@ struct PhysicalDeviceSelector {
 	PhysicalDeviceSelector& set_minimum_version (uint32_t major = 1, uint32_t minor = 0);
 
 	PhysicalDeviceSelector& set_required_features (VkPhysicalDeviceFeatures features);
-	PhysicalDeviceSelector& set_desired_features (VkPhysicalDeviceFeatures features);
 
 	PhysicalDeviceSelector& select_first_device_unconditionally (bool unconditionally = true);
 
@@ -284,7 +269,6 @@ struct PhysicalDeviceSelector {
 		uint32_t desired_version = VK_MAKE_VERSION (1, 0, 0);
 
 		VkPhysicalDeviceFeatures required_features{};
-		VkPhysicalDeviceFeatures desired_features{};
 
 		bool use_first_gpu_unconditionally = false;
 	} criteria;
@@ -294,12 +278,17 @@ struct PhysicalDeviceSelector {
 	Suitable is_device_suitable (VkPhysicalDevice phys_device);
 };
 
+// ---- Queue Selection ---- //
+
+enum class QueueType : uint8_t { primary, compute, transfer };
+
 // ---- Device ---- //
 
 struct Device {
 	VkDevice device = VK_NULL_HANDLE;
 	PhysicalDevice physical_device;
 	VkSurfaceKHR surface = VK_NULL_HANDLE;
+	std::vector<VkQueueFamilyProperties> queue_families;
 };
 
 void destroy_device (Device device);
@@ -311,43 +300,24 @@ class DeviceBuilder {
 
 	template <typename T> DeviceBuilder& add_pNext (T* structure);
 
-	DeviceBuilder& use_multiple_queues_per_family (bool multi_queue = true);
-
-	DeviceBuilder& set_graphics_queue_priorities (std::vector<float> priorities);
-	DeviceBuilder& set_compute_queue_priorities (std::vector<float> priorities);
-	DeviceBuilder& set_transfer_queue_priorities (std::vector<float> priorities);
-	DeviceBuilder& set_sparse_queue_priorities (std::vector<float> priorities);
-
-
 	private:
 	struct DeviceInfo {
 		VkDeviceCreateFlags flags;
 		std::vector<VkBaseOutStructure*> pNext_chain;
 		PhysicalDevice physical_device;
 		std::vector<std::string> extensions;
-
-		bool use_multiple_queues_per_family = false;
-		std::vector<float> graphics_queue_priorities;
-		std::vector<float> compute_queue_priorities;
-		std::vector<float> transfer_queue_priorities;
-		std::vector<float> sparse_queue_priorities;
-
 	} info;
 };
 
-// ---- Queue ---- //
+// ---- Getting Queues ---- //
 
-uint32_t get_queue_index_present (Device const& device);
-uint32_t get_queue_index_graphics (Device const& device);
-uint32_t get_queue_index_compute (Device const& device);
-uint32_t get_queue_index_transfer (Device const& device);
-uint32_t get_queue_index_sparse (Device const& device);
+detail::Expected<VkQueue, VkResult> get_present_queue (Device const& device);
+detail::Expected<VkQueue, VkResult> get_graphics_queue (Device const& device);
+detail::Expected<VkQueue, VkResult> get_compute_queue (Device const& device);
+detail::Expected<VkQueue, VkResult> get_transfer_queue (Device const& device);
 
-detail::Expected<VkQueue, VkResult> get_queue_present (Device const& device);
-detail::Expected<VkQueue, VkResult> get_queue_graphics (Device const& device, uint32_t index = 0);
-detail::Expected<VkQueue, VkResult> get_queue_compute (Device const& device, uint32_t index = 0);
-detail::Expected<VkQueue, VkResult> get_queue_transfer (Device const& device, uint32_t index = 0);
-detail::Expected<VkQueue, VkResult> get_queue_sparse (Device const& device, uint32_t index = 0);
+
+// ---- Swapchain ---- //
 
 struct Swapchain {
 	VkDevice device = VK_NULL_HANDLE;
@@ -358,6 +328,7 @@ struct Swapchain {
 };
 
 void destroy_swapchain (Swapchain const& swapchain);
+
 detail::Expected<std::vector<VkImage>, VkResult> get_swapchain_images (Swapchain const& swapchain);
 detail::Expected<std::vector<VkImageView>, VkResult> get_swapchain_image_views (
     Swapchain const& swapchain, std::vector<VkImage> const& images);
@@ -394,6 +365,8 @@ class SwapchainBuilder {
 		uint32_t desired_width = 256;
 		uint32_t desired_height = 256;
 		std::vector<VkBaseOutStructure*> pNext_elements;
+		uint32_t graphics_queue_index = 0;
+		uint32_t present_queue_index = 0;
 	} info;
 };
 

@@ -15,13 +15,13 @@ auto get_vector (F&& f, Ts&&... ts) -> Expected<std::vector<T>, VkResult> {
 	do {
 		err = f (ts..., &count, nullptr);
 		if (err) {
-			return Error{ err, "" };
+			return err;
 		};
 		results.resize (count);
 		err = f (ts..., &count, results.data ());
 	} while (err == VK_INCOMPLETE);
-	if (err) {
-		return Error{ err, "" };
+	if (err != VK_SUCCESS) {
+		return err;
 	};
 	return results;
 }
@@ -146,7 +146,7 @@ void destroy_instance (Instance instance) {
 	}
 }
 
-detail::Expected<Instance, VkResult> InstanceBuilder::build () {
+detail::Expected<Instance, detail::Error<InstanceError>> InstanceBuilder::build () {
 
 	VkApplicationInfo app_info = {};
 	app_info.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
@@ -189,7 +189,7 @@ detail::Expected<Instance, VkResult> InstanceBuilder::build () {
 	}
 	bool all_layers_supported = detail::check_layers_supported (layers);
 	if (!all_layers_supported) {
-		return detail::Error{ VK_ERROR_LAYER_NOT_PRESENT, "Not all layers supported!" };
+		return detail::Error<InstanceError>{ InstanceError::requested_layers_not_present };
 	}
 
 	VkDebugUtilsMessengerCreateInfoEXT messengerCreateInfo = {};
@@ -234,7 +234,8 @@ detail::Expected<Instance, VkResult> InstanceBuilder::build () {
 
 	Instance instance;
 	VkResult res = vkCreateInstance (&instance_create_info, nullptr, &instance.instance);
-	if (res != VK_SUCCESS) return detail::Error{ res, "Failed to create instance" };
+	if (res != VK_SUCCESS)
+		return detail::Error<InstanceError>{ InstanceError::failed_create_instance, res };
 
 	if (info.use_debug_messenger) {
 		res = create_debug_utils_messenger (instance.instance,
@@ -243,7 +244,7 @@ detail::Expected<Instance, VkResult> InstanceBuilder::build () {
 		    info.debug_message_type,
 		    &instance.debug_messenger);
 		if (res != VK_SUCCESS) {
-			return detail::Error{ res, "Failed to create setup debug callback" };
+			return detail::Error<InstanceError>{ InstanceError::failed_create_debug_messenger, res };
 		}
 	}
 
@@ -336,30 +337,33 @@ struct SurfaceSupportDetails {
 	std::vector<VkPresentModeKHR> present_modes;
 };
 
-Expected<SurfaceSupportDetails, VkResult> query_surface_support_details (
+enum class SurfaceSupportError {
+	surface_handle_null,
+	failed_get_surface_capabilities,
+	failed_enumerate_surface_formats,
+	failed_enumerate_present_modes
+};
+
+Expected<SurfaceSupportDetails, detail::Error<SurfaceSupportError>> query_surface_support_details (
     VkPhysicalDevice phys_device, VkSurfaceKHR surface) {
 	if (surface == VK_NULL_HANDLE)
-		return Error{ VK_ERROR_INITIALIZATION_FAILED, "surface handle was null" };
+		return detail::Error<SurfaceSupportError>{ SurfaceSupportError::surface_handle_null };
 
 	VkSurfaceCapabilitiesKHR capabilities;
 	VkResult res = vkGetPhysicalDeviceSurfaceCapabilitiesKHR (phys_device, surface, &capabilities);
 	if (res != VK_SUCCESS) {
-		// error
-		/* possible errors
-		VK_ERROR_OUT_OF_HOST_MEMORY
-		VK_ERROR_OUT_OF_DEVICE_MEMORY
-		VK_ERROR_SURFACE_LOST_KHR
-		*/
+		return detail::Error<SurfaceSupportError>{ SurfaceSupportError::failed_get_surface_capabilities, res };
 	}
 	auto formats = detail::get_vector<VkSurfaceFormatKHR> (
 	    vkGetPhysicalDeviceSurfaceFormatsKHR, phys_device, surface);
 	if (!formats.has_value ())
-		return detail::Error{ formats.error ().error_code, "Couldn't get surface formats" };
+		return detail::Error<SurfaceSupportError>{ SurfaceSupportError::failed_enumerate_surface_formats,
+			formats.error () };
 	auto present_modes = detail::get_vector<VkPresentModeKHR> (
 	    vkGetPhysicalDeviceSurfacePresentModesKHR, phys_device, surface);
 	if (!present_modes.has_value ())
-		return detail::Error{ formats.error ().error_code, "Couldn't get surface present modes" };
-
+		return detail::Error<SurfaceSupportError>{ SurfaceSupportError::failed_enumerate_present_modes,
+			formats.error () };
 	return SurfaceSupportDetails{ capabilities, formats.value (), present_modes.value () };
 }
 
@@ -580,13 +584,14 @@ PhysicalDeviceSelector::PhysicalDeviceSelector (Instance const& instance) {
 	criteria.require_present = !instance.headless;
 }
 
-detail::Expected<PhysicalDevice, VkResult> PhysicalDeviceSelector::select () {
+detail::Expected<PhysicalDevice, detail::Error<PhysicalDeviceError>> PhysicalDeviceSelector::select () {
 	auto physical_devices = detail::get_vector<VkPhysicalDevice> (vkEnumeratePhysicalDevices, info.instance);
 	if (!physical_devices.has_value ()) {
-		return detail::Error{ physical_devices.error ().error_code, "Failed to find physical devices" };
+		return detail::Error<PhysicalDeviceError>{ PhysicalDeviceError::failed_enumerate_physical_devices,
+			physical_devices.error () };
 	}
 	if (physical_devices.value ().size () == 0) {
-		return detail::Error{ VK_ERROR_INITIALIZATION_FAILED, "No physical devices found" };
+		return detail::Error<PhysicalDeviceError>{ PhysicalDeviceError::no_physical_devices_found };
 	}
 
 	PhysicalDevice physical_device;
@@ -605,7 +610,7 @@ detail::Expected<PhysicalDevice, VkResult> PhysicalDeviceSelector::select () {
 	}
 
 	if (physical_device.phys_device == VK_NULL_HANDLE) {
-		return detail::Error{ VK_ERROR_INITIALIZATION_FAILED, "Failed to find a suitable GPU!" };
+		return detail::Error<PhysicalDeviceError>{ PhysicalDeviceError::no_suitable_device };
 	}
 
 	physical_device.surface = info.surface;
@@ -703,7 +708,7 @@ DeviceBuilder::DeviceBuilder (PhysicalDevice phys_device) {
 	info.extensions = phys_device.extensions_to_enable;
 }
 
-detail::Expected<Device, VkResult> DeviceBuilder::build () {
+detail::Expected<Device, detail::Error<DeviceError>> DeviceBuilder::build () {
 
 	auto queue_families = detail::get_vector_noerror<VkQueueFamilyProperties> (
 	    vkGetPhysicalDeviceQueueFamilyProperties, info.physical_device.phys_device);
@@ -739,7 +744,7 @@ detail::Expected<Device, VkResult> DeviceBuilder::build () {
 	VkResult res =
 	    vkCreateDevice (info.physical_device.phys_device, &device_create_info, nullptr, &device.device);
 	if (res != VK_SUCCESS) {
-		return detail::Error{ res, "Couldn't create device" };
+		return detail::Error<DeviceError>{ DeviceError::failed_create_device, res };
 	}
 	device.physical_device = info.physical_device;
 	device.surface = info.physical_device.surface;
@@ -753,38 +758,62 @@ template <typename T> DeviceBuilder& DeviceBuilder::add_pNext (T* structure) {
 
 // ---- Getting Queues ---- //
 
+detail::Expected<uint32_t, detail::Error<QueueError>> get_present_queue_index (Device const& device) {
+	int present = get_present_queue_index (
+	    device.physical_device.phys_device, device.surface, device.queue_families);
+	if (present < 0) return detail::Error<QueueError>{ QueueError::present_unavailable };
+	return static_cast<uint32_t> (present);
+}
+detail::Expected<uint32_t, detail::Error<QueueError>> get_graphics_queue_index (Device const& device) {
+	int graphics = get_graphics_queue_index (device.queue_families);
+	if (graphics < 0) return detail::Error<QueueError>{ QueueError::invalid_queue_family_index };
+	return static_cast<uint32_t> (graphics);
+}
+detail::Expected<uint32_t, detail::Error<QueueError>> get_compute_queue_index (Device const& device) {
+	int compute = get_distinct_compute_queue_index (device.queue_families);
+	if (compute < 0) return detail::Error<QueueError>{ QueueError::compute_unavailable };
+	return static_cast<uint32_t> (compute);
+}
+detail::Expected<uint32_t, detail::Error<QueueError>> get_transfer_queue_index (Device const& device) {
+	int transfer = get_distinct_transfer_queue_index (device.queue_families);
+	if (transfer < 0) return detail::Error<QueueError>{ QueueError::transfer_unavailable };
+	return static_cast<uint32_t> (transfer);
+}
+
+
 VkQueue get_queue (VkDevice device, int32_t family) {
 	VkQueue out_queue;
 	vkGetDeviceQueue (device, family, 0, &out_queue);
 	return out_queue;
 }
-detail::Expected<VkQueue, VkResult> get_present_queue (Device const& device) {
-	int present = get_present_queue_index (device.physical_device, device.surface, device.queue_families);
+detail::Expected<VkQueue, detail::Error<QueueError>> get_present_queue (Device const& device) {
+	int present = get_present_queue_index (
+	    device.physical_device.phys_device, device.surface, device.queue_families);
 	if (present >= 0) {
 		return get_queue (device.device, present);
 	}
-	return detail::Error{ VK_ERROR_INITIALIZATION_FAILED, "presentation queue is not available" };
+	return detail::Error<QueueError>{ QueueError::present_unavailable };
 }
-detail::Expected<VkQueue, VkResult> get_graphics_queue (Device const& device) {
-	int graphics = get_graphics_queue_index (device.physical_device, device.surface, device.queue_families);
+detail::Expected<VkQueue, detail::Error<QueueError>> get_graphics_queue (Device const& device) {
+	int graphics = get_graphics_queue_index (device.queue_families);
 	if (graphics >= 0) {
 		return get_queue (device.device, graphics);
 	}
-	return detail::Error{ VK_ERROR_INITIALIZATION_FAILED, "requested queue family is not available" };
+	return detail::Error<QueueError>{ QueueError::invalid_queue_family_index };
 }
-detail::Expected<VkQueue, VkResult> get_compute_queue (Device const& device) {
-	int compute = get_distinct_compute_queue_index (device.physical_device, device.surface, device.queue_families);
+detail::Expected<VkQueue, detail::Error<QueueError>> get_compute_queue (Device const& device) {
+	int compute = get_distinct_compute_queue_index (device.queue_families);
 	if (compute >= 0) {
 		return get_queue (device.device, compute);
 	}
-	return detail::Error{ VK_ERROR_INITIALIZATION_FAILED, "requested queue family is not available" };
+	return detail::Error<QueueError>{ QueueError::compute_unavailable };
 }
-detail::Expected<VkQueue, VkResult> get_transfer_queue (Device const& device) {
-	int transfer = get_distinct_transfer_queue_index (device.physical_device, device.surface, device.queue_families);
+detail::Expected<VkQueue, detail::Error<QueueError>> get_transfer_queue (Device const& device) {
+	int transfer = get_distinct_transfer_queue_index (device.queue_families);
 	if (transfer >= 0) {
 		return get_queue (device.device, transfer);
 	}
-	return detail::Error{ VK_ERROR_INITIALIZATION_FAILED, "requested queue family is not available" };
+	return detail::Error<QueueError>{ QueueError::transfer_unavailable };
 }
 
 
@@ -840,21 +869,34 @@ SwapchainBuilder::SwapchainBuilder (Device const& device) {
 	info.device = device.device;
 	info.physical_device = device.physical_device.phys_device;
 	info.surface = device.surface;
+	int present = get_present_queue_index (
+	    device.physical_device.phys_device, device.surface, device.queue_families);
+	int graphics = get_graphics_queue_index (device.queue_families);
+
+	info.graphics_queue_index = graphics;
+	info.present_queue_index = present;
 }
 
-SwapchainBuilder::SwapchainBuilder (
-    VkPhysicalDevice const physical_device, VkDevice const device, VkSurfaceKHR const surface) {
+SwapchainBuilder::SwapchainBuilder (VkPhysicalDevice const physical_device,
+    VkDevice const device,
+    VkSurfaceKHR const surface,
+    uint32_t graphics_queue_index,
+    uint32_t present_queue_index) {
 	info.physical_device = physical_device;
 	info.device = device;
 	info.surface = surface;
+	info.graphics_queue_index = graphics_queue_index;
+	info.present_queue_index = present_queue_index;
 }
 
-detail::Expected<Swapchain, VkResult> SwapchainBuilder::build () {
+detail::Expected<Swapchain, detail::Error<SwapchainError>> SwapchainBuilder::build () {
 	if (info.desired_formats.size () == 0) use_default_format_selection ();
 	if (info.desired_present_modes.size () == 0) use_default_present_mode_selection ();
 
 	auto surface_support = detail::query_surface_support_details (info.physical_device, info.surface);
-	if (!surface_support.has_value ()) return surface_support.error ();
+	if (!surface_support.has_value ())
+		return detail::Error<SwapchainError>{ SwapchainError::failed_query_surface_support_details,
+			surface_support.error ().vk_result };
 	VkSurfaceFormatKHR surface_format =
 	    detail::find_surface_format (surface_support.value ().formats, info.desired_formats);
 	VkPresentModeKHR present_mode =
@@ -879,11 +921,9 @@ detail::Expected<Swapchain, VkResult> SwapchainBuilder::build () {
 	swapchain_create_info.imageArrayLayers = 1;
 	swapchain_create_info.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 
-	QueueFamilies indices = find_queue_families (info.physical_device, info.surface);
-	uint32_t queue_family_indices[] = { static_cast<uint32_t> (indices.graphics),
-		static_cast<uint32_t> (indices.present) };
+	uint32_t queue_family_indices[] = { info.graphics_queue_index, info.present_queue_index };
 
-	if (indices.graphics != indices.present) {
+	if (info.graphics_queue_index != info.present_queue_index) {
 		swapchain_create_info.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
 		swapchain_create_info.queueFamilyIndexCount = 2;
 		swapchain_create_info.pQueueFamilyIndices = queue_family_indices;
@@ -899,7 +939,7 @@ detail::Expected<Swapchain, VkResult> SwapchainBuilder::build () {
 	Swapchain swapchain{};
 	VkResult res = vkCreateSwapchainKHR (info.device, &swapchain_create_info, nullptr, &swapchain.swapchain);
 	if (res != VK_SUCCESS) {
-		return detail::Error{ res, "Failed to create swapchain" };
+		return detail::Error<SwapchainError>{ SwapchainError::failed_create_swapchain, res };
 	}
 	swapchain.device = info.device;
 	swapchain.image_format = surface_format.format;
@@ -908,22 +948,24 @@ detail::Expected<Swapchain, VkResult> SwapchainBuilder::build () {
 	auto images = get_swapchain_images (swapchain);
 	swapchain.image_count = images.value ().size ();
 	return swapchain;
-}
-detail::Expected<Swapchain, VkResult> SwapchainBuilder::recreate (Swapchain const& swapchain) {
+} // namespace vkb
+detail::Expected<Swapchain, detail::Error<SwapchainError>> SwapchainBuilder::recreate (Swapchain const& swapchain) {
 	info.old_swapchain = swapchain.swapchain;
 	return build ();
 }
-detail::Expected<std::vector<VkImage>, VkResult> get_swapchain_images (Swapchain const& swapchain) {
+detail::Expected<std::vector<VkImage>, detail::Error<SwapchainError>> get_swapchain_images (
+    Swapchain const& swapchain) {
 	auto swapchain_images =
 	    detail::get_vector<VkImage> (vkGetSwapchainImagesKHR, swapchain.device, swapchain.swapchain);
 	if (!swapchain_images) {
-		return detail::Error{ VK_ERROR_INITIALIZATION_FAILED, "Failed to get swapchain Images" };
+		return detail::Error<SwapchainError>{ SwapchainError::failed_get_swapchain_images,
+			swapchain_images.error () };
 	}
 	return swapchain_images.value ();
 }
 
-detail::Expected<std::vector<VkImageView>, VkResult> get_swapchain_image_views (
-    Swapchain const& swapchain, std::vector<VkImage> const& images) {
+detail::Expected<std::vector<VkImageView>, detail::Error<SwapchainError>>
+get_swapchain_image_views (Swapchain const& swapchain, std::vector<VkImage> const& images) {
 	std::vector<VkImageView> views{ swapchain.image_count };
 
 	for (size_t i = 0; i < swapchain.image_count; i++) {
@@ -944,7 +986,7 @@ detail::Expected<std::vector<VkImageView>, VkResult> get_swapchain_image_views (
 
 		VkResult res = vkCreateImageView (swapchain.device, &createInfo, nullptr, &views[i]);
 		if (res != VK_SUCCESS)
-			return detail::Error{ VK_ERROR_INITIALIZATION_FAILED, "Failed to create image views" };
+			return detail::Error<SwapchainError>{ SwapchainError::failed_create_swapchain_image_views, res };
 	}
 	return views;
 }

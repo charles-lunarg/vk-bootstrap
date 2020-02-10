@@ -1,14 +1,12 @@
 #include "common.h"
 
-int test_happy_path ()
-{
+int test_happy_path () {
 	auto window = create_window_glfw ();
 
 	vkb::InstanceBuilder instance_builder;
 	auto instance_ret = instance_builder.set_default_debug_messenger ().build ();
-	if (!instance_ret)
-	{
-		std::cout << instance_ret.error ().msg << "\n";
+	if (!instance_ret) {
+		std::cout << static_cast<uint32_t> (instance_ret.error ().type) << "\n";
 		return -1; // couldn't make instance
 	}
 	vkb::Instance instance = instance_ret.value ();
@@ -37,8 +35,7 @@ int test_happy_path ()
 }
 
 
-int test_instance_basic ()
-{
+int test_instance_basic () {
 
 	vkb::InstanceBuilder builder;
 
@@ -56,15 +53,13 @@ int test_instance_basic ()
 	        })
 	        .set_api_version (1, 2, 111)
 	        .build ();
-	if (!instance_ret.has_value ())
-	{
+	if (!instance_ret.has_value ()) {
 		return 1;
 	}
 	return 0;
 }
 
-int test_instance_headless ()
-{
+int test_instance_headless () {
 
 	vkb::InstanceBuilder builder;
 
@@ -76,15 +71,13 @@ int test_instance_headless ()
 	                        .set_api_version (1, 0, 34)
 	                        .set_default_debug_messenger ()
 	                        .build ();
-	if (!instance_ret.has_value ())
-	{
+	if (!instance_ret.has_value ()) {
 		return 1;
 	}
 	return 0;
 }
 
-int test_physical_device_selection ()
-{
+int test_physical_device_selection () {
 	vkb::InstanceBuilder instance_builder;
 	auto instance_ret = instance_builder.set_default_debug_messenger ().build ();
 	auto instance = instance_ret.value ();
@@ -98,8 +91,7 @@ int test_physical_device_selection ()
 	                        .set_minimum_version (1, 0)
 	                        .set_desired_version (1, 1)
 	                        .select ();
-	if (!phys_dev_ret.has_value ())
-	{
+	if (!phys_dev_ret.has_value ()) {
 		return -1;
 	}
 	vkb::destroy_instance (instance);
@@ -107,8 +99,7 @@ int test_physical_device_selection ()
 	return 0;
 }
 
-int test_device_creation ()
-{
+int test_device_creation () {
 	vkb::InstanceBuilder instance_builder;
 	auto instance_ret = instance_builder.set_default_debug_messenger ().build ();
 	auto instance = instance_ret.value ();
@@ -121,9 +112,8 @@ int test_device_creation ()
 
 	vkb::DeviceBuilder device_builder (phys_dev);
 	auto dev_ret = device_builder.build ();
-	if (!dev_ret.has_value ())
-	{
-		printf ("%s\n", dev_ret.error ().msg);
+	if (!dev_ret.has_value ()) {
+		printf ("couldn't create device %i\n", static_cast<uint32_t> (dev_ret.error ().type));
 		return -1;
 	}
 
@@ -133,8 +123,7 @@ int test_device_creation ()
 	return 0;
 }
 
-int main ()
-{
+int main () {
 	printf ("happy path\n");
 	test_happy_path ();
 

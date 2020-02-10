@@ -11,33 +11,32 @@
 namespace vkb {
 
 namespace detail {
+template <typename ErrorType> struct Error {
+	explicit Error (ErrorType type, VkResult result = VK_SUCCESS)
+	: type (type), vk_result (result) {}
 
-enum class BootstrapErrorType : uint32_t {
-
+	ErrorType type;
+	VkResult vk_result; // optional error value if a vulkan call failed
 };
 
-struct Error {
-	VkResult error_code;
-	const char* msg;
-};
 template <typename E, typename U> class Expected {
 	public:
 	Expected (const E& expect) : m_expect{ expect }, m_init{ true } {}
 	Expected (E&& expect) : m_expect{ std::move (expect) }, m_init{ true } {}
-	Expected (const Error& error) : m_error{ error }, m_init{ false } {}
-	Expected (Error&& error) : m_error{ std::move (error) }, m_init{ false } {}
+	Expected (const U& error) : m_error{ error }, m_init{ false } {}
+	Expected (U&& error) : m_error{ std::move (error) }, m_init{ false } {}
 	~Expected () { destroy (); }
 	Expected (Expected const& expected) : m_init (expected.m_init) {
 		if (m_init)
 			new (&m_expect) E{ expected.m_expect };
 		else
-			new (&m_error) Error{ expected.m_error };
+			new (&m_error) U{ expected.m_error };
 	}
 	Expected (Expected&& expected) : m_init (expected.m_init) {
 		if (m_init)
 			new (&m_expect) E{ std::move (expected.m_expect) };
 		else
-			new (&m_error) Error{ std::move (expected.m_error) };
+			new (&m_error) U{ std::move (expected.m_error) };
 		expected.destroy ();
 	}
 
@@ -53,16 +52,16 @@ template <typename E, typename U> class Expected {
 		new (&m_expect) E{ std::move (expect) };
 		return *this;
 	}
-	Expected& operator= (const Error& error) {
+	Expected& operator= (const U& error) {
 		destroy ();
 		m_init = false;
-		new (&m_error) Error{ error };
+		new (&m_error) U{ error };
 		return *this;
 	}
-	Expected& operator= (Error&& error) {
+	Expected& operator= (U&& error) {
 		destroy ();
 		m_init = false;
-		new (&m_error) Error{ std::move (error) };
+		new (&m_error) U{ std::move (error) };
 		return *this;
 	}
 	// clang-format off
@@ -75,10 +74,10 @@ template <typename E, typename U> class Expected {
 	E&        value () &         { assert (m_init); return m_expect; }
 	const E&& value () const&&   { assert (m_init); return std::move (m_expect); }
 	E&&       value () &&        { assert (m_init); return std::move (m_expect); }
-	const Error&  error () const&  { assert (!m_init); return m_error; }
-	Error&        error () &       { assert (!m_init); return m_error; }
-	const Error&& error () const&& { assert (!m_init); return std::move (m_error); }
-	Error&&       error () &&      { assert (!m_init); return std::move (m_error); }
+	const U&  error () const&  { assert (!m_init); return m_error; }
+	U&        error () &       { assert (!m_init); return m_error; }
+	const U&& error () const&& { assert (!m_init); return std::move (m_error); }
+	U&&       error () &&      { assert (!m_init); return std::move (m_error); }
 	// clang-format on
 	bool has_value () const { return m_init; }
 	explicit operator bool () const { return m_init; }
@@ -88,18 +87,24 @@ template <typename E, typename U> class Expected {
 		if (m_init)
 			m_expect.~E ();
 		else
-			m_error.~Error ();
+			m_error.~U ();
 	}
 	union {
 		E m_expect;
-		Error m_error;
+		U m_error;
 	};
 	bool m_init;
 };
 
 /* TODO implement operator == and operator != as friend or global */
-
 } // namespace detail
+
+enum class InstanceError {
+	failed_create_instance,
+	failed_create_debug_messenger,
+	requested_layers_not_present,
+	requested_extensions_not_present
+};
 
 class InstanceBuilder;
 class PhysicalDeviceSelector;
@@ -121,7 +126,7 @@ void destroy_instance (Instance instance); // release instance resources
 
 class InstanceBuilder {
 	public:
-	detail::Expected<Instance, VkResult> build (); // use builder pattern
+	detail::Expected<Instance, detail::Error<InstanceError>> build (); // use builder pattern
 
 	InstanceBuilder& set_app_name (std::string app_name);
 	InstanceBuilder& set_engine_name (std::string engine_name);
@@ -200,6 +205,13 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL default_debug_callback (VkDebugUtilsMessag
     void* pUserData);
 
 // ---- Physical Device ---- //
+enum class PhysicalDeviceError {
+	failed_enumerate_physical_devices,
+	no_physical_devices_found,
+	no_suitable_device,
+
+};
+
 class PhysicalDeviceSelector;
 class DeviceBuilder;
 
@@ -218,7 +230,7 @@ struct PhysicalDeviceSelector {
 	public:
 	PhysicalDeviceSelector (Instance const& instance);
 
-	detail::Expected<PhysicalDevice, VkResult> select ();
+	detail::Expected<PhysicalDevice, detail::Error<PhysicalDeviceError>> select ();
 
 	PhysicalDeviceSelector& set_surface (VkSurfaceKHR instance);
 
@@ -283,6 +295,9 @@ struct PhysicalDeviceSelector {
 enum class QueueType : uint8_t { primary, compute, transfer };
 
 // ---- Device ---- //
+enum class DeviceError {
+	failed_create_device,
+};
 
 struct Device {
 	VkDevice device = VK_NULL_HANDLE;
@@ -296,13 +311,13 @@ void destroy_device (Device device);
 class DeviceBuilder {
 	public:
 	DeviceBuilder (PhysicalDevice device);
-	detail::Expected<Device, VkResult> build ();
+	detail::Expected<Device, detail::Error<DeviceError>> build ();
 
 	template <typename T> DeviceBuilder& add_pNext (T* structure);
 
 	private:
 	struct DeviceInfo {
-		VkDeviceCreateFlags flags;
+		VkDeviceCreateFlags flags = 0;
 		std::vector<VkBaseOutStructure*> pNext_chain;
 		PhysicalDevice physical_device;
 		std::vector<std::string> extensions;
@@ -311,13 +326,33 @@ class DeviceBuilder {
 
 // ---- Getting Queues ---- //
 
-detail::Expected<VkQueue, VkResult> get_present_queue (Device const& device);
-detail::Expected<VkQueue, VkResult> get_graphics_queue (Device const& device);
-detail::Expected<VkQueue, VkResult> get_compute_queue (Device const& device);
-detail::Expected<VkQueue, VkResult> get_transfer_queue (Device const& device);
+enum class QueueError {
+	present_unavailable,
+	compute_unavailable,
+	transfer_unavailable,
+	queue_index_out_of_range,
+	invalid_queue_family_index
+};
+
+detail::Expected<uint32_t, detail::Error<QueueError>> get_present_queue_index (Device const& device);
+detail::Expected<uint32_t, detail::Error<QueueError>> get_graphics_queue_index (Device const& device);
+detail::Expected<uint32_t, detail::Error<QueueError>> get_compute_queue_index (Device const& device);
+detail::Expected<uint32_t, detail::Error<QueueError>> get_transfer_queue_index (Device const& device);
+
+detail::Expected<VkQueue, detail::Error<QueueError>> get_present_queue (Device const& device);
+detail::Expected<VkQueue, detail::Error<QueueError>> get_graphics_queue (Device const& device);
+detail::Expected<VkQueue, detail::Error<QueueError>> get_compute_queue (Device const& device);
+detail::Expected<VkQueue, detail::Error<QueueError>> get_transfer_queue (Device const& device);
 
 
 // ---- Swapchain ---- //
+
+enum class SwapchainError {
+	failed_query_surface_support_details,
+	failed_create_swapchain,
+	failed_get_swapchain_images,
+	failed_create_swapchain_image_views,
+};
 
 struct Swapchain {
 	VkDevice device = VK_NULL_HANDLE;
@@ -329,17 +364,22 @@ struct Swapchain {
 
 void destroy_swapchain (Swapchain const& swapchain);
 
-detail::Expected<std::vector<VkImage>, VkResult> get_swapchain_images (Swapchain const& swapchain);
-detail::Expected<std::vector<VkImageView>, VkResult> get_swapchain_image_views (
-    Swapchain const& swapchain, std::vector<VkImage> const& images);
+detail::Expected<std::vector<VkImage>, detail::Error<SwapchainError>> get_swapchain_images (
+    Swapchain const& swapchain);
+detail::Expected<std::vector<VkImageView>, detail::Error<SwapchainError>>
+get_swapchain_image_views (Swapchain const& swapchain, std::vector<VkImage> const& images);
 
 class SwapchainBuilder {
 	public:
 	SwapchainBuilder (Device const& device);
-	SwapchainBuilder (VkPhysicalDevice const physical_device, VkDevice const device, VkSurfaceKHR const surface);
+	SwapchainBuilder (VkPhysicalDevice const physical_device,
+	    VkDevice const device,
+	    VkSurfaceKHR const surface,
+	    uint32_t graphics_queue_index,
+	    uint32_t present_queue_index);
 
-	detail::Expected<Swapchain, VkResult> build ();
-	detail::Expected<Swapchain, VkResult> recreate (Swapchain const& swapchain);
+	detail::Expected<Swapchain, detail::Error<SwapchainError>> build ();
+	detail::Expected<Swapchain, detail::Error<SwapchainError>> recreate (Swapchain const& swapchain);
 
 	// SwapchainBuilder& set_desired_image_count (uint32_t count);
 	// SwapchainBuilder& set_maximum_image_count (uint32_t count);

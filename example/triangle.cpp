@@ -75,8 +75,18 @@ int device_initialization (Init& init) {
 }
 
 int get_queues (Init& init, RenderData& data) {
-	data.graphics_queue = vkb::get_graphics_queue (init.device).value ();
-	data.present_queue = vkb::get_present_queue (init.device).value ();
+	auto gq = vkb::get_graphics_queue (init.device);
+	if (!gq.has_value ()) {
+		std::cout << "failed to get graphics queue\n";
+		return -1;
+	}
+	data.graphics_queue = gq.value ();
+	auto pq = vkb::get_present_queue (init.device);
+	if (!pq.has_value ()) {
+		std::cout << "failed to get present queue\n";
+		return -1;
+	}
+	data.present_queue = pq.value ();
 	return 0;
 }
 

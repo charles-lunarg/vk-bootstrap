@@ -124,6 +124,8 @@ struct Instance {
 
 void destroy_instance (Instance instance); // release instance resources
 
+// TODO utility function for users to check if layer/extension is supported
+
 class InstanceBuilder {
 	public:
 	detail::Expected<Instance, detail::Error<InstanceError>> build (); // use builder pattern
@@ -138,8 +140,13 @@ class InstanceBuilder {
 	InstanceBuilder& add_layer (std::string app_name);
 	InstanceBuilder& add_extension (std::string app_name);
 
+	bool check_and_add_layer (std::string app_name);
+	bool check_and_add_extension (std::string app_name);
+
 	InstanceBuilder& setup_validation_layers (bool enable_validation = true);
 	InstanceBuilder& set_headless (bool headless = false);
+
+	bool check_and_setup_validation_layers (bool enable_validation = true);
 
 	InstanceBuilder& set_default_debug_messenger ();
 	InstanceBuilder& set_debug_callback (PFN_vkDebugUtilsMessengerCallbackEXT callback);
@@ -222,6 +229,7 @@ struct PhysicalDevice {
 	private:
 	VkPhysicalDeviceFeatures features{};
 	std::vector<std::string> extensions_to_enable;
+	std::vector<VkQueueFamilyProperties> queue_families;
 	friend class PhysicalDeviceSelector;
 	friend class DeviceBuilder;
 };
@@ -259,11 +267,21 @@ struct PhysicalDeviceSelector {
 	PhysicalDeviceSelector& select_first_device_unconditionally (bool unconditionally = true);
 
 	private:
-	struct PhysicalDeviceInfo {
+	struct SystemInfo {
 		VkInstance instance = VK_NULL_HANDLE;
 		VkSurfaceKHR surface = VK_NULL_HANDLE;
 		bool headless = false;
-	} info;
+	} system_info;
+
+	struct PhysicalDeviceDesc {
+		VkPhysicalDevice phys_device = VK_NULL_HANDLE;
+		std::vector<VkQueueFamilyProperties> queue_families;
+
+		VkPhysicalDeviceFeatures device_features;
+		VkPhysicalDeviceProperties device_properties;
+		VkPhysicalDeviceMemoryProperties mem_properties;
+	};
+	PhysicalDeviceDesc populate_device_details (VkPhysicalDevice phys_device);
 
 	struct SelectionCriteria {
 		PreferredDeviceType preferred_type = PreferredDeviceType::discrete;
@@ -287,12 +305,8 @@ struct PhysicalDeviceSelector {
 
 	enum class Suitable { yes, partial, no };
 
-	Suitable is_device_suitable (VkPhysicalDevice phys_device);
+	Suitable is_device_suitable (PhysicalDeviceDesc phys_device);
 };
-
-// ---- Queue Selection ---- //
-
-enum class QueueType : uint8_t { primary, compute, transfer };
 
 // ---- Device ---- //
 enum class DeviceError {
@@ -308,6 +322,12 @@ struct Device {
 
 void destroy_device (Device device);
 
+struct CustomQueueDescription {
+	uint32_t index;
+	uint32_t count;
+	std::vector<float> priorities;
+};
+
 class DeviceBuilder {
 	public:
 	DeviceBuilder (PhysicalDevice device);
@@ -315,12 +335,22 @@ class DeviceBuilder {
 
 	template <typename T> DeviceBuilder& add_pNext (T* structure);
 
+	DeviceBuilder& request_dedicated_compute_queue (bool compute = true);
+	DeviceBuilder& request_dedicated_transfer_queue (bool transfer = true);
+
+	/* For advanced users */
+	DeviceBuilder& custom_queue_setup (std::vector<CustomQueueDescription> queue_descriptions);
+
 	private:
 	struct DeviceInfo {
 		VkDeviceCreateFlags flags = 0;
 		std::vector<VkBaseOutStructure*> pNext_chain;
 		PhysicalDevice physical_device;
 		std::vector<std::string> extensions;
+		std::vector<VkQueueFamilyProperties> queue_families;
+		std::vector<CustomQueueDescription> queue_descriptions;
+		bool request_compute_queue = true;
+		bool request_transfer_queue = true;
 	} info;
 };
 
@@ -380,9 +410,6 @@ class SwapchainBuilder {
 
 	detail::Expected<Swapchain, detail::Error<SwapchainError>> build ();
 	detail::Expected<Swapchain, detail::Error<SwapchainError>> recreate (Swapchain const& swapchain);
-
-	// SwapchainBuilder& set_desired_image_count (uint32_t count);
-	// SwapchainBuilder& set_maximum_image_count (uint32_t count);
 
 	SwapchainBuilder& set_desired_format (VkSurfaceFormatKHR format);
 	SwapchainBuilder& add_fallback_format (VkSurfaceFormatKHR format);

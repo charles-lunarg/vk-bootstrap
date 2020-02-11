@@ -126,6 +126,27 @@ bool check_layers_supported (std::vector<const char*> layer_names) {
 	return all_found;
 }
 
+bool check_extensions_supported (std::vector<const char*> extension_names) {
+	auto available_extensions =
+	    detail::get_vector<VkExtensionProperties> (vkEnumerateInstanceExtensionProperties, nullptr);
+	if (!available_extensions.has_value ()) {
+		return false; // maybe report error?
+	}
+	bool all_found = true;
+	for (const auto& extension_name : extension_names) {
+		bool found = false;
+		for (const auto& layer_properties : available_extensions.value ()) {
+			if (strcmp (extension_name, layer_properties.extensionName) == 0) {
+				found = true;
+				break;
+			}
+		}
+		if (!found) all_found = false;
+	}
+
+	return all_found;
+}
+
 template <typename T>
 void setup_pNext_chain (T& structure, std::vector<VkBaseOutStructure*>& structs) {
 	structure.pNext = nullptr;
@@ -180,6 +201,11 @@ detail::Expected<Instance, detail::Error<InstanceError>> InstanceBuilder::build 
 		extensions.push_back ("VK_KHR_metal_surface");
 #endif
 	}
+	bool all_extensions_supported = detail::check_extensions_supported (extensions);
+	if (!all_extensions_supported) {
+		return detail::Error<InstanceError>{ InstanceError::requested_extensions_not_present };
+	}
+
 	std::vector<const char*> layers;
 	for (auto& layer : info.layers)
 		layers.push_back (layer.c_str ());
@@ -499,33 +525,46 @@ int get_present_queue_index (VkPhysicalDevice const phys_device,
 	return -1;
 }
 
-PhysicalDeviceSelector::Suitable PhysicalDeviceSelector::is_device_suitable (VkPhysicalDevice phys_device) {
-	Suitable suitable = Suitable::yes;
-
+PhysicalDeviceSelector::PhysicalDeviceDesc PhysicalDeviceSelector::populate_device_details (
+    VkPhysicalDevice phys_device) {
+	PhysicalDeviceSelector::PhysicalDeviceDesc desc{};
+	desc.phys_device = phys_device;
 	auto queue_families = detail::get_vector_noerror<VkQueueFamilyProperties> (
 	    vkGetPhysicalDeviceQueueFamilyProperties, phys_device);
-	bool dedicated_compute = get_distinct_compute_queue_index (queue_families);
-	bool dedicated_transfer = get_distinct_transfer_queue_index (queue_families);
-	bool present_queue = get_present_queue_index (phys_device, info.surface, queue_families);
+	desc.queue_families = queue_families;
+
+	vkGetPhysicalDeviceProperties (phys_device, &desc.device_properties);
+	vkGetPhysicalDeviceFeatures (phys_device, &desc.device_features);
+	vkGetPhysicalDeviceMemoryProperties (phys_device, &desc.mem_properties);
+	return desc;
+}
+
+PhysicalDeviceSelector::Suitable PhysicalDeviceSelector::is_device_suitable (PhysicalDeviceDesc pd) {
+	Suitable suitable = Suitable::yes;
+
+	bool dedicated_compute = get_distinct_compute_queue_index (pd.queue_families);
+	bool dedicated_transfer = get_distinct_transfer_queue_index (pd.queue_families);
+	bool present_queue = get_present_queue_index (pd.phys_device, system_info.surface, pd.queue_families);
 
 	if (criteria.require_dedicated_compute_queue && !dedicated_compute) suitable = Suitable::no;
 	if (criteria.require_dedicated_transfer_queue && !dedicated_transfer) suitable = Suitable::no;
 	if (criteria.require_present && !present_queue) suitable = Suitable::no;
 
 	auto required_extensions_supported =
-	    detail::check_device_extension_support (phys_device, criteria.required_extensions);
+	    detail::check_device_extension_support (pd.phys_device, criteria.required_extensions);
 	if (required_extensions_supported.size () != criteria.required_extensions.size ())
 		suitable = Suitable::no;
 
 	auto desired_extensions_supported =
-	    detail::check_device_extension_support (phys_device, criteria.desired_extensions);
+	    detail::check_device_extension_support (pd.phys_device, criteria.desired_extensions);
 	if (desired_extensions_supported.size () != criteria.desired_extensions.size ())
 		suitable = Suitable::partial;
 
 
 	bool swapChainAdequate = false;
-	if (!info.headless) {
-		auto swapChainSupport_ret = detail::query_surface_support_details (phys_device, info.surface);
+	if (!system_info.headless) {
+		auto swapChainSupport_ret =
+		    detail::query_surface_support_details (pd.phys_device, system_info.surface);
 		if (swapChainSupport_ret.has_value ()) {
 			auto swapchain_support = swapChainSupport_ret.value ();
 			swapChainAdequate =
@@ -534,17 +573,33 @@ PhysicalDeviceSelector::Suitable PhysicalDeviceSelector::is_device_suitable (VkP
 	}
 	if (criteria.require_present && !swapChainAdequate) suitable = Suitable::no;
 
-	VkPhysicalDeviceMemoryProperties mem_properties;
-	vkGetPhysicalDeviceMemoryProperties (phys_device, &mem_properties);
+	if ((criteria.preferred_type == PreferredDeviceType::discrete &&
+	        pd.device_properties.deviceType != VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU) ||
+	    (criteria.preferred_type == PreferredDeviceType::integrated &&
+	        pd.device_properties.deviceType != VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU) ||
+	    (criteria.preferred_type == PreferredDeviceType::virtual_gpu &&
+	        pd.device_properties.deviceType != VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU)) {
+		if (criteria.allow_fallback)
+			suitable = Suitable::partial;
+		else
+			suitable = Suitable::no;
+	}
+
+	if (criteria.required_version < pd.device_properties.apiVersion) suitable = Suitable::no;
+	if (criteria.desired_version < pd.device_properties.apiVersion) suitable = Suitable::partial;
+
+	bool required_features_supported =
+	    detail::supports_features (pd.device_features, criteria.required_features);
+	if (!required_features_supported) suitable = Suitable::no;
 
 	bool has_required_memory = false;
 	bool has_preferred_memory = false;
-	for (int i = 0; i < mem_properties.memoryHeapCount; i++) {
-		if (mem_properties.memoryHeaps[i].flags & VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT) {
-			if (mem_properties.memoryHeaps[i].size > criteria.required_mem_size) {
+	for (int i = 0; i < pd.mem_properties.memoryHeapCount; i++) {
+		if (pd.mem_properties.memoryHeaps[i].flags & VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT) {
+			if (pd.mem_properties.memoryHeaps[i].size > criteria.required_mem_size) {
 				has_required_memory = true;
 			}
-			if (mem_properties.memoryHeaps[i].size > criteria.desired_mem_size) {
+			if (pd.mem_properties.memoryHeaps[i].size > criteria.desired_mem_size) {
 				has_preferred_memory = true;
 			}
 		}
@@ -552,40 +607,18 @@ PhysicalDeviceSelector::Suitable PhysicalDeviceSelector::is_device_suitable (VkP
 	if (!has_required_memory) suitable = Suitable::no;
 	if (!has_preferred_memory) suitable = Suitable::partial;
 
-	VkPhysicalDeviceProperties device_properties;
-	vkGetPhysicalDeviceProperties (phys_device, &device_properties);
-	if ((criteria.preferred_type == PreferredDeviceType::discrete &&
-	        device_properties.deviceType != VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU) ||
-	    (criteria.preferred_type == PreferredDeviceType::integrated &&
-	        device_properties.deviceType != VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU) ||
-	    (criteria.preferred_type == PreferredDeviceType::virtual_gpu &&
-	        device_properties.deviceType != VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU)) {
-		if (criteria.allow_fallback)
-			suitable = Suitable::partial;
-		else
-			suitable = Suitable::no;
-	}
-
-	if (criteria.required_version < device_properties.apiVersion) suitable = Suitable::no;
-	if (criteria.desired_version < device_properties.apiVersion) suitable = Suitable::partial;
-
-	VkPhysicalDeviceFeatures supported_features{};
-	vkGetPhysicalDeviceFeatures (phys_device, &supported_features);
-	bool required_features_supported =
-	    detail::supports_features (supported_features, criteria.required_features);
-	if (!required_features_supported) suitable = Suitable::no;
-
 	return suitable;
 }
 
 PhysicalDeviceSelector::PhysicalDeviceSelector (Instance const& instance) {
-	info.instance = instance.instance;
-	info.headless = instance.headless;
+	system_info.instance = instance.instance;
+	system_info.headless = instance.headless;
 	criteria.require_present = !instance.headless;
 }
 
 detail::Expected<PhysicalDevice, detail::Error<PhysicalDeviceError>> PhysicalDeviceSelector::select () {
-	auto physical_devices = detail::get_vector<VkPhysicalDevice> (vkEnumeratePhysicalDevices, info.instance);
+	auto physical_devices =
+	    detail::get_vector<VkPhysicalDevice> (vkEnumeratePhysicalDevices, system_info.instance);
 	if (!physical_devices.has_value ()) {
 		return detail::Error<PhysicalDeviceError>{ PhysicalDeviceError::failed_enumerate_physical_devices,
 			physical_devices.error () };
@@ -594,42 +627,50 @@ detail::Expected<PhysicalDevice, detail::Error<PhysicalDeviceError>> PhysicalDev
 		return detail::Error<PhysicalDeviceError>{ PhysicalDeviceError::no_physical_devices_found };
 	}
 
-	PhysicalDevice physical_device;
+	std::vector<PhysicalDeviceDesc> phys_device_descriptions;
+	for (auto& phys_device : physical_devices.value ()) {
+		phys_device_descriptions.push_back (populate_device_details (phys_device));
+	}
+
+	PhysicalDeviceDesc selected_device{};
+
 	if (criteria.use_first_gpu_unconditionally) {
-		physical_device.phys_device = physical_devices.value ().at (0);
+		selected_device = phys_device_descriptions.at (0);
 	} else {
-		for (const auto& device : physical_devices.value ()) {
+		for (const auto& device : phys_device_descriptions) {
 			auto suitable = is_device_suitable (device);
 			if (suitable == Suitable::yes) {
-				physical_device.phys_device = device;
+				selected_device = device;
 				break;
 			} else if (suitable == Suitable::partial) {
-				physical_device.phys_device = device;
+				selected_device = device;
 			}
 		}
 	}
 
-	if (physical_device.phys_device == VK_NULL_HANDLE) {
+	if (selected_device.phys_device == VK_NULL_HANDLE) {
 		return detail::Error<PhysicalDeviceError>{ PhysicalDeviceError::no_suitable_device };
 	}
+	PhysicalDevice out_device{};
+	out_device.phys_device = selected_device.phys_device;
+	out_device.surface = system_info.surface;
+	out_device.features = criteria.required_features;
+	out_device.queue_families = selected_device.queue_families;
 
-	physical_device.surface = info.surface;
-	physical_device.features = criteria.required_features;
-
-	physical_device.extensions_to_enable.insert (physical_device.extensions_to_enable.end (),
+	out_device.extensions_to_enable.insert (out_device.extensions_to_enable.end (),
 	    criteria.required_extensions.begin (),
 	    criteria.required_extensions.end ());
 	auto desired_extensions_supported =
-	    detail::check_device_extension_support (physical_device.phys_device, criteria.desired_extensions);
-	physical_device.extensions_to_enable.insert (physical_device.extensions_to_enable.end (),
+	    detail::check_device_extension_support (out_device.phys_device, criteria.desired_extensions);
+	out_device.extensions_to_enable.insert (out_device.extensions_to_enable.end (),
 	    desired_extensions_supported.begin (),
 	    desired_extensions_supported.end ());
-	return physical_device;
+	return out_device;
 }
 
 PhysicalDeviceSelector& PhysicalDeviceSelector::set_surface (VkSurfaceKHR surface) {
-	info.surface = surface;
-	info.headless = false;
+	system_info.surface = surface;
+	system_info.headless = false;
 	return *this;
 }
 PhysicalDeviceSelector& PhysicalDeviceSelector::prefer_gpu_device_type (PreferredDeviceType type) {
@@ -706,21 +747,41 @@ void destroy_device (Device device) { vkDestroyDevice (device.device, nullptr); 
 DeviceBuilder::DeviceBuilder (PhysicalDevice phys_device) {
 	info.physical_device = phys_device;
 	info.extensions = phys_device.extensions_to_enable;
+	info.queue_families = phys_device.queue_families;
 }
 
 detail::Expected<Device, detail::Error<DeviceError>> DeviceBuilder::build () {
 
-	auto queue_families = detail::get_vector_noerror<VkQueueFamilyProperties> (
-	    vkGetPhysicalDeviceQueueFamilyProperties, info.physical_device.phys_device);
+	std::vector<CustomQueueDescription> queue_descriptions;
+	queue_descriptions.insert (
+	    queue_descriptions.end (), info.queue_descriptions.begin (), info.queue_descriptions.end ());
+
+	if (queue_descriptions.size () == 0) {
+		int graphics = get_graphics_queue_index (info.queue_families);
+		if (graphics >= 0) {
+			queue_descriptions.push_back ({ static_cast<uint32_t> (graphics), 1, { 1.0f } });
+		}
+		if (info.request_compute_queue) {
+			int compute = get_distinct_compute_queue_index (info.queue_families);
+			if (compute >= 0) {
+				queue_descriptions.push_back ({ static_cast<uint32_t> (compute), 1, { 1.0f } });
+			}
+		}
+		if (info.request_transfer_queue) {
+			int transfer = get_distinct_transfer_queue_index (info.queue_families);
+			if (transfer >= 0) {
+				queue_descriptions.push_back ({ static_cast<uint32_t> (transfer), 1, { 1.0f } });
+			}
+		}
+	}
 
 	std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
-	float priority = 1.0f;
-	for (int i = 0; i < queue_families.size (); i++) {
+	for (auto& desc : queue_descriptions) {
 		VkDeviceQueueCreateInfo queue_create_info = {};
 		queue_create_info.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
-		queue_create_info.queueFamilyIndex = static_cast<uint32_t> (i);
-		queue_create_info.queueCount = 1;
-		queue_create_info.pQueuePriorities = &priority;
+		queue_create_info.queueFamilyIndex = desc.index;
+		queue_create_info.queueCount = desc.count;
+		queue_create_info.pQueuePriorities = desc.priorities.data ();
 		queueCreateInfos.push_back (queue_create_info);
 	}
 
@@ -748,6 +809,7 @@ detail::Expected<Device, detail::Error<DeviceError>> DeviceBuilder::build () {
 	}
 	device.physical_device = info.physical_device;
 	device.surface = info.physical_device.surface;
+	device.queue_families = info.queue_families;
 	return device;
 }
 
@@ -755,6 +817,20 @@ template <typename T> DeviceBuilder& DeviceBuilder::add_pNext (T* structure) {
 	info.pNext_chain.push_back (reinterpret_cast<VkBaseOutStructure*> (structure));
 	return *this;
 }
+
+DeviceBuilder& DeviceBuilder::request_dedicated_compute_queue (bool compute) {
+	info.request_compute_queue = compute;
+	return *this;
+}
+DeviceBuilder& DeviceBuilder::request_dedicated_transfer_queue (bool transfer) {
+	info.request_transfer_queue = transfer;
+	return *this;
+}
+DeviceBuilder& DeviceBuilder::custom_queue_setup (std::vector<CustomQueueDescription> queue_descriptions) {
+	info.queue_descriptions = queue_descriptions;
+	return *this;
+}
+
 
 // ---- Getting Queues ---- //
 

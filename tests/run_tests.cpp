@@ -1,6 +1,8 @@
 #include "common.h"
 
 int test_happy_path () {
+	printf ("happy path\n");
+
 	auto window = create_window_glfw ();
 
 	vkb::InstanceBuilder instance_builder;
@@ -36,6 +38,7 @@ int test_happy_path () {
 
 
 int test_instance_basic () {
+	printf ("\nbasic instance\n");
 
 	vkb::InstanceBuilder builder;
 
@@ -56,10 +59,13 @@ int test_instance_basic () {
 	if (!instance_ret.has_value ()) {
 		return 1;
 	}
+	vkb::destroy_instance (instance_ret.value ());
+
 	return 0;
 }
 
 int test_instance_headless () {
+	printf ("\nheadless instance\n");
 
 	vkb::InstanceBuilder builder;
 
@@ -74,10 +80,13 @@ int test_instance_headless () {
 	if (!instance_ret.has_value ()) {
 		return 1;
 	}
+	vkb::destroy_instance (instance_ret.value ());
 	return 0;
 }
 
 int test_physical_device_selection () {
+	printf ("\nphysical device selection\n");
+
 	vkb::InstanceBuilder instance_builder;
 	auto instance_ret = instance_builder.set_default_debug_messenger ().build ();
 	auto instance = instance_ret.value ();
@@ -100,15 +109,25 @@ int test_physical_device_selection () {
 }
 
 int test_device_creation () {
+	printf ("\ndevice creation\n");
 	vkb::InstanceBuilder instance_builder;
 	auto instance_ret = instance_builder.set_default_debug_messenger ().build ();
+	if (!instance_ret.has_value ()) {
+		printf ("couldn't create instance %i\n", static_cast<uint32_t> (instance_ret.error ().type));
+		return -1;
+	}
 	auto instance = instance_ret.value ();
+
 	auto window = create_window_glfw ();
 	auto surface = create_surface_glfw (instance.instance, window);
 
 	vkb::PhysicalDeviceSelector selector (instance);
 	auto phys_dev_ret = selector.set_surface (surface).select ();
 	auto phys_dev = phys_dev_ret.value ();
+	if (!phys_dev_ret.has_value ()) {
+		printf ("couldn't select device %i\n", static_cast<uint32_t> (phys_dev_ret.error ().type));
+		return -1;
+	}
 
 	vkb::DeviceBuilder device_builder (phys_dev);
 	auto dev_ret = device_builder.build ();
@@ -124,27 +143,9 @@ int test_device_creation () {
 }
 
 int main () {
-	printf ("happy path\n");
 	test_happy_path ();
-
-	printf ("\nbasic instance\n");
-	{
-		auto ret = test_instance_basic ();
-		if (ret != 0) printf ("test_failed\n");
-	}
-	printf ("\nheadless instance\n");
-	{
-		auto ret = test_instance_headless ();
-		if (ret != 0) printf ("test_failed\n");
-	}
-	printf ("\nphysical device selection\n");
-	{
-		auto ret = test_physical_device_selection ();
-		if (ret != 0) printf ("test_failed\n");
-	}
-	printf ("\ndevice creation\n");
-	{
-		auto ret = test_device_creation ();
-		if (ret != 0) printf ("test_failed\n");
-	}
+	test_instance_basic ();
+	test_instance_headless ();
+	test_physical_device_selection ();
+	test_device_creation ();
 }

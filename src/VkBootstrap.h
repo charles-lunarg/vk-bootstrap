@@ -2,8 +2,6 @@
 
 #include <cassert>
 
-#include <array>
-#include <string>
 #include <vector>
 
 #include <vulkan/vulkan.h>
@@ -130,18 +128,18 @@ class InstanceBuilder {
 	public:
 	detail::Expected<Instance, detail::Error<InstanceError>> build (); // use builder pattern
 
-	InstanceBuilder& set_app_name (std::string app_name);
-	InstanceBuilder& set_engine_name (std::string engine_name);
+	InstanceBuilder& set_app_name (const char* app_name);
+	InstanceBuilder& set_engine_name (const char* engine_name);
 
 	InstanceBuilder& set_app_version (uint32_t major, uint32_t minor, uint32_t patch);
 	InstanceBuilder& set_engine_version (uint32_t major, uint32_t minor, uint32_t patch);
 	InstanceBuilder& set_api_version (uint32_t major, uint32_t minor, uint32_t patch);
 
-	InstanceBuilder& add_layer (std::string app_name);
-	InstanceBuilder& add_extension (std::string app_name);
+	InstanceBuilder& add_layer (const char* app_name);
+	InstanceBuilder& add_extension (const char* app_name);
 
-	bool check_and_add_layer (std::string app_name);
-	bool check_and_add_extension (std::string app_name);
+	bool check_and_add_layer (const char* app_name);
+	bool check_and_add_extension (const char* app_name);
 
 	InstanceBuilder& setup_validation_layers (bool enable_validation = true);
 	InstanceBuilder& set_headless (bool headless = false);
@@ -162,15 +160,15 @@ class InstanceBuilder {
 	private:
 	struct InstanceInfo {
 		// VkApplicationInfo
-		std::string app_name;
-		std::string engine_name;
+		const char* app_name;
+		const char* engine_name;
 		uint32_t application_version = 0;
 		uint32_t engine_version = 0;
 		uint32_t api_version = VK_MAKE_VERSION (1, 0, 0);
 
 		// VkInstanceCreateInfo
-		std::vector<std::string> layers;
-		std::vector<std::string> extensions;
+		std::vector<const char*> layers;
+		std::vector<const char*> extensions;
 		VkInstanceCreateFlags flags = 0;
 		std::vector<VkBaseOutStructure*> pNext_elements;
 
@@ -228,7 +226,7 @@ struct PhysicalDevice {
 
 	private:
 	VkPhysicalDeviceFeatures features{};
-	std::vector<std::string> extensions_to_enable;
+	std::vector<const char*> extensions_to_enable;
 	std::vector<VkQueueFamilyProperties> queue_families;
 	friend class PhysicalDeviceSelector;
 	friend class DeviceBuilder;
@@ -253,11 +251,11 @@ struct PhysicalDeviceSelector {
 	PhysicalDeviceSelector& required_device_memory_size (VkDeviceSize size);
 	PhysicalDeviceSelector& desired_device_memory_size (VkDeviceSize size);
 
-	PhysicalDeviceSelector& add_required_extension (std::string extension);
-	PhysicalDeviceSelector& add_required_extensions (std::vector<std::string> extensions);
+	PhysicalDeviceSelector& add_required_extension (const char* extension);
+	PhysicalDeviceSelector& add_required_extensions (std::vector<const char*> extensions);
 
-	PhysicalDeviceSelector& add_desired_extension (std::string extension);
-	PhysicalDeviceSelector& add_desired_extensions (std::vector<std::string> extensions);
+	PhysicalDeviceSelector& add_desired_extension (const char* extension);
+	PhysicalDeviceSelector& add_desired_extensions (std::vector<const char*> extensions);
 
 	PhysicalDeviceSelector& set_desired_version (uint32_t major, uint32_t minor);
 	PhysicalDeviceSelector& set_minimum_version (uint32_t major = 1, uint32_t minor = 0);
@@ -292,8 +290,8 @@ struct PhysicalDeviceSelector {
 		VkDeviceSize required_mem_size = 0;
 		VkDeviceSize desired_mem_size = 0;
 
-		std::vector<std::string> required_extensions;
-		std::vector<std::string> desired_extensions;
+		std::vector<const char*> required_extensions;
+		std::vector<const char*> desired_extensions;
 
 		uint32_t required_version = VK_MAKE_VERSION (1, 0, 0);
 		uint32_t desired_version = VK_MAKE_VERSION (1, 0, 0);
@@ -346,7 +344,7 @@ class DeviceBuilder {
 		VkDeviceCreateFlags flags = 0;
 		std::vector<VkBaseOutStructure*> pNext_chain;
 		PhysicalDevice physical_device;
-		std::vector<std::string> extensions;
+		std::vector<const char*> extensions;
 		std::vector<VkQueueFamilyProperties> queue_families;
 		std::vector<CustomQueueDescription> queue_descriptions;
 		bool request_compute_queue = true;

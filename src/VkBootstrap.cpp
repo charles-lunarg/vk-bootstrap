@@ -172,17 +172,17 @@ detail::Expected<Instance, detail::Error<InstanceError>> InstanceBuilder::build 
 	VkApplicationInfo app_info = {};
 	app_info.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
 	app_info.pNext = nullptr;
-	app_info.pApplicationName = info.app_name.c_str ();
+	app_info.pApplicationName = info.app_name;
 	app_info.applicationVersion = info.application_version;
-	app_info.pEngineName = info.engine_name.c_str ();
+	app_info.pEngineName = info.engine_name;
 	app_info.engineVersion = info.engine_version;
 	app_info.apiVersion = info.api_version;
 
 	std::vector<const char*> extensions;
 	for (auto& ext : info.extensions)
-		extensions.push_back (ext.c_str ());
+		extensions.push_back (ext);
 	if (info.debug_callback != nullptr) {
-		extensions.push_back ("VK_EXT_debug_utils");
+		extensions.push_back (VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
 	}
 
 	if (!info.headless_context) {
@@ -208,7 +208,7 @@ detail::Expected<Instance, detail::Error<InstanceError>> InstanceBuilder::build 
 
 	std::vector<const char*> layers;
 	for (auto& layer : info.layers)
-		layers.push_back (layer.c_str ());
+		layers.push_back (layer);
 
 	if (info.enable_validation_layers) {
 		layers.push_back ("VK_LAYER_KHRONOS_validation");
@@ -280,11 +280,11 @@ detail::Expected<Instance, detail::Error<InstanceError>> InstanceBuilder::build 
 	return instance;
 }
 
-InstanceBuilder& InstanceBuilder::set_app_name (std::string app_name) {
+InstanceBuilder& InstanceBuilder::set_app_name (const char* app_name) {
 	info.app_name = app_name;
 	return *this;
 }
-InstanceBuilder& InstanceBuilder::set_engine_name (std::string engine_name) {
+InstanceBuilder& InstanceBuilder::set_engine_name (const char* engine_name) {
 	info.engine_name = engine_name;
 	return *this;
 }
@@ -300,11 +300,11 @@ InstanceBuilder& InstanceBuilder::set_api_version (uint32_t major, uint32_t mino
 	info.api_version = VK_MAKE_VERSION (major, minor, patch);
 	return *this;
 }
-InstanceBuilder& InstanceBuilder::add_layer (std::string layer_name) {
+InstanceBuilder& InstanceBuilder::add_layer (const char* layer_name) {
 	info.layers.push_back (layer_name);
 	return *this;
 }
-InstanceBuilder& InstanceBuilder::add_extension (std::string extension_name) {
+InstanceBuilder& InstanceBuilder::add_extension (const char* extension_name) {
 	info.extensions.push_back (extension_name);
 	return *this;
 }
@@ -412,13 +412,13 @@ VkFormat find_supported_format (VkPhysicalDevice physical_device,
 	return VK_FORMAT_UNDEFINED;
 }
 
-std::vector<std::string> check_device_extension_support (
-    VkPhysicalDevice device, std::vector<std::string> desired_extensions) {
+std::vector<const char*> check_device_extension_support (
+    VkPhysicalDevice device, std::vector<const char*> desired_extensions) {
 	auto available_extensions =
 	    detail::get_vector<VkExtensionProperties> (vkEnumerateDeviceExtensionProperties, device, nullptr);
 	if (!available_extensions.has_value ()) return {};
 
-	std::vector<std::string> extensions_to_enable;
+	std::vector<const char*> extensions_to_enable;
 	for (const auto& extension : available_extensions.value ()) {
 		for (auto& req_ext : desired_extensions) {
 			if (req_ext == extension.extensionName) extensions_to_enable.push_back (req_ext);
@@ -701,20 +701,20 @@ PhysicalDeviceSelector& PhysicalDeviceSelector::desired_device_memory_size (VkDe
 	criteria.desired_mem_size = size;
 	return *this;
 }
-PhysicalDeviceSelector& PhysicalDeviceSelector::add_required_extension (std::string extension) {
+PhysicalDeviceSelector& PhysicalDeviceSelector::add_required_extension (const char* extension) {
 	criteria.required_extensions.push_back (extension);
 	return *this;
 }
-PhysicalDeviceSelector& PhysicalDeviceSelector::add_required_extensions (std::vector<std::string> extensions) {
+PhysicalDeviceSelector& PhysicalDeviceSelector::add_required_extensions (std::vector<const char*> extensions) {
 	criteria.required_extensions.insert (
 	    criteria.required_extensions.end (), extensions.begin (), extensions.end ());
 	return *this;
 }
-PhysicalDeviceSelector& PhysicalDeviceSelector::add_desired_extension (std::string extension) {
+PhysicalDeviceSelector& PhysicalDeviceSelector::add_desired_extension (const char* extension) {
 	criteria.desired_extensions.push_back (extension);
 	return *this;
 }
-PhysicalDeviceSelector& PhysicalDeviceSelector::add_desired_extensions (std::vector<std::string> extensions) {
+PhysicalDeviceSelector& PhysicalDeviceSelector::add_desired_extensions (std::vector<const char*> extensions) {
 	criteria.desired_extensions.insert (
 	    criteria.desired_extensions.end (), extensions.begin (), extensions.end ());
 	return *this;
@@ -787,7 +787,7 @@ detail::Expected<Device, detail::Error<DeviceError>> DeviceBuilder::build () {
 
 	std::vector<const char*> extensions;
 	for (auto& ext : info.extensions)
-		extensions.push_back (ext.c_str ());
+		extensions.push_back (ext);
 	if (info.physical_device.surface != VK_NULL_HANDLE)
 		extensions.push_back ({ VK_KHR_SWAPCHAIN_EXTENSION_NAME });
 

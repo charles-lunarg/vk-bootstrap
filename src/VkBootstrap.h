@@ -348,8 +348,8 @@ class DeviceBuilder {
 		std::vector<const char*> extensions;
 		std::vector<VkQueueFamilyProperties> queue_families;
 		std::vector<CustomQueueDescription> queue_descriptions;
-		bool request_compute_queue = true;
-		bool request_transfer_queue = true;
+		bool request_compute_queue = false;
+		bool request_transfer_queue = false;
 	} info;
 };
 

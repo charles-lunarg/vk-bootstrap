@@ -172,9 +172,9 @@ detail::Expected<Instance, detail::Error<InstanceError>> InstanceBuilder::build 
 	VkApplicationInfo app_info = {};
 	app_info.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
 	app_info.pNext = nullptr;
-	app_info.pApplicationName = info.app_name;
+	app_info.pApplicationName = info.app_name != nullptr ? info.app_name : "";
 	app_info.applicationVersion = info.application_version;
-	app_info.pEngineName = info.engine_name;
+	app_info.pEngineName = info.engine_name != nullptr ? info.engine_name : "";
 	app_info.engineVersion = info.engine_version;
 	app_info.apiVersion = info.api_version;
 

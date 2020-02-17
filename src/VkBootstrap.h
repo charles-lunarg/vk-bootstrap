@@ -158,8 +158,8 @@ class InstanceBuilder {
 	private:
 	struct InstanceInfo {
 		// VkApplicationInfo
-		const char* app_name;
-		const char* engine_name;
+		const char* app_name = nullptr;
+		const char* engine_name = nullptr;
 		uint32_t application_version = 0;
 		uint32_t engine_version = 0;
 		uint32_t api_version = VK_MAKE_VERSION (1, 0, 0);

@@ -932,6 +932,9 @@ VkPresentModeKHR find_present_mode (std::vector<VkPresentModeKHR> const& availab
 	return VK_PRESENT_MODE_FIFO_KHR;
 }
 
+template <typename T> T minimum (T a, T b) { return a < b ? a : b; }
+template <typename T> T maximum (T a, T b) { return a > b ? a : b; }
+
 VkExtent2D find_extent (
     VkSurfaceCapabilitiesKHR const& capabilities, uint32_t desired_width, uint32_t desired_height) {
 	if (capabilities.currentExtent.width != UINT32_MAX) {
@@ -941,10 +944,10 @@ VkExtent2D find_extent (
 		const int HEIGHT = 600;
 		VkExtent2D actualExtent = { WIDTH, HEIGHT };
 
-		actualExtent.width = std::max (capabilities.minImageExtent.width,
-		    std::min (capabilities.maxImageExtent.width, actualExtent.width));
-		actualExtent.height = std::max (capabilities.minImageExtent.height,
-		    std::min (capabilities.maxImageExtent.height, actualExtent.height));
+		actualExtent.width = maximum (capabilities.minImageExtent.width,
+		    minimum (capabilities.maxImageExtent.width, actualExtent.width));
+		actualExtent.height = maximum (capabilities.minImageExtent.height,
+		    minimum (capabilities.maxImageExtent.height, actualExtent.height));
 
 		return actualExtent;
 	}

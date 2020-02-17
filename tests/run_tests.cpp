@@ -69,14 +69,18 @@ int test_instance_headless () {
 
 	vkb::InstanceBuilder builder;
 
-	auto instance_ret = builder.setup_validation_layers ()
-	                        .set_headless ()
-	                        .set_app_version (4, 5, 6)
-	                        .set_app_name ("headless")
-	                        .set_engine_name ("nick")
-	                        .set_api_version (1, 0, 34)
-	                        .set_default_debug_messenger ()
-	                        .build ();
+	auto instance_ret =
+	    builder.setup_validation_layers ()
+	        .set_headless ()
+	        .set_app_version (4, 5, 6)
+	        .set_app_name ("headless")
+	        .set_engine_name ("nick")
+	        .set_api_version (1, 0, 34)
+	        .set_default_debug_messenger ()
+	        .add_validation_feature_enable (VkValidationFeatureEnableEXT::VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT)
+	        .add_validation_feature_disable (VkValidationFeatureDisableEXT::VK_VALIDATION_FEATURE_DISABLE_OBJECT_LIFETIMES_EXT)
+	        .add_validation_disable (VkValidationCheckEXT::VK_VALIDATION_CHECK_SHADERS_EXT)
+	        .build ();
 	if (!instance_ret.has_value ()) {
 		return 1;
 	}

@@ -148,14 +148,13 @@ bool check_extensions_supported (std::vector<const char*> extension_names) {
 }
 
 template <typename T>
-void setup_pNext_chain (T& structure, std::vector<VkBaseOutStructure*>& structs) {
+void setup_pNext_chain (T& structure, std::vector<VkBaseOutStructure*> const& structs) {
 	structure.pNext = nullptr;
 	if (structs.size () <= 0) return;
 	for (int i = 0; i < structs.size () - 1; i++) {
-		VkBaseOutStructure* cur = reinterpret_cast<VkBaseOutStructure*> (&structs[i]);
-		cur = reinterpret_cast<VkBaseOutStructure*> (&structs[i + 1]);
+		structs.at (i)->pNext = structs.at (i + 1);
 	}
-	structure.pNext = &structs.at (0);
+	structure.pNext = structs.at (0);
 }
 } // namespace detail
 

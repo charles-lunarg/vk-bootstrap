@@ -51,9 +51,11 @@ void device_init()
     }
     vkb::Device device = dev_ret.value();
 
-    VkQueue graphics_queue = get_queue_graphics(device).value();
-    VkQueue compute_queue = get_queue_compute(device).value();
-    VkQueue transfer_queue = get_queue_transfer(device).value();
+    auto graphics_queue_ret = get_graphics_queue(device).value();
+    if (!graphics_queue_ret.has_value()){
+        //error
+    }
+    VkQueue graphics_queue = graphics_queue_ret.value();
 }
 
 ```

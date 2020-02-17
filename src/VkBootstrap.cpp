@@ -186,13 +186,13 @@ detail::Expected<Instance, detail::Error<InstanceError>> InstanceBuilder::build 
 	}
 
 	if (!info.headless_context) {
-		extensions.push_back (VK_KHR_SURFACE_EXTENSION_NAME);
+		extensions.push_back ("VK_KHR_surface");
 #if defined(_WIN32)
 		extensions.push_back ("VK_KHR_win32_surface");
 #elif defined(__ANDROID__)
-		extensions.push_back (VK_KHR_ANDROID_SURFACE_EXTENSION_NAME);
+		extensions.push_back ("VK_KHR_android_surface");
 #elif defined(_DIRECT2DISPLAY)
-		extensions.push_back (VK_KHR_DISPLAY_EXTENSION_NAME);
+		extensions.push_back ("VK_KHR_display");
 #elif defined(__linux__)
 		extensions.push_back ("VK_KHR_xcb_surface");
 		extensions.push_back ("VK_KHR_xlib_surface");
@@ -355,6 +355,8 @@ InstanceBuilder& InstanceBuilder::add_validation_feature_disable (VkValidationFe
 	return *this;
 }
 
+// ---- Physical Device ---- //
+
 namespace detail {
 
 struct SurfaceSupportDetails {
@@ -497,18 +499,30 @@ int get_graphics_queue_index (std::vector<VkQueueFamilyProperties> const& famili
 	return -1;
 }
 int get_distinct_compute_queue_index (std::vector<VkQueueFamilyProperties> const& families) {
+	int compute = -1;
 	for (int i = 0; i < families.size (); i++) {
 		if ((families[i].queueFlags & VK_QUEUE_COMPUTE_BIT) &&
-		    ((families[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) == 0))
-			return i;
+		    ((families[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) == 0)) {
+			if ((families[i].queueFlags & VK_QUEUE_TRANSFER_BIT) == 0) {
+				return i;
+			} else {
+				compute = i;
+			}
+		}
 	}
-	return -1;
+	return compute;
 }
 int get_distinct_transfer_queue_index (std::vector<VkQueueFamilyProperties> const& families) {
+	int transfer = -1;
 	for (int i = 0; i < families.size (); i++) {
 		if ((families[i].queueFlags & VK_QUEUE_TRANSFER_BIT) &&
-		    ((families[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) == 0))
-			return true;
+		    ((families[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) == 0)) {
+			if ((families[i].queueFlags & VK_QUEUE_COMPUTE_BIT) == 0) {
+				return i;
+			} else {
+				transfer = i;
+			}
+		}
 	}
 	return -1;
 }
@@ -736,10 +750,6 @@ PhysicalDeviceSelector& PhysicalDeviceSelector::select_first_device_unconditiona
 	return *this;
 }
 
-// ---- Queue Selection ---- //
-
-
-
 // ---- Device ---- //
 
 void destroy_device (Device device) { vkDestroyDevice (device.device, nullptr); }
@@ -832,7 +842,7 @@ DeviceBuilder& DeviceBuilder::custom_queue_setup (std::vector<CustomQueueDescrip
 }
 
 
-// ---- Getting Queues ---- //
+// ---- Queues ---- //
 
 detail::Expected<uint32_t, detail::Error<QueueError>> get_present_queue_index (Device const& device) {
 	int present = get_present_queue_index (
@@ -865,31 +875,31 @@ VkQueue get_queue (VkDevice device, int32_t family) {
 detail::Expected<VkQueue, detail::Error<QueueError>> get_present_queue (Device const& device) {
 	int present = get_present_queue_index (
 	    device.physical_device.phys_device, device.surface, device.queue_families);
-	if (present >= 0) {
-		return get_queue (device.device, present);
+	if (present < 0) {
+		return detail::Error<QueueError>{ QueueError::present_unavailable };
 	}
-	return detail::Error<QueueError>{ QueueError::present_unavailable };
+	return get_queue (device.device, present);
 }
 detail::Expected<VkQueue, detail::Error<QueueError>> get_graphics_queue (Device const& device) {
 	int graphics = get_graphics_queue_index (device.queue_families);
-	if (graphics >= 0) {
-		return get_queue (device.device, graphics);
+	if (graphics < 0) {
+		return detail::Error<QueueError>{ QueueError::invalid_queue_family_index };
 	}
-	return detail::Error<QueueError>{ QueueError::invalid_queue_family_index };
+	return get_queue (device.device, graphics);
 }
 detail::Expected<VkQueue, detail::Error<QueueError>> get_compute_queue (Device const& device) {
 	int compute = get_distinct_compute_queue_index (device.queue_families);
-	if (compute >= 0) {
-		return get_queue (device.device, compute);
+	if (compute < 0) {
+		return detail::Error<QueueError>{ QueueError::compute_unavailable };
 	}
-	return detail::Error<QueueError>{ QueueError::compute_unavailable };
+	return get_queue (device.device, compute);
 }
 detail::Expected<VkQueue, detail::Error<QueueError>> get_transfer_queue (Device const& device) {
 	int transfer = get_distinct_transfer_queue_index (device.queue_families);
-	if (transfer >= 0) {
-		return get_queue (device.device, transfer);
+	if (transfer < 0) {
+		return detail::Error<QueueError>{ QueueError::transfer_unavailable };
 	}
-	return detail::Error<QueueError>{ QueueError::transfer_unavailable };
+	return get_queue (device.device, transfer);
 }
 
 

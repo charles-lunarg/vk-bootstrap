@@ -113,8 +113,6 @@ struct Instance {
 
 	private:
 	bool headless = false;
-	bool validation_enabled = false;
-	bool debug_callback_enabled = false;
 
 	friend class InstanceBuilder;
 	friend class PhysicalDeviceSelector;
@@ -321,14 +319,15 @@ struct Device {
 void destroy_device (Device device);
 
 struct CustomQueueDescription {
-	uint32_t index;
-	uint32_t count;
+	uint32_t index = 0;
+	uint32_t count = 0;
 	std::vector<float> priorities;
 };
 
 class DeviceBuilder {
 	public:
-	DeviceBuilder (PhysicalDevice device);
+	DeviceBuilder (PhysicalDevice physical_device);
+
 	detail::Expected<Device, detail::Error<DeviceError>> build ();
 
 	template <typename T> DeviceBuilder& add_pNext (T* structure);

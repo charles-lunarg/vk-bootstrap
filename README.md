@@ -51,7 +51,7 @@ void device_init()
     }
     vkb::Device device = dev_ret.value();
 
-    auto graphics_queue_ret = get_graphics_queue(device).value();
+    auto graphics_queue_ret = vkb::get_graphics_queue(device);
     if (!graphics_queue_ret.has_value()){
         //error
     }

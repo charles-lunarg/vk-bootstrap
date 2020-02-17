@@ -319,6 +319,8 @@ struct Device {
 void destroy_device (Device device);
 
 struct CustomQueueDescription {
+	CustomQueueDescription (uint32_t index, uint32_t count, std::vector<float> priorities)
+	: index (index), count (count), priorities (priorities) {}
 	uint32_t index = 0;
 	uint32_t count = 0;
 	std::vector<float> priorities;

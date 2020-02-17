@@ -769,18 +769,20 @@ detail::Expected<Device, detail::Error<DeviceError>> DeviceBuilder::build () {
 	if (queue_descriptions.size () == 0) {
 		int graphics = get_graphics_queue_index (info.queue_families);
 		if (graphics >= 0) {
-			queue_descriptions.push_back ({ static_cast<uint32_t> (graphics), 1, { 1.0f } });
+			queue_descriptions.push_back ({ static_cast<uint32_t> (graphics), 1, std::vector<float>{ 1.0f } });
 		}
 		if (info.request_compute_queue) {
 			int compute = get_distinct_compute_queue_index (info.queue_families);
 			if (compute >= 0) {
-				queue_descriptions.push_back ({ static_cast<uint32_t> (compute), 1, { 1.0f } });
+				queue_descriptions.push_back (
+				    { static_cast<uint32_t> (compute), 1, std::vector<float>{ 1.0f } });
 			}
 		}
 		if (info.request_transfer_queue) {
 			int transfer = get_distinct_transfer_queue_index (info.queue_families);
 			if (transfer >= 0) {
-				queue_descriptions.push_back ({ static_cast<uint32_t> (transfer), 1, { 1.0f } });
+				queue_descriptions.push_back (
+				    { static_cast<uint32_t> (transfer), 1, std::vector<float>{ 1.0f } });
 			}
 		}
 	}

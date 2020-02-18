@@ -106,44 +106,42 @@ VkBool32 default_debug_callback (VkDebugUtilsMessageSeverityFlagBitsEXT messageS
 }
 
 namespace detail {
-bool check_layers_supported (std::vector<const char*> layer_names) {
-	auto available_layers = detail::get_vector<VkLayerProperties> (vkEnumerateInstanceLayerProperties);
-	if (!available_layers.has_value ()) {
-		return false; // maybe report error?
+bool check_layer_supported (std::vector<VkLayerProperties> available_layers, const char* layer_name) {
+	if (!layer_name) return false;
+	for (const auto& layer_properties : available_layers) {
+		if (strcmp (layer_name, layer_properties.layerName) == 0) {
+			return true;
+		}
 	}
+	return false;
+}
+
+bool check_layers_supported (std::vector<VkLayerProperties> available_layers, std::vector<const char*> layer_names) {
 	bool all_found = true;
 	for (const auto& layer_name : layer_names) {
-		bool found = false;
-		for (const auto& layer_properties : available_layers.value ()) {
-			if (strcmp (layer_name, layer_properties.layerName) == 0) {
-				found = true;
-				break;
-			}
-		}
+		bool found = check_layer_supported (available_layers, layer_name);
 		if (!found) all_found = false;
 	}
-
 	return all_found;
 }
 
-bool check_extensions_supported (std::vector<const char*> extension_names) {
-	auto available_extensions =
-	    detail::get_vector<VkExtensionProperties> (vkEnumerateInstanceExtensionProperties, nullptr);
-	if (!available_extensions.has_value ()) {
-		return false; // maybe report error?
+bool check_extension_supported (std::vector<VkExtensionProperties> available_extensions, const char* extension_name) {
+	if (!extension_name) return false;
+	for (const auto& layer_properties : available_extensions) {
+		if (strcmp (extension_name, layer_properties.extensionName) == 0) {
+			return true;
+		}
 	}
+	return false;
+}
+
+bool check_extensions_supported (std::vector<VkExtensionProperties> available_extensions,
+    std::vector<const char*> extension_names) {
 	bool all_found = true;
 	for (const auto& extension_name : extension_names) {
-		bool found = false;
-		for (const auto& layer_properties : available_extensions.value ()) {
-			if (strcmp (extension_name, layer_properties.extensionName) == 0) {
-				found = true;
-				break;
-			}
-		}
+		bool found = check_extension_supported (available_extensions, extension_name);
 		if (!found) all_found = false;
 	}
-
 	return all_found;
 }
 
@@ -156,6 +154,8 @@ void setup_pNext_chain (T& structure, std::vector<VkBaseOutStructure*> const& st
 	}
 	structure.pNext = structs.at (0);
 }
+const char* validation_layer_name = "VK_LAYER_KHRONOS_validation";
+
 } // namespace detail
 
 void destroy_instance (Instance instance) {
@@ -163,6 +163,17 @@ void destroy_instance (Instance instance) {
 		if (instance.debug_messenger != nullptr)
 			destroy_debug_utils_messenger (instance.instance, instance.debug_messenger);
 		vkDestroyInstance (instance.instance, nullptr);
+	}
+}
+InstanceBuilder::InstanceBuilder () {
+	auto available_extensions =
+	    detail::get_vector<VkExtensionProperties> (vkEnumerateInstanceExtensionProperties, nullptr);
+	if (available_extensions.has_value ()) {
+		system.available_extensions = available_extensions.value ();
+	}
+	auto available_layers = detail::get_vector<VkLayerProperties> (vkEnumerateInstanceLayerProperties);
+	if (available_layers.has_value ()) {
+		system.available_layers = available_layers.value ();
 	}
 }
 
@@ -200,7 +211,7 @@ detail::Expected<Instance, detail::Error<InstanceError>> InstanceBuilder::build 
 		extensions.push_back ("VK_KHR_metal_surface");
 #endif
 	}
-	bool all_extensions_supported = detail::check_extensions_supported (extensions);
+	bool all_extensions_supported = detail::check_extensions_supported (system.available_extensions, extensions);
 	if (!all_extensions_supported) {
 		return detail::Error<InstanceError>{ InstanceError::requested_extensions_not_present };
 	}
@@ -210,9 +221,9 @@ detail::Expected<Instance, detail::Error<InstanceError>> InstanceBuilder::build 
 		layers.push_back (layer);
 
 	if (info.enable_validation_layers) {
-		layers.push_back ("VK_LAYER_KHRONOS_validation");
+		layers.push_back (detail::validation_layer_name);
 	}
-	bool all_layers_supported = detail::check_layers_supported (layers);
+	bool all_layers_supported = detail::check_layers_supported (system.available_layers, layers);
 	if (!all_layers_supported) {
 		return detail::Error<InstanceError>{ InstanceError::requested_layers_not_present };
 	}
@@ -280,10 +291,12 @@ detail::Expected<Instance, detail::Error<InstanceError>> InstanceBuilder::build 
 }
 
 InstanceBuilder& InstanceBuilder::set_app_name (const char* app_name) {
+	if (!app_name) return *this;
 	info.app_name = app_name;
 	return *this;
 }
 InstanceBuilder& InstanceBuilder::set_engine_name (const char* engine_name) {
+	if (!engine_name) return *this;
 	info.engine_name = engine_name;
 	return *this;
 }
@@ -300,17 +313,38 @@ InstanceBuilder& InstanceBuilder::set_api_version (uint32_t major, uint32_t mino
 	return *this;
 }
 InstanceBuilder& InstanceBuilder::add_layer (const char* layer_name) {
+	if (!layer_name) return *this;
 	info.layers.push_back (layer_name);
 	return *this;
 }
 InstanceBuilder& InstanceBuilder::add_extension (const char* extension_name) {
+	if (!extension_name) return *this;
 	info.extensions.push_back (extension_name);
 	return *this;
+}
+bool InstanceBuilder::check_and_add_layer (const char* layer_name) {
+	if (!layer_name) return false;
+	bool available = detail::check_layer_supported (system.available_layers, layer_name);
+	if (available) info.layers.push_back (layer_name);
+	return available;
+}
+bool InstanceBuilder::check_and_add_extension (const char* extension_name) {
+	if (!extension_name) return false;
+	bool available = detail::check_extension_supported (system.available_extensions, extension_name);
+	if (available) info.extensions.push_back (extension_name);
+	return available;
 }
 InstanceBuilder& InstanceBuilder::setup_validation_layers (bool enable_validation) {
 	info.enable_validation_layers = enable_validation;
 	return *this;
 }
+bool InstanceBuilder::check_and_setup_validation_layers (bool enable_validation) {
+	bool available =
+	    detail::check_extension_supported (system.available_extensions, detail::validation_layer_name);
+	setup_validation_layers (available);
+	return available;
+}
+
 InstanceBuilder& InstanceBuilder::set_default_debug_messenger () {
 	info.use_debug_messenger = true;
 	info.debug_callback = default_debug_callback;
@@ -394,25 +428,6 @@ Expected<SurfaceSupportDetails, detail::Error<SurfaceSupportError>> query_surfac
 	return SurfaceSupportDetails{ capabilities, formats.value (), present_modes.value () };
 }
 
-
-// Given a list of formats, return a format supported by the hardware, else return VK_FORMAT_UNDEFINED
-VkFormat find_supported_format (VkPhysicalDevice physical_device,
-    const std::vector<VkFormat>& candidates,
-    VkImageTiling tiling,
-    VkFormatFeatureFlags features) {
-	for (VkFormat format : candidates) {
-		VkFormatProperties props;
-		vkGetPhysicalDeviceFormatProperties (physical_device, format, &props);
-
-		if (tiling == VK_IMAGE_TILING_LINEAR && (props.linearTilingFeatures & features) == features) {
-			return format;
-		} else if (tiling == VK_IMAGE_TILING_OPTIMAL && (props.optimalTilingFeatures & features) == features) {
-			return format;
-		}
-	}
-	return VK_FORMAT_UNDEFINED;
-}
-
 std::vector<const char*> check_device_extension_support (
     VkPhysicalDevice device, std::vector<const char*> desired_extensions) {
 	auto available_extensions =
@@ -491,12 +506,15 @@ bool supports_features (VkPhysicalDeviceFeatures supported, VkPhysicalDeviceFeat
 }
 } // namespace detail
 
+// finds the first queue which supports graphics operations. returns -1 if none is found
 int get_graphics_queue_index (std::vector<VkQueueFamilyProperties> const& families) {
 	for (int i = 0; i < families.size (); i++) {
 		if (families[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) return i;
 	}
 	return -1;
 }
+// finds a compute queue which is distinct from the graphics queue and tries to find one without transfer support
+// returns -1 if none is found
 int get_distinct_compute_queue_index (std::vector<VkQueueFamilyProperties> const& families) {
 	int compute = -1;
 	for (int i = 0; i < families.size (); i++) {
@@ -511,6 +529,8 @@ int get_distinct_compute_queue_index (std::vector<VkQueueFamilyProperties> const
 	}
 	return compute;
 }
+// finds a transfer queue which is distinct from the graphics queue and tries to find one without compute support
+// returns -1 if none is found
 int get_distinct_transfer_queue_index (std::vector<VkQueueFamilyProperties> const& families) {
 	int transfer = -1;
 	for (int i = 0; i < families.size (); i++) {
@@ -523,8 +543,29 @@ int get_distinct_transfer_queue_index (std::vector<VkQueueFamilyProperties> cons
 			}
 		}
 	}
+	return transfer;
+}
+// finds the first queue which supports only compute (not graphics or transfer). returns -1 if none is found
+int get_dedicated_compute_queue_index (std::vector<VkQueueFamilyProperties> const& families) {
+	for (int i = 0; i < families.size (); i++) {
+		if ((families[i].queueFlags & VK_QUEUE_COMPUTE_BIT) &&
+		    (families[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) == 0 &&
+		    (families[i].queueFlags & VK_QUEUE_TRANSFER_BIT) == 0)
+			return i;
+	}
 	return -1;
 }
+// finds the first queue which supports only transfer (not graphics or compute). returns -1 if none is found
+int get_dedicated_transfer_queue_index (std::vector<VkQueueFamilyProperties> const& families) {
+	for (int i = 0; i < families.size (); i++) {
+		if ((families[i].queueFlags & VK_QUEUE_TRANSFER_BIT) &&
+		    (families[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) == 0 &&
+		    (families[i].queueFlags & VK_QUEUE_COMPUTE_BIT) == 0)
+			return i;
+	}
+	return -1;
+}
+// finds the first queue which supports presenting. returns -1 if none is found
 int get_present_queue_index (VkPhysicalDevice const phys_device,
     VkSurfaceKHR const surface,
     std::vector<VkQueueFamilyProperties> const& families) {

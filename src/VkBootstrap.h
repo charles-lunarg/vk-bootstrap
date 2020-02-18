@@ -124,6 +124,8 @@ void destroy_instance (Instance instance); // release instance resources
 
 class InstanceBuilder {
 	public:
+    InstanceBuilder(); //automatically gets available layers and extensions
+
 	detail::Expected<Instance, detail::Error<InstanceError>> build (); // use builder pattern
 
 	InstanceBuilder& set_app_name (const char* app_name);
@@ -133,11 +135,11 @@ class InstanceBuilder {
 	InstanceBuilder& set_engine_version (uint32_t major, uint32_t minor, uint32_t patch);
 	InstanceBuilder& set_api_version (uint32_t major, uint32_t minor, uint32_t patch);
 
-	InstanceBuilder& add_layer (const char* app_name);
-	InstanceBuilder& add_extension (const char* app_name);
+	InstanceBuilder& add_layer (const char* layer_name);
+	InstanceBuilder& add_extension (const char* extension_name);
 
-	bool check_and_add_layer (const char* app_name);
-	bool check_and_add_extension (const char* app_name);
+	bool check_and_add_layer (const char* layer_name);
+	bool check_and_add_extension (const char* extension_name);
 
 	InstanceBuilder& setup_validation_layers (bool enable_validation = true);
 	InstanceBuilder& set_headless (bool headless = false);
@@ -189,6 +191,11 @@ class InstanceBuilder {
 		bool use_debug_messenger = false;
 		bool headless_context = false;
 	} info;
+
+    struct SystemInfo {
+        std::vector<VkLayerProperties> available_layers;
+		std::vector<VkExtensionProperties> available_extensions;
+    } system;
 };
 
 const char* to_string_message_severity (VkDebugUtilsMessageSeverityFlagBitsEXT s);

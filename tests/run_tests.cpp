@@ -31,6 +31,7 @@ int test_happy_path () {
 	// possible swapchain creation...
 
 	vkb::destroy_device (device);
+	destroy_surface (instance.instance, surface);
 	vkb::destroy_instance (instance);
 	destroy_window_glfw (window);
 	return 0;
@@ -107,6 +108,7 @@ int test_physical_device_selection () {
 	if (!phys_dev_ret.has_value ()) {
 		return -1;
 	}
+	destroy_surface (instance.instance, surface);
 	vkb::destroy_instance (instance);
 	destroy_window_glfw (window);
 	return 0;
@@ -139,8 +141,8 @@ int test_device_creation () {
 		printf ("couldn't create device %i\n", static_cast<uint32_t> (dev_ret.error ().type));
 		return -1;
 	}
-
 	vkb::destroy_device (dev_ret.value ());
+	destroy_surface (instance.instance, surface);
 	vkb::destroy_instance (instance);
 	destroy_window_glfw (window);
 	return 0;

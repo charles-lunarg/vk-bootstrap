@@ -44,7 +44,7 @@ int test_instance_basic () {
 	vkb::InstanceBuilder builder;
 
 	auto instance_ret =
-	    builder.setup_validation_layers ()
+	    builder.check_and_setup_validation_layers ()
 	        .set_app_name ("test")
 	        .set_debug_callback ([] (VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
 	                                 VkDebugUtilsMessageTypeFlagsEXT messageType,
@@ -71,7 +71,7 @@ int test_instance_headless () {
 	vkb::InstanceBuilder builder;
 
 	auto instance_ret =
-	    builder.setup_validation_layers ()
+	    builder.check_and_setup_validation_layers ()
 	        .set_headless ()
 	        .set_app_version (4, 5, 6)
 	        .set_app_name ("headless")

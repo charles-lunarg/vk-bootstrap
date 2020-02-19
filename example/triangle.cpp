@@ -42,7 +42,8 @@ int device_initialization (Init& init) {
 	init.window = create_window_glfw (false);
 
 	vkb::InstanceBuilder instance_builder;
-	auto instance_ret = instance_builder.set_default_debug_messenger ().setup_validation_layers ().build ();
+	auto instance_ret =
+	    instance_builder.set_default_debug_messenger ().check_and_setup_validation_layers ().build ();
 	if (!instance_ret) {
 		std::cout << static_cast<uint32_t> (instance_ret.error ().type) << "\n";
 	}

@@ -124,37 +124,61 @@ void destroy_instance (Instance instance); // release instance resources
 
 class InstanceBuilder {
 	public:
-    InstanceBuilder(); //automatically gets available layers and extensions
+	InstanceBuilder (); // automatically gets available layers and extensions.
 
-	detail::Expected<Instance, detail::Error<InstanceError>> build (); // use builder pattern
+	detail::Expected<Instance, detail::Error<InstanceError>> build ();
 
+	// Sets the name of the application. Defaults to "" if none is provided.
 	InstanceBuilder& set_app_name (const char* app_name);
+	// Sets the name of the engine. Defaults to "" if none is provided.
 	InstanceBuilder& set_engine_name (const char* engine_name);
-
+	// Sets the (major, minor, patch) version of the application.
 	InstanceBuilder& set_app_version (uint32_t major, uint32_t minor, uint32_t patch);
+	// Sets the (major, minor, patch) version of the engine.
 	InstanceBuilder& set_engine_version (uint32_t major, uint32_t minor, uint32_t patch);
+	// Sets the vulkan API version to use.
 	InstanceBuilder& set_api_version (uint32_t major, uint32_t minor, uint32_t patch);
 
-	InstanceBuilder& add_layer (const char* layer_name);
-	InstanceBuilder& add_extension (const char* extension_name);
 
-	bool check_and_add_layer (const char* layer_name);
-	bool check_and_add_extension (const char* extension_name);
+	// Loads the specified layer if it is available.
+	InstanceBuilder& check_and_add_layer (const char* layer_name);
+	// Adds a layer to be enabled. Will fail to create an instance if the layer isn't available.
+	InstanceBuilder& must_enable_layer (const char* layer_name);
+	// Enables the specified extension if it is avaiable.
+	InstanceBuilder& check_and_add_extension (const char* extension_name);
+	// Adds an extension to be enabled. Will fail to create an instance if the extension isn't available.
+	InstanceBuilder& must_enable_extension (const char* extension_name);
 
-	InstanceBuilder& setup_validation_layers (bool enable_validation = true);
+	// Headless Mode does not load the required extensions for presentation. Defaults to false.
 	InstanceBuilder& set_headless (bool headless = false);
+	// Checks if the validation layers are available and loads them if they are. 
+	InstanceBuilder& check_and_setup_validation_layers (bool enable_validation = true);
+	// Enables the validation layers. Will fail to create an instance if the validation layers aren't available.
+	InstanceBuilder& must_enable_validation_layers (bool enable_validation = true);
 
-	bool check_and_setup_validation_layers (bool enable_validation = true);
-
+	// Use a default debug callback that prints to standard out.
 	InstanceBuilder& set_default_debug_messenger ();
+	// Provide a user defined debug callback.
 	InstanceBuilder& set_debug_callback (PFN_vkDebugUtilsMessengerCallbackEXT callback);
+	// Set what message severity is needed to trigger the callback.
 	InstanceBuilder& set_debug_messenger_severity (VkDebugUtilsMessageSeverityFlagsEXT severity);
+	// Add a message severity to the list that triggers the callback.
 	InstanceBuilder& add_debug_messenger_severity (VkDebugUtilsMessageSeverityFlagsEXT severity);
+	// Set what message type triggers the callback.
 	InstanceBuilder& set_debug_messenger_type (VkDebugUtilsMessageTypeFlagsEXT type);
+	// Add a message type to the list of that triggers the callback.
 	InstanceBuilder& add_debug_messenger_type (VkDebugUtilsMessageTypeFlagsEXT type);
 
+	// Disable some validation checks.
+	// Checks: All, and Shaders
 	InstanceBuilder& add_validation_disable (VkValidationCheckEXT check);
-	InstanceBuilder& add_validation_feature_enable (VkValidationFeatureEnableEXT enable);
+
+	// Enables optional parts of the validation layers.
+	// Parts: best practices, gpu assisted, and gpu assisted reserve binding slot.
+    InstanceBuilder& add_validation_feature_enable (VkValidationFeatureEnableEXT enable);
+	
+	// Disables sections of the validation layers.
+	// Options: All, shaders, thread safety, api parameters, object lifetimes, core checks, and unique handles.
 	InstanceBuilder& add_validation_feature_disable (VkValidationFeatureDisableEXT disable);
 
 	private:
@@ -192,10 +216,10 @@ class InstanceBuilder {
 		bool headless_context = false;
 	} info;
 
-    struct SystemInfo {
-        std::vector<VkLayerProperties> available_layers;
+	struct SystemInfo {
+		std::vector<VkLayerProperties> available_layers;
 		std::vector<VkExtensionProperties> available_extensions;
-    } system;
+	} system;
 };
 
 const char* to_string_message_severity (VkDebugUtilsMessageSeverityFlagBitsEXT s);
@@ -237,36 +261,53 @@ struct PhysicalDevice {
 	friend class DeviceBuilder;
 };
 
+enum class PreferredDeviceType { discrete, integrated, virtual_gpu, cpu, dont_care };
 struct PhysicalDeviceSelector {
 	public:
+    // Requires a vkb::Instance to construct, needed to pass instance creation info.
 	PhysicalDeviceSelector (Instance const& instance);
 
 	detail::Expected<PhysicalDevice, detail::Error<PhysicalDeviceError>> select ();
 
+    // Set the surface in which the physical device should render to.
 	PhysicalDeviceSelector& set_surface (VkSurfaceKHR instance);
-
-	enum PreferredDeviceType { discrete, integrated, virtual_gpu, cpu, dont_care };
+    // Set the desired physical device type to select. Defaults to PreferredDeviceType::discrete.
 	PhysicalDeviceSelector& prefer_gpu_device_type (PreferredDeviceType type = PreferredDeviceType::discrete);
-	PhysicalDeviceSelector& allow_fallback_gpu (bool fallback = true);
+    // Allow fallback to a device type that isn't the preferred physical device type. Defaults to true.
+    PhysicalDeviceSelector& allow_fallback_gpu (bool fallback = true);
 
+    // Require that a physical device supports presentation. Defaults to true.
 	PhysicalDeviceSelector& require_present (bool require = true);
-	PhysicalDeviceSelector& require_dedicated_transfer_queue ();
+    // Require a queue family that supports compute operations but not graphics nor transfer.
 	PhysicalDeviceSelector& require_dedicated_compute_queue ();
+    // Require a queue family that supports transfer operations but not graphics nor compute.
+	PhysicalDeviceSelector& require_dedicated_transfer_queue ();
 
+    // Require a memory heap from VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT with `size` memory available.
 	PhysicalDeviceSelector& required_device_memory_size (VkDeviceSize size);
+    // Prefer a memory heap from VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT with `size` memory available.
 	PhysicalDeviceSelector& desired_device_memory_size (VkDeviceSize size);
 
+    // Require a physical device which supports a specific extension.
 	PhysicalDeviceSelector& add_required_extension (const char* extension);
+    // Require a physical device which supports a set of extensions.
 	PhysicalDeviceSelector& add_required_extensions (std::vector<const char*> extensions);
 
+    // Prefer a physical device which supports a specific extension.
 	PhysicalDeviceSelector& add_desired_extension (const char* extension);
+    // Prefer a physical device which supports a set of extensions.
 	PhysicalDeviceSelector& add_desired_extensions (std::vector<const char*> extensions);
 
+    // Prefer a physical device that supports a (major, minor) version of vulkan.
 	PhysicalDeviceSelector& set_desired_version (uint32_t major, uint32_t minor);
+    // Require a physical device that supports a (major, minor) version of vulkan. Default is Vulkan 1.0.
 	PhysicalDeviceSelector& set_minimum_version (uint32_t major = 1, uint32_t minor = 0);
 
+    // Require a physical device which supports the features in VkPhysicalDeviceFeatures.
 	PhysicalDeviceSelector& set_required_features (VkPhysicalDeviceFeatures features);
 
+    // Ignore all criteria and choose the first physical device that is available. 
+    // Only use when: The first gpu in the list may be set by global user preferences and an application may wish to respect it.
 	PhysicalDeviceSelector& select_first_device_unconditionally (bool unconditionally = true);
 
 	private:
@@ -339,13 +380,18 @@ class DeviceBuilder {
 
 	detail::Expected<Device, detail::Error<DeviceError>> build ();
 
-	template <typename T> DeviceBuilder& add_pNext (T* structure);
-
+    // Require a queue family that supports compute operations but not graphics nor transfer.
 	DeviceBuilder& request_dedicated_compute_queue (bool compute = true);
+    // Require a queue family that supports transfer operations but not graphics nor compute.
 	DeviceBuilder& request_dedicated_transfer_queue (bool transfer = true);
 
-	/* For advanced users */
+	// For Advanced Users: specify the exact list of VkDeviceQueueCreateInfo's needed for the application.
+    // If a custom queue setup is provided, getting the queues and queue indexes is up to the applicatoin.
 	DeviceBuilder& custom_queue_setup (std::vector<CustomQueueDescription> queue_descriptions);
+
+    // For Advanced Users: Add a structure to the pNext chain of VkDeviceCreateInfo.
+    // The structure must be valid when DeviceBuilder::build() is called.
+	template <typename T> DeviceBuilder& add_pNext (T* structure);
 
 	private:
 	struct DeviceInfo {

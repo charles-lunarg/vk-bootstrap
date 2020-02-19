@@ -312,37 +312,37 @@ InstanceBuilder& InstanceBuilder::set_api_version (uint32_t major, uint32_t mino
 	info.api_version = VK_MAKE_VERSION (major, minor, patch);
 	return *this;
 }
-InstanceBuilder& InstanceBuilder::add_layer (const char* layer_name) {
+InstanceBuilder& InstanceBuilder::must_enable_layer (const char* layer_name) {
 	if (!layer_name) return *this;
 	info.layers.push_back (layer_name);
 	return *this;
 }
-InstanceBuilder& InstanceBuilder::add_extension (const char* extension_name) {
+InstanceBuilder& InstanceBuilder::must_enable_extension (const char* extension_name) {
 	if (!extension_name) return *this;
 	info.extensions.push_back (extension_name);
 	return *this;
 }
-bool InstanceBuilder::check_and_add_layer (const char* layer_name) {
-	if (!layer_name) return false;
-	bool available = detail::check_layer_supported (system.available_layers, layer_name);
-	if (available) info.layers.push_back (layer_name);
-	return available;
+InstanceBuilder& InstanceBuilder::check_and_add_layer (const char* layer_name) {
+	if (!layer_name) return *this;
+	if (detail::check_layer_supported (system.available_layers, layer_name))
+		info.layers.push_back (layer_name);
+	return *this;
 }
-bool InstanceBuilder::check_and_add_extension (const char* extension_name) {
-	if (!extension_name) return false;
-	bool available = detail::check_extension_supported (system.available_extensions, extension_name);
-	if (available) info.extensions.push_back (extension_name);
-	return available;
+InstanceBuilder& InstanceBuilder::check_and_add_extension (const char* extension_name) {
+	if (!extension_name) return *this;
+	if (detail::check_extension_supported (system.available_extensions, extension_name))
+		info.extensions.push_back (extension_name);
+	return *this;
 }
-InstanceBuilder& InstanceBuilder::setup_validation_layers (bool enable_validation) {
+InstanceBuilder& InstanceBuilder::must_enable_validation_layers (bool enable_validation) {
 	info.enable_validation_layers = enable_validation;
 	return *this;
 }
-bool InstanceBuilder::check_and_setup_validation_layers (bool enable_validation) {
+InstanceBuilder& InstanceBuilder::check_and_setup_validation_layers (bool enable_validation) {
 	bool available =
 	    detail::check_extension_supported (system.available_extensions, detail::validation_layer_name);
-	setup_validation_layers (available);
-	return available;
+	info.enable_validation_layers = available;
+	return *this;
 }
 
 InstanceBuilder& InstanceBuilder::set_default_debug_messenger () {
@@ -513,8 +513,8 @@ int get_graphics_queue_index (std::vector<VkQueueFamilyProperties> const& famili
 	}
 	return -1;
 }
-// finds a compute queue which is distinct from the graphics queue and tries to find one without transfer support
-// returns -1 if none is found
+// finds a compute queue which is distinct from the graphics queue and tries to find one without
+// transfer support returns -1 if none is found
 int get_distinct_compute_queue_index (std::vector<VkQueueFamilyProperties> const& families) {
 	int compute = -1;
 	for (int i = 0; i < families.size (); i++) {
@@ -529,8 +529,8 @@ int get_distinct_compute_queue_index (std::vector<VkQueueFamilyProperties> const
 	}
 	return compute;
 }
-// finds a transfer queue which is distinct from the graphics queue and tries to find one without compute support
-// returns -1 if none is found
+// finds a transfer queue which is distinct from the graphics queue and tries to find one without
+// compute support returns -1 if none is found
 int get_distinct_transfer_queue_index (std::vector<VkQueueFamilyProperties> const& families) {
 	int transfer = -1;
 	for (int i = 0; i < families.size (); i++) {

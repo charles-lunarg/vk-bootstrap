@@ -151,7 +151,7 @@ class InstanceBuilder {
 
 	// Headless Mode does not load the required extensions for presentation. Defaults to false.
 	InstanceBuilder& set_headless (bool headless = false);
-	// Checks if the validation layers are available and loads them if they are. 
+	// Checks if the validation layers are available and loads them if they are.
 	InstanceBuilder& check_and_setup_validation_layers (bool enable_validation = true);
 	// Enables the validation layers. Will fail to create an instance if the validation layers aren't available.
 	InstanceBuilder& must_enable_validation_layers (bool enable_validation = true);
@@ -175,8 +175,8 @@ class InstanceBuilder {
 
 	// Enables optional parts of the validation layers.
 	// Parts: best practices, gpu assisted, and gpu assisted reserve binding slot.
-    InstanceBuilder& add_validation_feature_enable (VkValidationFeatureEnableEXT enable);
-	
+	InstanceBuilder& add_validation_feature_enable (VkValidationFeatureEnableEXT enable);
+
 	// Disables sections of the validation layers.
 	// Options: All, shaders, thread safety, api parameters, object lifetimes, core checks, and unique handles.
 	InstanceBuilder& add_validation_feature_disable (VkValidationFeatureDisableEXT disable);
@@ -257,6 +257,10 @@ struct PhysicalDevice {
 	VkPhysicalDeviceFeatures features{};
 	std::vector<const char*> extensions_to_enable;
 	std::vector<VkQueueFamilyProperties> queue_families;
+	bool dedicated_compute = false;
+	bool distinct_compute = false;
+	bool dedicated_transfer = false;
+	bool distinct_transfer = false;
 	friend class PhysicalDeviceSelector;
 	friend class DeviceBuilder;
 };
@@ -264,50 +268,54 @@ struct PhysicalDevice {
 enum class PreferredDeviceType { discrete, integrated, virtual_gpu, cpu, dont_care };
 struct PhysicalDeviceSelector {
 	public:
-    // Requires a vkb::Instance to construct, needed to pass instance creation info.
+	// Requires a vkb::Instance to construct, needed to pass instance creation info.
 	PhysicalDeviceSelector (Instance const& instance);
 
 	detail::Expected<PhysicalDevice, detail::Error<PhysicalDeviceError>> select ();
 
-    // Set the surface in which the physical device should render to.
+	// Set the surface in which the physical device should render to.
 	PhysicalDeviceSelector& set_surface (VkSurfaceKHR instance);
-    // Set the desired physical device type to select. Defaults to PreferredDeviceType::discrete.
+	// Set the desired physical device type to select. Defaults to PreferredDeviceType::discrete.
 	PhysicalDeviceSelector& prefer_gpu_device_type (PreferredDeviceType type = PreferredDeviceType::discrete);
-    // Allow fallback to a device type that isn't the preferred physical device type. Defaults to true.
-    PhysicalDeviceSelector& allow_fallback_gpu (bool fallback = true);
+	// Allow fallback to a device type that isn't the preferred physical device type. Defaults to true.
+	PhysicalDeviceSelector& allow_fallback_gpu (bool fallback = true);
 
-    // Require that a physical device supports presentation. Defaults to true.
+	// Require that a physical device supports presentation. Defaults to true.
 	PhysicalDeviceSelector& require_present (bool require = true);
-    // Require a queue family that supports compute operations but not graphics nor transfer.
+	// Require a queue family that supports compute operations but not graphics nor transfer.
 	PhysicalDeviceSelector& require_dedicated_compute_queue ();
-    // Require a queue family that supports transfer operations but not graphics nor compute.
+	// Require a queue family that supports transfer operations but not graphics nor compute.
 	PhysicalDeviceSelector& require_dedicated_transfer_queue ();
+	// Require a queue family that supports compute operations but not graphics.
+	PhysicalDeviceSelector& require_distinct_compute_queue ();
+	// Require a queue family that supports transfer operations but not graphics.
+	PhysicalDeviceSelector& require_distinct_transfer_queue ();
 
-    // Require a memory heap from VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT with `size` memory available.
+	// Require a memory heap from VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT with `size` memory available.
 	PhysicalDeviceSelector& required_device_memory_size (VkDeviceSize size);
-    // Prefer a memory heap from VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT with `size` memory available.
+	// Prefer a memory heap from VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT with `size` memory available.
 	PhysicalDeviceSelector& desired_device_memory_size (VkDeviceSize size);
 
-    // Require a physical device which supports a specific extension.
+	// Require a physical device which supports a specific extension.
 	PhysicalDeviceSelector& add_required_extension (const char* extension);
-    // Require a physical device which supports a set of extensions.
+	// Require a physical device which supports a set of extensions.
 	PhysicalDeviceSelector& add_required_extensions (std::vector<const char*> extensions);
 
-    // Prefer a physical device which supports a specific extension.
+	// Prefer a physical device which supports a specific extension.
 	PhysicalDeviceSelector& add_desired_extension (const char* extension);
-    // Prefer a physical device which supports a set of extensions.
+	// Prefer a physical device which supports a set of extensions.
 	PhysicalDeviceSelector& add_desired_extensions (std::vector<const char*> extensions);
 
-    // Prefer a physical device that supports a (major, minor) version of vulkan.
+	// Prefer a physical device that supports a (major, minor) version of vulkan.
 	PhysicalDeviceSelector& set_desired_version (uint32_t major, uint32_t minor);
-    // Require a physical device that supports a (major, minor) version of vulkan. Default is Vulkan 1.0.
+	// Require a physical device that supports a (major, minor) version of vulkan. Default is Vulkan 1.0.
 	PhysicalDeviceSelector& set_minimum_version (uint32_t major = 1, uint32_t minor = 0);
 
-    // Require a physical device which supports the features in VkPhysicalDeviceFeatures.
+	// Require a physical device which supports the features in VkPhysicalDeviceFeatures.
 	PhysicalDeviceSelector& set_required_features (VkPhysicalDeviceFeatures features);
 
-    // Ignore all criteria and choose the first physical device that is available. 
-    // Only use when: The first gpu in the list may be set by global user preferences and an application may wish to respect it.
+	// Ignore all criteria and choose the first physical device that is available.
+	// Only use when: The first gpu in the list may be set by global user preferences and an application may wish to respect it.
 	PhysicalDeviceSelector& select_first_device_unconditionally (bool unconditionally = true);
 
 	private:
@@ -333,6 +341,8 @@ struct PhysicalDeviceSelector {
 		bool require_present = true;
 		bool require_dedicated_transfer_queue = false;
 		bool require_dedicated_compute_queue = false;
+		bool require_distinct_transfer_queue = false;
+		bool require_distinct_compute_queue = false;
 		VkDeviceSize required_mem_size = 0;
 		VkDeviceSize desired_mem_size = 0;
 
@@ -380,17 +390,27 @@ class DeviceBuilder {
 
 	detail::Expected<Device, detail::Error<DeviceError>> build ();
 
-    // Require a queue family that supports compute operations but not graphics nor transfer.
+    bool has_dedicated_compute_queue();
+    bool has_distinct_compute_queue();
+    bool has_dedicated_transfer_queue();
+    bool has_distinct_transfer_queue();
+
+	// Require a queue family that supports compute operations but not graphics nor transfer.
 	DeviceBuilder& request_dedicated_compute_queue (bool compute = true);
-    // Require a queue family that supports transfer operations but not graphics nor compute.
+	// Require a queue family that supports transfer operations but not graphics nor compute.
 	DeviceBuilder& request_dedicated_transfer_queue (bool transfer = true);
 
+	// Require a queue family that supports compute operations but not graphics.
+	DeviceBuilder& request_distinct_compute_queue (bool compute = true);
+	// Require a queue family that supports transfer operations but not graphics.
+	DeviceBuilder& request_distinct_transfer_queue (bool transfer = true);
+
 	// For Advanced Users: specify the exact list of VkDeviceQueueCreateInfo's needed for the application.
-    // If a custom queue setup is provided, getting the queues and queue indexes is up to the applicatoin.
+	// If a custom queue setup is provided, getting the queues and queue indexes is up to the applicatoin.
 	DeviceBuilder& custom_queue_setup (std::vector<CustomQueueDescription> queue_descriptions);
 
-    // For Advanced Users: Add a structure to the pNext chain of VkDeviceCreateInfo.
-    // The structure must be valid when DeviceBuilder::build() is called.
+	// For Advanced Users: Add a structure to the pNext chain of VkDeviceCreateInfo.
+	// The structure must be valid when DeviceBuilder::build() is called.
 	template <typename T> DeviceBuilder& add_pNext (T* structure);
 
 	private:
@@ -401,12 +421,14 @@ class DeviceBuilder {
 		std::vector<const char*> extensions;
 		std::vector<VkQueueFamilyProperties> queue_families;
 		std::vector<CustomQueueDescription> queue_descriptions;
-		bool request_compute_queue = false;
-		bool request_transfer_queue = false;
+		bool dedicated_compute = false;
+		bool distinct_compute = false;
+		bool dedicated_transfer = false;
+		bool distinct_transfer = false;
 	} info;
 };
 
-// ---- Getting Queues ---- //
+// ---- Queues ---- //
 
 enum class QueueError {
 	present_unavailable,

@@ -148,6 +148,14 @@ int test_device_creation () {
 	return 0;
 }
 
+// TODO
+// Migrate to Catch2
+// Getting queues
+// get dedicated vs distinct compute queues
+// Swapchain creation
+// Swapchain recreation
+// changing present modes and/or image formats
+
 int main () {
 	test_happy_path ();
 	test_instance_basic ();

@@ -144,7 +144,7 @@ class InstanceBuilder {
 	InstanceBuilder& check_and_add_layer (const char* layer_name);
 	// Adds a layer to be enabled. Will fail to create an instance if the layer isn't available.
 	InstanceBuilder& must_enable_layer (const char* layer_name);
-	// Enables the specified extension if it is avaiable.
+	// Enables the specified extension if it is available.
 	InstanceBuilder& check_and_add_extension (const char* extension_name);
 	// Adds an extension to be enabled. Will fail to create an instance if the extension isn't available.
 	InstanceBuilder& must_enable_extension (const char* extension_name);
@@ -266,7 +266,7 @@ struct PhysicalDevice {
 };
 
 enum class PreferredDeviceType { discrete, integrated, virtual_gpu, cpu, dont_care };
-struct PhysicalDeviceSelector {
+class PhysicalDeviceSelector {
 	public:
 	// Requires a vkb::Instance to construct, needed to pass instance creation info.
 	PhysicalDeviceSelector (Instance const& instance);
@@ -390,10 +390,10 @@ class DeviceBuilder {
 
 	detail::Expected<Device, detail::Error<DeviceError>> build ();
 
-    bool has_dedicated_compute_queue();
-    bool has_distinct_compute_queue();
-    bool has_dedicated_transfer_queue();
-    bool has_distinct_transfer_queue();
+	bool has_dedicated_compute_queue ();
+	bool has_distinct_compute_queue ();
+	bool has_dedicated_transfer_queue ();
+	bool has_distinct_transfer_queue ();
 
 	// Require a queue family that supports compute operations but not graphics nor transfer.
 	DeviceBuilder& request_dedicated_compute_queue (bool compute = true);
@@ -406,7 +406,7 @@ class DeviceBuilder {
 	DeviceBuilder& request_distinct_transfer_queue (bool transfer = true);
 
 	// For Advanced Users: specify the exact list of VkDeviceQueueCreateInfo's needed for the application.
-	// If a custom queue setup is provided, getting the queues and queue indexes is up to the applicatoin.
+	// If a custom queue setup is provided, getting the queues and queue indexes is up to the application.
 	DeviceBuilder& custom_queue_setup (std::vector<CustomQueueDescription> queue_descriptions);
 
 	// For Advanced Users: Add a structure to the pNext chain of VkDeviceCreateInfo.

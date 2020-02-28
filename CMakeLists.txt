@@ -7,8 +7,8 @@ add_library(vk-bootstrap src/VkBootstrap.h src/VkBootstrap.cpp)
 
 target_include_directories(vk-bootstrap PUBLIC src)
 
-target_include_directories(vk-bootstrap PRIVATE ${Vulkan_INCLUDE_DIRS})
-target_link_libraries(vk-bootstrap PRIVATE ${Vulkan_LIBRARIES})
+target_include_directories(vk-bootstrap PUBLIC ${Vulkan_INCLUDE_DIR})
+target_link_libraries(vk-bootstrap PUBLIC ${Vulkan_LIBRARY})
 
 target_compile_features(vk-bootstrap PUBLIC cxx_std_11)
 
@@ -16,6 +16,10 @@ option(VK_BOOTSTRAP_TEST "Test Vk-Bootstrap with glfw and Catch2" OFF)
 
 if (VK_BOOTSTRAP_TEST)
 
+set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+set(GLFW_INSTALL OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 add_subdirectory(ext/glfw)
 add_subdirectory(ext/Catch2)
 

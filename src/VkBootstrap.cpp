@@ -539,9 +539,9 @@ int get_graphics_queue_index (std::vector<VkQueueFamilyProperties> const& famili
 	}
 	return -1;
 }
-// finds a compute queue which is distinct from the graphics queue and tries to find one without
+// finds a compute queue which is separate from the graphics queue and tries to find one without
 // transfer support returns -1 if none is found
-int get_distinct_compute_queue_index (std::vector<VkQueueFamilyProperties> const& families) {
+int get_separate_compute_queue_index (std::vector<VkQueueFamilyProperties> const& families) {
 	int compute = -1;
 	for (int i = 0; i < families.size (); i++) {
 		if ((families[i].queueFlags & VK_QUEUE_COMPUTE_BIT) &&
@@ -555,9 +555,9 @@ int get_distinct_compute_queue_index (std::vector<VkQueueFamilyProperties> const
 	}
 	return compute;
 }
-// finds a transfer queue which is distinct from the graphics queue and tries to find one without
+// finds a transfer queue which is separate from the graphics queue and tries to find one without
 // compute support returns -1 if none is found
-int get_distinct_transfer_queue_index (std::vector<VkQueueFamilyProperties> const& families) {
+int get_separate_transfer_queue_index (std::vector<VkQueueFamilyProperties> const& families) {
 	int transfer = -1;
 	for (int i = 0; i < families.size (); i++) {
 		if ((families[i].queueFlags & VK_QUEUE_TRANSFER_BIT) &&
@@ -639,16 +639,16 @@ PhysicalDeviceSelector::Suitable PhysicalDeviceSelector::is_device_suitable (Phy
 
 	bool dedicated_compute = detail::get_dedicated_compute_queue_index (pd.queue_families) >= 0;
 	bool dedicated_transfer = detail::get_dedicated_transfer_queue_index (pd.queue_families) >= 0;
-	bool distinct_compute = detail::get_distinct_compute_queue_index (pd.queue_families) >= 0;
-	bool distinct_transfer = detail::get_distinct_transfer_queue_index (pd.queue_families) >= 0;
+	bool separate_compute = detail::get_separate_compute_queue_index (pd.queue_families) >= 0;
+	bool separate_transfer = detail::get_separate_transfer_queue_index (pd.queue_families) >= 0;
 
 	bool present_queue =
 	    detail::get_present_queue_index (pd.phys_device, system_info.surface, pd.queue_families);
 
 	if (criteria.require_dedicated_compute_queue && !dedicated_compute) suitable = Suitable::no;
 	if (criteria.require_dedicated_transfer_queue && !dedicated_transfer) suitable = Suitable::no;
-	if (criteria.require_distinct_compute_queue && !distinct_compute) suitable = Suitable::no;
-	if (criteria.require_distinct_transfer_queue && !distinct_transfer) suitable = Suitable::no;
+	if (criteria.require_separate_compute_queue && !separate_compute) suitable = Suitable::no;
+	if (criteria.require_separate_transfer_queue && !separate_transfer) suitable = Suitable::no;
 	if (criteria.require_present && !present_queue) suitable = Suitable::no;
 
 	auto required_extensions_supported =
@@ -789,12 +789,12 @@ PhysicalDeviceSelector& PhysicalDeviceSelector::require_dedicated_compute_queue 
 	criteria.require_dedicated_compute_queue = true;
 	return *this;
 }
-PhysicalDeviceSelector& PhysicalDeviceSelector::require_distinct_transfer_queue () {
-	criteria.require_distinct_transfer_queue = true;
+PhysicalDeviceSelector& PhysicalDeviceSelector::require_separate_transfer_queue () {
+	criteria.require_separate_transfer_queue = true;
 	return *this;
 }
-PhysicalDeviceSelector& PhysicalDeviceSelector::require_distinct_compute_queue () {
-	criteria.require_distinct_compute_queue = true;
+PhysicalDeviceSelector& PhysicalDeviceSelector::require_separate_compute_queue () {
+	criteria.require_separate_compute_queue = true;
 	return *this;
 }
 PhysicalDeviceSelector& PhysicalDeviceSelector::required_device_memory_size (VkDeviceSize size) {
@@ -859,9 +859,9 @@ DeviceBuilder::DeviceBuilder (PhysicalDevice phys_device) {
 	info.extensions = phys_device.extensions_to_enable;
 	info.queue_families = phys_device.queue_families;
 	info.dedicated_compute = phys_device.dedicated_compute;
-	info.distinct_compute = phys_device.distinct_compute;
+	info.separate_compute = phys_device.separate_compute;
 	info.dedicated_transfer = phys_device.dedicated_transfer;
-	info.distinct_transfer = phys_device.distinct_transfer;
+	info.separate_transfer = phys_device.separate_transfer;
 }
 
 detail::Expected<Device, detail::Error<DeviceError>> DeviceBuilder::build () {
@@ -875,13 +875,13 @@ detail::Expected<Device, detail::Error<DeviceError>> DeviceBuilder::build () {
 		if (graphics >= 0) {
 			queue_descriptions.push_back ({ static_cast<uint32_t> (graphics), 1, std::vector<float>{ 1.0f } });
 		}
-		if (info.distinct_compute || info.dedicated_compute) {
+		if (info.separate_compute || info.dedicated_compute) {
 			int compute = -1;
 			if (info.dedicated_compute)
-				compute = detail::get_distinct_compute_queue_index (info.queue_families);
-			else if (info.distinct_compute) {
-				compute = detail::get_distinct_compute_queue_index (info.queue_families);
-				int transfer = detail::get_distinct_transfer_queue_index (info.queue_families);
+				compute = detail::get_separate_compute_queue_index (info.queue_families);
+			else if (info.separate_compute) {
+				compute = detail::get_separate_compute_queue_index (info.queue_families);
+				int transfer = detail::get_separate_transfer_queue_index (info.queue_families);
 				if (compute == transfer && compute >= 0) compute = -1;
 			}
 
@@ -890,13 +890,13 @@ detail::Expected<Device, detail::Error<DeviceError>> DeviceBuilder::build () {
 				    { static_cast<uint32_t> (compute), 1, std::vector<float>{ 1.0f } });
 			}
 		}
-		if (info.distinct_transfer || info.dedicated_transfer) {
+		if (info.separate_transfer || info.dedicated_transfer) {
 			int transfer = -1;
 			if (info.dedicated_transfer)
 				transfer = detail::get_dedicated_transfer_queue_index (info.queue_families);
-			else if (info.distinct_transfer) {
-				transfer = detail::get_distinct_transfer_queue_index (info.queue_families);
-				int compute = detail::get_distinct_transfer_queue_index (info.queue_families);
+			else if (info.separate_transfer) {
+				transfer = detail::get_separate_transfer_queue_index (info.queue_families);
+				int compute = detail::get_separate_transfer_queue_index (info.queue_families);
 				if (transfer == compute && transfer >= 0) transfer = -1;
 			}
 			if (transfer >= 0) {
@@ -952,12 +952,12 @@ DeviceBuilder& DeviceBuilder::request_dedicated_transfer_queue (bool transfer) {
 	info.dedicated_transfer = transfer;
 	return *this;
 }
-DeviceBuilder& DeviceBuilder::request_distinct_compute_queue (bool compute) {
-	info.distinct_compute = compute;
+DeviceBuilder& DeviceBuilder::request_separate_compute_queue (bool compute) {
+	info.separate_compute = compute;
 	return *this;
 }
-DeviceBuilder& DeviceBuilder::request_distinct_transfer_queue (bool transfer) {
-	info.distinct_transfer = transfer;
+DeviceBuilder& DeviceBuilder::request_separate_transfer_queue (bool transfer) {
+	info.separate_transfer = transfer;
 	return *this;
 }
 DeviceBuilder& DeviceBuilder::custom_queue_setup (std::vector<CustomQueueDescription> queue_descriptions) {
@@ -995,14 +995,14 @@ const char* to_string (QueueError err) {
 bool DeviceBuilder::has_dedicated_compute_queue () {
 	return detail::get_dedicated_compute_queue_index (info.queue_families) >= 0;
 }
-bool DeviceBuilder::has_distinct_compute_queue () {
-	return detail::get_distinct_compute_queue_index (info.queue_families) >= 0;
+bool DeviceBuilder::has_separate_compute_queue () {
+	return detail::get_separate_compute_queue_index (info.queue_families) >= 0;
 }
 bool DeviceBuilder::has_dedicated_transfer_queue () {
 	return detail::get_dedicated_transfer_queue_index (info.queue_families) >= 0;
 }
-bool DeviceBuilder::has_distinct_transfer_queue () {
-	return detail::get_distinct_transfer_queue_index (info.queue_families) >= 0;
+bool DeviceBuilder::has_separate_transfer_queue () {
+	return detail::get_separate_transfer_queue_index (info.queue_families) >= 0;
 }
 
 detail::Expected<uint32_t, detail::Error<QueueError>> get_present_queue_index (Device const& device) {
@@ -1017,12 +1017,12 @@ detail::Expected<uint32_t, detail::Error<QueueError>> get_graphics_queue_index (
 	return static_cast<uint32_t> (graphics);
 }
 detail::Expected<uint32_t, detail::Error<QueueError>> get_compute_queue_index (Device const& device) {
-	int compute = detail::get_distinct_compute_queue_index (device.queue_families);
+	int compute = detail::get_separate_compute_queue_index (device.queue_families);
 	if (compute < 0) return detail::Error<QueueError>{ QueueError::compute_unavailable };
 	return static_cast<uint32_t> (compute);
 }
 detail::Expected<uint32_t, detail::Error<QueueError>> get_transfer_queue_index (Device const& device) {
-	int transfer = detail::get_distinct_transfer_queue_index (device.queue_families);
+	int transfer = detail::get_separate_transfer_queue_index (device.queue_families);
 	if (transfer < 0) return detail::Error<QueueError>{ QueueError::transfer_unavailable };
 	return static_cast<uint32_t> (transfer);
 }
@@ -1061,15 +1061,15 @@ detail::Expected<VkQueue, detail::Error<QueueError>> get_dedicated_transfer_queu
 	}
 	return get_queue (device.device, transfer);
 }
-detail::Expected<VkQueue, detail::Error<QueueError>> get_distinct_compute_queue (Device const& device) {
-	int compute = detail::get_distinct_compute_queue_index (device.queue_families);
+detail::Expected<VkQueue, detail::Error<QueueError>> get_separate_compute_queue (Device const& device) {
+	int compute = detail::get_separate_compute_queue_index (device.queue_families);
 	if (compute < 0) {
 		return detail::Error<QueueError>{ QueueError::compute_unavailable };
 	}
 	return get_queue (device.device, compute);
 }
-detail::Expected<VkQueue, detail::Error<QueueError>> get_distinct_transfer_queue (Device const& device) {
-	int transfer = detail::get_distinct_transfer_queue_index (device.queue_families);
+detail::Expected<VkQueue, detail::Error<QueueError>> get_separate_transfer_queue (Device const& device) {
+	int transfer = detail::get_separate_transfer_queue_index (device.queue_families);
 	if (transfer < 0) {
 		return detail::Error<QueueError>{ QueueError::transfer_unavailable };
 	}

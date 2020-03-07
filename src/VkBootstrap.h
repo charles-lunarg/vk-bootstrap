@@ -273,9 +273,9 @@ struct PhysicalDevice {
 	std::vector<const char*> extensions_to_enable;
 	std::vector<VkQueueFamilyProperties> queue_families;
 	bool dedicated_compute = false;
-	bool distinct_compute = false;
+	bool separate_compute = false;
 	bool dedicated_transfer = false;
-	bool distinct_transfer = false;
+	bool separate_transfer = false;
 	friend class PhysicalDeviceSelector;
 	friend class DeviceBuilder;
 };
@@ -309,9 +309,9 @@ class PhysicalDeviceSelector {
 	// Require a queue family that supports transfer operations but not graphics nor compute.
 	PhysicalDeviceSelector& require_dedicated_transfer_queue ();
 	// Require a queue family that supports compute operations but not graphics.
-	PhysicalDeviceSelector& require_distinct_compute_queue ();
+	PhysicalDeviceSelector& require_separate_compute_queue ();
 	// Require a queue family that supports transfer operations but not graphics.
-	PhysicalDeviceSelector& require_distinct_transfer_queue ();
+	PhysicalDeviceSelector& require_separate_transfer_queue ();
 
 	// Require a memory heap from VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT with `size` memory available.
 	PhysicalDeviceSelector& required_device_memory_size (VkDeviceSize size);
@@ -363,8 +363,8 @@ class PhysicalDeviceSelector {
 		bool require_present = true;
 		bool require_dedicated_transfer_queue = false;
 		bool require_dedicated_compute_queue = false;
-		bool require_distinct_transfer_queue = false;
-		bool require_distinct_compute_queue = false;
+		bool require_separate_transfer_queue = false;
+		bool require_separate_compute_queue = false;
 		VkDeviceSize required_mem_size = 0;
 		VkDeviceSize desired_mem_size = 0;
 
@@ -416,9 +416,9 @@ class DeviceBuilder {
 	detail::Expected<Device, detail::Error<DeviceError>> build ();
 
 	bool has_dedicated_compute_queue ();
-	bool has_distinct_compute_queue ();
+	bool has_separate_compute_queue ();
 	bool has_dedicated_transfer_queue ();
-	bool has_distinct_transfer_queue ();
+	bool has_separate_transfer_queue ();
 
 	// Require a queue family that supports compute operations but not graphics nor transfer.
 	DeviceBuilder& request_dedicated_compute_queue (bool compute = true);
@@ -426,9 +426,9 @@ class DeviceBuilder {
 	DeviceBuilder& request_dedicated_transfer_queue (bool transfer = true);
 
 	// Require a queue family that supports compute operations but not graphics.
-	DeviceBuilder& request_distinct_compute_queue (bool compute = true);
+	DeviceBuilder& request_separate_compute_queue (bool compute = true);
 	// Require a queue family that supports transfer operations but not graphics.
-	DeviceBuilder& request_distinct_transfer_queue (bool transfer = true);
+	DeviceBuilder& request_separate_transfer_queue (bool transfer = true);
 
 	// For Advanced Users: specify the exact list of VkDeviceQueueCreateInfo's needed for the application.
 	// If a custom queue setup is provided, getting the queues and queue indexes is up to the application.
@@ -450,9 +450,9 @@ class DeviceBuilder {
 		std::vector<VkQueueFamilyProperties> queue_families;
 		std::vector<CustomQueueDescription> queue_descriptions;
 		bool dedicated_compute = false;
-		bool distinct_compute = false;
+		bool separate_compute = false;
 		bool dedicated_transfer = false;
-		bool distinct_transfer = false;
+		bool separate_transfer = false;
 		VkAllocationCallbacks* allocation_callbacks = VK_NULL_HANDLE;
 	} info;
 };

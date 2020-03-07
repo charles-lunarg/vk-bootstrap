@@ -280,7 +280,14 @@ struct PhysicalDevice {
 	friend class DeviceBuilder;
 };
 
-enum class PreferredDeviceType { discrete, integrated, virtual_gpu, cpu, dont_care };
+enum class PreferredDeviceType {
+	other = 0,
+	integrated = 1,
+	discrete = 2,
+	virtual_gpu = 3,
+	cpu = 4
+};
+
 class PhysicalDeviceSelector {
 	public:
 	// Requires a vkb::Instance to construct, needed to pass instance creation info.
@@ -292,8 +299,8 @@ class PhysicalDeviceSelector {
 	PhysicalDeviceSelector& set_surface (VkSurfaceKHR instance);
 	// Set the desired physical device type to select. Defaults to PreferredDeviceType::discrete.
 	PhysicalDeviceSelector& prefer_gpu_device_type (PreferredDeviceType type = PreferredDeviceType::discrete);
-	// Allow fallback to a device type that isn't the preferred physical device type. Defaults to true.
-	PhysicalDeviceSelector& allow_fallback_gpu_type (bool fallback = true);
+	// Allow selection of a gpu device type that isn't the preferred physical device type. Defaults to true.
+	PhysicalDeviceSelector& allow_any_gpu_device_type (bool allow_any_type = true);
 
 	// Require that a physical device supports presentation. Defaults to true.
 	PhysicalDeviceSelector& require_present (bool require = true);
@@ -352,7 +359,7 @@ class PhysicalDeviceSelector {
 
 	struct SelectionCriteria {
 		PreferredDeviceType preferred_type = PreferredDeviceType::discrete;
-		bool allow_fallback = true;
+		bool allow_any_type = true;
 		bool require_present = true;
 		bool require_dedicated_transfer_queue = false;
 		bool require_dedicated_compute_queue = false;

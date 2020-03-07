@@ -674,13 +674,8 @@ PhysicalDeviceSelector::Suitable PhysicalDeviceSelector::is_device_suitable (Phy
 	}
 	if (criteria.require_present && !swapChainAdequate) suitable = Suitable::no;
 
-	if ((criteria.preferred_type == PreferredDeviceType::discrete &&
-	        pd.device_properties.deviceType != VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU) ||
-	    (criteria.preferred_type == PreferredDeviceType::integrated &&
-	        pd.device_properties.deviceType != VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU) ||
-	    (criteria.preferred_type == PreferredDeviceType::virtual_gpu &&
-	        pd.device_properties.deviceType != VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU)) {
-		if (criteria.allow_fallback)
+	if (pd.device_properties.deviceType != static_cast<VkPhysicalDeviceType> (criteria.preferred_type)) {
+		if (criteria.allow_any_type)
 			suitable = Suitable::partial;
 		else
 			suitable = Suitable::no;
@@ -778,8 +773,8 @@ PhysicalDeviceSelector& PhysicalDeviceSelector::prefer_gpu_device_type (Preferre
 	criteria.preferred_type = type;
 	return *this;
 }
-PhysicalDeviceSelector& PhysicalDeviceSelector::allow_fallback_gpu_type (bool fallback) {
-	criteria.allow_fallback = fallback;
+PhysicalDeviceSelector& PhysicalDeviceSelector::allow_any_gpu_device_type (bool allow_any_type) {
+	criteria.allow_any_type = allow_any_type;
 	return *this;
 }
 PhysicalDeviceSelector& PhysicalDeviceSelector::require_present (bool require) {

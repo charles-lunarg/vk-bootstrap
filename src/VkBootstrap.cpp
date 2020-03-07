@@ -181,6 +181,22 @@ bool SystemInfo::is_layer_available (const char* layer_name) {
 	if (!layer_name) return false;
 	return detail::check_layer_supported (available_layers, layer_name);
 }
+
+const char* to_string (InstanceError err) {
+	switch (err) {
+		case InstanceError::failed_create_debug_messenger:
+			return "failed_create_debug_messenger";
+		case InstanceError::failed_create_instance:
+			return "failed_create_instance";
+		case InstanceError::requested_layers_not_present:
+			return "requested_layers_not_present";
+		case InstanceError::requested_extensions_not_present:
+			return "requested_extensions_not_present";
+		default:
+			return "";
+	}
+}
+
 void destroy_instance (Instance instance) {
 	if (instance.instance != VK_NULL_HANDLE) {
 		if (instance.debug_messenger != nullptr)
@@ -593,6 +609,20 @@ int get_present_queue_index (VkPhysicalDevice const phys_device,
 }
 } // namespace detail
 
+
+const char* to_string (PhysicalDeviceError err) {
+	switch (err) {
+		case PhysicalDeviceError::failed_enumerate_physical_devices:
+			return "failed_enumerate_physical_devices";
+		case PhysicalDeviceError::no_physical_devices_found:
+			return "no_physical_devices_found";
+		case PhysicalDeviceError::no_suitable_device:
+			return "no_suitable_device";
+		default:
+			return "";
+	}
+}
+
 PhysicalDeviceSelector::PhysicalDeviceDesc PhysicalDeviceSelector::populate_device_details (
     VkPhysicalDevice phys_device) {
 	PhysicalDeviceSelector::PhysicalDeviceDesc desc{};
@@ -819,6 +849,14 @@ PhysicalDeviceSelector& PhysicalDeviceSelector::select_first_device_unconditiona
 }
 
 // ---- Device ---- //
+const char* to_string (DeviceError err) {
+	switch (err) {
+		case DeviceError::failed_create_device:
+			return "failed_create_device";
+		default:
+			return "";
+	}
+}
 
 void destroy_device (Device device) { vkDestroyDevice (device.device, nullptr); }
 
@@ -938,6 +976,22 @@ template <typename T> DeviceBuilder& DeviceBuilder::add_pNext (T* structure) {
 
 
 // ---- Queues ---- //
+const char* to_string (QueueError err) {
+	switch (err) {
+		case QueueError::present_unavailable:
+			return "present_unavailable";
+		case QueueError::compute_unavailable:
+			return "compute_unavailable";
+		case QueueError::transfer_unavailable:
+			return "transfer_unavailable";
+		case QueueError::queue_index_out_of_range:
+			return "queue_index_out_of_range";
+		case QueueError::invalid_queue_family_index:
+			return "invalid_queue_family_index";
+		default:
+			return "";
+	}
+}
 
 bool DeviceBuilder::has_dedicated_compute_queue () {
 	return detail::get_dedicated_compute_queue_index (info.queue_families) >= 0;
@@ -1073,6 +1127,21 @@ VkExtent2D find_extent (
 	}
 }
 } // namespace detail
+
+const char* to_string (SwapchainError err) {
+	switch (err) {
+		case SwapchainError::failed_query_surface_support_details:
+			return "failed_query_surface_support_details";
+		case SwapchainError::failed_create_swapchain:
+			return "failed_create_swapchain";
+		case SwapchainError::failed_get_swapchain_images:
+			return "failed_get_swapchain_images";
+		case SwapchainError::failed_create_swapchain_image_views:
+			return "failed_create_swapchain_image_views";
+		default:
+			return "";
+	}
+}
 
 SwapchainBuilder::SwapchainBuilder (Device const& device) {
 	info.device = device.device;

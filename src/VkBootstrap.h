@@ -116,6 +116,7 @@ enum class InstanceError {
 	requested_layers_not_present,
 	requested_extensions_not_present
 };
+const char* to_string (InstanceError err);
 
 class InstanceBuilder;
 class PhysicalDeviceSelector;
@@ -256,8 +257,9 @@ enum class PhysicalDeviceError {
 	failed_enumerate_physical_devices,
 	no_physical_devices_found,
 	no_suitable_device,
-
 };
+
+const char* to_string (PhysicalDeviceError err);
 
 class PhysicalDeviceSelector;
 class DeviceBuilder;
@@ -380,6 +382,8 @@ enum class DeviceError {
 	failed_create_device,
 };
 
+const char* to_string (DeviceError err);
+
 struct Device {
 	VkDevice device = VK_NULL_HANDLE;
 	PhysicalDevice physical_device;
@@ -450,6 +454,7 @@ enum class QueueError {
 	queue_index_out_of_range,
 	invalid_queue_family_index
 };
+const char* to_string (QueueError err);
 
 detail::Expected<uint32_t, detail::Error<QueueError>> get_present_queue_index (Device const& device);
 detail::Expected<uint32_t, detail::Error<QueueError>> get_graphics_queue_index (Device const& device);
@@ -470,7 +475,7 @@ enum class SwapchainError {
 	failed_get_swapchain_images,
 	failed_create_swapchain_image_views,
 };
-
+const char* to_string (SwapchainError err);
 struct Swapchain {
 	VkDevice device = VK_NULL_HANDLE;
 	VkSwapchainKHR swapchain = VK_NULL_HANDLE;

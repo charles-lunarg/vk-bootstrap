@@ -163,15 +163,16 @@ SystemInfo::SystemInfo () {
 		this->available_extensions = available_extensions.value ();
 	}
 	for (auto& ext : this->available_extensions)
-		if (ext.extensionName == VK_EXT_DEBUG_UTILS_EXTENSION_NAME)
+		if (strcmp (ext.extensionName, VK_EXT_DEBUG_UTILS_EXTENSION_NAME) == 0)
 			debug_messenger_available = true;
 
 	auto available_layers = detail::get_vector<VkLayerProperties> (vkEnumerateInstanceLayerProperties);
 	if (available_layers.has_value ()) {
-		available_layers = available_layers.value ();
+		this->available_layers = available_layers.value ();
 	}
 	for (auto& layer : this->available_layers)
-		if (layer.layerName == detail::validation_layer_name) validation_layers_available = true;
+		if (strcmp (layer.layerName, detail::validation_layer_name) == 0)
+			validation_layers_available = true;
 }
 bool SystemInfo::is_extension_available (const char* extension_name) {
 	if (!extension_name) return false;

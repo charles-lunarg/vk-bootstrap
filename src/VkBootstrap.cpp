@@ -66,7 +66,8 @@ VkResult create_debug_utils_messenger (VkInstance instance,
     PFN_vkDebugUtilsMessengerCallbackEXT debug_callback,
     VkDebugUtilsMessageSeverityFlagsEXT severity,
     VkDebugUtilsMessageTypeFlagsEXT type,
-    VkDebugUtilsMessengerEXT* pDebugMessenger) {
+    VkDebugUtilsMessengerEXT* pDebugMessenger,
+    VkAllocationCallbacks* allocation_callbacks) {
 	if (debug_callback == nullptr) debug_callback = default_debug_callback;
 	VkDebugUtilsMessengerCreateInfoEXT messengerCreateInfo = {};
 	messengerCreateInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
@@ -79,17 +80,19 @@ VkResult create_debug_utils_messenger (VkInstance instance,
 	auto vkCreateDebugUtilsMessengerEXT_func = reinterpret_cast<PFN_vkCreateDebugUtilsMessengerEXT> (
 	    vkGetInstanceProcAddr (instance, "vkCreateDebugUtilsMessengerEXT"));
 	if (vkCreateDebugUtilsMessengerEXT_func != nullptr) {
-		return vkCreateDebugUtilsMessengerEXT_func (instance, &messengerCreateInfo, nullptr, pDebugMessenger);
+		return vkCreateDebugUtilsMessengerEXT_func (
+		    instance, &messengerCreateInfo, allocation_callbacks, pDebugMessenger);
 	} else {
 		return VK_ERROR_EXTENSION_NOT_PRESENT;
 	}
 }
 
-void destroy_debug_utils_messenger (VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger) {
+void destroy_debug_utils_messenger (
+    VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, VkAllocationCallbacks* allocation_callbacks) {
 	auto vkDestroyDebugUtilsMessengerEXT_func = reinterpret_cast<PFN_vkDestroyDebugUtilsMessengerEXT> (
 	    vkGetInstanceProcAddr (instance, "vkDestroyDebugUtilsMessengerEXT"));
 	if (vkDestroyDebugUtilsMessengerEXT_func != nullptr) {
-		vkDestroyDebugUtilsMessengerEXT_func (instance, debugMessenger, nullptr);
+		vkDestroyDebugUtilsMessengerEXT_func (instance, debugMessenger, allocation_callbacks);
 	}
 }
 
@@ -201,8 +204,8 @@ const char* to_string (InstanceError err) {
 void destroy_instance (Instance instance) {
 	if (instance.instance != VK_NULL_HANDLE) {
 		if (instance.debug_messenger != nullptr)
-			destroy_debug_utils_messenger (instance.instance, instance.debug_messenger);
-		vkDestroyInstance (instance.instance, nullptr);
+			destroy_debug_utils_messenger (instance.instance, instance.debug_messenger, instance.allocation_callbacks);
+		vkDestroyInstance (instance.instance, instance.allocation_callbacks);
 	}
 }
 
@@ -300,7 +303,7 @@ detail::Expected<Instance, detail::Error<InstanceError>> InstanceBuilder::build 
 	instance_create_info.ppEnabledLayerNames = layers.data ();
 
 	Instance instance;
-	VkResult res = vkCreateInstance (&instance_create_info, nullptr, &instance.instance);
+	VkResult res = vkCreateInstance (&instance_create_info, info.allocation_callbacks, &instance.instance);
 	if (res != VK_SUCCESS)
 		return detail::Error<InstanceError>{ InstanceError::failed_create_instance, res };
 
@@ -309,7 +312,8 @@ detail::Expected<Instance, detail::Error<InstanceError>> InstanceBuilder::build 
 		    info.debug_callback,
 		    info.debug_message_severity,
 		    info.debug_message_type,
-		    &instance.debug_messenger);
+		    &instance.debug_messenger,
+		    info.allocation_callbacks);
 		if (res != VK_SUCCESS) {
 			return detail::Error<InstanceError>{ InstanceError::failed_create_debug_messenger, res };
 		}
@@ -318,6 +322,7 @@ detail::Expected<Instance, detail::Error<InstanceError>> InstanceBuilder::build 
 	if (info.headless_context) {
 		instance.headless = true;
 	}
+	instance.allocation_callbacks = info.allocation_callbacks;
 	return instance;
 }
 
@@ -403,6 +408,10 @@ InstanceBuilder& InstanceBuilder::add_validation_feature_enable (VkValidationFea
 }
 InstanceBuilder& InstanceBuilder::add_validation_feature_disable (VkValidationFeatureDisableEXT disable) {
 	info.disabled_validation_features.push_back (disable);
+	return *this;
+}
+InstanceBuilder& InstanceBuilder::set_allocation_callbacks (VkAllocationCallbacks* callbacks) {
+	info.allocation_callbacks = callbacks;
 	return *this;
 }
 
@@ -846,7 +855,9 @@ const char* to_string (DeviceError err) {
 	}
 }
 
-void destroy_device (Device device) { vkDestroyDevice (device.device, nullptr); }
+void destroy_device (Device device) {
+	vkDestroyDevice (device.device, device.allocation_callbacks);
+}
 
 DeviceBuilder::DeviceBuilder (PhysicalDevice phys_device) {
 	info.physical_device = phys_device;
@@ -927,14 +938,15 @@ detail::Expected<Device, detail::Error<DeviceError>> DeviceBuilder::build () {
 	device_create_info.pEnabledFeatures = &info.physical_device.features;
 
 	Device device;
-	VkResult res =
-	    vkCreateDevice (info.physical_device.phys_device, &device_create_info, nullptr, &device.device);
+	VkResult res = vkCreateDevice (
+	    info.physical_device.phys_device, &device_create_info, info.allocation_callbacks, &device.device);
 	if (res != VK_SUCCESS) {
 		return detail::Error<DeviceError>{ DeviceError::failed_create_device, res };
 	}
 	device.physical_device = info.physical_device;
 	device.surface = info.physical_device.surface;
 	device.queue_families = info.queue_families;
+	device.allocation_callbacks = info.allocation_callbacks;
 	return device;
 }
 DeviceBuilder& DeviceBuilder::request_dedicated_compute_queue (bool compute) {
@@ -959,6 +971,10 @@ DeviceBuilder& DeviceBuilder::custom_queue_setup (std::vector<CustomQueueDescrip
 }
 template <typename T> DeviceBuilder& DeviceBuilder::add_pNext (T* structure) {
 	info.pNext_chain.push_back (reinterpret_cast<VkBaseOutStructure*> (structure));
+	return *this;
+}
+DeviceBuilder& DeviceBuilder::set_allocation_callbacks (VkAllocationCallbacks* callbacks) {
+	info.allocation_callbacks = callbacks;
 	return *this;
 }
 
@@ -1203,16 +1219,17 @@ detail::Expected<Swapchain, detail::Error<SwapchainError>> SwapchainBuilder::bui
 	swapchain_create_info.clipped = VK_TRUE;
 	swapchain_create_info.oldSwapchain = info.old_swapchain;
 	Swapchain swapchain{};
-	VkResult res = vkCreateSwapchainKHR (info.device, &swapchain_create_info, nullptr, &swapchain.swapchain);
+	VkResult res = vkCreateSwapchainKHR (
+	    info.device, &swapchain_create_info, info.allocation_callbacks, &swapchain.swapchain);
 	if (res != VK_SUCCESS) {
 		return detail::Error<SwapchainError>{ SwapchainError::failed_create_swapchain, res };
 	}
 	swapchain.device = info.device;
 	swapchain.image_format = surface_format.format;
 	swapchain.extent = extent;
-
 	auto images = get_swapchain_images (swapchain);
 	swapchain.image_count = images.value ().size ();
+	swapchain.allocation_callbacks = info.allocation_callbacks;
 	return swapchain;
 } // namespace vkb
 detail::Expected<Swapchain, detail::Error<SwapchainError>> SwapchainBuilder::recreate (Swapchain const& swapchain) {
@@ -1260,7 +1277,7 @@ get_swapchain_image_views (Swapchain const& swapchain, std::vector<VkImage> cons
 
 void destroy_swapchain (Swapchain const& swapchain) {
 	if (swapchain.device != VK_NULL_HANDLE && swapchain.swapchain != VK_NULL_HANDLE)
-		vkDestroySwapchainKHR (swapchain.device, swapchain.swapchain, nullptr);
+		vkDestroySwapchainKHR (swapchain.device, swapchain.swapchain, swapchain.allocation_callbacks);
 }
 
 SwapchainBuilder& SwapchainBuilder::set_desired_format (VkSurfaceFormatKHR format) {
@@ -1290,6 +1307,9 @@ SwapchainBuilder& SwapchainBuilder::use_default_present_mode_selection () {
 	info.desired_present_modes.push_back (VK_PRESENT_MODE_FIFO_KHR);
 	return *this;
 }
-
+SwapchainBuilder& SwapchainBuilder::set_allocation_callbacks (VkAllocationCallbacks* callbacks) {
+	info.allocation_callbacks = callbacks;
+	return *this;
+}
 
 } // namespace vkb

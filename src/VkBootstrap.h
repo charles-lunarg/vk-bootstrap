@@ -123,6 +123,7 @@ class PhysicalDeviceSelector;
 struct Instance {
 	VkInstance instance = VK_NULL_HANDLE;
 	VkDebugUtilsMessengerEXT debug_messenger = VK_NULL_HANDLE;
+	VkAllocationCallbacks* allocation_callbacks = VK_NULL_HANDLE;
 
 	private:
 	bool headless = false;
@@ -190,6 +191,9 @@ class InstanceBuilder {
 	// Options: All, shaders, thread safety, api parameters, object lifetimes, core checks, and unique handles.
 	InstanceBuilder& add_validation_feature_disable (VkValidationFeatureDisableEXT disable);
 
+	// Provide custom allocation callbacks.
+	InstanceBuilder& set_allocation_callbacks (VkAllocationCallbacks* callbacks);
+
 	private:
 	struct InstanceInfo {
 		// VkApplicationInfo
@@ -218,6 +222,9 @@ class InstanceBuilder {
 		std::vector<VkValidationFeatureEnableEXT> enabled_validation_features;
 		std::vector<VkValidationFeatureDisableEXT> disabled_validation_features;
 
+		// Custom allocator
+		VkAllocationCallbacks* allocation_callbacks = VK_NULL_HANDLE;
+
 		bool enable_validation_layers = false;
 		bool use_debug_messenger = false;
 		bool headless_context = false;
@@ -233,9 +240,12 @@ VkResult create_debug_utils_messenger (VkInstance instance,
     PFN_vkDebugUtilsMessengerCallbackEXT debug_callback,
     VkDebugUtilsMessageSeverityFlagsEXT severity,
     VkDebugUtilsMessageTypeFlagsEXT type,
-    VkDebugUtilsMessengerEXT* pDebugMessenger);
+    VkDebugUtilsMessengerEXT* pDebugMessenger,
+    VkAllocationCallbacks* allocation_callbacks = VK_NULL_HANDLE);
 
-void destroy_debug_utils_messenger (VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger);
+void destroy_debug_utils_messenger (VkInstance instance,
+    VkDebugUtilsMessengerEXT debugMessenger,
+    VkAllocationCallbacks* allocation_callbacks = VK_NULL_HANDLE);
 
 static VKAPI_ATTR VkBool32 VKAPI_CALL default_debug_callback (VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
     VkDebugUtilsMessageTypeFlagsEXT messageType,
@@ -379,6 +389,7 @@ struct Device {
 	PhysicalDevice physical_device;
 	VkSurfaceKHR surface = VK_NULL_HANDLE;
 	std::vector<VkQueueFamilyProperties> queue_families;
+	VkAllocationCallbacks* allocation_callbacks = VK_NULL_HANDLE;
 };
 
 void destroy_device (Device device);
@@ -420,6 +431,9 @@ class DeviceBuilder {
 	// The structure must be valid when DeviceBuilder::build() is called.
 	template <typename T> DeviceBuilder& add_pNext (T* structure);
 
+	// Provide custom allocation callbacks.
+	DeviceBuilder& set_allocation_callbacks (VkAllocationCallbacks* callbacks);
+
 	private:
 	struct DeviceInfo {
 		VkDeviceCreateFlags flags = 0;
@@ -432,6 +446,7 @@ class DeviceBuilder {
 		bool distinct_compute = false;
 		bool dedicated_transfer = false;
 		bool distinct_transfer = false;
+		VkAllocationCallbacks* allocation_callbacks = VK_NULL_HANDLE;
 	} info;
 };
 
@@ -472,6 +487,7 @@ struct Swapchain {
 	uint32_t image_count = 0;
 	VkFormat image_format = VK_FORMAT_UNDEFINED;
 	VkExtent2D extent = { 0, 0 };
+	VkAllocationCallbacks* allocation_callbacks = VK_NULL_HANDLE;
 };
 
 void destroy_swapchain (Swapchain const& swapchain);
@@ -501,7 +517,8 @@ class SwapchainBuilder {
 	SwapchainBuilder& add_fallback_present_mode (VkPresentModeKHR present_mode);
 	SwapchainBuilder& use_default_present_mode_selection ();
 
-
+	// Provide custom allocation callbacks.
+	SwapchainBuilder& set_allocation_callbacks (VkAllocationCallbacks* callbacks);
 
 	private:
 	struct SwapchainInfo {
@@ -516,6 +533,7 @@ class SwapchainBuilder {
 		std::vector<VkBaseOutStructure*> pNext_elements;
 		uint32_t graphics_queue_index = 0;
 		uint32_t present_queue_index = 0;
+		VkAllocationCallbacks* allocation_callbacks = VK_NULL_HANDLE;
 	} info;
 };
 

@@ -76,8 +76,8 @@ VkResult create_debug_utils_messenger (VkInstance instance,
 	messengerCreateInfo.pfnUserCallback = debug_callback;
 
 
-	auto vkCreateDebugUtilsMessengerEXT_func = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr (
-	    instance, "vkCreateDebugUtilsMessengerEXT");
+	auto vkCreateDebugUtilsMessengerEXT_func = reinterpret_cast<PFN_vkCreateDebugUtilsMessengerEXT> (
+	    vkGetInstanceProcAddr (instance, "vkCreateDebugUtilsMessengerEXT"));
 	if (vkCreateDebugUtilsMessengerEXT_func != nullptr) {
 		return vkCreateDebugUtilsMessengerEXT_func (instance, &messengerCreateInfo, nullptr, pDebugMessenger);
 	} else {
@@ -86,8 +86,8 @@ VkResult create_debug_utils_messenger (VkInstance instance,
 }
 
 void destroy_debug_utils_messenger (VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger) {
-	auto vkDestroyDebugUtilsMessengerEXT_func = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr (
-	    instance, "vkDestroyDebugUtilsMessengerEXT");
+	auto vkDestroyDebugUtilsMessengerEXT_func = reinterpret_cast<PFN_vkDestroyDebugUtilsMessengerEXT> (
+	    vkGetInstanceProcAddr (instance, "vkDestroyDebugUtilsMessengerEXT"));
 	if (vkDestroyDebugUtilsMessengerEXT_func != nullptr) {
 		vkDestroyDebugUtilsMessengerEXT_func (instance, debugMessenger, nullptr);
 	}

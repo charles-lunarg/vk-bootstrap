@@ -753,7 +753,7 @@ PhysicalDeviceSelector& PhysicalDeviceSelector::prefer_gpu_device_type (Preferre
 	criteria.preferred_type = type;
 	return *this;
 }
-PhysicalDeviceSelector& PhysicalDeviceSelector::allow_fallback_gpu (bool fallback) {
+PhysicalDeviceSelector& PhysicalDeviceSelector::allow_fallback_gpu_type (bool fallback) {
 	criteria.allow_fallback = fallback;
 	return *this;
 }

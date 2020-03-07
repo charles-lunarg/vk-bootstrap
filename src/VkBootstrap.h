@@ -97,7 +97,6 @@ template <typename E, typename U> class Expected {
 /* TODO implement operator == and operator != as friend or global */
 } // namespace detail
 
-
 struct SystemInfo {
 	SystemInfo ();
 	// Returns true if a layer is available
@@ -154,7 +153,6 @@ class InstanceBuilder {
 	InstanceBuilder& set_engine_version (uint32_t major, uint32_t minor, uint32_t patch);
 	// Sets the vulkan API version to use.
 	InstanceBuilder& set_api_version (uint32_t major, uint32_t minor, uint32_t patch);
-
 
 	// Loads the specified layer if it is available.
 	InstanceBuilder& request_layer (const char* layer_name);
@@ -293,7 +291,7 @@ class PhysicalDeviceSelector {
 	// Set the desired physical device type to select. Defaults to PreferredDeviceType::discrete.
 	PhysicalDeviceSelector& prefer_gpu_device_type (PreferredDeviceType type = PreferredDeviceType::discrete);
 	// Allow fallback to a device type that isn't the preferred physical device type. Defaults to true.
-	PhysicalDeviceSelector& allow_fallback_gpu (bool fallback = true);
+	PhysicalDeviceSelector& allow_fallback_gpu_type (bool fallback = true);
 
 	// Require that a physical device supports presentation. Defaults to true.
 	PhysicalDeviceSelector& require_present (bool require = true);

@@ -342,29 +342,17 @@ InstanceBuilder& InstanceBuilder::set_api_version (uint32_t major, uint32_t mino
 	info.api_version = VK_MAKE_VERSION (major, minor, patch);
 	return *this;
 }
-InstanceBuilder& InstanceBuilder::must_enable_layer (const char* layer_name) {
+InstanceBuilder& InstanceBuilder::enable_layer (const char* layer_name) {
 	if (!layer_name) return *this;
 	info.layers.push_back (layer_name);
 	return *this;
 }
-InstanceBuilder& InstanceBuilder::request_layer (const char* layer_name) {
-	if (!layer_name) return *this;
-	if (detail::check_layer_supported (system.available_layers, layer_name))
-		info.layers.push_back (layer_name);
-	return *this;
-}
-InstanceBuilder& InstanceBuilder::must_enable_extension (const char* extension_name) {
+InstanceBuilder& InstanceBuilder::enable_extension (const char* extension_name) {
 	if (!extension_name) return *this;
 	info.extensions.push_back (extension_name);
 	return *this;
 }
-InstanceBuilder& InstanceBuilder::request_extension (const char* extension_name) {
-	if (!extension_name) return *this;
-	if (detail::check_extension_supported (system.available_extensions, extension_name))
-		info.extensions.push_back (extension_name);
-	return *this;
-}
-InstanceBuilder& InstanceBuilder::must_enable_validation_layers (bool enable_validation) {
+InstanceBuilder& InstanceBuilder::enable_validation_layers (bool enable_validation) {
 	info.enable_validation_layers = enable_validation;
 	return *this;
 }
@@ -374,7 +362,6 @@ InstanceBuilder& InstanceBuilder::request_validation_layers (bool enable_validat
 	    detail::check_extension_supported (system.available_extensions, detail::validation_layer_name);
 	return *this;
 }
-
 InstanceBuilder& InstanceBuilder::use_default_debug_messenger () {
 	info.use_debug_messenger = true;
 	info.debug_callback = default_debug_callback;

@@ -117,7 +117,6 @@ enum class InstanceError {
 	requested_extensions_not_present
 };
 const char* to_string (InstanceError err);
-
 class InstanceBuilder;
 class PhysicalDeviceSelector;
 
@@ -133,8 +132,6 @@ struct Instance {
 };
 
 void destroy_instance (Instance instance); // release instance resources
-
-// TODO utility function for users to check if layer/extension is supported
 
 class InstanceBuilder {
 	public:
@@ -155,21 +152,16 @@ class InstanceBuilder {
 	// Sets the vulkan API version to use.
 	InstanceBuilder& set_api_version (uint32_t major, uint32_t minor, uint32_t patch);
 
-	// Loads the specified layer if it is available.
-	InstanceBuilder& request_layer (const char* layer_name);
 	// Adds a layer to be enabled. Will fail to create an instance if the layer isn't available.
-	InstanceBuilder& must_enable_layer (const char* layer_name);
-
-	// Enables the specified extension if it is available.
-	InstanceBuilder& request_extension (const char* extension_name);
+	InstanceBuilder& enable_layer (const char* layer_name);
 	// Adds an extension to be enabled. Will fail to create an instance if the extension isn't available.
-	InstanceBuilder& must_enable_extension (const char* extension_name);
+	InstanceBuilder& enable_extension (const char* extension_name);
 
 	// Headless Mode does not load the required extensions for presentation. Defaults to false.
 	InstanceBuilder& set_headless (bool headless = false);
 
 	// Enables the validation layers. Will fail to create an instance if the validation layers aren't available.
-	InstanceBuilder& must_enable_validation_layers (bool require_validation = true);
+	InstanceBuilder& enable_validation_layers (bool require_validation = true);
 	// Checks if the validation layers are available and loads them if they are.
 	InstanceBuilder& request_validation_layers (bool enable_validation = true);
 
@@ -226,8 +218,6 @@ class InstanceBuilder {
 		std::vector<VkValidationFeatureEnableEXT> enabled_validation_features;
 		std::vector<VkValidationFeatureDisableEXT> disabled_validation_features;
 
-		// booleans
-		bool ignore_non_critical_issues = true;
 		bool enable_validation_layers = false;
 		bool use_debug_messenger = false;
 		bool headless_context = false;

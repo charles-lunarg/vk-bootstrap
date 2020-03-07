@@ -16,26 +16,26 @@ option(VK_BOOTSTRAP_TEST "Test Vk-Bootstrap with glfw and Catch2" OFF)
 
 if (VK_BOOTSTRAP_TEST)
 
-set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
-set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
-set(GLFW_INSTALL OFF CACHE BOOL "" FORCE)
-set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-add_subdirectory(ext/glfw)
-add_subdirectory(ext/Catch2)
+    set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+    set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+    set(GLFW_INSTALL OFF CACHE BOOL "" FORCE)
+    set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+    add_subdirectory(ext/glfw)
+    add_subdirectory(ext/Catch2)
 
-add_executable(vk-bootstrap-test tests/run_tests.cpp)
+    add_executable(vk-bootstrap-test tests/run_tests.cpp)
 
-target_link_libraries(vk-bootstrap-test vk-bootstrap)
-target_link_libraries(vk-bootstrap-test glfw)
-target_link_libraries(vk-bootstrap-test Catch2)
+    target_link_libraries(vk-bootstrap-test vk-bootstrap)
+    target_link_libraries(vk-bootstrap-test glfw)
+    target_link_libraries(vk-bootstrap-test Catch2)
 
-add_executable(vk-bootstrap-triangle example/triangle.cpp)
-target_link_libraries(vk-bootstrap-triangle vk-bootstrap)
-target_link_libraries(vk-bootstrap-triangle glfw)
+    add_executable(vk-bootstrap-triangle example/triangle.cpp)
+    target_link_libraries(vk-bootstrap-triangle vk-bootstrap)
+    target_link_libraries(vk-bootstrap-triangle glfw)
 
-add_custom_command(
-    TARGET vk-bootstrap-triangle POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/example/shaders ${CMAKE_CURRENT_BINARY_DIR} 
-    DEPENDS ${CMAKE_CURRENT_BINARY_DIR}
-)
+    add_custom_command(
+        TARGET vk-bootstrap-triangle POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/example/shaders ${CMAKE_CURRENT_BINARY_DIR} 
+        DEPENDS ${CMAKE_CURRENT_BINARY_DIR}
+    )
 endif()

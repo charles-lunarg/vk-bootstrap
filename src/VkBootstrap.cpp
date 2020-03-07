@@ -158,6 +158,31 @@ const char* validation_layer_name = "VK_LAYER_KHRONOS_validation";
 
 } // namespace detail
 
+SystemInfo::SystemInfo () {
+	auto available_extensions =
+	    detail::get_vector<VkExtensionProperties> (vkEnumerateInstanceExtensionProperties, nullptr);
+	if (available_extensions.has_value ()) {
+		this->available_extensions = available_extensions.value ();
+	}
+	for (auto& ext : this->available_extensions)
+		if (ext.extensionName == VK_EXT_DEBUG_UTILS_EXTENSION_NAME)
+			debug_messenger_available = true;
+
+	auto available_layers = detail::get_vector<VkLayerProperties> (vkEnumerateInstanceLayerProperties);
+	if (available_layers.has_value ()) {
+		available_layers = available_layers.value ();
+	}
+	for (auto& layer : this->available_layers)
+		if (layer.layerName == detail::validation_layer_name) validation_layers_available = true;
+}
+bool SystemInfo::is_extension_available (const char* extension_name) {
+	if (!extension_name) return false;
+	return detail::check_extension_supported (available_extensions, extension_name);
+}
+bool SystemInfo::is_layer_available (const char* layer_name) {
+	if (!layer_name) return false;
+	return detail::check_layer_supported (available_layers, layer_name);
+}
 void destroy_instance (Instance instance) {
 	if (instance.instance != VK_NULL_HANDLE) {
 		if (instance.debug_messenger != nullptr)
@@ -165,17 +190,8 @@ void destroy_instance (Instance instance) {
 		vkDestroyInstance (instance.instance, nullptr);
 	}
 }
-InstanceBuilder::InstanceBuilder () {
-	auto available_extensions =
-	    detail::get_vector<VkExtensionProperties> (vkEnumerateInstanceExtensionProperties, nullptr);
-	if (available_extensions.has_value ()) {
-		system.available_extensions = available_extensions.value ();
-	}
-	auto available_layers = detail::get_vector<VkLayerProperties> (vkEnumerateInstanceLayerProperties);
-	if (available_layers.has_value ()) {
-		system.available_layers = available_layers.value ();
-	}
-}
+
+SystemInfo InstanceBuilder::get_system_info () { return system; }
 
 detail::Expected<Instance, detail::Error<InstanceError>> InstanceBuilder::build () {
 
@@ -317,18 +333,18 @@ InstanceBuilder& InstanceBuilder::must_enable_layer (const char* layer_name) {
 	info.layers.push_back (layer_name);
 	return *this;
 }
-InstanceBuilder& InstanceBuilder::must_enable_extension (const char* extension_name) {
-	if (!extension_name) return *this;
-	info.extensions.push_back (extension_name);
-	return *this;
-}
-InstanceBuilder& InstanceBuilder::check_and_add_layer (const char* layer_name) {
+InstanceBuilder& InstanceBuilder::request_layer (const char* layer_name) {
 	if (!layer_name) return *this;
 	if (detail::check_layer_supported (system.available_layers, layer_name))
 		info.layers.push_back (layer_name);
 	return *this;
 }
-InstanceBuilder& InstanceBuilder::check_and_add_extension (const char* extension_name) {
+InstanceBuilder& InstanceBuilder::must_enable_extension (const char* extension_name) {
+	if (!extension_name) return *this;
+	info.extensions.push_back (extension_name);
+	return *this;
+}
+InstanceBuilder& InstanceBuilder::request_extension (const char* extension_name) {
 	if (!extension_name) return *this;
 	if (detail::check_extension_supported (system.available_extensions, extension_name))
 		info.extensions.push_back (extension_name);
@@ -338,14 +354,14 @@ InstanceBuilder& InstanceBuilder::must_enable_validation_layers (bool enable_val
 	info.enable_validation_layers = enable_validation;
 	return *this;
 }
-InstanceBuilder& InstanceBuilder::check_and_setup_validation_layers (bool enable_validation) {
-	bool available =
+InstanceBuilder& InstanceBuilder::request_validation_layers (bool enable_validation) {
+	info.enable_validation_layers =
+	    enable_validation &&
 	    detail::check_extension_supported (system.available_extensions, detail::validation_layer_name);
-	info.enable_validation_layers = available;
 	return *this;
 }
 
-InstanceBuilder& InstanceBuilder::set_default_debug_messenger () {
+InstanceBuilder& InstanceBuilder::use_default_debug_messenger () {
 	info.use_debug_messenger = true;
 	info.debug_callback = default_debug_callback;
 	return *this;

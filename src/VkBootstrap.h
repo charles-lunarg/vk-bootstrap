@@ -97,6 +97,20 @@ template <typename E, typename U> class Expected {
 /* TODO implement operator == and operator != as friend or global */
 } // namespace detail
 
+
+struct SystemInfo {
+	SystemInfo ();
+	// Returns true if a layer is available
+	bool is_layer_available (const char* layer_name);
+	// Returns true if an extension is available
+	bool is_extension_available (const char* extension_name);
+
+	std::vector<VkLayerProperties> available_layers;
+	std::vector<VkExtensionProperties> available_extensions;
+	bool validation_layers_available = false;
+	bool debug_messenger_available = false;
+};
+
 enum class InstanceError {
 	failed_create_instance,
 	failed_create_debug_messenger,
@@ -124,8 +138,10 @@ void destroy_instance (Instance instance); // release instance resources
 
 class InstanceBuilder {
 	public:
-	InstanceBuilder (); // automatically gets available layers and extensions.
+	// contains useful information about the available vulkan capabilities, like layers and instance extensions.
+	SystemInfo get_system_info ();
 
+	// Create a VkInstance. Return an error if it failed.
 	detail::Expected<Instance, detail::Error<InstanceError>> build ();
 
 	// Sets the name of the application. Defaults to "" if none is provided.
@@ -141,23 +157,25 @@ class InstanceBuilder {
 
 
 	// Loads the specified layer if it is available.
-	InstanceBuilder& check_and_add_layer (const char* layer_name);
+	InstanceBuilder& request_layer (const char* layer_name);
 	// Adds a layer to be enabled. Will fail to create an instance if the layer isn't available.
 	InstanceBuilder& must_enable_layer (const char* layer_name);
+
 	// Enables the specified extension if it is available.
-	InstanceBuilder& check_and_add_extension (const char* extension_name);
+	InstanceBuilder& request_extension (const char* extension_name);
 	// Adds an extension to be enabled. Will fail to create an instance if the extension isn't available.
 	InstanceBuilder& must_enable_extension (const char* extension_name);
 
 	// Headless Mode does not load the required extensions for presentation. Defaults to false.
 	InstanceBuilder& set_headless (bool headless = false);
-	// Checks if the validation layers are available and loads them if they are.
-	InstanceBuilder& check_and_setup_validation_layers (bool enable_validation = true);
+
 	// Enables the validation layers. Will fail to create an instance if the validation layers aren't available.
-	InstanceBuilder& must_enable_validation_layers (bool enable_validation = true);
+	InstanceBuilder& must_enable_validation_layers (bool require_validation = true);
+	// Checks if the validation layers are available and loads them if they are.
+	InstanceBuilder& request_validation_layers (bool enable_validation = true);
 
 	// Use a default debug callback that prints to standard out.
-	InstanceBuilder& set_default_debug_messenger ();
+	InstanceBuilder& use_default_debug_messenger ();
 	// Provide a user defined debug callback.
 	InstanceBuilder& set_debug_callback (PFN_vkDebugUtilsMessengerCallbackEXT callback);
 	// Set what message severity is needed to trigger the callback.
@@ -216,10 +234,7 @@ class InstanceBuilder {
 		bool headless_context = false;
 	} info;
 
-	struct SystemInfo {
-		std::vector<VkLayerProperties> available_layers;
-		std::vector<VkExtensionProperties> available_extensions;
-	} system;
+	SystemInfo system;
 };
 
 const char* to_string_message_severity (VkDebugUtilsMessageSeverityFlagBitsEXT s);

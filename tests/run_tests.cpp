@@ -6,7 +6,7 @@ int test_happy_path () {
 	auto window = create_window_glfw ();
 
 	vkb::InstanceBuilder instance_builder;
-	auto instance_ret = instance_builder.set_default_debug_messenger ().build ();
+	auto instance_ret = instance_builder.use_default_debug_messenger ().build ();
 	if (!instance_ret) {
 		std::cout << static_cast<uint32_t> (instance_ret.error ().type) << "\n";
 		return -1; // couldn't make instance
@@ -44,7 +44,7 @@ int test_instance_basic () {
 	vkb::InstanceBuilder builder;
 
 	auto instance_ret =
-	    builder.check_and_setup_validation_layers ()
+	    builder.request_validation_layers ()
 	        .set_app_name ("test")
 	        .set_debug_callback ([] (VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
 	                                 VkDebugUtilsMessageTypeFlagsEXT messageType,
@@ -71,13 +71,13 @@ int test_instance_headless () {
 	vkb::InstanceBuilder builder;
 
 	auto instance_ret =
-	    builder.check_and_setup_validation_layers ()
+	    builder.request_validation_layers ()
 	        .set_headless ()
 	        .set_app_version (4, 5, 6)
 	        .set_app_name ("headless")
 	        .set_engine_name ("nick")
 	        .set_api_version (1, 0, 34)
-	        .set_default_debug_messenger ()
+	        .use_default_debug_messenger ()
 	        .add_validation_feature_enable (VkValidationFeatureEnableEXT::VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT)
 	        .add_validation_feature_disable (VkValidationFeatureDisableEXT::VK_VALIDATION_FEATURE_DISABLE_OBJECT_LIFETIMES_EXT)
 	        .add_validation_disable (VkValidationCheckEXT::VK_VALIDATION_CHECK_SHADERS_EXT)
@@ -93,7 +93,7 @@ int test_physical_device_selection () {
 	printf ("\nphysical device selection\n");
 
 	vkb::InstanceBuilder instance_builder;
-	auto instance_ret = instance_builder.set_default_debug_messenger ().build ();
+	auto instance_ret = instance_builder.use_default_debug_messenger ().build ();
 	auto instance = instance_ret.value ();
 	auto window = create_window_glfw ();
 	auto surface = create_surface_glfw (instance.instance, window);
@@ -117,7 +117,7 @@ int test_physical_device_selection () {
 int test_device_creation () {
 	printf ("\ndevice creation\n");
 	vkb::InstanceBuilder instance_builder;
-	auto instance_ret = instance_builder.set_default_debug_messenger ().build ();
+	auto instance_ret = instance_builder.use_default_debug_messenger ().build ();
 	if (!instance_ret.has_value ()) {
 		printf ("couldn't create instance %i\n", static_cast<uint32_t> (instance_ret.error ().type));
 		return -1;

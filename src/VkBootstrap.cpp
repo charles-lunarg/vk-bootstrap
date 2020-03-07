@@ -52,16 +52,14 @@ const char* to_string_message_severity (VkDebugUtilsMessageSeverityFlagBitsEXT s
 	}
 }
 const char* to_string_message_type (VkDebugUtilsMessageTypeFlagsEXT s) {
-	switch (s) {
-		case VkDebugUtilsMessageTypeFlagBitsEXT::VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT:
-			return "General";
-		case VkDebugUtilsMessageTypeFlagBitsEXT::VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT:
-			return "Validation";
-		case VkDebugUtilsMessageTypeFlagBitsEXT::VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT:
-			return "Performance";
-		default:
-			return "Unknown";
-	}
+	if (s == 7) return "General | Validation | Performance";
+	if (s == 6) return "Validation | Performance";
+	if (s == 5) return "General | Performance";
+	if (s == 4 /*VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT*/) return "Performance";
+	if (s == 3) return "General | Validation";
+	if (s == 2 /*VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT*/) return "Validation";
+	if (s == 1 /*VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT*/) return "General";
+	return "Unknown";
 }
 
 VkResult create_debug_utils_messenger (VkInstance instance,

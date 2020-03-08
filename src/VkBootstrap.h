@@ -364,6 +364,10 @@ class PhysicalDeviceSelector {
 	// Require a physical device which supports the features in VkPhysicalDeviceFeatures.
 	PhysicalDeviceSelector& set_required_features (VkPhysicalDeviceFeatures features);
 
+	// Used when surface creation happens after physical device selection.
+	// Warning: This disables checking if the physical device supports a given surface.
+	PhysicalDeviceSelector& defer_surface_initialization ();
+
 	// Ignore all criteria and choose the first physical device that is available.
 	// Only use when: The first gpu in the list may be set by global user preferences and an application may wish to respect it.
 	PhysicalDeviceSelector& select_first_device_unconditionally (bool unconditionally = true);
@@ -404,6 +408,7 @@ class PhysicalDeviceSelector {
 
 		VkPhysicalDeviceFeatures required_features{};
 
+		bool defer_surface_initialization = false;
 		bool use_first_gpu_unconditionally = false;
 	} criteria;
 

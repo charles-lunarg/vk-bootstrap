@@ -487,42 +487,6 @@ InstanceBuilder& InstanceBuilder::set_allocation_callbacks (VkAllocationCallback
 
 namespace detail {
 
-struct SurfaceSupportDetails {
-	VkSurfaceCapabilitiesKHR capabilities;
-	std::vector<VkSurfaceFormatKHR> formats;
-	std::vector<VkPresentModeKHR> present_modes;
-};
-
-enum class SurfaceSupportError {
-	surface_handle_null,
-	failed_get_surface_capabilities,
-	failed_enumerate_surface_formats,
-	failed_enumerate_present_modes
-};
-
-Expected<SurfaceSupportDetails, detail::Error<SurfaceSupportError>> query_surface_support_details (
-    VkPhysicalDevice phys_device, VkSurfaceKHR surface) {
-	if (surface == VK_NULL_HANDLE)
-		return detail::Error<SurfaceSupportError>{ SurfaceSupportError::surface_handle_null };
-
-	VkSurfaceCapabilitiesKHR capabilities;
-	VkResult res = vkGetPhysicalDeviceSurfaceCapabilitiesKHR (phys_device, surface, &capabilities);
-	if (res != VK_SUCCESS) {
-		return detail::Error<SurfaceSupportError>{ SurfaceSupportError::failed_get_surface_capabilities, res };
-	}
-	auto formats = detail::get_vector<VkSurfaceFormatKHR> (
-	    vkGetPhysicalDeviceSurfaceFormatsKHR, phys_device, surface);
-	if (!formats.has_value ())
-		return detail::Error<SurfaceSupportError>{ SurfaceSupportError::failed_enumerate_surface_formats,
-			formats.error () };
-	auto present_modes = detail::get_vector<VkPresentModeKHR> (
-	    vkGetPhysicalDeviceSurfacePresentModesKHR, phys_device, surface);
-	if (!present_modes.has_value ())
-		return detail::Error<SurfaceSupportError>{ SurfaceSupportError::failed_enumerate_present_modes,
-			formats.error () };
-	return SurfaceSupportDetails{ capabilities, formats.value (), present_modes.value () };
-}
-
 std::vector<const char*> check_device_extension_support (
     VkPhysicalDevice device, std::vector<const char*> desired_extensions) {
 	auto available_extensions =
@@ -720,13 +684,17 @@ PhysicalDeviceSelector::Suitable PhysicalDeviceSelector::is_device_suitable (Phy
 
 
 	bool swapChainAdequate = false;
-	if (!system_info.headless) {
-		auto swapChainSupport_ret =
-		    detail::query_surface_support_details (pd.phys_device, system_info.surface);
-		if (swapChainSupport_ret.has_value ()) {
-			auto swapchain_support = swapChainSupport_ret.value ();
-			swapChainAdequate =
-			    !swapchain_support.formats.empty () && !swapchain_support.present_modes.empty ();
+	if (criteria.defer_surface_initialization) {
+		swapChainAdequate = true;
+	} else if (!system_info.headless) {
+
+		auto formats = detail::get_vector<VkSurfaceFormatKHR> (
+		    vkGetPhysicalDeviceSurfaceFormatsKHR, pd.phys_device, system_info.surface);
+		auto present_modes = detail::get_vector<VkPresentModeKHR> (
+		    vkGetPhysicalDeviceSurfacePresentModesKHR, pd.phys_device, system_info.surface);
+
+		if (formats.has_value () && present_modes.has_value ()) {
+			swapChainAdequate = !formats.value ().empty () && !present_modes.value ().empty ();
 		}
 	}
 	if (criteria.require_present && !swapChainAdequate) suitable = Suitable::no;
@@ -892,6 +860,10 @@ PhysicalDeviceSelector& PhysicalDeviceSelector::set_required_features (VkPhysica
 	criteria.required_features = features;
 	return *this;
 }
+PhysicalDeviceSelector& PhysicalDeviceSelector::defer_surface_initialization () {
+	criteria.defer_surface_initialization = true;
+	return *this;
+}
 PhysicalDeviceSelector& PhysicalDeviceSelector::select_first_device_unconditionally (bool unconditionally) {
 	criteria.use_first_gpu_unconditionally = unconditionally;
 	return *this;
@@ -1045,6 +1017,42 @@ DeviceBuilder& DeviceBuilder::set_allocation_callbacks (VkAllocationCallbacks* c
 }
 
 namespace detail {
+struct SurfaceSupportDetails {
+	VkSurfaceCapabilitiesKHR capabilities;
+	std::vector<VkSurfaceFormatKHR> formats;
+	std::vector<VkPresentModeKHR> present_modes;
+};
+
+enum class SurfaceSupportError {
+	surface_handle_null,
+	failed_get_surface_capabilities,
+	failed_enumerate_surface_formats,
+	failed_enumerate_present_modes
+};
+
+Expected<SurfaceSupportDetails, detail::Error<SurfaceSupportError>> query_surface_support_details (
+    VkPhysicalDevice phys_device, VkSurfaceKHR surface) {
+	if (surface == VK_NULL_HANDLE)
+		return detail::Error<SurfaceSupportError>{ SurfaceSupportError::surface_handle_null };
+
+	VkSurfaceCapabilitiesKHR capabilities;
+	VkResult res = vkGetPhysicalDeviceSurfaceCapabilitiesKHR (phys_device, surface, &capabilities);
+	if (res != VK_SUCCESS) {
+		return detail::Error<SurfaceSupportError>{ SurfaceSupportError::failed_get_surface_capabilities, res };
+	}
+	auto formats = detail::get_vector<VkSurfaceFormatKHR> (
+	    vkGetPhysicalDeviceSurfaceFormatsKHR, phys_device, surface);
+	if (!formats.has_value ())
+		return detail::Error<SurfaceSupportError>{ SurfaceSupportError::failed_enumerate_surface_formats,
+			formats.error () };
+	auto present_modes = detail::get_vector<VkPresentModeKHR> (
+	    vkGetPhysicalDeviceSurfacePresentModesKHR, phys_device, surface);
+	if (!present_modes.has_value ())
+		return detail::Error<SurfaceSupportError>{ SurfaceSupportError::failed_enumerate_present_modes,
+			formats.error () };
+	return SurfaceSupportDetails{ capabilities, formats.value (), present_modes.value () };
+}
+
 VkSurfaceFormatKHR find_surface_format (std::vector<VkSurfaceFormatKHR> const& available_formats,
     std::vector<VkSurfaceFormatKHR> const& desired_formats) {
 	for (auto const& desired_format : desired_formats) {

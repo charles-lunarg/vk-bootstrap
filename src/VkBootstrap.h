@@ -424,9 +424,9 @@ struct Device {
 	std::vector<VkQueueFamilyProperties> queue_families;
 	VkAllocationCallbacks* allocation_callbacks = VK_NULL_HANDLE;
 
-	detail::Expected<int32_t, detail::Error<QueueError>> get_queue_index (QueueType type) const;
+	detail::Expected<uint32_t, detail::Error<QueueError>> get_queue_index (QueueType type) const;
 	// Only a compute or transfer queue type is valid. All other queue types do not support a 'dedicated' queue index
-	detail::Expected<int32_t, detail::Error<QueueError>> get_dedicated_queue_index (QueueType type) const;
+	detail::Expected<uint32_t, detail::Error<QueueError>> get_dedicated_queue_index (QueueType type) const;
 
 	detail::Expected<VkQueue, detail::Error<QueueError>> get_queue (QueueType type) const;
 	// Only a compute or transfer queue type is valid. All other queue types do not support a 'dedicated' queue
@@ -503,6 +503,8 @@ class SwapchainBuilder {
 
 	detail::Expected<Swapchain, detail::Error<SwapchainError>> build () const;
 	detail::Expected<Swapchain, detail::Error<SwapchainError>> recreate (Swapchain const& swapchain) const;
+
+	SwapchainBuilder& set_desired_extent (uint32_t width, uint32_t height);
 
 	SwapchainBuilder& set_desired_format (VkSurfaceFormatKHR format);
 	SwapchainBuilder& add_fallback_format (VkSurfaceFormatKHR format);

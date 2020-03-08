@@ -112,6 +112,8 @@ VkBool32 default_debug_callback (VkDebugUtilsMessageSeverityFlagBitsEXT messageS
 	auto ms = to_string_message_severity (messageSeverity);
 	auto mt = to_string_message_type (messageType);
 	printf ("[%s: %s]\n%s\n", ms, mt, pCallbackData->pMessage);
+
+	assert (pUserData == nullptr && "Default debug callback should have no user data");
 	return VK_FALSE;
 }
 
@@ -159,7 +161,7 @@ template <typename T>
 void setup_pNext_chain (T& structure, std::vector<VkBaseOutStructure*> const& structs) {
 	structure.pNext = nullptr;
 	if (structs.size () <= 0) return;
-	for (int i = 0; i < structs.size () - 1; i++) {
+	for (size_t i = 0; i < structs.size () - 1; i++) {
 		structs.at (i)->pNext = structs.at (i + 1);
 	}
 	structure.pNext = structs.at (0);
@@ -339,9 +341,11 @@ detail::Expected<Instance, detail::Error<InstanceError>> InstanceBuilder::build 
 	if (info.enabled_validation_features.size () != 0 || info.disabled_validation_features.size ()) {
 		features.sType = VK_STRUCTURE_TYPE_VALIDATION_FEATURES_EXT;
 		features.pNext = nullptr;
-		features.enabledValidationFeatureCount = info.enabled_validation_features.size ();
+		features.enabledValidationFeatureCount =
+		    static_cast<uint32_t> (info.enabled_validation_features.size ());
 		features.pEnabledValidationFeatures = info.enabled_validation_features.data ();
-		features.disabledValidationFeatureCount = info.disabled_validation_features.size ();
+		features.disabledValidationFeatureCount =
+		    static_cast<uint32_t> (info.disabled_validation_features.size ());
 		features.pDisabledValidationFeatures = info.disabled_validation_features.data ();
 		pNext_chain.push_back (reinterpret_cast<VkBaseOutStructure*> (&features));
 	}
@@ -350,7 +354,8 @@ detail::Expected<Instance, detail::Error<InstanceError>> InstanceBuilder::build 
 	if (info.disabled_validation_checks.size () != 0) {
 		checks.sType = VK_STRUCTURE_TYPE_VALIDATION_FLAGS_EXT;
 		checks.pNext = nullptr;
-		checks.disabledValidationCheckCount = info.disabled_validation_checks.size ();
+		checks.disabledValidationCheckCount =
+		    static_cast<uint32_t> (info.disabled_validation_checks.size ());
 		checks.pDisabledValidationChecks = info.disabled_validation_checks.data ();
 		pNext_chain.push_back (reinterpret_cast<VkBaseOutStructure*> (&checks));
 	}
@@ -597,8 +602,8 @@ bool supports_features (VkPhysicalDeviceFeatures supported, VkPhysicalDeviceFeat
 
 // finds the first queue which supports graphics operations. returns -1 if none is found
 int get_graphics_queue_index (std::vector<VkQueueFamilyProperties> const& families) {
-	for (int i = 0; i < families.size (); i++) {
-		if (families[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) return i;
+	for (size_t i = 0; i < families.size (); i++) {
+		if (families[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) return static_cast<int> (i);
 	}
 	return -1;
 }
@@ -606,13 +611,13 @@ int get_graphics_queue_index (std::vector<VkQueueFamilyProperties> const& famili
 // transfer support returns -1 if none is found
 int get_separate_compute_queue_index (std::vector<VkQueueFamilyProperties> const& families) {
 	int compute = -1;
-	for (int i = 0; i < families.size (); i++) {
+	for (size_t i = 0; i < families.size (); i++) {
 		if ((families[i].queueFlags & VK_QUEUE_COMPUTE_BIT) &&
 		    ((families[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) == 0)) {
 			if ((families[i].queueFlags & VK_QUEUE_TRANSFER_BIT) == 0) {
-				return i;
+				return static_cast<int> (i);
 			} else {
-				compute = i;
+				compute = static_cast<int> (i);
 			}
 		}
 	}
@@ -622,13 +627,13 @@ int get_separate_compute_queue_index (std::vector<VkQueueFamilyProperties> const
 // compute support returns -1 if none is found
 int get_separate_transfer_queue_index (std::vector<VkQueueFamilyProperties> const& families) {
 	int transfer = -1;
-	for (int i = 0; i < families.size (); i++) {
+	for (size_t i = 0; i < families.size (); i++) {
 		if ((families[i].queueFlags & VK_QUEUE_TRANSFER_BIT) &&
 		    ((families[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) == 0)) {
 			if ((families[i].queueFlags & VK_QUEUE_COMPUTE_BIT) == 0) {
-				return i;
+				return static_cast<int> (i);
 			} else {
-				transfer = i;
+				transfer = static_cast<int> (i);
 			}
 		}
 	}
@@ -636,21 +641,21 @@ int get_separate_transfer_queue_index (std::vector<VkQueueFamilyProperties> cons
 }
 // finds the first queue which supports only compute (not graphics or transfer). returns -1 if none is found
 int get_dedicated_compute_queue_index (std::vector<VkQueueFamilyProperties> const& families) {
-	for (int i = 0; i < families.size (); i++) {
+	for (size_t i = 0; i < families.size (); i++) {
 		if ((families[i].queueFlags & VK_QUEUE_COMPUTE_BIT) &&
 		    (families[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) == 0 &&
 		    (families[i].queueFlags & VK_QUEUE_TRANSFER_BIT) == 0)
-			return i;
+			return static_cast<int> (i);
 	}
 	return -1;
 }
 // finds the first queue which supports only transfer (not graphics or compute). returns -1 if none is found
 int get_dedicated_transfer_queue_index (std::vector<VkQueueFamilyProperties> const& families) {
-	for (int i = 0; i < families.size (); i++) {
+	for (size_t i = 0; i < families.size (); i++) {
 		if ((families[i].queueFlags & VK_QUEUE_TRANSFER_BIT) &&
 		    (families[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) == 0 &&
 		    (families[i].queueFlags & VK_QUEUE_COMPUTE_BIT) == 0)
-			return i;
+			return static_cast<int> (i);
 	}
 	return -1;
 }
@@ -658,12 +663,14 @@ int get_dedicated_transfer_queue_index (std::vector<VkQueueFamilyProperties> con
 int get_present_queue_index (VkPhysicalDevice const phys_device,
     VkSurfaceKHR const surface,
     std::vector<VkQueueFamilyProperties> const& families) {
-	for (int i = 0; i < families.size (); i++) {
+	for (size_t i = 0; i < families.size (); i++) {
 		VkBool32 presentSupport = false;
 		if (surface != VK_NULL_HANDLE) {
-			VkResult res = vkGetPhysicalDeviceSurfaceSupportKHR (phys_device, i, surface, &presentSupport);
+			VkResult res = vkGetPhysicalDeviceSurfaceSupportKHR (
+			    phys_device, static_cast<uint32_t> (i), surface, &presentSupport);
+			if (res != VK_SUCCESS) return -1; // TODO: determine if this should fail another way
 		}
-		if (presentSupport == true) return i;
+		if (presentSupport == true) return static_cast<int> (i);
 	}
 	return -1;
 }
@@ -740,7 +747,7 @@ PhysicalDeviceSelector::Suitable PhysicalDeviceSelector::is_device_suitable (Phy
 
 	bool has_required_memory = false;
 	bool has_preferred_memory = false;
-	for (int i = 0; i < pd.mem_properties.memoryHeapCount; i++) {
+	for (uint32_t i = 0; i < pd.mem_properties.memoryHeapCount; i++) {
 		if (pd.mem_properties.memoryHeaps[i].flags & VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT) {
 			if (pd.mem_properties.memoryHeaps[i].size > criteria.required_mem_size) {
 				has_required_memory = true;
@@ -905,7 +912,7 @@ bool PhysicalDevice::has_separate_transfer_queue () const {
 
 // ---- Queues ---- //
 
-detail::Expected<int32_t, detail::Error<QueueError>> Device::get_queue_index (QueueType type) const {
+detail::Expected<uint32_t, detail::Error<QueueError>> Device::get_queue_index (QueueType type) const {
 	int index = -1;
 	switch (type) {
 		case QueueType::present:
@@ -927,9 +934,9 @@ detail::Expected<int32_t, detail::Error<QueueError>> Device::get_queue_index (Qu
 		default:
 			return detail::Error<QueueError>{ QueueError::invalid_queue_family_index };
 	}
-	return index;
+	return static_cast<uint32_t> (index);
 }
-detail::Expected<int32_t, detail::Error<QueueError>> Device::get_dedicated_queue_index (QueueType type) const {
+detail::Expected<uint32_t, detail::Error<QueueError>> Device::get_dedicated_queue_index (QueueType type) const {
 	int index = -1;
 	switch (type) {
 		case QueueType::compute:
@@ -943,10 +950,10 @@ detail::Expected<int32_t, detail::Error<QueueError>> Device::get_dedicated_queue
 		default:
 			return detail::Error<QueueError>{ QueueError::invalid_queue_family_index };
 	}
-	return index;
+	return static_cast<uint32_t> (index);
 }
 namespace detail {
-VkQueue get_queue (VkDevice device, int32_t family) {
+VkQueue get_queue (VkDevice device, uint32_t family) {
 	VkQueue out_queue;
 	vkGetDeviceQueue (device, family, 0, &out_queue);
 	return out_queue;
@@ -1074,9 +1081,7 @@ VkExtent2D find_extent (
 	if (capabilities.currentExtent.width != UINT32_MAX) {
 		return capabilities.currentExtent;
 	} else {
-		const int WIDTH = 800;
-		const int HEIGHT = 600;
-		VkExtent2D actualExtent = { WIDTH, HEIGHT };
+		VkExtent2D actualExtent = { desired_width, desired_height };
 
 		actualExtent.width = maximum (capabilities.minImageExtent.width,
 		    minimum (capabilities.maxImageExtent.width, actualExtent.width));
@@ -1173,7 +1178,7 @@ detail::Expected<Swapchain, detail::Error<SwapchainError>> SwapchainBuilder::bui
 	swapchain.image_format = surface_format.format;
 	swapchain.extent = extent;
 	auto images = get_swapchain_images (swapchain);
-	swapchain.image_count = images.value ().size ();
+	swapchain.image_count = static_cast<uint32_t> (images.value ().size ());
 	swapchain.allocation_callbacks = info.allocation_callbacks;
 	return swapchain;
 }
@@ -1224,7 +1229,11 @@ void destroy_swapchain (Swapchain const& swapchain) {
 	if (swapchain.device != VK_NULL_HANDLE && swapchain.swapchain != VK_NULL_HANDLE)
 		vkDestroySwapchainKHR (swapchain.device, swapchain.swapchain, swapchain.allocation_callbacks);
 }
-
+SwapchainBuilder& SwapchainBuilder::set_desired_extent (uint32_t width, uint32_t height) {
+	info.desired_width = width;
+	info.desired_height = height;
+	return *this;
+}
 SwapchainBuilder& SwapchainBuilder::set_desired_format (VkSurfaceFormatKHR format) {
 	info.desired_formats.insert (info.desired_formats.begin (), format);
 	return *this;

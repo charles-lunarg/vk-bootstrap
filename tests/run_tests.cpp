@@ -55,7 +55,7 @@ int test_instance_basic () {
 		        printf ("[%s: %s](user defined)\n%s\n", ms, mt, pCallbackData->pMessage);
 		        return VK_FALSE;
 	        })
-	        .set_api_version (1, 2, 111)
+	        .require_api_version (1, 2, 111)
 	        .build ();
 	if (!instance_ret.has_value ()) {
 		return 1;
@@ -76,7 +76,7 @@ int test_instance_headless () {
 	        .set_app_version (4, 5, 6)
 	        .set_app_name ("headless")
 	        .set_engine_name ("nick")
-	        .set_api_version (1, 0, 34)
+	        .require_api_version (1, 0, 34)
 	        .use_default_debug_messenger ()
 	        .add_validation_feature_enable (VkValidationFeatureEnableEXT::VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT)
 	        .add_validation_feature_disable (VkValidationFeatureDisableEXT::VK_VALIDATION_FEATURE_DISABLE_OBJECT_LIFETIMES_EXT)

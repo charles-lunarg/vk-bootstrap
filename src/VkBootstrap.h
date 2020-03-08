@@ -159,6 +159,7 @@ struct Instance {
 
 	private:
 	bool headless = false;
+	uint32_t instance_version = VK_MAKE_VERSION (1, 0, 0);
 
 	friend class InstanceBuilder;
 	friend class PhysicalDeviceSelector;
@@ -182,8 +183,8 @@ class InstanceBuilder {
 	InstanceBuilder& set_app_version (uint32_t major, uint32_t minor, uint32_t patch);
 	// Sets the (major, minor, patch) version of the engine.
 	InstanceBuilder& set_engine_version (uint32_t major, uint32_t minor, uint32_t patch);
-	// Sets the vulkan API version to use.
-	InstanceBuilder& set_api_version (uint32_t major, uint32_t minor, uint32_t patch);
+	// Require a minimum vulkan instance API version.
+	InstanceBuilder& require_api_version (uint32_t major, uint32_t minor, uint32_t patch);
 
 	// Adds a layer to be enabled. Will fail to create an instance if the layer isn't available.
 	InstanceBuilder& enable_layer (const char* layer_name);

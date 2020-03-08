@@ -406,6 +406,7 @@ detail::Expected<Instance, detail::Error<InstanceError>> InstanceBuilder::build 
 		instance.headless = true;
 	}
 	instance.allocation_callbacks = info.allocation_callbacks;
+	instance.instance_version = info.api_version;
 	return instance;
 }
 
@@ -427,7 +428,7 @@ InstanceBuilder& InstanceBuilder::set_engine_version (uint32_t major, uint32_t m
 	info.engine_version = VK_MAKE_VERSION (major, minor, patch);
 	return *this;
 }
-InstanceBuilder& InstanceBuilder::set_api_version (uint32_t major, uint32_t minor, uint32_t patch) {
+InstanceBuilder& InstanceBuilder::require_api_version (uint32_t major, uint32_t minor, uint32_t patch) {
 	info.api_version = VK_MAKE_VERSION (major, minor, patch);
 	return *this;
 }
@@ -750,6 +751,7 @@ PhysicalDeviceSelector::PhysicalDeviceSelector (Instance const& instance) {
 	system_info.instance = instance.instance;
 	system_info.headless = instance.headless;
 	criteria.require_present = !instance.headless;
+	criteria.required_version = instance.instance_version;
 }
 
 detail::Expected<PhysicalDevice, detail::Error<PhysicalDeviceError>> PhysicalDeviceSelector::select () const {

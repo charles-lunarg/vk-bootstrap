@@ -172,6 +172,8 @@ const char* validation_layer_name = "VK_LAYER_KHRONOS_validation";
 
 const char* to_string (InstanceError err) {
 	switch (err) {
+		case InstanceError::unavailable_vulkan_version:
+			return "unavailable_vulkan_version";
 		case InstanceError::failed_create_debug_messenger:
 			return "failed_create_debug_messenger";
 		case InstanceError::failed_create_instance:
@@ -276,6 +278,19 @@ SystemInfo InstanceBuilder::get_system_info () const { return system; }
 
 detail::Expected<Instance, detail::Error<InstanceError>> InstanceBuilder::build () const {
 
+	if (VK_VERSION_MINOR (info.api_version) > 0) {
+		PFN_vkEnumerateInstanceVersion pfn_vkEnumerateInstanceVersion;
+		detail::get_inst_proc_addr (
+		    pfn_vkEnumerateInstanceVersion, "vkEnumerateInstanceVersion", nullptr, vkGetInstanceProcAddr);
+		if (pfn_vkEnumerateInstanceVersion == nullptr) {
+			return detail::Error<InstanceError>{ InstanceError::unavailable_vulkan_version };
+		} else if (pfn_vkEnumerateInstanceVersion != nullptr) {
+			uint32_t api_version = 0;
+			pfn_vkEnumerateInstanceVersion (&api_version);
+			if (VK_VERSION_MINOR (api_version) < VK_VERSION_MINOR (info.api_version))
+				return detail::Error<InstanceError>{ InstanceError::unavailable_vulkan_version };
+		}
+	}
 	VkApplicationInfo app_info = {};
 	app_info.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
 	app_info.pNext = nullptr;

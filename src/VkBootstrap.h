@@ -98,6 +98,7 @@ template <typename E, typename U> class Expected {
 } // namespace detail
 
 enum class InstanceError {
+	unavailable_vulkan_version,
 	failed_create_instance,
 	failed_create_debug_messenger,
 	requested_layers_not_present,

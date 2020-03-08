@@ -445,6 +445,7 @@ struct CustomQueueDescription {
 
 class DeviceBuilder {
 	public:
+	// Any features and extensions that are requested/required in PhysicalDeviceSelector are automatically enabled.
 	DeviceBuilder (PhysicalDevice physical_device);
 
 	detail::Expected<Device, detail::Error<DeviceError>> build ();
@@ -465,8 +466,10 @@ class DeviceBuilder {
 		VkDeviceCreateFlags flags = 0;
 		std::vector<VkBaseOutStructure*> pNext_chain;
 		PhysicalDevice physical_device;
-		std::vector<const char*> extensions;
+		VkSurfaceKHR surface;
 		std::vector<VkQueueFamilyProperties> queue_families;
+		VkPhysicalDeviceFeatures features;
+		std::vector<const char*> extensions_to_enable;
 		std::vector<CustomQueueDescription> queue_descriptions;
 		VkAllocationCallbacks* allocation_callbacks = VK_NULL_HANDLE;
 	} info;
@@ -522,9 +525,9 @@ class SwapchainBuilder {
 		std::vector<VkPresentModeKHR> desired_present_modes;
 		uint32_t desired_width = 256;
 		uint32_t desired_height = 256;
-		std::vector<VkBaseOutStructure*> pNext_elements;
 		uint32_t graphics_queue_index = 0;
 		uint32_t present_queue_index = 0;
+		std::vector<VkBaseOutStructure*> pNext_elements;
 		VkAllocationCallbacks* allocation_callbacks = VK_NULL_HANDLE;
 	} info;
 };

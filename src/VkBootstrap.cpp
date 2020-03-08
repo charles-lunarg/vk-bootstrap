@@ -960,8 +960,10 @@ void destroy_device (Device device) {
 
 DeviceBuilder::DeviceBuilder (PhysicalDevice phys_device) {
 	info.physical_device = phys_device;
-	info.extensions = phys_device.extensions_to_enable;
+	info.surface = phys_device.surface;
 	info.queue_families = phys_device.queue_families;
+	info.features = phys_device.features;
+	info.extensions_to_enable = phys_device.extensions_to_enable;
 }
 
 detail::Expected<Device, detail::Error<DeviceError>> DeviceBuilder::build () {
@@ -986,11 +988,8 @@ detail::Expected<Device, detail::Error<DeviceError>> DeviceBuilder::build () {
 		queueCreateInfos.push_back (queue_create_info);
 	}
 
-	std::vector<const char*> extensions;
-	for (auto& ext : info.extensions)
-		extensions.push_back (ext);
-	if (info.physical_device.surface != VK_NULL_HANDLE)
-		extensions.push_back ({ VK_KHR_SWAPCHAIN_EXTENSION_NAME });
+	std::vector<const char*> extensions = info.extensions_to_enable;
+	if (info.surface != VK_NULL_HANDLE) extensions.push_back ({ VK_KHR_SWAPCHAIN_EXTENSION_NAME });
 
 	VkDeviceCreateInfo device_create_info = {};
 	device_create_info.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
@@ -1000,7 +999,7 @@ detail::Expected<Device, detail::Error<DeviceError>> DeviceBuilder::build () {
 	device_create_info.pQueueCreateInfos = queueCreateInfos.data ();
 	device_create_info.enabledExtensionCount = static_cast<uint32_t> (extensions.size ());
 	device_create_info.ppEnabledExtensionNames = extensions.data ();
-	device_create_info.pEnabledFeatures = &info.physical_device.features;
+	device_create_info.pEnabledFeatures = &info.features;
 
 	Device device;
 	VkResult res = vkCreateDevice (
@@ -1009,7 +1008,7 @@ detail::Expected<Device, detail::Error<DeviceError>> DeviceBuilder::build () {
 		return detail::Error<DeviceError>{ DeviceError::failed_create_device, res };
 	}
 	device.physical_device = info.physical_device;
-	device.surface = info.physical_device.surface;
+	device.surface = info.surface;
 	device.queue_families = info.queue_families;
 	device.allocation_callbacks = info.allocation_callbacks;
 	return device;

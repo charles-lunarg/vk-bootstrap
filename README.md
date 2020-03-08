@@ -25,9 +25,9 @@ It also adds several conveniences for:
 void init_vulkan()
 {
     vkb::InstanceBuilder builder;
-    builder.check_and_setup_validation_layers()
+    builder.request_validation_layers()
            .set_app_name ("Example Vulkan Application")
-           .set_default_debug_messenger ();
+           .use_default_debug_messenger ();
     auto inst_ret = builder.build();
     if (!inst_ret.has_value()) {
         // error
@@ -37,7 +37,7 @@ void init_vulkan()
     vkb::PhysicalDeviceSelector selector{ inst };
     selector.set_surface (/* from user created window*/)
             .set_minimum_version (1, 1) //require a vulkan 1.1 capable device
-            .require_dedicated_transfer_queue(); //require a transfer queue
+            .require_dedicated_transfer_queue();
     auto phys_ret = selector.select ();
     if (!phys_ret.has_value()) {
         // error
@@ -48,18 +48,19 @@ void init_vulkan()
     if (!dev_ret.has_value()){
         // error
     }
+    vkb::Device dev = dev_ret.value();
 
     // Get the VkDevice handle used in the rest of a vulkan application
-    VkDevice device = dev_ret.value().device;
+    VkDevice device = dev.device;
 
     // Get the graphics queue with a helper function
-    auto graphics_queue_ret = vkb::get_graphics_queue(dev_ret.value());
+    auto graphics_queue_ret = dev.get_queue(vkb::QueueType::graphics);
     if (!graphics_queue_ret.has_value()){
         // error
     }
     VkQueue graphics_queue = graphics_queue_ret.value();
 
-    // Reduced 400-500 lines of boilerplate to a less than fifty.
+    // Turned 400-500 lines of boilerplate into less than fifty.
 }
 
 ```

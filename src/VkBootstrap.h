@@ -97,6 +97,44 @@ template <typename E, typename U> class Expected {
 /* TODO implement operator == and operator != as friend or global */
 } // namespace detail
 
+enum class InstanceError {
+	failed_create_instance,
+	failed_create_debug_messenger,
+	requested_layers_not_present,
+	requested_extensions_not_present
+};
+enum class PhysicalDeviceError {
+	failed_enumerate_physical_devices,
+	no_physical_devices_found,
+	no_suitable_device,
+};
+enum class QueueError {
+	present_unavailable,
+	graphics_unavailable,
+	compute_unavailable,
+	transfer_unavailable,
+	queue_index_out_of_range,
+	invalid_queue_family_index
+};
+enum class DeviceError {
+	failed_create_device,
+};
+enum class SwapchainError {
+	failed_query_surface_support_details,
+	failed_create_swapchain,
+	failed_get_swapchain_images,
+	failed_create_swapchain_image_views,
+};
+const char* to_string_message_severity (VkDebugUtilsMessageSeverityFlagBitsEXT s);
+const char* to_string_message_type (VkDebugUtilsMessageTypeFlagsEXT s);
+
+const char* to_string (InstanceError err);
+const char* to_string (PhysicalDeviceError err);
+const char* to_string (QueueError err);
+const char* to_string (DeviceError err);
+const char* to_string (SwapchainError err);
+
+
 struct SystemInfo {
 	SystemInfo ();
 	// Returns true if a layer is available
@@ -110,13 +148,6 @@ struct SystemInfo {
 	bool debug_messenger_available = false;
 };
 
-enum class InstanceError {
-	failed_create_instance,
-	failed_create_debug_messenger,
-	requested_layers_not_present,
-	requested_extensions_not_present
-};
-const char* to_string (InstanceError err);
 class InstanceBuilder;
 class PhysicalDeviceSelector;
 
@@ -233,9 +264,6 @@ class InstanceBuilder {
 	SystemInfo system;
 };
 
-const char* to_string_message_severity (VkDebugUtilsMessageSeverityFlagBitsEXT s);
-const char* to_string_message_type (VkDebugUtilsMessageTypeFlagsEXT s);
-
 VkResult create_debug_utils_messenger (VkInstance instance,
     PFN_vkDebugUtilsMessengerCallbackEXT debug_callback,
     VkDebugUtilsMessageSeverityFlagsEXT severity,
@@ -253,14 +281,6 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL default_debug_callback (VkDebugUtilsMessag
     void* pUserData);
 
 // ---- Physical Device ---- //
-enum class PhysicalDeviceError {
-	failed_enumerate_physical_devices,
-	no_physical_devices_found,
-	no_suitable_device,
-};
-
-const char* to_string (PhysicalDeviceError err);
-
 class PhysicalDeviceSelector;
 class DeviceBuilder;
 
@@ -392,25 +412,10 @@ class PhysicalDeviceSelector {
 	Suitable is_device_suitable (PhysicalDeviceDesc phys_device);
 };
 
-// ---- Queues ---- //
+// ---- Queue ---- //
 enum class QueueType { present, graphics, compute, transfer };
 
-enum class QueueError {
-	present_unavailable,
-	graphics_unavailable,
-	compute_unavailable,
-	transfer_unavailable,
-	queue_index_out_of_range,
-	invalid_queue_family_index
-};
-const char* to_string (QueueError err);
-
 // ---- Device ---- //
-enum class DeviceError {
-	failed_create_device,
-};
-
-const char* to_string (DeviceError err);
 
 struct Device {
 	VkDevice device = VK_NULL_HANDLE;
@@ -420,9 +425,11 @@ struct Device {
 	VkAllocationCallbacks* allocation_callbacks = VK_NULL_HANDLE;
 
 	detail::Expected<int32_t, detail::Error<QueueError>> get_queue_index (QueueType type) const;
+	// Only a compute or transfer queue type is valid. All other queue types do not support a 'dedicated' queue index
 	detail::Expected<int32_t, detail::Error<QueueError>> get_dedicated_queue_index (QueueType type) const;
 
 	detail::Expected<VkQueue, detail::Error<QueueError>> get_queue (QueueType type) const;
+	// Only a compute or transfer queue type is valid. All other queue types do not support a 'dedicated' queue
 	detail::Expected<VkQueue, detail::Error<QueueError>> get_dedicated_queue (QueueType type) const;
 };
 
@@ -466,14 +473,6 @@ class DeviceBuilder {
 };
 
 // ---- Swapchain ---- //
-
-enum class SwapchainError {
-	failed_query_surface_support_details,
-	failed_create_swapchain,
-	failed_get_swapchain_images,
-	failed_create_swapchain_image_views,
-};
-const char* to_string (SwapchainError err);
 struct Swapchain {
 	VkDevice device = VK_NULL_HANDLE;
 	VkSwapchainKHR swapchain = VK_NULL_HANDLE;

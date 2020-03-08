@@ -268,14 +268,20 @@ struct PhysicalDevice {
 	VkPhysicalDevice phys_device = VK_NULL_HANDLE;
 	VkSurfaceKHR surface = VK_NULL_HANDLE;
 
+	// Has a queue family that supports compute operations but not graphics nor transfer.
+	bool has_dedicated_compute_queue ();
+	// Has a queue family that supports transfer operations but not graphics nor compute.
+	bool has_dedicated_transfer_queue ();
+
+	// Has a queue family that supports transfer operations but not graphics.
+	bool has_separate_compute_queue ();
+	// Has a queue family that supports transfer operations but not graphics.
+	bool has_separate_transfer_queue ();
+
 	private:
 	VkPhysicalDeviceFeatures features{};
 	std::vector<const char*> extensions_to_enable;
 	std::vector<VkQueueFamilyProperties> queue_families;
-	bool dedicated_compute = false;
-	bool separate_compute = false;
-	bool dedicated_transfer = false;
-	bool separate_transfer = false;
 	friend class PhysicalDeviceSelector;
 	friend class DeviceBuilder;
 };
@@ -304,10 +310,12 @@ class PhysicalDeviceSelector {
 
 	// Require that a physical device supports presentation. Defaults to true.
 	PhysicalDeviceSelector& require_present (bool require = true);
+
 	// Require a queue family that supports compute operations but not graphics nor transfer.
 	PhysicalDeviceSelector& require_dedicated_compute_queue ();
 	// Require a queue family that supports transfer operations but not graphics nor compute.
 	PhysicalDeviceSelector& require_dedicated_transfer_queue ();
+
 	// Require a queue family that supports compute operations but not graphics.
 	PhysicalDeviceSelector& require_separate_compute_queue ();
 	// Require a queue family that supports transfer operations but not graphics.
@@ -384,6 +392,19 @@ class PhysicalDeviceSelector {
 	Suitable is_device_suitable (PhysicalDeviceDesc phys_device);
 };
 
+// ---- Queues ---- //
+enum class QueueType { present, graphics, compute, transfer };
+
+enum class QueueError {
+	present_unavailable,
+	graphics_unavailable,
+	compute_unavailable,
+	transfer_unavailable,
+	queue_index_out_of_range,
+	invalid_queue_family_index
+};
+const char* to_string (QueueError err);
+
 // ---- Device ---- //
 enum class DeviceError {
 	failed_create_device,
@@ -397,6 +418,12 @@ struct Device {
 	VkSurfaceKHR surface = VK_NULL_HANDLE;
 	std::vector<VkQueueFamilyProperties> queue_families;
 	VkAllocationCallbacks* allocation_callbacks = VK_NULL_HANDLE;
+
+	detail::Expected<int32_t, detail::Error<QueueError>> get_queue_index (QueueType type) const;
+	detail::Expected<int32_t, detail::Error<QueueError>> get_dedicated_queue_index (QueueType type) const;
+
+	detail::Expected<VkQueue, detail::Error<QueueError>> get_queue (QueueType type) const;
+	detail::Expected<VkQueue, detail::Error<QueueError>> get_dedicated_queue (QueueType type) const;
 };
 
 void destroy_device (Device device);
@@ -415,26 +442,11 @@ class DeviceBuilder {
 
 	detail::Expected<Device, detail::Error<DeviceError>> build ();
 
-	bool has_dedicated_compute_queue ();
-	bool has_separate_compute_queue ();
-	bool has_dedicated_transfer_queue ();
-	bool has_separate_transfer_queue ();
-
-	// Require a queue family that supports compute operations but not graphics nor transfer.
-	DeviceBuilder& request_dedicated_compute_queue (bool compute = true);
-	// Require a queue family that supports transfer operations but not graphics nor compute.
-	DeviceBuilder& request_dedicated_transfer_queue (bool transfer = true);
-
-	// Require a queue family that supports compute operations but not graphics.
-	DeviceBuilder& request_separate_compute_queue (bool compute = true);
-	// Require a queue family that supports transfer operations but not graphics.
-	DeviceBuilder& request_separate_transfer_queue (bool transfer = true);
-
 	// For Advanced Users: specify the exact list of VkDeviceQueueCreateInfo's needed for the application.
 	// If a custom queue setup is provided, getting the queues and queue indexes is up to the application.
 	DeviceBuilder& custom_queue_setup (std::vector<CustomQueueDescription> queue_descriptions);
 
-	// For Advanced Users: Add a structure to the pNext chain of VkDeviceCreateInfo.
+	// Add a structure to the pNext chain of VkDeviceCreateInfo.
 	// The structure must be valid when DeviceBuilder::build() is called.
 	template <typename T> DeviceBuilder& add_pNext (T* structure);
 
@@ -449,35 +461,9 @@ class DeviceBuilder {
 		std::vector<const char*> extensions;
 		std::vector<VkQueueFamilyProperties> queue_families;
 		std::vector<CustomQueueDescription> queue_descriptions;
-		bool dedicated_compute = false;
-		bool separate_compute = false;
-		bool dedicated_transfer = false;
-		bool separate_transfer = false;
 		VkAllocationCallbacks* allocation_callbacks = VK_NULL_HANDLE;
 	} info;
 };
-
-// ---- Queues ---- //
-
-enum class QueueError {
-	present_unavailable,
-	compute_unavailable,
-	transfer_unavailable,
-	queue_index_out_of_range,
-	invalid_queue_family_index
-};
-const char* to_string (QueueError err);
-
-detail::Expected<uint32_t, detail::Error<QueueError>> get_present_queue_index (Device const& device);
-detail::Expected<uint32_t, detail::Error<QueueError>> get_graphics_queue_index (Device const& device);
-detail::Expected<uint32_t, detail::Error<QueueError>> get_compute_queue_index (Device const& device);
-detail::Expected<uint32_t, detail::Error<QueueError>> get_transfer_queue_index (Device const& device);
-
-detail::Expected<VkQueue, detail::Error<QueueError>> get_present_queue (Device const& device);
-detail::Expected<VkQueue, detail::Error<QueueError>> get_graphics_queue (Device const& device);
-detail::Expected<VkQueue, detail::Error<QueueError>> get_compute_queue (Device const& device);
-detail::Expected<VkQueue, detail::Error<QueueError>> get_transfer_queue (Device const& device);
-
 
 // ---- Swapchain ---- //
 

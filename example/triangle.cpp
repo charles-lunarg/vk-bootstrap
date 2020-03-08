@@ -75,13 +75,14 @@ int device_initialization (Init& init) {
 }
 
 int get_queues (Init& init, RenderData& data) {
-	auto gq = vkb::get_graphics_queue (init.device);
+	auto gq = init.device.get_queue (vkb::QueueType::graphics);
 	if (!gq.has_value ()) {
 		std::cout << "failed to get graphics queue\n";
 		return -1;
 	}
 	data.graphics_queue = gq.value ();
-	auto pq = vkb::get_present_queue (init.device);
+
+	auto pq = init.device.get_queue (vkb::QueueType::present);
 	if (!pq.has_value ()) {
 		std::cout << "failed to get present queue\n";
 		return -1;
@@ -314,7 +315,7 @@ int create_framebuffers (Init& init, RenderData& data) {
 int create_command_pool (Init& init, RenderData& data) {
 	VkCommandPoolCreateInfo pool_info = {};
 	pool_info.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
-	pool_info.queueFamilyIndex = vkb::get_graphics_queue_index (init.device).value ();
+	pool_info.queueFamilyIndex = init.device.get_queue_index (vkb::QueueType::graphics).value ();
 
 	if (vkCreateCommandPool (init.device.device, &pool_info, nullptr, &data.command_pool) != VK_SUCCESS) {
 		return -1; // failed to create command pool

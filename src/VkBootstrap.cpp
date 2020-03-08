@@ -253,11 +253,11 @@ SystemInfo::SystemInfo () {
 		if (strcmp (layer.layerName, detail::validation_layer_name) == 0)
 			validation_layers_available = true;
 }
-bool SystemInfo::is_extension_available (const char* extension_name) {
+bool SystemInfo::is_extension_available (const char* extension_name) const {
 	if (!extension_name) return false;
 	return detail::check_extension_supported (available_extensions, extension_name);
 }
-bool SystemInfo::is_layer_available (const char* layer_name) {
+bool SystemInfo::is_layer_available (const char* layer_name) const {
 	if (!layer_name) return false;
 	return detail::check_layer_supported (available_layers, layer_name);
 }
@@ -270,9 +270,9 @@ void destroy_instance (Instance instance) {
 	}
 }
 
-SystemInfo InstanceBuilder::get_system_info () { return system; }
+SystemInfo InstanceBuilder::get_system_info () const { return system; }
 
-detail::Expected<Instance, detail::Error<InstanceError>> InstanceBuilder::build () {
+detail::Expected<Instance, detail::Error<InstanceError>> InstanceBuilder::build () const {
 
 	VkApplicationInfo app_info = {};
 	app_info.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
@@ -323,6 +323,8 @@ detail::Expected<Instance, detail::Error<InstanceError>> InstanceBuilder::build 
 		return detail::Error<InstanceError>{ InstanceError::requested_layers_not_present };
 	}
 
+	std::vector<VkBaseOutStructure*> pNext_chain;
+
 	VkDebugUtilsMessengerCreateInfoEXT messengerCreateInfo = {};
 	if (info.use_debug_messenger) {
 		messengerCreateInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
@@ -330,7 +332,7 @@ detail::Expected<Instance, detail::Error<InstanceError>> InstanceBuilder::build 
 		messengerCreateInfo.messageSeverity = info.debug_message_severity;
 		messengerCreateInfo.messageType = info.debug_message_type;
 		messengerCreateInfo.pfnUserCallback = info.debug_callback;
-		info.pNext_elements.push_back (reinterpret_cast<VkBaseOutStructure*> (&messengerCreateInfo));
+		pNext_chain.push_back (reinterpret_cast<VkBaseOutStructure*> (&messengerCreateInfo));
 	}
 
 	VkValidationFeaturesEXT features{};
@@ -341,7 +343,7 @@ detail::Expected<Instance, detail::Error<InstanceError>> InstanceBuilder::build 
 		features.pEnabledValidationFeatures = info.enabled_validation_features.data ();
 		features.disabledValidationFeatureCount = info.disabled_validation_features.size ();
 		features.pDisabledValidationFeatures = info.disabled_validation_features.data ();
-		info.pNext_elements.push_back (reinterpret_cast<VkBaseOutStructure*> (&features));
+		pNext_chain.push_back (reinterpret_cast<VkBaseOutStructure*> (&features));
 	}
 
 	VkValidationFlagsEXT checks{};
@@ -350,12 +352,12 @@ detail::Expected<Instance, detail::Error<InstanceError>> InstanceBuilder::build 
 		checks.pNext = nullptr;
 		checks.disabledValidationCheckCount = info.disabled_validation_checks.size ();
 		checks.pDisabledValidationChecks = info.disabled_validation_checks.data ();
-		info.pNext_elements.push_back (reinterpret_cast<VkBaseOutStructure*> (&checks));
+		pNext_chain.push_back (reinterpret_cast<VkBaseOutStructure*> (&checks));
 	}
 
 	VkInstanceCreateInfo instance_create_info = {};
 	instance_create_info.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
-	detail::setup_pNext_chain (instance_create_info, info.pNext_elements);
+	detail::setup_pNext_chain (instance_create_info, pNext_chain);
 	instance_create_info.flags = info.flags;
 	instance_create_info.pApplicationInfo = &app_info;
 	instance_create_info.enabledExtensionCount = static_cast<uint32_t> (extensions.size ());
@@ -669,7 +671,7 @@ int get_present_queue_index (VkPhysicalDevice const phys_device,
 
 
 PhysicalDeviceSelector::PhysicalDeviceDesc PhysicalDeviceSelector::populate_device_details (
-    VkPhysicalDevice phys_device) {
+    VkPhysicalDevice phys_device) const {
 	PhysicalDeviceSelector::PhysicalDeviceDesc desc{};
 	desc.phys_device = phys_device;
 	auto queue_families = detail::get_vector_noerror<VkQueueFamilyProperties> (
@@ -682,7 +684,7 @@ PhysicalDeviceSelector::PhysicalDeviceDesc PhysicalDeviceSelector::populate_devi
 	return desc;
 }
 
-PhysicalDeviceSelector::Suitable PhysicalDeviceSelector::is_device_suitable (PhysicalDeviceDesc pd) {
+PhysicalDeviceSelector::Suitable PhysicalDeviceSelector::is_device_suitable (PhysicalDeviceDesc pd) const {
 	Suitable suitable = Suitable::yes;
 
 	bool dedicated_compute = detail::get_dedicated_compute_queue_index (pd.queue_families) >= 0;
@@ -760,7 +762,7 @@ PhysicalDeviceSelector::PhysicalDeviceSelector (Instance const& instance) {
 	criteria.require_present = !instance.headless;
 }
 
-detail::Expected<PhysicalDevice, detail::Error<PhysicalDeviceError>> PhysicalDeviceSelector::select () {
+detail::Expected<PhysicalDevice, detail::Error<PhysicalDeviceError>> PhysicalDeviceSelector::select () const {
 	auto physical_devices =
 	    detail::get_vector<VkPhysicalDevice> (vkEnumeratePhysicalDevices, system_info.instance);
 	if (!physical_devices.has_value ()) {
@@ -888,16 +890,16 @@ PhysicalDeviceSelector& PhysicalDeviceSelector::select_first_device_unconditiona
 	return *this;
 }
 
-bool PhysicalDevice::has_dedicated_compute_queue () {
+bool PhysicalDevice::has_dedicated_compute_queue () const {
 	return detail::get_dedicated_compute_queue_index (queue_families) >= 0;
 }
-bool PhysicalDevice::has_separate_compute_queue () {
+bool PhysicalDevice::has_separate_compute_queue () const {
 	return detail::get_separate_compute_queue_index (queue_families) >= 0;
 }
-bool PhysicalDevice::has_dedicated_transfer_queue () {
+bool PhysicalDevice::has_dedicated_transfer_queue () const {
 	return detail::get_dedicated_transfer_queue_index (queue_families) >= 0;
 }
-bool PhysicalDevice::has_separate_transfer_queue () {
+bool PhysicalDevice::has_separate_transfer_queue () const {
 	return detail::get_separate_transfer_queue_index (queue_families) >= 0;
 }
 
@@ -926,7 +928,7 @@ detail::Expected<int32_t, detail::Error<QueueError>> Device::get_queue_index (Qu
 			return detail::Error<QueueError>{ QueueError::invalid_queue_family_index };
 	}
 	return index;
-} // namespace vkb
+}
 detail::Expected<int32_t, detail::Error<QueueError>> Device::get_dedicated_queue_index (QueueType type) const {
 	int index = -1;
 	switch (type) {
@@ -975,7 +977,7 @@ DeviceBuilder::DeviceBuilder (PhysicalDevice phys_device) {
 	info.extensions_to_enable = phys_device.extensions_to_enable;
 }
 
-detail::Expected<Device, detail::Error<DeviceError>> DeviceBuilder::build () {
+detail::Expected<Device, detail::Error<DeviceError>> DeviceBuilder::build () const {
 
 	std::vector<CustomQueueDescription> queue_descriptions;
 	queue_descriptions.insert (
@@ -1108,19 +1110,24 @@ SwapchainBuilder::SwapchainBuilder (VkPhysicalDevice const physical_device,
 	info.graphics_queue_index = graphics_queue_index;
 	info.present_queue_index = present_queue_index;
 }
-
-detail::Expected<Swapchain, detail::Error<SwapchainError>> SwapchainBuilder::build () {
-	if (info.desired_formats.size () == 0) use_default_format_selection ();
-	if (info.desired_present_modes.size () == 0) use_default_present_mode_selection ();
+detail::Expected<Swapchain, detail::Error<SwapchainError>> SwapchainBuilder::build () const {
+	return build (VK_NULL_HANDLE);
+}
+detail::Expected<Swapchain, detail::Error<SwapchainError>> SwapchainBuilder::build (
+    VkSwapchainKHR old_swapchain) const {
+	auto desired_formats = info.desired_formats;
+	if (desired_formats.size () == 0) add_desired_formats (desired_formats);
+	auto desired_present_modes = info.desired_present_modes;
+	if (desired_present_modes.size () == 0) add_desired_present_modes (desired_present_modes);
 
 	auto surface_support = detail::query_surface_support_details (info.physical_device, info.surface);
 	if (!surface_support.has_value ())
 		return detail::Error<SwapchainError>{ SwapchainError::failed_query_surface_support_details,
 			surface_support.error ().vk_result };
 	VkSurfaceFormatKHR surface_format =
-	    detail::find_surface_format (surface_support.value ().formats, info.desired_formats);
+	    detail::find_surface_format (surface_support.value ().formats, desired_formats);
 	VkPresentModeKHR present_mode =
-	    detail::find_present_mode (surface_support.value ().present_modes, info.desired_present_modes);
+	    detail::find_present_mode (surface_support.value ().present_modes, desired_present_modes);
 	VkExtent2D extent = detail::find_extent (
 	    surface_support.value ().capabilities, info.desired_width, info.desired_height);
 
@@ -1155,7 +1162,7 @@ detail::Expected<Swapchain, detail::Error<SwapchainError>> SwapchainBuilder::bui
 	swapchain_create_info.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
 	swapchain_create_info.presentMode = present_mode;
 	swapchain_create_info.clipped = VK_TRUE;
-	swapchain_create_info.oldSwapchain = info.old_swapchain;
+	swapchain_create_info.oldSwapchain = old_swapchain;
 	Swapchain swapchain{};
 	VkResult res = vkCreateSwapchainKHR (
 	    info.device, &swapchain_create_info, info.allocation_callbacks, &swapchain.swapchain);
@@ -1169,10 +1176,10 @@ detail::Expected<Swapchain, detail::Error<SwapchainError>> SwapchainBuilder::bui
 	swapchain.image_count = images.value ().size ();
 	swapchain.allocation_callbacks = info.allocation_callbacks;
 	return swapchain;
-} // namespace vkb
-detail::Expected<Swapchain, detail::Error<SwapchainError>> SwapchainBuilder::recreate (Swapchain const& swapchain) {
-	info.old_swapchain = swapchain.swapchain;
-	return build ();
+}
+detail::Expected<Swapchain, detail::Error<SwapchainError>> SwapchainBuilder::recreate (
+    Swapchain const& swapchain) const {
+	return build (swapchain.swapchain);
 }
 detail::Expected<std::vector<VkImage>, detail::Error<SwapchainError>> get_swapchain_images (
     Swapchain const& swapchain) {
@@ -1227,8 +1234,7 @@ SwapchainBuilder& SwapchainBuilder::add_fallback_format (VkSurfaceFormatKHR form
 	return *this;
 }
 SwapchainBuilder& SwapchainBuilder::use_default_format_selection () {
-	info.desired_formats.push_back ({ VK_FORMAT_R8G8B8A8_UNORM, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR });
-	info.desired_formats.push_back ({ VK_FORMAT_B8G8R8A8_UNORM, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR });
+	add_desired_formats (info.desired_formats);
 	return *this;
 }
 
@@ -1241,13 +1247,19 @@ SwapchainBuilder& SwapchainBuilder::add_fallback_present_mode (VkPresentModeKHR 
 	return *this;
 }
 SwapchainBuilder& SwapchainBuilder::use_default_present_mode_selection () {
-	info.desired_present_modes.push_back (VK_PRESENT_MODE_MAILBOX_KHR);
-	info.desired_present_modes.push_back (VK_PRESENT_MODE_FIFO_KHR);
+	add_desired_present_modes (info.desired_present_modes);
 	return *this;
 }
 SwapchainBuilder& SwapchainBuilder::set_allocation_callbacks (VkAllocationCallbacks* callbacks) {
 	info.allocation_callbacks = callbacks;
 	return *this;
 }
-
+void SwapchainBuilder::add_desired_formats (std::vector<VkSurfaceFormatKHR>& formats) const {
+	formats.push_back ({ VK_FORMAT_R8G8B8A8_UNORM, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR });
+	formats.push_back ({ VK_FORMAT_B8G8R8A8_UNORM, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR });
+}
+void SwapchainBuilder::add_desired_present_modes (std::vector<VkPresentModeKHR>& modes) const {
+	modes.push_back (VK_PRESENT_MODE_MAILBOX_KHR);
+	modes.push_back (VK_PRESENT_MODE_FIFO_KHR);
+}
 } // namespace vkb

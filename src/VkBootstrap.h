@@ -138,9 +138,9 @@ const char* to_string (SwapchainError err);
 struct SystemInfo {
 	SystemInfo ();
 	// Returns true if a layer is available
-	bool is_layer_available (const char* layer_name);
+	bool is_layer_available (const char* layer_name) const;
 	// Returns true if an extension is available
-	bool is_extension_available (const char* extension_name);
+	bool is_extension_available (const char* extension_name) const;
 
 	std::vector<VkLayerProperties> available_layers;
 	std::vector<VkExtensionProperties> available_extensions;
@@ -168,10 +168,10 @@ void destroy_instance (Instance instance); // release instance resources
 class InstanceBuilder {
 	public:
 	// contains useful information about the available vulkan capabilities, like layers and instance extensions.
-	SystemInfo get_system_info ();
+	SystemInfo get_system_info () const;
 
 	// Create a VkInstance. Return an error if it failed.
-	detail::Expected<Instance, detail::Error<InstanceError>> build ();
+	detail::Expected<Instance, detail::Error<InstanceError>> build () const;
 
 	// Sets the name of the application. Defaults to "" if none is provided.
 	InstanceBuilder& set_app_name (const char* app_name);
@@ -289,14 +289,14 @@ struct PhysicalDevice {
 	VkSurfaceKHR surface = VK_NULL_HANDLE;
 
 	// Has a queue family that supports compute operations but not graphics nor transfer.
-	bool has_dedicated_compute_queue ();
+	bool has_dedicated_compute_queue () const;
 	// Has a queue family that supports transfer operations but not graphics nor compute.
-	bool has_dedicated_transfer_queue ();
+	bool has_dedicated_transfer_queue () const;
 
 	// Has a queue family that supports transfer operations but not graphics.
-	bool has_separate_compute_queue ();
+	bool has_separate_compute_queue () const;
 	// Has a queue family that supports transfer operations but not graphics.
-	bool has_separate_transfer_queue ();
+	bool has_separate_transfer_queue () const;
 
 	private:
 	VkPhysicalDeviceFeatures features{};
@@ -319,7 +319,7 @@ class PhysicalDeviceSelector {
 	// Requires a vkb::Instance to construct, needed to pass instance creation info.
 	PhysicalDeviceSelector (Instance const& instance);
 
-	detail::Expected<PhysicalDevice, detail::Error<PhysicalDeviceError>> select ();
+	detail::Expected<PhysicalDevice, detail::Error<PhysicalDeviceError>> select () const;
 
 	// Set the surface in which the physical device should render to.
 	PhysicalDeviceSelector& set_surface (VkSurfaceKHR instance);
@@ -383,7 +383,7 @@ class PhysicalDeviceSelector {
 		VkPhysicalDeviceProperties device_properties;
 		VkPhysicalDeviceMemoryProperties mem_properties;
 	};
-	PhysicalDeviceDesc populate_device_details (VkPhysicalDevice phys_device);
+	PhysicalDeviceDesc populate_device_details (VkPhysicalDevice phys_device) const;
 
 	struct SelectionCriteria {
 		PreferredDeviceType preferred_type = PreferredDeviceType::discrete;
@@ -409,7 +409,7 @@ class PhysicalDeviceSelector {
 
 	enum class Suitable { yes, partial, no };
 
-	Suitable is_device_suitable (PhysicalDeviceDesc phys_device);
+	Suitable is_device_suitable (PhysicalDeviceDesc phys_device) const;
 };
 
 // ---- Queue ---- //
@@ -448,7 +448,7 @@ class DeviceBuilder {
 	// Any features and extensions that are requested/required in PhysicalDeviceSelector are automatically enabled.
 	DeviceBuilder (PhysicalDevice physical_device);
 
-	detail::Expected<Device, detail::Error<DeviceError>> build ();
+	detail::Expected<Device, detail::Error<DeviceError>> build () const;
 
 	// For Advanced Users: specify the exact list of VkDeviceQueueCreateInfo's needed for the application.
 	// If a custom queue setup is provided, getting the queues and queue indexes is up to the application.
@@ -501,8 +501,8 @@ class SwapchainBuilder {
 	    uint32_t graphics_queue_index,
 	    uint32_t present_queue_index);
 
-	detail::Expected<Swapchain, detail::Error<SwapchainError>> build ();
-	detail::Expected<Swapchain, detail::Error<SwapchainError>> recreate (Swapchain const& swapchain);
+	detail::Expected<Swapchain, detail::Error<SwapchainError>> build () const;
+	detail::Expected<Swapchain, detail::Error<SwapchainError>> recreate (Swapchain const& swapchain) const;
 
 	SwapchainBuilder& set_desired_format (VkSurfaceFormatKHR format);
 	SwapchainBuilder& add_fallback_format (VkSurfaceFormatKHR format);
@@ -516,6 +516,11 @@ class SwapchainBuilder {
 	SwapchainBuilder& set_allocation_callbacks (VkAllocationCallbacks* callbacks);
 
 	private:
+	void add_desired_formats (std::vector<VkSurfaceFormatKHR>& formats) const;
+	void add_desired_present_modes (std::vector<VkPresentModeKHR>& modes) const;
+	// for use in swapchain recreation
+	detail::Expected<Swapchain, detail::Error<SwapchainError>> build (VkSwapchainKHR old_swapchain) const;
+
 	struct SwapchainInfo {
 		VkPhysicalDevice physical_device = VK_NULL_HANDLE;
 		VkDevice device = VK_NULL_HANDLE;

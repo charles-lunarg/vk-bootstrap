@@ -6,6 +6,13 @@
 namespace vkb {
 
 namespace detail {
+
+template <typename T>
+void get_inst_proc_addr (
+    T& out_ptr, const char* func_name, VkInstance instance, PFN_vkGetInstanceProcAddr ptr_vkGetInstanceProcAddr) {
+	out_ptr = reinterpret_cast<T> (ptr_vkGetInstanceProcAddr (instance, func_name));
+}
+
 // Helper for robustly executing the two-call pattern
 template <typename T, typename F, typename... Ts>
 auto get_vector (F&& f, Ts&&... ts) -> Expected<std::vector<T>, VkResult> {
@@ -68,6 +75,7 @@ VkResult create_debug_utils_messenger (VkInstance instance,
     VkDebugUtilsMessageTypeFlagsEXT type,
     VkDebugUtilsMessengerEXT* pDebugMessenger,
     VkAllocationCallbacks* allocation_callbacks) {
+
 	if (debug_callback == nullptr) debug_callback = default_debug_callback;
 	VkDebugUtilsMessengerCreateInfoEXT messengerCreateInfo = {};
 	messengerCreateInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
@@ -76,12 +84,12 @@ VkResult create_debug_utils_messenger (VkInstance instance,
 	messengerCreateInfo.messageType = type;
 	messengerCreateInfo.pfnUserCallback = debug_callback;
 
+	PFN_vkCreateDebugUtilsMessengerEXT createMessengerFunc;
+	detail::get_inst_proc_addr (
+	    createMessengerFunc, "vkCreateDebugUtilsMessengerEXT", instance, vkGetInstanceProcAddr);
 
-	auto vkCreateDebugUtilsMessengerEXT_func = reinterpret_cast<PFN_vkCreateDebugUtilsMessengerEXT> (
-	    vkGetInstanceProcAddr (instance, "vkCreateDebugUtilsMessengerEXT"));
-	if (vkCreateDebugUtilsMessengerEXT_func != nullptr) {
-		return vkCreateDebugUtilsMessengerEXT_func (
-		    instance, &messengerCreateInfo, allocation_callbacks, pDebugMessenger);
+	if (createMessengerFunc != nullptr) {
+		return createMessengerFunc (instance, &messengerCreateInfo, allocation_callbacks, pDebugMessenger);
 	} else {
 		return VK_ERROR_EXTENSION_NOT_PRESENT;
 	}
@@ -89,10 +97,11 @@ VkResult create_debug_utils_messenger (VkInstance instance,
 
 void destroy_debug_utils_messenger (
     VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, VkAllocationCallbacks* allocation_callbacks) {
-	auto vkDestroyDebugUtilsMessengerEXT_func = reinterpret_cast<PFN_vkDestroyDebugUtilsMessengerEXT> (
-	    vkGetInstanceProcAddr (instance, "vkDestroyDebugUtilsMessengerEXT"));
-	if (vkDestroyDebugUtilsMessengerEXT_func != nullptr) {
-		vkDestroyDebugUtilsMessengerEXT_func (instance, debugMessenger, allocation_callbacks);
+	PFN_vkDestroyDebugUtilsMessengerEXT deleteMessengerFunc;
+	detail::get_inst_proc_addr (
+	    deleteMessengerFunc, "vkDestroyDebugUtilsMessengerEXT", instance, vkGetInstanceProcAddr);
+	if (deleteMessengerFunc != nullptr) {
+		deleteMessengerFunc (instance, debugMessenger, allocation_callbacks);
 	}
 }
 

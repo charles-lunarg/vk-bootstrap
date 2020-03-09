@@ -172,8 +172,14 @@ const char* validation_layer_name = "VK_LAYER_KHRONOS_validation";
 
 const char* to_string (InstanceError err) {
 	switch (err) {
-		case InstanceError::unavailable_vulkan_version:
-			return "unavailable_vulkan_version";
+		case InstanceError::vulkan_unavailable:
+			return "vulkan_unavailable";
+		case InstanceError::vulkan_version_unavailable:
+			return "vulkan_version_unavailable";
+		case InstanceError::vulkan_version_1_1_unavailable:
+			return "vulkan_version_1_1_unavailable";
+		case InstanceError::vulkan_version_1_2_unavailable:
+			return "vulkan_version_1_2_unavailable";
 		case InstanceError::failed_create_debug_messenger:
 			return "failed_create_debug_messenger";
 		case InstanceError::failed_create_instance:
@@ -278,19 +284,38 @@ SystemInfo InstanceBuilder::get_system_info () const { return system; }
 
 detail::Expected<Instance, detail::Error<InstanceError>> InstanceBuilder::build () const {
 
-	if (VK_VERSION_MINOR (info.api_version) > 0) {
+	uint32_t api_version = VK_MAKE_VERSION (1, 0, 0);
+
+	if (info.required_api_version > VK_MAKE_VERSION (1, 0, 0) || info.desired_api_version > VK_MAKE_VERSION (1, 0, 0)) {
 		PFN_vkEnumerateInstanceVersion pfn_vkEnumerateInstanceVersion;
 		detail::get_inst_proc_addr (
 		    pfn_vkEnumerateInstanceVersion, "vkEnumerateInstanceVersion", nullptr, vkGetInstanceProcAddr);
-		if (pfn_vkEnumerateInstanceVersion == nullptr) {
-			return detail::Error<InstanceError>{ InstanceError::unavailable_vulkan_version };
-		} else if (pfn_vkEnumerateInstanceVersion != nullptr) {
-			uint32_t api_version = 0;
-			pfn_vkEnumerateInstanceVersion (&api_version);
-			if (VK_VERSION_MINOR (api_version) < VK_VERSION_MINOR (info.api_version))
-				return detail::Error<InstanceError>{ InstanceError::unavailable_vulkan_version };
+
+		uint32_t queried_api_version = VK_MAKE_VERSION (1, 0, 0);
+		if (pfn_vkEnumerateInstanceVersion != nullptr) {
+			VkResult res = pfn_vkEnumerateInstanceVersion (&api_version);
+			// Should always return VK_SUCCESS
+			if (res != VK_SUCCESS && info.required_api_version > 0)
+				return detail::Error<InstanceError>{ InstanceError::vulkan_version_unavailable };
+		}
+		if (pfn_vkEnumerateInstanceVersion == nullptr || queried_api_version < info.required_api_version) {
+			if (VK_VERSION_MINOR (info.required_api_version) == 2)
+				return detail::Error<InstanceError>{ InstanceError::vulkan_version_1_2_unavailable };
+			else if (VK_VERSION_MINOR (info.required_api_version))
+				return detail::Error<InstanceError>{ InstanceError::vulkan_version_1_1_unavailable };
+			else
+				return detail::Error<InstanceError>{ InstanceError::vulkan_version_unavailable };
+		}
+		if (info.required_api_version > VK_MAKE_VERSION (1, 0, 0)) {
+			api_version = info.required_api_version;
+		} else if (info.desired_api_version > VK_MAKE_VERSION (1, 0, 0)) {
+			if (queried_api_version >= info.desired_api_version)
+				api_version = info.desired_api_version;
+			else
+				api_version = queried_api_version;
 		}
 	}
+
 	VkApplicationInfo app_info = {};
 	app_info.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
 	app_info.pNext = nullptr;
@@ -298,7 +323,7 @@ detail::Expected<Instance, detail::Error<InstanceError>> InstanceBuilder::build 
 	app_info.applicationVersion = info.application_version;
 	app_info.pEngineName = info.engine_name != nullptr ? info.engine_name : "";
 	app_info.engineVersion = info.engine_version;
-	app_info.apiVersion = info.api_version;
+	app_info.apiVersion = api_version;
 
 	std::vector<const char*> extensions;
 	for (auto& ext : info.extensions)
@@ -406,7 +431,7 @@ detail::Expected<Instance, detail::Error<InstanceError>> InstanceBuilder::build 
 		instance.headless = true;
 	}
 	instance.allocation_callbacks = info.allocation_callbacks;
-	instance.instance_version = info.api_version;
+	instance.instance_version = api_version;
 	return instance;
 }
 
@@ -429,7 +454,11 @@ InstanceBuilder& InstanceBuilder::set_engine_version (uint32_t major, uint32_t m
 	return *this;
 }
 InstanceBuilder& InstanceBuilder::require_api_version (uint32_t major, uint32_t minor, uint32_t patch) {
-	info.api_version = VK_MAKE_VERSION (major, minor, patch);
+	info.required_api_version = VK_MAKE_VERSION (major, minor, patch);
+	return *this;
+}
+InstanceBuilder& InstanceBuilder::desire_api_version (uint32_t major, uint32_t minor, uint32_t patch) {
+	info.desired_api_version = VK_MAKE_VERSION (major, minor, patch);
 	return *this;
 }
 InstanceBuilder& InstanceBuilder::enable_layer (const char* layer_name) {
@@ -674,24 +703,27 @@ PhysicalDeviceSelector::PhysicalDeviceDesc PhysicalDeviceSelector::populate_devi
 PhysicalDeviceSelector::Suitable PhysicalDeviceSelector::is_device_suitable (PhysicalDeviceDesc pd) const {
 	Suitable suitable = Suitable::yes;
 
+    if (criteria.required_version > pd.device_properties.apiVersion) return Suitable::no;
+	if (criteria.desired_version > pd.device_properties.apiVersion) suitable = Suitable::partial;
+
 	bool dedicated_compute = detail::get_dedicated_compute_queue_index (pd.queue_families) >= 0;
 	bool dedicated_transfer = detail::get_dedicated_transfer_queue_index (pd.queue_families) >= 0;
 	bool separate_compute = detail::get_separate_compute_queue_index (pd.queue_families) >= 0;
 	bool separate_transfer = detail::get_separate_transfer_queue_index (pd.queue_families) >= 0;
 
 	bool present_queue =
-	    detail::get_present_queue_index (pd.phys_device, system_info.surface, pd.queue_families);
+	    detail::get_present_queue_index (pd.phys_device, system_info.surface, pd.queue_families) >= 0;
 
-	if (criteria.require_dedicated_compute_queue && !dedicated_compute) suitable = Suitable::no;
-	if (criteria.require_dedicated_transfer_queue && !dedicated_transfer) suitable = Suitable::no;
-	if (criteria.require_separate_compute_queue && !separate_compute) suitable = Suitable::no;
-	if (criteria.require_separate_transfer_queue && !separate_transfer) suitable = Suitable::no;
-	if (criteria.require_present && !present_queue) suitable = Suitable::no;
+	if (criteria.require_dedicated_compute_queue && !dedicated_compute) return Suitable::no;
+	if (criteria.require_dedicated_transfer_queue && !dedicated_transfer) return Suitable::no;
+	if (criteria.require_separate_compute_queue && !separate_compute) return Suitable::no;
+	if (criteria.require_separate_transfer_queue && !separate_transfer) return Suitable::no;
+	if (criteria.require_present && !present_queue) return Suitable::no;
 
 	auto required_extensions_supported =
 	    detail::check_device_extension_support (pd.phys_device, criteria.required_extensions);
 	if (required_extensions_supported.size () != criteria.required_extensions.size ())
-		suitable = Suitable::no;
+		return Suitable::no;
 
 	auto desired_extensions_supported =
 	    detail::check_device_extension_support (pd.phys_device, criteria.desired_extensions);
@@ -713,21 +745,18 @@ PhysicalDeviceSelector::Suitable PhysicalDeviceSelector::is_device_suitable (Phy
 			swapChainAdequate = !formats.value ().empty () && !present_modes.value ().empty ();
 		}
 	}
-	if (criteria.require_present && !swapChainAdequate) suitable = Suitable::no;
+	if (criteria.require_present && !swapChainAdequate) return Suitable::no;
 
 	if (pd.device_properties.deviceType != static_cast<VkPhysicalDeviceType> (criteria.preferred_type)) {
 		if (criteria.allow_any_type)
 			suitable = Suitable::partial;
 		else
-			suitable = Suitable::no;
+			return Suitable::no;
 	}
-
-	if (criteria.required_version < pd.device_properties.apiVersion) suitable = Suitable::no;
-	if (criteria.desired_version < pd.device_properties.apiVersion) suitable = Suitable::partial;
 
 	bool required_features_supported =
 	    detail::supports_features (pd.device_features, criteria.required_features);
-	if (!required_features_supported) suitable = Suitable::no;
+	if (!required_features_supported) return Suitable::no;
 
 	bool has_required_memory = false;
 	bool has_preferred_memory = false;
@@ -741,7 +770,7 @@ PhysicalDeviceSelector::Suitable PhysicalDeviceSelector::is_device_suitable (Phy
 			}
 		}
 	}
-	if (!has_required_memory) suitable = Suitable::no;
+	if (!has_required_memory) return Suitable::no;
 	if (!has_preferred_memory) suitable = Suitable::partial;
 
 	return suitable;
@@ -752,6 +781,7 @@ PhysicalDeviceSelector::PhysicalDeviceSelector (Instance const& instance) {
 	system_info.headless = instance.headless;
 	criteria.require_present = !instance.headless;
 	criteria.required_version = instance.instance_version;
+	criteria.desired_version = instance.instance_version;
 }
 
 detail::Expected<PhysicalDevice, detail::Error<PhysicalDeviceError>> PhysicalDeviceSelector::select () const {

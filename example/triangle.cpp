@@ -44,7 +44,8 @@ int device_initialization (Init& init) {
 	vkb::InstanceBuilder instance_builder;
 	auto instance_ret = instance_builder.use_default_debug_messenger ().request_validation_layers ().build ();
 	if (!instance_ret) {
-		std::cout << static_cast<uint32_t> (instance_ret.error ().type) << "\n";
+		std::cout << vkb::to_string (instance_ret.error ().type) << "\n";
+		return -1;
 	}
 	init.instance = instance_ret.value ();
 
@@ -53,14 +54,16 @@ int device_initialization (Init& init) {
 	vkb::PhysicalDeviceSelector phys_device_selector (init.instance);
 	auto phys_device_ret = phys_device_selector.set_surface (init.surface).select ();
 	if (!phys_device_ret) {
-		std::cout << static_cast<uint32_t> (phys_device_ret.error ().type) << "\n";
+		std::cout << vkb::to_string (phys_device_ret.error ().type) << "\n";
+		return -1;
 	}
 	vkb::PhysicalDevice physical_device = phys_device_ret.value ();
 
 	vkb::DeviceBuilder device_builder{ physical_device };
 	auto device_ret = device_builder.build ();
 	if (!device_ret) {
-		std::cout << static_cast<uint32_t> (device_ret.error ().type) << "\n";
+		std::cout << vkb::to_string (device_ret.error ().type) << "\n";
+		return -1;
 	}
 	init.device = device_ret.value ();
 
@@ -68,7 +71,8 @@ int device_initialization (Init& init) {
 	auto swap_ret =
 	    swapchain_builder.use_default_format_selection ().use_default_present_mode_selection ().build ();
 	if (!swap_ret) {
-		std::cout << static_cast<uint32_t> (swap_ret.error ().type) << "\n";
+		std::cout << vkb::to_string (swap_ret.error ().type) << "\n";
+		return -1;
 	}
 	init.swapchain = swap_ret.value ();
 	return 0;
@@ -77,14 +81,14 @@ int device_initialization (Init& init) {
 int get_queues (Init& init, RenderData& data) {
 	auto gq = init.device.get_queue (vkb::QueueType::graphics);
 	if (!gq.has_value ()) {
-		std::cout << "failed to get graphics queue\n";
+		std::cout << "failed to get graphics queue: " << vkb::to_string (gq.error ().type) << "\n";
 		return -1;
 	}
 	data.graphics_queue = gq.value ();
 
 	auto pq = init.device.get_queue (vkb::QueueType::present);
 	if (!pq.has_value ()) {
-		std::cout << "failed to get present queue\n";
+		std::cout << "failed to get present queue: " << vkb::to_string (gq.error ().type) << "\n";
 		return -1;
 	}
 	data.present_queue = pq.value ();
@@ -129,6 +133,7 @@ int create_render_pass (Init& init, RenderData& data) {
 	render_pass_info.pDependencies = &dependency;
 
 	if (vkCreateRenderPass (init.device.device, &render_pass_info, nullptr, &data.render_pass) != VK_SUCCESS) {
+        std::cout << "failed to create render pass\n";
 		return -1; // failed to create render pass!
 	}
 	return 0;
@@ -173,6 +178,7 @@ int create_graphics_pipeline (Init& init, RenderData& data) {
 	VkShaderModule vert_module = createShaderModule (init, vert_code);
 	VkShaderModule frag_module = createShaderModule (init, frag_code);
 	if (vert_module == VK_NULL_HANDLE || frag_module == VK_NULL_HANDLE) {
+        std::cout << "failed to create shader module\n";
 		return -1; // failed to create shader modules
 	}
 
@@ -257,6 +263,7 @@ int create_graphics_pipeline (Init& init, RenderData& data) {
 
 	if (vkCreatePipelineLayout (
 	        init.device.device, &pipeline_layout_info, nullptr, &data.pipeline_layout) != VK_SUCCESS) {
+        std::cout << "failed to create pipeline layout\n";
 		return -1; // failed to create pipeline layout
 	}
 
@@ -277,6 +284,7 @@ int create_graphics_pipeline (Init& init, RenderData& data) {
 
 	if (vkCreateGraphicsPipelines (
 	        init.device.device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &data.graphics_pipeline) != VK_SUCCESS) {
+        std::cout << "failed to create pipline\n";
 		return -1; // failed to create graphics pipeline
 	}
 
@@ -318,6 +326,7 @@ int create_command_pool (Init& init, RenderData& data) {
 	pool_info.queueFamilyIndex = init.device.get_queue_index (vkb::QueueType::graphics).value ();
 
 	if (vkCreateCommandPool (init.device.device, &pool_info, nullptr, &data.command_pool) != VK_SUCCESS) {
+        std::cout << "failed to create command pool\n";
 		return -1; // failed to create command pool
 	}
 	return 0;
@@ -364,6 +373,7 @@ int create_command_buffers (Init& init, RenderData& data) {
 		vkCmdEndRenderPass (data.command_buffers[i]);
 
 		if (vkEndCommandBuffer (data.command_buffers[i]) != VK_SUCCESS) {
+        std::cout << "failed to record command buffer\n";
 			return -1; // failed to record command buffer!
 		}
 	}
@@ -387,6 +397,7 @@ int create_sync_objects (Init& init, RenderData& data) {
 		if (vkCreateSemaphore (init.device.device, &semaphore_info, nullptr, &data.available_semaphores[i]) != VK_SUCCESS ||
 		    vkCreateSemaphore (init.device.device, &semaphore_info, nullptr, &data.finished_semaphore[i]) != VK_SUCCESS ||
 		    vkCreateFence (init.device.device, &fence_info, nullptr, &data.in_flight_fences[i]) != VK_SUCCESS) {
+            std::cout << "failed to create sync objects\n";
 			return -1; // failed to create synchronization objects for a frame
 		}
 	}
@@ -428,7 +439,8 @@ int draw_frame (Init& init, RenderData& data) {
 	vkResetFences (init.device.device, 1, &data.in_flight_fences[data.current_frame]);
 
 	if (vkQueueSubmit (data.graphics_queue, 1, &submitInfo, data.in_flight_fences[data.current_frame]) != VK_SUCCESS) {
-		return -1; //"failed to submit draw command buffer
+        std::cout << "failed to submit draw command buffer\n";
+        return -1; //"failed to submit draw command buffer
 	}
 
 	VkPresentInfoKHR present_info = {};
@@ -481,20 +493,14 @@ int main () {
 	Init init;
 	RenderData render_data;
 
-	int res = 0;
-	res = device_initialization (init);
-	res = get_queues (init, render_data);
-	res = create_render_pass (init, render_data);
-	res = create_graphics_pipeline (init, render_data);
-	res = create_framebuffers (init, render_data);
-	res = create_command_pool (init, render_data);
-	res = create_command_buffers (init, render_data);
-	res = create_sync_objects (init, render_data);
-
-	if (res != 0) {
-		std::cout << "failed to initialize vulkan\n";
-		return -1;
-	}
+	if(0 != device_initialization (init)) return -1;               
+	if(0 != get_queues (init, render_data)) return -1;
+	if(0 != create_render_pass (init, render_data)) return -1;
+	if(0 != create_graphics_pipeline (init, render_data)) return -1;
+	if(0 != create_framebuffers (init, render_data)) return -1;
+	if(0 != create_command_pool (init, render_data)) return -1;
+	if(0 != create_command_buffers (init, render_data)) return -1;
+	if(0 != create_sync_objects (init, render_data)) return -1;
 
 	while (!glfwWindowShouldClose (init.window)) {
 		glfwPollEvents ();

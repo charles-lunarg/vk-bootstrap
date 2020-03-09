@@ -90,10 +90,14 @@ int test_instance_headless () {
 }
 
 int test_physical_device_selection () {
-	printf ("\nphysical device selection\n");
 
+	printf ("\nphysical device selection\n");
 	vkb::InstanceBuilder instance_builder;
 	auto instance_ret = instance_builder.use_default_debug_messenger ().build ();
+    if(!instance_ret.has_value()){
+        printf("\n%s",vkb::to_string(instance_ret.error().type));
+        return -1;
+    }
 	auto instance = instance_ret.value ();
 	auto window = create_window_glfw ();
 	auto surface = create_surface_glfw (instance.instance, window);
@@ -119,7 +123,7 @@ int test_device_creation () {
 	vkb::InstanceBuilder instance_builder;
 	auto instance_ret = instance_builder.use_default_debug_messenger ().build ();
 	if (!instance_ret.has_value ()) {
-		printf ("couldn't create instance %i\n", static_cast<uint32_t> (instance_ret.error ().type));
+		printf ("couldn't create instance %s\n", vkb::to_string (instance_ret.error ().type));
 		return -1;
 	}
 	auto instance = instance_ret.value ();
@@ -129,16 +133,16 @@ int test_device_creation () {
 
 	vkb::PhysicalDeviceSelector selector (instance);
 	auto phys_dev_ret = selector.set_surface (surface).select ();
-	auto phys_dev = phys_dev_ret.value ();
 	if (!phys_dev_ret.has_value ()) {
-		printf ("couldn't select device %i\n", static_cast<uint32_t> (phys_dev_ret.error ().type));
+		printf ("couldn't select device %s\n",  vkb::to_string (phys_dev_ret.error ().type));
 		return -1;
 	}
+	auto phys_dev = phys_dev_ret.value ();
 
 	vkb::DeviceBuilder device_builder (phys_dev);
 	auto dev_ret = device_builder.build ();
 	if (!dev_ret.has_value ()) {
-		printf ("couldn't create device %i\n", static_cast<uint32_t> (dev_ret.error ().type));
+		printf ("couldn't create device %s\n",  vkb::to_string (dev_ret.error ().type));
 		return -1;
 	}
 	vkb::destroy_device (dev_ret.value ());

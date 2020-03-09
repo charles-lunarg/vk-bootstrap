@@ -98,7 +98,10 @@ template <typename E, typename U> class Expected {
 } // namespace detail
 
 enum class InstanceError {
-	unavailable_vulkan_version,
+    vulkan_unavailable,
+    vulkan_version_unavailable,
+	vulkan_version_1_1_unavailable,
+	vulkan_version_1_2_unavailable,
 	failed_create_instance,
 	failed_create_debug_messenger,
 	requested_layers_not_present,
@@ -183,8 +186,10 @@ class InstanceBuilder {
 	InstanceBuilder& set_app_version (uint32_t major, uint32_t minor, uint32_t patch);
 	// Sets the (major, minor, patch) version of the engine.
 	InstanceBuilder& set_engine_version (uint32_t major, uint32_t minor, uint32_t patch);
-	// Require a minimum vulkan instance API version.
+	// Require a vulkan instance API version. Will fail to create if this version isn't available.
 	InstanceBuilder& require_api_version (uint32_t major, uint32_t minor, uint32_t patch);
+    // Prefer a vulkan instance API version. If the desired version isn't available, it will use the highest version available. 
+	InstanceBuilder& desire_api_version (uint32_t major, uint32_t minor, uint32_t patch);
 
 	// Adds a layer to be enabled. Will fail to create an instance if the layer isn't available.
 	InstanceBuilder& enable_layer (const char* layer_name);
@@ -234,7 +239,8 @@ class InstanceBuilder {
 		const char* engine_name = nullptr;
 		uint32_t application_version = 0;
 		uint32_t engine_version = 0;
-		uint32_t api_version = VK_MAKE_VERSION (1, 0, 0);
+		uint32_t required_api_version = VK_MAKE_VERSION (1, 0, 0);
+		uint32_t desired_api_version = VK_MAKE_VERSION (1, 0, 0);
 
 		// VkInstanceCreateInfo
 		std::vector<const char*> layers;

@@ -108,6 +108,7 @@ enum class InstanceError {
 	requested_extensions_not_present
 };
 enum class PhysicalDeviceError {
+	no_surface_provided,
 	failed_enumerate_physical_devices,
 	no_physical_devices_found,
 	no_suitable_device,
@@ -293,8 +294,12 @@ class PhysicalDeviceSelector;
 class DeviceBuilder;
 
 struct PhysicalDevice {
-	VkPhysicalDevice phys_device = VK_NULL_HANDLE;
+	VkPhysicalDevice physical_device = VK_NULL_HANDLE;
 	VkSurfaceKHR surface = VK_NULL_HANDLE;
+
+	VkPhysicalDeviceFeatures features{};
+	VkPhysicalDeviceProperties properties{};
+	VkPhysicalDeviceMemoryProperties memory_properties{};
 
 	// Has a queue family that supports compute operations but not graphics nor transfer.
 	bool has_dedicated_compute_queue () const;
@@ -307,7 +312,6 @@ struct PhysicalDevice {
 	bool has_separate_transfer_queue () const;
 
 	private:
-	VkPhysicalDeviceFeatures features{};
 	std::vector<const char*> extensions_to_enable;
 	std::vector<VkQueueFamilyProperties> queue_families;
 	friend class PhysicalDeviceSelector;
@@ -330,7 +334,7 @@ class PhysicalDeviceSelector {
 	detail::Expected<PhysicalDevice, detail::Error<PhysicalDeviceError>> select () const;
 
 	// Set the surface in which the physical device should render to.
-	PhysicalDeviceSelector& set_surface (VkSurfaceKHR instance);
+	PhysicalDeviceSelector& set_surface (VkSurfaceKHR surface);
 	// Set the desired physical device type to select. Defaults to PreferredDeviceType::discrete.
 	PhysicalDeviceSelector& prefer_gpu_device_type (PreferredDeviceType type = PreferredDeviceType::discrete);
 	// Allow selection of a gpu device type that isn't the preferred physical device type. Defaults to true.

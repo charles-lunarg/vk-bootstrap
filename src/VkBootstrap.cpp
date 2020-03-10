@@ -194,6 +194,8 @@ const char* to_string (InstanceError err) {
 }
 const char* to_string (PhysicalDeviceError err) {
 	switch (err) {
+		case PhysicalDeviceError::no_surface_provided:
+			return "no_surface_provided";
 		case PhysicalDeviceError::failed_enumerate_physical_devices:
 			return "failed_enumerate_physical_devices";
 		case PhysicalDeviceError::no_physical_devices_found:
@@ -785,6 +787,11 @@ PhysicalDeviceSelector::PhysicalDeviceSelector (Instance const& instance) {
 }
 
 detail::Expected<PhysicalDevice, detail::Error<PhysicalDeviceError>> PhysicalDeviceSelector::select () const {
+	if (!system_info.headless && !criteria.defer_surface_initialization) {
+		if (system_info.surface == nullptr)
+			return detail::Error<PhysicalDeviceError>{ PhysicalDeviceError::no_surface_provided };
+	}
+
 	auto physical_devices =
 	    detail::get_vector<VkPhysicalDevice> (vkEnumeratePhysicalDevices, system_info.instance);
 	if (!physical_devices.has_value ()) {
@@ -820,16 +827,18 @@ detail::Expected<PhysicalDevice, detail::Error<PhysicalDeviceError>> PhysicalDev
 		return detail::Error<PhysicalDeviceError>{ PhysicalDeviceError::no_suitable_device };
 	}
 	PhysicalDevice out_device{};
-	out_device.phys_device = selected_device.phys_device;
+	out_device.physical_device = selected_device.phys_device;
 	out_device.surface = system_info.surface;
 	out_device.features = criteria.required_features;
+	out_device.properties = selected_device.device_properties;
+	out_device.memory_properties = selected_device.mem_properties;
 	out_device.queue_families = selected_device.queue_families;
 
 	out_device.extensions_to_enable.insert (out_device.extensions_to_enable.end (),
 	    criteria.required_extensions.begin (),
 	    criteria.required_extensions.end ());
 	auto desired_extensions_supported =
-	    detail::check_device_extension_support (out_device.phys_device, criteria.desired_extensions);
+	    detail::check_device_extension_support (out_device.physical_device, criteria.desired_extensions);
 	out_device.extensions_to_enable.insert (out_device.extensions_to_enable.end (),
 	    desired_extensions_supported.begin (),
 	    desired_extensions_supported.end ());
@@ -935,7 +944,7 @@ detail::Expected<uint32_t, detail::Error<QueueError>> Device::get_queue_index (Q
 	int index = -1;
 	switch (type) {
 		case QueueType::present:
-			index = detail::get_present_queue_index (physical_device.phys_device, surface, queue_families);
+			index = detail::get_present_queue_index (physical_device.physical_device, surface, queue_families);
 			if (index < 0) return detail::Error<QueueError>{ QueueError::present_unavailable };
 			break;
 		case QueueType::graphics:
@@ -1039,8 +1048,10 @@ detail::Expected<Device, detail::Error<DeviceError>> DeviceBuilder::build () con
 	device_create_info.pEnabledFeatures = &info.features;
 
 	Device device;
-	VkResult res = vkCreateDevice (
-	    info.physical_device.phys_device, &device_create_info, info.allocation_callbacks, &device.device);
+	VkResult res = vkCreateDevice (info.physical_device.physical_device,
+	    &device_create_info,
+	    info.allocation_callbacks,
+	    &device.device);
 	if (res != VK_SUCCESS) {
 		return detail::Error<DeviceError>{ DeviceError::failed_create_device, res };
 	}
@@ -1150,7 +1161,7 @@ VkExtent2D find_extent (
 
 SwapchainBuilder::SwapchainBuilder (Device const& device) {
 	info.device = device.device;
-	info.physical_device = device.physical_device.phys_device;
+	info.physical_device = device.physical_device.physical_device;
 	info.surface = device.surface;
 	auto present = device.get_queue_index (QueueType::present);
 	auto graphics = device.get_queue_index (QueueType::graphics);

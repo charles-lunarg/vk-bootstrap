@@ -288,7 +288,8 @@ detail::Expected<Instance, detail::Error<InstanceError>> InstanceBuilder::build 
 
 	uint32_t api_version = VK_MAKE_VERSION (1, 0, 0);
 
-	if (info.required_api_version > VK_MAKE_VERSION (1, 0, 0) || info.desired_api_version > VK_MAKE_VERSION (1, 0, 0)) {
+	if (info.required_api_version > VK_MAKE_VERSION (1, 0, 0) ||
+	    info.desired_api_version > VK_MAKE_VERSION (1, 0, 0)) {
 		PFN_vkEnumerateInstanceVersion pfn_vkEnumerateInstanceVersion;
 		detail::get_inst_proc_addr (
 		    pfn_vkEnumerateInstanceVersion, "vkEnumerateInstanceVersion", nullptr, vkGetInstanceProcAddr);
@@ -543,8 +544,10 @@ std::vector<const char*> check_device_extension_support (
 	std::vector<const char*> extensions_to_enable;
 	for (const auto& extension : available_extensions.value ()) {
 		for (auto& req_ext : desired_extensions) {
-			if (req_ext == extension.extensionName) extensions_to_enable.push_back (req_ext);
-			break;
+			if (strcmp (req_ext, extension.extensionName) == 0) {
+				extensions_to_enable.push_back (req_ext);
+				break;
+			}
 		}
 	}
 	return extensions_to_enable;
@@ -705,7 +708,7 @@ PhysicalDeviceSelector::PhysicalDeviceDesc PhysicalDeviceSelector::populate_devi
 PhysicalDeviceSelector::Suitable PhysicalDeviceSelector::is_device_suitable (PhysicalDeviceDesc pd) const {
 	Suitable suitable = Suitable::yes;
 
-    if (criteria.required_version > pd.device_properties.apiVersion) return Suitable::no;
+	if (criteria.required_version > pd.device_properties.apiVersion) return Suitable::no;
 	if (criteria.desired_version > pd.device_properties.apiVersion) suitable = Suitable::partial;
 
 	bool dedicated_compute = detail::get_dedicated_compute_queue_index (pd.queue_families) >= 0;

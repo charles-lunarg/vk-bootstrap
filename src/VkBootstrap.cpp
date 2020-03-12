@@ -248,18 +248,18 @@ const char* to_string (SwapchainError err) {
 }
 
 SystemInfo::SystemInfo () {
-	auto available_extensions =
+	auto available_extensions_ret =
 	    detail::get_vector<VkExtensionProperties> (vkEnumerateInstanceExtensionProperties, nullptr);
-	if (available_extensions.has_value ()) {
-		this->available_extensions = available_extensions.value ();
+	if (available_extensions_ret.has_value ()) {
+		this->available_extensions = available_extensions_ret.value ();
 	}
 	for (auto& ext : this->available_extensions)
 		if (strcmp (ext.extensionName, VK_EXT_DEBUG_UTILS_EXTENSION_NAME) == 0)
 			debug_messenger_available = true;
 
-	auto available_layers = detail::get_vector<VkLayerProperties> (vkEnumerateInstanceLayerProperties);
-	if (available_layers.has_value ()) {
-		this->available_layers = available_layers.value ();
+	auto available_layers_ret = detail::get_vector<VkLayerProperties> (vkEnumerateInstanceLayerProperties);
+	if (available_layers_ret.has_value ()) {
+		this->available_layers = available_layers_ret.value ();
 	}
 	for (auto& layer : this->available_layers)
 		if (strcmp (layer.layerName, detail::validation_layer_name) == 0)
@@ -684,7 +684,7 @@ int get_present_queue_index (VkPhysicalDevice const phys_device,
 			    phys_device, static_cast<uint32_t> (i), surface, &presentSupport);
 			if (res != VK_SUCCESS) return -1; // TODO: determine if this should fail another way
 		}
-		if (presentSupport == true) return static_cast<int> (i);
+		if (presentSupport == VK_TRUE) return static_cast<int> (i);
 	}
 	return -1;
 }

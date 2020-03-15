@@ -108,12 +108,11 @@ void destroy_debug_utils_messenger (
 VkBool32 default_debug_callback (VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
     VkDebugUtilsMessageTypeFlagsEXT messageType,
     const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
-    void* pUserData) {
+    void*) {
 	auto ms = to_string_message_severity (messageSeverity);
 	auto mt = to_string_message_type (messageType);
 	printf ("[%s: %s]\n%s\n", ms, mt, pCallbackData->pMessage);
 
-	assert (pUserData == nullptr && "Default debug callback should have no user data");
 	return VK_FALSE;
 }
 

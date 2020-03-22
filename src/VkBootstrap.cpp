@@ -480,7 +480,7 @@ InstanceBuilder& InstanceBuilder::enable_validation_layers (bool enable_validati
 InstanceBuilder& InstanceBuilder::request_validation_layers (bool enable_validation) {
 	info.enable_validation_layers =
 	    enable_validation &&
-	    detail::check_extension_supported (system.available_extensions, detail::validation_layer_name);
+	    detail::check_layer_supported (system.available_layers, detail::validation_layer_name);
 	return *this;
 }
 InstanceBuilder& InstanceBuilder::use_default_debug_messenger () {

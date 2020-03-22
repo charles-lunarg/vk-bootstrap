@@ -295,7 +295,7 @@ detail::Expected<Instance, detail::Error<InstanceError>> InstanceBuilder::build 
 
 		uint32_t queried_api_version = VK_MAKE_VERSION (1, 0, 0);
 		if (pfn_vkEnumerateInstanceVersion != nullptr) {
-			VkResult res = pfn_vkEnumerateInstanceVersion (&api_version);
+			VkResult res = pfn_vkEnumerateInstanceVersion (&queried_api_version);
 			// Should always return VK_SUCCESS
 			if (res != VK_SUCCESS && info.required_api_version > 0)
 				return detail::Error<InstanceError>{ InstanceError::vulkan_version_unavailable };

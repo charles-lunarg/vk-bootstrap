@@ -4,6 +4,7 @@ project(VulkanBootstrap)
 find_package(Vulkan REQUIRED)
 
 add_library(vk-bootstrap src/VkBootstrap.h src/VkBootstrap.cpp)
+add_library(vk-bootstrap::vk-bootstrap ALIAS vk-bootstrap)
 
 target_include_directories(vk-bootstrap PUBLIC src)
 
@@ -12,8 +13,8 @@ target_link_libraries(vk-bootstrap PRIVATE ${Vulkan_LIBRARY})
 
 target_compile_features(vk-bootstrap PUBLIC cxx_std_11)
 target_compile_options(
-    vk-bootstrap
-    PRIVATE
+        vk-bootstrap
+        PRIVATE
         $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>>:
         -Wall
         -Wextra
@@ -25,19 +26,19 @@ target_compile_options(
         /W4>)
 option(VK_BOOTSTRAP_TEST "Test Vk-Bootstrap with glfw and Catch2" OFF)
 
-if(VK_BOOTSTRAP_TEST)
+if (VK_BOOTSTRAP_TEST)
     set(GLFW_BUILD_TESTS
-        OFF
-        CACHE BOOL "" FORCE)
+            OFF
+            CACHE BOOL "" FORCE)
     set(GLFW_BUILD_DOCS
-        OFF
-        CACHE BOOL "" FORCE)
+            OFF
+            CACHE BOOL "" FORCE)
     set(GLFW_INSTALL
-        OFF
-        CACHE BOOL "" FORCE)
+            OFF
+            CACHE BOOL "" FORCE)
     set(GLFW_BUILD_EXAMPLES
-        OFF
-        CACHE BOOL "" FORCE)
+            OFF
+            CACHE BOOL "" FORCE)
     add_subdirectory(ext/glfw)
     add_subdirectory(ext/Catch2)
 
@@ -52,10 +53,10 @@ if(VK_BOOTSTRAP_TEST)
     target_link_libraries(vk-bootstrap-triangle glfw)
 
     add_custom_command(
-        TARGET vk-bootstrap-triangle
-        POST_BUILD
-        COMMAND
+            TARGET vk-bootstrap-triangle
+            POST_BUILD
+            COMMAND
             ${CMAKE_COMMAND} -E copy_directory
             ${CMAKE_SOURCE_DIR}/example/shaders ${CMAKE_CURRENT_BINARY_DIR}
             DEPENDS ${CMAKE_CURRENT_BINARY_DIR})
-endif()
+endif ()

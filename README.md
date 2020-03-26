@@ -110,10 +110,11 @@ In the project directory, run the following to get the required dependencies to 
 git submodule update --init
 ```
 
-In the build directory, enable tests by adding `-DVK_BOOTSTRAP_TEST` to the cmake command line arguments
+Tests will be enabled by default if you open this project standalone. If you include this project as a subdirectory,
+you can force enable tests by adding `-DVK_BOOTSTRAP_TEST` to the cmake command line arguments
 
 ```bash
-cmake ../path/to/vk-bootstrap/ -DVK_BOOTSTRAP_TEST=ON
+cmake ../path/to/your-project/ -DVK_BOOTSTRAP_TEST=ON
 ```
 
 ## Todo's

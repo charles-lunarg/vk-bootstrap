@@ -98,8 +98,8 @@ template <typename E, typename U> class Expected {
 } // namespace detail
 
 enum class InstanceError {
-    vulkan_unavailable,
-    vulkan_version_unavailable,
+	vulkan_unavailable,
+	vulkan_version_unavailable,
 	vulkan_version_1_1_unavailable,
 	vulkan_version_1_2_unavailable,
 	failed_create_instance,
@@ -189,7 +189,7 @@ class InstanceBuilder {
 	InstanceBuilder& set_engine_version (uint32_t major, uint32_t minor, uint32_t patch);
 	// Require a vulkan instance API version. Will fail to create if this version isn't available.
 	InstanceBuilder& require_api_version (uint32_t major, uint32_t minor, uint32_t patch);
-    // Prefer a vulkan instance API version. If the desired version isn't available, it will use the highest version available. 
+	// Prefer a vulkan instance API version. If the desired version isn't available, it will use the highest version available.
 	InstanceBuilder& desire_api_version (uint32_t major, uint32_t minor, uint32_t patch);
 
 	// Adds a layer to be enabled. Will fail to create an instance if the layer isn't available.
@@ -284,7 +284,7 @@ void destroy_debug_utils_messenger (VkInstance instance,
     VkDebugUtilsMessengerEXT debugMessenger,
     VkAllocationCallbacks* allocation_callbacks = VK_NULL_HANDLE);
 
-static VKAPI_ATTR VkBool32 VKAPI_CALL default_debug_callback (VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
+VKAPI_ATTR VkBool32 VKAPI_CALL default_debug_callback (VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
     VkDebugUtilsMessageTypeFlagsEXT messageType,
     const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
     void* pUserData);

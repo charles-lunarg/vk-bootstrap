@@ -722,7 +722,8 @@ PhysicalDeviceSelector::Suitable PhysicalDeviceSelector::is_device_suitable (Phy
 	if (criteria.require_dedicated_transfer_queue && !dedicated_transfer) return Suitable::no;
 	if (criteria.require_separate_compute_queue && !separate_compute) return Suitable::no;
 	if (criteria.require_separate_transfer_queue && !separate_transfer) return Suitable::no;
-	if (criteria.require_present && !present_queue) return Suitable::no;
+	if (criteria.require_present && !present_queue && !criteria.defer_surface_initialization)
+		return Suitable::no;
 
 	auto required_extensions_supported =
 	    detail::check_device_extension_support (pd.phys_device, criteria.required_extensions);
@@ -835,6 +836,7 @@ detail::Expected<PhysicalDevice, detail::Error<PhysicalDeviceError>> PhysicalDev
 	out_device.properties = selected_device.device_properties;
 	out_device.memory_properties = selected_device.mem_properties;
 	out_device.queue_families = selected_device.queue_families;
+	out_device.defer_surface_initialization = criteria.defer_surface_initialization;
 
 	out_device.extensions_to_enable.insert (out_device.extensions_to_enable.end (),
 	    criteria.required_extensions.begin (),
@@ -1020,6 +1022,7 @@ DeviceBuilder::DeviceBuilder (PhysicalDevice phys_device) {
 	info.queue_families = phys_device.queue_families;
 	info.features = phys_device.features;
 	info.extensions_to_enable = phys_device.extensions_to_enable;
+	info.defer_surface_initialization = phys_device.defer_surface_initialization;
 }
 
 detail::Expected<Device, detail::Error<DeviceError>> DeviceBuilder::build () const {
@@ -1045,7 +1048,8 @@ detail::Expected<Device, detail::Error<DeviceError>> DeviceBuilder::build () con
 	}
 
 	std::vector<const char*> extensions = info.extensions_to_enable;
-	if (info.surface != VK_NULL_HANDLE) extensions.push_back ({ VK_KHR_SWAPCHAIN_EXTENSION_NAME });
+	if (info.surface != VK_NULL_HANDLE || info.defer_surface_initialization)
+		extensions.push_back ({ VK_KHR_SWAPCHAIN_EXTENSION_NAME });
 
 	// VUID-VkDeviceCreateInfo-pNext-00373 - don't add pEnabledFeatures if the phys_dev_features_2 is present
 	bool has_phys_dev_features_2 = false;

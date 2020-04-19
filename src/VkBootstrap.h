@@ -317,6 +317,7 @@ struct PhysicalDevice {
 	private:
 	std::vector<const char*> extensions_to_enable;
 	std::vector<VkQueueFamilyProperties> queue_families;
+	bool defer_surface_initialization = false;
 	friend class PhysicalDeviceSelector;
 	friend class DeviceBuilder;
 };
@@ -398,9 +399,9 @@ class PhysicalDeviceSelector {
 		VkPhysicalDevice phys_device = VK_NULL_HANDLE;
 		std::vector<VkQueueFamilyProperties> queue_families;
 
-		VkPhysicalDeviceFeatures device_features;
-		VkPhysicalDeviceProperties device_properties;
-		VkPhysicalDeviceMemoryProperties mem_properties;
+		VkPhysicalDeviceFeatures device_features{};
+		VkPhysicalDeviceProperties device_properties{};
+		VkPhysicalDeviceMemoryProperties mem_properties{};
 	};
 	PhysicalDeviceDesc populate_device_details (VkPhysicalDevice phys_device) const;
 
@@ -489,9 +490,10 @@ class DeviceBuilder {
 		VkDeviceCreateFlags flags = 0;
 		std::vector<VkBaseOutStructure*> pNext_chain;
 		PhysicalDevice physical_device;
-		VkSurfaceKHR surface;
+		VkSurfaceKHR surface = VK_NULL_HANDLE;
+		bool defer_surface_initialization = false;
 		std::vector<VkQueueFamilyProperties> queue_families;
-		VkPhysicalDeviceFeatures features;
+		VkPhysicalDeviceFeatures features{};
 		std::vector<const char*> extensions_to_enable;
 		std::vector<CustomQueueDescription> queue_descriptions;
 		VkAllocationCallbacks* allocation_callbacks = VK_NULL_HANDLE;

@@ -939,6 +939,9 @@ bool PhysicalDevice::has_dedicated_transfer_queue () const {
 bool PhysicalDevice::has_separate_transfer_queue () const {
 	return detail::get_separate_transfer_queue_index (queue_families) >= 0;
 }
+std::vector<VkQueueFamilyProperties> PhysicalDevice::get_queue_families () const {
+	return queue_families;
+}
 
 // ---- Queues ---- //
 
@@ -1002,6 +1005,11 @@ detail::Expected<VkQueue, detail::Error<QueueError>> Device::get_dedicated_queue
 
 // ---- Device ---- //
 
+CustomQueueDescription::CustomQueueDescription (uint32_t index, uint32_t count, std::vector<float> priorities)
+: index (index), count (count), priorities (priorities) {
+	assert (count == priorities.size ());
+}
+
 void destroy_device (Device device) {
 	vkDestroyDevice (device.device, device.allocation_callbacks);
 }
@@ -1039,6 +1047,14 @@ detail::Expected<Device, detail::Error<DeviceError>> DeviceBuilder::build () con
 	std::vector<const char*> extensions = info.extensions_to_enable;
 	if (info.surface != VK_NULL_HANDLE) extensions.push_back ({ VK_KHR_SWAPCHAIN_EXTENSION_NAME });
 
+	// VUID-VkDeviceCreateInfo-pNext-00373 - don't add pEnabledFeatures if the phys_dev_features_2 is present
+	bool has_phys_dev_features_2 = false;
+	for (auto& pNext_struct : info.pNext_chain) {
+		if (pNext_struct->sType == VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2) {
+			has_phys_dev_features_2 = true;
+		}
+	}
+
 	VkDeviceCreateInfo device_create_info = {};
 	device_create_info.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
 	detail::setup_pNext_chain (device_create_info, info.pNext_chain);
@@ -1047,7 +1063,9 @@ detail::Expected<Device, detail::Error<DeviceError>> DeviceBuilder::build () con
 	device_create_info.pQueueCreateInfos = queueCreateInfos.data ();
 	device_create_info.enabledExtensionCount = static_cast<uint32_t> (extensions.size ());
 	device_create_info.ppEnabledExtensionNames = extensions.data ();
-	device_create_info.pEnabledFeatures = &info.features;
+	if (!has_phys_dev_features_2) {
+		device_create_info.pEnabledFeatures = &info.features;
+	}
 
 	Device device;
 	VkResult res = vkCreateDevice (info.physical_device.physical_device,
@@ -1067,14 +1085,12 @@ DeviceBuilder& DeviceBuilder::custom_queue_setup (std::vector<CustomQueueDescrip
 	info.queue_descriptions = queue_descriptions;
 	return *this;
 }
-template <typename T> DeviceBuilder& DeviceBuilder::add_pNext (T* structure) {
-	info.pNext_chain.push_back (reinterpret_cast<VkBaseOutStructure*> (structure));
-	return *this;
-}
 DeviceBuilder& DeviceBuilder::set_allocation_callbacks (VkAllocationCallbacks* callbacks) {
 	info.allocation_callbacks = callbacks;
 	return *this;
 }
+
+// ---- Swapchain ---- //
 
 namespace detail {
 struct SurfaceSupportDetails {
@@ -1245,7 +1261,10 @@ detail::Expected<Swapchain, detail::Error<SwapchainError>> SwapchainBuilder::bui
 	swapchain.device = info.device;
 	swapchain.image_format = surface_format.format;
 	swapchain.extent = extent;
-	auto images = get_swapchain_images (swapchain);
+	auto images = swapchain.get_images ();
+	if (!images) {
+		return detail::Error<SwapchainError>{ SwapchainError::failed_get_swapchain_images };
+	}
 	swapchain.image_count = static_cast<uint32_t> (images.value ().size ());
 	swapchain.allocation_callbacks = info.allocation_callbacks;
 	return swapchain;
@@ -1254,27 +1273,28 @@ detail::Expected<Swapchain, detail::Error<SwapchainError>> SwapchainBuilder::rec
     Swapchain const& swapchain) const {
 	return build (swapchain.swapchain);
 }
-detail::Expected<std::vector<VkImage>, detail::Error<SwapchainError>> get_swapchain_images (
-    Swapchain const& swapchain) {
-	auto swapchain_images =
-	    detail::get_vector<VkImage> (vkGetSwapchainImagesKHR, swapchain.device, swapchain.swapchain);
+detail::Expected<std::vector<VkImage>, detail::Error<SwapchainError>> Swapchain::get_images () {
+	auto swapchain_images = detail::get_vector<VkImage> (vkGetSwapchainImagesKHR, device, swapchain);
 	if (!swapchain_images) {
 		return detail::Error<SwapchainError>{ SwapchainError::failed_get_swapchain_images,
 			swapchain_images.error () };
 	}
 	return swapchain_images.value ();
 }
+detail::Expected<std::vector<VkImageView>, detail::Error<SwapchainError>> Swapchain::get_image_views () {
 
-detail::Expected<std::vector<VkImageView>, detail::Error<SwapchainError>>
-get_swapchain_image_views (Swapchain const& swapchain, std::vector<VkImage> const& images) {
-	std::vector<VkImageView> views{ swapchain.image_count };
+	auto swapchain_images_ret = get_images ();
+	if (!swapchain_images_ret) return swapchain_images_ret.error ();
+	auto swapchain_images = swapchain_images_ret.value ();
 
-	for (size_t i = 0; i < swapchain.image_count; i++) {
+	std::vector<VkImageView> views{ swapchain_images.size () };
+
+	for (size_t i = 0; i < swapchain_images.size (); i++) {
 		VkImageViewCreateInfo createInfo = {};
 		createInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-		createInfo.image = images[i];
+		createInfo.image = swapchain_images[i];
 		createInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
-		createInfo.format = swapchain.image_format;
+		createInfo.format = image_format;
 		createInfo.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
 		createInfo.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
 		createInfo.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
@@ -1285,14 +1305,17 @@ get_swapchain_image_views (Swapchain const& swapchain, std::vector<VkImage> cons
 		createInfo.subresourceRange.baseArrayLayer = 0;
 		createInfo.subresourceRange.layerCount = 1;
 
-		VkResult res = vkCreateImageView (swapchain.device, &createInfo, nullptr, &views[i]);
+		VkResult res = vkCreateImageView (device, &createInfo, allocation_callbacks, &views[i]);
 		if (res != VK_SUCCESS)
 			return detail::Error<SwapchainError>{ SwapchainError::failed_create_swapchain_image_views, res };
 	}
 	return views;
 }
-
-
+void Swapchain::destroy_image_views (std::vector<VkImageView> const& image_views) {
+	for (auto& image_view : image_views) {
+		vkDestroyImageView (device, image_view, allocation_callbacks);
+	}
+}
 void destroy_swapchain (Swapchain const& swapchain) {
 	if (swapchain.device != VK_NULL_HANDLE && swapchain.swapchain != VK_NULL_HANDLE)
 		vkDestroySwapchainKHR (swapchain.device, swapchain.swapchain, swapchain.allocation_callbacks);

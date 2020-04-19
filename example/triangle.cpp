@@ -294,10 +294,8 @@ int create_graphics_pipeline (Init& init, RenderData& data) {
 }
 
 int create_framebuffers (Init& init, RenderData& data) {
-	data.swapchain_images = vkb::get_swapchain_images (init.swapchain).value ();
-	// init.swapchain.image_count = data.swapchain_images.size ();
-	data.swapchain_image_views =
-	    vkb::get_swapchain_image_views (init.swapchain, data.swapchain_images).value ();
+	data.swapchain_images = init.swapchain.get_images ().value ();
+	data.swapchain_image_views = init.swapchain.get_image_views ().value ();
 
 	data.framebuffers.resize (data.swapchain_image_views.size ());
 

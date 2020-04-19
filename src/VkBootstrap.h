@@ -197,8 +197,8 @@ class InstanceBuilder {
 	// Adds an extension to be enabled. Will fail to create an instance if the extension isn't available.
 	InstanceBuilder& enable_extension (const char* extension_name);
 
-	// Headless Mode does not load the required extensions for presentation. Defaults to false.
-	InstanceBuilder& set_headless (bool headless = false);
+	// Headless Mode does not load the required extensions for presentation. Defaults to true.
+	InstanceBuilder& set_headless (bool headless = true);
 
 	// Enables the validation layers. Will fail to create an instance if the validation layers aren't available.
 	InstanceBuilder& enable_validation_layers (bool require_validation = true);
@@ -310,6 +310,9 @@ struct PhysicalDevice {
 	bool has_separate_compute_queue () const;
 	// Has a queue family that supports transfer operations but not graphics.
 	bool has_separate_transfer_queue () const;
+
+	// Advanced: Get the VkQueueFamilyProperties of the device if special queue setup is needed
+	std::vector<VkQueueFamilyProperties> get_queue_families () const;
 
 	private:
 	std::vector<const char*> extensions_to_enable;
@@ -450,15 +453,15 @@ struct Device {
 	detail::Expected<VkQueue, detail::Error<QueueError>> get_dedicated_queue (QueueType type) const;
 };
 
-void destroy_device (Device device);
-
+// For advanced device queue setup
 struct CustomQueueDescription {
-	CustomQueueDescription (uint32_t index, uint32_t count, std::vector<float> priorities)
-	: index (index), count (count), priorities (priorities) {}
+	CustomQueueDescription (uint32_t index, uint32_t count, std::vector<float> priorities);
 	uint32_t index = 0;
 	uint32_t count = 0;
 	std::vector<float> priorities;
 };
+
+void destroy_device (Device device);
 
 class DeviceBuilder {
 	public:
@@ -473,7 +476,10 @@ class DeviceBuilder {
 
 	// Add a structure to the pNext chain of VkDeviceCreateInfo.
 	// The structure must be valid when DeviceBuilder::build() is called.
-	template <typename T> DeviceBuilder& add_pNext (T* structure);
+	template <typename T> DeviceBuilder& add_pNext (T* structure) {
+		info.pNext_chain.push_back (reinterpret_cast<VkBaseOutStructure*> (structure));
+		return *this;
+	}
 
 	// Provide custom allocation callbacks.
 	DeviceBuilder& set_allocation_callbacks (VkAllocationCallbacks* callbacks);
@@ -500,14 +506,17 @@ struct Swapchain {
 	VkFormat image_format = VK_FORMAT_UNDEFINED;
 	VkExtent2D extent = { 0, 0 };
 	VkAllocationCallbacks* allocation_callbacks = VK_NULL_HANDLE;
+
+	// Returns a vector of VkImage handles to the swapchain
+	detail::Expected<std::vector<VkImage>, detail::Error<SwapchainError>> get_images ();
+
+	// Returns a vector of VkImageView's to the VkImage's of the swapchain
+	// VkImageViews must be destroyed
+	detail::Expected<std::vector<VkImageView>, detail::Error<SwapchainError>> get_image_views ();
+	void destroy_image_views (std::vector<VkImageView> const& image_views);
 };
 
 void destroy_swapchain (Swapchain const& swapchain);
-
-detail::Expected<std::vector<VkImage>, detail::Error<SwapchainError>> get_swapchain_images (
-    Swapchain const& swapchain);
-detail::Expected<std::vector<VkImageView>, detail::Error<SwapchainError>>
-get_swapchain_image_views (Swapchain const& swapchain, std::vector<VkImage> const& images);
 
 class SwapchainBuilder {
 	public:

@@ -233,6 +233,8 @@ const char* to_string (DeviceError err) {
 }
 const char* to_string (SwapchainError err) {
 	switch (err) {
+		case SwapchainError::surface_handle_not_provided:
+			return "surface_handle_not_provided";
 		case SwapchainError::failed_query_surface_support_details:
 			return "failed_query_surface_support_details";
 		case SwapchainError::failed_create_swapchain:
@@ -1191,6 +1193,18 @@ SwapchainBuilder::SwapchainBuilder (Device const& device) {
 	info.graphics_queue_index = present.value ();
 	info.present_queue_index = graphics.value ();
 }
+SwapchainBuilder::SwapchainBuilder (Device const& device, VkSurfaceKHR const surface) {
+	info.device = device.device;
+	info.physical_device = device.physical_device.physical_device;
+	info.surface = surface;
+	Device temp_device = device;
+	temp_device.surface = surface;
+	auto present = temp_device.get_queue_index (QueueType::present);
+	auto graphics = temp_device.get_queue_index (QueueType::graphics);
+	// TODO: handle error of queue's not available
+	info.graphics_queue_index = present.value ();
+	info.present_queue_index = graphics.value ();
+}
 
 SwapchainBuilder::SwapchainBuilder (
     VkPhysicalDevice const physical_device, VkDevice const device, VkSurfaceKHR const surface) {
@@ -1211,6 +1225,10 @@ detail::Expected<Swapchain, detail::Error<SwapchainError>> SwapchainBuilder::bui
 }
 detail::Expected<Swapchain, detail::Error<SwapchainError>> SwapchainBuilder::build (
     VkSwapchainKHR old_swapchain) const {
+	if (info.surface == VK_NULL_HANDLE) {
+		return detail::Error<SwapchainError>{ SwapchainError::surface_handle_not_provided };
+	}
+
 	auto desired_formats = info.desired_formats;
 	if (desired_formats.size () == 0) add_desired_formats (desired_formats);
 	auto desired_present_modes = info.desired_present_modes;

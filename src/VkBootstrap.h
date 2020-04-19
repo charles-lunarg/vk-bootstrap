@@ -125,6 +125,7 @@ enum class DeviceError {
 	failed_create_device,
 };
 enum class SwapchainError {
+	surface_handle_not_present,
 	failed_query_surface_support_details,
 	failed_create_swapchain,
 	failed_get_swapchain_images,
@@ -523,6 +524,7 @@ void destroy_swapchain (Swapchain const& swapchain);
 class SwapchainBuilder {
 	public:
 	SwapchainBuilder (Device const& device);
+	SwapchainBuilder (Device& device, VkSurfaceKHR const surface);
 	SwapchainBuilder (VkPhysicalDevice const physical_device, VkDevice const device, VkSurfaceKHR const surface);
 
 	detail::Expected<Swapchain, detail::Error<SwapchainError>> build () const;

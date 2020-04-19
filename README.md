@@ -12,11 +12,13 @@ This library simplifies the tedious process of:
 
 It also adds several conveniences for:
 
-* enabling validation layers
-* setting up a debug callback
-* select a gpu based on a set of common criteria like features, extensions, memory, etc.
+* Enabling validation layers
+* Adding a debug callback
+* Select a gpu based on a set of criteria like features, extensions, memory, etc.
 
-## Example
+Read the [Getting Started](docs/getting_started.md) guide for a quick start on using `vk-bootstrap`
+
+## Basic Usage
 
 ```cpp
 
@@ -70,7 +72,8 @@ See `example/triangle.cpp` for an example that renders a triangle to the screen.
 
 ### Simple
 
-This library has no external dependencies.
+This library has no external dependencies beyond C++11 and the standard library.
+
 Simply copy the `src/VkBootstrap.h` and `src/VkBootstrap.cpp` files into your project and compile them as you normally would
 
 ### With git-submodule + CMake
@@ -115,10 +118,3 @@ you can force enable tests by adding `-DVK_BOOTSTRAP_TEST` to the cmake command 
 ```bash
 cmake ../path/to/your-project/ -DVK_BOOTSTRAP_TEST=ON
 ```
-
-## Todo's
-
-* Package library to be usable
-* More examples
-* Testing
-* Documenting API

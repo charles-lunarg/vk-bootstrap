@@ -22,47 +22,46 @@ It also adds several conveniences for:
 
 #include "VkBootstrap.h"
 
-void init_vulkan()
-{
+void init_vulkan () {
     vkb::InstanceBuilder builder;
-    builder.request_validation_layers()
-           .set_app_name ("Example Vulkan Application")
-           .use_default_debug_messenger ();
-    auto inst_ret = builder.build();
-    if (!inst_ret.has_value()) {
+    auto inst_ret = builder.set_app_name ("Example Vulkan Application")
+                        .request_validation_layers ()
+                        .use_default_debug_messenger ()
+                        .build ();
+    if (!inst_ret) {
         // error
     }
-    vkb::Instance vkb_inst = inst_ret.value();
+    vkb::Instance vkb_inst = inst_ret.value ();
 
-    vkb::PhysicalDeviceSelector selector{ inst };
-    selector.set_surface (/* from user created window*/)
-            .set_minimum_version (1, 1) //require a vulkan 1.1 capable device
-            .require_dedicated_transfer_queue();
-    auto phys_ret = selector.select ();
-    if (!phys_ret.has_value()) {
+    vkb::PhysicalDeviceSelector selector{ vkb_inst };
+    auto phys_ret = selector.set_surface (/* from user created window*/)
+                        .set_minimum_version (1, 1) // require a vulkan 1.1 capable device
+                        .require_dedicated_transfer_queue ()
+                        .select ();
+    if (!phys_ret) {
         // error
     }
 
-    vkb::DeviceBuilder device_builder{ phys_ret.value() };
+    vkb::DeviceBuilder device_builder{ phys_ret.value () };
+    // automatically propagate needed data from instance & physical device
     auto dev_ret = device_builder.build ();
-    if (!dev_ret.has_value()){
+    if (!dev_ret) {
         // error
     }
-    vkb::Device dev = dev_ret.value();
+    vkb::Device vkb_device = dev_ret.value ();
 
     // Get the VkDevice handle used in the rest of a vulkan application
-    VkDevice device = dev.device;
+    VkDevice device = vkb_device.device;
 
     // Get the graphics queue with a helper function
-    auto graphics_queue_ret = dev.get_queue(vkb::QueueType::graphics);
-    if (!graphics_queue_ret.has_value()){
+    auto graphics_queue_ret = vkb_device.get_queue (vkb::QueueType::graphics);
+    if (!graphics_queue_ret) {
         // error
     }
-    VkQueue graphics_queue = graphics_queue_ret.value();
+    VkQueue graphics_queue = graphics_queue_ret.value ();
 
     // Turned 400-500 lines of boilerplate into less than fifty.
 }
-
 ```
 
 See `example/triangle.cpp` for an example that renders a triangle to the screen.

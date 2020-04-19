@@ -1192,16 +1192,19 @@ SwapchainBuilder::SwapchainBuilder (Device const& device) {
 	info.present_queue_index = graphics.value ();
 }
 
-SwapchainBuilder::SwapchainBuilder (VkPhysicalDevice const physical_device,
-    VkDevice const device,
-    VkSurfaceKHR const surface,
-    uint32_t graphics_queue_index,
-    uint32_t present_queue_index) {
+SwapchainBuilder::SwapchainBuilder (
+    VkPhysicalDevice const physical_device, VkDevice const device, VkSurfaceKHR const surface) {
 	info.physical_device = physical_device;
 	info.device = device;
 	info.surface = surface;
-	info.graphics_queue_index = graphics_queue_index;
-	info.present_queue_index = present_queue_index;
+	auto queue_families = detail::get_vector_noerror<VkQueueFamilyProperties> (
+	    vkGetPhysicalDeviceQueueFamilyProperties, physical_device);
+
+	int graphics_queue_index = detail::get_graphics_queue_index (queue_families);
+	int present_queue_index = detail::get_present_queue_index (physical_device, surface, queue_families);
+	// TODO: handle queue indexes being below zero
+	info.graphics_queue_index = static_cast<uint32_t> (graphics_queue_index);
+	info.present_queue_index = static_cast<uint32_t> (present_queue_index);
 }
 detail::Expected<Swapchain, detail::Error<SwapchainError>> SwapchainBuilder::build () const {
 	return build (VK_NULL_HANDLE);

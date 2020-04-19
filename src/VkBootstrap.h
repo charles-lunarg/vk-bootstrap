@@ -523,11 +523,7 @@ void destroy_swapchain (Swapchain const& swapchain);
 class SwapchainBuilder {
 	public:
 	SwapchainBuilder (Device const& device);
-	SwapchainBuilder (VkPhysicalDevice const physical_device,
-	    VkDevice const device,
-	    VkSurfaceKHR const surface,
-	    uint32_t graphics_queue_index,
-	    uint32_t present_queue_index);
+	SwapchainBuilder (VkPhysicalDevice const physical_device, VkDevice const device, VkSurfaceKHR const surface);
 
 	detail::Expected<Swapchain, detail::Error<SwapchainError>> build () const;
 	detail::Expected<Swapchain, detail::Error<SwapchainError>> recreate (Swapchain const& swapchain) const;

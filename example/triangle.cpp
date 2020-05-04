@@ -357,8 +357,7 @@ int create_command_buffers (Init& init, RenderData& data) {
 		render_pass_info.framebuffer = data.framebuffers[i];
 		render_pass_info.renderArea.offset = { 0, 0 };
 		render_pass_info.renderArea.extent = init.swapchain.extent;
-
-		VkClearValue clearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
+		VkClearValue clearColor{ { { 0.0f, 0.0f, 0.0f, 1.0f } } };
 		render_pass_info.clearValueCount = 1;
 		render_pass_info.pClearValues = &clearColor;
 

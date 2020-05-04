@@ -9,13 +9,13 @@ add_library(vk-bootstrap::vk-bootstrap ALIAS vk-bootstrap)
 add_library(vk-bootstrap-compiler-warnings INTERFACE)
 target_compile_options(vk-bootstrap-compiler-warnings
         INTERFACE
-        $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>>:
+        $<$<OR:$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>,$<AND:$<CXX_COMPILER_ID:Clang>,$<NOT:$<STREQUAL:"x${CMAKE_CXX_SIMULATE_ID}","xMSVC">>>>:
         -Wall
         -Wextra
         -pedantic-errors
         -Wconversion
         -Wsign-conversion>
-        $<$<CXX_COMPILER_ID:MSVC>:
+        $<$<OR:$<CXX_COMPILER_ID:MSVC>,$<AND:$<CXX_COMPILER_ID:Clang>,$<STREQUAL:"x${CMAKE_CXX_SIMULATE_ID}","xMSVC">>>:
         /WX
         /W4>
         )

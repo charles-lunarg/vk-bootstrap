@@ -1,6 +1,6 @@
 # Getting Started
 
-`vk-bootstrap` reduces the complexity of setting up a vulkan application into by simplifying the three initial steps; instance creation, Physical device selection, and device creation. 
+`vk-bootstrap` reduces the complexity of setting up a vulkan application by simplifying the three initial steps; instance creation, Physical device selection, and device creation. 
 
 ## Instance Creation
 

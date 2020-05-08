@@ -1,6 +1,6 @@
 # Getting Started
 
-`vk-bootstrap` reduces the complexity of setting up a vulkan application into 3 main steps; instance creation, Physical device selection, and device creation. 
+`vk-bootstrap` reduces the complexity of setting up a vulkan application into by simplifying the three initial steps; instance creation, Physical device selection, and device creation. 
 
 ## Instance Creation
 
@@ -159,9 +159,10 @@ auto dev_ret = device_builder.build ();
 if (!dev_ret) {
     // error
 }
+vkb::Device vkb_device = dev_ret.value();
  ```
 
-The features and extensions used as selection criteria in `vkb::PhysicalDeviceSelector` automatically propagate into `vkb::DeviceBuilder`. Because of this, there is no way to enable features or extensions that were not specified during `vkb::PhysicalDeviceSelector`. This is by design as any feature or extension enabled *must* have support from the `VkPhysicalDevice`.
+The features and extensions used as selection criteria in `vkb::PhysicalDeviceSelector` automatically propagate into `vkb::DeviceBuilder`. Because of this, there is no way to enable features or extensions that were not specified during `vkb::PhysicalDeviceSelector`. This is by design as any feature or extension enabled in a device *must* have support from the `VkPhysicalDevice` it is created with.
 
 The common method to extend Vulkan functionality in existing API calls is to use the pNext chain. This is accounted for `VkDevice` creation with the `add_pNext` member function of `vkb::DeviceBuilder`. Note: Any structures added to the pNext chain must remain valid until `build()` is called.
 
@@ -172,10 +173,39 @@ auto dev_ret = device_builder.add_pNext(&descriptor_indexing_features)
                              .build ();
 ```
 
-### Queue Selection and Querying
+### Queues
 
-By default, `vkb::DeviceBuilder` will enable one queue from each queue family available from the `VkPhysicalDevice` unless otherwise specified. This is due to the variety of possible combinations of queue families on different hardware. 
+By default, `vkb::DeviceBuilder` will enable one queue from each queue family available on the `VkPhysicalDevice`. This is done because in practice, most use cases only need a single queue from each family.
 
+To get a `VkQueue` or the index of a `VkQueue`, use the `get_queue(QueueType type)` and `get_queue_index(QueueType type)` functions of `vkb::Device`. These will return the appropriate `VkQueue` or `uint32_t` if they exist and were enabled, else they will return an error.
+
+```cpp
+auto queue_ret = vkb_device.get_queue (vkb::QueueType::graphics);
+if (!queue_ret) {
+    // handle error
+}
+graphics_queue = queue_ret.value ();
+```
+
+Queue families represent a set of queues with similar operations, such as graphics, transfer, and compute. Because not all Vulkan hardware has queue families for each operation category, an application should be able to handle the presence or lack of certain queue families. For this reason the `get_dedicated_queue`  and `get_dedicated_queue_index` functions of `vkb::Device` exist to allow applications to easily know if there is a queue dedicated to a particular operation, such as compute or transfer operations.
+
+#### Custom queue setup
+
+If an application wishes to have more fine grained control over their queue setup, they should create a `std::vector` of `vkb::CustomQueueDescription` which describe the index, count and a `std::vector<float>` of priorities. To build up such a vector, use the `get_queue_familties` function in `vkb::PhysicalDevice` to get a `std::vector<VkQueueFamilyProperties>`
+
+For example
+```cpp
+std::vector<vkb::CustomQueueDescription> queue_descriptions;
+auto queue_families = phys_device.get_queue_families ();
+for (uint32_t i = 0; i < static_cast<uint32_t>(queue_families.size ()); i++) {
+    if (queue_families[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) {
+        // Find the first queue family with graphics operations supported
+        queue_descriptions.push_back (vkb::CustomQueueDescription (
+            i, queue_families[i].queueCount, 
+            std::vector<float> (queue_families[i].queueCount, 1.0f)));
+    }
+}
+```
 ## Swapchain
 // TODO
 

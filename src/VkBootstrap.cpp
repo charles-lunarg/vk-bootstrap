@@ -1380,8 +1380,8 @@ SwapchainBuilder& SwapchainBuilder::set_allocation_callbacks (VkAllocationCallba
 	return *this;
 }
 void SwapchainBuilder::add_desired_formats (std::vector<VkSurfaceFormatKHR>& formats) const {
-	formats.push_back ({ VK_FORMAT_R8G8B8A8_UNORM, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR });
-	formats.push_back ({ VK_FORMAT_B8G8R8A8_UNORM, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR });
+	formats.push_back ({ VK_FORMAT_B8G8R8A8_SRGB, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR });
+	formats.push_back ({ VK_FORMAT_R8G8B8A8_SRGB, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR });
 }
 void SwapchainBuilder::add_desired_present_modes (std::vector<VkPresentModeKHR>& modes) const {
 	modes.push_back (VK_PRESENT_MODE_MAILBOX_KHR);

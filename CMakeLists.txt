@@ -7,15 +7,24 @@ add_library(vk-bootstrap src/VkBootstrap.h src/VkBootstrap.cpp)
 add_library(vk-bootstrap::vk-bootstrap ALIAS vk-bootstrap)
 
 add_library(vk-bootstrap-compiler-warnings INTERFACE)
+
+# Determine whether we're compiling with clang++
+string(FIND "${CMAKE_CXX_COMPILER}" "clang++" VK_BOOTSTRAP_COMPILER_CLANGPP)
+if(VK_BOOTSTRAP_COMPILER_CLANGPP GREATER -1)
+  set(VK_BOOTSTRAP_COMPILER_CLANGPP 1)
+else()
+  set(VK_BOOTSTRAP_COMPILER_CLANGPP 0)
+endif()
+
 target_compile_options(vk-bootstrap-compiler-warnings
         INTERFACE
-        $<$<OR:$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>,$<AND:$<CXX_COMPILER_ID:Clang>,$<NOT:$<STREQUAL:"x${CMAKE_CXX_SIMULATE_ID}","xMSVC">>>>:
+        $<$<OR:$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>,${VK_BOOTSTRAP_COMPILER_CLANGPP}>:
         -Wall
         -Wextra
         -pedantic-errors
         -Wconversion
         -Wsign-conversion>
-        $<$<OR:$<CXX_COMPILER_ID:MSVC>,$<AND:$<CXX_COMPILER_ID:Clang>,$<STREQUAL:"x${CMAKE_CXX_SIMULATE_ID}","xMSVC">>>:
+        $<$<CXX_COMPILER_ID:MSVC>:
         /WX
         /W4>
         )

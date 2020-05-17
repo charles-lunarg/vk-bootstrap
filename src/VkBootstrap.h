@@ -3,93 +3,94 @@
 #include <cassert>
 
 #include <vector>
+#include <system_error>
 
 #include <vulkan/vulkan.h>
 
 namespace vkb {
 
 namespace detail {
-template <typename ErrorType> struct Error {
-	explicit Error (ErrorType type, VkResult result = VK_SUCCESS)
-	: type (type), vk_result (result) {}
 
-	ErrorType type;
-	VkResult vk_result; // optional error value if a vulkan call failed
+struct Error {
+	std::error_code type;
+	VkResult vk_result = VK_SUCCESS; // optional error value if a vulkan call failed
 };
 
-template <typename E, typename U> class Expected {
+template <typename T> class Result {
 	public:
-	Expected (const E& expect) : m_expect{ expect }, m_init{ true } {}
-	Expected (E&& expect) : m_expect{ std::move (expect) }, m_init{ true } {}
-	Expected (const U& error) : m_error{ error }, m_init{ false } {}
-	Expected (U&& error) : m_error{ std::move (error) }, m_init{ false } {}
-	~Expected () { destroy (); }
-	Expected (Expected const& expected) : m_init (expected.m_init) {
+	Result (const T& value) : m_value{ value }, m_init{ true } {}
+	Result (T&& value) : m_value{ std::move (value) }, m_init{ true } {}
+
+	Result (Error error) : m_error{ error }, m_init{ false } {}
+
+	Result (std::error_code error_code, VkResult result = VK_SUCCESS)
+	: m_error{ error_code, result }, m_init{ false } {}
+
+	~Result () { destroy (); }
+	Result (Result const& expected) : m_init (expected.m_init) {
 		if (m_init)
-			new (&m_expect) E{ expected.m_expect };
+			new (&m_value) T{ expected.m_value };
 		else
-			new (&m_error) U{ expected.m_error };
+			m_error = expected.m_error;
 	}
-	Expected (Expected&& expected) : m_init (expected.m_init) {
+	Result (Result&& expected) : m_init (expected.m_init) {
 		if (m_init)
-			new (&m_expect) E{ std::move (expected.m_expect) };
+			new (&m_value) T{ std::move (expected.m_value) };
 		else
-			new (&m_error) U{ std::move (expected.m_error) };
+			m_error = std::move (expected.m_error);
 		expected.destroy ();
 	}
 
-	Expected& operator= (const E& expect) {
+	Result& operator= (const T& expect) {
 		destroy ();
 		m_init = true;
-		new (&m_expect) E{ expect };
+		new (&m_value) T{ expect };
 		return *this;
 	}
-	Expected& operator= (E&& expect) {
+	Result& operator= (T&& expect) {
 		destroy ();
 		m_init = true;
-		new (&m_expect) E{ std::move (expect) };
+		new (&m_value) T{ std::move (expect) };
 		return *this;
 	}
-	Expected& operator= (const U& error) {
+	Result& operator= (const Error& error) {
 		destroy ();
 		m_init = false;
-		new (&m_error) U{ error };
+		m_error = error;
 		return *this;
 	}
-	Expected& operator= (U&& error) {
+	Result& operator= (Error&& error) {
 		destroy ();
 		m_init = false;
-		new (&m_error) U{ std::move (error) };
+		m_error = error;
 		return *this;
 	}
 	// clang-format off
-	const E* operator-> () const { assert (m_init); return &m_expect; }
-	E*       operator-> ()       { assert (m_init); return &m_expect; }
-	const E& operator* () const& { assert (m_init);	return m_expect; }
-	E&       operator* () &      { assert (m_init); return m_expect; }
-	E&&      operator* () &&	 { assert (m_init); return std::move (m_expect); }
-	const E&  value () const&    { assert (m_init); return m_expect; }
-	E&        value () &         { assert (m_init); return m_expect; }
-	const E&& value () const&&   { assert (m_init); return std::move (m_expect); }
-	E&&       value () &&        { assert (m_init); return std::move (m_expect); }
-	const U&  error () const&  { assert (!m_init); return m_error; }
-	U&        error () &       { assert (!m_init); return m_error; }
-	const U&& error () const&& { assert (!m_init); return std::move (m_error); }
-	U&&       error () &&      { assert (!m_init); return std::move (m_error); }
+	const T* operator-> () const { assert (m_init); return &m_value; }
+	T*       operator-> ()       { assert (m_init); return &m_value; }
+	const T& operator* () const& { assert (m_init);	return m_value; }
+	T&       operator* () &      { assert (m_init); return m_value; }
+	T&&      operator* () &&	 { assert (m_init); return std::move (m_value); }
+	const T&  value () const&    { assert (m_init); return m_value; }
+	T&        value () &         { assert (m_init); return m_value; }
+	const T&& value () const&&   { assert (m_init); return std::move (m_value); }
+	T&&       value () &&        { assert (m_init); return std::move (m_value); }
+
+    std::error_code error() const { assert (!m_init); return m_error.type; }
+    VkResult vk_result() const { assert (!m_init); return m_error.vk_result; }
 	// clang-format on
+
+
 	bool has_value () const { return m_init; }
 	explicit operator bool () const { return m_init; }
 
 	private:
 	void destroy () {
-		if (m_init)
-			m_expect.~E ();
-		else
-			m_error.~U ();
+		if (m_init) m_value.~T ();
 	}
 	union {
-		E m_expect;
-		U m_error;
+		T m_value;
+		Error m_error;
 	};
 	bool m_init;
 };
@@ -131,6 +132,13 @@ enum class SwapchainError {
 	failed_get_swapchain_images,
 	failed_create_swapchain_image_views,
 };
+
+std::error_code make_error_code (InstanceError instance_error);
+std::error_code make_error_code (PhysicalDeviceError physical_device_error);
+std::error_code make_error_code (QueueError queue_error);
+std::error_code make_error_code (DeviceError device_error);
+std::error_code make_error_code (SwapchainError swapchain_error);
+
 const char* to_string_message_severity (VkDebugUtilsMessageSeverityFlagBitsEXT s);
 const char* to_string_message_type (VkDebugUtilsMessageTypeFlagsEXT s);
 
@@ -178,7 +186,7 @@ class InstanceBuilder {
 	SystemInfo get_system_info () const;
 
 	// Create a VkInstance. Return an error if it failed.
-	detail::Expected<Instance, detail::Error<InstanceError>> build () const;
+	detail::Result<Instance> build () const;
 
 	// Sets the name of the application. Defaults to "" if none is provided.
 	InstanceBuilder& set_app_name (const char* app_name);
@@ -336,7 +344,7 @@ class PhysicalDeviceSelector {
 	// Requires a vkb::Instance to construct, needed to pass instance creation info.
 	PhysicalDeviceSelector (Instance const& instance);
 
-	detail::Expected<PhysicalDevice, detail::Error<PhysicalDeviceError>> select () const;
+	detail::Result<PhysicalDevice> select () const;
 
 	// Set the surface in which the physical device should render to.
 	PhysicalDeviceSelector& set_surface (VkSurfaceKHR surface);
@@ -446,13 +454,13 @@ struct Device {
 	std::vector<VkQueueFamilyProperties> queue_families;
 	VkAllocationCallbacks* allocation_callbacks = VK_NULL_HANDLE;
 
-	detail::Expected<uint32_t, detail::Error<QueueError>> get_queue_index (QueueType type) const;
+	detail::Result<uint32_t> get_queue_index (QueueType type) const;
 	// Only a compute or transfer queue type is valid. All other queue types do not support a 'dedicated' queue index
-	detail::Expected<uint32_t, detail::Error<QueueError>> get_dedicated_queue_index (QueueType type) const;
+	detail::Result<uint32_t> get_dedicated_queue_index (QueueType type) const;
 
-	detail::Expected<VkQueue, detail::Error<QueueError>> get_queue (QueueType type) const;
+	detail::Result<VkQueue> get_queue (QueueType type) const;
 	// Only a compute or transfer queue type is valid. All other queue types do not support a 'dedicated' queue
-	detail::Expected<VkQueue, detail::Error<QueueError>> get_dedicated_queue (QueueType type) const;
+	detail::Result<VkQueue> get_dedicated_queue (QueueType type) const;
 };
 
 // For advanced device queue setup
@@ -470,7 +478,7 @@ class DeviceBuilder {
 	// Any features and extensions that are requested/required in PhysicalDeviceSelector are automatically enabled.
 	DeviceBuilder (PhysicalDevice physical_device);
 
-	detail::Expected<Device, detail::Error<DeviceError>> build () const;
+	detail::Result<Device> build () const;
 
 	// For Advanced Users: specify the exact list of VkDeviceQueueCreateInfo's needed for the application.
 	// If a custom queue setup is provided, getting the queues and queue indexes is up to the application.
@@ -511,11 +519,11 @@ struct Swapchain {
 	VkAllocationCallbacks* allocation_callbacks = VK_NULL_HANDLE;
 
 	// Returns a vector of VkImage handles to the swapchain
-	detail::Expected<std::vector<VkImage>, detail::Error<SwapchainError>> get_images ();
+	detail::Result<std::vector<VkImage>> get_images ();
 
 	// Returns a vector of VkImageView's to the VkImage's of the swapchain
 	// VkImageViews must be destroyed
-	detail::Expected<std::vector<VkImageView>, detail::Error<SwapchainError>> get_image_views ();
+	detail::Result<std::vector<VkImageView>> get_image_views ();
 	void destroy_image_views (std::vector<VkImageView> const& image_views);
 };
 
@@ -527,8 +535,8 @@ class SwapchainBuilder {
 	SwapchainBuilder (Device const& device, VkSurfaceKHR const surface);
 	SwapchainBuilder (VkPhysicalDevice const physical_device, VkDevice const device, VkSurfaceKHR const surface);
 
-	detail::Expected<Swapchain, detail::Error<SwapchainError>> build () const;
-	detail::Expected<Swapchain, detail::Error<SwapchainError>> recreate (Swapchain const& swapchain) const;
+	detail::Result<Swapchain> build () const;
+	detail::Result<Swapchain> recreate (Swapchain const& swapchain) const;
 
 	SwapchainBuilder& set_desired_extent (uint32_t width, uint32_t height);
 
@@ -547,7 +555,7 @@ class SwapchainBuilder {
 	void add_desired_formats (std::vector<VkSurfaceFormatKHR>& formats) const;
 	void add_desired_present_modes (std::vector<VkPresentModeKHR>& modes) const;
 	// for use in swapchain recreation
-	detail::Expected<Swapchain, detail::Error<SwapchainError>> build (VkSwapchainKHR old_swapchain) const;
+	detail::Result<Swapchain> build (VkSwapchainKHR old_swapchain) const;
 
 	struct SwapchainInfo {
 		VkPhysicalDevice physical_device = VK_NULL_HANDLE;
@@ -566,3 +574,12 @@ class SwapchainBuilder {
 };
 
 } // namespace vkb
+
+
+namespace std {
+template <> struct is_error_code_enum<vkb::InstanceError> : true_type {};
+template <> struct is_error_code_enum<vkb::PhysicalDeviceError> : true_type {};
+template <> struct is_error_code_enum<vkb::QueueError> : true_type {};
+template <> struct is_error_code_enum<vkb::DeviceError> : true_type {};
+template <> struct is_error_code_enum<vkb::SwapchainError> : true_type {};
+} // namespace std

@@ -8,7 +8,7 @@
 
 // changing present modes and/or image formats
 
-TEST_CASE ("Instance with surface") {
+TEST_CASE ("Instance with surface", "[VkBootstrap.bootstrap]") {
 	GIVEN ("A window and a vulkan instance") {
 
 		auto window = create_window_glfw ();
@@ -54,7 +54,7 @@ TEST_CASE ("Instance with surface") {
 	}
 }
 
-TEST_CASE ("instance configuration") {
+TEST_CASE ("instance configuration", "[VkBootstrap.bootstrap]") {
 	SECTION ("custom debug callback") {
 		vkb::InstanceBuilder builder;
 
@@ -97,7 +97,7 @@ TEST_CASE ("instance configuration") {
 	}
 }
 
-TEST_CASE ("Headless Vulkan") {
+TEST_CASE ("Headless Vulkan", "[VkBootstrap.bootstrap]") {
 	vkb::InstanceBuilder builder;
 
 	auto instance_ret = builder.request_validation_layers ().set_headless ().build ();
@@ -116,7 +116,7 @@ TEST_CASE ("Headless Vulkan") {
 	vkb::destroy_instance (instance_ret.value ());
 }
 
-TEST_CASE ("Device Configuration") {
+TEST_CASE ("Device Configuration", "[VkBootstrap.bootstrap]") {
 
 	auto window = create_window_glfw ();
 	vkb::InstanceBuilder builder;
@@ -180,7 +180,7 @@ TEST_CASE ("Device Configuration") {
 	vkb::destroy_instance (instance_ret.value ());
 }
 
-TEST_CASE ("Swapchain") {
+TEST_CASE ("Swapchain", "[VkBootstrap.bootstrap]") {
 	GIVEN ("A working instance, window, surface, and device") {
 		auto window = create_window_glfw ();
 		vkb::InstanceBuilder builder;
@@ -268,7 +268,7 @@ void* VKAPI_PTR shim_vkReallocationFunction (
 void VKAPI_PTR shim_vkFreeFunction (void* /*pUserData*/, void* pMemory) { return free (pMemory); }
 
 
-TEST_CASE ("Allocation Callbacks") {
+TEST_CASE ("Allocation Callbacks", "[VkBootstrap.bootstrap]") {
 	VkAllocationCallbacks allocation_callbacks{};
 	allocation_callbacks.pfnAllocation = &shim_vkAllocationFunction;
 	allocation_callbacks.pfnReallocation = &shim_vkReallocationFunction;
@@ -296,7 +296,7 @@ TEST_CASE ("Allocation Callbacks") {
 	vkb::SwapchainBuilder swapchain_builder (device);
 	auto swapchain_ret = swapchain_builder.set_allocation_callbacks (&allocation_callbacks).build ();
 	REQUIRE (swapchain_ret.has_value ());
-	auto swapchain = swapchain_ret.value ();
+	// auto swapchain = swapchain_ret.value ();
 
 	vkb::destroy_swapchain (swapchain_ret.value ());
 	vkb::destroy_device (device_ret.value ());

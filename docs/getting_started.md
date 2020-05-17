@@ -11,7 +11,7 @@ Simply create a builder variable and call the `build()` member function.
 vkb::InstanceBuilder instance_builder;
 auto instance_builder_return = instance_builder.build();
 ```
-Because creating an instance may fail, the builder returns an 'Expected' type. This contains either a valid `vkb::Instance` struct, which includes a `VkInstance` handle, or contains an `vkb::InstanceError`.
+Because creating an instance may fail, the builder returns an 'Result' type. This contains either a valid `vkb::Instance` struct, which includes a `VkInstance` handle, or contains an `vkb::InstanceError`.
 ```cpp
 if (!instance_builder_return) {
     printf("Failed to create Vulkan instance. Cause %s\n", 
@@ -19,7 +19,7 @@ if (!instance_builder_return) {
     return -1;
 } 
 ```
-Once any possible errors have been dealt with, we can pull the `vkb::Instance` struct out of the `Expected`. 
+Once any possible errors have been dealt with, we can pull the `vkb::Instance` struct out of the `Result`. 
 ```cpp
 vkb::Instance vkb_instance = instance_builder_return.value();
 ```

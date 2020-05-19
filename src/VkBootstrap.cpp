@@ -145,22 +145,21 @@ bool check_extension_supported (
 }
 
 bool check_extensions_supported (std::vector<VkExtensionProperties> const& available_extensions,
-    std::vector<const char*> const& extension_names, std::vector<const char*> const& display_extension_names, std::vector<const char*> &display_managers, bool headless) {
+    std::vector<const char*>& extension_names, std::vector<const char*>& display_extension_names) {
 	bool all_found = true;
 	for (const auto& extension_name : extension_names) {
 		bool found = check_extension_supported (available_extensions, extension_name);
 		if (!found) all_found = false;
 	}
-	// The logic for the display extension names is slightly different, as we want to make sure
 	bool display_manager_found = false;
 	for (const auto& display_extension_name : display_extension_names) {
         bool found = check_extension_supported (available_extensions, display_extension_name);
 		if(found) {
 			display_manager_found = true;
-			display_managers.push_back(display_extension_name);
+			extension_names.push_back(display_extension_name);
 		}
 	}
-	return all_found && (display_manager_found || headless);
+	return all_found && (display_manager_found || display_extension_names.empty());
 
 }
 
@@ -432,14 +431,11 @@ detail::Result<Instance> InstanceBuilder::build () const {
 #endif
 	}
 	std::vector<const char*> available_display_managers;
-	bool all_extensions_supported = detail::check_extensions_supported (system.available_extensions, extensions, display_extensions, available_display_managers, info.headless_context);
+	bool all_extensions_supported = detail::check_extensions_supported (system.available_extensions, extensions, display_extensions);
 	if (!all_extensions_supported) {
 		return make_error_code (InstanceError::requested_extensions_not_present);
 	}
 
-	for(auto& display_manager_name : available_display_managers) {
-		extensions.push_back(display_manager_name);
-	}
 	std::vector<const char*> layers;
 	for (auto& layer : info.layers)
 		layers.push_back (layer);

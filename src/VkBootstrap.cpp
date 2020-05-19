@@ -145,13 +145,23 @@ bool check_extension_supported (
 }
 
 bool check_extensions_supported (std::vector<VkExtensionProperties> const& available_extensions,
-    std::vector<const char*> const& extension_names) {
+    std::vector<const char*> const& extension_names, std::vector<const char*> const& display_extension_names, std::vector<const char*> &display_managers) {
 	bool all_found = true;
 	for (const auto& extension_name : extension_names) {
 		bool found = check_extension_supported (available_extensions, extension_name);
 		if (!found) all_found = false;
 	}
-	return all_found;
+	// The logic for the display extension names is slightly different, as we want to make sure
+	bool display_manager_found = false;
+	for (const auto& display_extension_name : display_extension_names) {
+        bool found = check_extension_supported (available_extensions, display_extension_name);
+		if(found) {
+			display_manager_found = true;
+			display_managers.push_back(display_extension_name);
+		}
+	}
+	return all_found && display_manager_found;
+
 }
 
 template <typename T>
@@ -398,6 +408,7 @@ detail::Result<Instance> InstanceBuilder::build () const {
 	app_info.apiVersion = api_version;
 
 	std::vector<const char*> extensions;
+	std::vector<const char*> display_extensions;
 	for (auto& ext : info.extensions)
 		extensions.push_back (ext);
 	if (info.debug_callback != nullptr) {
@@ -407,24 +418,28 @@ detail::Result<Instance> InstanceBuilder::build () const {
 	if (!info.headless_context) {
 		extensions.push_back ("VK_KHR_surface");
 #if defined(_WIN32)
-		extensions.push_back ("VK_KHR_win32_surface");
+		display_extensions.push_back ("VK_KHR_win32_surface");
 #elif defined(__ANDROID__)
-		extensions.push_back ("VK_KHR_android_surface");
+		display_extensions.push_back ("VK_KHR_android_surface");
 #elif defined(_DIRECT2DISPLAY)
-		extensions.push_back ("VK_KHR_display");
+		display_extensions.push_back ("VK_KHR_display");
 #elif defined(__linux__)
-		extensions.push_back ("VK_KHR_xcb_surface");
-		extensions.push_back ("VK_KHR_xlib_surface");
-		extensions.push_back ("VK_KHR_wayland_surface");
+		display_extensions.push_back ("VK_KHR_xcb_surface");
+		display_extensions.push_back ("VK_KHR_xlib_surface");
+		display_extensions.push_back ("VK_KHR_wayland_surface");
 #elif defined(__APPLE__)
-		extensions.push_back ("VK_KHR_metal_surface");
+		display_extensions.push_back ("VK_KHR_metal_surface");
 #endif
 	}
-	bool all_extensions_supported = detail::check_extensions_supported (system.available_extensions, extensions);
+	std::vector<const char*> available_display_managers;
+	bool all_extensions_supported = detail::check_extensions_supported (system.available_extensions, extensions, display_extensions, available_display_managers);
 	if (!all_extensions_supported) {
 		return make_error_code (InstanceError::requested_extensions_not_present);
 	}
 
+	for(auto& display_manager_name : available_display_managers) {
+		extensions.push_back(display_manager_name);
+	}
 	std::vector<const char*> layers;
 	for (auto& layer : info.layers)
 		layers.push_back (layer);

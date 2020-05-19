@@ -11,7 +11,7 @@
 TEST_CASE ("Instance with surface", "[VkBootstrap.bootstrap]") {
 	GIVEN ("A window and a vulkan instance") {
 
-		auto window = create_window_glfw ();
+		auto window = create_window_glfw ("Instance with surface");
 
 		vkb::InstanceBuilder instance_builder;
 		auto instance_ret = instance_builder.use_default_debug_messenger ().build ();
@@ -118,7 +118,7 @@ TEST_CASE ("Headless Vulkan", "[VkBootstrap.bootstrap]") {
 
 TEST_CASE ("Device Configuration", "[VkBootstrap.bootstrap]") {
 
-	auto window = create_window_glfw ();
+	auto window = create_window_glfw ("Device Configuration");
 	vkb::InstanceBuilder builder;
 
 	auto instance_ret = builder.request_validation_layers ().build ();
@@ -182,7 +182,7 @@ TEST_CASE ("Device Configuration", "[VkBootstrap.bootstrap]") {
 
 TEST_CASE ("Swapchain", "[VkBootstrap.bootstrap]") {
 	GIVEN ("A working instance, window, surface, and device") {
-		auto window = create_window_glfw ();
+		auto window = create_window_glfw ("Swapchain");
 		vkb::InstanceBuilder builder;
 
 		auto instance_ret = builder.request_validation_layers ().build ();
@@ -274,7 +274,7 @@ TEST_CASE ("Allocation Callbacks", "[VkBootstrap.bootstrap]") {
 	allocation_callbacks.pfnReallocation = &shim_vkReallocationFunction;
 	allocation_callbacks.pfnFree = &shim_vkFreeFunction;
 
-	auto window = create_window_glfw ();
+	auto window = create_window_glfw ("Allocation Callbacks");
 	vkb::InstanceBuilder builder;
 
 	auto instance_ret =

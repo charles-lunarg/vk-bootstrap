@@ -39,7 +39,7 @@ struct RenderData {
 };
 
 int device_initialization (Init& init) {
-	init.window = create_window_glfw (false);
+	init.window = create_window_glfw ("Vulkan Triangle", false);
 
 	vkb::InstanceBuilder instance_builder;
 	auto instance_ret = instance_builder.use_default_debug_messenger ().request_validation_layers ().build ();

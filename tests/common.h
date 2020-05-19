@@ -10,12 +10,12 @@
 
 #include "../src/VkBootstrap.h"
 
-GLFWwindow* create_window_glfw (bool resize = true) {
+GLFWwindow* create_window_glfw (const char * window_name = "", bool resize = true) {
 	glfwInit ();
 	glfwWindowHint (GLFW_CLIENT_API, GLFW_NO_API);
 	if (!resize) glfwWindowHint (GLFW_RESIZABLE, GLFW_FALSE);
 
-	return glfwCreateWindow (640, 480, "Vulkan Triangle", NULL, NULL);
+	return glfwCreateWindow (640, 480, window_name, NULL, NULL);
 }
 void destroy_window_glfw (GLFWwindow* window) {
 	glfwDestroyWindow (window);

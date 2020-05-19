@@ -31,7 +31,9 @@ void init_vulkan () {
                         .use_default_debug_messenger ()
                         .build ();
     if (!inst_ret) {
-        // error
+        printf("Failed to create Vulkan instance. Cause %s\n", 
+            instance_builder_return.error().message());
+        return;
     }
     vkb::Instance vkb_inst = inst_ret.value ();
 
@@ -41,14 +43,18 @@ void init_vulkan () {
                         .require_dedicated_transfer_queue ()
                         .select ();
     if (!phys_ret) {
-        // error
+        printf("Failed to select Vulkan Physical Device. Cause %s\n", 
+            phys_ret.error().message());
+        return;
     }
 
     vkb::DeviceBuilder device_builder{ phys_ret.value () };
     // automatically propagate needed data from instance & physical device
     auto dev_ret = device_builder.build ();
     if (!dev_ret) {
-        // error
+        printf("Failed to create Vulkan device. Cause %s\n", 
+            dev_ret.error().message());
+        return;
     }
     vkb::Device vkb_device = dev_ret.value ();
 
@@ -58,7 +64,9 @@ void init_vulkan () {
     // Get the graphics queue with a helper function
     auto graphics_queue_ret = vkb_device.get_queue (vkb::QueueType::graphics);
     if (!graphics_queue_ret) {
-        // error
+        printf("Failed to get graphics queue. Cause %s\n", 
+            graphics_queue_ret.error().message());
+        return;
     }
     VkQueue graphics_queue = graphics_queue_ret.value ();
 

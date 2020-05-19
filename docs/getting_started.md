@@ -15,7 +15,7 @@ Because creating an instance may fail, the builder returns an 'Result' type. Thi
 ```cpp
 if (!instance_builder_return) {
     printf("Failed to create Vulkan instance. Cause %s\n", 
-        vkb::to_string(instance_builder_return.error().type));
+        instance_builder_return.error().message());
     return -1;
 } 
 ```
@@ -55,6 +55,18 @@ auto inst_builder_ret = instance_builder
         .set_engine_name("Excellent Game Engine")
         .require_api_version(1,0,0)
         .build();
+```
+
+To query the available layers and extensions, use the `get_system_info()` function of `vkb::InstanceBuilder` to get a `SystemInfo` struct. It contains a `is_layer_available()` and `is_extension_available()` function to check for a layer or extensions before enabling it. It also has booleans for if the validation layers are present and if the VK_EXT_debug_utils extension is available.
+
+```cpp
+auto system_info = instance_builder.get_system_info();
+if (system_info.is_layer_available("VK_LAYER_LUNARG_api_dump")) {
+    instance_builder.enable_layer("VK_LAYER_LUNARG_api_dump");
+}
+if (system_info.validation_layers_available){
+    instance_builder.enable_validation_layers();
+}
 ```
 
 The `vkb::Instance` struct is meant to hold all the necessary instance level data to enable proper Physical Device selection. It also is meant for easy destructuring into custom classes if so desired.
@@ -191,7 +203,7 @@ Queue families represent a set of queues with similar operations, such as graphi
 
 #### Custom queue setup
 
-If an application wishes to have more fine grained control over their queue setup, they should create a `std::vector` of `vkb::CustomQueueDescription` which describe the index, count and a `std::vector<float>` of priorities. To build up such a vector, use the `get_queue_familties` function in `vkb::PhysicalDevice` to get a `std::vector<VkQueueFamilyProperties>`
+If an application wishes to have more fine grained control over their queue setup, they should create a `std::vector` of `vkb::CustomQueueDescription` which describe the index, count and a `std::vector<float>` of priorities. To build up such a vector, use the `get_queue_families` function in `vkb::PhysicalDevice` to get a `std::vector<VkQueueFamilyProperties>`
 
 For example
 ```cpp

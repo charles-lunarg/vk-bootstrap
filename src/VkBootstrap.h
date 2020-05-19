@@ -159,7 +159,7 @@ struct SystemInfo {
 	std::vector<VkLayerProperties> available_layers;
 	std::vector<VkExtensionProperties> available_extensions;
 	bool validation_layers_available = false;
-	bool debug_messenger_available = false;
+	bool debug_utils_available = false;
 };
 
 class InstanceBuilder;

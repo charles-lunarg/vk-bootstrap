@@ -44,7 +44,7 @@ int device_initialization (Init& init) {
 	vkb::InstanceBuilder instance_builder;
 	auto instance_ret = instance_builder.use_default_debug_messenger ().request_validation_layers ().build ();
 	if (!instance_ret) {
-		std::cout << instance_ret.error () << "\n";
+		std::cout << instance_ret.error ().message () << "\n";
 		return -1;
 	}
 	init.instance = instance_ret.value ();
@@ -54,7 +54,7 @@ int device_initialization (Init& init) {
 	vkb::PhysicalDeviceSelector phys_device_selector (init.instance);
 	auto phys_device_ret = phys_device_selector.set_surface (init.surface).select ();
 	if (!phys_device_ret) {
-		std::cout << phys_device_ret.error () << "\n";
+		std::cout << phys_device_ret.error ().message () << "\n";
 		return -1;
 	}
 	vkb::PhysicalDevice physical_device = phys_device_ret.value ();
@@ -62,7 +62,7 @@ int device_initialization (Init& init) {
 	vkb::DeviceBuilder device_builder{ physical_device };
 	auto device_ret = device_builder.build ();
 	if (!device_ret) {
-		std::cout << device_ret.error () << "\n";
+		std::cout << device_ret.error ().message () << "\n";
 		return -1;
 	}
 	init.device = device_ret.value ();
@@ -71,7 +71,7 @@ int device_initialization (Init& init) {
 	auto swap_ret =
 	    swapchain_builder.use_default_format_selection ().use_default_present_mode_selection ().build ();
 	if (!swap_ret) {
-		std::cout << swap_ret.error () << "\n";
+		std::cout << swap_ret.error ().message () << "\n";
 		return -1;
 	}
 	init.swapchain = swap_ret.value ();
@@ -81,14 +81,14 @@ int device_initialization (Init& init) {
 int get_queues (Init& init, RenderData& data) {
 	auto gq = init.device.get_queue (vkb::QueueType::graphics);
 	if (!gq.has_value ()) {
-		std::cout << "failed to get graphics queue: " << gq.error () << "\n";
+		std::cout << "failed to get graphics queue: " << gq.error ().message () << "\n";
 		return -1;
 	}
 	data.graphics_queue = gq.value ();
 
 	auto pq = init.device.get_queue (vkb::QueueType::present);
 	if (!pq.has_value ()) {
-		std::cout << "failed to get present queue: " << pq.error () << "\n";
+		std::cout << "failed to get present queue: " << pq.error ().message () << "\n";
 		return -1;
 	}
 	data.present_queue = pq.value ();

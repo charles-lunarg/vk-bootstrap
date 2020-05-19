@@ -113,7 +113,7 @@ VkBool32 default_debug_callback (VkDebugUtilsMessageSeverityFlagBitsEXT messageS
 }
 
 namespace detail {
-bool check_layer_supported (std::vector<VkLayerProperties> available_layers, const char* layer_name) {
+bool check_layer_supported (std::vector<VkLayerProperties> const& available_layers, const char* layer_name) {
 	if (!layer_name) return false;
 	for (const auto& layer_properties : available_layers) {
 		if (strcmp (layer_name, layer_properties.layerName) == 0) {
@@ -123,7 +123,8 @@ bool check_layer_supported (std::vector<VkLayerProperties> available_layers, con
 	return false;
 }
 
-bool check_layers_supported (std::vector<VkLayerProperties> available_layers, std::vector<const char*> layer_names) {
+bool check_layers_supported (std::vector<VkLayerProperties> const& available_layers,
+    std::vector<const char*> const& layer_names) {
 	bool all_found = true;
 	for (const auto& layer_name : layer_names) {
 		bool found = check_layer_supported (available_layers, layer_name);
@@ -132,18 +133,19 @@ bool check_layers_supported (std::vector<VkLayerProperties> available_layers, st
 	return all_found;
 }
 
-bool check_extension_supported (std::vector<VkExtensionProperties> available_extensions, const char* extension_name) {
+bool check_extension_supported (
+    std::vector<VkExtensionProperties> const& available_extensions, const char* extension_name) {
 	if (!extension_name) return false;
-	for (const auto& layer_properties : available_extensions) {
-		if (strcmp (extension_name, layer_properties.extensionName) == 0) {
+	for (const auto& extension_properties : available_extensions) {
+		if (strcmp (extension_name, extension_properties.extensionName) == 0) {
 			return true;
 		}
 	}
 	return false;
 }
 
-bool check_extensions_supported (std::vector<VkExtensionProperties> available_extensions,
-    std::vector<const char*> extension_names) {
+bool check_extensions_supported (std::vector<VkExtensionProperties> const& available_extensions,
+    std::vector<const char*> const& extension_names) {
 	bool all_found = true;
 	for (const auto& extension_name : extension_names) {
 		bool found = check_extension_supported (available_extensions, extension_name);
@@ -301,16 +303,6 @@ const char* to_string (SwapchainError err) {
 }
 
 SystemInfo::SystemInfo () {
-	auto available_extensions_ret = detail::get_vector<VkExtensionProperties> (
-	    this->available_extensions, vkEnumerateInstanceExtensionProperties, nullptr);
-	if (available_extensions_ret != VK_SUCCESS) {
-		this->available_extensions.clear ();
-	}
-
-	for (auto& ext : this->available_extensions)
-		if (strcmp (ext.extensionName, VK_EXT_DEBUG_UTILS_EXTENSION_NAME) == 0)
-			debug_messenger_available = true;
-
 	auto available_layers_ret =
 	    detail::get_vector<VkLayerProperties> (this->available_layers, vkEnumerateInstanceLayerProperties);
 	if (available_layers_ret != VK_SUCCESS) {
@@ -320,6 +312,27 @@ SystemInfo::SystemInfo () {
 	for (auto& layer : this->available_layers)
 		if (strcmp (layer.layerName, detail::validation_layer_name) == 0)
 			validation_layers_available = true;
+
+	auto available_extensions_ret = detail::get_vector<VkExtensionProperties> (
+	    this->available_extensions, vkEnumerateInstanceExtensionProperties, nullptr);
+	if (available_extensions_ret != VK_SUCCESS) {
+		this->available_extensions.clear ();
+	}
+
+	for (auto& ext : this->available_extensions)
+		if (strcmp (ext.extensionName, VK_EXT_DEBUG_UTILS_EXTENSION_NAME) == 0)
+			debug_utils_available = true;
+
+	for (auto& layer : this->available_layers) {
+		std::vector<VkExtensionProperties> layer_extensions;
+		auto layer_extensions_ret = detail::get_vector<VkExtensionProperties> (
+		    layer_extensions, vkEnumerateInstanceExtensionProperties, layer.layerName);
+		if (layer_extensions_ret != VK_SUCCESS) {
+			for (auto& ext : layer_extensions)
+				if (strcmp (ext.extensionName, VK_EXT_DEBUG_UTILS_EXTENSION_NAME) == 0)
+					debug_utils_available = true;
+		}
+	}
 }
 bool SystemInfo::is_extension_available (const char* extension_name) const {
 	if (!extension_name) return false;

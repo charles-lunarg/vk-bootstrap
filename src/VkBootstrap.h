@@ -106,7 +106,8 @@ enum class InstanceError {
 	failed_create_instance,
 	failed_create_debug_messenger,
 	requested_layers_not_present,
-	requested_extensions_not_present
+	requested_extensions_not_present,
+    windowing_extensions_not_present,
 };
 enum class PhysicalDeviceError {
 	no_surface_provided,

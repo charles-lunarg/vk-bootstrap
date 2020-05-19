@@ -241,6 +241,8 @@ const char* to_string (InstanceError err) {
 			return "requested_layers_not_present";
 		case InstanceError::requested_extensions_not_present:
 			return "requested_extensions_not_present";
+        case InstanceError::windowing_extensions_not_present:
+            return "windowing_extensions_not_present";
 		default:
 			return "";
 	}
@@ -400,25 +402,32 @@ detail::Result<Instance> InstanceBuilder::build () const {
 	std::vector<const char*> extensions;
 	for (auto& ext : info.extensions)
 		extensions.push_back (ext);
-	if (info.debug_callback != nullptr) {
+	if (info.debug_callback != nullptr && system.debug_utils_available) {
 		extensions.push_back (VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
 	}
 
 	if (!info.headless_context) {
-		extensions.push_back ("VK_KHR_surface");
+		auto check_add_window_ext = [&] (const char* name) -> bool {
+            if (!detail::check_extension_supported(system.available_extensions, name))
+                return false;
+            extensions.push_back(name);
+            return true;
+		};
+		bool khr_surface_added = check_add_window_ext ("VK_KHR_surface");
 #if defined(_WIN32)
-		extensions.push_back ("VK_KHR_win32_surface");
+        bool added_window_exts = check_add_window_ext("VK_KHR_win32_surface");
 #elif defined(__ANDROID__)
-		extensions.push_back ("VK_KHR_android_surface");
+        bool added_window_exts = check_add_window_ext("VK_KHR_android_surface");
 #elif defined(_DIRECT2DISPLAY)
-		extensions.push_back ("VK_KHR_display");
+		bool added_window_exts = check_add_window_ext ("VK_KHR_display");
 #elif defined(__linux__)
-		extensions.push_back ("VK_KHR_xcb_surface");
-		extensions.push_back ("VK_KHR_xlib_surface");
-		extensions.push_back ("VK_KHR_wayland_surface");
+        bool added_window_exts = check_add_window_ext ("VK_KHR_xcb_surface") || check_add_window_ext ("VK_KHR_xlib_surface") || check_add_window_ext ("VK_KHR_wayland_surface");
 #elif defined(__APPLE__)
-		extensions.push_back ("VK_KHR_metal_surface");
+		bool added_window_exts = check_add_window_ext ("VK_KHR_metal_surface");
 #endif
+        if (!khr_surface_added || !added_window_exts)
+            return make_error_code(InstanceError::windowing_extensions_not_present);
+            
 	}
 	bool all_extensions_supported = detail::check_extensions_supported (system.available_extensions, extensions);
 	if (!all_extensions_supported) {

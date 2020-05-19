@@ -145,7 +145,7 @@ bool check_extension_supported (
 }
 
 bool check_extensions_supported (std::vector<VkExtensionProperties> const& available_extensions,
-    std::vector<const char*> const& extension_names, std::vector<const char*> const& display_extension_names, std::vector<const char*> &display_managers) {
+    std::vector<const char*> const& extension_names, std::vector<const char*> const& display_extension_names, std::vector<const char*> &display_managers, bool headless) {
 	bool all_found = true;
 	for (const auto& extension_name : extension_names) {
 		bool found = check_extension_supported (available_extensions, extension_name);
@@ -160,7 +160,7 @@ bool check_extensions_supported (std::vector<VkExtensionProperties> const& avail
 			display_managers.push_back(display_extension_name);
 		}
 	}
-	return all_found && display_manager_found;
+	return all_found && (display_manager_found || headless);
 
 }
 
@@ -432,7 +432,7 @@ detail::Result<Instance> InstanceBuilder::build () const {
 #endif
 	}
 	std::vector<const char*> available_display_managers;
-	bool all_extensions_supported = detail::check_extensions_supported (system.available_extensions, extensions, display_extensions, available_display_managers);
+	bool all_extensions_supported = detail::check_extensions_supported (system.available_extensions, extensions, display_extensions, available_display_managers, info.headless_context);
 	if (!all_extensions_supported) {
 		return make_error_code (InstanceError::requested_extensions_not_present);
 	}

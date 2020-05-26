@@ -534,8 +534,7 @@ class SwapchainBuilder {
 	public:
 	SwapchainBuilder (Device const& device);
 	SwapchainBuilder (Device const& device, VkSurfaceKHR const surface);
-	SwapchainBuilder (VkPhysicalDevice const physical_device, VkDevice const device, VkSurfaceKHR const surface);
-
+	
 	detail::Result<Swapchain> build () const;
 	detail::Result<Swapchain> recreate (Swapchain const& swapchain) const;
 
@@ -548,6 +547,14 @@ class SwapchainBuilder {
 	SwapchainBuilder& set_desired_present_mode (VkPresentModeKHR present_mode);
 	SwapchainBuilder& add_fallback_present_mode (VkPresentModeKHR present_mode);
 	SwapchainBuilder& use_default_present_mode_selection ();
+
+    SwapchainBuilder& set_image_usage_flags(VkImageUsageFlags usage_flags);
+    SwapchainBuilder& add_image_usage_flags(VkImageUsageFlags usage_flags);
+    SwapchainBuilder& use_default_image_usage_flags();
+
+    SwapchainBuilder& set_image_array_layer_count(uint32_t array_layer_count = 1);
+
+    SwapchainBuilder& set_clipped(bool clipped = true);
 
 	// Provide custom allocation callbacks.
 	SwapchainBuilder& set_allocation_callbacks (VkAllocationCallbacks* callbacks);
@@ -567,6 +574,9 @@ class SwapchainBuilder {
 		std::vector<VkPresentModeKHR> desired_present_modes;
 		uint32_t desired_width = 256;
 		uint32_t desired_height = 256;
+        VkImageUsageFlags image_usage_flags = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+        uint32_t array_layer_count = 1;
+        bool clipped = true;
 		uint32_t graphics_queue_index = 0;
 		uint32_t present_queue_index = 0;
 		std::vector<VkBaseOutStructure*> pNext_elements;

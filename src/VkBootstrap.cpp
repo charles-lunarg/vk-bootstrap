@@ -241,8 +241,8 @@ const char* to_string (InstanceError err) {
 			return "requested_layers_not_present";
 		case InstanceError::requested_extensions_not_present:
 			return "requested_extensions_not_present";
-        case InstanceError::windowing_extensions_not_present:
-            return "windowing_extensions_not_present";
+		case InstanceError::windowing_extensions_not_present:
+			return "windowing_extensions_not_present";
 		default:
 			return "";
 	}
@@ -408,26 +408,27 @@ detail::Result<Instance> InstanceBuilder::build () const {
 
 	if (!info.headless_context) {
 		auto check_add_window_ext = [&] (const char* name) -> bool {
-            if (!detail::check_extension_supported(system.available_extensions, name))
-                return false;
-            extensions.push_back(name);
-            return true;
+			if (!detail::check_extension_supported (system.available_extensions, name))
+				return false;
+			extensions.push_back (name);
+			return true;
 		};
 		bool khr_surface_added = check_add_window_ext ("VK_KHR_surface");
 #if defined(_WIN32)
-        bool added_window_exts = check_add_window_ext("VK_KHR_win32_surface");
+		bool added_window_exts = check_add_window_ext ("VK_KHR_win32_surface");
 #elif defined(__ANDROID__)
-        bool added_window_exts = check_add_window_ext("VK_KHR_android_surface");
+		bool added_window_exts = check_add_window_ext ("VK_KHR_android_surface");
 #elif defined(_DIRECT2DISPLAY)
 		bool added_window_exts = check_add_window_ext ("VK_KHR_display");
 #elif defined(__linux__)
-        bool added_window_exts = check_add_window_ext ("VK_KHR_xcb_surface") || check_add_window_ext ("VK_KHR_xlib_surface") || check_add_window_ext ("VK_KHR_wayland_surface");
+		bool added_window_exts = check_add_window_ext ("VK_KHR_xcb_surface") ||
+		                         check_add_window_ext ("VK_KHR_xlib_surface") ||
+		                         check_add_window_ext ("VK_KHR_wayland_surface");
 #elif defined(__APPLE__)
 		bool added_window_exts = check_add_window_ext ("VK_KHR_metal_surface");
 #endif
-        if (!khr_surface_added || !added_window_exts)
-            return make_error_code(InstanceError::windowing_extensions_not_present);
-            
+		if (!khr_surface_added || !added_window_exts)
+			return make_error_code (InstanceError::windowing_extensions_not_present);
 	}
 	bool all_extensions_supported = detail::check_extensions_supported (system.available_extensions, extensions);
 	if (!all_extensions_supported) {
@@ -1313,20 +1314,6 @@ SwapchainBuilder::SwapchainBuilder (Device const& device, VkSurfaceKHR const sur
 	info.present_queue_index = graphics.value ();
 }
 
-SwapchainBuilder::SwapchainBuilder (
-    VkPhysicalDevice const physical_device, VkDevice const device, VkSurfaceKHR const surface) {
-	info.physical_device = physical_device;
-	info.device = device;
-	info.surface = surface;
-	auto queue_families = detail::get_vector_noerror<VkQueueFamilyProperties> (
-	    vkGetPhysicalDeviceQueueFamilyProperties, physical_device);
-
-	int graphics_queue_index = detail::get_graphics_queue_index (queue_families);
-	int present_queue_index = detail::get_present_queue_index (physical_device, surface, queue_families);
-	// TODO: handle queue indexes being below zero
-	info.graphics_queue_index = static_cast<uint32_t> (graphics_queue_index);
-	info.present_queue_index = static_cast<uint32_t> (present_queue_index);
-}
 detail::Result<Swapchain> SwapchainBuilder::build () const { return build (VK_NULL_HANDLE); }
 detail::Result<Swapchain> SwapchainBuilder::build (VkSwapchainKHR old_swapchain) const {
 	if (info.surface == VK_NULL_HANDLE) {
@@ -1363,8 +1350,8 @@ detail::Result<Swapchain> SwapchainBuilder::build (VkSwapchainKHR old_swapchain)
 	swapchain_create_info.imageFormat = surface_format.format;
 	swapchain_create_info.imageColorSpace = surface_format.colorSpace;
 	swapchain_create_info.imageExtent = extent;
-	swapchain_create_info.imageArrayLayers = 1;
-	swapchain_create_info.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+	swapchain_create_info.imageArrayLayers = info.array_layer_count;
+	swapchain_create_info.imageUsage = info.image_usage_flags;
 
 	uint32_t queue_family_indices[] = { info.graphics_queue_index, info.present_queue_index };
 
@@ -1379,7 +1366,7 @@ detail::Result<Swapchain> SwapchainBuilder::build (VkSwapchainKHR old_swapchain)
 	swapchain_create_info.preTransform = surface_support.value ().capabilities.currentTransform;
 	swapchain_create_info.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
 	swapchain_create_info.presentMode = present_mode;
-	swapchain_create_info.clipped = VK_TRUE;
+	swapchain_create_info.clipped = info.clipped;
 	swapchain_create_info.oldSwapchain = old_swapchain;
 	Swapchain swapchain{};
 	VkResult res = vkCreateSwapchainKHR (
@@ -1484,6 +1471,27 @@ SwapchainBuilder& SwapchainBuilder::set_allocation_callbacks (VkAllocationCallba
 	info.allocation_callbacks = callbacks;
 	return *this;
 }
+SwapchainBuilder& SwapchainBuilder::set_image_usage_flags (VkImageUsageFlags usage_flags) {
+	info.image_usage_flags = usage_flags;
+	return *this;
+}
+SwapchainBuilder& SwapchainBuilder::add_image_usage_flags (VkImageUsageFlags usage_flags) {
+	info.image_usage_flags = info.image_usage_flags | usage_flags;
+	return *this;
+}
+SwapchainBuilder& SwapchainBuilder::use_default_image_usage_flags () {
+	info.image_usage_flags = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+	return *this;
+}
+SwapchainBuilder& SwapchainBuilder::set_image_array_layer_count (uint32_t array_layer_count) {
+	info.array_layer_count = array_layer_count;
+	return *this;
+}
+SwapchainBuilder& SwapchainBuilder::set_clipped (bool clipped) {
+	info.clipped = clipped;
+	return *this;
+}
+
 void SwapchainBuilder::add_desired_formats (std::vector<VkSurfaceFormatKHR>& formats) const {
 	formats.push_back ({ VK_FORMAT_B8G8R8A8_SRGB, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR });
 	formats.push_back ({ VK_FORMAT_R8G8B8A8_SRGB, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR });

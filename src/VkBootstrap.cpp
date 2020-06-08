@@ -1292,9 +1292,11 @@ VkExtent2D find_extent (
 }
 } // namespace detail
 
-void destroy_swapchain (Swapchain const& swapchain) {
-	if (swapchain.device != VK_NULL_HANDLE && swapchain.swapchain != VK_NULL_HANDLE)
+void destroy_swapchain (Swapchain& swapchain) {
+	if (swapchain.device != VK_NULL_HANDLE && swapchain.swapchain != VK_NULL_HANDLE) {
 		vkDestroySwapchainKHR (swapchain.device, swapchain.swapchain, swapchain.allocation_callbacks);
+		swapchain.swapchain = VK_NULL_HANDLE;
+	}
 }
 
 SwapchainBuilder::SwapchainBuilder (Device const& device) {

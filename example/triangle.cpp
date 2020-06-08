@@ -71,19 +71,22 @@ int device_initialization (Init& init) {
 }
 
 int create_swapchain (Init& init) {
+
 	vkb::SwapchainBuilder swapchain_builder{ init.device };
-	auto swap_ret = swapchain_builder.use_default_format_selection ()
-	                    .use_default_present_mode_selection ()
+	auto swap_ret = swapchain_builder
 	                    .set_old_swapchain (init.swapchain)
 	                    .build ();
+    static int count = 0;
+    count++;
+    std::cout << count << '\n';
 	if (!swap_ret) {
-		std::cout << swap_ret.error ().message () << " " << swap_ret.vk_result () << "\n";
+    	std::cout << swap_ret.error ().message () << " " << swap_ret.vk_result () << "\n";
+		init.swapchain.swapchain = VK_NULL_HANDLE;
 		return -1;
 	}
 	init.swapchain = swap_ret.value ();
 	return 0;
 }
-
 
 int get_queues (Init& init, RenderData& data) {
 	auto gq = init.device.get_queue (vkb::QueueType::graphics);
@@ -436,17 +439,13 @@ int recreate_swapchain (Init& init, RenderData& data) {
 
 	vkDestroyCommandPool (init.device.device, data.command_pool, nullptr);
 
-	for (auto framebuffer : data.framebuffers) {
-		vkDestroyFramebuffer (init.device.device, framebuffer, nullptr);
-	}
+		for (auto framebuffer : data.framebuffers) {
+			vkDestroyFramebuffer (init.device.device, framebuffer, nullptr);
+		}
 
 	init.swapchain.destroy_image_views (data.swapchain_image_views);
-
-	int created_swapchain = create_swapchain (init);
-	while (created_swapchain != 0) {
-        init.swapchain.swapchain = VK_NULL_HANDLE;
-		created_swapchain = create_swapchain (init);
-	}
+	
+	if (0 != create_swapchain (init)) return -1;
 	if (0 != create_framebuffers (init, data)) return -1;
 	if (0 != create_command_pool (init, data)) return -1;
 	if (0 != create_command_buffers (init, data)) return -1;
@@ -466,9 +465,8 @@ int draw_frame (Init& init, RenderData& data) {
 
 	if (result == VK_ERROR_OUT_OF_DATE_KHR) {
 		return recreate_swapchain (init, data);
-		return 0;
 	} else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
-		std::cout << "failed to recreate swapchain. Error " << result << "\n";
+		std::cout << "failed to acquire swapchain image. Error " << result << "\n";
 		return -1;
 	}
 
@@ -515,7 +513,6 @@ int draw_frame (Init& init, RenderData& data) {
 	result = vkQueuePresentKHR (data.present_queue, &present_info);
 	if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR) {
 		return recreate_swapchain (init, data);
-		return 0;
 	} else if (result != VK_SUCCESS) {
 		std::cout << "failed to present swapchain image\n";
 		return -1;

@@ -528,7 +528,7 @@ struct Swapchain {
 	void destroy_image_views (std::vector<VkImageView> const& image_views);
 };
 
-void destroy_swapchain (Swapchain const& swapchain);
+void destroy_swapchain (Swapchain & swapchain);
 
 class SwapchainBuilder {
 	public:

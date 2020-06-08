@@ -185,6 +185,11 @@ auto dev_ret = device_builder.add_pNext(&descriptor_indexing_features)
                              .build ();
 ```
 
+To destroy a `vkb::Device`, call `vkb::destroy_device()`.
+```cpp
+vkb::destroy_device(vkb_device);
+```
+
 ### Queues
 
 By default, `vkb::DeviceBuilder` will enable one queue from each queue family available on the `VkPhysicalDevice`. This is done because in practice, most use cases only need a single queue from each family.
@@ -244,4 +249,10 @@ if !(swap_ret){
 }
 // Note that this is the same vkb::Swapchain which was fed into vkb::SwapchainBuilder
 vkb_swapchain = swap_ret.value();
+```
+
+To destroy the swapchain, call `vkb::destroy_swapchain()`. This is null out the VkSwapchainHandle inside of it.
+
+```cpp
+vkb::destroy_swapchain(vkb_swapchain);
 ```

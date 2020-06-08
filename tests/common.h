@@ -15,7 +15,7 @@ GLFWwindow* create_window_glfw (const char * window_name = "", bool resize = tru
 	glfwWindowHint (GLFW_CLIENT_API, GLFW_NO_API);
 	if (!resize) glfwWindowHint (GLFW_RESIZABLE, GLFW_FALSE);
 
-	return glfwCreateWindow (640, 480, window_name, NULL, NULL);
+	return glfwCreateWindow (1024,1024, window_name, NULL, NULL);
 }
 void destroy_window_glfw (GLFWwindow* window) {
 	glfwDestroyWindow (window);

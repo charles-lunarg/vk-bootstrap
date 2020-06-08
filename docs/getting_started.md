@@ -247,7 +247,9 @@ if !(swap_ret){
     // If it failed to create a swapchain, the old swapchain handle is invalid.
     vkb_swapchain.swapchain = VK_NULL_HANDLE;
 }
-// Note that this is the same vkb::Swapchain which was fed into vkb::SwapchainBuilder
+// Even though we recycled the previous swapchain, we need to free its resources.
+vkb::destroy_swapchain(vkb_swapchain);
+// Get the new swapchain and place it in our variable
 vkb_swapchain = swap_ret.value();
 ```
 

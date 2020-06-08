@@ -73,17 +73,12 @@ int device_initialization (Init& init) {
 int create_swapchain (Init& init) {
 
 	vkb::SwapchainBuilder swapchain_builder{ init.device };
-	auto swap_ret = swapchain_builder
-	                    .set_old_swapchain (init.swapchain)
-	                    .build ();
-    static int count = 0;
-    count++;
-    std::cout << count << '\n';
+	auto swap_ret = swapchain_builder.set_old_swapchain (init.swapchain).build ();
 	if (!swap_ret) {
-    	std::cout << swap_ret.error ().message () << " " << swap_ret.vk_result () << "\n";
-		init.swapchain.swapchain = VK_NULL_HANDLE;
-		return -1;
+		std::cout << swap_ret.error ().message () << " " << swap_ret.vk_result () << "\n";
+        return -1;
 	}
+    vkb::destroy_swapchain(init.swapchain);
 	init.swapchain = swap_ret.value ();
 	return 0;
 }
@@ -439,13 +434,13 @@ int recreate_swapchain (Init& init, RenderData& data) {
 
 	vkDestroyCommandPool (init.device.device, data.command_pool, nullptr);
 
-		for (auto framebuffer : data.framebuffers) {
-			vkDestroyFramebuffer (init.device.device, framebuffer, nullptr);
-		}
-
+	for (auto framebuffer : data.framebuffers) {
+		vkDestroyFramebuffer (init.device.device, framebuffer, nullptr);
+	}
+		
 	init.swapchain.destroy_image_views (data.swapchain_image_views);
 	
-	if (0 != create_swapchain (init)) return -1;
+    if (0 != create_swapchain (init)) return -1;
 	if (0 != create_framebuffers (init, data)) return -1;
 	if (0 != create_command_pool (init, data)) return -1;
 	if (0 != create_command_buffers (init, data)) return -1;

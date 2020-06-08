@@ -225,6 +225,10 @@ TEST_CASE ("Swapchain", "[VkBootstrap.bootstrap]") {
 			    swapchain_builder.set_desired_extent (256, 256)
 			        .set_desired_format ({ VK_FORMAT_R8G8B8A8_UNORM, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR })
 			        .set_desired_present_mode (VK_PRESENT_MODE_IMMEDIATE_KHR)
+			        .set_pre_transform_flags (VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR)
+			        .set_composite_alpha_flags (VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR)
+			        .set_clipped (false)
+			        .set_image_array_layer_count (1)
 			        .build ();
 			REQUIRE (swapchain_ret.has_value ());
 
@@ -234,6 +238,7 @@ TEST_CASE ("Swapchain", "[VkBootstrap.bootstrap]") {
 			vkb::SwapchainBuilder swapchain_builder (device);
 			auto swapchain_ret = swapchain_builder.use_default_format_selection ()
 			                         .use_default_present_mode_selection ()
+			                         .use_default_image_usage_flags ()
 			                         .build ();
 			REQUIRE (swapchain_ret.has_value ());
 
@@ -245,7 +250,8 @@ TEST_CASE ("Swapchain", "[VkBootstrap.bootstrap]") {
 			REQUIRE (swapchain_ret.has_value ());
 
 			auto swapchain = swapchain_ret.value ();
-			auto recreated_swapchain_ret = swapchain_builder.recreate (swapchain);
+
+			auto recreated_swapchain_ret = swapchain_builder.set_old_swapchain (swapchain).build ();
 			REQUIRE (recreated_swapchain_ret.has_value ());
 
 			vkb::destroy_swapchain (recreated_swapchain_ret.value ());

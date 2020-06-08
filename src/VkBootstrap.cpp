@@ -1240,6 +1240,7 @@ Result<SurfaceSupportDetails> query_surface_support_details (VkPhysicalDevice ph
 	    present_modes, vkGetPhysicalDeviceSurfacePresentModesKHR, phys_device, surface);
 	if (present_modes_ret != VK_SUCCESS)
 		return { make_error_code (SurfaceSupportError::failed_enumerate_present_modes), present_modes_ret };
+
 	return SurfaceSupportDetails{ capabilities, formats, present_modes };
 }
 
@@ -1291,6 +1292,11 @@ VkExtent2D find_extent (
 }
 } // namespace detail
 
+void destroy_swapchain (Swapchain const& swapchain) {
+	if (swapchain.device != VK_NULL_HANDLE && swapchain.swapchain != VK_NULL_HANDLE)
+		vkDestroySwapchainKHR (swapchain.device, swapchain.swapchain, swapchain.allocation_callbacks);
+}
+
 SwapchainBuilder::SwapchainBuilder (Device const& device) {
 	info.device = device.device;
 	info.physical_device = device.physical_device.physical_device;
@@ -1314,8 +1320,7 @@ SwapchainBuilder::SwapchainBuilder (Device const& device, VkSurfaceKHR const sur
 	info.present_queue_index = graphics.value ();
 }
 
-detail::Result<Swapchain> SwapchainBuilder::build () const { return build (VK_NULL_HANDLE); }
-detail::Result<Swapchain> SwapchainBuilder::build (VkSwapchainKHR old_swapchain) const {
+detail::Result<Swapchain> SwapchainBuilder::build () const {
 	if (info.surface == VK_NULL_HANDLE) {
 		return detail::Error{ SwapchainError::surface_handle_not_provided };
 	}
@@ -1325,35 +1330,47 @@ detail::Result<Swapchain> SwapchainBuilder::build (VkSwapchainKHR old_swapchain)
 	auto desired_present_modes = info.desired_present_modes;
 	if (desired_present_modes.size () == 0) add_desired_present_modes (desired_present_modes);
 
-	auto surface_support = detail::query_surface_support_details (info.physical_device, info.surface);
-	if (!surface_support.has_value ())
+	auto surface_support_ret = detail::query_surface_support_details (info.physical_device, info.surface);
+	if (!surface_support_ret.has_value ())
 		return detail::Error{ SwapchainError::failed_query_surface_support_details,
-			surface_support.vk_result () };
-	VkSurfaceFormatKHR surface_format =
-	    detail::find_surface_format (surface_support.value ().formats, desired_formats);
-	VkPresentModeKHR present_mode =
-	    detail::find_present_mode (surface_support.value ().present_modes, desired_present_modes);
-	VkExtent2D extent = detail::find_extent (
-	    surface_support.value ().capabilities, info.desired_width, info.desired_height);
+			surface_support_ret.vk_result () };
+	auto surface_support = surface_support_ret.value ();
 
-	uint32_t imageCount = surface_support.value ().capabilities.minImageCount + 1;
-	if (surface_support.value ().capabilities.maxImageCount > 0 &&
-	    imageCount > surface_support.value ().capabilities.maxImageCount) {
-		imageCount = surface_support.value ().capabilities.maxImageCount;
+	uint32_t image_count = surface_support.capabilities.minImageCount + 1;
+	if (surface_support.capabilities.maxImageCount > 0 && image_count > surface_support.capabilities.maxImageCount) {
+		image_count = surface_support.capabilities.maxImageCount;
 	}
+	VkSurfaceFormatKHR surface_format = detail::find_surface_format (surface_support.formats, desired_formats);
+
+	VkExtent2D extent =
+	    detail::find_extent (surface_support.capabilities, info.desired_width, info.desired_height);
+
+	uint32_t image_array_layers = info.array_layer_count;
+	if (surface_support.capabilities.maxImageArrayLayers < info.array_layer_count)
+		image_array_layers = surface_support.capabilities.maxImageArrayLayers;
+	if (info.array_layer_count == 0) image_array_layers = 1;
+
+	uint32_t queue_family_indices[] = { info.graphics_queue_index, info.present_queue_index };
+
+
+	VkPresentModeKHR present_mode =
+	    detail::find_present_mode (surface_support.present_modes, desired_present_modes);
+
+	VkSurfaceTransformFlagBitsKHR pre_transform = info.pre_transform;
+	if (info.pre_transform == static_cast<VkSurfaceTransformFlagBitsKHR> (0))
+		pre_transform = surface_support.capabilities.currentTransform;
 
 	VkSwapchainCreateInfoKHR swapchain_create_info = {};
 	swapchain_create_info.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
-	detail::setup_pNext_chain (swapchain_create_info, info.pNext_elements);
+	detail::setup_pNext_chain (swapchain_create_info, info.pNext_chain);
+	swapchain_create_info.flags = info.create_flags;
 	swapchain_create_info.surface = info.surface;
-	swapchain_create_info.minImageCount = imageCount;
+	swapchain_create_info.minImageCount = image_count;
 	swapchain_create_info.imageFormat = surface_format.format;
 	swapchain_create_info.imageColorSpace = surface_format.colorSpace;
 	swapchain_create_info.imageExtent = extent;
-	swapchain_create_info.imageArrayLayers = info.array_layer_count;
+	swapchain_create_info.imageArrayLayers = image_array_layers;
 	swapchain_create_info.imageUsage = info.image_usage_flags;
-
-	uint32_t queue_family_indices[] = { info.graphics_queue_index, info.present_queue_index };
 
 	if (info.graphics_queue_index != info.present_queue_index) {
 		swapchain_create_info.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
@@ -1363,11 +1380,11 @@ detail::Result<Swapchain> SwapchainBuilder::build (VkSwapchainKHR old_swapchain)
 		swapchain_create_info.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
 	}
 
-	swapchain_create_info.preTransform = surface_support.value ().capabilities.currentTransform;
-	swapchain_create_info.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
+	swapchain_create_info.preTransform = pre_transform;
+	swapchain_create_info.compositeAlpha = info.composite_alpha;
 	swapchain_create_info.presentMode = present_mode;
 	swapchain_create_info.clipped = info.clipped;
-	swapchain_create_info.oldSwapchain = old_swapchain;
+	swapchain_create_info.oldSwapchain = info.old_swapchain;
 	Swapchain swapchain{};
 	VkResult res = vkCreateSwapchainKHR (
 	    info.device, &swapchain_create_info, info.allocation_callbacks, &swapchain.swapchain);
@@ -1384,9 +1401,6 @@ detail::Result<Swapchain> SwapchainBuilder::build (VkSwapchainKHR old_swapchain)
 	swapchain.image_count = static_cast<uint32_t> (images.value ().size ());
 	swapchain.allocation_callbacks = info.allocation_callbacks;
 	return swapchain;
-}
-detail::Result<Swapchain> SwapchainBuilder::recreate (Swapchain const& swapchain) const {
-	return build (swapchain.swapchain);
 }
 detail::Result<std::vector<VkImage>> Swapchain::get_images () {
 	std::vector<VkImage> swapchain_images;
@@ -1433,9 +1447,13 @@ void Swapchain::destroy_image_views (std::vector<VkImageView> const& image_views
 		vkDestroyImageView (device, image_view, allocation_callbacks);
 	}
 }
-void destroy_swapchain (Swapchain const& swapchain) {
-	if (swapchain.device != VK_NULL_HANDLE && swapchain.swapchain != VK_NULL_HANDLE)
-		vkDestroySwapchainKHR (swapchain.device, swapchain.swapchain, swapchain.allocation_callbacks);
+SwapchainBuilder& SwapchainBuilder::set_old_swapchain (VkSwapchainKHR old_swapchain) {
+	info.old_swapchain = old_swapchain;
+	return *this;
+}
+SwapchainBuilder& SwapchainBuilder::set_old_swapchain (Swapchain const& swapchain) {
+	info.old_swapchain = swapchain.swapchain;
+	return *this;
 }
 SwapchainBuilder& SwapchainBuilder::set_desired_extent (uint32_t width, uint32_t height) {
 	info.desired_width = width;
@@ -1451,6 +1469,7 @@ SwapchainBuilder& SwapchainBuilder::add_fallback_format (VkSurfaceFormatKHR form
 	return *this;
 }
 SwapchainBuilder& SwapchainBuilder::use_default_format_selection () {
+	info.desired_formats.clear ();
 	add_desired_formats (info.desired_formats);
 	return *this;
 }
@@ -1464,6 +1483,7 @@ SwapchainBuilder& SwapchainBuilder::add_fallback_present_mode (VkPresentModeKHR 
 	return *this;
 }
 SwapchainBuilder& SwapchainBuilder::use_default_present_mode_selection () {
+	info.desired_present_modes.clear ();
 	add_desired_present_modes (info.desired_present_modes);
 	return *this;
 }
@@ -1489,6 +1509,18 @@ SwapchainBuilder& SwapchainBuilder::set_image_array_layer_count (uint32_t array_
 }
 SwapchainBuilder& SwapchainBuilder::set_clipped (bool clipped) {
 	info.clipped = clipped;
+	return *this;
+}
+SwapchainBuilder& SwapchainBuilder::set_create_flags (VkSwapchainCreateFlagBitsKHR create_flags) {
+	info.create_flags = create_flags;
+	return *this;
+}
+SwapchainBuilder& SwapchainBuilder::set_pre_transform_flags (VkSurfaceTransformFlagBitsKHR pre_transform_flags) {
+	info.pre_transform = pre_transform_flags;
+	return *this;
+}
+SwapchainBuilder& SwapchainBuilder::set_composite_alpha_flags (VkCompositeAlphaFlagBitsKHR composite_alpha_flags) {
+	info.composite_alpha = composite_alpha_flags;
 	return *this;
 }
 

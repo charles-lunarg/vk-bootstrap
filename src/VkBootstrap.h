@@ -107,7 +107,7 @@ enum class InstanceError {
 	failed_create_debug_messenger,
 	requested_layers_not_present,
 	requested_extensions_not_present,
-    windowing_extensions_not_present,
+	windowing_extensions_not_present,
 };
 enum class PhysicalDeviceError {
 	no_surface_provided,
@@ -519,11 +519,11 @@ struct Swapchain {
 	VkExtent2D extent = { 0, 0 };
 	VkAllocationCallbacks* allocation_callbacks = VK_NULL_HANDLE;
 
-	// Returns a vector of VkImage handles to the swapchain
+	// Returns a vector of VkImage handles to the swapchain.
 	detail::Result<std::vector<VkImage>> get_images ();
 
-	// Returns a vector of VkImageView's to the VkImage's of the swapchain
-	// VkImageViews must be destroyed
+	// Returns a vector of VkImageView's to the VkImage's of the swapchain.
+	// VkImageViews must be destroyed.
 	detail::Result<std::vector<VkImageView>> get_image_views ();
 	void destroy_image_views (std::vector<VkImageView> const& image_views);
 };
@@ -534,27 +534,64 @@ class SwapchainBuilder {
 	public:
 	SwapchainBuilder (Device const& device);
 	SwapchainBuilder (Device const& device, VkSurfaceKHR const surface);
-	
-	detail::Result<Swapchain> build () const;
-	detail::Result<Swapchain> recreate (Swapchain const& swapchain) const;
 
+	detail::Result<Swapchain> build () const;
+
+	// Set the oldSwapchain member of VkSwapchainCreateInfoKHR.
+	// For use in rebuilding a swapchain.
+	SwapchainBuilder& set_old_swapchain (VkSwapchainKHR old_swapchain);
+	SwapchainBuilder& set_old_swapchain (Swapchain const& swapchain);
+
+
+	// Desired size of the swapchain. By default, the swapchain will use the size
+	// of the window being drawn to.
 	SwapchainBuilder& set_desired_extent (uint32_t width, uint32_t height);
 
+	// When determining the surface format, make this the first to be used if supported.
 	SwapchainBuilder& set_desired_format (VkSurfaceFormatKHR format);
+	// Add this swapchain format to the end of the list of formats selected from.
 	SwapchainBuilder& add_fallback_format (VkSurfaceFormatKHR format);
+	// Use the default swapchain formats. This is done if no formats are provided.
 	SwapchainBuilder& use_default_format_selection ();
 
+	// When determining the present mode, make this the first to be used if supported.
 	SwapchainBuilder& set_desired_present_mode (VkPresentModeKHR present_mode);
+	// Add this present mode to the end of the list of present modes selected from.
 	SwapchainBuilder& add_fallback_present_mode (VkPresentModeKHR present_mode);
+	// Use the default presentation mode. This is done if no present modes are provided.
 	SwapchainBuilder& use_default_present_mode_selection ();
 
-    SwapchainBuilder& set_image_usage_flags(VkImageUsageFlags usage_flags);
-    SwapchainBuilder& add_image_usage_flags(VkImageUsageFlags usage_flags);
-    SwapchainBuilder& use_default_image_usage_flags();
+	// Set the bitmask of the image usage for acquired swapchain images.
+	SwapchainBuilder& set_image_usage_flags (VkImageUsageFlags usage_flags);
+	// Add a image usage to the bitmask for acquired swapchain images.
+	SwapchainBuilder& add_image_usage_flags (VkImageUsageFlags usage_flags);
+	// Use the default image usage bitmask values. This is the default if no image usages
+	// are provided. The default is VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT
+	SwapchainBuilder& use_default_image_usage_flags ();
 
-    SwapchainBuilder& set_image_array_layer_count(uint32_t array_layer_count = 1);
+	// Set the number of views in for multiview/stereo surface
+	SwapchainBuilder& set_image_array_layer_count (uint32_t array_layer_count);
 
-    SwapchainBuilder& set_clipped(bool clipped = true);
+	// Set whether the Vulkan implementation is allowed to discard rendering operations that
+	// affect regions of the surface that are not visible. Default is true.
+	// Note: Applications should use the default of true if they do not expect to read back the content
+	// of presentable images before presenting them or after reacquiring them, and if their fragment
+	// shaders do not have any side effects that require them to run for all pixels in the presentable image.
+	SwapchainBuilder& set_clipped (bool clipped = true);
+
+	// Set the VkSwapchainCreateFlagBitsKHR.
+	SwapchainBuilder& set_create_flags (VkSwapchainCreateFlagBitsKHR create_flags);
+	// Set the transform to be applied, like a 90 degree rotation. Default is the current transform.
+	SwapchainBuilder& set_pre_transform_flags (VkSurfaceTransformFlagBitsKHR pre_transform_flags);
+	// Set the alpha channel to be used with other windows in on the system. Default is VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR.
+	SwapchainBuilder& set_composite_alpha_flags (VkCompositeAlphaFlagBitsKHR composite_alpha_flags);
+
+	// Add a structure to the pNext chain of VkSwapchainCreateInfoKHR.
+	// The structure must be valid when SwapchainBuilder::build() is called.
+	template <typename T> SwapchainBuilder& add_pNext (T* structure) {
+		info.pNext_chain.push_back (reinterpret_cast<VkBaseOutStructure*> (structure));
+		return *this;
+	}
 
 	// Provide custom allocation callbacks.
 	SwapchainBuilder& set_allocation_callbacks (VkAllocationCallbacks* callbacks);
@@ -562,24 +599,25 @@ class SwapchainBuilder {
 	private:
 	void add_desired_formats (std::vector<VkSurfaceFormatKHR>& formats) const;
 	void add_desired_present_modes (std::vector<VkPresentModeKHR>& modes) const;
-	// for use in swapchain recreation
-	detail::Result<Swapchain> build (VkSwapchainKHR old_swapchain) const;
 
 	struct SwapchainInfo {
 		VkPhysicalDevice physical_device = VK_NULL_HANDLE;
 		VkDevice device = VK_NULL_HANDLE;
+		std::vector<VkBaseOutStructure*> pNext_chain;
+		VkSwapchainCreateFlagBitsKHR create_flags = static_cast<VkSwapchainCreateFlagBitsKHR> (0);
 		VkSurfaceKHR surface = VK_NULL_HANDLE;
-		VkSwapchainKHR old_swapchain = VK_NULL_HANDLE;
 		std::vector<VkSurfaceFormatKHR> desired_formats;
-		std::vector<VkPresentModeKHR> desired_present_modes;
 		uint32_t desired_width = 256;
 		uint32_t desired_height = 256;
-        VkImageUsageFlags image_usage_flags = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
-        uint32_t array_layer_count = 1;
-        bool clipped = true;
+		uint32_t array_layer_count = 1;
+		VkImageUsageFlags image_usage_flags = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 		uint32_t graphics_queue_index = 0;
 		uint32_t present_queue_index = 0;
-		std::vector<VkBaseOutStructure*> pNext_elements;
+		VkSurfaceTransformFlagBitsKHR pre_transform = static_cast<VkSurfaceTransformFlagBitsKHR> (0);
+		VkCompositeAlphaFlagBitsKHR composite_alpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
+		std::vector<VkPresentModeKHR> desired_present_modes;
+		bool clipped = true;
+		VkSwapchainKHR old_swapchain = VK_NULL_HANDLE;
 		VkAllocationCallbacks* allocation_callbacks = VK_NULL_HANDLE;
 	} info;
 };

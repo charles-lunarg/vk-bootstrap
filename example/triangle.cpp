@@ -39,7 +39,7 @@ struct RenderData {
 };
 
 int device_initialization (Init& init) {
-	init.window = create_window_glfw ("Vulkan Triangle", false);
+	init.window = create_window_glfw ("Vulkan Triangle", true);
 
 	vkb::InstanceBuilder instance_builder;
 	auto instance_ret = instance_builder.use_default_debug_messenger ().request_validation_layers ().build ();
@@ -67,16 +67,23 @@ int device_initialization (Init& init) {
 	}
 	init.device = device_ret.value ();
 
+	return 0;
+}
+
+int create_swapchain (Init& init) {
 	vkb::SwapchainBuilder swapchain_builder{ init.device };
-	auto swap_ret =
-	    swapchain_builder.use_default_format_selection ().use_default_present_mode_selection ().build ();
+	auto swap_ret = swapchain_builder.use_default_format_selection ()
+	                    .use_default_present_mode_selection ()
+	                    .set_old_swapchain (init.swapchain)
+	                    .build ();
 	if (!swap_ret) {
-		std::cout << swap_ret.error ().message () << "\n";
+		std::cout << swap_ret.error ().message () << " " << swap_ret.vk_result () << "\n";
 		return -1;
 	}
 	init.swapchain = swap_ret.value ();
 	return 0;
 }
+
 
 int get_queues (Init& init, RenderData& data) {
 	auto gq = init.device.get_queue (vkb::QueueType::graphics);
@@ -267,23 +274,31 @@ int create_graphics_pipeline (Init& init, RenderData& data) {
 		return -1; // failed to create pipeline layout
 	}
 
-	VkGraphicsPipelineCreateInfo pipelineInfo = {};
-	pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
-	pipelineInfo.stageCount = 2;
-	pipelineInfo.pStages = shader_stages;
-	pipelineInfo.pVertexInputState = &vertex_input_info;
-	pipelineInfo.pInputAssemblyState = &input_assembly;
-	pipelineInfo.pViewportState = &viewport_state;
-	pipelineInfo.pRasterizationState = &rasterizer;
-	pipelineInfo.pMultisampleState = &multisampling;
-	pipelineInfo.pColorBlendState = &color_blending;
-	pipelineInfo.layout = data.pipeline_layout;
-	pipelineInfo.renderPass = data.render_pass;
-	pipelineInfo.subpass = 0;
-	pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
+	std::vector<VkDynamicState> dynamic_states = { VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR };
+
+	VkPipelineDynamicStateCreateInfo dynamic_info = {};
+	dynamic_info.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
+	dynamic_info.dynamicStateCount = static_cast<uint32_t> (dynamic_states.size ());
+	dynamic_info.pDynamicStates = dynamic_states.data ();
+
+	VkGraphicsPipelineCreateInfo pipeline_info = {};
+	pipeline_info.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
+	pipeline_info.stageCount = 2;
+	pipeline_info.pStages = shader_stages;
+	pipeline_info.pVertexInputState = &vertex_input_info;
+	pipeline_info.pInputAssemblyState = &input_assembly;
+	pipeline_info.pViewportState = &viewport_state;
+	pipeline_info.pRasterizationState = &rasterizer;
+	pipeline_info.pMultisampleState = &multisampling;
+	pipeline_info.pColorBlendState = &color_blending;
+	pipeline_info.pDynamicState = &dynamic_info;
+	pipeline_info.layout = data.pipeline_layout;
+	pipeline_info.renderPass = data.render_pass;
+	pipeline_info.subpass = 0;
+	pipeline_info.basePipelineHandle = VK_NULL_HANDLE;
 
 	if (vkCreateGraphicsPipelines (
-	        init.device.device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &data.graphics_pipeline) != VK_SUCCESS) {
+	        init.device.device, VK_NULL_HANDLE, 1, &pipeline_info, nullptr, &data.graphics_pipeline) != VK_SUCCESS) {
 		std::cout << "failed to create pipline\n";
 		return -1; // failed to create graphics pipeline
 	}
@@ -361,6 +376,21 @@ int create_command_buffers (Init& init, RenderData& data) {
 		render_pass_info.clearValueCount = 1;
 		render_pass_info.pClearValues = &clearColor;
 
+		VkViewport viewport = {};
+		viewport.x = 0.0f;
+		viewport.y = 0.0f;
+		viewport.width = (float)init.swapchain.extent.width;
+		viewport.height = (float)init.swapchain.extent.height;
+		viewport.minDepth = 0.0f;
+		viewport.maxDepth = 1.0f;
+
+		VkRect2D scissor = {};
+		scissor.offset = { 0, 0 };
+		scissor.extent = init.swapchain.extent;
+
+		vkCmdSetViewport (data.command_buffers[i], 0, 1, &viewport);
+		vkCmdSetScissor (data.command_buffers[i], 0, 1, &scissor);
+
 		vkCmdBeginRenderPass (data.command_buffers[i], &render_pass_info, VK_SUBPASS_CONTENTS_INLINE);
 
 		vkCmdBindPipeline (data.command_buffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, data.graphics_pipeline);
@@ -401,16 +431,46 @@ int create_sync_objects (Init& init, RenderData& data) {
 	return 0;
 }
 
+int recreate_swapchain (Init& init, RenderData& data) {
+	vkDeviceWaitIdle (init.device.device);
+
+	vkDestroyCommandPool (init.device.device, data.command_pool, nullptr);
+
+	for (auto framebuffer : data.framebuffers) {
+		vkDestroyFramebuffer (init.device.device, framebuffer, nullptr);
+	}
+
+	init.swapchain.destroy_image_views (data.swapchain_image_views);
+
+	int created_swapchain = create_swapchain (init);
+	while (created_swapchain != 0) {
+        init.swapchain.swapchain = VK_NULL_HANDLE;
+		created_swapchain = create_swapchain (init);
+	}
+	if (0 != create_framebuffers (init, data)) return -1;
+	if (0 != create_command_pool (init, data)) return -1;
+	if (0 != create_command_buffers (init, data)) return -1;
+	return 0;
+}
+
 int draw_frame (Init& init, RenderData& data) {
 	vkWaitForFences (init.device.device, 1, &data.in_flight_fences[data.current_frame], VK_TRUE, UINT64_MAX);
 
 	uint32_t image_index = 0;
-	vkAcquireNextImageKHR (init.device.device,
+	VkResult result = vkAcquireNextImageKHR (init.device.device,
 	    init.swapchain.swapchain,
 	    UINT64_MAX,
 	    data.available_semaphores[data.current_frame],
 	    VK_NULL_HANDLE,
 	    &image_index);
+
+	if (result == VK_ERROR_OUT_OF_DATE_KHR) {
+		return recreate_swapchain (init, data);
+		return 0;
+	} else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
+		std::cout << "failed to recreate swapchain. Error " << result << "\n";
+		return -1;
+	}
 
 	if (data.image_in_flight[image_index] != VK_NULL_HANDLE) {
 		vkWaitForFences (init.device.device, 1, &data.image_in_flight[image_index], VK_TRUE, UINT64_MAX);
@@ -452,7 +512,14 @@ int draw_frame (Init& init, RenderData& data) {
 
 	present_info.pImageIndices = &image_index;
 
-	vkQueuePresentKHR (data.present_queue, &present_info);
+	result = vkQueuePresentKHR (data.present_queue, &present_info);
+	if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR) {
+		return recreate_swapchain (init, data);
+		return 0;
+	} else if (result != VK_SUCCESS) {
+		std::cout << "failed to present swapchain image\n";
+		return -1;
+	}
 
 	data.current_frame = (data.current_frame + 1) % MAX_FRAMES_IN_FLIGHT;
 	return 0;
@@ -475,9 +542,7 @@ void cleanup (Init& init, RenderData& data) {
 	vkDestroyPipelineLayout (init.device.device, data.pipeline_layout, nullptr);
 	vkDestroyRenderPass (init.device.device, data.render_pass, nullptr);
 
-	for (auto imageView : data.swapchain_image_views) {
-		vkDestroyImageView (init.device.device, imageView, nullptr);
-	}
+	init.swapchain.destroy_image_views (data.swapchain_image_views);
 
 	vkb::destroy_swapchain (init.swapchain);
 	vkb::destroy_device (init.device);
@@ -491,6 +556,7 @@ int main () {
 	RenderData render_data;
 
 	if (0 != device_initialization (init)) return -1;
+	if (0 != create_swapchain (init)) return -1;
 	if (0 != get_queues (init, render_data)) return -1;
 	if (0 != create_render_pass (init, render_data)) return -1;
 	if (0 != create_graphics_pipeline (init, render_data)) return -1;

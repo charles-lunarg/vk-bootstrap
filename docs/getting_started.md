@@ -219,6 +219,29 @@ for (uint32_t i = 0; i < static_cast<uint32_t>(queue_families.size ()); i++) {
 }
 ```
 ## Swapchain
-// TODO
 
+Creating a swapchain follows the same form outlined by `vkb::InstanceBuilder` and `vkb::DeviceBuilder`. Create the `vkb::SwapchainBuilder`, provide `vkb::Device`, call the appropriate builder functions, and call `build()`. 
 
+```cpp
+vkb::SwapchainBuilder swapchain_builder{ device };
+auto swap_ret = swapchain_builder.build ();
+if !(swap_ret){
+
+}
+vkb::swapchain swapchain = swap_ret.value();
+```
+
+By default, the swapchain will use the VK_FORMAT_B8G8R8A8_SRGB or VK_FORMAT_R8G8B8A8_SRGB image format with the color space VK_COLOR_SPACE_SRGB_NONLINEAR_KHR. The present mode will default to VK_PRESENT_MODE_MAILBOX_KHR if available and fallback to VK_PRESENT_MODE_FIFO_KHR. The image usage default flag is VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT.
+
+Recreating the swapchain is equivalent to creating a new swapchain but providing the old swapchain as a source. Be sure to not use the same `VkSwapchainKHR` again as it expires when it is recycled after trying to create a new swapchain.
+```cpp
+vkb::SwapchainBuilder swapchain_builder{ device };
+auto swap_ret = swapchain_builder.set_old_swapchain (vkb_swapchain)
+                                 .build ();
+if !(swap_ret){
+    // If it failed to create a swapchain, the old swapchain handle is invalid.
+    vkb_swapchain.swapchain = VK_NULL_HANDLE;
+}
+// Note that this is the same vkb::Swapchain which was fed into vkb::SwapchainBuilder
+vkb_swapchain = swap_ret.value();
+```

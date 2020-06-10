@@ -1,20 +1,21 @@
-# Vk-Bootstrap
+# vk-bootstrap
 
-A Vulkan utility library meant to jump start any Vulkan Application
+A utility library meant to jump start developing a Vulkan Application
 
 This library simplifies the tedious process of:
 
-* Instance Creation
-* Picking a Physical Device
-* Device Creation
-* Getting Queues
-* Swapchain Creation
+* Instance creation
+* Physical Device selection
+* Device creation
+* Getting queues
+* Swapchain creation
 
 It also adds several conveniences for:
 
 * Enabling validation layers
-* Adding a debug callback
-* Select a gpu based on a set of criteria like features, extensions, memory, etc.
+* Adding a debug callback messenger
+* Enabling extensions on a physical device
+* Select a gpu based on a set of criteria like features, extensions, memory, etc
 
 Read the [Getting Started](docs/getting_started.md) guide for a quick start on using `vk-bootstrap`
 
@@ -82,7 +83,7 @@ See `example/triangle.cpp` for an example that renders a triangle to the screen.
 
 This library has no external dependencies beyond C++11 and the standard library.
 
-Simply copy the `src/VkBootstrap.h` and `src/VkBootstrap.cpp` files into your project and compile them as you normally would
+Simply copy the `src/VkBootstrap.h` and `src/VkBootstrap.cpp` files into your project, include them, compile as you normally would.
 
 ### With git-submodule + CMake
 
@@ -112,17 +113,9 @@ cmake ..
 
 ## Testing
 
-To test, glfw and Catch2 are automatically included using git submodules.
-
-In the project directory, run the following to get the required dependencies to test.
-
-```bash
-git submodule update --init
-```
-
-Tests will be enabled by default if you open this project standalone. If you include this project as a subdirectory,
-you can force enable tests by adding `-DVK_BOOTSTRAP_TEST` to the cmake command line arguments
+Testing requires GLFW and Catch2 but are acquired automatically using cmake.
+Tests will be enabled if you open this project standalone. If you include this project as a subdirectory, you can force enable tests by setting the option `VK_BOOTSTRAP_TEST` to `ON`, otherwise it won't be built.
 
 ```bash
-cmake ../path/to/your-project/ -DVK_BOOTSTRAP_TEST=ON
+cmake ../path/to/your_project/ -DVK_BOOTSTRAP_TEST=ON
 ```

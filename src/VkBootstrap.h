@@ -23,6 +23,7 @@
 
 #include <vulkan/vulkan.h>
 
+
 namespace vkb {
 
 namespace detail {
@@ -111,7 +112,6 @@ template <typename T> class Result {
 	bool m_init;
 };
 
-/* TODO implement operator == and operator != as friend or global */
 } // namespace detail
 
 enum class InstanceError {
@@ -165,9 +165,18 @@ const char* to_string (QueueError err);
 const char* to_string (DeviceError err);
 const char* to_string (SwapchainError err);
 
-
+// Gathers useful information about the available vulkan capabilities, like layers and instance extensions.
+// Use this for enabling features conditionally, ie if you would like an extension but can use a fallback if
+// it isn't supported but need to know if support is available first.
 struct SystemInfo {
+	private:
 	SystemInfo ();
+
+	public:
+    // Use get_system_info to create a SystemInfo struct. This is because loading vulkan could fail.
+	static detail::Result<SystemInfo> get_system_info ();
+	static detail::Result<SystemInfo>  get_system_info (PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr);
+
 	// Returns true if a layer is available
 	bool is_layer_available (const char* layer_name) const;
 	// Returns true if an extension is available
@@ -179,6 +188,7 @@ struct SystemInfo {
 	bool debug_utils_available = false;
 };
 
+
 class InstanceBuilder;
 class PhysicalDeviceSelector;
 
@@ -186,6 +196,8 @@ struct Instance {
 	VkInstance instance = VK_NULL_HANDLE;
 	VkDebugUtilsMessengerEXT debug_messenger = VK_NULL_HANDLE;
 	VkAllocationCallbacks* allocation_callbacks = VK_NULL_HANDLE;
+
+	PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr = nullptr;
 
 	private:
 	bool headless = false;
@@ -199,8 +211,10 @@ void destroy_instance (Instance instance); // release instance resources
 
 class InstanceBuilder {
 	public:
-	// contains useful information about the available vulkan capabilities, like layers and instance extensions.
-	SystemInfo get_system_info () const;
+	// Default constructor, will load vulkan.
+	explicit InstanceBuilder ();
+	// Optional: Can use your own PFN_vkGetInstanceProcAddr
+	explicit InstanceBuilder (PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr);
 
 	// Create a VkInstance. Return an error if it failed.
 	detail::Result<Instance> build () const;
@@ -291,24 +305,14 @@ class InstanceBuilder {
 		// Custom allocator
 		VkAllocationCallbacks* allocation_callbacks = VK_NULL_HANDLE;
 
+		bool request_validation_layers = false;
 		bool enable_validation_layers = false;
 		bool use_debug_messenger = false;
 		bool headless_context = false;
+
+		PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr = nullptr;
 	} info;
-
-	SystemInfo system;
 };
-
-VkResult create_debug_utils_messenger (VkInstance instance,
-    PFN_vkDebugUtilsMessengerCallbackEXT debug_callback,
-    VkDebugUtilsMessageSeverityFlagsEXT severity,
-    VkDebugUtilsMessageTypeFlagsEXT type,
-    VkDebugUtilsMessengerEXT* pDebugMessenger,
-    VkAllocationCallbacks* allocation_callbacks = VK_NULL_HANDLE);
-
-void destroy_debug_utils_messenger (VkInstance instance,
-    VkDebugUtilsMessengerEXT debugMessenger,
-    VkAllocationCallbacks* allocation_callbacks = VK_NULL_HANDLE);
 
 VKAPI_ATTR VkBool32 VKAPI_CALL default_debug_callback (VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
     VkDebugUtilsMessageTypeFlagsEXT messageType,
@@ -359,7 +363,7 @@ enum class PreferredDeviceType {
 class PhysicalDeviceSelector {
 	public:
 	// Requires a vkb::Instance to construct, needed to pass instance creation info.
-	PhysicalDeviceSelector (Instance const& instance);
+	explicit PhysicalDeviceSelector (Instance const& instance);
 
 	detail::Result<PhysicalDevice> select () const;
 
@@ -482,7 +486,7 @@ struct Device {
 
 // For advanced device queue setup
 struct CustomQueueDescription {
-	CustomQueueDescription (uint32_t index, uint32_t count, std::vector<float> priorities);
+	explicit CustomQueueDescription (uint32_t index, uint32_t count, std::vector<float> priorities);
 	uint32_t index = 0;
 	uint32_t count = 0;
 	std::vector<float> priorities;
@@ -493,7 +497,7 @@ void destroy_device (Device device);
 class DeviceBuilder {
 	public:
 	// Any features and extensions that are requested/required in PhysicalDeviceSelector are automatically enabled.
-	DeviceBuilder (PhysicalDevice physical_device);
+	explicit DeviceBuilder (PhysicalDevice physical_device);
 
 	detail::Result<Device> build () const;
 
@@ -548,8 +552,8 @@ void destroy_swapchain (Swapchain const& swapchain);
 
 class SwapchainBuilder {
 	public:
-	SwapchainBuilder (Device const& device);
-	SwapchainBuilder (Device const& device, VkSurfaceKHR const surface);
+	explicit SwapchainBuilder (Device const& device);
+	explicit SwapchainBuilder (Device const& device, VkSurfaceKHR const surface);
 
 	detail::Result<Swapchain> build () const;
 

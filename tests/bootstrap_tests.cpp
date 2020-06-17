@@ -3,15 +3,21 @@
 #include <catch2/catch.hpp>
 
 // TODO
-// Getting queues
-// get dedicated vs distinct compute queues
-
 // changing present modes and/or image formats
+
+void destroy_surface (vkb::detail::Result<vkb::Instance> instance_ret, VkSurfaceKHR surface) {
+	PFN_vkDestroySurfaceKHR fp_vkDestroySurfaceKHR = reinterpret_cast<PFN_vkDestroySurfaceKHR> (
+	    instance_ret->fp_vkGetInstanceProcAddr (instance_ret->instance, "vkDestroySurfaceKHR"));
+	fp_vkDestroySurfaceKHR (instance_ret->instance, surface, nullptr);
+}
 
 TEST_CASE ("Instance with surface", "[VkBootstrap.bootstrap]") {
 	GIVEN ("A window and a vulkan instance") {
 
 		auto window = create_window_glfw ("Instance with surface");
+
+		auto sys_info_ret = vkb::SystemInfo::get_system_info ();
+		REQUIRE (sys_info_ret);
 
 		vkb::InstanceBuilder instance_builder;
 		auto instance_ret = instance_builder.use_default_debug_messenger ().build ();
@@ -48,7 +54,7 @@ TEST_CASE ("Instance with surface", "[VkBootstrap.bootstrap]") {
 			REQUIRE (phys_dev_ret.has_value ());
 		}
 
-		destroy_surface (instance.instance, surface);
+		destroy_surface (instance_ret, surface);
 		vkb::destroy_instance (instance);
 		destroy_window_glfw (window);
 	}
@@ -176,7 +182,7 @@ TEST_CASE ("Device Configuration", "[VkBootstrap.bootstrap]") {
 		vkb::destroy_device (device_ret.value ());
 	}
 
-	destroy_surface (instance_ret.value ().instance, surface);
+	destroy_surface (instance_ret, surface);
 	vkb::destroy_instance (instance_ret.value ());
 }
 
@@ -258,7 +264,7 @@ TEST_CASE ("Swapchain", "[VkBootstrap.bootstrap]") {
 		}
 
 		vkb::destroy_device (device_ret.value ());
-		destroy_surface (instance_ret.value ().instance, surface);
+		destroy_surface (instance_ret, surface);
 		vkb::destroy_instance (instance_ret.value ());
 	}
 }
@@ -307,6 +313,70 @@ TEST_CASE ("Allocation Callbacks", "[VkBootstrap.bootstrap]") {
 	vkb::destroy_swapchain (swapchain_ret.value ());
 	vkb::destroy_device (device_ret.value ());
 
-	destroy_surface (instance_ret.value ().instance, surface);
+	destroy_surface (instance_ret, surface);
 	vkb::destroy_instance (instance_ret.value ());
+}
+
+TEST_CASE ("SystemInfo Loading Vulkan Automatically", "[VkBootstrap.loading]") {
+	auto info_ret = vkb::SystemInfo::get_system_info ();
+	REQUIRE (info_ret);
+	vkb::InstanceBuilder builder;
+	auto ret = builder.build ();
+	REQUIRE (ret);
+}
+
+TEST_CASE ("SystemInfo Loading Vulkan Manually", "[VkBootstrap.loading]") {
+	VulkanLibrary vk_lib;
+	REQUIRE (vk_lib.ptr_vkGetInstanceProcAddr != NULL);
+	auto info_ret = vkb::SystemInfo::get_system_info (vk_lib.ptr_vkGetInstanceProcAddr);
+	REQUIRE (info_ret);
+	vkb::InstanceBuilder builder;
+	auto ret = builder.build ();
+	REQUIRE (ret);
+	vk_lib.close ();
+}
+
+TEST_CASE ("InstanceBuilder Loading Vulkan Automatically", "[VkBootstrap.loading]") {
+	vkb::InstanceBuilder builder;
+	auto ret = builder.build ();
+	REQUIRE (ret);
+}
+
+TEST_CASE ("InstanceBuilder Loading Vulkan Manually", "[VkBootstrap.loading]") {
+	VulkanLibrary vk_lib;
+	REQUIRE (vk_lib.ptr_vkGetInstanceProcAddr != NULL);
+	vkb::InstanceBuilder builder{ vk_lib.ptr_vkGetInstanceProcAddr };
+	auto ret = builder.build ();
+	vk_lib.close ();
+}
+TEST_CASE ("ReLoading Vulkan Automatically", "[VkBootstrap.loading]") {
+	{
+		vkb::InstanceBuilder builder;
+		auto ret = builder.build ();
+        REQUIRE(ret);
+	}
+    {
+		vkb::InstanceBuilder builder;
+		auto ret = builder.build ();
+        REQUIRE(ret);
+	}
+}
+
+TEST_CASE ("ReLoading Vulkan Manually", "[VkBootstrap.loading]") {
+	{
+		VulkanLibrary vk_lib;
+		REQUIRE (vk_lib.ptr_vkGetInstanceProcAddr != NULL);
+		vkb::InstanceBuilder builder{ vk_lib.ptr_vkGetInstanceProcAddr };
+		auto ret = builder.build ();
+        REQUIRE(ret);
+		vk_lib.close ();
+	}
+    {
+		VulkanLibrary vk_lib;
+		REQUIRE (vk_lib.ptr_vkGetInstanceProcAddr != NULL);
+		vkb::InstanceBuilder builder{ vk_lib.ptr_vkGetInstanceProcAddr };
+		auto ret = builder.build ();
+        REQUIRE(ret);
+		vk_lib.close ();
+	}
 }

@@ -57,10 +57,15 @@ auto inst_builder_ret = instance_builder
         .build();
 ```
 
-To query the available layers and extensions, use the `get_system_info()` function of `vkb::InstanceBuilder` to get a `SystemInfo` struct. It contains a `is_layer_available()` and `is_extension_available()` function to check for a layer or extensions before enabling it. It also has booleans for if the validation layers are present and if the VK_EXT_debug_utils extension is available.
+To query the available layers and extensions, get a `SystemInfo` struct from `SystemInfo::get_system_info()`. It contains a `is_layer_available()` and `is_extension_available()` function to check for a layer or extensions before enabling it. It also has booleans for if the validation layers are present and if the VK_EXT_debug_utils extension is available.
 
 ```cpp
-auto system_info = instance_builder.get_system_info();
+auto system_info_ret = vkb::SystemInfo.get_system_info();
+if (!system_info_ret) {
+    printf("%s\n", system_info_ret.error().message());
+    return -1;
+}
+auto system_info = system_info_ret.value();
 if (system_info.is_layer_available("VK_LAYER_LUNARG_api_dump")) {
     instance_builder.enable_layer("VK_LAYER_LUNARG_api_dump");
 }

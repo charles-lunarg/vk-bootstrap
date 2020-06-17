@@ -32,7 +32,6 @@ target_compile_options(vk-bootstrap-compiler-warnings
 target_include_directories(vk-bootstrap PUBLIC src)
 target_include_directories(vk-bootstrap PUBLIC ${Vulkan_INCLUDE_DIR})
 target_link_libraries(vk-bootstrap
-        PUBLIC ${Vulkan_LIBRARY}
         PRIVATE
         vk-bootstrap-compiler-warnings)
 

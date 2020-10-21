@@ -127,13 +127,13 @@ TEST_CASE ("Device Configuration", "[VkBootstrap.bootstrap]") {
 	auto window = create_window_glfw ("Device Configuration");
 	vkb::InstanceBuilder builder;
 
-	auto instance_ret = builder.request_validation_layers ().build ();
+	auto instance_ret = builder.request_validation_layers ().require_api_version(1,1).build ();
 	REQUIRE (instance_ret.has_value ());
 	auto surface = create_surface_glfw (instance_ret.value ().instance, window);
 
 	vkb::PhysicalDeviceSelector phys_device_selector (instance_ret.value ());
 
-	auto phys_device_ret = phys_device_selector.set_surface (surface).select ();
+	auto phys_device_ret = phys_device_selector.set_minimum_version (1, 1).set_surface (surface).select ();
 	REQUIRE (phys_device_ret.has_value ());
 	auto phys_device = phys_device_ret.value ();
 
@@ -174,10 +174,11 @@ TEST_CASE ("Device Configuration", "[VkBootstrap.bootstrap]") {
 	}
 
 	SECTION ("VkPhysicalDeviceFeatures2 in pNext Chain") {
-		VkPhysicalDeviceFeatures2 phys_dev_feat_2{};
+		VkPhysicalDeviceShaderDrawParameterFeatures shader_draw_features{};
+		shader_draw_features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETER_FEATURES;
 
-		vkb::DeviceBuilder device_builder (phys_device);
-		auto device_ret = device_builder.add_pNext (&phys_dev_feat_2).build ();
+		vkb::DeviceBuilder device_builder (phys_device_ret.value ());
+		auto device_ret = device_builder.add_pNext (&shader_draw_features).build ();
 		REQUIRE (device_ret.has_value ());
 		vkb::destroy_device (device_ret.value ());
 	}
@@ -204,6 +205,9 @@ TEST_CASE ("Swapchain", "[VkBootstrap.bootstrap]") {
 		auto device_ret = device_builder.build ();
 		REQUIRE (device_ret.has_value ());
 		vkb::Device device = device_ret.value ();
+
+		auto graphics_queue_index = device.get_queue_index (vkb::QueueType::graphics).value ();
+		auto present_queue_index = device.get_queue_index (vkb::QueueType::present).value ();
 
 		THEN ("Swapchain can be made") {
 			vkb::SwapchainBuilder swapchain_builder (device);
@@ -252,6 +256,19 @@ TEST_CASE ("Swapchain", "[VkBootstrap.bootstrap]") {
 		}
 		AND_THEN ("Swapchain can be recreated") {
 			vkb::SwapchainBuilder swapchain_builder (device);
+			auto swapchain_ret = swapchain_builder.build ();
+			REQUIRE (swapchain_ret.has_value ());
+
+			auto swapchain = swapchain_ret.value ();
+
+			auto recreated_swapchain_ret = swapchain_builder.set_old_swapchain (swapchain).build ();
+			REQUIRE (recreated_swapchain_ret.has_value ());
+
+			vkb::destroy_swapchain (recreated_swapchain_ret.value ());
+		}
+		AND_THEN ("Swapchain can be created from individual handles") {
+			vkb::SwapchainBuilder swapchain_builder (
+			    device.physical_device.physical_device, device.device, surface, graphics_queue_index, present_queue_index);
 			auto swapchain_ret = swapchain_builder.build ();
 			REQUIRE (swapchain_ret.has_value ());
 
@@ -353,12 +370,12 @@ TEST_CASE ("ReLoading Vulkan Automatically", "[VkBootstrap.loading]") {
 	{
 		vkb::InstanceBuilder builder;
 		auto ret = builder.build ();
-        REQUIRE(ret);
+		REQUIRE (ret);
 	}
-    {
+	{
 		vkb::InstanceBuilder builder;
 		auto ret = builder.build ();
-        REQUIRE(ret);
+		REQUIRE (ret);
 	}
 }
 
@@ -368,15 +385,15 @@ TEST_CASE ("ReLoading Vulkan Manually", "[VkBootstrap.loading]") {
 		REQUIRE (vk_lib.ptr_vkGetInstanceProcAddr != NULL);
 		vkb::InstanceBuilder builder{ vk_lib.ptr_vkGetInstanceProcAddr };
 		auto ret = builder.build ();
-        REQUIRE(ret);
+		REQUIRE (ret);
 		vk_lib.close ();
 	}
-    {
+	{
 		VulkanLibrary vk_lib;
 		REQUIRE (vk_lib.ptr_vkGetInstanceProcAddr != NULL);
 		vkb::InstanceBuilder builder{ vk_lib.ptr_vkGetInstanceProcAddr };
 		auto ret = builder.build ();
-        REQUIRE(ret);
+		REQUIRE (ret);
 		vk_lib.close ();
 	}
 }

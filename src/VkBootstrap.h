@@ -224,13 +224,13 @@ class InstanceBuilder {
 	// Sets the name of the engine. Defaults to "" if none is provided.
 	InstanceBuilder& set_engine_name (const char* engine_name);
 	// Sets the (major, minor, patch) version of the application.
-	InstanceBuilder& set_app_version (uint32_t major, uint32_t minor, uint32_t patch);
+	InstanceBuilder& set_app_version (uint32_t major, uint32_t minor, uint32_t patch = 0);
 	// Sets the (major, minor, patch) version of the engine.
-	InstanceBuilder& set_engine_version (uint32_t major, uint32_t minor, uint32_t patch);
+	InstanceBuilder& set_engine_version (uint32_t major, uint32_t minor, uint32_t patch = 0);
 	// Require a vulkan instance API version. Will fail to create if this version isn't available.
-	InstanceBuilder& require_api_version (uint32_t major, uint32_t minor, uint32_t patch);
+	InstanceBuilder& require_api_version (uint32_t major, uint32_t minor, uint32_t patch = 0);
 	// Prefer a vulkan instance API version. If the desired version isn't available, it will use the highest version available.
-	InstanceBuilder& desire_api_version (uint32_t major, uint32_t minor, uint32_t patch);
+	InstanceBuilder& desire_api_version (uint32_t major, uint32_t minor, uint32_t patch = 0);
 
 	// Adds a layer to be enabled. Will fail to create an instance if the layer isn't available.
 	InstanceBuilder& enable_layer (const char* layer_name);
@@ -404,8 +404,8 @@ class PhysicalDeviceSelector {
 
 	// Prefer a physical device that supports a (major, minor) version of vulkan.
 	PhysicalDeviceSelector& set_desired_version (uint32_t major, uint32_t minor);
-	// Require a physical device that supports a (major, minor) version of vulkan. Default is Vulkan 1.0.
-	PhysicalDeviceSelector& set_minimum_version (uint32_t major = 1, uint32_t minor = 0);
+	// Require a physical device that supports a (major, minor) version of vulkan.
+	PhysicalDeviceSelector& set_minimum_version (uint32_t major, uint32_t minor);
 
 	// Require a physical device which supports the features in VkPhysicalDeviceFeatures.
 	PhysicalDeviceSelector& set_required_features (VkPhysicalDeviceFeatures features);
@@ -554,6 +554,8 @@ class SwapchainBuilder {
 	public:
 	explicit SwapchainBuilder (Device const& device);
 	explicit SwapchainBuilder (Device const& device, VkSurfaceKHR const surface);
+	explicit SwapchainBuilder (VkPhysicalDevice const physical_device, VkDevice const device, VkSurfaceKHR const surface, uint32_t graphics_queue_index);
+	explicit SwapchainBuilder (VkPhysicalDevice const physical_device, VkDevice const device, VkSurfaceKHR const surface, uint32_t graphics_queue_index, uint32_t present_queue_index);
 
 	detail::Result<Swapchain> build () const;
 

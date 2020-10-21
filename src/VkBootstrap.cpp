@@ -1537,7 +1537,20 @@ SwapchainBuilder::SwapchainBuilder (Device const& device, VkSurfaceKHR const sur
 	info.graphics_queue_index = present.value ();
 	info.present_queue_index = graphics.value ();
 }
-
+SwapchainBuilder::SwapchainBuilder (VkPhysicalDevice const physical_device, VkDevice const device, VkSurfaceKHR const surface, uint32_t graphics_queue_index){
+	info.physical_device = physical_device;
+    info.device = device;
+	info.surface = surface;
+    info.graphics_queue_index = graphics_queue_index;
+	info.present_queue_index = graphics_queue_index;
+}
+SwapchainBuilder::SwapchainBuilder (VkPhysicalDevice const physical_device, VkDevice const device, VkSurfaceKHR const surface, uint32_t graphics_queue_index, uint32_t present_queue_index){
+	info.physical_device = physical_device;
+    info.device = device;
+	info.surface = surface;
+    info.graphics_queue_index = graphics_queue_index;
+	info.present_queue_index = present_queue_index;
+}
 detail::Result<Swapchain> SwapchainBuilder::build () const {
 	if (info.surface == VK_NULL_HANDLE) {
 		return detail::Error{ SwapchainError::surface_handle_not_provided };

@@ -1,6 +1,6 @@
-# vk-bootstrap
+# `vk-bootstrap`
 
-A utility library meant to jump start developing a Vulkan Application
+A utility library that jump starts initialization of Vulkan 
 
 This library simplifies the tedious process of:
 
@@ -25,7 +25,7 @@ Read the [Getting Started](docs/getting_started.md) guide for a quick start on u
 
 #include "VkBootstrap.h"
 
-void init_vulkan () {
+bool init_vulkan () {
     vkb::InstanceBuilder builder;
     auto inst_ret = builder.set_app_name ("Example Vulkan Application")
                         .request_validation_layers ()
@@ -34,7 +34,7 @@ void init_vulkan () {
     if (!inst_ret) {
         printf("Failed to create Vulkan instance. Cause %s\n", 
             instance_builder_return.error().message());
-        return;
+        return false;
     }
     vkb::Instance vkb_inst = inst_ret.value ();
 
@@ -46,7 +46,7 @@ void init_vulkan () {
     if (!phys_ret) {
         printf("Failed to select Vulkan Physical Device. Cause %s\n", 
             phys_ret.error().message());
-        return;
+        return false;
     }
 
     vkb::DeviceBuilder device_builder{ phys_ret.value () };
@@ -55,7 +55,7 @@ void init_vulkan () {
     if (!dev_ret) {
         printf("Failed to create Vulkan device. Cause %s\n", 
             dev_ret.error().message());
-        return;
+        return false;
     }
     vkb::Device vkb_device = dev_ret.value ();
 
@@ -67,37 +67,59 @@ void init_vulkan () {
     if (!graphics_queue_ret) {
         printf("Failed to get graphics queue. Cause %s\n", 
             graphics_queue_ret.error().message());
-        return;
+        return false;
     }
     VkQueue graphics_queue = graphics_queue_ret.value ();
 
     // Turned 400-500 lines of boilerplate into less than fifty.
+    return true;
 }
 ```
 
 See `example/triangle.cpp` for an example that renders a triangle to the screen.
 
-## Setting up vk-bootstrap
+## Setting up `vk-bootstrap`
 
-### Simple
+This library has no external dependencies beyond C++11, its standard library, and the Vulkan Headers.
 
-This library has no external dependencies beyond C++11 and the standard library.
+Note on Unix platforms, `vk-bootstrap` will require the dynamic linker in order to compile as the library doesn't link against `vulkan-1.dll`/`libvulkan.so` directly. 
 
-Simply copy the `src/VkBootstrap.h` and `src/VkBootstrap.cpp` files into your project, include them, compile as you normally would.
+### Copy-Paste
 
-### With git-submodule + CMake
+Copy the `src/VkBootstrap.h` and `src/VkBootstrap.cpp` files into your project, include them into your build, then compile as you normally would.
 
-Add this project as a git-submodule
+`vk-bootstrap` is *not* a header only library, so no need to worry about macros in the header.
+
+### git-submodule + CMake
+
+Add this project as a git-submodule into the root directory. Suggested is using a subdirectory to hold all submodules.
 
 ```bash
 git submodule add https://github.com/charles-lunarg/vk-bootstrap
 ```
 
-With CMake, add the project as a subdirectory
+With CMake, add the subdirectory to include the project
 
 ```cmake
 add_subdirectory(vk-bootstrap)
+```
 
+Then use `target_link_libraries` to use the library in whichever target needs it. 
+
+```cmake
+target_link_libraries(your_application_name vk-bootstrap)
+```
+
+### CMake Fetch Content
+If cmake 3.12 is available, use the FetchContent capability of cmake to directly download and build the library for you.
+
+```cmake
+FetchContent_Declare(
+    fetch_vk_bootstrap
+    GIT_REPOSITORY https://github.com/charles-lunarg/vk-bootstrap
+    GIT_TAG        BRANCH_OR_TAG #suggest using a tag so the library doesn't update whenever new commits are pushed to a branch 
+)
+FetchContent_MakeAvailable(fetch_vk_bootstrap)
 target_link_libraries(your_application_name vk-bootstrap)
 ```
 
@@ -113,8 +135,8 @@ cmake ..
 
 ## Testing
 
-Testing requires GLFW and Catch2 but are acquired automatically using cmake.
-Tests will be enabled if you open this project standalone. If you include this project as a subdirectory, you can force enable tests by setting the option `VK_BOOTSTRAP_TEST` to `ON`, otherwise it won't be built.
+Testing requires GLFW and Catch2 but are acquired automatically using cmake fetch content.
+Tests will be enabled if you open this project standalone. If you include this project as a subdirectory or sub-project, you can force enable tests by setting the option `VK_BOOTSTRAP_TEST` to `ON`.
 
 ```bash
 cmake ../path/to/your_project/ -DVK_BOOTSTRAP_TEST=ON

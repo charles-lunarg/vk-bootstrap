@@ -127,7 +127,7 @@ TEST_CASE ("Device Configuration", "[VkBootstrap.bootstrap]") {
 	auto window = create_window_glfw ("Device Configuration");
 	vkb::InstanceBuilder builder;
 
-	auto instance_ret = builder.request_validation_layers ().require_api_version(1,1).build ();
+	auto instance_ret = builder.request_validation_layers ().require_api_version (1, 1).build ();
 	REQUIRE (instance_ret.has_value ());
 	auto surface = create_surface_glfw (instance_ret.value ().instance, window);
 
@@ -269,6 +269,19 @@ TEST_CASE ("Swapchain", "[VkBootstrap.bootstrap]") {
 		AND_THEN ("Swapchain can be created from individual handles") {
 			vkb::SwapchainBuilder swapchain_builder (
 			    device.physical_device.physical_device, device.device, surface, graphics_queue_index, present_queue_index);
+			auto swapchain_ret = swapchain_builder.build ();
+			REQUIRE (swapchain_ret.has_value ());
+
+			auto swapchain = swapchain_ret.value ();
+
+			auto recreated_swapchain_ret = swapchain_builder.set_old_swapchain (swapchain).build ();
+			REQUIRE (recreated_swapchain_ret.has_value ());
+
+			vkb::destroy_swapchain (recreated_swapchain_ret.value ());
+		}
+		AND_THEN ("Swapchain can be create with default gotten handles") {
+			vkb::SwapchainBuilder swapchain_builder (
+			    device.physical_device.physical_device, device.device, surface);
 			auto swapchain_ret = swapchain_builder.build ();
 			REQUIRE (swapchain_ret.has_value ());
 

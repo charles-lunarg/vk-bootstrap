@@ -1660,7 +1660,7 @@ detail::Result<std::vector<VkImageView>> Swapchain::get_image_views () {
 	if (!swapchain_images_ret) return swapchain_images_ret.error ();
 	auto swapchain_images = swapchain_images_ret.value ();
 
-	std::vector<VkImageView> views{ swapchain_images.size () };
+	std::vector<VkImageView> views (swapchain_images.size ());
 
 	for (size_t i = 0; i < swapchain_images.size (); i++) {
 		VkImageViewCreateInfo createInfo = {};

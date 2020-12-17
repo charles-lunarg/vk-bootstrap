@@ -289,7 +289,7 @@ void destroy_debug_utils_messenger (
 	}
 }
 
-VkBool32 default_debug_callback (VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
+VKAPI_ATTR VkBool32 VKAPI_CALL default_debug_callback (VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
     VkDebugUtilsMessageTypeFlagsEXT messageType,
     const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
     void*) {
@@ -550,7 +550,7 @@ bool SystemInfo::is_layer_available (const char* layer_name) const {
 
 void destroy_instance (Instance instance) {
 	if (instance.instance != VK_NULL_HANDLE) {
-		if (instance.debug_messenger != nullptr)
+		if (instance.debug_messenger != VK_NULL_HANDLE)
 			destroy_debug_utils_messenger (instance.instance, instance.debug_messenger, instance.allocation_callbacks);
 		detail::vulkan_functions ().fp_vkDestroyInstance (instance.instance, instance.allocation_callbacks);
 	}
@@ -630,9 +630,9 @@ detail::Result<Instance> InstanceBuilder::build () const {
 #elif defined(_DIRECT2DISPLAY)
 		bool added_window_exts = check_add_window_ext ("VK_KHR_display");
 #elif defined(__linux__)
-        // make sure all three calls to check_add_window_ext, don't allow short circuiting 
+		// make sure all three calls to check_add_window_ext, don't allow short circuiting
 		bool added_window_exts = check_add_window_ext ("VK_KHR_xcb_surface");
-        added_window_exts = check_add_window_ext ("VK_KHR_xlib_surface") || added_window_exts;
+		added_window_exts = check_add_window_ext ("VK_KHR_xlib_surface") || added_window_exts;
 		added_window_exts = check_add_window_ext ("VK_KHR_wayland_surface") || added_window_exts;
 #elif defined(__APPLE__)
 		bool added_window_exts = check_add_window_ext ("VK_EXT_metal_surface");
@@ -822,7 +822,7 @@ InstanceBuilder& InstanceBuilder::set_allocation_callbacks (VkAllocationCallback
 	return *this;
 }
 
-void destroy_debug_messenger(VkInstance const instance, VkDebugUtilsMessengerEXT const messenger);
+void destroy_debug_messenger (VkInstance const instance, VkDebugUtilsMessengerEXT const messenger);
 
 
 // ---- Physical Device ---- //
@@ -1093,7 +1093,7 @@ PhysicalDeviceSelector::PhysicalDeviceSelector (Instance const& instance) {
 
 detail::Result<PhysicalDevice> PhysicalDeviceSelector::select () const {
 	if (!system_info.headless && !criteria.defer_surface_initialization) {
-		if (system_info.surface == nullptr)
+		if (system_info.surface == VK_NULL_HANDLE)
 			return detail::Result<PhysicalDevice>{ PhysicalDeviceError::no_surface_provided };
 	}
 
@@ -1541,19 +1541,25 @@ SwapchainBuilder::SwapchainBuilder (Device const& device, VkSurfaceKHR const sur
 	info.graphics_queue_index = present.value ();
 	info.present_queue_index = graphics.value ();
 }
-SwapchainBuilder::SwapchainBuilder (VkPhysicalDevice const physical_device, VkDevice const device, VkSurfaceKHR const surface, int32_t graphics_queue_index, int32_t present_queue_index){
+SwapchainBuilder::SwapchainBuilder (VkPhysicalDevice const physical_device,
+    VkDevice const device,
+    VkSurfaceKHR const surface,
+    int32_t graphics_queue_index,
+    int32_t present_queue_index) {
 	info.physical_device = physical_device;
-    info.device = device;
+	info.device = device;
 	info.surface = surface;
-    info.graphics_queue_index = static_cast<uint32_t>(graphics_queue_index);
-	info.present_queue_index = static_cast<uint32_t>(present_queue_index);
+	info.graphics_queue_index = static_cast<uint32_t> (graphics_queue_index);
+	info.present_queue_index = static_cast<uint32_t> (present_queue_index);
 	if (graphics_queue_index < 0 || present_queue_index < 0) {
 		auto queue_families = detail::get_vector_noerror<VkQueueFamilyProperties> (
-			detail::vulkan_functions().fp_vkGetPhysicalDeviceQueueFamilyProperties, physical_device);
+		    detail::vulkan_functions ().fp_vkGetPhysicalDeviceQueueFamilyProperties, physical_device);
 		if (graphics_queue_index < 0)
-			info.graphics_queue_index = static_cast<uint32_t>(detail::get_graphics_queue_index (queue_families));
+			info.graphics_queue_index =
+			    static_cast<uint32_t> (detail::get_graphics_queue_index (queue_families));
 		if (present_queue_index < 0)
-			info.present_queue_index = static_cast<uint32_t>(detail::get_present_queue_index (physical_device, surface, queue_families));
+			info.present_queue_index = static_cast<uint32_t> (
+			    detail::get_present_queue_index (physical_device, surface, queue_families));
 	}
 }
 detail::Result<Swapchain> SwapchainBuilder::build () const {

@@ -14,8 +14,7 @@ auto instance_builder_return = instance_builder.build();
 Because creating an instance may fail, the builder returns an 'Result' type. This contains either a valid `vkb::Instance` struct, which includes a `VkInstance` handle, or contains an `vkb::InstanceError`.
 ```cpp
 if (!instance_builder_return) {
-    printf("Failed to create Vulkan instance. Cause %s\n", 
-        instance_builder_return.error().message());
+    std::cerr << "Failed to create Vulkan instance. Error: " << instance_builder_return.error().message() << "\n";
     return -1;
 } 
 ```

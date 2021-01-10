@@ -110,6 +110,7 @@ target_link_libraries(your_application_name vk-bootstrap)
 If cmake 3.12 is available, use the FetchContent capability of cmake to directly download and build the library for you.
 
 ```cmake
+include(FetchContent)
 FetchContent_Declare(
     fetch_vk_bootstrap
     GIT_REPOSITORY https://github.com/charles-lunarg/vk-bootstrap

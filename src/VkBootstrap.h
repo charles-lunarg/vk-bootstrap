@@ -470,6 +470,11 @@ class PhysicalDeviceSelector {
 // ---- Queue ---- //
 enum class QueueType { present, graphics, compute, transfer };
 
+namespace detail {
+    // Sentinel value, used in implementation only
+    const int QUEUE_INDEX_MAX_VALUE = 65536;
+}
+
 // ---- Device ---- //
 
 struct Device {
@@ -561,8 +566,8 @@ class SwapchainBuilder {
 	explicit SwapchainBuilder (VkPhysicalDevice const physical_device,
 	    VkDevice const device,
 	    VkSurfaceKHR const surface,
-	    int32_t graphics_queue_index = -1,
-	    int32_t present_queue_index = -1);
+	    uint32_t graphics_queue_index = detail::QUEUE_INDEX_MAX_VALUE,
+	    uint32_t present_queue_index = detail::QUEUE_INDEX_MAX_VALUE);
 
 	detail::Result<Swapchain> build () const;
 

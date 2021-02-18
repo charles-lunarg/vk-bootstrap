@@ -575,6 +575,7 @@ class SwapchainBuilder {
 	// Add this swapchain format to the end of the list of formats selected from.
 	SwapchainBuilder& add_fallback_format (VkSurfaceFormatKHR format);
 	// Use the default swapchain formats. This is done if no formats are provided.
+    // Default surface format is {VK_FORMAT_B8G8R8A8_SRGB, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR}
 	SwapchainBuilder& use_default_format_selection ();
 
 	// When determining the present mode, make this the first to be used if supported.
@@ -582,6 +583,7 @@ class SwapchainBuilder {
 	// Add this present mode to the end of the list of present modes selected from.
 	SwapchainBuilder& add_fallback_present_mode (VkPresentModeKHR present_mode);
 	// Use the default presentation mode. This is done if no present modes are provided.
+    // Default present modes: VK_PRESENT_MODE_MAILBOX_KHR with fallback VK_PRESENT_MODE_FIFO_KHR
 	SwapchainBuilder& use_default_present_mode_selection ();
 
 	// Set the bitmask of the image usage for acquired swapchain images.
@@ -604,7 +606,7 @@ class SwapchainBuilder {
 
 	// Set the VkSwapchainCreateFlagBitsKHR.
 	SwapchainBuilder& set_create_flags (VkSwapchainCreateFlagBitsKHR create_flags);
-	// Set the transform to be applied, like a 90 degree rotation. Default is the current transform.
+	// Set the transform to be applied, like a 90 degree rotation. Default is the no transform.
 	SwapchainBuilder& set_pre_transform_flags (VkSurfaceTransformFlagBitsKHR pre_transform_flags);
 	// Set the alpha channel to be used with other windows in on the system. Default is VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR.
 	SwapchainBuilder& set_composite_alpha_flags (VkCompositeAlphaFlagBitsKHR composite_alpha_flags);

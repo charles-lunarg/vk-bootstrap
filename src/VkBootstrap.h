@@ -93,10 +93,13 @@ template <typename T> class Result {
 	const T&& value () const&&   { assert (m_init); return std::move (m_value); }
 	T&&       value () &&        { assert (m_init); return std::move (m_value); }
 
+    // std::error_code associated with the error
     std::error_code error() const { assert (!m_init); return m_error.type; }
+    // optional VkResult that could of been produced due to the error
     VkResult vk_result() const { assert (!m_init); return m_error.vk_result; }
+    // Returns the struct that holds the std::error_code and VkResult
+    Error full_error() const { assert (!m_init); return m_error; }
 	// clang-format on
-
 
 	bool has_value () const { return m_init; }
 	explicit operator bool () const { return m_init; }
@@ -471,9 +474,9 @@ class PhysicalDeviceSelector {
 enum class QueueType { present, graphics, compute, transfer };
 
 namespace detail {
-    // Sentinel value, used in implementation only
-    const int QUEUE_INDEX_MAX_VALUE = 65536;
-}
+// Sentinel value, used in implementation only
+const int QUEUE_INDEX_MAX_VALUE = 65536;
+} // namespace detail
 
 // ---- Device ---- //
 
@@ -616,9 +619,9 @@ class SwapchainBuilder {
 	SwapchainBuilder& set_clipped (bool clipped = true);
 
 	// Set the VkSwapchainCreateFlagBitsKHR.
-	SwapchainBuilder& set_create_flags (VkSwapchainCreateFlagBitsKHR create_flags);
-	// Set the transform to be applied, like a 90 degree rotation. Default is the no transform.
-	SwapchainBuilder& set_pre_transform_flags (VkSurfaceTransformFlagBitsKHR pre_transform_flags);
+	SwapchainBuilder& set_create_flags(VkSwapchainCreateFlagBitsKHR create_flags);
+	// Set the transform to be applied, like a 90 degree rotation. Default is no transform.
+	SwapchainBuilder& set_pre_transform_flags(VkSurfaceTransformFlagBitsKHR pre_transform_flags);
 	// Set the alpha channel to be used with other windows in on the system. Default is VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR.
 	SwapchainBuilder& set_composite_alpha_flags (VkCompositeAlphaFlagBitsKHR composite_alpha_flags);
 

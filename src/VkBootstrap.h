@@ -165,17 +165,17 @@ const char* to_string (QueueError err);
 const char* to_string (DeviceError err);
 const char* to_string (SwapchainError err);
 
-// Gathers useful information about the available vulkan capabilities, like layers and instance extensions.
-// Use this for enabling features conditionally, ie if you would like an extension but can use a fallback if
-// it isn't supported but need to know if support is available first.
+// Gathers useful information about the available vulkan capabilities, like layers and instance
+// extensions. Use this for enabling features conditionally, ie if you would like an extension but
+// can use a fallback if it isn't supported but need to know if support is available first.
 struct SystemInfo {
 	private:
 	SystemInfo ();
 
 	public:
-    // Use get_system_info to create a SystemInfo struct. This is because loading vulkan could fail.
+	// Use get_system_info to create a SystemInfo struct. This is because loading vulkan could fail.
 	static detail::Result<SystemInfo> get_system_info ();
-	static detail::Result<SystemInfo>  get_system_info (PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr);
+	static detail::Result<SystemInfo> get_system_info (PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr);
 
 	// Returns true if a layer is available
 	bool is_layer_available (const char* layer_name) const;
@@ -319,7 +319,9 @@ VKAPI_ATTR VkBool32 VKAPI_CALL default_debug_callback (VkDebugUtilsMessageSeveri
     const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
     void* pUserData);
 
-void destroy_debug_utils_messenger(VkInstance const instance, VkDebugUtilsMessengerEXT const messenger, VkAllocationCallbacks* allocation_callbacks = nullptr);
+void destroy_debug_utils_messenger (VkInstance const instance,
+    VkDebugUtilsMessengerEXT const messenger,
+    VkAllocationCallbacks* allocation_callbacks = nullptr);
 
 // ---- Physical Device ---- //
 class PhysicalDeviceSelector;
@@ -556,7 +558,11 @@ class SwapchainBuilder {
 	public:
 	explicit SwapchainBuilder (Device const& device);
 	explicit SwapchainBuilder (Device const& device, VkSurfaceKHR const surface);
-	explicit SwapchainBuilder (VkPhysicalDevice const physical_device, VkDevice const device, VkSurfaceKHR const surface, int32_t graphics_queue_index = -1, int32_t present_queue_index = -1);
+	explicit SwapchainBuilder (VkPhysicalDevice const physical_device,
+	    VkDevice const device,
+	    VkSurfaceKHR const surface,
+	    int32_t graphics_queue_index = -1,
+	    int32_t present_queue_index = -1);
 
 	detail::Result<Swapchain> build () const;
 
@@ -575,7 +581,7 @@ class SwapchainBuilder {
 	// Add this swapchain format to the end of the list of formats selected from.
 	SwapchainBuilder& add_fallback_format (VkSurfaceFormatKHR format);
 	// Use the default swapchain formats. This is done if no formats are provided.
-    // Default surface format is {VK_FORMAT_B8G8R8A8_SRGB, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR}
+	// Default surface format is {VK_FORMAT_B8G8R8A8_SRGB, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR}
 	SwapchainBuilder& use_default_format_selection ();
 
 	// When determining the present mode, make this the first to be used if supported.
@@ -583,7 +589,7 @@ class SwapchainBuilder {
 	// Add this present mode to the end of the list of present modes selected from.
 	SwapchainBuilder& add_fallback_present_mode (VkPresentModeKHR present_mode);
 	// Use the default presentation mode. This is done if no present modes are provided.
-    // Default present modes: VK_PRESENT_MODE_MAILBOX_KHR with fallback VK_PRESENT_MODE_FIFO_KHR
+	// Default present modes: VK_PRESENT_MODE_MAILBOX_KHR with fallback VK_PRESENT_MODE_FIFO_KHR
 	SwapchainBuilder& use_default_present_mode_selection ();
 
 	// Set the bitmask of the image usage for acquired swapchain images.

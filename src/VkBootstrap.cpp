@@ -1530,6 +1530,7 @@ SwapchainBuilder::SwapchainBuilder (Device const& device) {
 	// TODO: handle error of queue's not available
 	info.graphics_queue_index = present.value ();
 	info.present_queue_index = graphics.value ();
+	info.allocation_callbacks = device.allocation_callbacks;
 }
 SwapchainBuilder::SwapchainBuilder (Device const& device, VkSurfaceKHR const surface) {
 	info.device = device.device;
@@ -1542,6 +1543,7 @@ SwapchainBuilder::SwapchainBuilder (Device const& device, VkSurfaceKHR const sur
 	// TODO: handle error of queue's not available
 	info.graphics_queue_index = present.value ();
 	info.present_queue_index = graphics.value ();
+	info.allocation_callbacks = device.allocation_callbacks;
 }
 SwapchainBuilder::SwapchainBuilder (VkPhysicalDevice const physical_device,
     VkDevice const device,

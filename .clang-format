@@ -31,7 +31,6 @@ PenaltyExcessCharacter: 1
 PenaltyReturnTypeOnItsOwnLine: 20
 PointerBindsToType: true
 SpaceBeforeAssignmentOperators: true
-SpaceBeforeParens: Always
 SpaceInEmptyParentheses: false
 SpacesBeforeTrailingComments: 1
 SpacesInAngles: false

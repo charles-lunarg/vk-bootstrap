@@ -32,7 +32,7 @@ void destroy_window_glfw(GLFWwindow* window) {
 	glfwTerminate();
 }
 VkSurfaceKHR create_surface_glfw(VkInstance instance, GLFWwindow* window) {
-	VkSurfaceKHR surface = nullptr;
+	VkSurfaceKHR surface = VK_NULL_HANDLE;
 	VkResult err = glfwCreateWindowSurface(instance, window, NULL, &surface);
 	if (err) {
 		const char* error_msg;
@@ -42,7 +42,7 @@ VkSurfaceKHR create_surface_glfw(VkInstance instance, GLFWwindow* window) {
 			if (error_msg != nullptr) std::cout << error_msg;
 			std::cout << "\n";
 		}
-		surface = nullptr;
+		surface = VK_NULL_HANDLE;
 	}
 	return surface;
 }

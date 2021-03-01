@@ -4,7 +4,7 @@ target_link_libraries(vk-bootstrap-triangle
         glfw
         vk-bootstrap
         vk-bootstrap-compiler-warnings
-        ${Vulkan_LIBRARY})
+        vk-boostrap-vulkan-headers)
 
 add_custom_command(
         TARGET vk-bootstrap-triangle

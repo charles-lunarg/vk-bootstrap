@@ -357,8 +357,8 @@ TEST_CASE ("SystemInfo Loading Vulkan Automatically", "[VkBootstrap.loading]") {
 
 TEST_CASE ("SystemInfo Loading Vulkan Manually", "[VkBootstrap.loading]") {
 	VulkanLibrary vk_lib;
-	REQUIRE (vk_lib.ptr_vkGetInstanceProcAddr != NULL);
-	auto info_ret = vkb::SystemInfo::get_system_info (vk_lib.ptr_vkGetInstanceProcAddr);
+	REQUIRE (vk_lib.vkGetInstanceProcAddr != NULL);
+	auto info_ret = vkb::SystemInfo::get_system_info (vk_lib.vkGetInstanceProcAddr);
 	REQUIRE (info_ret);
 	vkb::InstanceBuilder builder;
 	auto ret = builder.build ();
@@ -374,8 +374,8 @@ TEST_CASE ("InstanceBuilder Loading Vulkan Automatically", "[VkBootstrap.loading
 
 TEST_CASE ("InstanceBuilder Loading Vulkan Manually", "[VkBootstrap.loading]") {
 	VulkanLibrary vk_lib;
-	REQUIRE (vk_lib.ptr_vkGetInstanceProcAddr != NULL);
-	vkb::InstanceBuilder builder{ vk_lib.ptr_vkGetInstanceProcAddr };
+	REQUIRE (vk_lib.vkGetInstanceProcAddr != NULL);
+	vkb::InstanceBuilder builder{ vk_lib.vkGetInstanceProcAddr };
 	auto ret = builder.build ();
 	vk_lib.close ();
 }
@@ -395,16 +395,16 @@ TEST_CASE ("ReLoading Vulkan Automatically", "[VkBootstrap.loading]") {
 TEST_CASE ("ReLoading Vulkan Manually", "[VkBootstrap.loading]") {
 	{
 		VulkanLibrary vk_lib;
-		REQUIRE (vk_lib.ptr_vkGetInstanceProcAddr != NULL);
-		vkb::InstanceBuilder builder{ vk_lib.ptr_vkGetInstanceProcAddr };
+		REQUIRE (vk_lib.vkGetInstanceProcAddr != NULL);
+		vkb::InstanceBuilder builder{ vk_lib.vkGetInstanceProcAddr };
 		auto ret = builder.build ();
 		REQUIRE (ret);
 		vk_lib.close ();
 	}
 	{
 		VulkanLibrary vk_lib;
-		REQUIRE (vk_lib.ptr_vkGetInstanceProcAddr != NULL);
-		vkb::InstanceBuilder builder{ vk_lib.ptr_vkGetInstanceProcAddr };
+		REQUIRE (vk_lib.vkGetInstanceProcAddr != NULL);
+		vkb::InstanceBuilder builder{ vk_lib.vkGetInstanceProcAddr };
 		auto ret = builder.build ();
 		REQUIRE (ret);
 		vk_lib.close ();

@@ -1,17 +1,13 @@
-
-
 option(GLFW_BUILD_TESTS "" OFF)
 option(GLFW_BUILD_DOCS "" OFF)
 option(GLFW_INSTALL "" OFF)
 option(GLFW_BUILD_EXAMPLES "" OFF)
-#add_subdirectory(glfw)
 
 option(CATCH_BUILD_TESTING "" OFF)
 option(CATCH_ENABLE_WERROR "" OFF)
 option(CATCH_INSTALL_DOCS "" OFF)
 option(CATCH_INSTALL_HELPERS "" OFF)
 set_property(GLOBAL PROPERTY CTEST_TARGETS_ADDED 1) #remove Catch2 target spam
-#add_subdirectory(Catch2)
 
 include(FetchContent)
 FetchContent_Declare(

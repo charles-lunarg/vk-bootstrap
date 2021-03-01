@@ -1,7 +1,21 @@
 cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
 project(VulkanBootstrap)
 
-find_package(Vulkan REQUIRED)
+add_library(vk-boostrap-vulkan-headers INTERFACE)
+find_package(Vulkan QUIET)
+
+if(${Vulkan_INCLUDE_DIR} STREQUAL "Vulkan_INCLUDE_DIR-NOTFOUND")
+    include(FetchContent)
+    FetchContent_Declare(
+        VulkanHeaders
+        GIT_REPOSITORY https://github.com/KhronosGroup/Vulkan-Headers
+        GIT_TAG        v1.2.171
+    )
+    FetchContent_MakeAvailable(VulkanHeaders)
+    target_link_libraries(vk-boostrap-vulkan-headers INTERFACE Vulkan::Headers)
+else()
+    set_target_properties(vk-boostrap-vulkan-headers PROPERTIES INTERFACE_INCLUDE_DIRECTORIES ${Vulkan_INCLUDE_DIR})
+endif()
 
 add_library(vk-bootstrap src/VkBootstrap.h src/VkBootstrap.cpp)
 add_library(vk-bootstrap::vk-bootstrap ALIAS vk-bootstrap)
@@ -33,10 +47,10 @@ target_include_directories(vk-bootstrap PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
     $<INSTALL_INTERFACE:include>)
 target_include_directories(vk-bootstrap PUBLIC src)
-target_include_directories(vk-bootstrap PUBLIC ${Vulkan_INCLUDE_DIR})
 target_link_libraries(vk-bootstrap
         PRIVATE
         vk-bootstrap-compiler-warnings
+        vk-boostrap-vulkan-headers
         ${CMAKE_DL_LIBS})
 target_compile_features(vk-bootstrap PUBLIC cxx_std_14)
 

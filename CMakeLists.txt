@@ -34,6 +34,7 @@ target_include_directories(vk-bootstrap PUBLIC ${Vulkan_INCLUDE_DIR})
 target_link_libraries(vk-bootstrap
         PRIVATE
         vk-bootstrap-compiler-warnings)
+target_compile_features(vk-bootstrap PUBLIC cxx_std_14)
 
 option(VK_BOOTSTRAP_TEST "Test Vk-Bootstrap with glfw and Catch2" OFF)
 

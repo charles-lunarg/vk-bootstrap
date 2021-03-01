@@ -29,6 +29,9 @@ target_compile_options(vk-bootstrap-compiler-warnings
         /W4>
         )
 
+target_include_directories(vk-bootstrap PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
+    $<INSTALL_INTERFACE:include>)
 target_include_directories(vk-bootstrap PUBLIC src)
 target_include_directories(vk-bootstrap PUBLIC ${Vulkan_INCLUDE_DIR})
 target_link_libraries(vk-bootstrap
@@ -36,6 +39,13 @@ target_link_libraries(vk-bootstrap
         vk-bootstrap-compiler-warnings
         ${CMAKE_DL_LIBS})
 target_compile_features(vk-bootstrap PUBLIC cxx_std_14)
+
+include(GNUInstallDirs)
+install(FILES src/VkBootstrap.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+install(TARGETS vk-bootstrap
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
 option(VK_BOOTSTRAP_TEST "Test Vk-Bootstrap with glfw and Catch2" OFF)
 

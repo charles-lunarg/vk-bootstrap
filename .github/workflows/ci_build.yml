@@ -59,3 +59,27 @@ jobs:
     - name: CMake Build
       run: cmake --build build
 
+  windows:
+    name: ${{ matrix.config.name }}
+    runs-on: ${{matrix.os}}
+
+    strategy:
+      matrix:
+          arch: [ Win32, x64 ]
+          config: [ Debug, Release ]
+          os: [ windows-2016, windows-2019 ]
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2.0.0
+
+    - name: Download and setup Vulkan-Headers
+      run: |
+        git clone https://github.com/KhronosGroup/Vulkan-Headers
+        echo "VULKAN_SDK=./Vulkan-Headers" >> $GITHUB_ENV
+
+    - name: CMake Configure
+      run: cmake -Bbuild -DVK_BOOTSTRAP_TEST=ON -DCMAKE_BUILD_TYPE=Debug
+
+    - name: CMake Build
+      run: cmake --build build

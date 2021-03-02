@@ -2,19 +2,27 @@ cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
 project(VulkanBootstrap)
 
 add_library(vk-boostrap-vulkan-headers INTERFACE)
-find_package(Vulkan QUIET)
 
-if(${Vulkan_INCLUDE_DIR} STREQUAL "Vulkan_INCLUDE_DIR-NOTFOUND")
-    include(FetchContent)
-    FetchContent_Declare(
-        VulkanHeaders
-        GIT_REPOSITORY https://github.com/KhronosGroup/Vulkan-Headers
-        GIT_TAG        v1.2.171
-    )
-    FetchContent_MakeAvailable(VulkanHeaders)
-    target_link_libraries(vk-boostrap-vulkan-headers INTERFACE Vulkan::Headers)
-else()
-    set_target_properties(vk-boostrap-vulkan-headers PROPERTIES INTERFACE_INCLUDE_DIRECTORIES ${Vulkan_INCLUDE_DIR})
+set(VK_BOOTSTRAP_VULKAN_HEADER_DIR "" CACHE STRING "Specify the location of the Vulkan-Headers include directory.")
+mark_as_advanced(VK_BOOTSTRAP_VULKAN_HEADER_DIR)
+
+if(NOT "${VK_BOOTSTRAP_VULKAN_HEADER_DIR}" STREQUAL "")
+  target_include_directories(vk-boostrap-vulkan-headers INTERFACE ${VK_BOOTSTRAP_VULKAN_HEADER_DIR})
+else ()
+  find_package(Vulkan QUIET)
+
+  if(${Vulkan_INCLUDE_DIR} STREQUAL "Vulkan_INCLUDE_DIR-NOTFOUND")
+      include(FetchContent)
+      FetchContent_Declare(
+          VulkanHeaders
+          GIT_REPOSITORY https://github.com/KhronosGroup/Vulkan-Headers
+          GIT_TAG        v1.2.171
+      )
+      FetchContent_MakeAvailable(VulkanHeaders)
+      target_link_libraries(vk-boostrap-vulkan-headers INTERFACE Vulkan::Headers)
+  else()
+      set_target_properties(vk-boostrap-vulkan-headers PROPERTIES INTERFACE_INCLUDE_DIRECTORIES ${Vulkan_INCLUDE_DIR})
+  endif()
 endif()
 
 add_library(vk-bootstrap src/VkBootstrap.h src/VkBootstrap.cpp)

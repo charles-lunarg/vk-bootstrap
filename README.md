@@ -76,9 +76,9 @@ See `example/triangle.cpp` for an example that renders a triangle to the screen.
 
 ## Setting up `vk-bootstrap`
 
-This library has no external dependencies beyond C++11, its standard library, and the Vulkan Headers.
+This library has no external dependencies beyond C++14, it's standard library, and the Vulkan Headers.
 
-Note on Unix platforms, `vk-bootstrap` will require the dynamic linker in order to compile as the library doesn't link against `vulkan-1.dll`/`libvulkan.so` directly. 
+Note: on Unix platforms, `vk-bootstrap` will require the dynamic linker in order to compile as the library doesn't link against `vulkan-1.dll`/`libvulkan.so` directly. 
 
 ### Copy-Paste
 
@@ -130,11 +130,21 @@ cd build
 cmake ..
 ```
 
-## Testing
+### Vulkan-Headers dependency
 
-Testing requires GLFW and Catch2 but are acquired automatically using cmake fetch content.
-Tests will be enabled if you open this project standalone. If you include this project as a subdirectory or sub-project, you can force enable tests by setting the option `VK_BOOTSTRAP_TEST` to `ON`.
+By default, when using vk-bootstrap through CMake, it will attempt to locate the Vulkan-Headers on the system and fall back to downloading them directly if they aren't present. If the `VK_BOOTSTRAP_VULKAN_HEADER_DIR` option is specified, it will use that directory instead.
+
+
+### Testing
+
+Tests will be enabled if you open this project standalone. If you include this project as a subdirectory or sub-project, you can force enable tests by setting the option `VK_BOOTSTRAP_TEST` to `ON`. Testing requires GLFW and Catch2 but are acquired automatically using cmake fetch content.
 
 ```bash
 cmake ../path/to/your_project/ -DVK_BOOTSTRAP_TEST=ON
 ```
+
+### Build Options
+| Name | Type |  Default Value | Description |
+| ---- | --- | ---- | ----- | 
+| `VK_BOOTSTRAP_TEST` | bool | `OFF` | Enable building of the tests in this project. Will download GLFW and Catch2 automatically if enabled. |
+| `VK_BOOTSTRAP_VULKAN_HEADER_DIR` | string | `""` | Optional. Specify the directory that contains the Vulkan Headers. Useful if you are downloading the headers manually and don't want vk-bootstrap to download them itself. |

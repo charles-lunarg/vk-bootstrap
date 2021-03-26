@@ -335,6 +335,10 @@ struct PhysicalDevice {
 	VkSurfaceKHR surface = VK_NULL_HANDLE;
 
 	VkPhysicalDeviceFeatures features{};
+#if defined(VK_API_VERSION_1_2)
+	VkPhysicalDeviceVulkan11Features features_11{};
+	VkPhysicalDeviceVulkan12Features features_12{};
+#endif
 	VkPhysicalDeviceProperties properties{};
 	VkPhysicalDeviceMemoryProperties memory_properties{};
 
@@ -352,6 +356,7 @@ struct PhysicalDevice {
 	std::vector<VkQueueFamilyProperties> get_queue_families() const;
 
 	private:
+	uint32_t instance_version = VK_MAKE_VERSION(1, 0, 0);
 	std::vector<const char*> extensions_to_enable;
 	std::vector<VkQueueFamilyProperties> queue_families;
 	bool defer_surface_initialization = false;
@@ -415,7 +420,16 @@ class PhysicalDeviceSelector {
 	PhysicalDeviceSelector& set_minimum_version(uint32_t major, uint32_t minor);
 
 	// Require a physical device which supports the features in VkPhysicalDeviceFeatures.
-	PhysicalDeviceSelector& set_required_features(VkPhysicalDeviceFeatures features);
+	PhysicalDeviceSelector& set_required_features(VkPhysicalDeviceFeatures const& features);
+
+#if defined(VK_API_VERSION_1_2)
+	// Require a physical device which supports the features in VkPhysicalDeviceVulkan11Features.
+	// Must have vulkan version 1.2 - This is due to the VkPhysicalDeviceVulkan11Features struct being added in 1.2, not 1.1
+	PhysicalDeviceSelector& set_required_features_11(VkPhysicalDeviceVulkan11Features const& features_11);
+	// Require a physical device which supports the features in VkPhysicalDeviceVulkan12Features.
+	// Must have vulkan version 1.2
+	PhysicalDeviceSelector& set_required_features_12(VkPhysicalDeviceVulkan12Features const& features_12);
+#endif
 
 	// Used when surface creation happens after physical device selection.
 	// Warning: This disables checking if the physical device supports a given surface.
@@ -426,11 +440,12 @@ class PhysicalDeviceSelector {
 	PhysicalDeviceSelector& select_first_device_unconditionally(bool unconditionally = true);
 
 	private:
-	struct SystemInfo {
+	struct InstanceInfo {
 		VkInstance instance = VK_NULL_HANDLE;
 		VkSurfaceKHR surface = VK_NULL_HANDLE;
+		uint32_t version = VK_MAKE_VERSION(1, 0, 0);
 		bool headless = false;
-	} system_info;
+	} instance_info;
 
 	struct PhysicalDeviceDesc {
 		VkPhysicalDevice phys_device = VK_NULL_HANDLE;
@@ -439,8 +454,15 @@ class PhysicalDeviceSelector {
 		VkPhysicalDeviceFeatures device_features{};
 		VkPhysicalDeviceProperties device_properties{};
 		VkPhysicalDeviceMemoryProperties mem_properties{};
+#if defined(VK_API_VERSION_1_1)
+		VkPhysicalDeviceFeatures2 device_features2{};
+#endif
+#if defined(VK_API_VERSION_1_2)
+		VkPhysicalDeviceVulkan11Features device_features_11{};
+		VkPhysicalDeviceVulkan12Features device_features_12{};
+#endif
 	};
-	PhysicalDeviceDesc populate_device_details(VkPhysicalDevice phys_device) const;
+	PhysicalDeviceDesc populate_device_details(uint32_t instance_version, VkPhysicalDevice phys_device) const;
 
 	struct SelectionCriteria {
 		PreferredDeviceType preferred_type = PreferredDeviceType::discrete;
@@ -460,6 +482,14 @@ class PhysicalDeviceSelector {
 		uint32_t desired_version = VK_MAKE_VERSION(1, 0, 0);
 
 		VkPhysicalDeviceFeatures required_features{};
+#if defined(VK_API_VERSION_1_1)
+		VkPhysicalDeviceFeatures2 required_features2{};
+#endif
+
+#if defined(VK_API_VERSION_1_2)
+		VkPhysicalDeviceVulkan11Features required_features_11{};
+		VkPhysicalDeviceVulkan12Features required_features_12{};
+#endif
 
 		bool defer_surface_initialization = false;
 		bool use_first_gpu_unconditionally = false;
@@ -528,15 +558,11 @@ class DeviceBuilder {
 	DeviceBuilder& set_allocation_callbacks(VkAllocationCallbacks* callbacks);
 
 	private:
+	PhysicalDevice physical_device;
 	struct DeviceInfo {
 		VkDeviceCreateFlags flags = 0;
 		std::vector<VkBaseOutStructure*> pNext_chain;
-		PhysicalDevice physical_device;
-		VkSurfaceKHR surface = VK_NULL_HANDLE;
-		bool defer_surface_initialization = false;
-		std::vector<VkQueueFamilyProperties> queue_families;
-		VkPhysicalDeviceFeatures features{};
-		std::vector<const char*> extensions_to_enable;
+
 		std::vector<CustomQueueDescription> queue_descriptions;
 		VkAllocationCallbacks* allocation_callbacks = VK_NULL_HANDLE;
 	} info;

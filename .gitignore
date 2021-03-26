@@ -2,3 +2,4 @@
 *.vs
 *.idea
 cmake-build-*
+build

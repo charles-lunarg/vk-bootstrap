@@ -843,8 +843,8 @@ std::vector<const char*> check_device_extension_support(
 	return extensions_to_enable;
 }
 
+// clang-format off
 bool supports_features(VkPhysicalDeviceFeatures supported, VkPhysicalDeviceFeatures requested) {
-	// clang-format off
     if (requested.robustBufferAccess && !supported.robustBufferAccess) return false;
     if (requested.fullDrawIndexUint32 && !supported.fullDrawIndexUint32) return false;
     if (requested.imageCubeArray && !supported.imageCubeArray) return false;
@@ -900,10 +900,76 @@ bool supports_features(VkPhysicalDeviceFeatures supported, VkPhysicalDeviceFeatu
     if (requested.sparseResidencyAliased && !supported.sparseResidencyAliased) return false;
     if (requested.variableMultisampleRate && !supported.variableMultisampleRate) return false;
     if (requested.inheritedQueries && !supported.inheritedQueries) return false;
-	// clang-format on
 	return true;
 }
-
+#if defined(VK_API_VERSION_1_2)
+bool supports_features_11(VkPhysicalDeviceVulkan11Features supported, VkPhysicalDeviceVulkan11Features requested){
+    if (requested.storageBuffer16BitAccess && !supported.storageBuffer16BitAccess) return false;
+    if (requested.uniformAndStorageBuffer16BitAccess && !supported.uniformAndStorageBuffer16BitAccess) return false;
+    if (requested.storagePushConstant16 && !supported.storagePushConstant16) return false;
+    if (requested.storageInputOutput16 && !supported.storageInputOutput16) return false;
+    if (requested.multiview && !supported.multiview) return false;
+    if (requested.multiviewGeometryShader && !supported.multiviewGeometryShader) return false;
+    if (requested.multiviewTessellationShader && !supported.multiviewTessellationShader) return false;
+    if (requested.variablePointersStorageBuffer && !supported.variablePointersStorageBuffer) return false;
+    if (requested.variablePointers && !supported.variablePointers) return false;
+    if (requested.protectedMemory && !supported.protectedMemory) return false;
+    if (requested.samplerYcbcrConversion && !supported.samplerYcbcrConversion) return false;
+    if (requested.shaderDrawParameters && !supported.shaderDrawParameters) return false;
+    return true;
+}
+bool supports_features_12(VkPhysicalDeviceVulkan12Features supported, VkPhysicalDeviceVulkan12Features requested){
+    if(requested.samplerMirrorClampToEdge && !supported.samplerMirrorClampToEdge) return false;
+    if(requested.drawIndirectCount && !supported.drawIndirectCount) return false;
+    if(requested.storageBuffer8BitAccess && !supported.storageBuffer8BitAccess) return false;
+    if(requested.uniformAndStorageBuffer8BitAccess && !supported.uniformAndStorageBuffer8BitAccess) return false;
+    if(requested.storagePushConstant8 && !supported.storagePushConstant8) return false;
+    if(requested.shaderBufferInt64Atomics && !supported.shaderBufferInt64Atomics) return false;
+    if(requested.shaderSharedInt64Atomics && !supported.shaderSharedInt64Atomics) return false;
+    if(requested.shaderFloat16 && !supported.shaderFloat16) return false;
+    if(requested.shaderInt8 && !supported.shaderInt8) return false;
+    if(requested.descriptorIndexing && !supported.descriptorIndexing) return false;
+    if(requested.shaderInputAttachmentArrayDynamicIndexing && !supported.shaderInputAttachmentArrayDynamicIndexing) return false;
+    if(requested.shaderUniformTexelBufferArrayDynamicIndexing && !supported.shaderUniformTexelBufferArrayDynamicIndexing) return false;
+    if(requested.shaderStorageTexelBufferArrayDynamicIndexing && !supported.shaderStorageTexelBufferArrayDynamicIndexing) return false;
+    if(requested.shaderUniformBufferArrayNonUniformIndexing && !supported.shaderUniformBufferArrayNonUniformIndexing) return false;
+    if(requested.shaderSampledImageArrayNonUniformIndexing && !supported.shaderSampledImageArrayNonUniformIndexing) return false;
+    if(requested.shaderStorageBufferArrayNonUniformIndexing && !supported.shaderStorageBufferArrayNonUniformIndexing) return false;
+    if(requested.shaderStorageImageArrayNonUniformIndexing && !supported.shaderStorageImageArrayNonUniformIndexing) return false;
+    if(requested.shaderInputAttachmentArrayNonUniformIndexing && !supported.shaderInputAttachmentArrayNonUniformIndexing) return false;
+    if(requested.shaderUniformTexelBufferArrayNonUniformIndexing && !supported.shaderUniformTexelBufferArrayNonUniformIndexing) return false;
+    if(requested.shaderStorageTexelBufferArrayNonUniformIndexing && !supported.shaderStorageTexelBufferArrayNonUniformIndexing) return false;
+    if(requested.descriptorBindingUniformBufferUpdateAfterBind && !supported.descriptorBindingUniformBufferUpdateAfterBind) return false;
+    if(requested.descriptorBindingSampledImageUpdateAfterBind && !supported.descriptorBindingSampledImageUpdateAfterBind) return false;
+    if(requested.descriptorBindingStorageImageUpdateAfterBind && !supported.descriptorBindingStorageImageUpdateAfterBind) return false;
+    if(requested.descriptorBindingStorageBufferUpdateAfterBind && !supported.descriptorBindingStorageBufferUpdateAfterBind) return false;
+    if(requested.descriptorBindingUniformTexelBufferUpdateAfterBind && !supported.descriptorBindingUniformTexelBufferUpdateAfterBind) return false;
+    if(requested.descriptorBindingStorageTexelBufferUpdateAfterBind && !supported.descriptorBindingStorageTexelBufferUpdateAfterBind) return false;
+    if(requested.descriptorBindingUpdateUnusedWhilePending && !supported.descriptorBindingUpdateUnusedWhilePending) return false;
+    if(requested.descriptorBindingPartiallyBound && !supported.descriptorBindingPartiallyBound) return false;
+    if(requested.descriptorBindingVariableDescriptorCount && !supported.descriptorBindingVariableDescriptorCount) return false;
+    if(requested.runtimeDescriptorArray && !supported.runtimeDescriptorArray) return false;
+    if(requested.samplerFilterMinmax && !supported.samplerFilterMinmax) return false;
+    if(requested.scalarBlockLayout && !supported.scalarBlockLayout) return false;
+    if(requested.imagelessFramebuffer && !supported.imagelessFramebuffer) return false;
+    if(requested.uniformBufferStandardLayout && !supported.uniformBufferStandardLayout) return false;
+    if(requested.shaderSubgroupExtendedTypes && !supported.shaderSubgroupExtendedTypes) return false;
+    if(requested.separateDepthStencilLayouts && !supported.separateDepthStencilLayouts) return false;
+    if(requested.hostQueryReset && !supported.hostQueryReset) return false;
+    if(requested.timelineSemaphore && !supported.timelineSemaphore) return false;
+    if(requested.bufferDeviceAddress && !supported.bufferDeviceAddress) return false;
+    if(requested.bufferDeviceAddressCaptureReplay && !supported.bufferDeviceAddressCaptureReplay) return false;
+    if(requested.bufferDeviceAddressMultiDevice && !supported.bufferDeviceAddressMultiDevice) return false;
+    if(requested.vulkanMemoryModel && !supported.vulkanMemoryModel) return false;
+    if(requested.vulkanMemoryModelDeviceScope && !supported.vulkanMemoryModelDeviceScope) return false;
+    if(requested.vulkanMemoryModelAvailabilityVisibilityChains && !supported.vulkanMemoryModelAvailabilityVisibilityChains) return false;
+    if(requested.shaderOutputViewportIndex && !supported.shaderOutputViewportIndex) return false;
+    if(requested.shaderOutputLayer && !supported.shaderOutputLayer) return false;
+    if(requested.subgroupBroadcastDynamicId && !supported.subgroupBroadcastDynamicId) return false;
+    return true;
+}
+#endif
+// clang-format on
 // finds the first queue which supports graphics operations. returns QUEUE_INDEX_MAX_VALUE if none is found
 uint32_t get_graphics_queue_index(std::vector<VkQueueFamilyProperties> const& families) {
 	for (uint32_t i = 0; i < static_cast<uint32_t>(families.size()); i++) {
@@ -983,7 +1049,7 @@ uint32_t get_present_queue_index(VkPhysicalDevice const phys_device,
 
 
 PhysicalDeviceSelector::PhysicalDeviceDesc PhysicalDeviceSelector::populate_device_details(
-    VkPhysicalDevice phys_device) const {
+    uint32_t instance_version, VkPhysicalDevice phys_device) const {
 	PhysicalDeviceSelector::PhysicalDeviceDesc desc{};
 	desc.phys_device = phys_device;
 	auto queue_families = detail::get_vector_noerror<VkQueueFamilyProperties>(
@@ -993,6 +1059,20 @@ PhysicalDeviceSelector::PhysicalDeviceDesc PhysicalDeviceSelector::populate_devi
 	detail::vulkan_functions().fp_vkGetPhysicalDeviceProperties(phys_device, &desc.device_properties);
 	detail::vulkan_functions().fp_vkGetPhysicalDeviceFeatures(phys_device, &desc.device_features);
 	detail::vulkan_functions().fp_vkGetPhysicalDeviceMemoryProperties(phys_device, &desc.mem_properties);
+
+#if defined(VK_API_VERSION_1_1)
+	desc.device_features2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
+
+#if defined(VK_API_VERSION_1_2)
+	desc.device_features_11.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES;
+	desc.device_features_12.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES;
+	desc.device_features2.pNext = &desc.device_features_11;
+	desc.device_features_11.pNext = &desc.device_features_12;
+#endif
+	if (instance_version >= VK_API_VERSION_1_1) {
+		detail::vulkan_functions().fp_vkGetPhysicalDeviceFeatures2(phys_device, &desc.device_features2);
+	}
+#endif
 	return desc;
 }
 
@@ -1012,7 +1092,7 @@ PhysicalDeviceSelector::Suitable PhysicalDeviceSelector::is_device_suitable(Phys
 	    detail::get_separate_transfer_queue_index(pd.queue_families) != detail::QUEUE_INDEX_MAX_VALUE;
 
 	bool present_queue =
-	    detail::get_present_queue_index(pd.phys_device, system_info.surface, pd.queue_families) !=
+	    detail::get_present_queue_index(pd.phys_device, instance_info.surface, pd.queue_families) !=
 	    detail::QUEUE_INDEX_MAX_VALUE;
 
 	if (criteria.require_dedicated_compute_queue && !dedicated_compute) return Suitable::no;
@@ -1036,18 +1116,18 @@ PhysicalDeviceSelector::Suitable PhysicalDeviceSelector::is_device_suitable(Phys
 	bool swapChainAdequate = false;
 	if (criteria.defer_surface_initialization) {
 		swapChainAdequate = true;
-	} else if (!system_info.headless) {
+	} else if (!instance_info.headless) {
 		std::vector<VkSurfaceFormatKHR> formats;
 		std::vector<VkPresentModeKHR> present_modes;
 
 		auto formats_ret = detail::get_vector<VkSurfaceFormatKHR>(formats,
 		    detail::vulkan_functions().fp_vkGetPhysicalDeviceSurfaceFormatsKHR,
 		    pd.phys_device,
-		    system_info.surface);
+		    instance_info.surface);
 		auto present_modes_ret = detail::get_vector<VkPresentModeKHR>(present_modes,
 		    detail::vulkan_functions().fp_vkGetPhysicalDeviceSurfacePresentModesKHR,
 		    pd.phys_device,
-		    system_info.surface);
+		    instance_info.surface);
 
 		if (formats_ret == VK_SUCCESS && present_modes_ret == VK_SUCCESS) {
 			swapChainAdequate = !formats.empty() && !present_modes.empty();
@@ -1064,6 +1144,18 @@ PhysicalDeviceSelector::Suitable PhysicalDeviceSelector::is_device_suitable(Phys
 
 	bool required_features_supported = detail::supports_features(pd.device_features, criteria.required_features);
 	if (!required_features_supported) return Suitable::no;
+
+#if defined(VK_API_VERSION_1_2)
+	if (instance_info.version >= VK_API_VERSION_1_2) {
+		bool required_features_11_supported =
+		    detail::supports_features_11(pd.device_features_11, criteria.required_features_11);
+		if (!required_features_11_supported) return Suitable::no;
+
+		bool required_features_12_supported =
+		    detail::supports_features_12(pd.device_features_12, criteria.required_features_12);
+		if (!required_features_12_supported) return Suitable::no;
+	}
+#endif
 
 	bool has_required_memory = false;
 	bool has_preferred_memory = false;
@@ -1084,16 +1176,17 @@ PhysicalDeviceSelector::Suitable PhysicalDeviceSelector::is_device_suitable(Phys
 }
 
 PhysicalDeviceSelector::PhysicalDeviceSelector(Instance const& instance) {
-	system_info.instance = instance.instance;
-	system_info.headless = instance.headless;
+	instance_info.instance = instance.instance;
+	instance_info.headless = instance.headless;
+	instance_info.version = instance.instance_version;
 	criteria.require_present = !instance.headless;
 	criteria.required_version = instance.instance_version;
 	criteria.desired_version = instance.instance_version;
 }
 
 detail::Result<PhysicalDevice> PhysicalDeviceSelector::select() const {
-	if (!system_info.headless && !criteria.defer_surface_initialization) {
-		if (system_info.surface == VK_NULL_HANDLE)
+	if (!instance_info.headless && !criteria.defer_surface_initialization) {
+		if (instance_info.surface == VK_NULL_HANDLE)
 			return detail::Result<PhysicalDevice>{ PhysicalDeviceError::no_surface_provided };
 	}
 
@@ -1101,7 +1194,7 @@ detail::Result<PhysicalDevice> PhysicalDeviceSelector::select() const {
 	std::vector<VkPhysicalDevice> physical_devices;
 
 	auto physical_devices_ret = detail::get_vector<VkPhysicalDevice>(
-	    physical_devices, detail::vulkan_functions().fp_vkEnumeratePhysicalDevices, system_info.instance);
+	    physical_devices, detail::vulkan_functions().fp_vkEnumeratePhysicalDevices, instance_info.instance);
 	if (physical_devices_ret != VK_SUCCESS) {
 		return detail::Result<PhysicalDevice>{ PhysicalDeviceError::failed_enumerate_physical_devices,
 			physical_devices_ret };
@@ -1112,7 +1205,7 @@ detail::Result<PhysicalDevice> PhysicalDeviceSelector::select() const {
 
 	std::vector<PhysicalDeviceDesc> phys_device_descriptions;
 	for (auto& phys_device : physical_devices) {
-		phys_device_descriptions.push_back(populate_device_details(phys_device));
+		phys_device_descriptions.push_back(populate_device_details(instance_info.version, phys_device));
 	}
 
 	PhysicalDeviceDesc selected_device{};
@@ -1136,7 +1229,7 @@ detail::Result<PhysicalDevice> PhysicalDeviceSelector::select() const {
 	}
 	PhysicalDevice out_device{};
 	out_device.physical_device = selected_device.phys_device;
-	out_device.surface = system_info.surface;
+	out_device.surface = instance_info.surface;
 	out_device.features = criteria.required_features;
 	out_device.properties = selected_device.device_properties;
 	out_device.memory_properties = selected_device.mem_properties;
@@ -1155,8 +1248,8 @@ detail::Result<PhysicalDevice> PhysicalDeviceSelector::select() const {
 }
 
 PhysicalDeviceSelector& PhysicalDeviceSelector::set_surface(VkSurfaceKHR surface) {
-	system_info.surface = surface;
-	system_info.headless = false;
+	instance_info.surface = surface;
+	instance_info.headless = false;
 	return *this;
 }
 PhysicalDeviceSelector& PhysicalDeviceSelector::prefer_gpu_device_type(PreferredDeviceType type) {
@@ -1221,10 +1314,22 @@ PhysicalDeviceSelector& PhysicalDeviceSelector::set_desired_version(uint32_t maj
 	criteria.desired_version = VK_MAKE_VERSION(major, minor, 0);
 	return *this;
 }
-PhysicalDeviceSelector& PhysicalDeviceSelector::set_required_features(VkPhysicalDeviceFeatures features) {
+PhysicalDeviceSelector& PhysicalDeviceSelector::set_required_features(VkPhysicalDeviceFeatures const& features) {
 	criteria.required_features = features;
 	return *this;
 }
+#if defined(VK_API_VERSION_1_2)
+PhysicalDeviceSelector& PhysicalDeviceSelector::set_required_features_11(
+    VkPhysicalDeviceVulkan11Features const& features_11) {
+	criteria.required_features_11 = features_11;
+	return *this;
+}
+PhysicalDeviceSelector& PhysicalDeviceSelector::set_required_features_12(
+    VkPhysicalDeviceVulkan12Features const& features_12) {
+	criteria.required_features_12 = features_12;
+	return *this;
+}
+#endif
 PhysicalDeviceSelector& PhysicalDeviceSelector::defer_surface_initialization() {
 	criteria.defer_surface_initialization = true;
 	return *this;
@@ -1327,14 +1432,7 @@ void destroy_device(Device device) {
 	detail::vulkan_functions().fp_vkDestroyDevice(device.device, device.allocation_callbacks);
 }
 
-DeviceBuilder::DeviceBuilder(PhysicalDevice phys_device) {
-	info.physical_device = phys_device;
-	info.surface = phys_device.surface;
-	info.queue_families = phys_device.queue_families;
-	info.features = phys_device.features;
-	info.extensions_to_enable = phys_device.extensions_to_enable;
-	info.defer_surface_initialization = phys_device.defer_surface_initialization;
-}
+DeviceBuilder::DeviceBuilder(PhysicalDevice phys_device) { physical_device = phys_device; }
 
 detail::Result<Device> DeviceBuilder::build() const {
 
@@ -1343,7 +1441,7 @@ detail::Result<Device> DeviceBuilder::build() const {
 	    queue_descriptions.end(), info.queue_descriptions.begin(), info.queue_descriptions.end());
 
 	if (queue_descriptions.size() == 0) {
-		for (uint32_t i = 0; i < info.queue_families.size(); i++) {
+		for (uint32_t i = 0; i < physical_device.queue_families.size(); i++) {
 			queue_descriptions.push_back(CustomQueueDescription{ i, 1, std::vector<float>{ 1.0f } });
 		}
 	}
@@ -1358,41 +1456,77 @@ detail::Result<Device> DeviceBuilder::build() const {
 		queueCreateInfos.push_back(queue_create_info);
 	}
 
-	std::vector<const char*> extensions = info.extensions_to_enable;
-	if (info.surface != VK_NULL_HANDLE || info.defer_surface_initialization)
+	std::vector<const char*> extensions = physical_device.extensions_to_enable;
+	if (physical_device.surface != VK_NULL_HANDLE || physical_device.defer_surface_initialization)
 		extensions.push_back({ VK_KHR_SWAPCHAIN_EXTENSION_NAME });
 
-	// VUID-VkDeviceCreateInfo-pNext-00373 - don't add pEnabledFeatures if the phys_dev_features_2 is present
+	std::vector<VkBaseOutStructure*> pNext_chain = info.pNext_chain;
+
+	// check if certain structs were added in the pNext chain by the user
 	bool has_phys_dev_features_2 = false;
-	for (auto& pNext_struct : info.pNext_chain) {
+	bool has_phys_dev_vulkan_features_11 = false;
+	bool has_phys_dev_vulkan_features_12 = false;
+	for (auto& pNext_struct : pNext_chain) {
 		if (pNext_struct->sType == VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2) {
 			has_phys_dev_features_2 = true;
 		}
+		if (pNext_struct->sType == VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES) {
+			has_phys_dev_vulkan_features_11 = true;
+		}
+		if (pNext_struct->sType == VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES) {
+			has_phys_dev_vulkan_features_12 = true;
+		}
 	}
+
+// Add the correct structs to the pNext chain if api is 1.1/1.2 and aren't already present
+// This is to guard against users who were already doing that
+#if defined(VK_API_VERSION_1_1)
+	VkPhysicalDeviceFeatures2 local_features2{};
+	if (physical_device.instance_version >= VK_MAKE_VERSION(1, 1, 0) && !has_phys_dev_features_2) {
+		local_features2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
+		local_features2.features = physical_device.features;
+		pNext_chain.push_back(reinterpret_cast<VkBaseOutStructure*>(&local_features2));
+		has_phys_dev_features_2 = true;
+	}
+#if defined(VK_API_VERSION_1_2)
+	VkPhysicalDeviceVulkan11Features local_features_11 = physical_device.features_11;
+	VkPhysicalDeviceVulkan12Features local_features_12 = physical_device.features_12;
+	if (physical_device.instance_version >= VK_MAKE_VERSION(1, 2, 0)) {
+		if (!has_phys_dev_vulkan_features_11) {
+			pNext_chain.push_back(reinterpret_cast<VkBaseOutStructure*>(&local_features_11));
+			has_phys_dev_vulkan_features_11 = true;
+		}
+		if (!has_phys_dev_vulkan_features_12) {
+			pNext_chain.push_back(reinterpret_cast<VkBaseOutStructure*>(&local_features_12));
+			has_phys_dev_vulkan_features_12 = true;
+		}
+	}
+#endif
+#endif
 
 	VkDeviceCreateInfo device_create_info = {};
 	device_create_info.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
-	detail::setup_pNext_chain(device_create_info, info.pNext_chain);
+	detail::setup_pNext_chain(device_create_info, pNext_chain);
 	device_create_info.flags = info.flags;
 	device_create_info.queueCreateInfoCount = static_cast<uint32_t>(queueCreateInfos.size());
 	device_create_info.pQueueCreateInfos = queueCreateInfos.data();
 	device_create_info.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
 	device_create_info.ppEnabledExtensionNames = extensions.data();
+	// VUID-VkDeviceCreateInfo-pNext-00373 - don't add pEnabledFeatures if the phys_dev_features_2 is present
 	if (!has_phys_dev_features_2) {
-		device_create_info.pEnabledFeatures = &info.features;
+		device_create_info.pEnabledFeatures = &physical_device.features;
 	}
 
+
 	Device device;
-	VkResult res = detail::vulkan_functions().fp_vkCreateDevice(info.physical_device.physical_device,
-	    &device_create_info,
-	    info.allocation_callbacks,
-	    &device.device);
+	VkResult res = detail::vulkan_functions().fp_vkCreateDevice(
+	    physical_device.physical_device, &device_create_info, info.allocation_callbacks, &device.device);
 	if (res != VK_SUCCESS) {
 		return { DeviceError::failed_create_device, res };
 	}
-	device.physical_device = info.physical_device;
-	device.surface = info.surface;
-	device.queue_families = info.queue_families;
+	device.physical_device = physical_device;
+	device.surface = physical_device.surface;
+	device.queue_families = physical_device.queue_families;
 	device.allocation_callbacks = info.allocation_callbacks;
 	return device;
 }

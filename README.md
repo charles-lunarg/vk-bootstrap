@@ -76,7 +76,7 @@ See `example/triangle.cpp` for an example that renders a triangle to the screen.
 
 ## Setting up `vk-bootstrap`
 
-This library has no external dependencies beyond C++14, it's standard library, and the Vulkan Headers.
+This library has no external dependencies beyond C++14, its standard library, and the Vulkan Headers.
 
 Note: on Unix platforms, `vk-bootstrap` will require the dynamic linker in order to compile as the library doesn't link against `vulkan-1.dll`/`libvulkan.so` directly. 
 

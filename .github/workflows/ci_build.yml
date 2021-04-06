@@ -18,7 +18,7 @@
 
 name: CI Build
 
-on: [push]
+on: [push, workflow_dispatch]
 
 jobs:
   linux-build:

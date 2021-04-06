@@ -1727,7 +1727,7 @@ detail::Result<Swapchain> SwapchainBuilder::build() const {
 		image_count = surface_support.capabilities.maxImageCount;
 	}
 	VkSurfaceFormatKHR surface_format = detail::find_surface_format(
-	    info.physical_device, surface_support.formats, desired_formats, info.image_usage_flags);
+	    info.physical_device, surface_support.formats, desired_formats, info.format_feature_flags);
 
 	VkExtent2D extent =
 	    detail::find_extent(surface_support.capabilities, info.desired_width, info.desired_height);

@@ -634,6 +634,14 @@ class SwapchainBuilder {
 	// are provided. The default is VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT
 	SwapchainBuilder& use_default_image_usage_flags();
 
+	// Set the bitmask of the format feature flag for acquired swapchain images.
+	SwapchainBuilder& set_format_feature_flags(VkFormatFeatureFlags feature_flags);
+	// Add a format feature to the bitmask for acquired swapchain images.
+	SwapchainBuilder& add_format_feature_flags(VkFormatFeatureFlags feature_flags);
+	// Use the default format feature bitmask values. This is the default if no format features
+	// are provided. The default is VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT
+	SwapchainBuilder& use_default_format_feature_flags();
+
 	// Set the number of views in for multiview/stereo surface
 	SwapchainBuilder& set_image_array_layer_count(uint32_t array_layer_count);
 
@@ -676,6 +684,7 @@ class SwapchainBuilder {
 		uint32_t desired_height = 256;
 		uint32_t array_layer_count = 1;
 		VkImageUsageFlags image_usage_flags = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+		VkFormatFeatureFlags format_feature_flags = VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT;
 		uint32_t graphics_queue_index = 0;
 		uint32_t present_queue_index = 0;
 		VkSurfaceTransformFlagBitsKHR pre_transform = static_cast<VkSurfaceTransformFlagBitsKHR>(0);

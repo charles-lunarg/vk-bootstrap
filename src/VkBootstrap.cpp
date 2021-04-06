@@ -1606,7 +1606,7 @@ Result<SurfaceSupportDetails> query_surface_support_details(VkPhysicalDevice phy
 VkSurfaceFormatKHR find_surface_format(VkPhysicalDevice phys_device,
     std::vector<VkSurfaceFormatKHR> const& available_formats,
     std::vector<VkSurfaceFormatKHR> const& desired_formats,
-    VkImageUsageFlags usage_flags) {
+    VkFormatFeatureFlags feature_flags) {
 	for (auto const& desired_format : desired_formats) {
 		for (auto const& available_format : available_formats) {
 			// finds the first format that is desired and available
@@ -1615,7 +1615,7 @@ VkSurfaceFormatKHR find_surface_format(VkPhysicalDevice phys_device,
 				VkFormatProperties properties;
 				detail::vulkan_functions().fp_vkGetPhysicalDeviceFormatProperties(
 				    phys_device, desired_format.format, &properties);
-				if ((properties.optimalTilingFeatures & usage_flags) == usage_flags)
+				if ((properties.optimalTilingFeatures & feature_flags) == feature_flags)
 					return desired_format;
 			}
 		}
@@ -1889,6 +1889,18 @@ SwapchainBuilder& SwapchainBuilder::add_image_usage_flags(VkImageUsageFlags usag
 }
 SwapchainBuilder& SwapchainBuilder::use_default_image_usage_flags() {
 	info.image_usage_flags = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+	return *this;
+}
+SwapchainBuilder& SwapchainBuilder::set_format_feature_flags(VkFormatFeatureFlags feature_flags) {
+	info.format_feature_flags = feature_flags;
+	return *this;
+}
+SwapchainBuilder& SwapchainBuilder::add_format_feature_flags(VkFormatFeatureFlags feature_flags) {
+	info.format_feature_flags = info.format_feature_flags | feature_flags;
+	return *this;
+}
+SwapchainBuilder& SwapchainBuilder::use_default_format_feature_flags() {
+	info.format_feature_flags = VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT;
 	return *this;
 }
 SwapchainBuilder& SwapchainBuilder::set_image_array_layer_count(uint32_t array_layer_count) {

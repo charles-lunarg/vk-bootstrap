@@ -1231,10 +1231,12 @@ detail::Result<PhysicalDevice> PhysicalDeviceSelector::select() const {
 	out_device.physical_device = selected_device.phys_device;
 	out_device.surface = instance_info.surface;
 	out_device.features = criteria.required_features;
+#if defined(VK_API_VERSION_1_2)
 	out_device.features_11 = criteria.required_features_11;
 	out_device.features_11.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES;
 	out_device.features_12 = criteria.required_features_12;
 	out_device.features_12.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES;
+#endif
 	out_device.properties = selected_device.device_properties;
 	out_device.memory_properties = selected_device.mem_properties;
 	out_device.queue_families = selected_device.queue_families;

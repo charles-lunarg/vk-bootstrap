@@ -1015,9 +1015,12 @@ PhysicalDeviceSelector::PhysicalDeviceDesc PhysicalDeviceSelector::populate_devi
             prev = &extension;
         }
         if(desc.extension_features.size() > 0) {
-            desc.device_features2.pNext = &desc.extension_features[0].structure;
+            desc.device_features2.pNext = desc.extension_features[0].structure;
         }
         detail::vulkan_functions().fp_vkGetPhysicalDeviceFeatures2(phys_device, &desc.device_features2);
+        for(auto& extension : desc.extension_features) {
+			extension.update();
+		}
     }
 #endif
 	return desc;

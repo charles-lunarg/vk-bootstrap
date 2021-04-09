@@ -1168,7 +1168,6 @@ detail::Result<PhysicalDevice> PhysicalDeviceSelector::select() const {
 	out_device.physical_device = selected_device.phys_device;
 	out_device.surface = instance_info.surface;
 	out_device.features = criteria.required_features;
-    out_device.extension_features = criteria.extension_features;
 	out_device.properties = selected_device.device_properties;
 	out_device.memory_properties = selected_device.mem_properties;
 	out_device.queue_families = selected_device.queue_families;

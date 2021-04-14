@@ -411,6 +411,38 @@ TEST_CASE("ReLoading Vulkan Manually", "[VkBootstrap.loading]") {
 	}
 }
 
+#if defined(VK_API_VERSION_1_1)
+TEST_CASE("Querying Required Extension Features", "[VkBootstrap.version]") {
+	GIVEN("A working instance") {
+		vkb::InstanceBuilder builder;
+
+		auto instance_ret =
+			builder.request_validation_layers().require_api_version(1, 2).set_headless().build();
+		REQUIRE(instance_ret.has_value());
+		// Requires a device that supports runtime descriptor arrays via descriptor indexing extension.
+		{
+			VkPhysicalDeviceDescriptorIndexingFeaturesEXT descriptor_indexing_features{};
+			descriptor_indexing_features.sType	= VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT;
+			descriptor_indexing_features.runtimeDescriptorArray = true;
+
+			vkb::PhysicalDeviceSelector selector(instance_ret.value());
+			auto phys_dev_ret =
+				selector.add_required_extension(VK_EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME).
+			    add_required_extension_features(descriptor_indexing_features).select();
+			// Ignore if hardware support isn't true
+			REQUIRE(phys_dev_ret.has_value());
+
+			vkb::DeviceBuilder device_builder(phys_dev_ret.value());
+			auto device_ret = device_builder.build();
+			REQUIRE(device_ret.has_value());
+			vkb::destroy_device(device_ret.value());
+		}
+		vkb::destroy_instance(instance_ret.value());
+	}
+}
+
+#endif
+
 #if defined(VK_API_VERSION_1_2)
 TEST_CASE("Querying Vulkan 1.1 and 1.2 features", "[VkBootstrap.version]") {
 	GIVEN("A working instance") {

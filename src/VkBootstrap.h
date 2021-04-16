@@ -115,90 +115,60 @@ template <typename T> class Result {
 	bool m_init;
 };
 
-struct ExtensionFeatures {
+struct FeaturesContainer {
 
-	struct StructureContainer {
+	FeaturesContainer() = default;
 
-		struct Header {
-			VkStructureType sType;
-			void* pNext;
-		};
+	FeaturesContainer(FeaturesContainer const& other) { copy(other); }
 
-		StructureContainer() = default;
+	FeaturesContainer(FeaturesContainer&& other) { copy(other); }
 
-		StructureContainer (StructureContainer const& other) { copy(other); }
+	FeaturesContainer& operator=(FeaturesContainer const& other) { copy(other); return *this; }
 
-		StructureContainer (StructureContainer&& other) { copy(other); }
+	FeaturesContainer& operator=(FeaturesContainer&& other) { copy(other); return *this; }
 
-		StructureContainer& operator=(StructureContainer const& other) { copy(other); return *this; }
+	template <typename T>
+	static FeaturesContainer make(T src) {
+		FeaturesContainer extension_features;
+		extension_features.set<T>(src);
+		return extension_features;
 
-		StructureContainer& operator=(StructureContainer&& other) { copy(other); return *this; }
+	}
 
-		template <typename T>
-		void set(T const& features) {
-			data.resize(sizeof(T));
-			*reinterpret_cast<T*>(data.data()) = features;
-			count = (sizeof(T) - sizeof(Header)) / sizeof(VkBool32);
-			header = reinterpret_cast<Header*>(data.data());
-			fields = reinterpret_cast<VkBool32*>(data.data() + sizeof(Header));
-		}
+	template <typename T>
+	void set(T const& features) {
+		data.resize(sizeof(T));
+		*reinterpret_cast<T*>(data.data()) = features;
+		count = (sizeof(T) - sizeof(VkBaseOutStructure)) / sizeof(VkBool32);
+		header = reinterpret_cast<VkBaseOutStructure*>(data.data());
+		fields = reinterpret_cast<VkBool32*>(data.data() + sizeof(VkBaseOutStructure));
+	}
 
-		bool match(StructureContainer const& other) const {
-			if(!header || !other.header || header->sType != other.header->sType) { return false; }
-			for(auto i = 0; i < count; ++i) {
-				if(fields[i] == VK_TRUE && other.fields[i] == VK_FALSE) {
-					return false;
-				}
+	bool match(FeaturesContainer const& other) const {
+		if(!header || !other.header || header->sType != other.header->sType) { return false; }
+		for(auto i = 0; i < count; ++i) {
+			if(fields[i] == VK_TRUE && other.fields[i] == VK_FALSE) {
+				return false;
 			}
-			return true;
 		}
+		return true;
+	}
 
-		Header* header = nullptr;
-	private:
+	VkBaseOutStructure* header = nullptr;
+private:
 
-		// Just to avoid having it copied in 4 places
-		void copy(StructureContainer const& other) {
-			data = other.data;
-			count = other.count;
-			header = reinterpret_cast<Header*>(data.data());
-			fields = reinterpret_cast<VkBool32*>(data.data() + sizeof(Header));
-		}
+	// Just to avoid having it copied in 4 places
+	void copy(FeaturesContainer const& other) {
+		data = other.data;
+		count = other.count;
+		header = reinterpret_cast<VkBaseOutStructure*>(data.data());
+		fields = reinterpret_cast<VkBool32*>(data.data() + sizeof(VkBaseOutStructure));
+	}
 
-		std::vector<char> data;
-		VkBool32* fields = nullptr;
-		void* extend = nullptr; // Future proofing
-		int count = 0;
-
-	};
-
-    ExtensionFeatures() = default;
-
-    ExtensionFeatures (ExtensionFeatures const& other) : structure(other.structure) {}
-
-    ExtensionFeatures (ExtensionFeatures&& other) : structure(std::exchange(other.structure, {})) {}
-
-    ExtensionFeatures& operator=(ExtensionFeatures const& other) {
-        structure = other.structure;
-        return *this;
-    }
-
-    ExtensionFeatures& operator=(ExtensionFeatures&& other) {
-		structure = std::exchange(other.structure, {});
-        return *this;
-    }
-
-    template <typename T>
-    static ExtensionFeatures make(T src) {
-
-        ExtensionFeatures extension_features;
-        extension_features.structure.set<T>(src);
-        return extension_features;
-
-    }
-
-    bool match(const ExtensionFeatures& other) const { return structure.match(other.structure); }
-
-	StructureContainer structure;
+	std::vector<char> data;
+	VkBool32* fields = nullptr;
+	void* extend = nullptr; // Future proofing
+	int count = 0;
 
 };
 
@@ -442,7 +412,7 @@ struct PhysicalDevice {
 	uint32_t instance_version = VK_MAKE_VERSION(1, 0, 0);
 	std::vector<const char*> extensions_to_enable;
 	std::vector<VkQueueFamilyProperties> queue_families;
-    std::vector<detail::ExtensionFeatures> extension_features;
+    std::vector<detail::FeaturesContainer> extension_features;
 	bool defer_surface_initialization = false;
 	friend class PhysicalDeviceSelector;
 	friend class DeviceBuilder;
@@ -509,7 +479,7 @@ class PhysicalDeviceSelector {
     PhysicalDeviceSelector& add_required_extension_features(T const& features) {
 		assert(features.sType != 0 &&
 		       "Features struct sType must be filled with the struct's corresponding VkStructureType enum");
-        criteria.extension_features.push_back(detail::ExtensionFeatures::make(features));
+        criteria.extension_features.push_back(detail::FeaturesContainer::make(features));
         return *this;
     }
 #endif
@@ -551,7 +521,7 @@ class PhysicalDeviceSelector {
 		VkPhysicalDeviceMemoryProperties mem_properties{};
 #if defined(VK_API_VERSION_1_1)
 		VkPhysicalDeviceFeatures2 device_features2{};
-        std::vector<detail::ExtensionFeatures> extension_features;
+        std::vector<detail::FeaturesContainer> extension_features;
 #endif
 	};
 
@@ -560,7 +530,7 @@ class PhysicalDeviceSelector {
 
     PhysicalDeviceDesc populate_device_details(uint32_t instance_version,
                                                VkPhysicalDevice phys_device,
-                                               std::vector<detail::ExtensionFeatures> extension_features_as_template) const;
+                                               std::vector<detail::FeaturesContainer> extension_features_as_template) const;
 
 	struct SelectionCriteria {
 		PreferredDeviceType preferred_type = PreferredDeviceType::discrete;
@@ -582,7 +552,7 @@ class PhysicalDeviceSelector {
 		VkPhysicalDeviceFeatures required_features{};
 #if defined(VK_API_VERSION_1_1)
 		VkPhysicalDeviceFeatures2 required_features2{};
-        std::vector<detail::ExtensionFeatures> extension_features;
+        std::vector<detail::FeaturesContainer> extension_features;
 #endif
 		bool defer_surface_initialization = false;
 		bool use_first_gpu_unconditionally = false;

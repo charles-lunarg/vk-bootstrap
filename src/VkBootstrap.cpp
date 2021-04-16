@@ -1010,17 +1010,14 @@ PhysicalDeviceSelector::PhysicalDeviceDesc PhysicalDeviceSelector::populate_devi
 		detail::ExtensionFeatures* prev = nullptr;
         for(auto& extension : desc.extension_features) {
             if(prev != nullptr) {
-                prev->structure->pNext = extension.structure;
+                prev->structure.header->pNext = extension.structure.header;
             }
             prev = &extension;
         }
         if(desc.extension_features.size() > 0) {
-            desc.device_features2.pNext = desc.extension_features[0].structure;
+            desc.device_features2.pNext = desc.extension_features.front().structure.header;
         }
         detail::vulkan_functions().fp_vkGetPhysicalDeviceFeatures2(phys_device, &desc.device_features2);
-        for(auto& extension : desc.extension_features) {
-			extension.update();
-		}
     }
 #endif
 	return desc;
@@ -1407,20 +1404,20 @@ detail::Result<Device> DeviceBuilder::build() const {
 	// Setup the pNexts of all the extension features
 	std::vector<detail::ExtensionFeatures> match = physical_device.extension_features;
     VkPhysicalDeviceFeatures2 local_features2{};
-	VkBaseOutStructure* tail = nullptr;
+	//VkBaseOutStructure* tail = nullptr;
     if (physical_device.instance_version >= VK_MAKE_VERSION(1, 1, 0) &&
 		match.size() > 0) {
 		detail::ExtensionFeatures* prev = nullptr;
         for(auto& extension : match) {
             if(prev != nullptr) {
-                prev->structure->pNext = extension.structure;
+                prev->structure.header->pNext = extension.structure.header;
             }
             prev = &extension;
-			tail = prev->structure;
+			//tail = prev->structure;
         }
         local_features2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
         local_features2.features = physical_device.features;
-        local_features2.pNext = match.front().structure;
+        local_features2.pNext = match.front().structure.header;
         has_phys_dev_features_2 = true;
     }
 #endif
@@ -1440,7 +1437,7 @@ detail::Result<Device> DeviceBuilder::build() const {
     if (has_phys_dev_features_2) {
         device_create_info.pNext = &local_features2;
 		if(info.pNext_chain.size() > 0) {
-			match.back().structure->pNext = info.pNext_chain.front();
+			match.back().structure.header->pNext = info.pNext_chain.front();
 		}
     } else {
 		device_create_info.pEnabledFeatures = &physical_device.features;

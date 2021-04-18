@@ -117,26 +117,16 @@ template <typename T> class Result {
 
 struct GenericFeaturesPNextNode {
 
-	GenericFeaturesPNextNode() : sType(static_cast<VkStructureType>(0)), pNext(nullptr) {
-		for (auto& field : fields) {
-			field = 0;
-		}
-	}
+	GenericFeaturesPNextNode();
+
+	template <typename T> void set(T const& features) { *reinterpret_cast<T*>(this) = features; }
+
+	static bool match(GenericFeaturesPNextNode const& requested, GenericFeaturesPNextNode const& supported);
 
 	VkStructureType sType = static_cast<VkStructureType>(0);
 	void* pNext = nullptr;
 	static const uint32_t field_capacity = 256;
 	VkBool32 fields[field_capacity];
-
-	template <typename T> void set(T const& features) { *reinterpret_cast<T*>(this) = features; }
-
-	static bool match(GenericFeaturesPNextNode const& requested, GenericFeaturesPNextNode const& supported) {
-		assert(requested.sType == supported.sType && "Non-matching sTypes in features nodes!");
-		for (uint32_t i = 0; i < field_capacity; i++) {
-			if (requested.fields[i] && !supported.fields[i]) return false;
-		}
-		return true;
-	}
 };
 
 } // namespace detail

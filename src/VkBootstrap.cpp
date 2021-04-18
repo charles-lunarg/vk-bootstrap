@@ -31,7 +31,6 @@
 #include <dlfcn.h>
 #endif
 
-#include <cstdio>
 #include <mutex>
 
 namespace vkb {
@@ -1265,10 +1264,6 @@ PhysicalDeviceSelector& PhysicalDeviceSelector::set_desired_version(uint32_t maj
 	criteria.desired_version = VK_MAKE_VERSION(major, minor, 0);
 	return *this;
 }
-PhysicalDeviceSelector& PhysicalDeviceSelector::set_required_features(VkPhysicalDeviceFeatures const& features) {
-    criteria.required_features = features;
-    return *this;
-}
 #if defined(VK_API_VERSION_1_2)
 // Just calls add_required_features
 PhysicalDeviceSelector& PhysicalDeviceSelector::set_required_features_11(
@@ -1440,8 +1435,6 @@ detail::Result<Device> DeviceBuilder::build() const {
 				final_pnext_chain.push_back(reinterpret_cast<VkBaseOutStructure*>(&features_node));
 			}
 		}
-	} else {
-        printf("User provided VkPhysicalDeviceFeatures2 instance found in pNext chain. All requirements added via 'add_required_extension_features' will be ignored.");
 	}
 
 	if(!user_defined_phys_dev_features_2 && !has_phys_dev_features_2) {
@@ -1464,6 +1457,10 @@ detail::Result<Device> DeviceBuilder::build() const {
 	device_create_info.pQueueCreateInfos = queueCreateInfos.data();
 	device_create_info.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
 	device_create_info.ppEnabledExtensionNames = extensions.data();
+
+	if(!final_pnext_chain.empty()) {
+        device_create_info.pNext = final_pnext_chain.front();
+	}
 
 	Device device;
 

@@ -538,8 +538,6 @@ class PhysicalDeviceSelector {
 #if defined(VK_API_VERSION_1_1)
     template <typename T>
     PhysicalDeviceSelector& add_required_extension_features(T const& features) {
-		assert(features.sType != 0 &&
-		       "Features struct sType must be filled with the struct's corresponding VkStructureType enum");
         criteria.extension_features.push_back(detail::ExtensionFeatures::make(features));
         return *this;
     }

@@ -124,18 +124,18 @@ struct GenericFeaturesPNextNode {
 
     VkStructureType sType = static_cast<VkStructureType>(0);
     void* pNext = nullptr;
-    VkBool32 fields[256];
+	static const uint32_t field_capacity = 256;
+    VkBool32 fields[field_capacity];
 
     template <typename T>
     void set(T const& features) {
-        GenericFeaturesPNextNode node;
         *reinterpret_cast<T*>(this) = features;
     }
 
     static bool match(GenericFeaturesPNextNode const& requested, GenericFeaturesPNextNode const& supported) {
         assert(requested.sType == supported.sType &&
                "Non-matching sTypes in features nodes!");
-        for (uint32_t i = 0; i < (sizeof(fields) / sizeof(VkBool32)); i++) {
+        for (uint32_t i = 0; i < field_capacity; i++) {
             if (requested.fields[i] && !supported.fields[i]) return false;
         }
         return true;
@@ -362,6 +362,7 @@ struct PhysicalDevice {
 	VkPhysicalDevice physical_device = VK_NULL_HANDLE;
 	VkSurfaceKHR surface = VK_NULL_HANDLE;
 
+	// Note that this reflects selected features carried over from required features, not all features the physical device supports.
 	VkPhysicalDeviceFeatures features{};
 	VkPhysicalDeviceProperties properties{};
 	VkPhysicalDeviceMemoryProperties memory_properties{};
@@ -450,6 +451,8 @@ class PhysicalDeviceSelector {
     PhysicalDeviceSelector& add_required_extension_features(T const& features) {
 		assert(features.sType != 0 &&
 		       "Features struct sType must be filled with the struct's corresponding VkStructureType enum");
+		assert(features.sType != VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2 &&
+		       "Do not pass VkPhysicalDeviceFeatures2 as a required extension feature structure. An instance of this is managed internally for selection criteria and device creation.");
 		detail::GenericFeaturesPNextNode node;
 		node.set(features);
         criteria.extended_features_chain.push_back(node);

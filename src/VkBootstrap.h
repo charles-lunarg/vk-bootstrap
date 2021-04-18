@@ -195,105 +195,6 @@ struct SystemInfo {
 class InstanceBuilder;
 class PhysicalDeviceSelector;
 
-struct ExtensionFeatures {
-
-    using DeleteProc = void(*)(ExtensionFeatures&);
-    using CopyProc = void(*)(const ExtensionFeatures&, ExtensionFeatures&);
-
-    ExtensionFeatures() = default;
-
-    ExtensionFeatures (const ExtensionFeatures& other) : delete_proc(other.delete_proc), copy_proc(other.copy_proc) {
-        if(copy_proc) { copy_proc(other, *this); }
-    }
-
-    ExtensionFeatures (ExtensionFeatures&& other) : delete_proc(std::exchange(other.delete_proc, nullptr)),
-                                                    copy_proc(std::exchange(other.copy_proc, nullptr)),
-                                                    structure(std::exchange(other.structure, nullptr)),
-                                                    fields(std::exchange(other.fields, {})) {}
-
-    ExtensionFeatures& operator=(const ExtensionFeatures& other) {
-        delete_proc = other.delete_proc;
-        copy_proc = other.copy_proc;
-        if(copy_proc) { copy_proc(other, *this); }
-        return *this;
-    }
-
-    ExtensionFeatures& operator=(ExtensionFeatures&& other) {
-        delete_proc = std::exchange(other.delete_proc, nullptr);
-        copy_proc = std::exchange(other.copy_proc, nullptr);
-        structure = std::exchange(other.structure, nullptr);
-        fields = std::exchange(other.fields, {});
-        return *this;
-    }
-
-    template <typename T>
-    static ExtensionFeatures make(T src) {
-
-        ExtensionFeatures extension_features;
-        T* new_features_structure = new T;
-        *new_features_structure = src;
-        extension_features.structure = reinterpret_cast<VkBaseOutStructure*>(new_features_structure);
-
-        auto structure_field_count =
-            (sizeof(T) - (sizeof(VkStructureType) + sizeof(void*))) / sizeof(VkBool32);
-        extension_features.fields.resize(structure_field_count);
-        memcpy(extension_features.fields.data(),
-               reinterpret_cast<unsigned char*>(extension_features.structure) +
-               (sizeof(VkStructureType) + sizeof(void*)),
-               sizeof(VkBool32) * extension_features.fields.size());
-
-        extension_features.delete_proc = [](ExtensionFeatures& features) {
-
-          features.fields = {};
-          if(features.structure) {
-              auto casted = reinterpret_cast<T *>(features.structure);
-              delete casted;
-          }
-
-        };
-
-        extension_features.copy_proc = [](const ExtensionFeatures& src, ExtensionFeatures& dst) {
-
-          if(dst.structure) {
-              auto casted = reinterpret_cast<T*>(dst.structure);
-              delete casted;
-          }
-          T* new_features_structure = new T;
-          *new_features_structure = *reinterpret_cast<T*>(src.structure);
-          dst.structure = reinterpret_cast<VkBaseOutStructure*>(new_features_structure);
-          dst.fields = src.fields;
-
-        };
-
-        return extension_features;
-    }
-
-    bool match(const ExtensionFeatures& other) const {
-
-        if(!structure || !other.structure || structure->sType != other.structure->sType) { return false; }
-
-        for(auto i = 0; i < fields.size(); ++i) {
-            if(fields[i] == VK_TRUE && other.fields[i] == VK_FALSE) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    ~ExtensionFeatures() {
-
-        if(delete_proc) { delete_proc(*this); }
-
-    }
-
-    VkBaseOutStructure* structure = nullptr;
-    std::vector<VkBool32> fields;
-    private:
-    DeleteProc delete_proc = {};
-    CopyProc copy_proc = {};
-};
-
 struct Instance {
 	VkInstance instance = VK_NULL_HANDLE;
 	VkDebugUtilsMessengerEXT debug_messenger = VK_NULL_HANDLE;
@@ -434,6 +335,10 @@ struct PhysicalDevice {
 	VkSurfaceKHR surface = VK_NULL_HANDLE;
 
 	VkPhysicalDeviceFeatures features{};
+#if defined(VK_API_VERSION_1_2)
+	VkPhysicalDeviceVulkan11Features features_11{};
+	VkPhysicalDeviceVulkan12Features features_12{};
+#endif
 	VkPhysicalDeviceProperties properties{};
 	VkPhysicalDeviceMemoryProperties memory_properties{};
 
@@ -454,7 +359,6 @@ struct PhysicalDevice {
 	uint32_t instance_version = VK_MAKE_VERSION(1, 0, 0);
 	std::vector<const char*> extensions_to_enable;
 	std::vector<VkQueueFamilyProperties> queue_families;
-    mutable std::vector<ExtensionFeatures> extension_features;
 	bool defer_surface_initialization = false;
 	friend class PhysicalDeviceSelector;
 	friend class DeviceBuilder;
@@ -515,26 +419,16 @@ class PhysicalDeviceSelector {
 	// Require a physical device that supports a (major, minor) version of vulkan.
 	PhysicalDeviceSelector& set_minimum_version(uint32_t major, uint32_t minor);
 
-// Require a physical device which supports a specific set of general/extension features.
-    template <typename T>
-    PhysicalDeviceSelector& add_required_features(T const& features) {
-#if defined(VK_API_VERSION_1_1)
-        criteria.extension_features.push_back(ExtensionFeatures::make(features));
-#endif
-        return *this;
-    }
-    template<>
-    PhysicalDeviceSelector& add_required_features<VkPhysicalDeviceFeatures>(VkPhysicalDeviceFeatures const& features) {
-        criteria.required_features = features;
-        return *this;
-    }
+	// Require a physical device which supports the features in VkPhysicalDeviceFeatures.
+	PhysicalDeviceSelector& set_required_features(VkPhysicalDeviceFeatures const& features);
+
 #if defined(VK_API_VERSION_1_2)
-    // Require a physical device which supports the features in VkPhysicalDeviceVulkan11Features.
-    // Must have vulkan version 1.2 - This is due to the VkPhysicalDeviceVulkan11Features struct being added in 1.2, not 1.1
-    PhysicalDeviceSelector& set_required_features_11(VkPhysicalDeviceVulkan11Features const& features_11);
-    // Require a physical device which supports the features in VkPhysicalDeviceVulkan12Features.
-    // Must have vulkan version 1.2
-    PhysicalDeviceSelector& set_required_features_12(VkPhysicalDeviceVulkan12Features const& features_12);
+	// Require a physical device which supports the features in VkPhysicalDeviceVulkan11Features.
+	// Must have vulkan version 1.2 - This is due to the VkPhysicalDeviceVulkan11Features struct being added in 1.2, not 1.1
+	PhysicalDeviceSelector& set_required_features_11(VkPhysicalDeviceVulkan11Features const& features_11);
+	// Require a physical device which supports the features in VkPhysicalDeviceVulkan12Features.
+	// Must have vulkan version 1.2
+	PhysicalDeviceSelector& set_required_features_12(VkPhysicalDeviceVulkan12Features const& features_12);
 #endif
 
 	// Used when surface creation happens after physical device selection.
@@ -562,16 +456,13 @@ class PhysicalDeviceSelector {
 		VkPhysicalDeviceMemoryProperties mem_properties{};
 #if defined(VK_API_VERSION_1_1)
 		VkPhysicalDeviceFeatures2 device_features2{};
-        std::vector<ExtensionFeatures> extension_features;
+#endif
+#if defined(VK_API_VERSION_1_2)
+		VkPhysicalDeviceVulkan11Features device_features_11{};
+		VkPhysicalDeviceVulkan12Features device_features_12{};
 #endif
 	};
-
-    // We copy the extension features stored in the selector criteria under the prose of a "template" to
-    // ensure that after fetching everything is compared 1:1 during a match.
-
-    PhysicalDeviceDesc populate_device_details(uint32_t instance_version,
-                                               VkPhysicalDevice phys_device,
-                                               std::vector<ExtensionFeatures> extension_features_as_template) const;
+	PhysicalDeviceDesc populate_device_details(uint32_t instance_version, VkPhysicalDevice phys_device) const;
 
 	struct SelectionCriteria {
 		PreferredDeviceType preferred_type = PreferredDeviceType::discrete;
@@ -593,8 +484,13 @@ class PhysicalDeviceSelector {
 		VkPhysicalDeviceFeatures required_features{};
 #if defined(VK_API_VERSION_1_1)
 		VkPhysicalDeviceFeatures2 required_features2{};
-        std::vector<ExtensionFeatures> extension_features;
 #endif
+
+#if defined(VK_API_VERSION_1_2)
+		VkPhysicalDeviceVulkan11Features required_features_11{};
+		VkPhysicalDeviceVulkan12Features required_features_12{};
+#endif
+
 		bool defer_surface_initialization = false;
 		bool use_first_gpu_unconditionally = false;
 	} criteria;
@@ -651,6 +547,13 @@ class DeviceBuilder {
 	// If a custom queue setup is provided, getting the queues and queue indexes is up to the application.
 	DeviceBuilder& custom_queue_setup(std::vector<CustomQueueDescription> queue_descriptions);
 
+	// Add a structure to the pNext chain of VkDeviceCreateInfo.
+	// The structure must be valid when DeviceBuilder::build() is called.
+	template <typename T> DeviceBuilder& add_pNext(T* structure) {
+		info.pNext_chain.push_back(reinterpret_cast<VkBaseOutStructure*>(structure));
+		return *this;
+	}
+
 	// Provide custom allocation callbacks.
 	DeviceBuilder& set_allocation_callbacks(VkAllocationCallbacks* callbacks);
 
@@ -658,6 +561,8 @@ class DeviceBuilder {
 	PhysicalDevice physical_device;
 	struct DeviceInfo {
 		VkDeviceCreateFlags flags = 0;
+		std::vector<VkBaseOutStructure*> pNext_chain;
+
 		std::vector<CustomQueueDescription> queue_descriptions;
 		VkAllocationCallbacks* allocation_callbacks = VK_NULL_HANDLE;
 	} info;

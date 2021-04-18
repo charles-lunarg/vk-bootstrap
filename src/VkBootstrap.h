@@ -117,73 +117,38 @@ template <typename T> class Result {
 
 struct ExtensionFeatures {
 
-	struct StructureContainer {
-
-		struct Header {
-			VkStructureType sType;
-			void* pNext;
-		};
-
-		StructureContainer() = default;
-
-		StructureContainer (StructureContainer const& other) { copy(other); }
-
-		StructureContainer (StructureContainer&& other) { copy(other); }
-
-		StructureContainer& operator=(StructureContainer const& other) { copy(other); return *this; }
-
-		StructureContainer& operator=(StructureContainer&& other) { copy(other); return *this; }
-
-		template <typename T>
-		void set(T const& features) {
-			data.resize(sizeof(T));
-			*reinterpret_cast<T*>(data.data()) = features;
-			count = (sizeof(T) - sizeof(Header)) / sizeof(VkBool32);
-			header = reinterpret_cast<Header*>(data.data());
-			fields = reinterpret_cast<VkBool32*>(data.data() + sizeof(Header));
-		}
-
-		bool match(StructureContainer const& other) const {
-			if(!header || !other.header || header->sType != other.header->sType) { return false; }
-			for(auto i = 0; i < count; ++i) {
-				if(fields[i] == VK_TRUE && other.fields[i] == VK_FALSE) {
-					return false;
-				}
-			}
-			return true;
-		}
-
-		Header* header = nullptr;
-	private:
-
-		// Just to avoid having it copied in 4 places
-		void copy(StructureContainer const& other) {
-			data = other.data;
-			count = other.count;
-			header = reinterpret_cast<Header*>(data.data());
-			fields = reinterpret_cast<VkBool32*>(data.data() + sizeof(Header));
-		}
-
-		std::vector<char> data;
-		VkBool32* fields = nullptr;
-		void* extend = nullptr; // Future proofing
-		int count = 0;
-
-	};
+    using DeleteProc = void(*)(ExtensionFeatures&);
+    using UpdateProc = void(*)(ExtensionFeatures&);
+    using CopyProc = void(*)(const ExtensionFeatures&, ExtensionFeatures&);
 
     ExtensionFeatures() = default;
 
-    ExtensionFeatures (ExtensionFeatures const& other) : structure(other.structure) {}
+    ExtensionFeatures (const ExtensionFeatures& other) : delete_proc(other.delete_proc),
+                                                         update_proc(other.update_proc),
+                                                         copy_proc(other.copy_proc) {
+        if(copy_proc) { copy_proc(other, *this); }
+    }
 
-    ExtensionFeatures (ExtensionFeatures&& other) : structure(std::exchange(other.structure, {})) {}
+    ExtensionFeatures (ExtensionFeatures&& other) : delete_proc(std::exchange(other.delete_proc, nullptr)),
+                                                    update_proc(std::exchange(other.update_proc, nullptr)),
+                                                    copy_proc(std::exchange(other.copy_proc, nullptr)),
+                                                    structure(std::exchange(other.structure, nullptr)),
+                                                    fields(std::exchange(other.fields, {})) {}
 
-    ExtensionFeatures& operator=(ExtensionFeatures const& other) {
-        structure = other.structure;
+    ExtensionFeatures& operator=(const ExtensionFeatures& other) {
+        delete_proc = other.delete_proc;
+        update_proc = other.update_proc;
+        copy_proc = other.copy_proc;
+        if(copy_proc) { copy_proc(other, *this); }
         return *this;
     }
 
     ExtensionFeatures& operator=(ExtensionFeatures&& other) {
-		structure = std::exchange(other.structure, {});
+        delete_proc = std::exchange(other.delete_proc, nullptr);
+        update_proc = std::exchange(other.update_proc, nullptr);
+        copy_proc = std::exchange(other.copy_proc, nullptr);
+        structure = std::exchange(other.structure, nullptr);
+        fields = std::exchange(other.fields, {});
         return *this;
     }
 
@@ -191,15 +156,81 @@ struct ExtensionFeatures {
     static ExtensionFeatures make(T src) {
 
         ExtensionFeatures extension_features;
-        extension_features.structure.set<T>(src);
+        T* new_features_structure = new T;
+        *new_features_structure = src;
+        extension_features.structure = reinterpret_cast<VkBaseOutStructure*>(new_features_structure);
+
+        extension_features.delete_proc = [](ExtensionFeatures& features) {
+
+          features.fields = {};
+          if(features.structure) {
+              auto casted = reinterpret_cast<T *>(features.structure);
+              delete casted;
+          }
+
+        };
+
+        extension_features.update_proc = [](ExtensionFeatures& features) {
+
+            auto structure_field_count = (sizeof(T) - (sizeof(void*) * 2)) / sizeof(VkBool32);
+            features.fields.resize(structure_field_count);
+            memcpy(features.fields.data(),
+                   reinterpret_cast<unsigned char*>(features.structure) + (sizeof(void*) * 2),
+                   sizeof(VkBool32) * features.fields.size());
+
+        };
+
+        extension_features.copy_proc = [](const ExtensionFeatures& src, ExtensionFeatures& dst) {
+
+          if(dst.structure) {
+              auto casted = reinterpret_cast<T*>(dst.structure);
+              delete casted;
+          }
+          T* new_features_structure = new T;
+          *new_features_structure = *reinterpret_cast<T*>(src.structure);
+          dst.structure = reinterpret_cast<VkBaseOutStructure*>(new_features_structure);
+          dst.fields = src.fields;
+
+        };
+
+		extension_features.update();
+
         return extension_features;
+    }
+
+	void update() {
+
+		if(update_proc) {
+			update_proc(*this);
+		}
+
+	}
+
+    bool match(const ExtensionFeatures& other) const {
+
+        if(!structure || !other.structure || structure->sType != other.structure->sType) { return false; }
+
+        for(auto i = 0; i < fields.size(); ++i) {
+            if(fields[i] == VK_TRUE && other.fields[i] == VK_FALSE) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    ~ExtensionFeatures() {
+
+        if(delete_proc) { delete_proc(*this); }
 
     }
 
-    bool match(const ExtensionFeatures& other) const { return structure.match(other.structure); }
-
-	StructureContainer structure;
-
+    VkBaseOutStructure* structure = nullptr;
+    std::vector<VkBool32> fields;
+    private:
+    DeleteProc delete_proc = nullptr;
+    UpdateProc update_proc = nullptr;
+    CopyProc copy_proc = nullptr;
 };
 
 } // namespace detail

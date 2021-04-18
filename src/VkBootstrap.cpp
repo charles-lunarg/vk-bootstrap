@@ -31,7 +31,6 @@
 #include <dlfcn.h>
 #endif
 
-#include <cstdio>
 #include <mutex>
 
 namespace vkb {

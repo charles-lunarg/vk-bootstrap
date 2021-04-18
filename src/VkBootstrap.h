@@ -117,30 +117,26 @@ template <typename T> class Result {
 
 struct GenericFeaturesPNextNode {
 
-    GenericFeaturesPNextNode() : sType(static_cast<VkStructureType>(0)),
-                                 pNext(nullptr) {
-        memset(fields, 0, sizeof(fields));
-    }
+	GenericFeaturesPNextNode() : sType(static_cast<VkStructureType>(0)), pNext(nullptr) {
+		for (auto& field : fields) {
+			field = 0;
+		}
+	}
 
-    VkStructureType sType = static_cast<VkStructureType>(0);
-    void* pNext = nullptr;
+	VkStructureType sType = static_cast<VkStructureType>(0);
+	void* pNext = nullptr;
 	static const uint32_t field_capacity = 256;
-    VkBool32 fields[field_capacity];
+	VkBool32 fields[field_capacity];
 
-    template <typename T>
-    void set(T const& features) {
-        *reinterpret_cast<T*>(this) = features;
-    }
+	template <typename T> void set(T const& features) { *reinterpret_cast<T*>(this) = features; }
 
-    static bool match(GenericFeaturesPNextNode const& requested, GenericFeaturesPNextNode const& supported) {
-        assert(requested.sType == supported.sType &&
-               "Non-matching sTypes in features nodes!");
-        for (uint32_t i = 0; i < field_capacity; i++) {
-            if (requested.fields[i] && !supported.fields[i]) return false;
-        }
-        return true;
-    }
-
+	static bool match(GenericFeaturesPNextNode const& requested, GenericFeaturesPNextNode const& supported) {
+		assert(requested.sType == supported.sType && "Non-matching sTypes in features nodes!");
+		for (uint32_t i = 0; i < field_capacity; i++) {
+			if (requested.fields[i] && !supported.fields[i]) return false;
+		}
+		return true;
+	}
 };
 
 } // namespace detail
@@ -384,7 +380,7 @@ struct PhysicalDevice {
 	uint32_t instance_version = VK_MAKE_VERSION(1, 0, 0);
 	std::vector<const char*> extensions_to_enable;
 	std::vector<VkQueueFamilyProperties> queue_families;
-    std::vector<detail::GenericFeaturesPNextNode> extended_features_chain;
+	std::vector<detail::GenericFeaturesPNextNode> extended_features_chain;
 	bool defer_surface_initialization = false;
 	friend class PhysicalDeviceSelector;
 	friend class DeviceBuilder;
@@ -447,27 +443,29 @@ class PhysicalDeviceSelector {
 
 	// Require a physical device which supports a specific set of general/extension features.
 #if defined(VK_API_VERSION_1_1)
-    template <typename T>
-    PhysicalDeviceSelector& add_required_extension_features(T const& features) {
-		assert(features.sType != 0 &&
-		       "Features struct sType must be filled with the struct's corresponding VkStructureType enum");
-		assert(features.sType != VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2 &&
-		       "Do not pass VkPhysicalDeviceFeatures2 as a required extension feature structure. An instance of this is managed internally for selection criteria and device creation.");
+	template <typename T>
+	PhysicalDeviceSelector& add_required_extension_features(T const& features) {
+		assert(features.sType != 0 && "Features struct sType must be filled with the struct's "
+		                              "corresponding VkStructureType enum");
+		assert(
+		    features.sType != VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2 &&
+		    "Do not pass VkPhysicalDeviceFeatures2 as a required extension feature structure. An "
+		    "instance of this is managed internally for selection criteria and device creation.");
 		detail::GenericFeaturesPNextNode node;
 		node.set(features);
-        criteria.extended_features_chain.push_back(node);
-        return *this;
-    }
+		criteria.extended_features_chain.push_back(node);
+		return *this;
+	}
 #endif
-    // Require a physical device which supports the features in VkPhysicalDeviceFeatures.
-    PhysicalDeviceSelector& set_required_features(VkPhysicalDeviceFeatures const& features);
+	// Require a physical device which supports the features in VkPhysicalDeviceFeatures.
+	PhysicalDeviceSelector& set_required_features(VkPhysicalDeviceFeatures const& features);
 #if defined(VK_API_VERSION_1_2)
-    // Require a physical device which supports the features in VkPhysicalDeviceVulkan11Features.
-    // Must have vulkan version 1.2 - This is due to the VkPhysicalDeviceVulkan11Features struct being added in 1.2, not 1.1
-    PhysicalDeviceSelector& set_required_features_11(VkPhysicalDeviceVulkan11Features features_11);
-    // Require a physical device which supports the features in VkPhysicalDeviceVulkan12Features.
-    // Must have vulkan version 1.2
-    PhysicalDeviceSelector& set_required_features_12(VkPhysicalDeviceVulkan12Features features_12);
+	// Require a physical device which supports the features in VkPhysicalDeviceVulkan11Features.
+	// Must have vulkan version 1.2 - This is due to the VkPhysicalDeviceVulkan11Features struct being added in 1.2, not 1.1
+	PhysicalDeviceSelector& set_required_features_11(VkPhysicalDeviceVulkan11Features features_11);
+	// Require a physical device which supports the features in VkPhysicalDeviceVulkan12Features.
+	// Must have vulkan version 1.2
+	PhysicalDeviceSelector& set_required_features_12(VkPhysicalDeviceVulkan12Features features_12);
 #endif
 
 	// Used when surface creation happens after physical device selection.
@@ -495,16 +493,16 @@ class PhysicalDeviceSelector {
 		VkPhysicalDeviceMemoryProperties mem_properties{};
 #if defined(VK_API_VERSION_1_1)
 		VkPhysicalDeviceFeatures2 device_features2{};
-        std::vector<detail::GenericFeaturesPNextNode> extended_features_chain;
+		std::vector<detail::GenericFeaturesPNextNode> extended_features_chain;
 #endif
 	};
 
-    // We copy the extension features stored in the selector criteria under the prose of a "template" to
-    // ensure that after fetching everything is compared 1:1 during a match.
+	// We copy the extension features stored in the selector criteria under the prose of a
+	// "template" to ensure that after fetching everything is compared 1:1 during a match.
 
-    PhysicalDeviceDesc populate_device_details(uint32_t instance_version,
-                                               VkPhysicalDevice phys_device,
-                                               std::vector<detail::GenericFeaturesPNextNode> const& src_extended_features_chain) const;
+	PhysicalDeviceDesc populate_device_details(uint32_t instance_version,
+	    VkPhysicalDevice phys_device,
+	    std::vector<detail::GenericFeaturesPNextNode> const& src_extended_features_chain) const;
 
 	struct SelectionCriteria {
 		PreferredDeviceType preferred_type = PreferredDeviceType::discrete;
@@ -526,7 +524,7 @@ class PhysicalDeviceSelector {
 		VkPhysicalDeviceFeatures required_features{};
 #if defined(VK_API_VERSION_1_1)
 		VkPhysicalDeviceFeatures2 required_features2{};
-        std::vector<detail::GenericFeaturesPNextNode> extended_features_chain;
+		std::vector<detail::GenericFeaturesPNextNode> extended_features_chain;
 #endif
 		bool defer_surface_initialization = false;
 		bool use_first_gpu_unconditionally = false;

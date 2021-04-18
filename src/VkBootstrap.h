@@ -115,6 +115,86 @@ template <typename T> class Result {
 	bool m_init;
 };
 
+} // namespace detail
+
+enum class InstanceError {
+	vulkan_unavailable,
+	vulkan_version_unavailable,
+	vulkan_version_1_1_unavailable,
+	vulkan_version_1_2_unavailable,
+	failed_create_instance,
+	failed_create_debug_messenger,
+	requested_layers_not_present,
+	requested_extensions_not_present,
+	windowing_extensions_not_present,
+};
+enum class PhysicalDeviceError {
+	no_surface_provided,
+	failed_enumerate_physical_devices,
+	no_physical_devices_found,
+	no_suitable_device,
+};
+enum class QueueError {
+	present_unavailable,
+	graphics_unavailable,
+	compute_unavailable,
+	transfer_unavailable,
+	queue_index_out_of_range,
+	invalid_queue_family_index
+};
+enum class DeviceError {
+	failed_create_device,
+};
+enum class SwapchainError {
+	surface_handle_not_provided,
+	failed_query_surface_support_details,
+	failed_create_swapchain,
+	failed_get_swapchain_images,
+	failed_create_swapchain_image_views,
+};
+
+std::error_code make_error_code(InstanceError instance_error);
+std::error_code make_error_code(PhysicalDeviceError physical_device_error);
+std::error_code make_error_code(QueueError queue_error);
+std::error_code make_error_code(DeviceError device_error);
+std::error_code make_error_code(SwapchainError swapchain_error);
+
+const char* to_string_message_severity(VkDebugUtilsMessageSeverityFlagBitsEXT s);
+const char* to_string_message_type(VkDebugUtilsMessageTypeFlagsEXT s);
+
+const char* to_string(InstanceError err);
+const char* to_string(PhysicalDeviceError err);
+const char* to_string(QueueError err);
+const char* to_string(DeviceError err);
+const char* to_string(SwapchainError err);
+
+// Gathers useful information about the available vulkan capabilities, like layers and instance
+// extensions. Use this for enabling features conditionally, ie if you would like an extension but
+// can use a fallback if it isn't supported but need to know if support is available first.
+struct SystemInfo {
+	private:
+	SystemInfo();
+
+	public:
+	// Use get_system_info to create a SystemInfo struct. This is because loading vulkan could fail.
+	static detail::Result<SystemInfo> get_system_info();
+	static detail::Result<SystemInfo> get_system_info(PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr);
+
+	// Returns true if a layer is available
+	bool is_layer_available(const char* layer_name) const;
+	// Returns true if an extension is available
+	bool is_extension_available(const char* extension_name) const;
+
+	std::vector<VkLayerProperties> available_layers;
+	std::vector<VkExtensionProperties> available_extensions;
+	bool validation_layers_available = false;
+	bool debug_utils_available = false;
+};
+
+
+class InstanceBuilder;
+class PhysicalDeviceSelector;
+
 struct ExtensionFeatures {
 
     using DeleteProc = void(*)(ExtensionFeatures&);
@@ -232,86 +312,6 @@ struct ExtensionFeatures {
     UpdateProc update_proc = nullptr;
     CopyProc copy_proc = nullptr;
 };
-
-} // namespace detail
-
-enum class InstanceError {
-	vulkan_unavailable,
-	vulkan_version_unavailable,
-	vulkan_version_1_1_unavailable,
-	vulkan_version_1_2_unavailable,
-	failed_create_instance,
-	failed_create_debug_messenger,
-	requested_layers_not_present,
-	requested_extensions_not_present,
-	windowing_extensions_not_present,
-};
-enum class PhysicalDeviceError {
-	no_surface_provided,
-	failed_enumerate_physical_devices,
-	no_physical_devices_found,
-	no_suitable_device,
-};
-enum class QueueError {
-	present_unavailable,
-	graphics_unavailable,
-	compute_unavailable,
-	transfer_unavailable,
-	queue_index_out_of_range,
-	invalid_queue_family_index
-};
-enum class DeviceError {
-	failed_create_device,
-};
-enum class SwapchainError {
-	surface_handle_not_provided,
-	failed_query_surface_support_details,
-	failed_create_swapchain,
-	failed_get_swapchain_images,
-	failed_create_swapchain_image_views,
-};
-
-std::error_code make_error_code(InstanceError instance_error);
-std::error_code make_error_code(PhysicalDeviceError physical_device_error);
-std::error_code make_error_code(QueueError queue_error);
-std::error_code make_error_code(DeviceError device_error);
-std::error_code make_error_code(SwapchainError swapchain_error);
-
-const char* to_string_message_severity(VkDebugUtilsMessageSeverityFlagBitsEXT s);
-const char* to_string_message_type(VkDebugUtilsMessageTypeFlagsEXT s);
-
-const char* to_string(InstanceError err);
-const char* to_string(PhysicalDeviceError err);
-const char* to_string(QueueError err);
-const char* to_string(DeviceError err);
-const char* to_string(SwapchainError err);
-
-// Gathers useful information about the available vulkan capabilities, like layers and instance
-// extensions. Use this for enabling features conditionally, ie if you would like an extension but
-// can use a fallback if it isn't supported but need to know if support is available first.
-struct SystemInfo {
-	private:
-	SystemInfo();
-
-	public:
-	// Use get_system_info to create a SystemInfo struct. This is because loading vulkan could fail.
-	static detail::Result<SystemInfo> get_system_info();
-	static detail::Result<SystemInfo> get_system_info(PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr);
-
-	// Returns true if a layer is available
-	bool is_layer_available(const char* layer_name) const;
-	// Returns true if an extension is available
-	bool is_extension_available(const char* extension_name) const;
-
-	std::vector<VkLayerProperties> available_layers;
-	std::vector<VkExtensionProperties> available_extensions;
-	bool validation_layers_available = false;
-	bool debug_utils_available = false;
-};
-
-
-class InstanceBuilder;
-class PhysicalDeviceSelector;
 
 struct Instance {
 	VkInstance instance = VK_NULL_HANDLE;
@@ -473,7 +473,7 @@ struct PhysicalDevice {
 	uint32_t instance_version = VK_MAKE_VERSION(1, 0, 0);
 	std::vector<const char*> extensions_to_enable;
 	std::vector<VkQueueFamilyProperties> queue_families;
-    std::vector<detail::ExtensionFeatures> extension_features;
+    mutable std::vector<ExtensionFeatures> extension_features;
 	bool defer_surface_initialization = false;
 	friend class PhysicalDeviceSelector;
 	friend class DeviceBuilder;
@@ -534,15 +534,16 @@ class PhysicalDeviceSelector {
 	// Require a physical device that supports a (major, minor) version of vulkan.
 	PhysicalDeviceSelector& set_minimum_version(uint32_t major, uint32_t minor);
 
-	// Require a physical device which supports a specific set of general/extension features.
-#if defined(VK_API_VERSION_1_1)
+// Require a physical device which supports a specific set of general/extension features.
     template <typename T>
-    PhysicalDeviceSelector& add_required_extension_features(T const& features) {
-        criteria.extension_features.push_back(detail::ExtensionFeatures::make(features));
+    PhysicalDeviceSelector& add_required_features(T const& features) {
+#if defined(VK_API_VERSION_1_1)
+        criteria.extension_features.push_back(ExtensionFeatures::make(features));
+#endif
         return *this;
     }
-#endif
-    PhysicalDeviceSelector& set_required_features(VkPhysicalDeviceFeatures const& features) {
+    template<>
+    PhysicalDeviceSelector& add_required_features<VkPhysicalDeviceFeatures>(VkPhysicalDeviceFeatures const& features) {
         criteria.required_features = features;
         return *this;
     }
@@ -580,7 +581,7 @@ class PhysicalDeviceSelector {
 		VkPhysicalDeviceMemoryProperties mem_properties{};
 #if defined(VK_API_VERSION_1_1)
 		VkPhysicalDeviceFeatures2 device_features2{};
-        std::vector<detail::ExtensionFeatures> extension_features;
+        std::vector<ExtensionFeatures> extension_features;
 #endif
 	};
 
@@ -589,7 +590,7 @@ class PhysicalDeviceSelector {
 
     PhysicalDeviceDesc populate_device_details(uint32_t instance_version,
                                                VkPhysicalDevice phys_device,
-                                               std::vector<detail::ExtensionFeatures> extension_features_as_template) const;
+                                               std::vector<ExtensionFeatures> extension_features_as_template) const;
 
 	struct SelectionCriteria {
 		PreferredDeviceType preferred_type = PreferredDeviceType::discrete;
@@ -611,7 +612,7 @@ class PhysicalDeviceSelector {
 		VkPhysicalDeviceFeatures required_features{};
 #if defined(VK_API_VERSION_1_1)
 		VkPhysicalDeviceFeatures2 required_features2{};
-        std::vector<detail::ExtensionFeatures> extension_features;
+        std::vector<ExtensionFeatures> extension_features;
 #endif
 		bool defer_surface_initialization = false;
 		bool use_first_gpu_unconditionally = false;
@@ -669,13 +670,6 @@ class DeviceBuilder {
 	// If a custom queue setup is provided, getting the queues and queue indexes is up to the application.
 	DeviceBuilder& custom_queue_setup(std::vector<CustomQueueDescription> queue_descriptions);
 
-	// Add a structure to the pNext chain of VkDeviceCreateInfo.
-	// The structure must be valid when DeviceBuilder::build() is called.
-	template <typename T> DeviceBuilder& add_pNext(T* structure) {
-		info.pNext_chain.push_back(reinterpret_cast<VkBaseOutStructure*>(structure));
-		return *this;
-	}
-
 	// Provide custom allocation callbacks.
 	DeviceBuilder& set_allocation_callbacks(VkAllocationCallbacks* callbacks);
 
@@ -683,7 +677,6 @@ class DeviceBuilder {
 	PhysicalDevice physical_device;
 	struct DeviceInfo {
 		VkDeviceCreateFlags flags = 0;
-		std::vector<VkBaseOutStructure*> pNext_chain;
 		std::vector<CustomQueueDescription> queue_descriptions;
 		VkAllocationCallbacks* allocation_callbacks = VK_NULL_HANDLE;
 	} info;

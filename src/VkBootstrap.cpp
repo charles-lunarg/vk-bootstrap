@@ -37,6 +37,18 @@ namespace vkb {
 
 namespace detail {
 
+GenericFeaturesPNextNode::GenericFeaturesPNextNode()
+: fields() {} // zero initializes the array of fields
+
+bool GenericFeaturesPNextNode::match(
+    GenericFeaturesPNextNode const& requested, GenericFeaturesPNextNode const& supported) {
+	assert(requested.sType == supported.sType && "Non-matching sTypes in features nodes!");
+	for (uint32_t i = 0; i < field_capacity; i++) {
+		if (requested.fields[i] && !supported.fields[i]) return false;
+	}
+	return true;
+}
+
 class VulkanFunctions {
 	private:
 	std::mutex init_mutex;

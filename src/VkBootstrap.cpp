@@ -846,8 +846,8 @@ std::vector<const char*> check_device_extension_support(
 // clang-format off
 bool supports_features(VkPhysicalDeviceFeatures supported,
                        VkPhysicalDeviceFeatures requested,
-                       std::vector<FeaturesContainer> const& extension_supported,
-                       std::vector<FeaturesContainer> const& extension_requested) {
+                       std::vector<ExtensionFeatures> const& extension_supported,
+                       std::vector<ExtensionFeatures> const& extension_requested) {
     if (requested.robustBufferAccess && !supported.robustBufferAccess) return false;
     if (requested.fullDrawIndexUint32 && !supported.fullDrawIndexUint32) return false;
     if (requested.imageCubeArray && !supported.imageCubeArray) return false;
@@ -992,7 +992,7 @@ uint32_t get_present_queue_index(VkPhysicalDevice const phys_device,
 
 PhysicalDeviceSelector::PhysicalDeviceDesc PhysicalDeviceSelector::populate_device_details(
     uint32_t instance_version, VkPhysicalDevice phys_device,
-    std::vector<detail::FeaturesContainer> extension_features_as_template) const {
+    std::vector<detail::ExtensionFeatures> extension_features_as_template) const {
 	PhysicalDeviceSelector::PhysicalDeviceDesc desc{};
 	desc.phys_device = phys_device;
 	auto queue_families = detail::get_vector_noerror<VkQueueFamilyProperties>(
@@ -1007,15 +1007,15 @@ PhysicalDeviceSelector::PhysicalDeviceDesc PhysicalDeviceSelector::populate_devi
 	desc.device_features2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
     desc.extension_features = extension_features_as_template;
     if (instance_version >= VK_API_VERSION_1_1) {
-		detail::FeaturesContainer* prev = nullptr;
+		detail::ExtensionFeatures* prev = nullptr;
         for(auto& extension : desc.extension_features) {
             if(prev != nullptr) {
-                prev->header->pNext = extension.header;
+                prev->structure.header->pNext = extension.structure.header;
             }
             prev = &extension;
         }
         if(desc.extension_features.size() > 0) {
-            desc.device_features2.pNext = desc.extension_features.front().header;
+            desc.device_features2.pNext = desc.extension_features.front().structure.header;
         }
         detail::vulkan_functions().fp_vkGetPhysicalDeviceFeatures2(phys_device, &desc.device_features2);
     }
@@ -1402,20 +1402,22 @@ detail::Result<Device> DeviceBuilder::build() const {
 
 #if defined(VK_API_VERSION_1_1)
 	// Setup the pNexts of all the extension features
-	std::vector<detail::FeaturesContainer> match = physical_device.extension_features;
+	std::vector<detail::ExtensionFeatures> match = physical_device.extension_features;
     VkPhysicalDeviceFeatures2 local_features2{};
+	//VkBaseOutStructure* tail = nullptr;
     if (physical_device.instance_version >= VK_MAKE_VERSION(1, 1, 0) &&
 		match.size() > 0) {
-		detail::FeaturesContainer* prev = nullptr;
+		detail::ExtensionFeatures* prev = nullptr;
         for(auto& extension : match) {
             if(prev != nullptr) {
-                prev->header->pNext = extension.header;
+                prev->structure.header->pNext = extension.structure.header;
             }
             prev = &extension;
+			//tail = prev->structure;
         }
         local_features2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
         local_features2.features = physical_device.features;
-        local_features2.pNext = match.front().header;
+        local_features2.pNext = match.front().structure.header;
         has_phys_dev_features_2 = true;
     }
 #endif
@@ -1435,7 +1437,7 @@ detail::Result<Device> DeviceBuilder::build() const {
     if (has_phys_dev_features_2) {
         device_create_info.pNext = &local_features2;
 		if(info.pNext_chain.size() > 0) {
-			match.back().header->pNext = info.pNext_chain.front();
+			match.back().structure.header->pNext = info.pNext_chain.front();
 		}
     } else {
 		device_create_info.pEnabledFeatures = &physical_device.features;

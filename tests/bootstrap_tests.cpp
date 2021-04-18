@@ -454,8 +454,10 @@ TEST_CASE("Querying Vulkan 1.1 and 1.2 features", "[VkBootstrap.version]") {
 		// Requires a device that supports multiview and bufferDeviceAddress
 		{
 			VkPhysicalDeviceVulkan11Features features_11{};
+			features_11.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES;
 			features_11.multiview = true;
 			VkPhysicalDeviceVulkan12Features features_12{};
+			features_11.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES;
 			features_12.bufferDeviceAddress = true;
 
 			vkb::PhysicalDeviceSelector selector(instance_ret.value());
@@ -472,6 +474,7 @@ TEST_CASE("Querying Vulkan 1.1 and 1.2 features", "[VkBootstrap.version]") {
 		// protectedMemory should NOT be supported
 		{
 			VkPhysicalDeviceVulkan11Features features_11{};
+			features_11.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES;
 			features_11.protectedMemory = true;
 
 			vkb::PhysicalDeviceSelector selector(instance_ret.value());

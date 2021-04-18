@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
 project(VulkanBootstrap)
 
-option(VK_BOOTSTRAP_WERROR "Enable warnings as errors during compilation" OFF)
-
 add_library(vk-boostrap-vulkan-headers INTERFACE)
 
 set(VK_BOOTSTRAP_VULKAN_HEADER_DIR "" CACHE STRING "Specify the location of the Vulkan-Headers include directory.")
@@ -45,21 +43,13 @@ target_compile_options(vk-bootstrap-compiler-warnings
         $<$<OR:$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>,${VK_BOOTSTRAP_COMPILER_CLANGPP}>:
         -Wall
         -Wextra
+        -pedantic-errors
         -Wconversion
         -Wsign-conversion>
         $<$<CXX_COMPILER_ID:MSVC>:
+        /WX
         /W4>
         )
-
-if(VK_BOOTSTRAP_WERROR)
-  target_compile_options(vk-bootstrap-compiler-warnings
-          INTERFACE
-          $<$<OR:$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>,${VK_BOOTSTRAP_COMPILER_CLANGPP}>:
-          -pedantic-errors>
-          $<$<CXX_COMPILER_ID:MSVC>:
-          /WX>
-          )
-endif()
 
 target_include_directories(vk-bootstrap PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>

@@ -549,10 +549,10 @@ class PhysicalDeviceSelector {
 #if defined(VK_API_VERSION_1_2)
     // Require a physical device which supports the features in VkPhysicalDeviceVulkan11Features.
     // Must have vulkan version 1.2 - This is due to the VkPhysicalDeviceVulkan11Features struct being added in 1.2, not 1.1
-    PhysicalDeviceSelector& set_required_features_11(VkPhysicalDeviceVulkan11Features features_11);
+    PhysicalDeviceSelector& set_required_features_11(VkPhysicalDeviceVulkan11Features& features_11);
     // Require a physical device which supports the features in VkPhysicalDeviceVulkan12Features.
     // Must have vulkan version 1.2
-    PhysicalDeviceSelector& set_required_features_12(VkPhysicalDeviceVulkan12Features features_12);
+    PhysicalDeviceSelector& set_required_features_12(VkPhysicalDeviceVulkan12Features& features_12);
 #endif
 
 	// Used when surface creation happens after physical device selection.

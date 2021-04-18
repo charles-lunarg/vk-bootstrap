@@ -1259,13 +1259,13 @@ PhysicalDeviceSelector& PhysicalDeviceSelector::set_desired_version(uint32_t maj
 #if defined(VK_API_VERSION_1_2)
 // Just calls add_required_features
 PhysicalDeviceSelector& PhysicalDeviceSelector::set_required_features_11(
-    VkPhysicalDeviceVulkan11Features features_11) {
+    VkPhysicalDeviceVulkan11Features& features_11) {
 	features_11.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES;
     add_required_extension_features(features_11);
     return *this;
 }
 PhysicalDeviceSelector& PhysicalDeviceSelector::set_required_features_12(
-    VkPhysicalDeviceVulkan12Features features_12) {
+    VkPhysicalDeviceVulkan12Features& features_12) {
 	features_12.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES;
 	add_required_extension_features(features_12);
     return *this;

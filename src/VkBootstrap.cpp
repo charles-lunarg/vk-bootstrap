@@ -908,7 +908,6 @@ bool supports_features(VkPhysicalDeviceFeatures supported,
     if (requested.inheritedQueries && !supported.inheritedQueries) return false;
 
     for(auto i = 0; i < extension_requested.size(); ++i) {
-        //auto res = extension_requested[i].match(extension_supported[i]);
         auto res = GenericFeaturesPNextNode::match(extension_requested[i], extension_supported[i]);
         if(!res) return false;
     }
@@ -1411,21 +1410,47 @@ detail::Result<Device> DeviceBuilder::build() const {
 		extensions.push_back({ VK_KHR_SWAPCHAIN_EXTENSION_NAME });
 
     bool has_phys_dev_features_2 = false;
+	bool user_defined_phys_dev_features_2 = false;
 	std::vector<VkBaseOutStructure*> final_pnext_chain;
+    VkDeviceCreateInfo device_create_info = {};
 
 #if defined(VK_API_VERSION_1_1)
+    for(auto& pnext : info.pNext_chain) {
+        if(pnext->sType == VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2) {
+            user_defined_phys_dev_features_2 = true;
+			break;
+		}
+    }
+
+    auto physical_device_extension_features_copy = physical_device.extended_features_chain;
     VkPhysicalDeviceFeatures2 local_features2{};
     local_features2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
-	auto physical_device_extension_features_copy = physical_device.extended_features_chain;
-    if (physical_device.instance_version >= VK_MAKE_VERSION(1, 1, 0)) {
-        has_phys_dev_features_2 = true;
-		for(auto& features_node : physical_device_extension_features_copy) {
-			final_pnext_chain.push_back(reinterpret_cast<VkBaseOutStructure*>(&features_node));
+
+	if(!user_defined_phys_dev_features_2) {
+		if (physical_device.instance_version >= VK_MAKE_VERSION(1, 1, 0)) {
+			local_features2.features = physical_device.features;
+            final_pnext_chain.push_back(reinterpret_cast<VkBaseOutStructure*>(&local_features2));
+			has_phys_dev_features_2 = true;
+			for (auto& features_node : physical_device_extension_features_copy) {
+				final_pnext_chain.push_back(reinterpret_cast<VkBaseOutStructure*>(&features_node));
+			}
 		}
+	}
+
+	if(!user_defined_phys_dev_features_2 && !has_phys_dev_features_2) {
+        device_create_info.pEnabledFeatures = &physical_device.features;
 	}
 #endif
 
-	VkDeviceCreateInfo device_create_info = {};
+    for(auto& pnext : info.pNext_chain) {
+        final_pnext_chain.push_back(pnext);
+    }
+
+    detail::setup_pNext_chain(device_create_info, final_pnext_chain);
+    for(auto& node : final_pnext_chain) {
+        assert(node->sType != VK_STRUCTURE_TYPE_APPLICATION_INFO);
+    }
+
 	device_create_info.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
 	device_create_info.flags = info.flags;
 	device_create_info.queueCreateInfoCount = static_cast<uint32_t>(queueCreateInfos.size());
@@ -1433,29 +1458,9 @@ detail::Result<Device> DeviceBuilder::build() const {
 	device_create_info.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
 	device_create_info.ppEnabledExtensionNames = extensions.data();
 
-	for(auto& pnext : info.pNext_chain) {
-        final_pnext_chain.push_back(pnext);
+	if(!final_pnext_chain.empty()) {
+        device_create_info.pNext = final_pnext_chain.front();
 	}
-
-	detail::setup_pNext_chain(device_create_info, final_pnext_chain);
-	for(auto& node : final_pnext_chain) {
-		assert(node->sType != VK_STRUCTURE_TYPE_APPLICATION_INFO);
-	}
-
-#if defined(VK_API_VERSION_1_1)
-	// VUID-VkDeviceCreateInfo-pNext-00373 - don't add pEnabledFeatures if the phys_dev_features_2 is present
-    if (has_phys_dev_features_2) {
-        device_create_info.pNext = &local_features2;
-		if(!final_pnext_chain.empty()) {
-            local_features2.pNext = final_pnext_chain.front();
-		}
-        device_create_info.pEnabledFeatures = nullptr;
-    } else {
-		device_create_info.pEnabledFeatures = &physical_device.features;
-	}
-#else
-	device_create_info.pEnabledFeatures = &physical_device.features;
-#endif
 
 	Device device;
 

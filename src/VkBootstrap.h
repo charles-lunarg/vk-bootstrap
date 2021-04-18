@@ -198,21 +198,26 @@ class PhysicalDeviceSelector;
 struct ExtensionFeatures {
 
     using DeleteProc = void(*)(ExtensionFeatures&);
+    using UpdateProc = void(*)(ExtensionFeatures&);
     using CopyProc = void(*)(const ExtensionFeatures&, ExtensionFeatures&);
 
     ExtensionFeatures() = default;
 
-    ExtensionFeatures (const ExtensionFeatures& other) : delete_proc(other.delete_proc), copy_proc(other.copy_proc) {
+    ExtensionFeatures (const ExtensionFeatures& other) : delete_proc(other.delete_proc),
+                                                         update_proc(other.update_proc),
+                                                         copy_proc(other.copy_proc) {
         if(copy_proc) { copy_proc(other, *this); }
     }
 
     ExtensionFeatures (ExtensionFeatures&& other) : delete_proc(std::exchange(other.delete_proc, nullptr)),
+                                                    update_proc(std::exchange(other.update_proc, nullptr)),
                                                     copy_proc(std::exchange(other.copy_proc, nullptr)),
                                                     structure(std::exchange(other.structure, nullptr)),
                                                     fields(std::exchange(other.fields, {})) {}
 
     ExtensionFeatures& operator=(const ExtensionFeatures& other) {
         delete_proc = other.delete_proc;
+        update_proc = other.update_proc;
         copy_proc = other.copy_proc;
         if(copy_proc) { copy_proc(other, *this); }
         return *this;
@@ -220,6 +225,7 @@ struct ExtensionFeatures {
 
     ExtensionFeatures& operator=(ExtensionFeatures&& other) {
         delete_proc = std::exchange(other.delete_proc, nullptr);
+        update_proc = std::exchange(other.update_proc, nullptr);
         copy_proc = std::exchange(other.copy_proc, nullptr);
         structure = std::exchange(other.structure, nullptr);
         fields = std::exchange(other.fields, {});
@@ -234,14 +240,6 @@ struct ExtensionFeatures {
         *new_features_structure = src;
         extension_features.structure = reinterpret_cast<VkBaseOutStructure*>(new_features_structure);
 
-        auto structure_field_count =
-            (sizeof(T) - (sizeof(VkStructureType) + sizeof(void*))) / sizeof(VkBool32);
-        extension_features.fields.resize(structure_field_count);
-        memcpy(extension_features.fields.data(),
-               reinterpret_cast<unsigned char*>(extension_features.structure) +
-               (sizeof(VkStructureType) + sizeof(void*)),
-               sizeof(VkBool32) * extension_features.fields.size());
-
         extension_features.delete_proc = [](ExtensionFeatures& features) {
 
           features.fields = {};
@@ -249,6 +247,16 @@ struct ExtensionFeatures {
               auto casted = reinterpret_cast<T *>(features.structure);
               delete casted;
           }
+
+        };
+
+        extension_features.update_proc = [](ExtensionFeatures& features) {
+
+            auto structure_field_count = (sizeof(T) - (sizeof(void*) * 2)) / sizeof(VkBool32);
+            features.fields.resize(structure_field_count);
+            memcpy(features.fields.data(),
+                   reinterpret_cast<unsigned char*>(features.structure) + (sizeof(void*) * 2),
+                   sizeof(VkBool32) * features.fields.size());
 
         };
 
@@ -265,8 +273,18 @@ struct ExtensionFeatures {
 
         };
 
+		extension_features.update();
+
         return extension_features;
     }
+
+	void update() {
+
+		if(update_proc) {
+			update_proc(*this);
+		}
+
+	}
 
     bool match(const ExtensionFeatures& other) const {
 
@@ -290,8 +308,9 @@ struct ExtensionFeatures {
     VkBaseOutStructure* structure = nullptr;
     std::vector<VkBool32> fields;
     private:
-    DeleteProc delete_proc = {};
-    CopyProc copy_proc = {};
+    DeleteProc delete_proc = nullptr;
+    UpdateProc update_proc = nullptr;
+    CopyProc copy_proc = nullptr;
 };
 
 struct Instance {

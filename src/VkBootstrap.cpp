@@ -690,9 +690,6 @@ detail::Result<Instance> InstanceBuilder::build() const {
 	VkInstanceCreateInfo instance_create_info = {};
 	instance_create_info.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
 	detail::setup_pNext_chain(instance_create_info, pNext_chain);
-    for(auto& node : pNext_chain) {
-        assert(node->sType != VK_STRUCTURE_TYPE_APPLICATION_INFO);
-    }
 	instance_create_info.flags = info.flags;
 	instance_create_info.pApplicationInfo = &app_info;
 	instance_create_info.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
@@ -849,8 +846,8 @@ std::vector<const char*> check_device_extension_support(
 // clang-format off
 bool supports_features(VkPhysicalDeviceFeatures supported,
                        VkPhysicalDeviceFeatures requested,
-                       std::vector<GenericFeaturesPNextNode> const& extension_supported,
-                       std::vector<GenericFeaturesPNextNode> const& extension_requested) {
+                       std::vector<FeaturesContainer> const& extension_supported,
+                       std::vector<FeaturesContainer> const& extension_requested) {
     if (requested.robustBufferAccess && !supported.robustBufferAccess) return false;
     if (requested.fullDrawIndexUint32 && !supported.fullDrawIndexUint32) return false;
     if (requested.imageCubeArray && !supported.imageCubeArray) return false;
@@ -908,8 +905,7 @@ bool supports_features(VkPhysicalDeviceFeatures supported,
     if (requested.inheritedQueries && !supported.inheritedQueries) return false;
 
     for(auto i = 0; i < extension_requested.size(); ++i) {
-        //auto res = extension_requested[i].match(extension_supported[i]);
-        auto res = GenericFeaturesPNextNode::match(extension_requested[i], extension_supported[i]);
+        auto res = extension_requested[i].match(extension_supported[i]);
         if(!res) return false;
     }
 
@@ -996,7 +992,7 @@ uint32_t get_present_queue_index(VkPhysicalDevice const phys_device,
 
 PhysicalDeviceSelector::PhysicalDeviceDesc PhysicalDeviceSelector::populate_device_details(
     uint32_t instance_version, VkPhysicalDevice phys_device,
-    std::vector<detail::GenericFeaturesPNextNode> const& src_extended_features_chain) const {
+    std::vector<detail::FeaturesContainer> extension_features_as_template) const {
 	PhysicalDeviceSelector::PhysicalDeviceDesc desc{};
 	desc.phys_device = phys_device;
 	auto queue_families = detail::get_vector_noerror<VkQueueFamilyProperties>(
@@ -1008,31 +1004,23 @@ PhysicalDeviceSelector::PhysicalDeviceDesc PhysicalDeviceSelector::populate_devi
 	detail::vulkan_functions().fp_vkGetPhysicalDeviceMemoryProperties(phys_device, &desc.mem_properties);
 
 #if defined(VK_API_VERSION_1_1)
-    desc.device_features2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
-
-    auto fill_chain = src_extended_features_chain;
-
-    if(!fill_chain.empty() && instance_version >= VK_API_VERSION_1_1) {
-
-        detail::GenericFeaturesPNextNode* prev = nullptr;
-        for (auto& extension : fill_chain) {
-            if (prev != nullptr) {
-                prev->pNext = &extension;
+	desc.device_features2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
+    desc.extension_features = extension_features_as_template;
+    if (instance_version >= VK_API_VERSION_1_1) {
+		detail::FeaturesContainer* prev = nullptr;
+        for(auto& extension : desc.extension_features) {
+            if(prev != nullptr) {
+                prev->header->pNext = extension.header;
             }
             prev = &extension;
         }
-
-        VkPhysicalDeviceFeatures2 local_features{};
-        local_features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
-        local_features.pNext = &fill_chain.front();
-
-        detail::vulkan_functions().fp_vkGetPhysicalDeviceFeatures2(phys_device, &local_features);
-
+        if(desc.extension_features.size() > 0) {
+            desc.device_features2.pNext = desc.extension_features.front().header;
+        }
+        detail::vulkan_functions().fp_vkGetPhysicalDeviceFeatures2(phys_device, &desc.device_features2);
     }
-
-    desc.extended_features_chain = fill_chain;
 #endif
-    return desc;
+	return desc;
 }
 
 PhysicalDeviceSelector::Suitable PhysicalDeviceSelector::is_device_suitable(PhysicalDeviceDesc pd) const {
@@ -1101,7 +1089,7 @@ PhysicalDeviceSelector::Suitable PhysicalDeviceSelector::is_device_suitable(Phys
 	}
 
     bool required_features_supported = detail::supports_features(pd.device_features, criteria.required_features,
-                                                                 pd.extended_features_chain, criteria.extended_features_chain);
+                                                                 pd.extension_features, criteria.extension_features);
 	if (!required_features_supported) return Suitable::no;
 
 	bool has_required_memory = false;
@@ -1154,7 +1142,7 @@ detail::Result<PhysicalDevice> PhysicalDeviceSelector::select() const {
 	for (auto& phys_device : physical_devices) {
         phys_device_descriptions.push_back(populate_device_details(instance_info.version,
                                                                    phys_device,
-                                                                   criteria.extended_features_chain));
+                                                                   criteria.extension_features));
 	}
 
 	PhysicalDeviceDesc selected_device{};
@@ -1180,7 +1168,7 @@ detail::Result<PhysicalDevice> PhysicalDeviceSelector::select() const {
 	out_device.physical_device = selected_device.phys_device;
 	out_device.surface = instance_info.surface;
 	out_device.features = criteria.required_features;
-    out_device.extended_features_chain = criteria.extended_features_chain;
+    out_device.extension_features = criteria.extension_features;
 	out_device.properties = selected_device.device_properties;
 	out_device.memory_properties = selected_device.mem_properties;
 	out_device.queue_families = selected_device.queue_families;
@@ -1411,18 +1399,25 @@ detail::Result<Device> DeviceBuilder::build() const {
 		extensions.push_back({ VK_KHR_SWAPCHAIN_EXTENSION_NAME });
 
     bool has_phys_dev_features_2 = false;
-	std::vector<VkBaseOutStructure*> final_pnext_chain;
 
 #if defined(VK_API_VERSION_1_1)
+	// Setup the pNexts of all the extension features
+	std::vector<detail::FeaturesContainer> match = physical_device.extension_features;
     VkPhysicalDeviceFeatures2 local_features2{};
-    local_features2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
-	auto physical_device_extension_features_copy = physical_device.extended_features_chain;
-    if (physical_device.instance_version >= VK_MAKE_VERSION(1, 1, 0)) {
+    if (physical_device.instance_version >= VK_MAKE_VERSION(1, 1, 0) &&
+		match.size() > 0) {
+		detail::FeaturesContainer* prev = nullptr;
+        for(auto& extension : match) {
+            if(prev != nullptr) {
+                prev->header->pNext = extension.header;
+            }
+            prev = &extension;
+        }
+        local_features2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
+        local_features2.features = physical_device.features;
+        local_features2.pNext = match.front().header;
         has_phys_dev_features_2 = true;
-		for(auto& features_node : physical_device_extension_features_copy) {
-			final_pnext_chain.push_back(reinterpret_cast<VkBaseOutStructure*>(&features_node));
-		}
-	}
+    }
 #endif
 
 	VkDeviceCreateInfo device_create_info = {};
@@ -1433,23 +1428,15 @@ detail::Result<Device> DeviceBuilder::build() const {
 	device_create_info.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
 	device_create_info.ppEnabledExtensionNames = extensions.data();
 
-	for(auto& pnext : info.pNext_chain) {
-        final_pnext_chain.push_back(pnext);
-	}
-
-	detail::setup_pNext_chain(device_create_info, final_pnext_chain);
-	for(auto& node : final_pnext_chain) {
-		assert(node->sType != VK_STRUCTURE_TYPE_APPLICATION_INFO);
-	}
+	detail::setup_pNext_chain(device_create_info, info.pNext_chain);
 
 #if defined(VK_API_VERSION_1_1)
 	// VUID-VkDeviceCreateInfo-pNext-00373 - don't add pEnabledFeatures if the phys_dev_features_2 is present
     if (has_phys_dev_features_2) {
         device_create_info.pNext = &local_features2;
-		if(!final_pnext_chain.empty()) {
-            local_features2.pNext = final_pnext_chain.front();
+		if(info.pNext_chain.size() > 0) {
+			match.back().header->pNext = info.pNext_chain.front();
 		}
-        device_create_info.pEnabledFeatures = nullptr;
     } else {
 		device_create_info.pEnabledFeatures = &physical_device.features;
 	}
@@ -1691,9 +1678,6 @@ detail::Result<Swapchain> SwapchainBuilder::build() const {
 	VkSwapchainCreateInfoKHR swapchain_create_info = {};
 	swapchain_create_info.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
 	detail::setup_pNext_chain(swapchain_create_info, info.pNext_chain);
-	for(auto& node : info.pNext_chain) {
-        assert(node->sType != VK_STRUCTURE_TYPE_APPLICATION_INFO);
-	}
 	swapchain_create_info.flags = info.create_flags;
 	swapchain_create_info.surface = info.surface;
 	swapchain_create_info.minImageCount = image_count;

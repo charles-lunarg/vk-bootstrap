@@ -106,7 +106,7 @@ TEST_CASE("instance configuration", "[VkBootstrap.bootstrap]") {
 TEST_CASE("Headless Vulkan", "[VkBootstrap.bootstrap]") {
 	vkb::InstanceBuilder builder;
 
-	auto instance_ret = builder.request_validation_layers().set_headless().use_default_debug_messenger().build();
+	auto instance_ret = builder.request_validation_layers().set_headless().build();
 	REQUIRE(instance_ret.has_value());
 
 	vkb::PhysicalDeviceSelector phys_device_selector(instance_ret.value());
@@ -127,7 +127,7 @@ TEST_CASE("Device Configuration", "[VkBootstrap.bootstrap]") {
 	auto window = create_window_glfw("Device Configuration");
 	vkb::InstanceBuilder builder;
 
-	auto instance_ret = builder.request_validation_layers().require_api_version(1, 1).use_default_debug_messenger().build();
+	auto instance_ret = builder.request_validation_layers().require_api_version(1, 1).build();
 	REQUIRE(instance_ret.has_value());
 	auto surface = create_surface_glfw(instance_ret.value().instance, window);
 
@@ -192,7 +192,7 @@ TEST_CASE("Swapchain", "[VkBootstrap.bootstrap]") {
 		auto window = create_window_glfw("Swapchain");
 		vkb::InstanceBuilder builder;
 
-		auto instance_ret = builder.request_validation_layers().use_default_debug_messenger().build();
+		auto instance_ret = builder.request_validation_layers().build();
 		REQUIRE(instance_ret.has_value());
 		auto surface = create_surface_glfw(instance_ret.value().instance, window);
 
@@ -320,7 +320,7 @@ TEST_CASE("Allocation Callbacks", "[VkBootstrap.bootstrap]") {
 	vkb::InstanceBuilder builder;
 
 	auto instance_ret =
-	    builder.request_validation_layers().set_allocation_callbacks(&allocation_callbacks).use_default_debug_messenger().build();
+	    builder.request_validation_layers().set_allocation_callbacks(&allocation_callbacks).build();
 	REQUIRE(instance_ret.has_value());
 	auto surface = create_surface_glfw(instance_ret.value().instance, window);
 
@@ -417,7 +417,7 @@ TEST_CASE("Querying Required Extension Features", "[VkBootstrap.version]") {
 		vkb::InstanceBuilder builder;
 
 		auto instance_ret =
-			builder.request_validation_layers().require_api_version(1, 2).set_headless().use_default_debug_messenger().build();
+			builder.request_validation_layers().require_api_version(1, 2).set_headless().build();
 		REQUIRE(instance_ret.has_value());
 		// Requires a device that supports runtime descriptor arrays via descriptor indexing extension.
 		{
@@ -449,7 +449,7 @@ TEST_CASE("Querying Vulkan 1.1 and 1.2 features", "[VkBootstrap.version]") {
 		vkb::InstanceBuilder builder;
 
 		auto instance_ret =
-		    builder.request_validation_layers().require_api_version(1, 2).set_headless().use_default_debug_messenger().build();
+		    builder.request_validation_layers().require_api_version(1, 2).set_headless().build();
 		REQUIRE(instance_ret.has_value());
 		// Requires a device that supports multiview and bufferDeviceAddress
 		{

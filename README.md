@@ -86,6 +86,12 @@ Copy the `src/VkBootstrap.h` and `src/VkBootstrap.cpp` files into your project, 
 
 `vk-bootstrap` is *not* a header only library, so no need to worry about macros in the header.
 
+#### Linux specific
+
+vk-bootstrap will load the required symbols at runtime, which requires that the application is linked to the system dynamic link. 
+How the dynamic linker is linked into the project depends on the build system in question.
+If CMake is being used, link vk-bootstrap with `${CMAKE_DL_LIBS}`.
+
 ### git-submodule + CMake
 
 Add this project as a git-submodule into the root directory. Suggested is using a subdirectory to hold all submodules.

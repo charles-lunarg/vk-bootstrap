@@ -83,12 +83,3 @@ TEST_CASE("Dedicated Transfer Queue, Separate Compute", "[UnitTests.queue_select
 		REQUIRE(2 == vkb::detail::get_dedicated_queue_index(families, VK_QUEUE_TRANSFER_BIT, VK_QUEUE_COMPUTE_BIT));
 	}
 }
-
-TEST_CASE("Queue Selection logic", "[VkBootstrap.queue_logic]") {
-	vkb::InstanceBuilder builder;
-
-	auto instance_ret = builder.request_validation_layers().build();
-	REQUIRE(instance_ret.has_value());
-
-	vkb::destroy_instance(instance_ret.value());
-}

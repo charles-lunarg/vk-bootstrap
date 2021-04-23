@@ -1030,14 +1030,18 @@ PhysicalDeviceSelector::Suitable PhysicalDeviceSelector::is_device_suitable(Phys
 	if (criteria.required_version > pd.device_properties.apiVersion) return Suitable::no;
 	if (criteria.desired_version > pd.device_properties.apiVersion) suitable = Suitable::partial;
 
-	bool dedicated_compute =
-	    detail::get_dedicated_queue_index(pd.queue_families, VK_QUEUE_COMPUTE_BIT, VK_QUEUE_TRANSFER_BIT) != detail::QUEUE_INDEX_MAX_VALUE;
-	bool dedicated_transfer =
-	    detail::get_dedicated_queue_index(pd.queue_families, VK_QUEUE_TRANSFER_BIT, VK_QUEUE_COMPUTE_BIT) != detail::QUEUE_INDEX_MAX_VALUE;
+	bool dedicated_compute = detail::get_dedicated_queue_index(pd.queue_families,
+	                             VK_QUEUE_COMPUTE_BIT,
+	                             VK_QUEUE_TRANSFER_BIT) != detail::QUEUE_INDEX_MAX_VALUE;
+	bool dedicated_transfer = detail::get_dedicated_queue_index(pd.queue_families,
+	                              VK_QUEUE_TRANSFER_BIT,
+	                              VK_QUEUE_COMPUTE_BIT) != detail::QUEUE_INDEX_MAX_VALUE;
 	bool separate_compute =
-	    detail::get_separate_queue_index(pd.queue_families, VK_QUEUE_COMPUTE_BIT, VK_QUEUE_TRANSFER_BIT) != detail::QUEUE_INDEX_MAX_VALUE;
+	    detail::get_separate_queue_index(pd.queue_families, VK_QUEUE_COMPUTE_BIT, VK_QUEUE_TRANSFER_BIT) !=
+	    detail::QUEUE_INDEX_MAX_VALUE;
 	bool separate_transfer =
-	    detail::get_separate_queue_index(pd.queue_families, VK_QUEUE_TRANSFER_BIT, VK_QUEUE_COMPUTE_BIT) != detail::QUEUE_INDEX_MAX_VALUE;
+	    detail::get_separate_queue_index(pd.queue_families, VK_QUEUE_TRANSFER_BIT, VK_QUEUE_COMPUTE_BIT) !=
+	    detail::QUEUE_INDEX_MAX_VALUE;
 
 	bool present_queue =
 	    detail::get_present_queue_index(pd.phys_device, instance_info.surface, pd.queue_families) !=
@@ -1282,16 +1286,20 @@ PhysicalDeviceSelector& PhysicalDeviceSelector::select_first_device_unconditiona
 }
 
 bool PhysicalDevice::has_dedicated_compute_queue() const {
-	return detail::get_dedicated_queue_index(queue_families, VK_QUEUE_COMPUTE_BIT, VK_QUEUE_TRANSFER_BIT) != detail::QUEUE_INDEX_MAX_VALUE;
+	return detail::get_dedicated_queue_index(queue_families, VK_QUEUE_COMPUTE_BIT, VK_QUEUE_TRANSFER_BIT) !=
+	       detail::QUEUE_INDEX_MAX_VALUE;
 }
 bool PhysicalDevice::has_separate_compute_queue() const {
-	return detail::get_separate_queue_index(queue_families, VK_QUEUE_COMPUTE_BIT, VK_QUEUE_TRANSFER_BIT) != detail::QUEUE_INDEX_MAX_VALUE;
+	return detail::get_separate_queue_index(queue_families, VK_QUEUE_COMPUTE_BIT, VK_QUEUE_TRANSFER_BIT) !=
+	       detail::QUEUE_INDEX_MAX_VALUE;
 }
 bool PhysicalDevice::has_dedicated_transfer_queue() const {
-	return detail::get_dedicated_queue_index(queue_families, VK_QUEUE_TRANSFER_BIT, VK_QUEUE_COMPUTE_BIT) != detail::QUEUE_INDEX_MAX_VALUE;
+	return detail::get_dedicated_queue_index(queue_families, VK_QUEUE_TRANSFER_BIT, VK_QUEUE_COMPUTE_BIT) !=
+	       detail::QUEUE_INDEX_MAX_VALUE;
 }
 bool PhysicalDevice::has_separate_transfer_queue() const {
-	return detail::get_separate_queue_index(queue_families, VK_QUEUE_TRANSFER_BIT, VK_QUEUE_COMPUTE_BIT) != detail::QUEUE_INDEX_MAX_VALUE;
+	return detail::get_separate_queue_index(queue_families, VK_QUEUE_TRANSFER_BIT, VK_QUEUE_COMPUTE_BIT) !=
+	       detail::QUEUE_INDEX_MAX_VALUE;
 }
 std::vector<VkQueueFamilyProperties> PhysicalDevice::get_queue_families() const {
 	return queue_families;

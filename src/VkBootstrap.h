@@ -614,8 +614,13 @@ void destroy_swapchain(Swapchain const& swapchain);
 
 class SwapchainBuilder {
 	public:
+    // Construct a SwapchainBuilder with a `vkb::Device`
 	explicit SwapchainBuilder(Device const& device);
-	explicit SwapchainBuilder(Device const& device, VkSurfaceKHR const surface);
+	// Construct a SwapchainBuilder with a specific VkSurfaceKHR handle and `vkb::Device`
+    explicit SwapchainBuilder(Device const& device, VkSurfaceKHR const surface);
+    // Construct a SwapchainBuilder with Vulkan handles for the physical device, device, and surface
+    // Optionally can provide the uint32_t indices for the graphics and present queue
+    // Note: The constructor will query the graphics & present queue if the indices are not provided
 	explicit SwapchainBuilder(VkPhysicalDevice const physical_device,
 	    VkDevice const device,
 	    VkSurfaceKHR const surface,

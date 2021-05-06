@@ -1483,7 +1483,7 @@ detail::Result<Device> DeviceBuilder::build() const {
 	device.surface = physical_device.surface;
 	device.queue_families = physical_device.queue_families;
 	device.allocation_callbacks = info.allocation_callbacks;
-	device.fp_vkGetDeviceProcAddr =
+	device.fp_vkGetDeviceProcAddr = detail::vulkan_functions().fp_vkGetDeviceProcAddr;
 	return device;
 }
 DeviceBuilder& DeviceBuilder::custom_queue_setup(std::vector<CustomQueueDescription> queue_descriptions) {

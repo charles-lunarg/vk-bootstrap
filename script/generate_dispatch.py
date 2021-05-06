@@ -1,21 +1,51 @@
 
-#https://raw.githubusercontent.com/KhronosGroup/Vulkan-Headers/master/registry/vk.xml
+#
+# generate_dispatch.py
+# 
+# Copyright © 2021 Cody Goodson (contact@vibimanx.com)
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
+# documentation files (the “Software”), to deal in the Software without restriction, including without
+# limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+# of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT
+# LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+# WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#exclusions
+# This file is a part of VkBootstrap
+# https://github.com/charles-lunarg/vk-bootstrap
+
+# On run, vk.xml is pulled from the master of Khronos's Vulkan-Headers repo and a VkDispatchTable type 
+# is generated and placed in VkBoostrap's source directory
+# https://raw.githubusercontent.com/KhronosGroup/Vulkan-Headers/master/registry/vk.xml
+
+# This script makes use of xmltodict
+# https://github.com/martinblech/xmltodict
+# The module will be auto-installed if not detected
+
+# Exclusions
 exclusions = [
 	'vkGetDeviceProcAddr',
 	'vkCreateDevice',
 	'vkDestroyDevice'
 ]
 
-#install xmltodict
+# Check for/install xmltodict
 import sys
 import subprocess
-import json
+import pkg_resources
 
-subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'xmltodict'])
+installed = {pkg.key for pkg in pkg_resources.working_set}
+xmltodict_missing = {'xmltodict'} - installed
 
-#fetch fresh vk.xml from Khronos repo
+if xmltodict_missing:
+	subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'xmltodict'])
+
+# Fetch fresh vk.xml from Khronos repo
 import urllib.request
 import xmltodict
 
@@ -28,7 +58,7 @@ device_commands = {}
 core_commands = {}
 extension_commands = {}
 
-#Gather all device functions/aliases for filtering core/extension function fetching
+# Gather all device functions/aliases for filtering core/extension function fetching
 commands = vk_xml['registry']['commands']['command']
 aliases = {}
 for command in commands:
@@ -46,12 +76,12 @@ for command in commands:
 	elif '@alias' in command:
 		aliases[command['@alias']] = command['@name'];
 
-#Push the alias name as a device function if the alias exists in device commands
+# Push the alias name as a device function if the alias exists in device commands
 for alias in aliases:
 	if alias in device_commands:
 		device_commands[aliases[alias]] = device_commands[alias]
 
-#Gather all core feature levels and functions
+# Gather all core feature levels and functions
 levels = vk_xml['registry']['feature']
 for level in levels:
 	core_commands[level['@name']] = []
@@ -67,7 +97,7 @@ for level in levels:
 					if require[param]['@name'] in device_commands:
 							core_commands[level['@name']] += [require[param]['@name']]
 
-#Gather extension functions
+# Gather extension functions
 extensions = vk_xml['registry']['extensions']['extension']
 for extension in extensions:
 	extension_name = extension['@name']
@@ -107,7 +137,32 @@ for extension in extensions:
 						elif command['@name'] in device_commands:
 							extension_commands[(extension_name, 'VK_VERSION_1_0')] += [command['@name']]
 
-header = '\n#pragma once\n\n#include <vulkan/vulkan.h>\n\n'
+# Build header
+
+# License
+header = '/* \n'
+header += ' * Copyright © 2021 Cody Goodson (contact@vibimanx.com)\n'
+header += ' * \n'
+header += ' * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated\n'
+header += ' * documentation files (the “Software”), to deal in the Software without restriction, including without\n'
+header += ' * limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies\n'
+header += ' * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\n'
+header += ' * \n'
+header += ' * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\n'
+header += ' * \n'
+header += ' * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT\n'
+header += ' * LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.\n'
+header += ' * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,\n'
+header += ' * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n'
+header += ' * \n'
+header += ' */\n\n'
+
+# Info
+header += '// This file is a part of VkBootstrap\n'
+header += '// https://github.com/charles-lunarg/vk-bootstrap\n\n'
+
+# Content
+header += '\n#pragma once\n\n#include <vulkan/vulkan.h>\n\n'
 header += 'namespace vkb {\n\n'
 header += 'struct DispatchTable {\n'
 header += '\tDispatchTable() = default;\n'
@@ -186,11 +241,7 @@ for level in core_commands:
 				proxy_definition += ', '
 			i += 1
 		proxy_definition += ');\n'
-
 		proxy_definition += '\t}\n'
-		#print(proxy_name)
-		#print(names)
-		#print(proxy_definition)
 
 		pfn_declaration += '\t' + fptr_name + ' ' + member_name + ' = nullptr;\n'
 		pfn_loading += '\t\t' + member_name + ' = (' + fptr_name + ')procAddr(device, "' + command + '");\n'
@@ -221,7 +272,7 @@ for extension in extension_commands:
 header += pfn_loading
 header += '\t}\n'
 header += proxy_definition
-header += 'private:\n\nVkDevice _device = VK_NULL_HANDLE;\n\n'
+header += 'private:\n\n\tVkDevice _device = VK_NULL_HANDLE;\n\n'
 header += pfn_declaration
 header += '};\n\n'
 header += '} // namespace vkb'
@@ -229,22 +280,3 @@ header += '} // namespace vkb'
 header_file = open("../src/VkDispatchTable.h", "w")
 header_file.write(header)
 header_file.close();
-	#print(test)
-
-#print(core_commands)
-#print(core_feature_levels)
-#print(extension_commands)
-#print(device_commands)
-
-#header = ''
-#header = format_header_top(header)
-#for command in device_commands:
-#	header = format_load(header, command);
-#header = format_header_mid(header)
-#for command in device_commands:
-#	header = format_declaration(header, command);
-#header = format_header_bottom(header)
-
-#header_file = open("../src/VkDispatchTable.h", "w")
-#header_file.write(header)
-#header_file.close();

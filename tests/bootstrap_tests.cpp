@@ -187,6 +187,29 @@ TEST_CASE("Device Configuration", "[VkBootstrap.bootstrap]") {
 	vkb::destroy_instance(instance_ret.value());
 }
 
+TEST_CASE("Loading Dispatch Table", "[VkBootstrap.bootstrap]") {
+	vkb::InstanceBuilder builder;
+
+	auto instance_ret =
+		builder.request_validation_layers().require_api_version(1, 0).set_headless().use_default_debug_messenger().build();
+	REQUIRE(instance_ret.has_value());
+	{
+
+		vkb::PhysicalDeviceSelector selector(instance_ret.value());
+		auto phys_dev_ret = selector.select_first_device_unconditionally().select();
+		REQUIRE(phys_dev_ret.has_value());
+
+		vkb::DeviceBuilder device_builder(phys_dev_ret.value());
+		auto device_ret = device_builder.build();
+		REQUIRE(device_ret.has_value());
+
+		vkb::DispatchTable table = device_ret->get_dispatch_table();
+
+		vkb::destroy_device(device_ret.value());
+	}
+	vkb::destroy_instance(instance_ret.value());
+}
+
 TEST_CASE("Swapchain", "[VkBootstrap.bootstrap]") {
 	GIVEN("A working instance, window, surface, and device") {
 		auto window = create_window_glfw("Swapchain");

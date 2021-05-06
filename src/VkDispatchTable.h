@@ -8,2501 +8,2950 @@ namespace vkb {
 struct DispatchTable {
 	DispatchTable() = default;
 	DispatchTable(VkDevice const& device, PFN_vkGetDeviceProcAddr const& procAddr) {
+		_device = device;
 #ifdef VK_VERSION_1_0
-		getDeviceQueue = (PFN_vkGetDeviceQueue)procAddr(device, "vkGetDeviceQueue");
-		queueSubmit = (PFN_vkQueueSubmit)procAddr(device, "vkQueueSubmit");
-		queueWaitIdle = (PFN_vkQueueWaitIdle)procAddr(device, "vkQueueWaitIdle");
-		deviceWaitIdle = (PFN_vkDeviceWaitIdle)procAddr(device, "vkDeviceWaitIdle");
-		allocateMemory = (PFN_vkAllocateMemory)procAddr(device, "vkAllocateMemory");
-		freeMemory = (PFN_vkFreeMemory)procAddr(device, "vkFreeMemory");
-		mapMemory = (PFN_vkMapMemory)procAddr(device, "vkMapMemory");
-		unmapMemory = (PFN_vkUnmapMemory)procAddr(device, "vkUnmapMemory");
-		flushMappedMemoryRanges = (PFN_vkFlushMappedMemoryRanges)procAddr(device, "vkFlushMappedMemoryRanges");
-		invalidateMappedMemoryRanges = (PFN_vkInvalidateMappedMemoryRanges)procAddr(device, "vkInvalidateMappedMemoryRanges");
-		getDeviceMemoryCommitment = (PFN_vkGetDeviceMemoryCommitment)procAddr(device, "vkGetDeviceMemoryCommitment");
-		bindBufferMemory = (PFN_vkBindBufferMemory)procAddr(device, "vkBindBufferMemory");
-		bindImageMemory = (PFN_vkBindImageMemory)procAddr(device, "vkBindImageMemory");
-		getBufferMemoryRequirements = (PFN_vkGetBufferMemoryRequirements)procAddr(device, "vkGetBufferMemoryRequirements");
-		getImageMemoryRequirements = (PFN_vkGetImageMemoryRequirements)procAddr(device, "vkGetImageMemoryRequirements");
-		getImageSparseMemoryRequirements = (PFN_vkGetImageSparseMemoryRequirements)procAddr(device, "vkGetImageSparseMemoryRequirements");
-		queueBindSparse = (PFN_vkQueueBindSparse)procAddr(device, "vkQueueBindSparse");
-		createFence = (PFN_vkCreateFence)procAddr(device, "vkCreateFence");
-		destroyFence = (PFN_vkDestroyFence)procAddr(device, "vkDestroyFence");
-		resetFences = (PFN_vkResetFences)procAddr(device, "vkResetFences");
-		getFenceStatus = (PFN_vkGetFenceStatus)procAddr(device, "vkGetFenceStatus");
-		waitForFences = (PFN_vkWaitForFences)procAddr(device, "vkWaitForFences");
-		createSemaphore = (PFN_vkCreateSemaphore)procAddr(device, "vkCreateSemaphore");
-		destroySemaphore = (PFN_vkDestroySemaphore)procAddr(device, "vkDestroySemaphore");
-		createEvent = (PFN_vkCreateEvent)procAddr(device, "vkCreateEvent");
-		destroyEvent = (PFN_vkDestroyEvent)procAddr(device, "vkDestroyEvent");
-		getEventStatus = (PFN_vkGetEventStatus)procAddr(device, "vkGetEventStatus");
-		setEvent = (PFN_vkSetEvent)procAddr(device, "vkSetEvent");
-		resetEvent = (PFN_vkResetEvent)procAddr(device, "vkResetEvent");
-		createQueryPool = (PFN_vkCreateQueryPool)procAddr(device, "vkCreateQueryPool");
-		destroyQueryPool = (PFN_vkDestroyQueryPool)procAddr(device, "vkDestroyQueryPool");
-		getQueryPoolResults = (PFN_vkGetQueryPoolResults)procAddr(device, "vkGetQueryPoolResults");
-		createBuffer = (PFN_vkCreateBuffer)procAddr(device, "vkCreateBuffer");
-		destroyBuffer = (PFN_vkDestroyBuffer)procAddr(device, "vkDestroyBuffer");
-		createBufferView = (PFN_vkCreateBufferView)procAddr(device, "vkCreateBufferView");
-		destroyBufferView = (PFN_vkDestroyBufferView)procAddr(device, "vkDestroyBufferView");
-		createImage = (PFN_vkCreateImage)procAddr(device, "vkCreateImage");
-		destroyImage = (PFN_vkDestroyImage)procAddr(device, "vkDestroyImage");
-		getImageSubresourceLayout = (PFN_vkGetImageSubresourceLayout)procAddr(device, "vkGetImageSubresourceLayout");
-		createImageView = (PFN_vkCreateImageView)procAddr(device, "vkCreateImageView");
-		destroyImageView = (PFN_vkDestroyImageView)procAddr(device, "vkDestroyImageView");
-		createShaderModule = (PFN_vkCreateShaderModule)procAddr(device, "vkCreateShaderModule");
-		destroyShaderModule = (PFN_vkDestroyShaderModule)procAddr(device, "vkDestroyShaderModule");
-		createPipelineCache = (PFN_vkCreatePipelineCache)procAddr(device, "vkCreatePipelineCache");
-		destroyPipelineCache = (PFN_vkDestroyPipelineCache)procAddr(device, "vkDestroyPipelineCache");
-		getPipelineCacheData = (PFN_vkGetPipelineCacheData)procAddr(device, "vkGetPipelineCacheData");
-		mergePipelineCaches = (PFN_vkMergePipelineCaches)procAddr(device, "vkMergePipelineCaches");
-		createGraphicsPipelines = (PFN_vkCreateGraphicsPipelines)procAddr(device, "vkCreateGraphicsPipelines");
-		createComputePipelines = (PFN_vkCreateComputePipelines)procAddr(device, "vkCreateComputePipelines");
-		destroyPipeline = (PFN_vkDestroyPipeline)procAddr(device, "vkDestroyPipeline");
-		createPipelineLayout = (PFN_vkCreatePipelineLayout)procAddr(device, "vkCreatePipelineLayout");
-		destroyPipelineLayout = (PFN_vkDestroyPipelineLayout)procAddr(device, "vkDestroyPipelineLayout");
-		createSampler = (PFN_vkCreateSampler)procAddr(device, "vkCreateSampler");
-		destroySampler = (PFN_vkDestroySampler)procAddr(device, "vkDestroySampler");
-		createDescriptorSetLayout = (PFN_vkCreateDescriptorSetLayout)procAddr(device, "vkCreateDescriptorSetLayout");
-		destroyDescriptorSetLayout = (PFN_vkDestroyDescriptorSetLayout)procAddr(device, "vkDestroyDescriptorSetLayout");
-		createDescriptorPool = (PFN_vkCreateDescriptorPool)procAddr(device, "vkCreateDescriptorPool");
-		destroyDescriptorPool = (PFN_vkDestroyDescriptorPool)procAddr(device, "vkDestroyDescriptorPool");
-		resetDescriptorPool = (PFN_vkResetDescriptorPool)procAddr(device, "vkResetDescriptorPool");
-		allocateDescriptorSets = (PFN_vkAllocateDescriptorSets)procAddr(device, "vkAllocateDescriptorSets");
-		freeDescriptorSets = (PFN_vkFreeDescriptorSets)procAddr(device, "vkFreeDescriptorSets");
-		updateDescriptorSets = (PFN_vkUpdateDescriptorSets)procAddr(device, "vkUpdateDescriptorSets");
-		createFramebuffer = (PFN_vkCreateFramebuffer)procAddr(device, "vkCreateFramebuffer");
-		destroyFramebuffer = (PFN_vkDestroyFramebuffer)procAddr(device, "vkDestroyFramebuffer");
-		createRenderPass = (PFN_vkCreateRenderPass)procAddr(device, "vkCreateRenderPass");
-		destroyRenderPass = (PFN_vkDestroyRenderPass)procAddr(device, "vkDestroyRenderPass");
-		getRenderAreaGranularity = (PFN_vkGetRenderAreaGranularity)procAddr(device, "vkGetRenderAreaGranularity");
-		createCommandPool = (PFN_vkCreateCommandPool)procAddr(device, "vkCreateCommandPool");
-		destroyCommandPool = (PFN_vkDestroyCommandPool)procAddr(device, "vkDestroyCommandPool");
-		resetCommandPool = (PFN_vkResetCommandPool)procAddr(device, "vkResetCommandPool");
-		allocateCommandBuffers = (PFN_vkAllocateCommandBuffers)procAddr(device, "vkAllocateCommandBuffers");
-		freeCommandBuffers = (PFN_vkFreeCommandBuffers)procAddr(device, "vkFreeCommandBuffers");
-		beginCommandBuffer = (PFN_vkBeginCommandBuffer)procAddr(device, "vkBeginCommandBuffer");
-		endCommandBuffer = (PFN_vkEndCommandBuffer)procAddr(device, "vkEndCommandBuffer");
-		resetCommandBuffer = (PFN_vkResetCommandBuffer)procAddr(device, "vkResetCommandBuffer");
-		cmdBindPipeline = (PFN_vkCmdBindPipeline)procAddr(device, "vkCmdBindPipeline");
-		cmdSetViewport = (PFN_vkCmdSetViewport)procAddr(device, "vkCmdSetViewport");
-		cmdSetScissor = (PFN_vkCmdSetScissor)procAddr(device, "vkCmdSetScissor");
-		cmdSetLineWidth = (PFN_vkCmdSetLineWidth)procAddr(device, "vkCmdSetLineWidth");
-		cmdSetDepthBias = (PFN_vkCmdSetDepthBias)procAddr(device, "vkCmdSetDepthBias");
-		cmdSetBlendConstants = (PFN_vkCmdSetBlendConstants)procAddr(device, "vkCmdSetBlendConstants");
-		cmdSetDepthBounds = (PFN_vkCmdSetDepthBounds)procAddr(device, "vkCmdSetDepthBounds");
-		cmdSetStencilCompareMask = (PFN_vkCmdSetStencilCompareMask)procAddr(device, "vkCmdSetStencilCompareMask");
-		cmdSetStencilWriteMask = (PFN_vkCmdSetStencilWriteMask)procAddr(device, "vkCmdSetStencilWriteMask");
-		cmdSetStencilReference = (PFN_vkCmdSetStencilReference)procAddr(device, "vkCmdSetStencilReference");
-		cmdBindDescriptorSets = (PFN_vkCmdBindDescriptorSets)procAddr(device, "vkCmdBindDescriptorSets");
-		cmdBindIndexBuffer = (PFN_vkCmdBindIndexBuffer)procAddr(device, "vkCmdBindIndexBuffer");
-		cmdBindVertexBuffers = (PFN_vkCmdBindVertexBuffers)procAddr(device, "vkCmdBindVertexBuffers");
-		cmdDraw = (PFN_vkCmdDraw)procAddr(device, "vkCmdDraw");
-		cmdDrawIndexed = (PFN_vkCmdDrawIndexed)procAddr(device, "vkCmdDrawIndexed");
-		cmdDrawIndirect = (PFN_vkCmdDrawIndirect)procAddr(device, "vkCmdDrawIndirect");
-		cmdDrawIndexedIndirect = (PFN_vkCmdDrawIndexedIndirect)procAddr(device, "vkCmdDrawIndexedIndirect");
-		cmdDispatch = (PFN_vkCmdDispatch)procAddr(device, "vkCmdDispatch");
-		cmdDispatchIndirect = (PFN_vkCmdDispatchIndirect)procAddr(device, "vkCmdDispatchIndirect");
-		cmdCopyBuffer = (PFN_vkCmdCopyBuffer)procAddr(device, "vkCmdCopyBuffer");
-		cmdCopyImage = (PFN_vkCmdCopyImage)procAddr(device, "vkCmdCopyImage");
-		cmdBlitImage = (PFN_vkCmdBlitImage)procAddr(device, "vkCmdBlitImage");
-		cmdCopyBufferToImage = (PFN_vkCmdCopyBufferToImage)procAddr(device, "vkCmdCopyBufferToImage");
-		cmdCopyImageToBuffer = (PFN_vkCmdCopyImageToBuffer)procAddr(device, "vkCmdCopyImageToBuffer");
-		cmdUpdateBuffer = (PFN_vkCmdUpdateBuffer)procAddr(device, "vkCmdUpdateBuffer");
-		cmdFillBuffer = (PFN_vkCmdFillBuffer)procAddr(device, "vkCmdFillBuffer");
-		cmdClearColorImage = (PFN_vkCmdClearColorImage)procAddr(device, "vkCmdClearColorImage");
-		cmdClearDepthStencilImage = (PFN_vkCmdClearDepthStencilImage)procAddr(device, "vkCmdClearDepthStencilImage");
-		cmdClearAttachments = (PFN_vkCmdClearAttachments)procAddr(device, "vkCmdClearAttachments");
-		cmdResolveImage = (PFN_vkCmdResolveImage)procAddr(device, "vkCmdResolveImage");
-		cmdSetEvent = (PFN_vkCmdSetEvent)procAddr(device, "vkCmdSetEvent");
-		cmdResetEvent = (PFN_vkCmdResetEvent)procAddr(device, "vkCmdResetEvent");
-		cmdWaitEvents = (PFN_vkCmdWaitEvents)procAddr(device, "vkCmdWaitEvents");
-		cmdPipelineBarrier = (PFN_vkCmdPipelineBarrier)procAddr(device, "vkCmdPipelineBarrier");
-		cmdBeginQuery = (PFN_vkCmdBeginQuery)procAddr(device, "vkCmdBeginQuery");
-		cmdEndQuery = (PFN_vkCmdEndQuery)procAddr(device, "vkCmdEndQuery");
-		cmdResetQueryPool = (PFN_vkCmdResetQueryPool)procAddr(device, "vkCmdResetQueryPool");
-		cmdWriteTimestamp = (PFN_vkCmdWriteTimestamp)procAddr(device, "vkCmdWriteTimestamp");
-		cmdCopyQueryPoolResults = (PFN_vkCmdCopyQueryPoolResults)procAddr(device, "vkCmdCopyQueryPoolResults");
-		cmdPushConstants = (PFN_vkCmdPushConstants)procAddr(device, "vkCmdPushConstants");
-		cmdBeginRenderPass = (PFN_vkCmdBeginRenderPass)procAddr(device, "vkCmdBeginRenderPass");
-		cmdNextSubpass = (PFN_vkCmdNextSubpass)procAddr(device, "vkCmdNextSubpass");
-		cmdEndRenderPass = (PFN_vkCmdEndRenderPass)procAddr(device, "vkCmdEndRenderPass");
-		cmdExecuteCommands = (PFN_vkCmdExecuteCommands)procAddr(device, "vkCmdExecuteCommands");
+		fp_vkGetDeviceQueue = (PFN_vkGetDeviceQueue)procAddr(device, "vkGetDeviceQueue");
+		fp_vkQueueSubmit = (PFN_vkQueueSubmit)procAddr(device, "vkQueueSubmit");
+		fp_vkQueueWaitIdle = (PFN_vkQueueWaitIdle)procAddr(device, "vkQueueWaitIdle");
+		fp_vkDeviceWaitIdle = (PFN_vkDeviceWaitIdle)procAddr(device, "vkDeviceWaitIdle");
+		fp_vkAllocateMemory = (PFN_vkAllocateMemory)procAddr(device, "vkAllocateMemory");
+		fp_vkFreeMemory = (PFN_vkFreeMemory)procAddr(device, "vkFreeMemory");
+		fp_vkMapMemory = (PFN_vkMapMemory)procAddr(device, "vkMapMemory");
+		fp_vkUnmapMemory = (PFN_vkUnmapMemory)procAddr(device, "vkUnmapMemory");
+		fp_vkFlushMappedMemoryRanges = (PFN_vkFlushMappedMemoryRanges)procAddr(device, "vkFlushMappedMemoryRanges");
+		fp_vkInvalidateMappedMemoryRanges = (PFN_vkInvalidateMappedMemoryRanges)procAddr(device, "vkInvalidateMappedMemoryRanges");
+		fp_vkGetDeviceMemoryCommitment = (PFN_vkGetDeviceMemoryCommitment)procAddr(device, "vkGetDeviceMemoryCommitment");
+		fp_vkBindBufferMemory = (PFN_vkBindBufferMemory)procAddr(device, "vkBindBufferMemory");
+		fp_vkBindImageMemory = (PFN_vkBindImageMemory)procAddr(device, "vkBindImageMemory");
+		fp_vkGetBufferMemoryRequirements = (PFN_vkGetBufferMemoryRequirements)procAddr(device, "vkGetBufferMemoryRequirements");
+		fp_vkGetImageMemoryRequirements = (PFN_vkGetImageMemoryRequirements)procAddr(device, "vkGetImageMemoryRequirements");
+		fp_vkGetImageSparseMemoryRequirements = (PFN_vkGetImageSparseMemoryRequirements)procAddr(device, "vkGetImageSparseMemoryRequirements");
+		fp_vkQueueBindSparse = (PFN_vkQueueBindSparse)procAddr(device, "vkQueueBindSparse");
+		fp_vkCreateFence = (PFN_vkCreateFence)procAddr(device, "vkCreateFence");
+		fp_vkDestroyFence = (PFN_vkDestroyFence)procAddr(device, "vkDestroyFence");
+		fp_vkResetFences = (PFN_vkResetFences)procAddr(device, "vkResetFences");
+		fp_vkGetFenceStatus = (PFN_vkGetFenceStatus)procAddr(device, "vkGetFenceStatus");
+		fp_vkWaitForFences = (PFN_vkWaitForFences)procAddr(device, "vkWaitForFences");
+		fp_vkCreateSemaphore = (PFN_vkCreateSemaphore)procAddr(device, "vkCreateSemaphore");
+		fp_vkDestroySemaphore = (PFN_vkDestroySemaphore)procAddr(device, "vkDestroySemaphore");
+		fp_vkCreateEvent = (PFN_vkCreateEvent)procAddr(device, "vkCreateEvent");
+		fp_vkDestroyEvent = (PFN_vkDestroyEvent)procAddr(device, "vkDestroyEvent");
+		fp_vkGetEventStatus = (PFN_vkGetEventStatus)procAddr(device, "vkGetEventStatus");
+		fp_vkSetEvent = (PFN_vkSetEvent)procAddr(device, "vkSetEvent");
+		fp_vkResetEvent = (PFN_vkResetEvent)procAddr(device, "vkResetEvent");
+		fp_vkCreateQueryPool = (PFN_vkCreateQueryPool)procAddr(device, "vkCreateQueryPool");
+		fp_vkDestroyQueryPool = (PFN_vkDestroyQueryPool)procAddr(device, "vkDestroyQueryPool");
+		fp_vkGetQueryPoolResults = (PFN_vkGetQueryPoolResults)procAddr(device, "vkGetQueryPoolResults");
+		fp_vkCreateBuffer = (PFN_vkCreateBuffer)procAddr(device, "vkCreateBuffer");
+		fp_vkDestroyBuffer = (PFN_vkDestroyBuffer)procAddr(device, "vkDestroyBuffer");
+		fp_vkCreateBufferView = (PFN_vkCreateBufferView)procAddr(device, "vkCreateBufferView");
+		fp_vkDestroyBufferView = (PFN_vkDestroyBufferView)procAddr(device, "vkDestroyBufferView");
+		fp_vkCreateImage = (PFN_vkCreateImage)procAddr(device, "vkCreateImage");
+		fp_vkDestroyImage = (PFN_vkDestroyImage)procAddr(device, "vkDestroyImage");
+		fp_vkGetImageSubresourceLayout = (PFN_vkGetImageSubresourceLayout)procAddr(device, "vkGetImageSubresourceLayout");
+		fp_vkCreateImageView = (PFN_vkCreateImageView)procAddr(device, "vkCreateImageView");
+		fp_vkDestroyImageView = (PFN_vkDestroyImageView)procAddr(device, "vkDestroyImageView");
+		fp_vkCreateShaderModule = (PFN_vkCreateShaderModule)procAddr(device, "vkCreateShaderModule");
+		fp_vkDestroyShaderModule = (PFN_vkDestroyShaderModule)procAddr(device, "vkDestroyShaderModule");
+		fp_vkCreatePipelineCache = (PFN_vkCreatePipelineCache)procAddr(device, "vkCreatePipelineCache");
+		fp_vkDestroyPipelineCache = (PFN_vkDestroyPipelineCache)procAddr(device, "vkDestroyPipelineCache");
+		fp_vkGetPipelineCacheData = (PFN_vkGetPipelineCacheData)procAddr(device, "vkGetPipelineCacheData");
+		fp_vkMergePipelineCaches = (PFN_vkMergePipelineCaches)procAddr(device, "vkMergePipelineCaches");
+		fp_vkCreateGraphicsPipelines = (PFN_vkCreateGraphicsPipelines)procAddr(device, "vkCreateGraphicsPipelines");
+		fp_vkCreateComputePipelines = (PFN_vkCreateComputePipelines)procAddr(device, "vkCreateComputePipelines");
+		fp_vkDestroyPipeline = (PFN_vkDestroyPipeline)procAddr(device, "vkDestroyPipeline");
+		fp_vkCreatePipelineLayout = (PFN_vkCreatePipelineLayout)procAddr(device, "vkCreatePipelineLayout");
+		fp_vkDestroyPipelineLayout = (PFN_vkDestroyPipelineLayout)procAddr(device, "vkDestroyPipelineLayout");
+		fp_vkCreateSampler = (PFN_vkCreateSampler)procAddr(device, "vkCreateSampler");
+		fp_vkDestroySampler = (PFN_vkDestroySampler)procAddr(device, "vkDestroySampler");
+		fp_vkCreateDescriptorSetLayout = (PFN_vkCreateDescriptorSetLayout)procAddr(device, "vkCreateDescriptorSetLayout");
+		fp_vkDestroyDescriptorSetLayout = (PFN_vkDestroyDescriptorSetLayout)procAddr(device, "vkDestroyDescriptorSetLayout");
+		fp_vkCreateDescriptorPool = (PFN_vkCreateDescriptorPool)procAddr(device, "vkCreateDescriptorPool");
+		fp_vkDestroyDescriptorPool = (PFN_vkDestroyDescriptorPool)procAddr(device, "vkDestroyDescriptorPool");
+		fp_vkResetDescriptorPool = (PFN_vkResetDescriptorPool)procAddr(device, "vkResetDescriptorPool");
+		fp_vkAllocateDescriptorSets = (PFN_vkAllocateDescriptorSets)procAddr(device, "vkAllocateDescriptorSets");
+		fp_vkFreeDescriptorSets = (PFN_vkFreeDescriptorSets)procAddr(device, "vkFreeDescriptorSets");
+		fp_vkUpdateDescriptorSets = (PFN_vkUpdateDescriptorSets)procAddr(device, "vkUpdateDescriptorSets");
+		fp_vkCreateFramebuffer = (PFN_vkCreateFramebuffer)procAddr(device, "vkCreateFramebuffer");
+		fp_vkDestroyFramebuffer = (PFN_vkDestroyFramebuffer)procAddr(device, "vkDestroyFramebuffer");
+		fp_vkCreateRenderPass = (PFN_vkCreateRenderPass)procAddr(device, "vkCreateRenderPass");
+		fp_vkDestroyRenderPass = (PFN_vkDestroyRenderPass)procAddr(device, "vkDestroyRenderPass");
+		fp_vkGetRenderAreaGranularity = (PFN_vkGetRenderAreaGranularity)procAddr(device, "vkGetRenderAreaGranularity");
+		fp_vkCreateCommandPool = (PFN_vkCreateCommandPool)procAddr(device, "vkCreateCommandPool");
+		fp_vkDestroyCommandPool = (PFN_vkDestroyCommandPool)procAddr(device, "vkDestroyCommandPool");
+		fp_vkResetCommandPool = (PFN_vkResetCommandPool)procAddr(device, "vkResetCommandPool");
+		fp_vkAllocateCommandBuffers = (PFN_vkAllocateCommandBuffers)procAddr(device, "vkAllocateCommandBuffers");
+		fp_vkFreeCommandBuffers = (PFN_vkFreeCommandBuffers)procAddr(device, "vkFreeCommandBuffers");
+		fp_vkBeginCommandBuffer = (PFN_vkBeginCommandBuffer)procAddr(device, "vkBeginCommandBuffer");
+		fp_vkEndCommandBuffer = (PFN_vkEndCommandBuffer)procAddr(device, "vkEndCommandBuffer");
+		fp_vkResetCommandBuffer = (PFN_vkResetCommandBuffer)procAddr(device, "vkResetCommandBuffer");
+		fp_vkCmdBindPipeline = (PFN_vkCmdBindPipeline)procAddr(device, "vkCmdBindPipeline");
+		fp_vkCmdSetViewport = (PFN_vkCmdSetViewport)procAddr(device, "vkCmdSetViewport");
+		fp_vkCmdSetScissor = (PFN_vkCmdSetScissor)procAddr(device, "vkCmdSetScissor");
+		fp_vkCmdSetLineWidth = (PFN_vkCmdSetLineWidth)procAddr(device, "vkCmdSetLineWidth");
+		fp_vkCmdSetDepthBias = (PFN_vkCmdSetDepthBias)procAddr(device, "vkCmdSetDepthBias");
+		fp_vkCmdSetBlendConstants = (PFN_vkCmdSetBlendConstants)procAddr(device, "vkCmdSetBlendConstants");
+		fp_vkCmdSetDepthBounds = (PFN_vkCmdSetDepthBounds)procAddr(device, "vkCmdSetDepthBounds");
+		fp_vkCmdSetStencilCompareMask = (PFN_vkCmdSetStencilCompareMask)procAddr(device, "vkCmdSetStencilCompareMask");
+		fp_vkCmdSetStencilWriteMask = (PFN_vkCmdSetStencilWriteMask)procAddr(device, "vkCmdSetStencilWriteMask");
+		fp_vkCmdSetStencilReference = (PFN_vkCmdSetStencilReference)procAddr(device, "vkCmdSetStencilReference");
+		fp_vkCmdBindDescriptorSets = (PFN_vkCmdBindDescriptorSets)procAddr(device, "vkCmdBindDescriptorSets");
+		fp_vkCmdBindIndexBuffer = (PFN_vkCmdBindIndexBuffer)procAddr(device, "vkCmdBindIndexBuffer");
+		fp_vkCmdBindVertexBuffers = (PFN_vkCmdBindVertexBuffers)procAddr(device, "vkCmdBindVertexBuffers");
+		fp_vkCmdDraw = (PFN_vkCmdDraw)procAddr(device, "vkCmdDraw");
+		fp_vkCmdDrawIndexed = (PFN_vkCmdDrawIndexed)procAddr(device, "vkCmdDrawIndexed");
+		fp_vkCmdDrawIndirect = (PFN_vkCmdDrawIndirect)procAddr(device, "vkCmdDrawIndirect");
+		fp_vkCmdDrawIndexedIndirect = (PFN_vkCmdDrawIndexedIndirect)procAddr(device, "vkCmdDrawIndexedIndirect");
+		fp_vkCmdDispatch = (PFN_vkCmdDispatch)procAddr(device, "vkCmdDispatch");
+		fp_vkCmdDispatchIndirect = (PFN_vkCmdDispatchIndirect)procAddr(device, "vkCmdDispatchIndirect");
+		fp_vkCmdCopyBuffer = (PFN_vkCmdCopyBuffer)procAddr(device, "vkCmdCopyBuffer");
+		fp_vkCmdCopyImage = (PFN_vkCmdCopyImage)procAddr(device, "vkCmdCopyImage");
+		fp_vkCmdBlitImage = (PFN_vkCmdBlitImage)procAddr(device, "vkCmdBlitImage");
+		fp_vkCmdCopyBufferToImage = (PFN_vkCmdCopyBufferToImage)procAddr(device, "vkCmdCopyBufferToImage");
+		fp_vkCmdCopyImageToBuffer = (PFN_vkCmdCopyImageToBuffer)procAddr(device, "vkCmdCopyImageToBuffer");
+		fp_vkCmdUpdateBuffer = (PFN_vkCmdUpdateBuffer)procAddr(device, "vkCmdUpdateBuffer");
+		fp_vkCmdFillBuffer = (PFN_vkCmdFillBuffer)procAddr(device, "vkCmdFillBuffer");
+		fp_vkCmdClearColorImage = (PFN_vkCmdClearColorImage)procAddr(device, "vkCmdClearColorImage");
+		fp_vkCmdClearDepthStencilImage = (PFN_vkCmdClearDepthStencilImage)procAddr(device, "vkCmdClearDepthStencilImage");
+		fp_vkCmdClearAttachments = (PFN_vkCmdClearAttachments)procAddr(device, "vkCmdClearAttachments");
+		fp_vkCmdResolveImage = (PFN_vkCmdResolveImage)procAddr(device, "vkCmdResolveImage");
+		fp_vkCmdSetEvent = (PFN_vkCmdSetEvent)procAddr(device, "vkCmdSetEvent");
+		fp_vkCmdResetEvent = (PFN_vkCmdResetEvent)procAddr(device, "vkCmdResetEvent");
+		fp_vkCmdWaitEvents = (PFN_vkCmdWaitEvents)procAddr(device, "vkCmdWaitEvents");
+		fp_vkCmdPipelineBarrier = (PFN_vkCmdPipelineBarrier)procAddr(device, "vkCmdPipelineBarrier");
+		fp_vkCmdBeginQuery = (PFN_vkCmdBeginQuery)procAddr(device, "vkCmdBeginQuery");
+		fp_vkCmdEndQuery = (PFN_vkCmdEndQuery)procAddr(device, "vkCmdEndQuery");
+		fp_vkCmdResetQueryPool = (PFN_vkCmdResetQueryPool)procAddr(device, "vkCmdResetQueryPool");
+		fp_vkCmdWriteTimestamp = (PFN_vkCmdWriteTimestamp)procAddr(device, "vkCmdWriteTimestamp");
+		fp_vkCmdCopyQueryPoolResults = (PFN_vkCmdCopyQueryPoolResults)procAddr(device, "vkCmdCopyQueryPoolResults");
+		fp_vkCmdPushConstants = (PFN_vkCmdPushConstants)procAddr(device, "vkCmdPushConstants");
+		fp_vkCmdBeginRenderPass = (PFN_vkCmdBeginRenderPass)procAddr(device, "vkCmdBeginRenderPass");
+		fp_vkCmdNextSubpass = (PFN_vkCmdNextSubpass)procAddr(device, "vkCmdNextSubpass");
+		fp_vkCmdEndRenderPass = (PFN_vkCmdEndRenderPass)procAddr(device, "vkCmdEndRenderPass");
+		fp_vkCmdExecuteCommands = (PFN_vkCmdExecuteCommands)procAddr(device, "vkCmdExecuteCommands");
 #endif
 #ifdef VK_VERSION_1_1
-		bindBufferMemory2 = (PFN_vkBindBufferMemory2)procAddr(device, "vkBindBufferMemory2");
-		bindImageMemory2 = (PFN_vkBindImageMemory2)procAddr(device, "vkBindImageMemory2");
-		getDeviceGroupPeerMemoryFeatures = (PFN_vkGetDeviceGroupPeerMemoryFeatures)procAddr(device, "vkGetDeviceGroupPeerMemoryFeatures");
-		cmdSetDeviceMask = (PFN_vkCmdSetDeviceMask)procAddr(device, "vkCmdSetDeviceMask");
-		cmdDispatchBase = (PFN_vkCmdDispatchBase)procAddr(device, "vkCmdDispatchBase");
-		getImageMemoryRequirements2 = (PFN_vkGetImageMemoryRequirements2)procAddr(device, "vkGetImageMemoryRequirements2");
-		getBufferMemoryRequirements2 = (PFN_vkGetBufferMemoryRequirements2)procAddr(device, "vkGetBufferMemoryRequirements2");
-		getImageSparseMemoryRequirements2 = (PFN_vkGetImageSparseMemoryRequirements2)procAddr(device, "vkGetImageSparseMemoryRequirements2");
-		trimCommandPool = (PFN_vkTrimCommandPool)procAddr(device, "vkTrimCommandPool");
-		getDeviceQueue2 = (PFN_vkGetDeviceQueue2)procAddr(device, "vkGetDeviceQueue2");
-		createSamplerYcbcrConversion = (PFN_vkCreateSamplerYcbcrConversion)procAddr(device, "vkCreateSamplerYcbcrConversion");
-		destroySamplerYcbcrConversion = (PFN_vkDestroySamplerYcbcrConversion)procAddr(device, "vkDestroySamplerYcbcrConversion");
-		createDescriptorUpdateTemplate = (PFN_vkCreateDescriptorUpdateTemplate)procAddr(device, "vkCreateDescriptorUpdateTemplate");
-		destroyDescriptorUpdateTemplate = (PFN_vkDestroyDescriptorUpdateTemplate)procAddr(device, "vkDestroyDescriptorUpdateTemplate");
-		updateDescriptorSetWithTemplate = (PFN_vkUpdateDescriptorSetWithTemplate)procAddr(device, "vkUpdateDescriptorSetWithTemplate");
-		getDescriptorSetLayoutSupport = (PFN_vkGetDescriptorSetLayoutSupport)procAddr(device, "vkGetDescriptorSetLayoutSupport");
+		fp_vkBindBufferMemory2 = (PFN_vkBindBufferMemory2)procAddr(device, "vkBindBufferMemory2");
+		fp_vkBindImageMemory2 = (PFN_vkBindImageMemory2)procAddr(device, "vkBindImageMemory2");
+		fp_vkGetDeviceGroupPeerMemoryFeatures = (PFN_vkGetDeviceGroupPeerMemoryFeatures)procAddr(device, "vkGetDeviceGroupPeerMemoryFeatures");
+		fp_vkCmdSetDeviceMask = (PFN_vkCmdSetDeviceMask)procAddr(device, "vkCmdSetDeviceMask");
+		fp_vkCmdDispatchBase = (PFN_vkCmdDispatchBase)procAddr(device, "vkCmdDispatchBase");
+		fp_vkGetImageMemoryRequirements2 = (PFN_vkGetImageMemoryRequirements2)procAddr(device, "vkGetImageMemoryRequirements2");
+		fp_vkGetBufferMemoryRequirements2 = (PFN_vkGetBufferMemoryRequirements2)procAddr(device, "vkGetBufferMemoryRequirements2");
+		fp_vkGetImageSparseMemoryRequirements2 = (PFN_vkGetImageSparseMemoryRequirements2)procAddr(device, "vkGetImageSparseMemoryRequirements2");
+		fp_vkTrimCommandPool = (PFN_vkTrimCommandPool)procAddr(device, "vkTrimCommandPool");
+		fp_vkGetDeviceQueue2 = (PFN_vkGetDeviceQueue2)procAddr(device, "vkGetDeviceQueue2");
+		fp_vkCreateSamplerYcbcrConversion = (PFN_vkCreateSamplerYcbcrConversion)procAddr(device, "vkCreateSamplerYcbcrConversion");
+		fp_vkDestroySamplerYcbcrConversion = (PFN_vkDestroySamplerYcbcrConversion)procAddr(device, "vkDestroySamplerYcbcrConversion");
+		fp_vkCreateDescriptorUpdateTemplate = (PFN_vkCreateDescriptorUpdateTemplate)procAddr(device, "vkCreateDescriptorUpdateTemplate");
+		fp_vkDestroyDescriptorUpdateTemplate = (PFN_vkDestroyDescriptorUpdateTemplate)procAddr(device, "vkDestroyDescriptorUpdateTemplate");
+		fp_vkUpdateDescriptorSetWithTemplate = (PFN_vkUpdateDescriptorSetWithTemplate)procAddr(device, "vkUpdateDescriptorSetWithTemplate");
+		fp_vkGetDescriptorSetLayoutSupport = (PFN_vkGetDescriptorSetLayoutSupport)procAddr(device, "vkGetDescriptorSetLayoutSupport");
 #endif
 #ifdef VK_VERSION_1_2
-		cmdDrawIndirectCount = (PFN_vkCmdDrawIndirectCount)procAddr(device, "vkCmdDrawIndirectCount");
-		cmdDrawIndexedIndirectCount = (PFN_vkCmdDrawIndexedIndirectCount)procAddr(device, "vkCmdDrawIndexedIndirectCount");
-		createRenderPass2 = (PFN_vkCreateRenderPass2)procAddr(device, "vkCreateRenderPass2");
-		cmdBeginRenderPass2 = (PFN_vkCmdBeginRenderPass2)procAddr(device, "vkCmdBeginRenderPass2");
-		cmdNextSubpass2 = (PFN_vkCmdNextSubpass2)procAddr(device, "vkCmdNextSubpass2");
-		cmdEndRenderPass2 = (PFN_vkCmdEndRenderPass2)procAddr(device, "vkCmdEndRenderPass2");
-		resetQueryPool = (PFN_vkResetQueryPool)procAddr(device, "vkResetQueryPool");
-		getSemaphoreCounterValue = (PFN_vkGetSemaphoreCounterValue)procAddr(device, "vkGetSemaphoreCounterValue");
-		waitSemaphores = (PFN_vkWaitSemaphores)procAddr(device, "vkWaitSemaphores");
-		signalSemaphore = (PFN_vkSignalSemaphore)procAddr(device, "vkSignalSemaphore");
-		getBufferDeviceAddress = (PFN_vkGetBufferDeviceAddress)procAddr(device, "vkGetBufferDeviceAddress");
-		getBufferOpaqueCaptureAddress = (PFN_vkGetBufferOpaqueCaptureAddress)procAddr(device, "vkGetBufferOpaqueCaptureAddress");
-		getDeviceMemoryOpaqueCaptureAddress = (PFN_vkGetDeviceMemoryOpaqueCaptureAddress)procAddr(device, "vkGetDeviceMemoryOpaqueCaptureAddress");
+		fp_vkCmdDrawIndirectCount = (PFN_vkCmdDrawIndirectCount)procAddr(device, "vkCmdDrawIndirectCount");
+		fp_vkCmdDrawIndexedIndirectCount = (PFN_vkCmdDrawIndexedIndirectCount)procAddr(device, "vkCmdDrawIndexedIndirectCount");
+		fp_vkCreateRenderPass2 = (PFN_vkCreateRenderPass2)procAddr(device, "vkCreateRenderPass2");
+		fp_vkCmdBeginRenderPass2 = (PFN_vkCmdBeginRenderPass2)procAddr(device, "vkCmdBeginRenderPass2");
+		fp_vkCmdNextSubpass2 = (PFN_vkCmdNextSubpass2)procAddr(device, "vkCmdNextSubpass2");
+		fp_vkCmdEndRenderPass2 = (PFN_vkCmdEndRenderPass2)procAddr(device, "vkCmdEndRenderPass2");
+		fp_vkResetQueryPool = (PFN_vkResetQueryPool)procAddr(device, "vkResetQueryPool");
+		fp_vkGetSemaphoreCounterValue = (PFN_vkGetSemaphoreCounterValue)procAddr(device, "vkGetSemaphoreCounterValue");
+		fp_vkWaitSemaphores = (PFN_vkWaitSemaphores)procAddr(device, "vkWaitSemaphores");
+		fp_vkSignalSemaphore = (PFN_vkSignalSemaphore)procAddr(device, "vkSignalSemaphore");
+		fp_vkGetBufferDeviceAddress = (PFN_vkGetBufferDeviceAddress)procAddr(device, "vkGetBufferDeviceAddress");
+		fp_vkGetBufferOpaqueCaptureAddress = (PFN_vkGetBufferOpaqueCaptureAddress)procAddr(device, "vkGetBufferOpaqueCaptureAddress");
+		fp_vkGetDeviceMemoryOpaqueCaptureAddress = (PFN_vkGetDeviceMemoryOpaqueCaptureAddress)procAddr(device, "vkGetDeviceMemoryOpaqueCaptureAddress");
 #endif
 #if defined(VK_KHR_swapchain) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCreateSwapchainKHR_LOAD
 #define PFN_vkCreateSwapchainKHR_LOAD
-		createSwapchainKHR = (PFN_vkCreateSwapchainKHR)procAddr(device, "vkCreateSwapchainKHR");
+		fp_vkCreateSwapchainKHR = (PFN_vkCreateSwapchainKHR)procAddr(device, "vkCreateSwapchainKHR");
 #endif
 #ifndef PFN_vkDestroySwapchainKHR_LOAD
 #define PFN_vkDestroySwapchainKHR_LOAD
-		destroySwapchainKHR = (PFN_vkDestroySwapchainKHR)procAddr(device, "vkDestroySwapchainKHR");
+		fp_vkDestroySwapchainKHR = (PFN_vkDestroySwapchainKHR)procAddr(device, "vkDestroySwapchainKHR");
 #endif
 #ifndef PFN_vkGetSwapchainImagesKHR_LOAD
 #define PFN_vkGetSwapchainImagesKHR_LOAD
-		getSwapchainImagesKHR = (PFN_vkGetSwapchainImagesKHR)procAddr(device, "vkGetSwapchainImagesKHR");
+		fp_vkGetSwapchainImagesKHR = (PFN_vkGetSwapchainImagesKHR)procAddr(device, "vkGetSwapchainImagesKHR");
 #endif
 #ifndef PFN_vkAcquireNextImageKHR_LOAD
 #define PFN_vkAcquireNextImageKHR_LOAD
-		acquireNextImageKHR = (PFN_vkAcquireNextImageKHR)procAddr(device, "vkAcquireNextImageKHR");
+		fp_vkAcquireNextImageKHR = (PFN_vkAcquireNextImageKHR)procAddr(device, "vkAcquireNextImageKHR");
 #endif
 #ifndef PFN_vkQueuePresentKHR_LOAD
 #define PFN_vkQueuePresentKHR_LOAD
-		queuePresentKHR = (PFN_vkQueuePresentKHR)procAddr(device, "vkQueuePresentKHR");
+		fp_vkQueuePresentKHR = (PFN_vkQueuePresentKHR)procAddr(device, "vkQueuePresentKHR");
 #endif
 #endif
 #if defined(VK_KHR_swapchain) && defined(VK_VERSION_1_1)
 #ifndef PFN_vkGetDeviceGroupPresentCapabilitiesKHR_LOAD
 #define PFN_vkGetDeviceGroupPresentCapabilitiesKHR_LOAD
-		getDeviceGroupPresentCapabilitiesKHR = (PFN_vkGetDeviceGroupPresentCapabilitiesKHR)procAddr(device, "vkGetDeviceGroupPresentCapabilitiesKHR");
+		fp_vkGetDeviceGroupPresentCapabilitiesKHR = (PFN_vkGetDeviceGroupPresentCapabilitiesKHR)procAddr(device, "vkGetDeviceGroupPresentCapabilitiesKHR");
 #endif
 #ifndef PFN_vkGetDeviceGroupSurfacePresentModesKHR_LOAD
 #define PFN_vkGetDeviceGroupSurfacePresentModesKHR_LOAD
-		getDeviceGroupSurfacePresentModesKHR = (PFN_vkGetDeviceGroupSurfacePresentModesKHR)procAddr(device, "vkGetDeviceGroupSurfacePresentModesKHR");
+		fp_vkGetDeviceGroupSurfacePresentModesKHR = (PFN_vkGetDeviceGroupSurfacePresentModesKHR)procAddr(device, "vkGetDeviceGroupSurfacePresentModesKHR");
 #endif
 #ifndef PFN_vkAcquireNextImage2KHR_LOAD
 #define PFN_vkAcquireNextImage2KHR_LOAD
-		acquireNextImage2KHR = (PFN_vkAcquireNextImage2KHR)procAddr(device, "vkAcquireNextImage2KHR");
+		fp_vkAcquireNextImage2KHR = (PFN_vkAcquireNextImage2KHR)procAddr(device, "vkAcquireNextImage2KHR");
 #endif
 #endif
 #if defined(VK_KHR_display_swapchain) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCreateSharedSwapchainsKHR_LOAD
 #define PFN_vkCreateSharedSwapchainsKHR_LOAD
-		createSharedSwapchainsKHR = (PFN_vkCreateSharedSwapchainsKHR)procAddr(device, "vkCreateSharedSwapchainsKHR");
+		fp_vkCreateSharedSwapchainsKHR = (PFN_vkCreateSharedSwapchainsKHR)procAddr(device, "vkCreateSharedSwapchainsKHR");
 #endif
 #endif
 #if defined(VK_ANDROID_native_buffer) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetSwapchainGrallocUsageANDROID_LOAD
 #define PFN_vkGetSwapchainGrallocUsageANDROID_LOAD
-		getSwapchainGrallocUsageANDROID = (PFN_vkGetSwapchainGrallocUsageANDROID)procAddr(device, "vkGetSwapchainGrallocUsageANDROID");
+		fp_vkGetSwapchainGrallocUsageANDROID = (PFN_vkGetSwapchainGrallocUsageANDROID)procAddr(device, "vkGetSwapchainGrallocUsageANDROID");
 #endif
 #ifndef PFN_vkAcquireImageANDROID_LOAD
 #define PFN_vkAcquireImageANDROID_LOAD
-		acquireImageANDROID = (PFN_vkAcquireImageANDROID)procAddr(device, "vkAcquireImageANDROID");
+		fp_vkAcquireImageANDROID = (PFN_vkAcquireImageANDROID)procAddr(device, "vkAcquireImageANDROID");
 #endif
 #ifndef PFN_vkQueueSignalReleaseImageANDROID_LOAD
 #define PFN_vkQueueSignalReleaseImageANDROID_LOAD
-		queueSignalReleaseImageANDROID = (PFN_vkQueueSignalReleaseImageANDROID)procAddr(device, "vkQueueSignalReleaseImageANDROID");
+		fp_vkQueueSignalReleaseImageANDROID = (PFN_vkQueueSignalReleaseImageANDROID)procAddr(device, "vkQueueSignalReleaseImageANDROID");
 #endif
 #ifndef PFN_vkGetSwapchainGrallocUsage2ANDROID_LOAD
 #define PFN_vkGetSwapchainGrallocUsage2ANDROID_LOAD
-		getSwapchainGrallocUsage2ANDROID = (PFN_vkGetSwapchainGrallocUsage2ANDROID)procAddr(device, "vkGetSwapchainGrallocUsage2ANDROID");
+		fp_vkGetSwapchainGrallocUsage2ANDROID = (PFN_vkGetSwapchainGrallocUsage2ANDROID)procAddr(device, "vkGetSwapchainGrallocUsage2ANDROID");
 #endif
 #endif
 #if defined(VK_EXT_debug_marker) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkDebugMarkerSetObjectTagEXT_LOAD
 #define PFN_vkDebugMarkerSetObjectTagEXT_LOAD
-		debugMarkerSetObjectTagEXT = (PFN_vkDebugMarkerSetObjectTagEXT)procAddr(device, "vkDebugMarkerSetObjectTagEXT");
+		fp_vkDebugMarkerSetObjectTagEXT = (PFN_vkDebugMarkerSetObjectTagEXT)procAddr(device, "vkDebugMarkerSetObjectTagEXT");
 #endif
 #ifndef PFN_vkDebugMarkerSetObjectNameEXT_LOAD
 #define PFN_vkDebugMarkerSetObjectNameEXT_LOAD
-		debugMarkerSetObjectNameEXT = (PFN_vkDebugMarkerSetObjectNameEXT)procAddr(device, "vkDebugMarkerSetObjectNameEXT");
+		fp_vkDebugMarkerSetObjectNameEXT = (PFN_vkDebugMarkerSetObjectNameEXT)procAddr(device, "vkDebugMarkerSetObjectNameEXT");
 #endif
 #ifndef PFN_vkCmdDebugMarkerBeginEXT_LOAD
 #define PFN_vkCmdDebugMarkerBeginEXT_LOAD
-		cmdDebugMarkerBeginEXT = (PFN_vkCmdDebugMarkerBeginEXT)procAddr(device, "vkCmdDebugMarkerBeginEXT");
+		fp_vkCmdDebugMarkerBeginEXT = (PFN_vkCmdDebugMarkerBeginEXT)procAddr(device, "vkCmdDebugMarkerBeginEXT");
 #endif
 #ifndef PFN_vkCmdDebugMarkerEndEXT_LOAD
 #define PFN_vkCmdDebugMarkerEndEXT_LOAD
-		cmdDebugMarkerEndEXT = (PFN_vkCmdDebugMarkerEndEXT)procAddr(device, "vkCmdDebugMarkerEndEXT");
+		fp_vkCmdDebugMarkerEndEXT = (PFN_vkCmdDebugMarkerEndEXT)procAddr(device, "vkCmdDebugMarkerEndEXT");
 #endif
 #ifndef PFN_vkCmdDebugMarkerInsertEXT_LOAD
 #define PFN_vkCmdDebugMarkerInsertEXT_LOAD
-		cmdDebugMarkerInsertEXT = (PFN_vkCmdDebugMarkerInsertEXT)procAddr(device, "vkCmdDebugMarkerInsertEXT");
+		fp_vkCmdDebugMarkerInsertEXT = (PFN_vkCmdDebugMarkerInsertEXT)procAddr(device, "vkCmdDebugMarkerInsertEXT");
 #endif
 #endif
 #if defined(VK_KHR_video_queue) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCreateVideoSessionKHR_LOAD
 #define PFN_vkCreateVideoSessionKHR_LOAD
-		createVideoSessionKHR = (PFN_vkCreateVideoSessionKHR)procAddr(device, "vkCreateVideoSessionKHR");
+		fp_vkCreateVideoSessionKHR = (PFN_vkCreateVideoSessionKHR)procAddr(device, "vkCreateVideoSessionKHR");
 #endif
 #ifndef PFN_vkDestroyVideoSessionKHR_LOAD
 #define PFN_vkDestroyVideoSessionKHR_LOAD
-		destroyVideoSessionKHR = (PFN_vkDestroyVideoSessionKHR)procAddr(device, "vkDestroyVideoSessionKHR");
+		fp_vkDestroyVideoSessionKHR = (PFN_vkDestroyVideoSessionKHR)procAddr(device, "vkDestroyVideoSessionKHR");
 #endif
 #ifndef PFN_vkGetVideoSessionMemoryRequirementsKHR_LOAD
 #define PFN_vkGetVideoSessionMemoryRequirementsKHR_LOAD
-		getVideoSessionMemoryRequirementsKHR = (PFN_vkGetVideoSessionMemoryRequirementsKHR)procAddr(device, "vkGetVideoSessionMemoryRequirementsKHR");
+		fp_vkGetVideoSessionMemoryRequirementsKHR = (PFN_vkGetVideoSessionMemoryRequirementsKHR)procAddr(device, "vkGetVideoSessionMemoryRequirementsKHR");
 #endif
 #ifndef PFN_vkBindVideoSessionMemoryKHR_LOAD
 #define PFN_vkBindVideoSessionMemoryKHR_LOAD
-		bindVideoSessionMemoryKHR = (PFN_vkBindVideoSessionMemoryKHR)procAddr(device, "vkBindVideoSessionMemoryKHR");
+		fp_vkBindVideoSessionMemoryKHR = (PFN_vkBindVideoSessionMemoryKHR)procAddr(device, "vkBindVideoSessionMemoryKHR");
 #endif
 #ifndef PFN_vkCreateVideoSessionParametersKHR_LOAD
 #define PFN_vkCreateVideoSessionParametersKHR_LOAD
-		createVideoSessionParametersKHR = (PFN_vkCreateVideoSessionParametersKHR)procAddr(device, "vkCreateVideoSessionParametersKHR");
+		fp_vkCreateVideoSessionParametersKHR = (PFN_vkCreateVideoSessionParametersKHR)procAddr(device, "vkCreateVideoSessionParametersKHR");
 #endif
 #ifndef PFN_vkUpdateVideoSessionParametersKHR_LOAD
 #define PFN_vkUpdateVideoSessionParametersKHR_LOAD
-		updateVideoSessionParametersKHR = (PFN_vkUpdateVideoSessionParametersKHR)procAddr(device, "vkUpdateVideoSessionParametersKHR");
+		fp_vkUpdateVideoSessionParametersKHR = (PFN_vkUpdateVideoSessionParametersKHR)procAddr(device, "vkUpdateVideoSessionParametersKHR");
 #endif
 #ifndef PFN_vkDestroyVideoSessionParametersKHR_LOAD
 #define PFN_vkDestroyVideoSessionParametersKHR_LOAD
-		destroyVideoSessionParametersKHR = (PFN_vkDestroyVideoSessionParametersKHR)procAddr(device, "vkDestroyVideoSessionParametersKHR");
+		fp_vkDestroyVideoSessionParametersKHR = (PFN_vkDestroyVideoSessionParametersKHR)procAddr(device, "vkDestroyVideoSessionParametersKHR");
 #endif
 #ifndef PFN_vkCmdBeginVideoCodingKHR_LOAD
 #define PFN_vkCmdBeginVideoCodingKHR_LOAD
-		cmdBeginVideoCodingKHR = (PFN_vkCmdBeginVideoCodingKHR)procAddr(device, "vkCmdBeginVideoCodingKHR");
+		fp_vkCmdBeginVideoCodingKHR = (PFN_vkCmdBeginVideoCodingKHR)procAddr(device, "vkCmdBeginVideoCodingKHR");
 #endif
 #ifndef PFN_vkCmdEndVideoCodingKHR_LOAD
 #define PFN_vkCmdEndVideoCodingKHR_LOAD
-		cmdEndVideoCodingKHR = (PFN_vkCmdEndVideoCodingKHR)procAddr(device, "vkCmdEndVideoCodingKHR");
+		fp_vkCmdEndVideoCodingKHR = (PFN_vkCmdEndVideoCodingKHR)procAddr(device, "vkCmdEndVideoCodingKHR");
 #endif
 #ifndef PFN_vkCmdControlVideoCodingKHR_LOAD
 #define PFN_vkCmdControlVideoCodingKHR_LOAD
-		cmdControlVideoCodingKHR = (PFN_vkCmdControlVideoCodingKHR)procAddr(device, "vkCmdControlVideoCodingKHR");
+		fp_vkCmdControlVideoCodingKHR = (PFN_vkCmdControlVideoCodingKHR)procAddr(device, "vkCmdControlVideoCodingKHR");
 #endif
 #endif
 #if defined(VK_KHR_video_decode_queue) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdDecodeVideoKHR_LOAD
 #define PFN_vkCmdDecodeVideoKHR_LOAD
-		cmdDecodeVideoKHR = (PFN_vkCmdDecodeVideoKHR)procAddr(device, "vkCmdDecodeVideoKHR");
+		fp_vkCmdDecodeVideoKHR = (PFN_vkCmdDecodeVideoKHR)procAddr(device, "vkCmdDecodeVideoKHR");
 #endif
 #endif
 #if defined(VK_KHR_video_encode_queue) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdEncodeVideoKHR_LOAD
 #define PFN_vkCmdEncodeVideoKHR_LOAD
-		cmdEncodeVideoKHR = (PFN_vkCmdEncodeVideoKHR)procAddr(device, "vkCmdEncodeVideoKHR");
+		fp_vkCmdEncodeVideoKHR = (PFN_vkCmdEncodeVideoKHR)procAddr(device, "vkCmdEncodeVideoKHR");
 #endif
 #endif
 #if defined(VK_EXT_transform_feedback) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdBindTransformFeedbackBuffersEXT_LOAD
 #define PFN_vkCmdBindTransformFeedbackBuffersEXT_LOAD
-		cmdBindTransformFeedbackBuffersEXT = (PFN_vkCmdBindTransformFeedbackBuffersEXT)procAddr(device, "vkCmdBindTransformFeedbackBuffersEXT");
+		fp_vkCmdBindTransformFeedbackBuffersEXT = (PFN_vkCmdBindTransformFeedbackBuffersEXT)procAddr(device, "vkCmdBindTransformFeedbackBuffersEXT");
 #endif
 #ifndef PFN_vkCmdBeginTransformFeedbackEXT_LOAD
 #define PFN_vkCmdBeginTransformFeedbackEXT_LOAD
-		cmdBeginTransformFeedbackEXT = (PFN_vkCmdBeginTransformFeedbackEXT)procAddr(device, "vkCmdBeginTransformFeedbackEXT");
+		fp_vkCmdBeginTransformFeedbackEXT = (PFN_vkCmdBeginTransformFeedbackEXT)procAddr(device, "vkCmdBeginTransformFeedbackEXT");
 #endif
 #ifndef PFN_vkCmdEndTransformFeedbackEXT_LOAD
 #define PFN_vkCmdEndTransformFeedbackEXT_LOAD
-		cmdEndTransformFeedbackEXT = (PFN_vkCmdEndTransformFeedbackEXT)procAddr(device, "vkCmdEndTransformFeedbackEXT");
+		fp_vkCmdEndTransformFeedbackEXT = (PFN_vkCmdEndTransformFeedbackEXT)procAddr(device, "vkCmdEndTransformFeedbackEXT");
 #endif
 #ifndef PFN_vkCmdBeginQueryIndexedEXT_LOAD
 #define PFN_vkCmdBeginQueryIndexedEXT_LOAD
-		cmdBeginQueryIndexedEXT = (PFN_vkCmdBeginQueryIndexedEXT)procAddr(device, "vkCmdBeginQueryIndexedEXT");
+		fp_vkCmdBeginQueryIndexedEXT = (PFN_vkCmdBeginQueryIndexedEXT)procAddr(device, "vkCmdBeginQueryIndexedEXT");
 #endif
 #ifndef PFN_vkCmdEndQueryIndexedEXT_LOAD
 #define PFN_vkCmdEndQueryIndexedEXT_LOAD
-		cmdEndQueryIndexedEXT = (PFN_vkCmdEndQueryIndexedEXT)procAddr(device, "vkCmdEndQueryIndexedEXT");
+		fp_vkCmdEndQueryIndexedEXT = (PFN_vkCmdEndQueryIndexedEXT)procAddr(device, "vkCmdEndQueryIndexedEXT");
 #endif
 #ifndef PFN_vkCmdDrawIndirectByteCountEXT_LOAD
 #define PFN_vkCmdDrawIndirectByteCountEXT_LOAD
-		cmdDrawIndirectByteCountEXT = (PFN_vkCmdDrawIndirectByteCountEXT)procAddr(device, "vkCmdDrawIndirectByteCountEXT");
+		fp_vkCmdDrawIndirectByteCountEXT = (PFN_vkCmdDrawIndirectByteCountEXT)procAddr(device, "vkCmdDrawIndirectByteCountEXT");
 #endif
 #endif
 #if defined(VK_NVX_image_view_handle) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetImageViewHandleNVX_LOAD
 #define PFN_vkGetImageViewHandleNVX_LOAD
-		getImageViewHandleNVX = (PFN_vkGetImageViewHandleNVX)procAddr(device, "vkGetImageViewHandleNVX");
+		fp_vkGetImageViewHandleNVX = (PFN_vkGetImageViewHandleNVX)procAddr(device, "vkGetImageViewHandleNVX");
 #endif
 #ifndef PFN_vkGetImageViewAddressNVX_LOAD
 #define PFN_vkGetImageViewAddressNVX_LOAD
-		getImageViewAddressNVX = (PFN_vkGetImageViewAddressNVX)procAddr(device, "vkGetImageViewAddressNVX");
+		fp_vkGetImageViewAddressNVX = (PFN_vkGetImageViewAddressNVX)procAddr(device, "vkGetImageViewAddressNVX");
 #endif
 #endif
 #if defined(VK_AMD_draw_indirect_count) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdDrawIndirectCountAMD_LOAD
 #define PFN_vkCmdDrawIndirectCountAMD_LOAD
-		cmdDrawIndirectCountAMD = (PFN_vkCmdDrawIndirectCountAMD)procAddr(device, "vkCmdDrawIndirectCountAMD");
+		fp_vkCmdDrawIndirectCountAMD = (PFN_vkCmdDrawIndirectCountAMD)procAddr(device, "vkCmdDrawIndirectCountAMD");
 #endif
 #ifndef PFN_vkCmdDrawIndexedIndirectCountAMD_LOAD
 #define PFN_vkCmdDrawIndexedIndirectCountAMD_LOAD
-		cmdDrawIndexedIndirectCountAMD = (PFN_vkCmdDrawIndexedIndirectCountAMD)procAddr(device, "vkCmdDrawIndexedIndirectCountAMD");
+		fp_vkCmdDrawIndexedIndirectCountAMD = (PFN_vkCmdDrawIndexedIndirectCountAMD)procAddr(device, "vkCmdDrawIndexedIndirectCountAMD");
 #endif
 #endif
 #if defined(VK_AMD_shader_info) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetShaderInfoAMD_LOAD
 #define PFN_vkGetShaderInfoAMD_LOAD
-		getShaderInfoAMD = (PFN_vkGetShaderInfoAMD)procAddr(device, "vkGetShaderInfoAMD");
+		fp_vkGetShaderInfoAMD = (PFN_vkGetShaderInfoAMD)procAddr(device, "vkGetShaderInfoAMD");
 #endif
 #endif
 #if defined(VK_NV_external_memory_win32) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetMemoryWin32HandleNV_LOAD
 #define PFN_vkGetMemoryWin32HandleNV_LOAD
-		getMemoryWin32HandleNV = (PFN_vkGetMemoryWin32HandleNV)procAddr(device, "vkGetMemoryWin32HandleNV");
+		fp_vkGetMemoryWin32HandleNV = (PFN_vkGetMemoryWin32HandleNV)procAddr(device, "vkGetMemoryWin32HandleNV");
 #endif
 #endif
 #if defined(VK_KHR_device_group) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetDeviceGroupPeerMemoryFeaturesKHR_LOAD
 #define PFN_vkGetDeviceGroupPeerMemoryFeaturesKHR_LOAD
-		getDeviceGroupPeerMemoryFeaturesKHR = (PFN_vkGetDeviceGroupPeerMemoryFeaturesKHR)procAddr(device, "vkGetDeviceGroupPeerMemoryFeaturesKHR");
+		fp_vkGetDeviceGroupPeerMemoryFeaturesKHR = (PFN_vkGetDeviceGroupPeerMemoryFeaturesKHR)procAddr(device, "vkGetDeviceGroupPeerMemoryFeaturesKHR");
 #endif
 #ifndef PFN_vkCmdSetDeviceMaskKHR_LOAD
 #define PFN_vkCmdSetDeviceMaskKHR_LOAD
-		cmdSetDeviceMaskKHR = (PFN_vkCmdSetDeviceMaskKHR)procAddr(device, "vkCmdSetDeviceMaskKHR");
+		fp_vkCmdSetDeviceMaskKHR = (PFN_vkCmdSetDeviceMaskKHR)procAddr(device, "vkCmdSetDeviceMaskKHR");
 #endif
 #ifndef PFN_vkCmdDispatchBaseKHR_LOAD
 #define PFN_vkCmdDispatchBaseKHR_LOAD
-		cmdDispatchBaseKHR = (PFN_vkCmdDispatchBaseKHR)procAddr(device, "vkCmdDispatchBaseKHR");
+		fp_vkCmdDispatchBaseKHR = (PFN_vkCmdDispatchBaseKHR)procAddr(device, "vkCmdDispatchBaseKHR");
 #endif
 #ifndef PFN_vkGetDeviceGroupPresentCapabilitiesKHR_LOAD
 #define PFN_vkGetDeviceGroupPresentCapabilitiesKHR_LOAD
-		getDeviceGroupPresentCapabilitiesKHR = (PFN_vkGetDeviceGroupPresentCapabilitiesKHR)procAddr(device, "vkGetDeviceGroupPresentCapabilitiesKHR");
+		fp_vkGetDeviceGroupPresentCapabilitiesKHR = (PFN_vkGetDeviceGroupPresentCapabilitiesKHR)procAddr(device, "vkGetDeviceGroupPresentCapabilitiesKHR");
 #endif
 #ifndef PFN_vkGetDeviceGroupSurfacePresentModesKHR_LOAD
 #define PFN_vkGetDeviceGroupSurfacePresentModesKHR_LOAD
-		getDeviceGroupSurfacePresentModesKHR = (PFN_vkGetDeviceGroupSurfacePresentModesKHR)procAddr(device, "vkGetDeviceGroupSurfacePresentModesKHR");
+		fp_vkGetDeviceGroupSurfacePresentModesKHR = (PFN_vkGetDeviceGroupSurfacePresentModesKHR)procAddr(device, "vkGetDeviceGroupSurfacePresentModesKHR");
 #endif
 #ifndef PFN_vkAcquireNextImage2KHR_LOAD
 #define PFN_vkAcquireNextImage2KHR_LOAD
-		acquireNextImage2KHR = (PFN_vkAcquireNextImage2KHR)procAddr(device, "vkAcquireNextImage2KHR");
+		fp_vkAcquireNextImage2KHR = (PFN_vkAcquireNextImage2KHR)procAddr(device, "vkAcquireNextImage2KHR");
 #endif
 #endif
 #if defined(VK_KHR_maintenance1) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkTrimCommandPoolKHR_LOAD
 #define PFN_vkTrimCommandPoolKHR_LOAD
-		trimCommandPoolKHR = (PFN_vkTrimCommandPoolKHR)procAddr(device, "vkTrimCommandPoolKHR");
+		fp_vkTrimCommandPoolKHR = (PFN_vkTrimCommandPoolKHR)procAddr(device, "vkTrimCommandPoolKHR");
 #endif
 #endif
 #if defined(VK_KHR_external_memory_win32) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetMemoryWin32HandleKHR_LOAD
 #define PFN_vkGetMemoryWin32HandleKHR_LOAD
-		getMemoryWin32HandleKHR = (PFN_vkGetMemoryWin32HandleKHR)procAddr(device, "vkGetMemoryWin32HandleKHR");
+		fp_vkGetMemoryWin32HandleKHR = (PFN_vkGetMemoryWin32HandleKHR)procAddr(device, "vkGetMemoryWin32HandleKHR");
 #endif
 #ifndef PFN_vkGetMemoryWin32HandlePropertiesKHR_LOAD
 #define PFN_vkGetMemoryWin32HandlePropertiesKHR_LOAD
-		getMemoryWin32HandlePropertiesKHR = (PFN_vkGetMemoryWin32HandlePropertiesKHR)procAddr(device, "vkGetMemoryWin32HandlePropertiesKHR");
+		fp_vkGetMemoryWin32HandlePropertiesKHR = (PFN_vkGetMemoryWin32HandlePropertiesKHR)procAddr(device, "vkGetMemoryWin32HandlePropertiesKHR");
 #endif
 #endif
 #if defined(VK_KHR_external_memory_fd) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetMemoryFdKHR_LOAD
 #define PFN_vkGetMemoryFdKHR_LOAD
-		getMemoryFdKHR = (PFN_vkGetMemoryFdKHR)procAddr(device, "vkGetMemoryFdKHR");
+		fp_vkGetMemoryFdKHR = (PFN_vkGetMemoryFdKHR)procAddr(device, "vkGetMemoryFdKHR");
 #endif
 #ifndef PFN_vkGetMemoryFdPropertiesKHR_LOAD
 #define PFN_vkGetMemoryFdPropertiesKHR_LOAD
-		getMemoryFdPropertiesKHR = (PFN_vkGetMemoryFdPropertiesKHR)procAddr(device, "vkGetMemoryFdPropertiesKHR");
+		fp_vkGetMemoryFdPropertiesKHR = (PFN_vkGetMemoryFdPropertiesKHR)procAddr(device, "vkGetMemoryFdPropertiesKHR");
 #endif
 #endif
 #if defined(VK_KHR_external_semaphore_win32) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkImportSemaphoreWin32HandleKHR_LOAD
 #define PFN_vkImportSemaphoreWin32HandleKHR_LOAD
-		importSemaphoreWin32HandleKHR = (PFN_vkImportSemaphoreWin32HandleKHR)procAddr(device, "vkImportSemaphoreWin32HandleKHR");
+		fp_vkImportSemaphoreWin32HandleKHR = (PFN_vkImportSemaphoreWin32HandleKHR)procAddr(device, "vkImportSemaphoreWin32HandleKHR");
 #endif
 #ifndef PFN_vkGetSemaphoreWin32HandleKHR_LOAD
 #define PFN_vkGetSemaphoreWin32HandleKHR_LOAD
-		getSemaphoreWin32HandleKHR = (PFN_vkGetSemaphoreWin32HandleKHR)procAddr(device, "vkGetSemaphoreWin32HandleKHR");
+		fp_vkGetSemaphoreWin32HandleKHR = (PFN_vkGetSemaphoreWin32HandleKHR)procAddr(device, "vkGetSemaphoreWin32HandleKHR");
 #endif
 #endif
 #if defined(VK_KHR_external_semaphore_fd) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkImportSemaphoreFdKHR_LOAD
 #define PFN_vkImportSemaphoreFdKHR_LOAD
-		importSemaphoreFdKHR = (PFN_vkImportSemaphoreFdKHR)procAddr(device, "vkImportSemaphoreFdKHR");
+		fp_vkImportSemaphoreFdKHR = (PFN_vkImportSemaphoreFdKHR)procAddr(device, "vkImportSemaphoreFdKHR");
 #endif
 #ifndef PFN_vkGetSemaphoreFdKHR_LOAD
 #define PFN_vkGetSemaphoreFdKHR_LOAD
-		getSemaphoreFdKHR = (PFN_vkGetSemaphoreFdKHR)procAddr(device, "vkGetSemaphoreFdKHR");
+		fp_vkGetSemaphoreFdKHR = (PFN_vkGetSemaphoreFdKHR)procAddr(device, "vkGetSemaphoreFdKHR");
 #endif
 #endif
 #if defined(VK_KHR_push_descriptor) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdPushDescriptorSetKHR_LOAD
 #define PFN_vkCmdPushDescriptorSetKHR_LOAD
-		cmdPushDescriptorSetKHR = (PFN_vkCmdPushDescriptorSetKHR)procAddr(device, "vkCmdPushDescriptorSetKHR");
+		fp_vkCmdPushDescriptorSetKHR = (PFN_vkCmdPushDescriptorSetKHR)procAddr(device, "vkCmdPushDescriptorSetKHR");
 #endif
 #ifndef PFN_vkCmdPushDescriptorSetWithTemplateKHR_LOAD
 #define PFN_vkCmdPushDescriptorSetWithTemplateKHR_LOAD
-		cmdPushDescriptorSetWithTemplateKHR = (PFN_vkCmdPushDescriptorSetWithTemplateKHR)procAddr(device, "vkCmdPushDescriptorSetWithTemplateKHR");
+		fp_vkCmdPushDescriptorSetWithTemplateKHR = (PFN_vkCmdPushDescriptorSetWithTemplateKHR)procAddr(device, "vkCmdPushDescriptorSetWithTemplateKHR");
 #endif
 #endif
 #if defined(VK_KHR_push_descriptor) && defined(VK_VERSION_1_1)
 #ifndef PFN_vkCmdPushDescriptorSetWithTemplateKHR_LOAD
 #define PFN_vkCmdPushDescriptorSetWithTemplateKHR_LOAD
-		cmdPushDescriptorSetWithTemplateKHR = (PFN_vkCmdPushDescriptorSetWithTemplateKHR)procAddr(device, "vkCmdPushDescriptorSetWithTemplateKHR");
+		fp_vkCmdPushDescriptorSetWithTemplateKHR = (PFN_vkCmdPushDescriptorSetWithTemplateKHR)procAddr(device, "vkCmdPushDescriptorSetWithTemplateKHR");
 #endif
 #endif
 #if defined(VK_EXT_conditional_rendering) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdBeginConditionalRenderingEXT_LOAD
 #define PFN_vkCmdBeginConditionalRenderingEXT_LOAD
-		cmdBeginConditionalRenderingEXT = (PFN_vkCmdBeginConditionalRenderingEXT)procAddr(device, "vkCmdBeginConditionalRenderingEXT");
+		fp_vkCmdBeginConditionalRenderingEXT = (PFN_vkCmdBeginConditionalRenderingEXT)procAddr(device, "vkCmdBeginConditionalRenderingEXT");
 #endif
 #ifndef PFN_vkCmdEndConditionalRenderingEXT_LOAD
 #define PFN_vkCmdEndConditionalRenderingEXT_LOAD
-		cmdEndConditionalRenderingEXT = (PFN_vkCmdEndConditionalRenderingEXT)procAddr(device, "vkCmdEndConditionalRenderingEXT");
+		fp_vkCmdEndConditionalRenderingEXT = (PFN_vkCmdEndConditionalRenderingEXT)procAddr(device, "vkCmdEndConditionalRenderingEXT");
 #endif
 #endif
 #if defined(VK_KHR_descriptor_update_template) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCreateDescriptorUpdateTemplateKHR_LOAD
 #define PFN_vkCreateDescriptorUpdateTemplateKHR_LOAD
-		createDescriptorUpdateTemplateKHR = (PFN_vkCreateDescriptorUpdateTemplateKHR)procAddr(device, "vkCreateDescriptorUpdateTemplateKHR");
+		fp_vkCreateDescriptorUpdateTemplateKHR = (PFN_vkCreateDescriptorUpdateTemplateKHR)procAddr(device, "vkCreateDescriptorUpdateTemplateKHR");
 #endif
 #ifndef PFN_vkDestroyDescriptorUpdateTemplateKHR_LOAD
 #define PFN_vkDestroyDescriptorUpdateTemplateKHR_LOAD
-		destroyDescriptorUpdateTemplateKHR = (PFN_vkDestroyDescriptorUpdateTemplateKHR)procAddr(device, "vkDestroyDescriptorUpdateTemplateKHR");
+		fp_vkDestroyDescriptorUpdateTemplateKHR = (PFN_vkDestroyDescriptorUpdateTemplateKHR)procAddr(device, "vkDestroyDescriptorUpdateTemplateKHR");
 #endif
 #ifndef PFN_vkUpdateDescriptorSetWithTemplateKHR_LOAD
 #define PFN_vkUpdateDescriptorSetWithTemplateKHR_LOAD
-		updateDescriptorSetWithTemplateKHR = (PFN_vkUpdateDescriptorSetWithTemplateKHR)procAddr(device, "vkUpdateDescriptorSetWithTemplateKHR");
+		fp_vkUpdateDescriptorSetWithTemplateKHR = (PFN_vkUpdateDescriptorSetWithTemplateKHR)procAddr(device, "vkUpdateDescriptorSetWithTemplateKHR");
 #endif
 #ifndef PFN_vkCmdPushDescriptorSetWithTemplateKHR_LOAD
 #define PFN_vkCmdPushDescriptorSetWithTemplateKHR_LOAD
-		cmdPushDescriptorSetWithTemplateKHR = (PFN_vkCmdPushDescriptorSetWithTemplateKHR)procAddr(device, "vkCmdPushDescriptorSetWithTemplateKHR");
+		fp_vkCmdPushDescriptorSetWithTemplateKHR = (PFN_vkCmdPushDescriptorSetWithTemplateKHR)procAddr(device, "vkCmdPushDescriptorSetWithTemplateKHR");
 #endif
 #endif
 #if defined(VK_NV_clip_space_w_scaling) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdSetViewportWScalingNV_LOAD
 #define PFN_vkCmdSetViewportWScalingNV_LOAD
-		cmdSetViewportWScalingNV = (PFN_vkCmdSetViewportWScalingNV)procAddr(device, "vkCmdSetViewportWScalingNV");
+		fp_vkCmdSetViewportWScalingNV = (PFN_vkCmdSetViewportWScalingNV)procAddr(device, "vkCmdSetViewportWScalingNV");
 #endif
 #endif
 #if defined(VK_EXT_display_control) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkDisplayPowerControlEXT_LOAD
 #define PFN_vkDisplayPowerControlEXT_LOAD
-		displayPowerControlEXT = (PFN_vkDisplayPowerControlEXT)procAddr(device, "vkDisplayPowerControlEXT");
+		fp_vkDisplayPowerControlEXT = (PFN_vkDisplayPowerControlEXT)procAddr(device, "vkDisplayPowerControlEXT");
 #endif
 #ifndef PFN_vkRegisterDeviceEventEXT_LOAD
 #define PFN_vkRegisterDeviceEventEXT_LOAD
-		registerDeviceEventEXT = (PFN_vkRegisterDeviceEventEXT)procAddr(device, "vkRegisterDeviceEventEXT");
+		fp_vkRegisterDeviceEventEXT = (PFN_vkRegisterDeviceEventEXT)procAddr(device, "vkRegisterDeviceEventEXT");
 #endif
 #ifndef PFN_vkRegisterDisplayEventEXT_LOAD
 #define PFN_vkRegisterDisplayEventEXT_LOAD
-		registerDisplayEventEXT = (PFN_vkRegisterDisplayEventEXT)procAddr(device, "vkRegisterDisplayEventEXT");
+		fp_vkRegisterDisplayEventEXT = (PFN_vkRegisterDisplayEventEXT)procAddr(device, "vkRegisterDisplayEventEXT");
 #endif
 #ifndef PFN_vkGetSwapchainCounterEXT_LOAD
 #define PFN_vkGetSwapchainCounterEXT_LOAD
-		getSwapchainCounterEXT = (PFN_vkGetSwapchainCounterEXT)procAddr(device, "vkGetSwapchainCounterEXT");
+		fp_vkGetSwapchainCounterEXT = (PFN_vkGetSwapchainCounterEXT)procAddr(device, "vkGetSwapchainCounterEXT");
 #endif
 #endif
 #if defined(VK_GOOGLE_display_timing) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetRefreshCycleDurationGOOGLE_LOAD
 #define PFN_vkGetRefreshCycleDurationGOOGLE_LOAD
-		getRefreshCycleDurationGOOGLE = (PFN_vkGetRefreshCycleDurationGOOGLE)procAddr(device, "vkGetRefreshCycleDurationGOOGLE");
+		fp_vkGetRefreshCycleDurationGOOGLE = (PFN_vkGetRefreshCycleDurationGOOGLE)procAddr(device, "vkGetRefreshCycleDurationGOOGLE");
 #endif
 #ifndef PFN_vkGetPastPresentationTimingGOOGLE_LOAD
 #define PFN_vkGetPastPresentationTimingGOOGLE_LOAD
-		getPastPresentationTimingGOOGLE = (PFN_vkGetPastPresentationTimingGOOGLE)procAddr(device, "vkGetPastPresentationTimingGOOGLE");
+		fp_vkGetPastPresentationTimingGOOGLE = (PFN_vkGetPastPresentationTimingGOOGLE)procAddr(device, "vkGetPastPresentationTimingGOOGLE");
 #endif
 #endif
 #if defined(VK_EXT_discard_rectangles) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdSetDiscardRectangleEXT_LOAD
 #define PFN_vkCmdSetDiscardRectangleEXT_LOAD
-		cmdSetDiscardRectangleEXT = (PFN_vkCmdSetDiscardRectangleEXT)procAddr(device, "vkCmdSetDiscardRectangleEXT");
+		fp_vkCmdSetDiscardRectangleEXT = (PFN_vkCmdSetDiscardRectangleEXT)procAddr(device, "vkCmdSetDiscardRectangleEXT");
 #endif
 #endif
 #if defined(VK_EXT_hdr_metadata) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkSetHdrMetadataEXT_LOAD
 #define PFN_vkSetHdrMetadataEXT_LOAD
-		setHdrMetadataEXT = (PFN_vkSetHdrMetadataEXT)procAddr(device, "vkSetHdrMetadataEXT");
+		fp_vkSetHdrMetadataEXT = (PFN_vkSetHdrMetadataEXT)procAddr(device, "vkSetHdrMetadataEXT");
 #endif
 #endif
 #if defined(VK_KHR_create_renderpass2) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCreateRenderPass2KHR_LOAD
 #define PFN_vkCreateRenderPass2KHR_LOAD
-		createRenderPass2KHR = (PFN_vkCreateRenderPass2KHR)procAddr(device, "vkCreateRenderPass2KHR");
+		fp_vkCreateRenderPass2KHR = (PFN_vkCreateRenderPass2KHR)procAddr(device, "vkCreateRenderPass2KHR");
 #endif
 #ifndef PFN_vkCmdBeginRenderPass2KHR_LOAD
 #define PFN_vkCmdBeginRenderPass2KHR_LOAD
-		cmdBeginRenderPass2KHR = (PFN_vkCmdBeginRenderPass2KHR)procAddr(device, "vkCmdBeginRenderPass2KHR");
+		fp_vkCmdBeginRenderPass2KHR = (PFN_vkCmdBeginRenderPass2KHR)procAddr(device, "vkCmdBeginRenderPass2KHR");
 #endif
 #ifndef PFN_vkCmdNextSubpass2KHR_LOAD
 #define PFN_vkCmdNextSubpass2KHR_LOAD
-		cmdNextSubpass2KHR = (PFN_vkCmdNextSubpass2KHR)procAddr(device, "vkCmdNextSubpass2KHR");
+		fp_vkCmdNextSubpass2KHR = (PFN_vkCmdNextSubpass2KHR)procAddr(device, "vkCmdNextSubpass2KHR");
 #endif
 #ifndef PFN_vkCmdEndRenderPass2KHR_LOAD
 #define PFN_vkCmdEndRenderPass2KHR_LOAD
-		cmdEndRenderPass2KHR = (PFN_vkCmdEndRenderPass2KHR)procAddr(device, "vkCmdEndRenderPass2KHR");
+		fp_vkCmdEndRenderPass2KHR = (PFN_vkCmdEndRenderPass2KHR)procAddr(device, "vkCmdEndRenderPass2KHR");
 #endif
 #endif
 #if defined(VK_KHR_shared_presentable_image) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetSwapchainStatusKHR_LOAD
 #define PFN_vkGetSwapchainStatusKHR_LOAD
-		getSwapchainStatusKHR = (PFN_vkGetSwapchainStatusKHR)procAddr(device, "vkGetSwapchainStatusKHR");
+		fp_vkGetSwapchainStatusKHR = (PFN_vkGetSwapchainStatusKHR)procAddr(device, "vkGetSwapchainStatusKHR");
 #endif
 #endif
 #if defined(VK_KHR_external_fence_win32) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkImportFenceWin32HandleKHR_LOAD
 #define PFN_vkImportFenceWin32HandleKHR_LOAD
-		importFenceWin32HandleKHR = (PFN_vkImportFenceWin32HandleKHR)procAddr(device, "vkImportFenceWin32HandleKHR");
+		fp_vkImportFenceWin32HandleKHR = (PFN_vkImportFenceWin32HandleKHR)procAddr(device, "vkImportFenceWin32HandleKHR");
 #endif
 #ifndef PFN_vkGetFenceWin32HandleKHR_LOAD
 #define PFN_vkGetFenceWin32HandleKHR_LOAD
-		getFenceWin32HandleKHR = (PFN_vkGetFenceWin32HandleKHR)procAddr(device, "vkGetFenceWin32HandleKHR");
+		fp_vkGetFenceWin32HandleKHR = (PFN_vkGetFenceWin32HandleKHR)procAddr(device, "vkGetFenceWin32HandleKHR");
 #endif
 #endif
 #if defined(VK_KHR_external_fence_fd) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkImportFenceFdKHR_LOAD
 #define PFN_vkImportFenceFdKHR_LOAD
-		importFenceFdKHR = (PFN_vkImportFenceFdKHR)procAddr(device, "vkImportFenceFdKHR");
+		fp_vkImportFenceFdKHR = (PFN_vkImportFenceFdKHR)procAddr(device, "vkImportFenceFdKHR");
 #endif
 #ifndef PFN_vkGetFenceFdKHR_LOAD
 #define PFN_vkGetFenceFdKHR_LOAD
-		getFenceFdKHR = (PFN_vkGetFenceFdKHR)procAddr(device, "vkGetFenceFdKHR");
+		fp_vkGetFenceFdKHR = (PFN_vkGetFenceFdKHR)procAddr(device, "vkGetFenceFdKHR");
 #endif
 #endif
 #if defined(VK_KHR_performance_query) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkAcquireProfilingLockKHR_LOAD
 #define PFN_vkAcquireProfilingLockKHR_LOAD
-		acquireProfilingLockKHR = (PFN_vkAcquireProfilingLockKHR)procAddr(device, "vkAcquireProfilingLockKHR");
+		fp_vkAcquireProfilingLockKHR = (PFN_vkAcquireProfilingLockKHR)procAddr(device, "vkAcquireProfilingLockKHR");
 #endif
 #ifndef PFN_vkReleaseProfilingLockKHR_LOAD
 #define PFN_vkReleaseProfilingLockKHR_LOAD
-		releaseProfilingLockKHR = (PFN_vkReleaseProfilingLockKHR)procAddr(device, "vkReleaseProfilingLockKHR");
+		fp_vkReleaseProfilingLockKHR = (PFN_vkReleaseProfilingLockKHR)procAddr(device, "vkReleaseProfilingLockKHR");
 #endif
 #endif
 #if defined(VK_EXT_debug_utils) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkSetDebugUtilsObjectNameEXT_LOAD
 #define PFN_vkSetDebugUtilsObjectNameEXT_LOAD
-		setDebugUtilsObjectNameEXT = (PFN_vkSetDebugUtilsObjectNameEXT)procAddr(device, "vkSetDebugUtilsObjectNameEXT");
+		fp_vkSetDebugUtilsObjectNameEXT = (PFN_vkSetDebugUtilsObjectNameEXT)procAddr(device, "vkSetDebugUtilsObjectNameEXT");
 #endif
 #ifndef PFN_vkSetDebugUtilsObjectTagEXT_LOAD
 #define PFN_vkSetDebugUtilsObjectTagEXT_LOAD
-		setDebugUtilsObjectTagEXT = (PFN_vkSetDebugUtilsObjectTagEXT)procAddr(device, "vkSetDebugUtilsObjectTagEXT");
+		fp_vkSetDebugUtilsObjectTagEXT = (PFN_vkSetDebugUtilsObjectTagEXT)procAddr(device, "vkSetDebugUtilsObjectTagEXT");
 #endif
 #ifndef PFN_vkQueueBeginDebugUtilsLabelEXT_LOAD
 #define PFN_vkQueueBeginDebugUtilsLabelEXT_LOAD
-		queueBeginDebugUtilsLabelEXT = (PFN_vkQueueBeginDebugUtilsLabelEXT)procAddr(device, "vkQueueBeginDebugUtilsLabelEXT");
+		fp_vkQueueBeginDebugUtilsLabelEXT = (PFN_vkQueueBeginDebugUtilsLabelEXT)procAddr(device, "vkQueueBeginDebugUtilsLabelEXT");
 #endif
 #ifndef PFN_vkQueueEndDebugUtilsLabelEXT_LOAD
 #define PFN_vkQueueEndDebugUtilsLabelEXT_LOAD
-		queueEndDebugUtilsLabelEXT = (PFN_vkQueueEndDebugUtilsLabelEXT)procAddr(device, "vkQueueEndDebugUtilsLabelEXT");
+		fp_vkQueueEndDebugUtilsLabelEXT = (PFN_vkQueueEndDebugUtilsLabelEXT)procAddr(device, "vkQueueEndDebugUtilsLabelEXT");
 #endif
 #ifndef PFN_vkQueueInsertDebugUtilsLabelEXT_LOAD
 #define PFN_vkQueueInsertDebugUtilsLabelEXT_LOAD
-		queueInsertDebugUtilsLabelEXT = (PFN_vkQueueInsertDebugUtilsLabelEXT)procAddr(device, "vkQueueInsertDebugUtilsLabelEXT");
+		fp_vkQueueInsertDebugUtilsLabelEXT = (PFN_vkQueueInsertDebugUtilsLabelEXT)procAddr(device, "vkQueueInsertDebugUtilsLabelEXT");
 #endif
 #ifndef PFN_vkCmdBeginDebugUtilsLabelEXT_LOAD
 #define PFN_vkCmdBeginDebugUtilsLabelEXT_LOAD
-		cmdBeginDebugUtilsLabelEXT = (PFN_vkCmdBeginDebugUtilsLabelEXT)procAddr(device, "vkCmdBeginDebugUtilsLabelEXT");
+		fp_vkCmdBeginDebugUtilsLabelEXT = (PFN_vkCmdBeginDebugUtilsLabelEXT)procAddr(device, "vkCmdBeginDebugUtilsLabelEXT");
 #endif
 #ifndef PFN_vkCmdEndDebugUtilsLabelEXT_LOAD
 #define PFN_vkCmdEndDebugUtilsLabelEXT_LOAD
-		cmdEndDebugUtilsLabelEXT = (PFN_vkCmdEndDebugUtilsLabelEXT)procAddr(device, "vkCmdEndDebugUtilsLabelEXT");
+		fp_vkCmdEndDebugUtilsLabelEXT = (PFN_vkCmdEndDebugUtilsLabelEXT)procAddr(device, "vkCmdEndDebugUtilsLabelEXT");
 #endif
 #ifndef PFN_vkCmdInsertDebugUtilsLabelEXT_LOAD
 #define PFN_vkCmdInsertDebugUtilsLabelEXT_LOAD
-		cmdInsertDebugUtilsLabelEXT = (PFN_vkCmdInsertDebugUtilsLabelEXT)procAddr(device, "vkCmdInsertDebugUtilsLabelEXT");
+		fp_vkCmdInsertDebugUtilsLabelEXT = (PFN_vkCmdInsertDebugUtilsLabelEXT)procAddr(device, "vkCmdInsertDebugUtilsLabelEXT");
 #endif
 #endif
 #if defined(VK_ANDROID_external_memory_android_hardware_buffer) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetAndroidHardwareBufferPropertiesANDROID_LOAD
 #define PFN_vkGetAndroidHardwareBufferPropertiesANDROID_LOAD
-		getAndroidHardwareBufferPropertiesANDROID = (PFN_vkGetAndroidHardwareBufferPropertiesANDROID)procAddr(device, "vkGetAndroidHardwareBufferPropertiesANDROID");
+		fp_vkGetAndroidHardwareBufferPropertiesANDROID = (PFN_vkGetAndroidHardwareBufferPropertiesANDROID)procAddr(device, "vkGetAndroidHardwareBufferPropertiesANDROID");
 #endif
 #ifndef PFN_vkGetMemoryAndroidHardwareBufferANDROID_LOAD
 #define PFN_vkGetMemoryAndroidHardwareBufferANDROID_LOAD
-		getMemoryAndroidHardwareBufferANDROID = (PFN_vkGetMemoryAndroidHardwareBufferANDROID)procAddr(device, "vkGetMemoryAndroidHardwareBufferANDROID");
+		fp_vkGetMemoryAndroidHardwareBufferANDROID = (PFN_vkGetMemoryAndroidHardwareBufferANDROID)procAddr(device, "vkGetMemoryAndroidHardwareBufferANDROID");
 #endif
 #endif
 #if defined(VK_EXT_sample_locations) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdSetSampleLocationsEXT_LOAD
 #define PFN_vkCmdSetSampleLocationsEXT_LOAD
-		cmdSetSampleLocationsEXT = (PFN_vkCmdSetSampleLocationsEXT)procAddr(device, "vkCmdSetSampleLocationsEXT");
+		fp_vkCmdSetSampleLocationsEXT = (PFN_vkCmdSetSampleLocationsEXT)procAddr(device, "vkCmdSetSampleLocationsEXT");
 #endif
 #endif
 #if defined(VK_KHR_get_memory_requirements2) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetImageMemoryRequirements2KHR_LOAD
 #define PFN_vkGetImageMemoryRequirements2KHR_LOAD
-		getImageMemoryRequirements2KHR = (PFN_vkGetImageMemoryRequirements2KHR)procAddr(device, "vkGetImageMemoryRequirements2KHR");
+		fp_vkGetImageMemoryRequirements2KHR = (PFN_vkGetImageMemoryRequirements2KHR)procAddr(device, "vkGetImageMemoryRequirements2KHR");
 #endif
 #ifndef PFN_vkGetBufferMemoryRequirements2KHR_LOAD
 #define PFN_vkGetBufferMemoryRequirements2KHR_LOAD
-		getBufferMemoryRequirements2KHR = (PFN_vkGetBufferMemoryRequirements2KHR)procAddr(device, "vkGetBufferMemoryRequirements2KHR");
+		fp_vkGetBufferMemoryRequirements2KHR = (PFN_vkGetBufferMemoryRequirements2KHR)procAddr(device, "vkGetBufferMemoryRequirements2KHR");
 #endif
 #ifndef PFN_vkGetImageSparseMemoryRequirements2KHR_LOAD
 #define PFN_vkGetImageSparseMemoryRequirements2KHR_LOAD
-		getImageSparseMemoryRequirements2KHR = (PFN_vkGetImageSparseMemoryRequirements2KHR)procAddr(device, "vkGetImageSparseMemoryRequirements2KHR");
+		fp_vkGetImageSparseMemoryRequirements2KHR = (PFN_vkGetImageSparseMemoryRequirements2KHR)procAddr(device, "vkGetImageSparseMemoryRequirements2KHR");
 #endif
 #endif
 #if defined(VK_KHR_acceleration_structure) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCreateAccelerationStructureKHR_LOAD
 #define PFN_vkCreateAccelerationStructureKHR_LOAD
-		createAccelerationStructureKHR = (PFN_vkCreateAccelerationStructureKHR)procAddr(device, "vkCreateAccelerationStructureKHR");
+		fp_vkCreateAccelerationStructureKHR = (PFN_vkCreateAccelerationStructureKHR)procAddr(device, "vkCreateAccelerationStructureKHR");
 #endif
 #ifndef PFN_vkDestroyAccelerationStructureKHR_LOAD
 #define PFN_vkDestroyAccelerationStructureKHR_LOAD
-		destroyAccelerationStructureKHR = (PFN_vkDestroyAccelerationStructureKHR)procAddr(device, "vkDestroyAccelerationStructureKHR");
+		fp_vkDestroyAccelerationStructureKHR = (PFN_vkDestroyAccelerationStructureKHR)procAddr(device, "vkDestroyAccelerationStructureKHR");
 #endif
 #ifndef PFN_vkCmdBuildAccelerationStructuresKHR_LOAD
 #define PFN_vkCmdBuildAccelerationStructuresKHR_LOAD
-		cmdBuildAccelerationStructuresKHR = (PFN_vkCmdBuildAccelerationStructuresKHR)procAddr(device, "vkCmdBuildAccelerationStructuresKHR");
+		fp_vkCmdBuildAccelerationStructuresKHR = (PFN_vkCmdBuildAccelerationStructuresKHR)procAddr(device, "vkCmdBuildAccelerationStructuresKHR");
 #endif
 #ifndef PFN_vkCmdBuildAccelerationStructuresIndirectKHR_LOAD
 #define PFN_vkCmdBuildAccelerationStructuresIndirectKHR_LOAD
-		cmdBuildAccelerationStructuresIndirectKHR = (PFN_vkCmdBuildAccelerationStructuresIndirectKHR)procAddr(device, "vkCmdBuildAccelerationStructuresIndirectKHR");
+		fp_vkCmdBuildAccelerationStructuresIndirectKHR = (PFN_vkCmdBuildAccelerationStructuresIndirectKHR)procAddr(device, "vkCmdBuildAccelerationStructuresIndirectKHR");
 #endif
 #ifndef PFN_vkBuildAccelerationStructuresKHR_LOAD
 #define PFN_vkBuildAccelerationStructuresKHR_LOAD
-		buildAccelerationStructuresKHR = (PFN_vkBuildAccelerationStructuresKHR)procAddr(device, "vkBuildAccelerationStructuresKHR");
+		fp_vkBuildAccelerationStructuresKHR = (PFN_vkBuildAccelerationStructuresKHR)procAddr(device, "vkBuildAccelerationStructuresKHR");
 #endif
 #ifndef PFN_vkCopyAccelerationStructureKHR_LOAD
 #define PFN_vkCopyAccelerationStructureKHR_LOAD
-		copyAccelerationStructureKHR = (PFN_vkCopyAccelerationStructureKHR)procAddr(device, "vkCopyAccelerationStructureKHR");
+		fp_vkCopyAccelerationStructureKHR = (PFN_vkCopyAccelerationStructureKHR)procAddr(device, "vkCopyAccelerationStructureKHR");
 #endif
 #ifndef PFN_vkCopyAccelerationStructureToMemoryKHR_LOAD
 #define PFN_vkCopyAccelerationStructureToMemoryKHR_LOAD
-		copyAccelerationStructureToMemoryKHR = (PFN_vkCopyAccelerationStructureToMemoryKHR)procAddr(device, "vkCopyAccelerationStructureToMemoryKHR");
+		fp_vkCopyAccelerationStructureToMemoryKHR = (PFN_vkCopyAccelerationStructureToMemoryKHR)procAddr(device, "vkCopyAccelerationStructureToMemoryKHR");
 #endif
 #ifndef PFN_vkCopyMemoryToAccelerationStructureKHR_LOAD
 #define PFN_vkCopyMemoryToAccelerationStructureKHR_LOAD
-		copyMemoryToAccelerationStructureKHR = (PFN_vkCopyMemoryToAccelerationStructureKHR)procAddr(device, "vkCopyMemoryToAccelerationStructureKHR");
+		fp_vkCopyMemoryToAccelerationStructureKHR = (PFN_vkCopyMemoryToAccelerationStructureKHR)procAddr(device, "vkCopyMemoryToAccelerationStructureKHR");
 #endif
 #ifndef PFN_vkWriteAccelerationStructuresPropertiesKHR_LOAD
 #define PFN_vkWriteAccelerationStructuresPropertiesKHR_LOAD
-		writeAccelerationStructuresPropertiesKHR = (PFN_vkWriteAccelerationStructuresPropertiesKHR)procAddr(device, "vkWriteAccelerationStructuresPropertiesKHR");
+		fp_vkWriteAccelerationStructuresPropertiesKHR = (PFN_vkWriteAccelerationStructuresPropertiesKHR)procAddr(device, "vkWriteAccelerationStructuresPropertiesKHR");
 #endif
 #ifndef PFN_vkCmdCopyAccelerationStructureKHR_LOAD
 #define PFN_vkCmdCopyAccelerationStructureKHR_LOAD
-		cmdCopyAccelerationStructureKHR = (PFN_vkCmdCopyAccelerationStructureKHR)procAddr(device, "vkCmdCopyAccelerationStructureKHR");
+		fp_vkCmdCopyAccelerationStructureKHR = (PFN_vkCmdCopyAccelerationStructureKHR)procAddr(device, "vkCmdCopyAccelerationStructureKHR");
 #endif
 #ifndef PFN_vkCmdCopyAccelerationStructureToMemoryKHR_LOAD
 #define PFN_vkCmdCopyAccelerationStructureToMemoryKHR_LOAD
-		cmdCopyAccelerationStructureToMemoryKHR = (PFN_vkCmdCopyAccelerationStructureToMemoryKHR)procAddr(device, "vkCmdCopyAccelerationStructureToMemoryKHR");
+		fp_vkCmdCopyAccelerationStructureToMemoryKHR = (PFN_vkCmdCopyAccelerationStructureToMemoryKHR)procAddr(device, "vkCmdCopyAccelerationStructureToMemoryKHR");
 #endif
 #ifndef PFN_vkCmdCopyMemoryToAccelerationStructureKHR_LOAD
 #define PFN_vkCmdCopyMemoryToAccelerationStructureKHR_LOAD
-		cmdCopyMemoryToAccelerationStructureKHR = (PFN_vkCmdCopyMemoryToAccelerationStructureKHR)procAddr(device, "vkCmdCopyMemoryToAccelerationStructureKHR");
+		fp_vkCmdCopyMemoryToAccelerationStructureKHR = (PFN_vkCmdCopyMemoryToAccelerationStructureKHR)procAddr(device, "vkCmdCopyMemoryToAccelerationStructureKHR");
 #endif
 #ifndef PFN_vkGetAccelerationStructureDeviceAddressKHR_LOAD
 #define PFN_vkGetAccelerationStructureDeviceAddressKHR_LOAD
-		getAccelerationStructureDeviceAddressKHR = (PFN_vkGetAccelerationStructureDeviceAddressKHR)procAddr(device, "vkGetAccelerationStructureDeviceAddressKHR");
+		fp_vkGetAccelerationStructureDeviceAddressKHR = (PFN_vkGetAccelerationStructureDeviceAddressKHR)procAddr(device, "vkGetAccelerationStructureDeviceAddressKHR");
 #endif
 #ifndef PFN_vkCmdWriteAccelerationStructuresPropertiesKHR_LOAD
 #define PFN_vkCmdWriteAccelerationStructuresPropertiesKHR_LOAD
-		cmdWriteAccelerationStructuresPropertiesKHR = (PFN_vkCmdWriteAccelerationStructuresPropertiesKHR)procAddr(device, "vkCmdWriteAccelerationStructuresPropertiesKHR");
+		fp_vkCmdWriteAccelerationStructuresPropertiesKHR = (PFN_vkCmdWriteAccelerationStructuresPropertiesKHR)procAddr(device, "vkCmdWriteAccelerationStructuresPropertiesKHR");
 #endif
 #ifndef PFN_vkGetDeviceAccelerationStructureCompatibilityKHR_LOAD
 #define PFN_vkGetDeviceAccelerationStructureCompatibilityKHR_LOAD
-		getDeviceAccelerationStructureCompatibilityKHR = (PFN_vkGetDeviceAccelerationStructureCompatibilityKHR)procAddr(device, "vkGetDeviceAccelerationStructureCompatibilityKHR");
+		fp_vkGetDeviceAccelerationStructureCompatibilityKHR = (PFN_vkGetDeviceAccelerationStructureCompatibilityKHR)procAddr(device, "vkGetDeviceAccelerationStructureCompatibilityKHR");
 #endif
 #ifndef PFN_vkGetAccelerationStructureBuildSizesKHR_LOAD
 #define PFN_vkGetAccelerationStructureBuildSizesKHR_LOAD
-		getAccelerationStructureBuildSizesKHR = (PFN_vkGetAccelerationStructureBuildSizesKHR)procAddr(device, "vkGetAccelerationStructureBuildSizesKHR");
+		fp_vkGetAccelerationStructureBuildSizesKHR = (PFN_vkGetAccelerationStructureBuildSizesKHR)procAddr(device, "vkGetAccelerationStructureBuildSizesKHR");
 #endif
 #endif
 #if defined(VK_KHR_ray_tracing_pipeline) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdTraceRaysKHR_LOAD
 #define PFN_vkCmdTraceRaysKHR_LOAD
-		cmdTraceRaysKHR = (PFN_vkCmdTraceRaysKHR)procAddr(device, "vkCmdTraceRaysKHR");
+		fp_vkCmdTraceRaysKHR = (PFN_vkCmdTraceRaysKHR)procAddr(device, "vkCmdTraceRaysKHR");
 #endif
 #ifndef PFN_vkCreateRayTracingPipelinesKHR_LOAD
 #define PFN_vkCreateRayTracingPipelinesKHR_LOAD
-		createRayTracingPipelinesKHR = (PFN_vkCreateRayTracingPipelinesKHR)procAddr(device, "vkCreateRayTracingPipelinesKHR");
+		fp_vkCreateRayTracingPipelinesKHR = (PFN_vkCreateRayTracingPipelinesKHR)procAddr(device, "vkCreateRayTracingPipelinesKHR");
 #endif
 #ifndef PFN_vkGetRayTracingShaderGroupHandlesKHR_LOAD
 #define PFN_vkGetRayTracingShaderGroupHandlesKHR_LOAD
-		getRayTracingShaderGroupHandlesKHR = (PFN_vkGetRayTracingShaderGroupHandlesKHR)procAddr(device, "vkGetRayTracingShaderGroupHandlesKHR");
+		fp_vkGetRayTracingShaderGroupHandlesKHR = (PFN_vkGetRayTracingShaderGroupHandlesKHR)procAddr(device, "vkGetRayTracingShaderGroupHandlesKHR");
 #endif
 #ifndef PFN_vkGetRayTracingCaptureReplayShaderGroupHandlesKHR_LOAD
 #define PFN_vkGetRayTracingCaptureReplayShaderGroupHandlesKHR_LOAD
-		getRayTracingCaptureReplayShaderGroupHandlesKHR = (PFN_vkGetRayTracingCaptureReplayShaderGroupHandlesKHR)procAddr(device, "vkGetRayTracingCaptureReplayShaderGroupHandlesKHR");
+		fp_vkGetRayTracingCaptureReplayShaderGroupHandlesKHR = (PFN_vkGetRayTracingCaptureReplayShaderGroupHandlesKHR)procAddr(device, "vkGetRayTracingCaptureReplayShaderGroupHandlesKHR");
 #endif
 #ifndef PFN_vkCmdTraceRaysIndirectKHR_LOAD
 #define PFN_vkCmdTraceRaysIndirectKHR_LOAD
-		cmdTraceRaysIndirectKHR = (PFN_vkCmdTraceRaysIndirectKHR)procAddr(device, "vkCmdTraceRaysIndirectKHR");
+		fp_vkCmdTraceRaysIndirectKHR = (PFN_vkCmdTraceRaysIndirectKHR)procAddr(device, "vkCmdTraceRaysIndirectKHR");
 #endif
 #ifndef PFN_vkGetRayTracingShaderGroupStackSizeKHR_LOAD
 #define PFN_vkGetRayTracingShaderGroupStackSizeKHR_LOAD
-		getRayTracingShaderGroupStackSizeKHR = (PFN_vkGetRayTracingShaderGroupStackSizeKHR)procAddr(device, "vkGetRayTracingShaderGroupStackSizeKHR");
+		fp_vkGetRayTracingShaderGroupStackSizeKHR = (PFN_vkGetRayTracingShaderGroupStackSizeKHR)procAddr(device, "vkGetRayTracingShaderGroupStackSizeKHR");
 #endif
 #ifndef PFN_vkCmdSetRayTracingPipelineStackSizeKHR_LOAD
 #define PFN_vkCmdSetRayTracingPipelineStackSizeKHR_LOAD
-		cmdSetRayTracingPipelineStackSizeKHR = (PFN_vkCmdSetRayTracingPipelineStackSizeKHR)procAddr(device, "vkCmdSetRayTracingPipelineStackSizeKHR");
+		fp_vkCmdSetRayTracingPipelineStackSizeKHR = (PFN_vkCmdSetRayTracingPipelineStackSizeKHR)procAddr(device, "vkCmdSetRayTracingPipelineStackSizeKHR");
 #endif
 #endif
 #if defined(VK_KHR_sampler_ycbcr_conversion) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCreateSamplerYcbcrConversionKHR_LOAD
 #define PFN_vkCreateSamplerYcbcrConversionKHR_LOAD
-		createSamplerYcbcrConversionKHR = (PFN_vkCreateSamplerYcbcrConversionKHR)procAddr(device, "vkCreateSamplerYcbcrConversionKHR");
+		fp_vkCreateSamplerYcbcrConversionKHR = (PFN_vkCreateSamplerYcbcrConversionKHR)procAddr(device, "vkCreateSamplerYcbcrConversionKHR");
 #endif
 #ifndef PFN_vkDestroySamplerYcbcrConversionKHR_LOAD
 #define PFN_vkDestroySamplerYcbcrConversionKHR_LOAD
-		destroySamplerYcbcrConversionKHR = (PFN_vkDestroySamplerYcbcrConversionKHR)procAddr(device, "vkDestroySamplerYcbcrConversionKHR");
+		fp_vkDestroySamplerYcbcrConversionKHR = (PFN_vkDestroySamplerYcbcrConversionKHR)procAddr(device, "vkDestroySamplerYcbcrConversionKHR");
 #endif
 #endif
 #if defined(VK_KHR_bind_memory2) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkBindBufferMemory2KHR_LOAD
 #define PFN_vkBindBufferMemory2KHR_LOAD
-		bindBufferMemory2KHR = (PFN_vkBindBufferMemory2KHR)procAddr(device, "vkBindBufferMemory2KHR");
+		fp_vkBindBufferMemory2KHR = (PFN_vkBindBufferMemory2KHR)procAddr(device, "vkBindBufferMemory2KHR");
 #endif
 #ifndef PFN_vkBindImageMemory2KHR_LOAD
 #define PFN_vkBindImageMemory2KHR_LOAD
-		bindImageMemory2KHR = (PFN_vkBindImageMemory2KHR)procAddr(device, "vkBindImageMemory2KHR");
+		fp_vkBindImageMemory2KHR = (PFN_vkBindImageMemory2KHR)procAddr(device, "vkBindImageMemory2KHR");
 #endif
 #endif
 #if defined(VK_EXT_image_drm_format_modifier) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetImageDrmFormatModifierPropertiesEXT_LOAD
 #define PFN_vkGetImageDrmFormatModifierPropertiesEXT_LOAD
-		getImageDrmFormatModifierPropertiesEXT = (PFN_vkGetImageDrmFormatModifierPropertiesEXT)procAddr(device, "vkGetImageDrmFormatModifierPropertiesEXT");
+		fp_vkGetImageDrmFormatModifierPropertiesEXT = (PFN_vkGetImageDrmFormatModifierPropertiesEXT)procAddr(device, "vkGetImageDrmFormatModifierPropertiesEXT");
 #endif
 #endif
 #if defined(VK_EXT_validation_cache) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCreateValidationCacheEXT_LOAD
 #define PFN_vkCreateValidationCacheEXT_LOAD
-		createValidationCacheEXT = (PFN_vkCreateValidationCacheEXT)procAddr(device, "vkCreateValidationCacheEXT");
+		fp_vkCreateValidationCacheEXT = (PFN_vkCreateValidationCacheEXT)procAddr(device, "vkCreateValidationCacheEXT");
 #endif
 #ifndef PFN_vkDestroyValidationCacheEXT_LOAD
 #define PFN_vkDestroyValidationCacheEXT_LOAD
-		destroyValidationCacheEXT = (PFN_vkDestroyValidationCacheEXT)procAddr(device, "vkDestroyValidationCacheEXT");
+		fp_vkDestroyValidationCacheEXT = (PFN_vkDestroyValidationCacheEXT)procAddr(device, "vkDestroyValidationCacheEXT");
 #endif
 #ifndef PFN_vkMergeValidationCachesEXT_LOAD
 #define PFN_vkMergeValidationCachesEXT_LOAD
-		mergeValidationCachesEXT = (PFN_vkMergeValidationCachesEXT)procAddr(device, "vkMergeValidationCachesEXT");
+		fp_vkMergeValidationCachesEXT = (PFN_vkMergeValidationCachesEXT)procAddr(device, "vkMergeValidationCachesEXT");
 #endif
 #ifndef PFN_vkGetValidationCacheDataEXT_LOAD
 #define PFN_vkGetValidationCacheDataEXT_LOAD
-		getValidationCacheDataEXT = (PFN_vkGetValidationCacheDataEXT)procAddr(device, "vkGetValidationCacheDataEXT");
+		fp_vkGetValidationCacheDataEXT = (PFN_vkGetValidationCacheDataEXT)procAddr(device, "vkGetValidationCacheDataEXT");
 #endif
 #endif
 #if defined(VK_NV_shading_rate_image) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdBindShadingRateImageNV_LOAD
 #define PFN_vkCmdBindShadingRateImageNV_LOAD
-		cmdBindShadingRateImageNV = (PFN_vkCmdBindShadingRateImageNV)procAddr(device, "vkCmdBindShadingRateImageNV");
+		fp_vkCmdBindShadingRateImageNV = (PFN_vkCmdBindShadingRateImageNV)procAddr(device, "vkCmdBindShadingRateImageNV");
 #endif
 #ifndef PFN_vkCmdSetViewportShadingRatePaletteNV_LOAD
 #define PFN_vkCmdSetViewportShadingRatePaletteNV_LOAD
-		cmdSetViewportShadingRatePaletteNV = (PFN_vkCmdSetViewportShadingRatePaletteNV)procAddr(device, "vkCmdSetViewportShadingRatePaletteNV");
+		fp_vkCmdSetViewportShadingRatePaletteNV = (PFN_vkCmdSetViewportShadingRatePaletteNV)procAddr(device, "vkCmdSetViewportShadingRatePaletteNV");
 #endif
 #ifndef PFN_vkCmdSetCoarseSampleOrderNV_LOAD
 #define PFN_vkCmdSetCoarseSampleOrderNV_LOAD
-		cmdSetCoarseSampleOrderNV = (PFN_vkCmdSetCoarseSampleOrderNV)procAddr(device, "vkCmdSetCoarseSampleOrderNV");
+		fp_vkCmdSetCoarseSampleOrderNV = (PFN_vkCmdSetCoarseSampleOrderNV)procAddr(device, "vkCmdSetCoarseSampleOrderNV");
 #endif
 #endif
 #if defined(VK_NV_ray_tracing) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCreateAccelerationStructureNV_LOAD
 #define PFN_vkCreateAccelerationStructureNV_LOAD
-		createAccelerationStructureNV = (PFN_vkCreateAccelerationStructureNV)procAddr(device, "vkCreateAccelerationStructureNV");
+		fp_vkCreateAccelerationStructureNV = (PFN_vkCreateAccelerationStructureNV)procAddr(device, "vkCreateAccelerationStructureNV");
 #endif
 #ifndef PFN_vkDestroyAccelerationStructureNV_LOAD
 #define PFN_vkDestroyAccelerationStructureNV_LOAD
-		destroyAccelerationStructureNV = (PFN_vkDestroyAccelerationStructureNV)procAddr(device, "vkDestroyAccelerationStructureNV");
+		fp_vkDestroyAccelerationStructureNV = (PFN_vkDestroyAccelerationStructureNV)procAddr(device, "vkDestroyAccelerationStructureNV");
 #endif
 #ifndef PFN_vkGetAccelerationStructureMemoryRequirementsNV_LOAD
 #define PFN_vkGetAccelerationStructureMemoryRequirementsNV_LOAD
-		getAccelerationStructureMemoryRequirementsNV = (PFN_vkGetAccelerationStructureMemoryRequirementsNV)procAddr(device, "vkGetAccelerationStructureMemoryRequirementsNV");
+		fp_vkGetAccelerationStructureMemoryRequirementsNV = (PFN_vkGetAccelerationStructureMemoryRequirementsNV)procAddr(device, "vkGetAccelerationStructureMemoryRequirementsNV");
 #endif
 #ifndef PFN_vkBindAccelerationStructureMemoryNV_LOAD
 #define PFN_vkBindAccelerationStructureMemoryNV_LOAD
-		bindAccelerationStructureMemoryNV = (PFN_vkBindAccelerationStructureMemoryNV)procAddr(device, "vkBindAccelerationStructureMemoryNV");
+		fp_vkBindAccelerationStructureMemoryNV = (PFN_vkBindAccelerationStructureMemoryNV)procAddr(device, "vkBindAccelerationStructureMemoryNV");
 #endif
 #ifndef PFN_vkCmdBuildAccelerationStructureNV_LOAD
 #define PFN_vkCmdBuildAccelerationStructureNV_LOAD
-		cmdBuildAccelerationStructureNV = (PFN_vkCmdBuildAccelerationStructureNV)procAddr(device, "vkCmdBuildAccelerationStructureNV");
+		fp_vkCmdBuildAccelerationStructureNV = (PFN_vkCmdBuildAccelerationStructureNV)procAddr(device, "vkCmdBuildAccelerationStructureNV");
 #endif
 #ifndef PFN_vkCmdCopyAccelerationStructureNV_LOAD
 #define PFN_vkCmdCopyAccelerationStructureNV_LOAD
-		cmdCopyAccelerationStructureNV = (PFN_vkCmdCopyAccelerationStructureNV)procAddr(device, "vkCmdCopyAccelerationStructureNV");
+		fp_vkCmdCopyAccelerationStructureNV = (PFN_vkCmdCopyAccelerationStructureNV)procAddr(device, "vkCmdCopyAccelerationStructureNV");
 #endif
 #ifndef PFN_vkCmdTraceRaysNV_LOAD
 #define PFN_vkCmdTraceRaysNV_LOAD
-		cmdTraceRaysNV = (PFN_vkCmdTraceRaysNV)procAddr(device, "vkCmdTraceRaysNV");
+		fp_vkCmdTraceRaysNV = (PFN_vkCmdTraceRaysNV)procAddr(device, "vkCmdTraceRaysNV");
 #endif
 #ifndef PFN_vkCreateRayTracingPipelinesNV_LOAD
 #define PFN_vkCreateRayTracingPipelinesNV_LOAD
-		createRayTracingPipelinesNV = (PFN_vkCreateRayTracingPipelinesNV)procAddr(device, "vkCreateRayTracingPipelinesNV");
+		fp_vkCreateRayTracingPipelinesNV = (PFN_vkCreateRayTracingPipelinesNV)procAddr(device, "vkCreateRayTracingPipelinesNV");
 #endif
 #ifndef PFN_vkGetRayTracingShaderGroupHandlesNV_LOAD
 #define PFN_vkGetRayTracingShaderGroupHandlesNV_LOAD
-		getRayTracingShaderGroupHandlesNV = (PFN_vkGetRayTracingShaderGroupHandlesNV)procAddr(device, "vkGetRayTracingShaderGroupHandlesNV");
+		fp_vkGetRayTracingShaderGroupHandlesNV = (PFN_vkGetRayTracingShaderGroupHandlesNV)procAddr(device, "vkGetRayTracingShaderGroupHandlesNV");
 #endif
 #ifndef PFN_vkGetAccelerationStructureHandleNV_LOAD
 #define PFN_vkGetAccelerationStructureHandleNV_LOAD
-		getAccelerationStructureHandleNV = (PFN_vkGetAccelerationStructureHandleNV)procAddr(device, "vkGetAccelerationStructureHandleNV");
+		fp_vkGetAccelerationStructureHandleNV = (PFN_vkGetAccelerationStructureHandleNV)procAddr(device, "vkGetAccelerationStructureHandleNV");
 #endif
 #ifndef PFN_vkCmdWriteAccelerationStructuresPropertiesNV_LOAD
 #define PFN_vkCmdWriteAccelerationStructuresPropertiesNV_LOAD
-		cmdWriteAccelerationStructuresPropertiesNV = (PFN_vkCmdWriteAccelerationStructuresPropertiesNV)procAddr(device, "vkCmdWriteAccelerationStructuresPropertiesNV");
+		fp_vkCmdWriteAccelerationStructuresPropertiesNV = (PFN_vkCmdWriteAccelerationStructuresPropertiesNV)procAddr(device, "vkCmdWriteAccelerationStructuresPropertiesNV");
 #endif
 #ifndef PFN_vkCompileDeferredNV_LOAD
 #define PFN_vkCompileDeferredNV_LOAD
-		compileDeferredNV = (PFN_vkCompileDeferredNV)procAddr(device, "vkCompileDeferredNV");
+		fp_vkCompileDeferredNV = (PFN_vkCompileDeferredNV)procAddr(device, "vkCompileDeferredNV");
 #endif
 #endif
 #if defined(VK_KHR_maintenance3) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetDescriptorSetLayoutSupportKHR_LOAD
 #define PFN_vkGetDescriptorSetLayoutSupportKHR_LOAD
-		getDescriptorSetLayoutSupportKHR = (PFN_vkGetDescriptorSetLayoutSupportKHR)procAddr(device, "vkGetDescriptorSetLayoutSupportKHR");
+		fp_vkGetDescriptorSetLayoutSupportKHR = (PFN_vkGetDescriptorSetLayoutSupportKHR)procAddr(device, "vkGetDescriptorSetLayoutSupportKHR");
 #endif
 #endif
 #if defined(VK_EXT_external_memory_host) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetMemoryHostPointerPropertiesEXT_LOAD
 #define PFN_vkGetMemoryHostPointerPropertiesEXT_LOAD
-		getMemoryHostPointerPropertiesEXT = (PFN_vkGetMemoryHostPointerPropertiesEXT)procAddr(device, "vkGetMemoryHostPointerPropertiesEXT");
+		fp_vkGetMemoryHostPointerPropertiesEXT = (PFN_vkGetMemoryHostPointerPropertiesEXT)procAddr(device, "vkGetMemoryHostPointerPropertiesEXT");
 #endif
 #endif
 #if defined(VK_AMD_buffer_marker) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdWriteBufferMarkerAMD_LOAD
 #define PFN_vkCmdWriteBufferMarkerAMD_LOAD
-		cmdWriteBufferMarkerAMD = (PFN_vkCmdWriteBufferMarkerAMD)procAddr(device, "vkCmdWriteBufferMarkerAMD");
+		fp_vkCmdWriteBufferMarkerAMD = (PFN_vkCmdWriteBufferMarkerAMD)procAddr(device, "vkCmdWriteBufferMarkerAMD");
 #endif
 #endif
 #if defined(VK_EXT_calibrated_timestamps) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetCalibratedTimestampsEXT_LOAD
 #define PFN_vkGetCalibratedTimestampsEXT_LOAD
-		getCalibratedTimestampsEXT = (PFN_vkGetCalibratedTimestampsEXT)procAddr(device, "vkGetCalibratedTimestampsEXT");
+		fp_vkGetCalibratedTimestampsEXT = (PFN_vkGetCalibratedTimestampsEXT)procAddr(device, "vkGetCalibratedTimestampsEXT");
 #endif
 #endif
 #if defined(VK_NV_mesh_shader) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdDrawMeshTasksNV_LOAD
 #define PFN_vkCmdDrawMeshTasksNV_LOAD
-		cmdDrawMeshTasksNV = (PFN_vkCmdDrawMeshTasksNV)procAddr(device, "vkCmdDrawMeshTasksNV");
+		fp_vkCmdDrawMeshTasksNV = (PFN_vkCmdDrawMeshTasksNV)procAddr(device, "vkCmdDrawMeshTasksNV");
 #endif
 #ifndef PFN_vkCmdDrawMeshTasksIndirectNV_LOAD
 #define PFN_vkCmdDrawMeshTasksIndirectNV_LOAD
-		cmdDrawMeshTasksIndirectNV = (PFN_vkCmdDrawMeshTasksIndirectNV)procAddr(device, "vkCmdDrawMeshTasksIndirectNV");
+		fp_vkCmdDrawMeshTasksIndirectNV = (PFN_vkCmdDrawMeshTasksIndirectNV)procAddr(device, "vkCmdDrawMeshTasksIndirectNV");
 #endif
 #ifndef PFN_vkCmdDrawMeshTasksIndirectCountNV_LOAD
 #define PFN_vkCmdDrawMeshTasksIndirectCountNV_LOAD
-		cmdDrawMeshTasksIndirectCountNV = (PFN_vkCmdDrawMeshTasksIndirectCountNV)procAddr(device, "vkCmdDrawMeshTasksIndirectCountNV");
+		fp_vkCmdDrawMeshTasksIndirectCountNV = (PFN_vkCmdDrawMeshTasksIndirectCountNV)procAddr(device, "vkCmdDrawMeshTasksIndirectCountNV");
 #endif
 #endif
 #if defined(VK_NV_scissor_exclusive) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdSetExclusiveScissorNV_LOAD
 #define PFN_vkCmdSetExclusiveScissorNV_LOAD
-		cmdSetExclusiveScissorNV = (PFN_vkCmdSetExclusiveScissorNV)procAddr(device, "vkCmdSetExclusiveScissorNV");
+		fp_vkCmdSetExclusiveScissorNV = (PFN_vkCmdSetExclusiveScissorNV)procAddr(device, "vkCmdSetExclusiveScissorNV");
 #endif
 #endif
 #if defined(VK_NV_device_diagnostic_checkpoints) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdSetCheckpointNV_LOAD
 #define PFN_vkCmdSetCheckpointNV_LOAD
-		cmdSetCheckpointNV = (PFN_vkCmdSetCheckpointNV)procAddr(device, "vkCmdSetCheckpointNV");
+		fp_vkCmdSetCheckpointNV = (PFN_vkCmdSetCheckpointNV)procAddr(device, "vkCmdSetCheckpointNV");
 #endif
 #ifndef PFN_vkGetQueueCheckpointDataNV_LOAD
 #define PFN_vkGetQueueCheckpointDataNV_LOAD
-		getQueueCheckpointDataNV = (PFN_vkGetQueueCheckpointDataNV)procAddr(device, "vkGetQueueCheckpointDataNV");
+		fp_vkGetQueueCheckpointDataNV = (PFN_vkGetQueueCheckpointDataNV)procAddr(device, "vkGetQueueCheckpointDataNV");
 #endif
 #endif
 #if defined(VK_KHR_timeline_semaphore) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetSemaphoreCounterValueKHR_LOAD
 #define PFN_vkGetSemaphoreCounterValueKHR_LOAD
-		getSemaphoreCounterValueKHR = (PFN_vkGetSemaphoreCounterValueKHR)procAddr(device, "vkGetSemaphoreCounterValueKHR");
+		fp_vkGetSemaphoreCounterValueKHR = (PFN_vkGetSemaphoreCounterValueKHR)procAddr(device, "vkGetSemaphoreCounterValueKHR");
 #endif
 #ifndef PFN_vkWaitSemaphoresKHR_LOAD
 #define PFN_vkWaitSemaphoresKHR_LOAD
-		waitSemaphoresKHR = (PFN_vkWaitSemaphoresKHR)procAddr(device, "vkWaitSemaphoresKHR");
+		fp_vkWaitSemaphoresKHR = (PFN_vkWaitSemaphoresKHR)procAddr(device, "vkWaitSemaphoresKHR");
 #endif
 #ifndef PFN_vkSignalSemaphoreKHR_LOAD
 #define PFN_vkSignalSemaphoreKHR_LOAD
-		signalSemaphoreKHR = (PFN_vkSignalSemaphoreKHR)procAddr(device, "vkSignalSemaphoreKHR");
+		fp_vkSignalSemaphoreKHR = (PFN_vkSignalSemaphoreKHR)procAddr(device, "vkSignalSemaphoreKHR");
 #endif
 #endif
 #if defined(VK_INTEL_performance_query) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkInitializePerformanceApiINTEL_LOAD
 #define PFN_vkInitializePerformanceApiINTEL_LOAD
-		initializePerformanceApiINTEL = (PFN_vkInitializePerformanceApiINTEL)procAddr(device, "vkInitializePerformanceApiINTEL");
+		fp_vkInitializePerformanceApiINTEL = (PFN_vkInitializePerformanceApiINTEL)procAddr(device, "vkInitializePerformanceApiINTEL");
 #endif
 #ifndef PFN_vkUninitializePerformanceApiINTEL_LOAD
 #define PFN_vkUninitializePerformanceApiINTEL_LOAD
-		uninitializePerformanceApiINTEL = (PFN_vkUninitializePerformanceApiINTEL)procAddr(device, "vkUninitializePerformanceApiINTEL");
+		fp_vkUninitializePerformanceApiINTEL = (PFN_vkUninitializePerformanceApiINTEL)procAddr(device, "vkUninitializePerformanceApiINTEL");
 #endif
 #ifndef PFN_vkCmdSetPerformanceMarkerINTEL_LOAD
 #define PFN_vkCmdSetPerformanceMarkerINTEL_LOAD
-		cmdSetPerformanceMarkerINTEL = (PFN_vkCmdSetPerformanceMarkerINTEL)procAddr(device, "vkCmdSetPerformanceMarkerINTEL");
+		fp_vkCmdSetPerformanceMarkerINTEL = (PFN_vkCmdSetPerformanceMarkerINTEL)procAddr(device, "vkCmdSetPerformanceMarkerINTEL");
 #endif
 #ifndef PFN_vkCmdSetPerformanceStreamMarkerINTEL_LOAD
 #define PFN_vkCmdSetPerformanceStreamMarkerINTEL_LOAD
-		cmdSetPerformanceStreamMarkerINTEL = (PFN_vkCmdSetPerformanceStreamMarkerINTEL)procAddr(device, "vkCmdSetPerformanceStreamMarkerINTEL");
+		fp_vkCmdSetPerformanceStreamMarkerINTEL = (PFN_vkCmdSetPerformanceStreamMarkerINTEL)procAddr(device, "vkCmdSetPerformanceStreamMarkerINTEL");
 #endif
 #ifndef PFN_vkCmdSetPerformanceOverrideINTEL_LOAD
 #define PFN_vkCmdSetPerformanceOverrideINTEL_LOAD
-		cmdSetPerformanceOverrideINTEL = (PFN_vkCmdSetPerformanceOverrideINTEL)procAddr(device, "vkCmdSetPerformanceOverrideINTEL");
+		fp_vkCmdSetPerformanceOverrideINTEL = (PFN_vkCmdSetPerformanceOverrideINTEL)procAddr(device, "vkCmdSetPerformanceOverrideINTEL");
 #endif
 #ifndef PFN_vkAcquirePerformanceConfigurationINTEL_LOAD
 #define PFN_vkAcquirePerformanceConfigurationINTEL_LOAD
-		acquirePerformanceConfigurationINTEL = (PFN_vkAcquirePerformanceConfigurationINTEL)procAddr(device, "vkAcquirePerformanceConfigurationINTEL");
+		fp_vkAcquirePerformanceConfigurationINTEL = (PFN_vkAcquirePerformanceConfigurationINTEL)procAddr(device, "vkAcquirePerformanceConfigurationINTEL");
 #endif
 #ifndef PFN_vkReleasePerformanceConfigurationINTEL_LOAD
 #define PFN_vkReleasePerformanceConfigurationINTEL_LOAD
-		releasePerformanceConfigurationINTEL = (PFN_vkReleasePerformanceConfigurationINTEL)procAddr(device, "vkReleasePerformanceConfigurationINTEL");
+		fp_vkReleasePerformanceConfigurationINTEL = (PFN_vkReleasePerformanceConfigurationINTEL)procAddr(device, "vkReleasePerformanceConfigurationINTEL");
 #endif
 #ifndef PFN_vkQueueSetPerformanceConfigurationINTEL_LOAD
 #define PFN_vkQueueSetPerformanceConfigurationINTEL_LOAD
-		queueSetPerformanceConfigurationINTEL = (PFN_vkQueueSetPerformanceConfigurationINTEL)procAddr(device, "vkQueueSetPerformanceConfigurationINTEL");
+		fp_vkQueueSetPerformanceConfigurationINTEL = (PFN_vkQueueSetPerformanceConfigurationINTEL)procAddr(device, "vkQueueSetPerformanceConfigurationINTEL");
 #endif
 #ifndef PFN_vkGetPerformanceParameterINTEL_LOAD
 #define PFN_vkGetPerformanceParameterINTEL_LOAD
-		getPerformanceParameterINTEL = (PFN_vkGetPerformanceParameterINTEL)procAddr(device, "vkGetPerformanceParameterINTEL");
+		fp_vkGetPerformanceParameterINTEL = (PFN_vkGetPerformanceParameterINTEL)procAddr(device, "vkGetPerformanceParameterINTEL");
 #endif
 #endif
 #if defined(VK_AMD_display_native_hdr) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkSetLocalDimmingAMD_LOAD
 #define PFN_vkSetLocalDimmingAMD_LOAD
-		setLocalDimmingAMD = (PFN_vkSetLocalDimmingAMD)procAddr(device, "vkSetLocalDimmingAMD");
+		fp_vkSetLocalDimmingAMD = (PFN_vkSetLocalDimmingAMD)procAddr(device, "vkSetLocalDimmingAMD");
 #endif
 #endif
 #if defined(VK_KHR_fragment_shading_rate) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdSetFragmentShadingRateKHR_LOAD
 #define PFN_vkCmdSetFragmentShadingRateKHR_LOAD
-		cmdSetFragmentShadingRateKHR = (PFN_vkCmdSetFragmentShadingRateKHR)procAddr(device, "vkCmdSetFragmentShadingRateKHR");
+		fp_vkCmdSetFragmentShadingRateKHR = (PFN_vkCmdSetFragmentShadingRateKHR)procAddr(device, "vkCmdSetFragmentShadingRateKHR");
 #endif
 #endif
 #if defined(VK_EXT_buffer_device_address) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetBufferDeviceAddressEXT_LOAD
 #define PFN_vkGetBufferDeviceAddressEXT_LOAD
-		getBufferDeviceAddressEXT = (PFN_vkGetBufferDeviceAddressEXT)procAddr(device, "vkGetBufferDeviceAddressEXT");
+		fp_vkGetBufferDeviceAddressEXT = (PFN_vkGetBufferDeviceAddressEXT)procAddr(device, "vkGetBufferDeviceAddressEXT");
 #endif
 #endif
 #if defined(VK_EXT_full_screen_exclusive) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkAcquireFullScreenExclusiveModeEXT_LOAD
 #define PFN_vkAcquireFullScreenExclusiveModeEXT_LOAD
-		acquireFullScreenExclusiveModeEXT = (PFN_vkAcquireFullScreenExclusiveModeEXT)procAddr(device, "vkAcquireFullScreenExclusiveModeEXT");
+		fp_vkAcquireFullScreenExclusiveModeEXT = (PFN_vkAcquireFullScreenExclusiveModeEXT)procAddr(device, "vkAcquireFullScreenExclusiveModeEXT");
 #endif
 #ifndef PFN_vkReleaseFullScreenExclusiveModeEXT_LOAD
 #define PFN_vkReleaseFullScreenExclusiveModeEXT_LOAD
-		releaseFullScreenExclusiveModeEXT = (PFN_vkReleaseFullScreenExclusiveModeEXT)procAddr(device, "vkReleaseFullScreenExclusiveModeEXT");
+		fp_vkReleaseFullScreenExclusiveModeEXT = (PFN_vkReleaseFullScreenExclusiveModeEXT)procAddr(device, "vkReleaseFullScreenExclusiveModeEXT");
 #endif
 #ifndef PFN_vkGetDeviceGroupSurfacePresentModes2EXT_LOAD
 #define PFN_vkGetDeviceGroupSurfacePresentModes2EXT_LOAD
-		getDeviceGroupSurfacePresentModes2EXT = (PFN_vkGetDeviceGroupSurfacePresentModes2EXT)procAddr(device, "vkGetDeviceGroupSurfacePresentModes2EXT");
+		fp_vkGetDeviceGroupSurfacePresentModes2EXT = (PFN_vkGetDeviceGroupSurfacePresentModes2EXT)procAddr(device, "vkGetDeviceGroupSurfacePresentModes2EXT");
 #endif
 #endif
 #if defined(VK_EXT_full_screen_exclusive) && defined(VK_VERSION_1_1)
 #ifndef PFN_vkGetDeviceGroupSurfacePresentModes2EXT_LOAD
 #define PFN_vkGetDeviceGroupSurfacePresentModes2EXT_LOAD
-		getDeviceGroupSurfacePresentModes2EXT = (PFN_vkGetDeviceGroupSurfacePresentModes2EXT)procAddr(device, "vkGetDeviceGroupSurfacePresentModes2EXT");
+		fp_vkGetDeviceGroupSurfacePresentModes2EXT = (PFN_vkGetDeviceGroupSurfacePresentModes2EXT)procAddr(device, "vkGetDeviceGroupSurfacePresentModes2EXT");
 #endif
 #endif
 #if defined(VK_KHR_buffer_device_address) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetBufferOpaqueCaptureAddressKHR_LOAD
 #define PFN_vkGetBufferOpaqueCaptureAddressKHR_LOAD
-		getBufferOpaqueCaptureAddressKHR = (PFN_vkGetBufferOpaqueCaptureAddressKHR)procAddr(device, "vkGetBufferOpaqueCaptureAddressKHR");
+		fp_vkGetBufferOpaqueCaptureAddressKHR = (PFN_vkGetBufferOpaqueCaptureAddressKHR)procAddr(device, "vkGetBufferOpaqueCaptureAddressKHR");
 #endif
 #ifndef PFN_vkGetDeviceMemoryOpaqueCaptureAddressKHR_LOAD
 #define PFN_vkGetDeviceMemoryOpaqueCaptureAddressKHR_LOAD
-		getDeviceMemoryOpaqueCaptureAddressKHR = (PFN_vkGetDeviceMemoryOpaqueCaptureAddressKHR)procAddr(device, "vkGetDeviceMemoryOpaqueCaptureAddressKHR");
+		fp_vkGetDeviceMemoryOpaqueCaptureAddressKHR = (PFN_vkGetDeviceMemoryOpaqueCaptureAddressKHR)procAddr(device, "vkGetDeviceMemoryOpaqueCaptureAddressKHR");
 #endif
 #endif
 #if defined(VK_EXT_line_rasterization) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdSetLineStippleEXT_LOAD
 #define PFN_vkCmdSetLineStippleEXT_LOAD
-		cmdSetLineStippleEXT = (PFN_vkCmdSetLineStippleEXT)procAddr(device, "vkCmdSetLineStippleEXT");
+		fp_vkCmdSetLineStippleEXT = (PFN_vkCmdSetLineStippleEXT)procAddr(device, "vkCmdSetLineStippleEXT");
 #endif
 #endif
 #if defined(VK_EXT_host_query_reset) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkResetQueryPoolEXT_LOAD
 #define PFN_vkResetQueryPoolEXT_LOAD
-		resetQueryPoolEXT = (PFN_vkResetQueryPoolEXT)procAddr(device, "vkResetQueryPoolEXT");
+		fp_vkResetQueryPoolEXT = (PFN_vkResetQueryPoolEXT)procAddr(device, "vkResetQueryPoolEXT");
 #endif
 #endif
 #if defined(VK_EXT_extended_dynamic_state) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdSetCullModeEXT_LOAD
 #define PFN_vkCmdSetCullModeEXT_LOAD
-		cmdSetCullModeEXT = (PFN_vkCmdSetCullModeEXT)procAddr(device, "vkCmdSetCullModeEXT");
+		fp_vkCmdSetCullModeEXT = (PFN_vkCmdSetCullModeEXT)procAddr(device, "vkCmdSetCullModeEXT");
 #endif
 #ifndef PFN_vkCmdSetFrontFaceEXT_LOAD
 #define PFN_vkCmdSetFrontFaceEXT_LOAD
-		cmdSetFrontFaceEXT = (PFN_vkCmdSetFrontFaceEXT)procAddr(device, "vkCmdSetFrontFaceEXT");
+		fp_vkCmdSetFrontFaceEXT = (PFN_vkCmdSetFrontFaceEXT)procAddr(device, "vkCmdSetFrontFaceEXT");
 #endif
 #ifndef PFN_vkCmdSetPrimitiveTopologyEXT_LOAD
 #define PFN_vkCmdSetPrimitiveTopologyEXT_LOAD
-		cmdSetPrimitiveTopologyEXT = (PFN_vkCmdSetPrimitiveTopologyEXT)procAddr(device, "vkCmdSetPrimitiveTopologyEXT");
+		fp_vkCmdSetPrimitiveTopologyEXT = (PFN_vkCmdSetPrimitiveTopologyEXT)procAddr(device, "vkCmdSetPrimitiveTopologyEXT");
 #endif
 #ifndef PFN_vkCmdSetViewportWithCountEXT_LOAD
 #define PFN_vkCmdSetViewportWithCountEXT_LOAD
-		cmdSetViewportWithCountEXT = (PFN_vkCmdSetViewportWithCountEXT)procAddr(device, "vkCmdSetViewportWithCountEXT");
+		fp_vkCmdSetViewportWithCountEXT = (PFN_vkCmdSetViewportWithCountEXT)procAddr(device, "vkCmdSetViewportWithCountEXT");
 #endif
 #ifndef PFN_vkCmdSetScissorWithCountEXT_LOAD
 #define PFN_vkCmdSetScissorWithCountEXT_LOAD
-		cmdSetScissorWithCountEXT = (PFN_vkCmdSetScissorWithCountEXT)procAddr(device, "vkCmdSetScissorWithCountEXT");
+		fp_vkCmdSetScissorWithCountEXT = (PFN_vkCmdSetScissorWithCountEXT)procAddr(device, "vkCmdSetScissorWithCountEXT");
 #endif
 #ifndef PFN_vkCmdBindVertexBuffers2EXT_LOAD
 #define PFN_vkCmdBindVertexBuffers2EXT_LOAD
-		cmdBindVertexBuffers2EXT = (PFN_vkCmdBindVertexBuffers2EXT)procAddr(device, "vkCmdBindVertexBuffers2EXT");
+		fp_vkCmdBindVertexBuffers2EXT = (PFN_vkCmdBindVertexBuffers2EXT)procAddr(device, "vkCmdBindVertexBuffers2EXT");
 #endif
 #ifndef PFN_vkCmdSetDepthTestEnableEXT_LOAD
 #define PFN_vkCmdSetDepthTestEnableEXT_LOAD
-		cmdSetDepthTestEnableEXT = (PFN_vkCmdSetDepthTestEnableEXT)procAddr(device, "vkCmdSetDepthTestEnableEXT");
+		fp_vkCmdSetDepthTestEnableEXT = (PFN_vkCmdSetDepthTestEnableEXT)procAddr(device, "vkCmdSetDepthTestEnableEXT");
 #endif
 #ifndef PFN_vkCmdSetDepthWriteEnableEXT_LOAD
 #define PFN_vkCmdSetDepthWriteEnableEXT_LOAD
-		cmdSetDepthWriteEnableEXT = (PFN_vkCmdSetDepthWriteEnableEXT)procAddr(device, "vkCmdSetDepthWriteEnableEXT");
+		fp_vkCmdSetDepthWriteEnableEXT = (PFN_vkCmdSetDepthWriteEnableEXT)procAddr(device, "vkCmdSetDepthWriteEnableEXT");
 #endif
 #ifndef PFN_vkCmdSetDepthCompareOpEXT_LOAD
 #define PFN_vkCmdSetDepthCompareOpEXT_LOAD
-		cmdSetDepthCompareOpEXT = (PFN_vkCmdSetDepthCompareOpEXT)procAddr(device, "vkCmdSetDepthCompareOpEXT");
+		fp_vkCmdSetDepthCompareOpEXT = (PFN_vkCmdSetDepthCompareOpEXT)procAddr(device, "vkCmdSetDepthCompareOpEXT");
 #endif
 #ifndef PFN_vkCmdSetDepthBoundsTestEnableEXT_LOAD
 #define PFN_vkCmdSetDepthBoundsTestEnableEXT_LOAD
-		cmdSetDepthBoundsTestEnableEXT = (PFN_vkCmdSetDepthBoundsTestEnableEXT)procAddr(device, "vkCmdSetDepthBoundsTestEnableEXT");
+		fp_vkCmdSetDepthBoundsTestEnableEXT = (PFN_vkCmdSetDepthBoundsTestEnableEXT)procAddr(device, "vkCmdSetDepthBoundsTestEnableEXT");
 #endif
 #ifndef PFN_vkCmdSetStencilTestEnableEXT_LOAD
 #define PFN_vkCmdSetStencilTestEnableEXT_LOAD
-		cmdSetStencilTestEnableEXT = (PFN_vkCmdSetStencilTestEnableEXT)procAddr(device, "vkCmdSetStencilTestEnableEXT");
+		fp_vkCmdSetStencilTestEnableEXT = (PFN_vkCmdSetStencilTestEnableEXT)procAddr(device, "vkCmdSetStencilTestEnableEXT");
 #endif
 #ifndef PFN_vkCmdSetStencilOpEXT_LOAD
 #define PFN_vkCmdSetStencilOpEXT_LOAD
-		cmdSetStencilOpEXT = (PFN_vkCmdSetStencilOpEXT)procAddr(device, "vkCmdSetStencilOpEXT");
+		fp_vkCmdSetStencilOpEXT = (PFN_vkCmdSetStencilOpEXT)procAddr(device, "vkCmdSetStencilOpEXT");
 #endif
 #endif
 #if defined(VK_KHR_deferred_host_operations) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCreateDeferredOperationKHR_LOAD
 #define PFN_vkCreateDeferredOperationKHR_LOAD
-		createDeferredOperationKHR = (PFN_vkCreateDeferredOperationKHR)procAddr(device, "vkCreateDeferredOperationKHR");
+		fp_vkCreateDeferredOperationKHR = (PFN_vkCreateDeferredOperationKHR)procAddr(device, "vkCreateDeferredOperationKHR");
 #endif
 #ifndef PFN_vkDestroyDeferredOperationKHR_LOAD
 #define PFN_vkDestroyDeferredOperationKHR_LOAD
-		destroyDeferredOperationKHR = (PFN_vkDestroyDeferredOperationKHR)procAddr(device, "vkDestroyDeferredOperationKHR");
+		fp_vkDestroyDeferredOperationKHR = (PFN_vkDestroyDeferredOperationKHR)procAddr(device, "vkDestroyDeferredOperationKHR");
 #endif
 #ifndef PFN_vkGetDeferredOperationMaxConcurrencyKHR_LOAD
 #define PFN_vkGetDeferredOperationMaxConcurrencyKHR_LOAD
-		getDeferredOperationMaxConcurrencyKHR = (PFN_vkGetDeferredOperationMaxConcurrencyKHR)procAddr(device, "vkGetDeferredOperationMaxConcurrencyKHR");
+		fp_vkGetDeferredOperationMaxConcurrencyKHR = (PFN_vkGetDeferredOperationMaxConcurrencyKHR)procAddr(device, "vkGetDeferredOperationMaxConcurrencyKHR");
 #endif
 #ifndef PFN_vkGetDeferredOperationResultKHR_LOAD
 #define PFN_vkGetDeferredOperationResultKHR_LOAD
-		getDeferredOperationResultKHR = (PFN_vkGetDeferredOperationResultKHR)procAddr(device, "vkGetDeferredOperationResultKHR");
+		fp_vkGetDeferredOperationResultKHR = (PFN_vkGetDeferredOperationResultKHR)procAddr(device, "vkGetDeferredOperationResultKHR");
 #endif
 #ifndef PFN_vkDeferredOperationJoinKHR_LOAD
 #define PFN_vkDeferredOperationJoinKHR_LOAD
-		deferredOperationJoinKHR = (PFN_vkDeferredOperationJoinKHR)procAddr(device, "vkDeferredOperationJoinKHR");
+		fp_vkDeferredOperationJoinKHR = (PFN_vkDeferredOperationJoinKHR)procAddr(device, "vkDeferredOperationJoinKHR");
 #endif
 #endif
 #if defined(VK_KHR_pipeline_executable_properties) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetPipelineExecutablePropertiesKHR_LOAD
 #define PFN_vkGetPipelineExecutablePropertiesKHR_LOAD
-		getPipelineExecutablePropertiesKHR = (PFN_vkGetPipelineExecutablePropertiesKHR)procAddr(device, "vkGetPipelineExecutablePropertiesKHR");
+		fp_vkGetPipelineExecutablePropertiesKHR = (PFN_vkGetPipelineExecutablePropertiesKHR)procAddr(device, "vkGetPipelineExecutablePropertiesKHR");
 #endif
 #ifndef PFN_vkGetPipelineExecutableStatisticsKHR_LOAD
 #define PFN_vkGetPipelineExecutableStatisticsKHR_LOAD
-		getPipelineExecutableStatisticsKHR = (PFN_vkGetPipelineExecutableStatisticsKHR)procAddr(device, "vkGetPipelineExecutableStatisticsKHR");
+		fp_vkGetPipelineExecutableStatisticsKHR = (PFN_vkGetPipelineExecutableStatisticsKHR)procAddr(device, "vkGetPipelineExecutableStatisticsKHR");
 #endif
 #ifndef PFN_vkGetPipelineExecutableInternalRepresentationsKHR_LOAD
 #define PFN_vkGetPipelineExecutableInternalRepresentationsKHR_LOAD
-		getPipelineExecutableInternalRepresentationsKHR = (PFN_vkGetPipelineExecutableInternalRepresentationsKHR)procAddr(device, "vkGetPipelineExecutableInternalRepresentationsKHR");
+		fp_vkGetPipelineExecutableInternalRepresentationsKHR = (PFN_vkGetPipelineExecutableInternalRepresentationsKHR)procAddr(device, "vkGetPipelineExecutableInternalRepresentationsKHR");
 #endif
 #endif
 #if defined(VK_NV_device_generated_commands) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetGeneratedCommandsMemoryRequirementsNV_LOAD
 #define PFN_vkGetGeneratedCommandsMemoryRequirementsNV_LOAD
-		getGeneratedCommandsMemoryRequirementsNV = (PFN_vkGetGeneratedCommandsMemoryRequirementsNV)procAddr(device, "vkGetGeneratedCommandsMemoryRequirementsNV");
+		fp_vkGetGeneratedCommandsMemoryRequirementsNV = (PFN_vkGetGeneratedCommandsMemoryRequirementsNV)procAddr(device, "vkGetGeneratedCommandsMemoryRequirementsNV");
 #endif
 #ifndef PFN_vkCmdPreprocessGeneratedCommandsNV_LOAD
 #define PFN_vkCmdPreprocessGeneratedCommandsNV_LOAD
-		cmdPreprocessGeneratedCommandsNV = (PFN_vkCmdPreprocessGeneratedCommandsNV)procAddr(device, "vkCmdPreprocessGeneratedCommandsNV");
+		fp_vkCmdPreprocessGeneratedCommandsNV = (PFN_vkCmdPreprocessGeneratedCommandsNV)procAddr(device, "vkCmdPreprocessGeneratedCommandsNV");
 #endif
 #ifndef PFN_vkCmdExecuteGeneratedCommandsNV_LOAD
 #define PFN_vkCmdExecuteGeneratedCommandsNV_LOAD
-		cmdExecuteGeneratedCommandsNV = (PFN_vkCmdExecuteGeneratedCommandsNV)procAddr(device, "vkCmdExecuteGeneratedCommandsNV");
+		fp_vkCmdExecuteGeneratedCommandsNV = (PFN_vkCmdExecuteGeneratedCommandsNV)procAddr(device, "vkCmdExecuteGeneratedCommandsNV");
 #endif
 #ifndef PFN_vkCmdBindPipelineShaderGroupNV_LOAD
 #define PFN_vkCmdBindPipelineShaderGroupNV_LOAD
-		cmdBindPipelineShaderGroupNV = (PFN_vkCmdBindPipelineShaderGroupNV)procAddr(device, "vkCmdBindPipelineShaderGroupNV");
+		fp_vkCmdBindPipelineShaderGroupNV = (PFN_vkCmdBindPipelineShaderGroupNV)procAddr(device, "vkCmdBindPipelineShaderGroupNV");
 #endif
 #ifndef PFN_vkCreateIndirectCommandsLayoutNV_LOAD
 #define PFN_vkCreateIndirectCommandsLayoutNV_LOAD
-		createIndirectCommandsLayoutNV = (PFN_vkCreateIndirectCommandsLayoutNV)procAddr(device, "vkCreateIndirectCommandsLayoutNV");
+		fp_vkCreateIndirectCommandsLayoutNV = (PFN_vkCreateIndirectCommandsLayoutNV)procAddr(device, "vkCreateIndirectCommandsLayoutNV");
 #endif
 #ifndef PFN_vkDestroyIndirectCommandsLayoutNV_LOAD
 #define PFN_vkDestroyIndirectCommandsLayoutNV_LOAD
-		destroyIndirectCommandsLayoutNV = (PFN_vkDestroyIndirectCommandsLayoutNV)procAddr(device, "vkDestroyIndirectCommandsLayoutNV");
+		fp_vkDestroyIndirectCommandsLayoutNV = (PFN_vkDestroyIndirectCommandsLayoutNV)procAddr(device, "vkDestroyIndirectCommandsLayoutNV");
 #endif
 #endif
 #if defined(VK_EXT_private_data) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCreatePrivateDataSlotEXT_LOAD
 #define PFN_vkCreatePrivateDataSlotEXT_LOAD
-		createPrivateDataSlotEXT = (PFN_vkCreatePrivateDataSlotEXT)procAddr(device, "vkCreatePrivateDataSlotEXT");
+		fp_vkCreatePrivateDataSlotEXT = (PFN_vkCreatePrivateDataSlotEXT)procAddr(device, "vkCreatePrivateDataSlotEXT");
 #endif
 #ifndef PFN_vkDestroyPrivateDataSlotEXT_LOAD
 #define PFN_vkDestroyPrivateDataSlotEXT_LOAD
-		destroyPrivateDataSlotEXT = (PFN_vkDestroyPrivateDataSlotEXT)procAddr(device, "vkDestroyPrivateDataSlotEXT");
+		fp_vkDestroyPrivateDataSlotEXT = (PFN_vkDestroyPrivateDataSlotEXT)procAddr(device, "vkDestroyPrivateDataSlotEXT");
 #endif
 #ifndef PFN_vkSetPrivateDataEXT_LOAD
 #define PFN_vkSetPrivateDataEXT_LOAD
-		setPrivateDataEXT = (PFN_vkSetPrivateDataEXT)procAddr(device, "vkSetPrivateDataEXT");
+		fp_vkSetPrivateDataEXT = (PFN_vkSetPrivateDataEXT)procAddr(device, "vkSetPrivateDataEXT");
 #endif
 #ifndef PFN_vkGetPrivateDataEXT_LOAD
 #define PFN_vkGetPrivateDataEXT_LOAD
-		getPrivateDataEXT = (PFN_vkGetPrivateDataEXT)procAddr(device, "vkGetPrivateDataEXT");
+		fp_vkGetPrivateDataEXT = (PFN_vkGetPrivateDataEXT)procAddr(device, "vkGetPrivateDataEXT");
 #endif
 #endif
 #if defined(VK_KHR_synchronization2) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdSetEvent2KHR_LOAD
 #define PFN_vkCmdSetEvent2KHR_LOAD
-		cmdSetEvent2KHR = (PFN_vkCmdSetEvent2KHR)procAddr(device, "vkCmdSetEvent2KHR");
+		fp_vkCmdSetEvent2KHR = (PFN_vkCmdSetEvent2KHR)procAddr(device, "vkCmdSetEvent2KHR");
 #endif
 #ifndef PFN_vkCmdResetEvent2KHR_LOAD
 #define PFN_vkCmdResetEvent2KHR_LOAD
-		cmdResetEvent2KHR = (PFN_vkCmdResetEvent2KHR)procAddr(device, "vkCmdResetEvent2KHR");
+		fp_vkCmdResetEvent2KHR = (PFN_vkCmdResetEvent2KHR)procAddr(device, "vkCmdResetEvent2KHR");
 #endif
 #ifndef PFN_vkCmdWaitEvents2KHR_LOAD
 #define PFN_vkCmdWaitEvents2KHR_LOAD
-		cmdWaitEvents2KHR = (PFN_vkCmdWaitEvents2KHR)procAddr(device, "vkCmdWaitEvents2KHR");
+		fp_vkCmdWaitEvents2KHR = (PFN_vkCmdWaitEvents2KHR)procAddr(device, "vkCmdWaitEvents2KHR");
 #endif
 #ifndef PFN_vkCmdPipelineBarrier2KHR_LOAD
 #define PFN_vkCmdPipelineBarrier2KHR_LOAD
-		cmdPipelineBarrier2KHR = (PFN_vkCmdPipelineBarrier2KHR)procAddr(device, "vkCmdPipelineBarrier2KHR");
+		fp_vkCmdPipelineBarrier2KHR = (PFN_vkCmdPipelineBarrier2KHR)procAddr(device, "vkCmdPipelineBarrier2KHR");
 #endif
 #ifndef PFN_vkCmdWriteTimestamp2KHR_LOAD
 #define PFN_vkCmdWriteTimestamp2KHR_LOAD
-		cmdWriteTimestamp2KHR = (PFN_vkCmdWriteTimestamp2KHR)procAddr(device, "vkCmdWriteTimestamp2KHR");
+		fp_vkCmdWriteTimestamp2KHR = (PFN_vkCmdWriteTimestamp2KHR)procAddr(device, "vkCmdWriteTimestamp2KHR");
 #endif
 #ifndef PFN_vkQueueSubmit2KHR_LOAD
 #define PFN_vkQueueSubmit2KHR_LOAD
-		queueSubmit2KHR = (PFN_vkQueueSubmit2KHR)procAddr(device, "vkQueueSubmit2KHR");
+		fp_vkQueueSubmit2KHR = (PFN_vkQueueSubmit2KHR)procAddr(device, "vkQueueSubmit2KHR");
 #endif
 #ifndef PFN_vkCmdWriteBufferMarker2AMD_LOAD
 #define PFN_vkCmdWriteBufferMarker2AMD_LOAD
-		cmdWriteBufferMarker2AMD = (PFN_vkCmdWriteBufferMarker2AMD)procAddr(device, "vkCmdWriteBufferMarker2AMD");
+		fp_vkCmdWriteBufferMarker2AMD = (PFN_vkCmdWriteBufferMarker2AMD)procAddr(device, "vkCmdWriteBufferMarker2AMD");
 #endif
 #ifndef PFN_vkGetQueueCheckpointData2NV_LOAD
 #define PFN_vkGetQueueCheckpointData2NV_LOAD
-		getQueueCheckpointData2NV = (PFN_vkGetQueueCheckpointData2NV)procAddr(device, "vkGetQueueCheckpointData2NV");
+		fp_vkGetQueueCheckpointData2NV = (PFN_vkGetQueueCheckpointData2NV)procAddr(device, "vkGetQueueCheckpointData2NV");
 #endif
 #endif
 #if defined(VK_NV_fragment_shading_rate_enums) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdSetFragmentShadingRateEnumNV_LOAD
 #define PFN_vkCmdSetFragmentShadingRateEnumNV_LOAD
-		cmdSetFragmentShadingRateEnumNV = (PFN_vkCmdSetFragmentShadingRateEnumNV)procAddr(device, "vkCmdSetFragmentShadingRateEnumNV");
+		fp_vkCmdSetFragmentShadingRateEnumNV = (PFN_vkCmdSetFragmentShadingRateEnumNV)procAddr(device, "vkCmdSetFragmentShadingRateEnumNV");
 #endif
 #endif
 #if defined(VK_KHR_copy_commands2) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdCopyBuffer2KHR_LOAD
 #define PFN_vkCmdCopyBuffer2KHR_LOAD
-		cmdCopyBuffer2KHR = (PFN_vkCmdCopyBuffer2KHR)procAddr(device, "vkCmdCopyBuffer2KHR");
+		fp_vkCmdCopyBuffer2KHR = (PFN_vkCmdCopyBuffer2KHR)procAddr(device, "vkCmdCopyBuffer2KHR");
 #endif
 #ifndef PFN_vkCmdCopyImage2KHR_LOAD
 #define PFN_vkCmdCopyImage2KHR_LOAD
-		cmdCopyImage2KHR = (PFN_vkCmdCopyImage2KHR)procAddr(device, "vkCmdCopyImage2KHR");
+		fp_vkCmdCopyImage2KHR = (PFN_vkCmdCopyImage2KHR)procAddr(device, "vkCmdCopyImage2KHR");
 #endif
 #ifndef PFN_vkCmdCopyBufferToImage2KHR_LOAD
 #define PFN_vkCmdCopyBufferToImage2KHR_LOAD
-		cmdCopyBufferToImage2KHR = (PFN_vkCmdCopyBufferToImage2KHR)procAddr(device, "vkCmdCopyBufferToImage2KHR");
+		fp_vkCmdCopyBufferToImage2KHR = (PFN_vkCmdCopyBufferToImage2KHR)procAddr(device, "vkCmdCopyBufferToImage2KHR");
 #endif
 #ifndef PFN_vkCmdCopyImageToBuffer2KHR_LOAD
 #define PFN_vkCmdCopyImageToBuffer2KHR_LOAD
-		cmdCopyImageToBuffer2KHR = (PFN_vkCmdCopyImageToBuffer2KHR)procAddr(device, "vkCmdCopyImageToBuffer2KHR");
+		fp_vkCmdCopyImageToBuffer2KHR = (PFN_vkCmdCopyImageToBuffer2KHR)procAddr(device, "vkCmdCopyImageToBuffer2KHR");
 #endif
 #ifndef PFN_vkCmdBlitImage2KHR_LOAD
 #define PFN_vkCmdBlitImage2KHR_LOAD
-		cmdBlitImage2KHR = (PFN_vkCmdBlitImage2KHR)procAddr(device, "vkCmdBlitImage2KHR");
+		fp_vkCmdBlitImage2KHR = (PFN_vkCmdBlitImage2KHR)procAddr(device, "vkCmdBlitImage2KHR");
 #endif
 #ifndef PFN_vkCmdResolveImage2KHR_LOAD
 #define PFN_vkCmdResolveImage2KHR_LOAD
-		cmdResolveImage2KHR = (PFN_vkCmdResolveImage2KHR)procAddr(device, "vkCmdResolveImage2KHR");
+		fp_vkCmdResolveImage2KHR = (PFN_vkCmdResolveImage2KHR)procAddr(device, "vkCmdResolveImage2KHR");
 #endif
 #endif
 #if defined(VK_EXT_vertex_input_dynamic_state) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdSetVertexInputEXT_LOAD
 #define PFN_vkCmdSetVertexInputEXT_LOAD
-		cmdSetVertexInputEXT = (PFN_vkCmdSetVertexInputEXT)procAddr(device, "vkCmdSetVertexInputEXT");
+		fp_vkCmdSetVertexInputEXT = (PFN_vkCmdSetVertexInputEXT)procAddr(device, "vkCmdSetVertexInputEXT");
 #endif
 #endif
 #if defined(VK_FUCHSIA_external_memory) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetMemoryZirconHandleFUCHSIA_LOAD
 #define PFN_vkGetMemoryZirconHandleFUCHSIA_LOAD
-		getMemoryZirconHandleFUCHSIA = (PFN_vkGetMemoryZirconHandleFUCHSIA)procAddr(device, "vkGetMemoryZirconHandleFUCHSIA");
+		fp_vkGetMemoryZirconHandleFUCHSIA = (PFN_vkGetMemoryZirconHandleFUCHSIA)procAddr(device, "vkGetMemoryZirconHandleFUCHSIA");
 #endif
 #ifndef PFN_vkGetMemoryZirconHandlePropertiesFUCHSIA_LOAD
 #define PFN_vkGetMemoryZirconHandlePropertiesFUCHSIA_LOAD
-		getMemoryZirconHandlePropertiesFUCHSIA = (PFN_vkGetMemoryZirconHandlePropertiesFUCHSIA)procAddr(device, "vkGetMemoryZirconHandlePropertiesFUCHSIA");
+		fp_vkGetMemoryZirconHandlePropertiesFUCHSIA = (PFN_vkGetMemoryZirconHandlePropertiesFUCHSIA)procAddr(device, "vkGetMemoryZirconHandlePropertiesFUCHSIA");
 #endif
 #endif
 #if defined(VK_FUCHSIA_external_semaphore) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkImportSemaphoreZirconHandleFUCHSIA_LOAD
 #define PFN_vkImportSemaphoreZirconHandleFUCHSIA_LOAD
-		importSemaphoreZirconHandleFUCHSIA = (PFN_vkImportSemaphoreZirconHandleFUCHSIA)procAddr(device, "vkImportSemaphoreZirconHandleFUCHSIA");
+		fp_vkImportSemaphoreZirconHandleFUCHSIA = (PFN_vkImportSemaphoreZirconHandleFUCHSIA)procAddr(device, "vkImportSemaphoreZirconHandleFUCHSIA");
 #endif
 #ifndef PFN_vkGetSemaphoreZirconHandleFUCHSIA_LOAD
 #define PFN_vkGetSemaphoreZirconHandleFUCHSIA_LOAD
-		getSemaphoreZirconHandleFUCHSIA = (PFN_vkGetSemaphoreZirconHandleFUCHSIA)procAddr(device, "vkGetSemaphoreZirconHandleFUCHSIA");
+		fp_vkGetSemaphoreZirconHandleFUCHSIA = (PFN_vkGetSemaphoreZirconHandleFUCHSIA)procAddr(device, "vkGetSemaphoreZirconHandleFUCHSIA");
 #endif
 #endif
 #if defined(VK_EXT_extended_dynamic_state2) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdSetPatchControlPointsEXT_LOAD
 #define PFN_vkCmdSetPatchControlPointsEXT_LOAD
-		cmdSetPatchControlPointsEXT = (PFN_vkCmdSetPatchControlPointsEXT)procAddr(device, "vkCmdSetPatchControlPointsEXT");
+		fp_vkCmdSetPatchControlPointsEXT = (PFN_vkCmdSetPatchControlPointsEXT)procAddr(device, "vkCmdSetPatchControlPointsEXT");
 #endif
 #ifndef PFN_vkCmdSetRasterizerDiscardEnableEXT_LOAD
 #define PFN_vkCmdSetRasterizerDiscardEnableEXT_LOAD
-		cmdSetRasterizerDiscardEnableEXT = (PFN_vkCmdSetRasterizerDiscardEnableEXT)procAddr(device, "vkCmdSetRasterizerDiscardEnableEXT");
+		fp_vkCmdSetRasterizerDiscardEnableEXT = (PFN_vkCmdSetRasterizerDiscardEnableEXT)procAddr(device, "vkCmdSetRasterizerDiscardEnableEXT");
 #endif
 #ifndef PFN_vkCmdSetDepthBiasEnableEXT_LOAD
 #define PFN_vkCmdSetDepthBiasEnableEXT_LOAD
-		cmdSetDepthBiasEnableEXT = (PFN_vkCmdSetDepthBiasEnableEXT)procAddr(device, "vkCmdSetDepthBiasEnableEXT");
+		fp_vkCmdSetDepthBiasEnableEXT = (PFN_vkCmdSetDepthBiasEnableEXT)procAddr(device, "vkCmdSetDepthBiasEnableEXT");
 #endif
 #ifndef PFN_vkCmdSetLogicOpEXT_LOAD
 #define PFN_vkCmdSetLogicOpEXT_LOAD
-		cmdSetLogicOpEXT = (PFN_vkCmdSetLogicOpEXT)procAddr(device, "vkCmdSetLogicOpEXT");
+		fp_vkCmdSetLogicOpEXT = (PFN_vkCmdSetLogicOpEXT)procAddr(device, "vkCmdSetLogicOpEXT");
 #endif
 #ifndef PFN_vkCmdSetPrimitiveRestartEnableEXT_LOAD
 #define PFN_vkCmdSetPrimitiveRestartEnableEXT_LOAD
-		cmdSetPrimitiveRestartEnableEXT = (PFN_vkCmdSetPrimitiveRestartEnableEXT)procAddr(device, "vkCmdSetPrimitiveRestartEnableEXT");
+		fp_vkCmdSetPrimitiveRestartEnableEXT = (PFN_vkCmdSetPrimitiveRestartEnableEXT)procAddr(device, "vkCmdSetPrimitiveRestartEnableEXT");
 #endif
 #endif
 #if defined(VK_EXT_color_write_enable) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdSetColorWriteEnableEXT_LOAD
 #define PFN_vkCmdSetColorWriteEnableEXT_LOAD
-		cmdSetColorWriteEnableEXT = (PFN_vkCmdSetColorWriteEnableEXT)procAddr(device, "vkCmdSetColorWriteEnableEXT");
+		fp_vkCmdSetColorWriteEnableEXT = (PFN_vkCmdSetColorWriteEnableEXT)procAddr(device, "vkCmdSetColorWriteEnableEXT");
 #endif
 #endif
 	}
+	void getDeviceQueue(uint32_t queueFamilyIndex, uint32_t queueIndex, VkQueue* pQueue) {
+		fp_vkGetDeviceQueue(_device, queueFamilyIndex, queueIndex, pQueue);
+	}
+	VkResult queueSubmit(VkQueue queue, uint32_t submitCount, const VkSubmitInfo* pSubmits, VkFence fence) {
+		return fp_vkQueueSubmit(queue, submitCount, pSubmits, fence);
+	}
+	VkResult queueWaitIdle(VkQueue queue) {
+		return fp_vkQueueWaitIdle(queue);
+	}
+	VkResult deviceWaitIdle() {
+		return fp_vkDeviceWaitIdle(_device);
+	}
+	VkResult allocateMemory(const VkMemoryAllocateInfo* pAllocateInfo, const VkAllocationCallbacks* pAllocator, VkDeviceMemory* pMemory) {
+		return fp_vkAllocateMemory(_device, pAllocateInfo, pAllocator, pMemory);
+	}
+	void freeMemory(VkDeviceMemory memory, const VkAllocationCallbacks* pAllocator) {
+		fp_vkFreeMemory(_device, memory, pAllocator);
+	}
+	VkResult mapMemory(VkDeviceMemory memory, VkDeviceSize offset, VkDeviceSize size, VkMemoryMapFlags flags, void** ppData) {
+		return fp_vkMapMemory(_device, memory, offset, size, flags, ppData);
+	}
+	void unmapMemory(VkDeviceMemory memory) {
+		fp_vkUnmapMemory(_device, memory);
+	}
+	VkResult flushMappedMemoryRanges(uint32_t memoryRangeCount, const VkMappedMemoryRange* pMemoryRanges) {
+		return fp_vkFlushMappedMemoryRanges(_device, memoryRangeCount, pMemoryRanges);
+	}
+	VkResult invalidateMappedMemoryRanges(uint32_t memoryRangeCount, const VkMappedMemoryRange* pMemoryRanges) {
+		return fp_vkInvalidateMappedMemoryRanges(_device, memoryRangeCount, pMemoryRanges);
+	}
+	void getDeviceMemoryCommitment(VkDeviceMemory memory, VkDeviceSize* pCommittedMemoryInBytes) {
+		fp_vkGetDeviceMemoryCommitment(_device, memory, pCommittedMemoryInBytes);
+	}
+	VkResult bindBufferMemory(VkBuffer buffer, VkDeviceMemory memory, VkDeviceSize memoryOffset) {
+		return fp_vkBindBufferMemory(_device, buffer, memory, memoryOffset);
+	}
+	VkResult bindImageMemory(VkImage image, VkDeviceMemory memory, VkDeviceSize memoryOffset) {
+		return fp_vkBindImageMemory(_device, image, memory, memoryOffset);
+	}
+	void getBufferMemoryRequirements(VkBuffer buffer, VkMemoryRequirements* pMemoryRequirements) {
+		fp_vkGetBufferMemoryRequirements(_device, buffer, pMemoryRequirements);
+	}
+	void getImageMemoryRequirements(VkImage image, VkMemoryRequirements* pMemoryRequirements) {
+		fp_vkGetImageMemoryRequirements(_device, image, pMemoryRequirements);
+	}
+	void getImageSparseMemoryRequirements(VkImage image, uint32_t* pSparseMemoryRequirementCount, VkSparseImageMemoryRequirements* pSparseMemoryRequirements) {
+		fp_vkGetImageSparseMemoryRequirements(_device, image, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
+	}
+	VkResult queueBindSparse(VkQueue queue, uint32_t bindInfoCount, const VkBindSparseInfo* pBindInfo, VkFence fence) {
+		return fp_vkQueueBindSparse(queue, bindInfoCount, pBindInfo, fence);
+	}
+	VkResult createFence(const VkFenceCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkFence* pFence) {
+		return fp_vkCreateFence(_device, pCreateInfo, pAllocator, pFence);
+	}
+	void destroyFence(VkFence fence, const VkAllocationCallbacks* pAllocator) {
+		fp_vkDestroyFence(_device, fence, pAllocator);
+	}
+	VkResult resetFences(uint32_t fenceCount, const VkFence* pFences) {
+		return fp_vkResetFences(_device, fenceCount, pFences);
+	}
+	VkResult getFenceStatus(VkFence fence) {
+		return fp_vkGetFenceStatus(_device, fence);
+	}
+	VkResult waitForFences(uint32_t fenceCount, const VkFence* pFences, VkBool32 waitAll, uint64_t timeout) {
+		return fp_vkWaitForFences(_device, fenceCount, pFences, waitAll, timeout);
+	}
+	VkResult createSemaphore(const VkSemaphoreCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkSemaphore* pSemaphore) {
+		return fp_vkCreateSemaphore(_device, pCreateInfo, pAllocator, pSemaphore);
+	}
+	void destroySemaphore(VkSemaphore semaphore, const VkAllocationCallbacks* pAllocator) {
+		fp_vkDestroySemaphore(_device, semaphore, pAllocator);
+	}
+	VkResult createEvent(const VkEventCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkEvent* pEvent) {
+		return fp_vkCreateEvent(_device, pCreateInfo, pAllocator, pEvent);
+	}
+	void destroyEvent(VkEvent event, const VkAllocationCallbacks* pAllocator) {
+		fp_vkDestroyEvent(_device, event, pAllocator);
+	}
+	VkResult getEventStatus(VkEvent event) {
+		return fp_vkGetEventStatus(_device, event);
+	}
+	VkResult setEvent(VkEvent event) {
+		return fp_vkSetEvent(_device, event);
+	}
+	VkResult resetEvent(VkEvent event) {
+		return fp_vkResetEvent(_device, event);
+	}
+	VkResult createQueryPool(const VkQueryPoolCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkQueryPool* pQueryPool) {
+		return fp_vkCreateQueryPool(_device, pCreateInfo, pAllocator, pQueryPool);
+	}
+	void destroyQueryPool(VkQueryPool queryPool, const VkAllocationCallbacks* pAllocator) {
+		fp_vkDestroyQueryPool(_device, queryPool, pAllocator);
+	}
+	VkResult getQueryPoolResults(VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount, size_t dataSize, void* pData, VkDeviceSize stride, VkQueryResultFlags flags) {
+		return fp_vkGetQueryPoolResults(_device, queryPool, firstQuery, queryCount, dataSize, pData, stride, flags);
+	}
+	VkResult createBuffer(const VkBufferCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkBuffer* pBuffer) {
+		return fp_vkCreateBuffer(_device, pCreateInfo, pAllocator, pBuffer);
+	}
+	void destroyBuffer(VkBuffer buffer, const VkAllocationCallbacks* pAllocator) {
+		fp_vkDestroyBuffer(_device, buffer, pAllocator);
+	}
+	VkResult createBufferView(const VkBufferViewCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkBufferView* pView) {
+		return fp_vkCreateBufferView(_device, pCreateInfo, pAllocator, pView);
+	}
+	void destroyBufferView(VkBufferView bufferView, const VkAllocationCallbacks* pAllocator) {
+		fp_vkDestroyBufferView(_device, bufferView, pAllocator);
+	}
+	VkResult createImage(const VkImageCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkImage* pImage) {
+		return fp_vkCreateImage(_device, pCreateInfo, pAllocator, pImage);
+	}
+	void destroyImage(VkImage image, const VkAllocationCallbacks* pAllocator) {
+		fp_vkDestroyImage(_device, image, pAllocator);
+	}
+	void getImageSubresourceLayout(VkImage image, const VkImageSubresource* pSubresource, VkSubresourceLayout* pLayout) {
+		fp_vkGetImageSubresourceLayout(_device, image, pSubresource, pLayout);
+	}
+	VkResult createImageView(const VkImageViewCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkImageView* pView) {
+		return fp_vkCreateImageView(_device, pCreateInfo, pAllocator, pView);
+	}
+	void destroyImageView(VkImageView imageView, const VkAllocationCallbacks* pAllocator) {
+		fp_vkDestroyImageView(_device, imageView, pAllocator);
+	}
+	VkResult createShaderModule(const VkShaderModuleCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkShaderModule* pShaderModule) {
+		return fp_vkCreateShaderModule(_device, pCreateInfo, pAllocator, pShaderModule);
+	}
+	void destroyShaderModule(VkShaderModule shaderModule, const VkAllocationCallbacks* pAllocator) {
+		fp_vkDestroyShaderModule(_device, shaderModule, pAllocator);
+	}
+	VkResult createPipelineCache(const VkPipelineCacheCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkPipelineCache* pPipelineCache) {
+		return fp_vkCreatePipelineCache(_device, pCreateInfo, pAllocator, pPipelineCache);
+	}
+	void destroyPipelineCache(VkPipelineCache pipelineCache, const VkAllocationCallbacks* pAllocator) {
+		fp_vkDestroyPipelineCache(_device, pipelineCache, pAllocator);
+	}
+	VkResult getPipelineCacheData(VkPipelineCache pipelineCache, size_t* pDataSize, void* pData) {
+		return fp_vkGetPipelineCacheData(_device, pipelineCache, pDataSize, pData);
+	}
+	VkResult mergePipelineCaches(VkPipelineCache dstCache, uint32_t srcCacheCount, const VkPipelineCache* pSrcCaches) {
+		return fp_vkMergePipelineCaches(_device, dstCache, srcCacheCount, pSrcCaches);
+	}
+	VkResult createGraphicsPipelines(VkPipelineCache pipelineCache, uint32_t createInfoCount, const VkGraphicsPipelineCreateInfo* pCreateInfos, const VkAllocationCallbacks* pAllocator, VkPipeline* pPipelines) {
+		return fp_vkCreateGraphicsPipelines(_device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
+	}
+	VkResult createComputePipelines(VkPipelineCache pipelineCache, uint32_t createInfoCount, const VkComputePipelineCreateInfo* pCreateInfos, const VkAllocationCallbacks* pAllocator, VkPipeline* pPipelines) {
+		return fp_vkCreateComputePipelines(_device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
+	}
+	void destroyPipeline(VkPipeline pipeline, const VkAllocationCallbacks* pAllocator) {
+		fp_vkDestroyPipeline(_device, pipeline, pAllocator);
+	}
+	VkResult createPipelineLayout(const VkPipelineLayoutCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkPipelineLayout* pPipelineLayout) {
+		return fp_vkCreatePipelineLayout(_device, pCreateInfo, pAllocator, pPipelineLayout);
+	}
+	void destroyPipelineLayout(VkPipelineLayout pipelineLayout, const VkAllocationCallbacks* pAllocator) {
+		fp_vkDestroyPipelineLayout(_device, pipelineLayout, pAllocator);
+	}
+	VkResult createSampler(const VkSamplerCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkSampler* pSampler) {
+		return fp_vkCreateSampler(_device, pCreateInfo, pAllocator, pSampler);
+	}
+	void destroySampler(VkSampler sampler, const VkAllocationCallbacks* pAllocator) {
+		fp_vkDestroySampler(_device, sampler, pAllocator);
+	}
+	VkResult createDescriptorSetLayout(const VkDescriptorSetLayoutCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDescriptorSetLayout* pSetLayout) {
+		return fp_vkCreateDescriptorSetLayout(_device, pCreateInfo, pAllocator, pSetLayout);
+	}
+	void destroyDescriptorSetLayout(VkDescriptorSetLayout descriptorSetLayout, const VkAllocationCallbacks* pAllocator) {
+		fp_vkDestroyDescriptorSetLayout(_device, descriptorSetLayout, pAllocator);
+	}
+	VkResult createDescriptorPool(const VkDescriptorPoolCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDescriptorPool* pDescriptorPool) {
+		return fp_vkCreateDescriptorPool(_device, pCreateInfo, pAllocator, pDescriptorPool);
+	}
+	void destroyDescriptorPool(VkDescriptorPool descriptorPool, const VkAllocationCallbacks* pAllocator) {
+		fp_vkDestroyDescriptorPool(_device, descriptorPool, pAllocator);
+	}
+	VkResult resetDescriptorPool(VkDescriptorPool descriptorPool, VkDescriptorPoolResetFlags flags) {
+		return fp_vkResetDescriptorPool(_device, descriptorPool, flags);
+	}
+	VkResult allocateDescriptorSets(const VkDescriptorSetAllocateInfo* pAllocateInfo, VkDescriptorSet* pDescriptorSets) {
+		return fp_vkAllocateDescriptorSets(_device, pAllocateInfo, pDescriptorSets);
+	}
+	VkResult freeDescriptorSets(VkDescriptorPool descriptorPool, uint32_t descriptorSetCount, const VkDescriptorSet* pDescriptorSets) {
+		return fp_vkFreeDescriptorSets(_device, descriptorPool, descriptorSetCount, pDescriptorSets);
+	}
+	void updateDescriptorSets(uint32_t descriptorWriteCount, const VkWriteDescriptorSet* pDescriptorWrites, uint32_t descriptorCopyCount, const VkCopyDescriptorSet* pDescriptorCopies) {
+		fp_vkUpdateDescriptorSets(_device, descriptorWriteCount, pDescriptorWrites, descriptorCopyCount, pDescriptorCopies);
+	}
+	VkResult createFramebuffer(const VkFramebufferCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkFramebuffer* pFramebuffer) {
+		return fp_vkCreateFramebuffer(_device, pCreateInfo, pAllocator, pFramebuffer);
+	}
+	void destroyFramebuffer(VkFramebuffer framebuffer, const VkAllocationCallbacks* pAllocator) {
+		fp_vkDestroyFramebuffer(_device, framebuffer, pAllocator);
+	}
+	VkResult createRenderPass(const VkRenderPassCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkRenderPass* pRenderPass) {
+		return fp_vkCreateRenderPass(_device, pCreateInfo, pAllocator, pRenderPass);
+	}
+	void destroyRenderPass(VkRenderPass renderPass, const VkAllocationCallbacks* pAllocator) {
+		fp_vkDestroyRenderPass(_device, renderPass, pAllocator);
+	}
+	void getRenderAreaGranularity(VkRenderPass renderPass, VkExtent2D* pGranularity) {
+		fp_vkGetRenderAreaGranularity(_device, renderPass, pGranularity);
+	}
+	VkResult createCommandPool(const VkCommandPoolCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkCommandPool* pCommandPool) {
+		return fp_vkCreateCommandPool(_device, pCreateInfo, pAllocator, pCommandPool);
+	}
+	void destroyCommandPool(VkCommandPool commandPool, const VkAllocationCallbacks* pAllocator) {
+		fp_vkDestroyCommandPool(_device, commandPool, pAllocator);
+	}
+	VkResult resetCommandPool(VkCommandPool commandPool, VkCommandPoolResetFlags flags) {
+		return fp_vkResetCommandPool(_device, commandPool, flags);
+	}
+	VkResult allocateCommandBuffers(const VkCommandBufferAllocateInfo* pAllocateInfo, VkCommandBuffer* pCommandBuffers) {
+		return fp_vkAllocateCommandBuffers(_device, pAllocateInfo, pCommandBuffers);
+	}
+	void freeCommandBuffers(VkCommandPool commandPool, uint32_t commandBufferCount, const VkCommandBuffer* pCommandBuffers) {
+		fp_vkFreeCommandBuffers(_device, commandPool, commandBufferCount, pCommandBuffers);
+	}
+	VkResult beginCommandBuffer(VkCommandBuffer commandBuffer, const VkCommandBufferBeginInfo* pBeginInfo) {
+		return fp_vkBeginCommandBuffer(commandBuffer, pBeginInfo);
+	}
+	VkResult endCommandBuffer(VkCommandBuffer commandBuffer) {
+		return fp_vkEndCommandBuffer(commandBuffer);
+	}
+	VkResult resetCommandBuffer(VkCommandBuffer commandBuffer, VkCommandBufferResetFlags flags) {
+		return fp_vkResetCommandBuffer(commandBuffer, flags);
+	}
+	void cmdBindPipeline(VkCommandBuffer commandBuffer, VkPipelineBindPoint pipelineBindPoint, VkPipeline pipeline) {
+		fp_vkCmdBindPipeline(commandBuffer, pipelineBindPoint, pipeline);
+	}
+	void cmdSetViewport(VkCommandBuffer commandBuffer, uint32_t firstViewport, uint32_t viewportCount, const VkViewport* pViewports) {
+		fp_vkCmdSetViewport(commandBuffer, firstViewport, viewportCount, pViewports);
+	}
+	void cmdSetScissor(VkCommandBuffer commandBuffer, uint32_t firstScissor, uint32_t scissorCount, const VkRect2D* pScissors) {
+		fp_vkCmdSetScissor(commandBuffer, firstScissor, scissorCount, pScissors);
+	}
+	void cmdSetLineWidth(VkCommandBuffer commandBuffer, float lineWidth) {
+		fp_vkCmdSetLineWidth(commandBuffer, lineWidth);
+	}
+	void cmdSetDepthBias(VkCommandBuffer commandBuffer, float depthBiasConstantFactor, float depthBiasClamp, float depthBiasSlopeFactor) {
+		fp_vkCmdSetDepthBias(commandBuffer, depthBiasConstantFactor, depthBiasClamp, depthBiasSlopeFactor);
+	}
+	void cmdSetBlendConstants(VkCommandBuffer commandBuffer, const float blendConstants[4]) {
+		fp_vkCmdSetBlendConstants(commandBuffer, blendConstants);
+	}
+	void cmdSetDepthBounds(VkCommandBuffer commandBuffer, float minDepthBounds, float maxDepthBounds) {
+		fp_vkCmdSetDepthBounds(commandBuffer, minDepthBounds, maxDepthBounds);
+	}
+	void cmdSetStencilCompareMask(VkCommandBuffer commandBuffer, VkStencilFaceFlags faceMask, uint32_t compareMask) {
+		fp_vkCmdSetStencilCompareMask(commandBuffer, faceMask, compareMask);
+	}
+	void cmdSetStencilWriteMask(VkCommandBuffer commandBuffer, VkStencilFaceFlags faceMask, uint32_t writeMask) {
+		fp_vkCmdSetStencilWriteMask(commandBuffer, faceMask, writeMask);
+	}
+	void cmdSetStencilReference(VkCommandBuffer commandBuffer, VkStencilFaceFlags faceMask, uint32_t reference) {
+		fp_vkCmdSetStencilReference(commandBuffer, faceMask, reference);
+	}
+	void cmdBindDescriptorSets(VkCommandBuffer commandBuffer, VkPipelineBindPoint pipelineBindPoint, VkPipelineLayout layout, uint32_t firstSet, uint32_t descriptorSetCount, const VkDescriptorSet* pDescriptorSets, uint32_t dynamicOffsetCount, const uint32_t* pDynamicOffsets) {
+		fp_vkCmdBindDescriptorSets(commandBuffer, pipelineBindPoint, layout, firstSet, descriptorSetCount, pDescriptorSets, dynamicOffsetCount, pDynamicOffsets);
+	}
+	void cmdBindIndexBuffer(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkIndexType indexType) {
+		fp_vkCmdBindIndexBuffer(commandBuffer, buffer, offset, indexType);
+	}
+	void cmdBindVertexBuffers(VkCommandBuffer commandBuffer, uint32_t firstBinding, uint32_t bindingCount, const VkBuffer* pBuffers, const VkDeviceSize* pOffsets) {
+		fp_vkCmdBindVertexBuffers(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets);
+	}
+	void cmdDraw(VkCommandBuffer commandBuffer, uint32_t vertexCount, uint32_t instanceCount, uint32_t firstVertex, uint32_t firstInstance) {
+		fp_vkCmdDraw(commandBuffer, vertexCount, instanceCount, firstVertex, firstInstance);
+	}
+	void cmdDrawIndexed(VkCommandBuffer commandBuffer, uint32_t indexCount, uint32_t instanceCount, uint32_t firstIndex, int32_t vertexOffset, uint32_t firstInstance) {
+		fp_vkCmdDrawIndexed(commandBuffer, indexCount, instanceCount, firstIndex, vertexOffset, firstInstance);
+	}
+	void cmdDrawIndirect(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, uint32_t drawCount, uint32_t stride) {
+		fp_vkCmdDrawIndirect(commandBuffer, buffer, offset, drawCount, stride);
+	}
+	void cmdDrawIndexedIndirect(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, uint32_t drawCount, uint32_t stride) {
+		fp_vkCmdDrawIndexedIndirect(commandBuffer, buffer, offset, drawCount, stride);
+	}
+	void cmdDispatch(VkCommandBuffer commandBuffer, uint32_t groupCountX, uint32_t groupCountY, uint32_t groupCountZ) {
+		fp_vkCmdDispatch(commandBuffer, groupCountX, groupCountY, groupCountZ);
+	}
+	void cmdDispatchIndirect(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset) {
+		fp_vkCmdDispatchIndirect(commandBuffer, buffer, offset);
+	}
+	void cmdCopyBuffer(VkCommandBuffer commandBuffer, VkBuffer srcBuffer, VkBuffer dstBuffer, uint32_t regionCount, const VkBufferCopy* pRegions) {
+		fp_vkCmdCopyBuffer(commandBuffer, srcBuffer, dstBuffer, regionCount, pRegions);
+	}
+	void cmdCopyImage(VkCommandBuffer commandBuffer, VkImage srcImage, VkImageLayout srcImageLayout, VkImage dstImage, VkImageLayout dstImageLayout, uint32_t regionCount, const VkImageCopy* pRegions) {
+		fp_vkCmdCopyImage(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions);
+	}
+	void cmdBlitImage(VkCommandBuffer commandBuffer, VkImage srcImage, VkImageLayout srcImageLayout, VkImage dstImage, VkImageLayout dstImageLayout, uint32_t regionCount, const VkImageBlit* pRegions, VkFilter filter) {
+		fp_vkCmdBlitImage(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions, filter);
+	}
+	void cmdCopyBufferToImage(VkCommandBuffer commandBuffer, VkBuffer srcBuffer, VkImage dstImage, VkImageLayout dstImageLayout, uint32_t regionCount, const VkBufferImageCopy* pRegions) {
+		fp_vkCmdCopyBufferToImage(commandBuffer, srcBuffer, dstImage, dstImageLayout, regionCount, pRegions);
+	}
+	void cmdCopyImageToBuffer(VkCommandBuffer commandBuffer, VkImage srcImage, VkImageLayout srcImageLayout, VkBuffer dstBuffer, uint32_t regionCount, const VkBufferImageCopy* pRegions) {
+		fp_vkCmdCopyImageToBuffer(commandBuffer, srcImage, srcImageLayout, dstBuffer, regionCount, pRegions);
+	}
+	void cmdUpdateBuffer(VkCommandBuffer commandBuffer, VkBuffer dstBuffer, VkDeviceSize dstOffset, VkDeviceSize dataSize, const void* pData) {
+		fp_vkCmdUpdateBuffer(commandBuffer, dstBuffer, dstOffset, dataSize, pData);
+	}
+	void cmdFillBuffer(VkCommandBuffer commandBuffer, VkBuffer dstBuffer, VkDeviceSize dstOffset, VkDeviceSize size, uint32_t data) {
+		fp_vkCmdFillBuffer(commandBuffer, dstBuffer, dstOffset, size, data);
+	}
+	void cmdClearColorImage(VkCommandBuffer commandBuffer, VkImage image, VkImageLayout imageLayout, const VkClearColorValue* pColor, uint32_t rangeCount, const VkImageSubresourceRange* pRanges) {
+		fp_vkCmdClearColorImage(commandBuffer, image, imageLayout, pColor, rangeCount, pRanges);
+	}
+	void cmdClearDepthStencilImage(VkCommandBuffer commandBuffer, VkImage image, VkImageLayout imageLayout, const VkClearDepthStencilValue* pDepthStencil, uint32_t rangeCount, const VkImageSubresourceRange* pRanges) {
+		fp_vkCmdClearDepthStencilImage(commandBuffer, image, imageLayout, pDepthStencil, rangeCount, pRanges);
+	}
+	void cmdClearAttachments(VkCommandBuffer commandBuffer, uint32_t attachmentCount, const VkClearAttachment* pAttachments, uint32_t rectCount, const VkClearRect* pRects) {
+		fp_vkCmdClearAttachments(commandBuffer, attachmentCount, pAttachments, rectCount, pRects);
+	}
+	void cmdResolveImage(VkCommandBuffer commandBuffer, VkImage srcImage, VkImageLayout srcImageLayout, VkImage dstImage, VkImageLayout dstImageLayout, uint32_t regionCount, const VkImageResolve* pRegions) {
+		fp_vkCmdResolveImage(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions);
+	}
+	void cmdSetEvent(VkCommandBuffer commandBuffer, VkEvent event, VkPipelineStageFlags stageMask) {
+		fp_vkCmdSetEvent(commandBuffer, event, stageMask);
+	}
+	void cmdResetEvent(VkCommandBuffer commandBuffer, VkEvent event, VkPipelineStageFlags stageMask) {
+		fp_vkCmdResetEvent(commandBuffer, event, stageMask);
+	}
+	void cmdWaitEvents(VkCommandBuffer commandBuffer, uint32_t eventCount, const VkEvent* pEvents, VkPipelineStageFlags srcStageMask, VkPipelineStageFlags dstStageMask, uint32_t memoryBarrierCount, const VkMemoryBarrier* pMemoryBarriers, uint32_t bufferMemoryBarrierCount, const VkBufferMemoryBarrier* pBufferMemoryBarriers, uint32_t imageMemoryBarrierCount, const VkImageMemoryBarrier* pImageMemoryBarriers) {
+		fp_vkCmdWaitEvents(commandBuffer, eventCount, pEvents, srcStageMask, dstStageMask, memoryBarrierCount, pMemoryBarriers, bufferMemoryBarrierCount, pBufferMemoryBarriers, imageMemoryBarrierCount, pImageMemoryBarriers);
+	}
+	void cmdPipelineBarrier(VkCommandBuffer commandBuffer, VkPipelineStageFlags srcStageMask, VkPipelineStageFlags dstStageMask, VkDependencyFlags dependencyFlags, uint32_t memoryBarrierCount, const VkMemoryBarrier* pMemoryBarriers, uint32_t bufferMemoryBarrierCount, const VkBufferMemoryBarrier* pBufferMemoryBarriers, uint32_t imageMemoryBarrierCount, const VkImageMemoryBarrier* pImageMemoryBarriers) {
+		fp_vkCmdPipelineBarrier(commandBuffer, srcStageMask, dstStageMask, dependencyFlags, memoryBarrierCount, pMemoryBarriers, bufferMemoryBarrierCount, pBufferMemoryBarriers, imageMemoryBarrierCount, pImageMemoryBarriers);
+	}
+	void cmdBeginQuery(VkCommandBuffer commandBuffer, VkQueryPool queryPool, uint32_t query, VkQueryControlFlags flags) {
+		fp_vkCmdBeginQuery(commandBuffer, queryPool, query, flags);
+	}
+	void cmdEndQuery(VkCommandBuffer commandBuffer, VkQueryPool queryPool, uint32_t query) {
+		fp_vkCmdEndQuery(commandBuffer, queryPool, query);
+	}
+	void cmdResetQueryPool(VkCommandBuffer commandBuffer, VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount) {
+		fp_vkCmdResetQueryPool(commandBuffer, queryPool, firstQuery, queryCount);
+	}
+	void cmdWriteTimestamp(VkCommandBuffer commandBuffer, VkPipelineStageFlagBits pipelineStage, VkQueryPool queryPool, uint32_t query) {
+		fp_vkCmdWriteTimestamp(commandBuffer, pipelineStage, queryPool, query);
+	}
+	void cmdCopyQueryPoolResults(VkCommandBuffer commandBuffer, VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount, VkBuffer dstBuffer, VkDeviceSize dstOffset, VkDeviceSize stride, VkQueryResultFlags flags) {
+		fp_vkCmdCopyQueryPoolResults(commandBuffer, queryPool, firstQuery, queryCount, dstBuffer, dstOffset, stride, flags);
+	}
+	void cmdPushConstants(VkCommandBuffer commandBuffer, VkPipelineLayout layout, VkShaderStageFlags stageFlags, uint32_t offset, uint32_t size, const void* pValues) {
+		fp_vkCmdPushConstants(commandBuffer, layout, stageFlags, offset, size, pValues);
+	}
+	void cmdBeginRenderPass(VkCommandBuffer commandBuffer, const VkRenderPassBeginInfo* pRenderPassBegin, VkSubpassContents contents) {
+		fp_vkCmdBeginRenderPass(commandBuffer, pRenderPassBegin, contents);
+	}
+	void cmdNextSubpass(VkCommandBuffer commandBuffer, VkSubpassContents contents) {
+		fp_vkCmdNextSubpass(commandBuffer, contents);
+	}
+	void cmdEndRenderPass(VkCommandBuffer commandBuffer) {
+		fp_vkCmdEndRenderPass(commandBuffer);
+	}
+	void cmdExecuteCommands(VkCommandBuffer commandBuffer, uint32_t commandBufferCount, const VkCommandBuffer* pCommandBuffers) {
+		fp_vkCmdExecuteCommands(commandBuffer, commandBufferCount, pCommandBuffers);
+	}
+	VkResult bindBufferMemory2(uint32_t bindInfoCount, const VkBindBufferMemoryInfo* pBindInfos) {
+		return fp_vkBindBufferMemory2(_device, bindInfoCount, pBindInfos);
+	}
+	VkResult bindImageMemory2(uint32_t bindInfoCount, const VkBindImageMemoryInfo* pBindInfos) {
+		return fp_vkBindImageMemory2(_device, bindInfoCount, pBindInfos);
+	}
+	void getDeviceGroupPeerMemoryFeatures(uint32_t heapIndex, uint32_t localDeviceIndex, uint32_t remoteDeviceIndex, VkPeerMemoryFeatureFlags* pPeerMemoryFeatures) {
+		fp_vkGetDeviceGroupPeerMemoryFeatures(_device, heapIndex, localDeviceIndex, remoteDeviceIndex, pPeerMemoryFeatures);
+	}
+	void cmdSetDeviceMask(VkCommandBuffer commandBuffer, uint32_t deviceMask) {
+		fp_vkCmdSetDeviceMask(commandBuffer, deviceMask);
+	}
+	void cmdDispatchBase(VkCommandBuffer commandBuffer, uint32_t baseGroupX, uint32_t baseGroupY, uint32_t baseGroupZ, uint32_t groupCountX, uint32_t groupCountY, uint32_t groupCountZ) {
+		fp_vkCmdDispatchBase(commandBuffer, baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ);
+	}
+	void getImageMemoryRequirements2(const VkImageMemoryRequirementsInfo2* pInfo, VkMemoryRequirements2* pMemoryRequirements) {
+		fp_vkGetImageMemoryRequirements2(_device, pInfo, pMemoryRequirements);
+	}
+	void getBufferMemoryRequirements2(const VkBufferMemoryRequirementsInfo2* pInfo, VkMemoryRequirements2* pMemoryRequirements) {
+		fp_vkGetBufferMemoryRequirements2(_device, pInfo, pMemoryRequirements);
+	}
+	void getImageSparseMemoryRequirements2(const VkImageSparseMemoryRequirementsInfo2* pInfo, uint32_t* pSparseMemoryRequirementCount, VkSparseImageMemoryRequirements2* pSparseMemoryRequirements) {
+		fp_vkGetImageSparseMemoryRequirements2(_device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
+	}
+	void trimCommandPool(VkCommandPool commandPool, VkCommandPoolTrimFlags flags) {
+		fp_vkTrimCommandPool(_device, commandPool, flags);
+	}
+	void getDeviceQueue2(const VkDeviceQueueInfo2* pQueueInfo, VkQueue* pQueue) {
+		fp_vkGetDeviceQueue2(_device, pQueueInfo, pQueue);
+	}
+	VkResult createSamplerYcbcrConversion(const VkSamplerYcbcrConversionCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkSamplerYcbcrConversion* pYcbcrConversion) {
+		return fp_vkCreateSamplerYcbcrConversion(_device, pCreateInfo, pAllocator, pYcbcrConversion);
+	}
+	void destroySamplerYcbcrConversion(VkSamplerYcbcrConversion ycbcrConversion, const VkAllocationCallbacks* pAllocator) {
+		fp_vkDestroySamplerYcbcrConversion(_device, ycbcrConversion, pAllocator);
+	}
+	VkResult createDescriptorUpdateTemplate(const VkDescriptorUpdateTemplateCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDescriptorUpdateTemplate* pDescriptorUpdateTemplate) {
+		return fp_vkCreateDescriptorUpdateTemplate(_device, pCreateInfo, pAllocator, pDescriptorUpdateTemplate);
+	}
+	void destroyDescriptorUpdateTemplate(VkDescriptorUpdateTemplate descriptorUpdateTemplate, const VkAllocationCallbacks* pAllocator) {
+		fp_vkDestroyDescriptorUpdateTemplate(_device, descriptorUpdateTemplate, pAllocator);
+	}
+	void updateDescriptorSetWithTemplate(VkDescriptorSet descriptorSet, VkDescriptorUpdateTemplate descriptorUpdateTemplate, const void* pData) {
+		fp_vkUpdateDescriptorSetWithTemplate(_device, descriptorSet, descriptorUpdateTemplate, pData);
+	}
+	void getDescriptorSetLayoutSupport(const VkDescriptorSetLayoutCreateInfo* pCreateInfo, VkDescriptorSetLayoutSupport* pSupport) {
+		fp_vkGetDescriptorSetLayoutSupport(_device, pCreateInfo, pSupport);
+	}
+	void cmdDrawIndirectCount(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint32_t maxDrawCount, uint32_t stride) {
+		fp_vkCmdDrawIndirectCount(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
+	}
+	void cmdDrawIndexedIndirectCount(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint32_t maxDrawCount, uint32_t stride) {
+		fp_vkCmdDrawIndexedIndirectCount(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
+	}
+	VkResult createRenderPass2(const VkRenderPassCreateInfo2* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkRenderPass* pRenderPass) {
+		return fp_vkCreateRenderPass2(_device, pCreateInfo, pAllocator, pRenderPass);
+	}
+	void cmdBeginRenderPass2(VkCommandBuffer commandBuffer, const VkRenderPassBeginInfo* pRenderPassBegin, const VkSubpassBeginInfo* pSubpassBeginInfo) {
+		fp_vkCmdBeginRenderPass2(commandBuffer, pRenderPassBegin, pSubpassBeginInfo);
+	}
+	void cmdNextSubpass2(VkCommandBuffer commandBuffer, const VkSubpassBeginInfo* pSubpassBeginInfo, const VkSubpassEndInfo* pSubpassEndInfo) {
+		fp_vkCmdNextSubpass2(commandBuffer, pSubpassBeginInfo, pSubpassEndInfo);
+	}
+	void cmdEndRenderPass2(VkCommandBuffer commandBuffer, const VkSubpassEndInfo* pSubpassEndInfo) {
+		fp_vkCmdEndRenderPass2(commandBuffer, pSubpassEndInfo);
+	}
+	void resetQueryPool(VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount) {
+		fp_vkResetQueryPool(_device, queryPool, firstQuery, queryCount);
+	}
+	VkResult getSemaphoreCounterValue(VkSemaphore semaphore, uint64_t* pValue) {
+		return fp_vkGetSemaphoreCounterValue(_device, semaphore, pValue);
+	}
+	VkResult waitSemaphores(const VkSemaphoreWaitInfo* pWaitInfo, uint64_t timeout) {
+		return fp_vkWaitSemaphores(_device, pWaitInfo, timeout);
+	}
+	VkResult signalSemaphore(const VkSemaphoreSignalInfo* pSignalInfo) {
+		return fp_vkSignalSemaphore(_device, pSignalInfo);
+	}
+	VkDeviceAddress getBufferDeviceAddress(const VkBufferDeviceAddressInfo* pInfo) {
+		return fp_vkGetBufferDeviceAddress(_device, pInfo);
+	}
+	uint64_t getBufferOpaqueCaptureAddress(const VkBufferDeviceAddressInfo* pInfo) {
+		return fp_vkGetBufferOpaqueCaptureAddress(_device, pInfo);
+	}
+	uint64_t getDeviceMemoryOpaqueCaptureAddress(const VkDeviceMemoryOpaqueCaptureAddressInfo* pInfo) {
+		return fp_vkGetDeviceMemoryOpaqueCaptureAddress(_device, pInfo);
+	}
+private:
+
+VkDevice _device = VK_NULL_HANDLE;
+
 #ifdef VK_VERSION_1_0
-	PFN_vkGetDeviceQueue getDeviceQueue = nullptr;
-	PFN_vkQueueSubmit queueSubmit = nullptr;
-	PFN_vkQueueWaitIdle queueWaitIdle = nullptr;
-	PFN_vkDeviceWaitIdle deviceWaitIdle = nullptr;
-	PFN_vkAllocateMemory allocateMemory = nullptr;
-	PFN_vkFreeMemory freeMemory = nullptr;
-	PFN_vkMapMemory mapMemory = nullptr;
-	PFN_vkUnmapMemory unmapMemory = nullptr;
-	PFN_vkFlushMappedMemoryRanges flushMappedMemoryRanges = nullptr;
-	PFN_vkInvalidateMappedMemoryRanges invalidateMappedMemoryRanges = nullptr;
-	PFN_vkGetDeviceMemoryCommitment getDeviceMemoryCommitment = nullptr;
-	PFN_vkBindBufferMemory bindBufferMemory = nullptr;
-	PFN_vkBindImageMemory bindImageMemory = nullptr;
-	PFN_vkGetBufferMemoryRequirements getBufferMemoryRequirements = nullptr;
-	PFN_vkGetImageMemoryRequirements getImageMemoryRequirements = nullptr;
-	PFN_vkGetImageSparseMemoryRequirements getImageSparseMemoryRequirements = nullptr;
-	PFN_vkQueueBindSparse queueBindSparse = nullptr;
-	PFN_vkCreateFence createFence = nullptr;
-	PFN_vkDestroyFence destroyFence = nullptr;
-	PFN_vkResetFences resetFences = nullptr;
-	PFN_vkGetFenceStatus getFenceStatus = nullptr;
-	PFN_vkWaitForFences waitForFences = nullptr;
-	PFN_vkCreateSemaphore createSemaphore = nullptr;
-	PFN_vkDestroySemaphore destroySemaphore = nullptr;
-	PFN_vkCreateEvent createEvent = nullptr;
-	PFN_vkDestroyEvent destroyEvent = nullptr;
-	PFN_vkGetEventStatus getEventStatus = nullptr;
-	PFN_vkSetEvent setEvent = nullptr;
-	PFN_vkResetEvent resetEvent = nullptr;
-	PFN_vkCreateQueryPool createQueryPool = nullptr;
-	PFN_vkDestroyQueryPool destroyQueryPool = nullptr;
-	PFN_vkGetQueryPoolResults getQueryPoolResults = nullptr;
-	PFN_vkCreateBuffer createBuffer = nullptr;
-	PFN_vkDestroyBuffer destroyBuffer = nullptr;
-	PFN_vkCreateBufferView createBufferView = nullptr;
-	PFN_vkDestroyBufferView destroyBufferView = nullptr;
-	PFN_vkCreateImage createImage = nullptr;
-	PFN_vkDestroyImage destroyImage = nullptr;
-	PFN_vkGetImageSubresourceLayout getImageSubresourceLayout = nullptr;
-	PFN_vkCreateImageView createImageView = nullptr;
-	PFN_vkDestroyImageView destroyImageView = nullptr;
-	PFN_vkCreateShaderModule createShaderModule = nullptr;
-	PFN_vkDestroyShaderModule destroyShaderModule = nullptr;
-	PFN_vkCreatePipelineCache createPipelineCache = nullptr;
-	PFN_vkDestroyPipelineCache destroyPipelineCache = nullptr;
-	PFN_vkGetPipelineCacheData getPipelineCacheData = nullptr;
-	PFN_vkMergePipelineCaches mergePipelineCaches = nullptr;
-	PFN_vkCreateGraphicsPipelines createGraphicsPipelines = nullptr;
-	PFN_vkCreateComputePipelines createComputePipelines = nullptr;
-	PFN_vkDestroyPipeline destroyPipeline = nullptr;
-	PFN_vkCreatePipelineLayout createPipelineLayout = nullptr;
-	PFN_vkDestroyPipelineLayout destroyPipelineLayout = nullptr;
-	PFN_vkCreateSampler createSampler = nullptr;
-	PFN_vkDestroySampler destroySampler = nullptr;
-	PFN_vkCreateDescriptorSetLayout createDescriptorSetLayout = nullptr;
-	PFN_vkDestroyDescriptorSetLayout destroyDescriptorSetLayout = nullptr;
-	PFN_vkCreateDescriptorPool createDescriptorPool = nullptr;
-	PFN_vkDestroyDescriptorPool destroyDescriptorPool = nullptr;
-	PFN_vkResetDescriptorPool resetDescriptorPool = nullptr;
-	PFN_vkAllocateDescriptorSets allocateDescriptorSets = nullptr;
-	PFN_vkFreeDescriptorSets freeDescriptorSets = nullptr;
-	PFN_vkUpdateDescriptorSets updateDescriptorSets = nullptr;
-	PFN_vkCreateFramebuffer createFramebuffer = nullptr;
-	PFN_vkDestroyFramebuffer destroyFramebuffer = nullptr;
-	PFN_vkCreateRenderPass createRenderPass = nullptr;
-	PFN_vkDestroyRenderPass destroyRenderPass = nullptr;
-	PFN_vkGetRenderAreaGranularity getRenderAreaGranularity = nullptr;
-	PFN_vkCreateCommandPool createCommandPool = nullptr;
-	PFN_vkDestroyCommandPool destroyCommandPool = nullptr;
-	PFN_vkResetCommandPool resetCommandPool = nullptr;
-	PFN_vkAllocateCommandBuffers allocateCommandBuffers = nullptr;
-	PFN_vkFreeCommandBuffers freeCommandBuffers = nullptr;
-	PFN_vkBeginCommandBuffer beginCommandBuffer = nullptr;
-	PFN_vkEndCommandBuffer endCommandBuffer = nullptr;
-	PFN_vkResetCommandBuffer resetCommandBuffer = nullptr;
-	PFN_vkCmdBindPipeline cmdBindPipeline = nullptr;
-	PFN_vkCmdSetViewport cmdSetViewport = nullptr;
-	PFN_vkCmdSetScissor cmdSetScissor = nullptr;
-	PFN_vkCmdSetLineWidth cmdSetLineWidth = nullptr;
-	PFN_vkCmdSetDepthBias cmdSetDepthBias = nullptr;
-	PFN_vkCmdSetBlendConstants cmdSetBlendConstants = nullptr;
-	PFN_vkCmdSetDepthBounds cmdSetDepthBounds = nullptr;
-	PFN_vkCmdSetStencilCompareMask cmdSetStencilCompareMask = nullptr;
-	PFN_vkCmdSetStencilWriteMask cmdSetStencilWriteMask = nullptr;
-	PFN_vkCmdSetStencilReference cmdSetStencilReference = nullptr;
-	PFN_vkCmdBindDescriptorSets cmdBindDescriptorSets = nullptr;
-	PFN_vkCmdBindIndexBuffer cmdBindIndexBuffer = nullptr;
-	PFN_vkCmdBindVertexBuffers cmdBindVertexBuffers = nullptr;
-	PFN_vkCmdDraw cmdDraw = nullptr;
-	PFN_vkCmdDrawIndexed cmdDrawIndexed = nullptr;
-	PFN_vkCmdDrawIndirect cmdDrawIndirect = nullptr;
-	PFN_vkCmdDrawIndexedIndirect cmdDrawIndexedIndirect = nullptr;
-	PFN_vkCmdDispatch cmdDispatch = nullptr;
-	PFN_vkCmdDispatchIndirect cmdDispatchIndirect = nullptr;
-	PFN_vkCmdCopyBuffer cmdCopyBuffer = nullptr;
-	PFN_vkCmdCopyImage cmdCopyImage = nullptr;
-	PFN_vkCmdBlitImage cmdBlitImage = nullptr;
-	PFN_vkCmdCopyBufferToImage cmdCopyBufferToImage = nullptr;
-	PFN_vkCmdCopyImageToBuffer cmdCopyImageToBuffer = nullptr;
-	PFN_vkCmdUpdateBuffer cmdUpdateBuffer = nullptr;
-	PFN_vkCmdFillBuffer cmdFillBuffer = nullptr;
-	PFN_vkCmdClearColorImage cmdClearColorImage = nullptr;
-	PFN_vkCmdClearDepthStencilImage cmdClearDepthStencilImage = nullptr;
-	PFN_vkCmdClearAttachments cmdClearAttachments = nullptr;
-	PFN_vkCmdResolveImage cmdResolveImage = nullptr;
-	PFN_vkCmdSetEvent cmdSetEvent = nullptr;
-	PFN_vkCmdResetEvent cmdResetEvent = nullptr;
-	PFN_vkCmdWaitEvents cmdWaitEvents = nullptr;
-	PFN_vkCmdPipelineBarrier cmdPipelineBarrier = nullptr;
-	PFN_vkCmdBeginQuery cmdBeginQuery = nullptr;
-	PFN_vkCmdEndQuery cmdEndQuery = nullptr;
-	PFN_vkCmdResetQueryPool cmdResetQueryPool = nullptr;
-	PFN_vkCmdWriteTimestamp cmdWriteTimestamp = nullptr;
-	PFN_vkCmdCopyQueryPoolResults cmdCopyQueryPoolResults = nullptr;
-	PFN_vkCmdPushConstants cmdPushConstants = nullptr;
-	PFN_vkCmdBeginRenderPass cmdBeginRenderPass = nullptr;
-	PFN_vkCmdNextSubpass cmdNextSubpass = nullptr;
-	PFN_vkCmdEndRenderPass cmdEndRenderPass = nullptr;
-	PFN_vkCmdExecuteCommands cmdExecuteCommands = nullptr;
+	PFN_vkGetDeviceQueue fp_vkGetDeviceQueue = nullptr;
+	PFN_vkQueueSubmit fp_vkQueueSubmit = nullptr;
+	PFN_vkQueueWaitIdle fp_vkQueueWaitIdle = nullptr;
+	PFN_vkDeviceWaitIdle fp_vkDeviceWaitIdle = nullptr;
+	PFN_vkAllocateMemory fp_vkAllocateMemory = nullptr;
+	PFN_vkFreeMemory fp_vkFreeMemory = nullptr;
+	PFN_vkMapMemory fp_vkMapMemory = nullptr;
+	PFN_vkUnmapMemory fp_vkUnmapMemory = nullptr;
+	PFN_vkFlushMappedMemoryRanges fp_vkFlushMappedMemoryRanges = nullptr;
+	PFN_vkInvalidateMappedMemoryRanges fp_vkInvalidateMappedMemoryRanges = nullptr;
+	PFN_vkGetDeviceMemoryCommitment fp_vkGetDeviceMemoryCommitment = nullptr;
+	PFN_vkBindBufferMemory fp_vkBindBufferMemory = nullptr;
+	PFN_vkBindImageMemory fp_vkBindImageMemory = nullptr;
+	PFN_vkGetBufferMemoryRequirements fp_vkGetBufferMemoryRequirements = nullptr;
+	PFN_vkGetImageMemoryRequirements fp_vkGetImageMemoryRequirements = nullptr;
+	PFN_vkGetImageSparseMemoryRequirements fp_vkGetImageSparseMemoryRequirements = nullptr;
+	PFN_vkQueueBindSparse fp_vkQueueBindSparse = nullptr;
+	PFN_vkCreateFence fp_vkCreateFence = nullptr;
+	PFN_vkDestroyFence fp_vkDestroyFence = nullptr;
+	PFN_vkResetFences fp_vkResetFences = nullptr;
+	PFN_vkGetFenceStatus fp_vkGetFenceStatus = nullptr;
+	PFN_vkWaitForFences fp_vkWaitForFences = nullptr;
+	PFN_vkCreateSemaphore fp_vkCreateSemaphore = nullptr;
+	PFN_vkDestroySemaphore fp_vkDestroySemaphore = nullptr;
+	PFN_vkCreateEvent fp_vkCreateEvent = nullptr;
+	PFN_vkDestroyEvent fp_vkDestroyEvent = nullptr;
+	PFN_vkGetEventStatus fp_vkGetEventStatus = nullptr;
+	PFN_vkSetEvent fp_vkSetEvent = nullptr;
+	PFN_vkResetEvent fp_vkResetEvent = nullptr;
+	PFN_vkCreateQueryPool fp_vkCreateQueryPool = nullptr;
+	PFN_vkDestroyQueryPool fp_vkDestroyQueryPool = nullptr;
+	PFN_vkGetQueryPoolResults fp_vkGetQueryPoolResults = nullptr;
+	PFN_vkCreateBuffer fp_vkCreateBuffer = nullptr;
+	PFN_vkDestroyBuffer fp_vkDestroyBuffer = nullptr;
+	PFN_vkCreateBufferView fp_vkCreateBufferView = nullptr;
+	PFN_vkDestroyBufferView fp_vkDestroyBufferView = nullptr;
+	PFN_vkCreateImage fp_vkCreateImage = nullptr;
+	PFN_vkDestroyImage fp_vkDestroyImage = nullptr;
+	PFN_vkGetImageSubresourceLayout fp_vkGetImageSubresourceLayout = nullptr;
+	PFN_vkCreateImageView fp_vkCreateImageView = nullptr;
+	PFN_vkDestroyImageView fp_vkDestroyImageView = nullptr;
+	PFN_vkCreateShaderModule fp_vkCreateShaderModule = nullptr;
+	PFN_vkDestroyShaderModule fp_vkDestroyShaderModule = nullptr;
+	PFN_vkCreatePipelineCache fp_vkCreatePipelineCache = nullptr;
+	PFN_vkDestroyPipelineCache fp_vkDestroyPipelineCache = nullptr;
+	PFN_vkGetPipelineCacheData fp_vkGetPipelineCacheData = nullptr;
+	PFN_vkMergePipelineCaches fp_vkMergePipelineCaches = nullptr;
+	PFN_vkCreateGraphicsPipelines fp_vkCreateGraphicsPipelines = nullptr;
+	PFN_vkCreateComputePipelines fp_vkCreateComputePipelines = nullptr;
+	PFN_vkDestroyPipeline fp_vkDestroyPipeline = nullptr;
+	PFN_vkCreatePipelineLayout fp_vkCreatePipelineLayout = nullptr;
+	PFN_vkDestroyPipelineLayout fp_vkDestroyPipelineLayout = nullptr;
+	PFN_vkCreateSampler fp_vkCreateSampler = nullptr;
+	PFN_vkDestroySampler fp_vkDestroySampler = nullptr;
+	PFN_vkCreateDescriptorSetLayout fp_vkCreateDescriptorSetLayout = nullptr;
+	PFN_vkDestroyDescriptorSetLayout fp_vkDestroyDescriptorSetLayout = nullptr;
+	PFN_vkCreateDescriptorPool fp_vkCreateDescriptorPool = nullptr;
+	PFN_vkDestroyDescriptorPool fp_vkDestroyDescriptorPool = nullptr;
+	PFN_vkResetDescriptorPool fp_vkResetDescriptorPool = nullptr;
+	PFN_vkAllocateDescriptorSets fp_vkAllocateDescriptorSets = nullptr;
+	PFN_vkFreeDescriptorSets fp_vkFreeDescriptorSets = nullptr;
+	PFN_vkUpdateDescriptorSets fp_vkUpdateDescriptorSets = nullptr;
+	PFN_vkCreateFramebuffer fp_vkCreateFramebuffer = nullptr;
+	PFN_vkDestroyFramebuffer fp_vkDestroyFramebuffer = nullptr;
+	PFN_vkCreateRenderPass fp_vkCreateRenderPass = nullptr;
+	PFN_vkDestroyRenderPass fp_vkDestroyRenderPass = nullptr;
+	PFN_vkGetRenderAreaGranularity fp_vkGetRenderAreaGranularity = nullptr;
+	PFN_vkCreateCommandPool fp_vkCreateCommandPool = nullptr;
+	PFN_vkDestroyCommandPool fp_vkDestroyCommandPool = nullptr;
+	PFN_vkResetCommandPool fp_vkResetCommandPool = nullptr;
+	PFN_vkAllocateCommandBuffers fp_vkAllocateCommandBuffers = nullptr;
+	PFN_vkFreeCommandBuffers fp_vkFreeCommandBuffers = nullptr;
+	PFN_vkBeginCommandBuffer fp_vkBeginCommandBuffer = nullptr;
+	PFN_vkEndCommandBuffer fp_vkEndCommandBuffer = nullptr;
+	PFN_vkResetCommandBuffer fp_vkResetCommandBuffer = nullptr;
+	PFN_vkCmdBindPipeline fp_vkCmdBindPipeline = nullptr;
+	PFN_vkCmdSetViewport fp_vkCmdSetViewport = nullptr;
+	PFN_vkCmdSetScissor fp_vkCmdSetScissor = nullptr;
+	PFN_vkCmdSetLineWidth fp_vkCmdSetLineWidth = nullptr;
+	PFN_vkCmdSetDepthBias fp_vkCmdSetDepthBias = nullptr;
+	PFN_vkCmdSetBlendConstants fp_vkCmdSetBlendConstants = nullptr;
+	PFN_vkCmdSetDepthBounds fp_vkCmdSetDepthBounds = nullptr;
+	PFN_vkCmdSetStencilCompareMask fp_vkCmdSetStencilCompareMask = nullptr;
+	PFN_vkCmdSetStencilWriteMask fp_vkCmdSetStencilWriteMask = nullptr;
+	PFN_vkCmdSetStencilReference fp_vkCmdSetStencilReference = nullptr;
+	PFN_vkCmdBindDescriptorSets fp_vkCmdBindDescriptorSets = nullptr;
+	PFN_vkCmdBindIndexBuffer fp_vkCmdBindIndexBuffer = nullptr;
+	PFN_vkCmdBindVertexBuffers fp_vkCmdBindVertexBuffers = nullptr;
+	PFN_vkCmdDraw fp_vkCmdDraw = nullptr;
+	PFN_vkCmdDrawIndexed fp_vkCmdDrawIndexed = nullptr;
+	PFN_vkCmdDrawIndirect fp_vkCmdDrawIndirect = nullptr;
+	PFN_vkCmdDrawIndexedIndirect fp_vkCmdDrawIndexedIndirect = nullptr;
+	PFN_vkCmdDispatch fp_vkCmdDispatch = nullptr;
+	PFN_vkCmdDispatchIndirect fp_vkCmdDispatchIndirect = nullptr;
+	PFN_vkCmdCopyBuffer fp_vkCmdCopyBuffer = nullptr;
+	PFN_vkCmdCopyImage fp_vkCmdCopyImage = nullptr;
+	PFN_vkCmdBlitImage fp_vkCmdBlitImage = nullptr;
+	PFN_vkCmdCopyBufferToImage fp_vkCmdCopyBufferToImage = nullptr;
+	PFN_vkCmdCopyImageToBuffer fp_vkCmdCopyImageToBuffer = nullptr;
+	PFN_vkCmdUpdateBuffer fp_vkCmdUpdateBuffer = nullptr;
+	PFN_vkCmdFillBuffer fp_vkCmdFillBuffer = nullptr;
+	PFN_vkCmdClearColorImage fp_vkCmdClearColorImage = nullptr;
+	PFN_vkCmdClearDepthStencilImage fp_vkCmdClearDepthStencilImage = nullptr;
+	PFN_vkCmdClearAttachments fp_vkCmdClearAttachments = nullptr;
+	PFN_vkCmdResolveImage fp_vkCmdResolveImage = nullptr;
+	PFN_vkCmdSetEvent fp_vkCmdSetEvent = nullptr;
+	PFN_vkCmdResetEvent fp_vkCmdResetEvent = nullptr;
+	PFN_vkCmdWaitEvents fp_vkCmdWaitEvents = nullptr;
+	PFN_vkCmdPipelineBarrier fp_vkCmdPipelineBarrier = nullptr;
+	PFN_vkCmdBeginQuery fp_vkCmdBeginQuery = nullptr;
+	PFN_vkCmdEndQuery fp_vkCmdEndQuery = nullptr;
+	PFN_vkCmdResetQueryPool fp_vkCmdResetQueryPool = nullptr;
+	PFN_vkCmdWriteTimestamp fp_vkCmdWriteTimestamp = nullptr;
+	PFN_vkCmdCopyQueryPoolResults fp_vkCmdCopyQueryPoolResults = nullptr;
+	PFN_vkCmdPushConstants fp_vkCmdPushConstants = nullptr;
+	PFN_vkCmdBeginRenderPass fp_vkCmdBeginRenderPass = nullptr;
+	PFN_vkCmdNextSubpass fp_vkCmdNextSubpass = nullptr;
+	PFN_vkCmdEndRenderPass fp_vkCmdEndRenderPass = nullptr;
+	PFN_vkCmdExecuteCommands fp_vkCmdExecuteCommands = nullptr;
 #endif
 #ifdef VK_VERSION_1_1
-	PFN_vkBindBufferMemory2 bindBufferMemory2 = nullptr;
-	PFN_vkBindImageMemory2 bindImageMemory2 = nullptr;
-	PFN_vkGetDeviceGroupPeerMemoryFeatures getDeviceGroupPeerMemoryFeatures = nullptr;
-	PFN_vkCmdSetDeviceMask cmdSetDeviceMask = nullptr;
-	PFN_vkCmdDispatchBase cmdDispatchBase = nullptr;
-	PFN_vkGetImageMemoryRequirements2 getImageMemoryRequirements2 = nullptr;
-	PFN_vkGetBufferMemoryRequirements2 getBufferMemoryRequirements2 = nullptr;
-	PFN_vkGetImageSparseMemoryRequirements2 getImageSparseMemoryRequirements2 = nullptr;
-	PFN_vkTrimCommandPool trimCommandPool = nullptr;
-	PFN_vkGetDeviceQueue2 getDeviceQueue2 = nullptr;
-	PFN_vkCreateSamplerYcbcrConversion createSamplerYcbcrConversion = nullptr;
-	PFN_vkDestroySamplerYcbcrConversion destroySamplerYcbcrConversion = nullptr;
-	PFN_vkCreateDescriptorUpdateTemplate createDescriptorUpdateTemplate = nullptr;
-	PFN_vkDestroyDescriptorUpdateTemplate destroyDescriptorUpdateTemplate = nullptr;
-	PFN_vkUpdateDescriptorSetWithTemplate updateDescriptorSetWithTemplate = nullptr;
-	PFN_vkGetDescriptorSetLayoutSupport getDescriptorSetLayoutSupport = nullptr;
+	PFN_vkBindBufferMemory2 fp_vkBindBufferMemory2 = nullptr;
+	PFN_vkBindImageMemory2 fp_vkBindImageMemory2 = nullptr;
+	PFN_vkGetDeviceGroupPeerMemoryFeatures fp_vkGetDeviceGroupPeerMemoryFeatures = nullptr;
+	PFN_vkCmdSetDeviceMask fp_vkCmdSetDeviceMask = nullptr;
+	PFN_vkCmdDispatchBase fp_vkCmdDispatchBase = nullptr;
+	PFN_vkGetImageMemoryRequirements2 fp_vkGetImageMemoryRequirements2 = nullptr;
+	PFN_vkGetBufferMemoryRequirements2 fp_vkGetBufferMemoryRequirements2 = nullptr;
+	PFN_vkGetImageSparseMemoryRequirements2 fp_vkGetImageSparseMemoryRequirements2 = nullptr;
+	PFN_vkTrimCommandPool fp_vkTrimCommandPool = nullptr;
+	PFN_vkGetDeviceQueue2 fp_vkGetDeviceQueue2 = nullptr;
+	PFN_vkCreateSamplerYcbcrConversion fp_vkCreateSamplerYcbcrConversion = nullptr;
+	PFN_vkDestroySamplerYcbcrConversion fp_vkDestroySamplerYcbcrConversion = nullptr;
+	PFN_vkCreateDescriptorUpdateTemplate fp_vkCreateDescriptorUpdateTemplate = nullptr;
+	PFN_vkDestroyDescriptorUpdateTemplate fp_vkDestroyDescriptorUpdateTemplate = nullptr;
+	PFN_vkUpdateDescriptorSetWithTemplate fp_vkUpdateDescriptorSetWithTemplate = nullptr;
+	PFN_vkGetDescriptorSetLayoutSupport fp_vkGetDescriptorSetLayoutSupport = nullptr;
 #endif
 #ifdef VK_VERSION_1_2
-	PFN_vkCmdDrawIndirectCount cmdDrawIndirectCount = nullptr;
-	PFN_vkCmdDrawIndexedIndirectCount cmdDrawIndexedIndirectCount = nullptr;
-	PFN_vkCreateRenderPass2 createRenderPass2 = nullptr;
-	PFN_vkCmdBeginRenderPass2 cmdBeginRenderPass2 = nullptr;
-	PFN_vkCmdNextSubpass2 cmdNextSubpass2 = nullptr;
-	PFN_vkCmdEndRenderPass2 cmdEndRenderPass2 = nullptr;
-	PFN_vkResetQueryPool resetQueryPool = nullptr;
-	PFN_vkGetSemaphoreCounterValue getSemaphoreCounterValue = nullptr;
-	PFN_vkWaitSemaphores waitSemaphores = nullptr;
-	PFN_vkSignalSemaphore signalSemaphore = nullptr;
-	PFN_vkGetBufferDeviceAddress getBufferDeviceAddress = nullptr;
-	PFN_vkGetBufferOpaqueCaptureAddress getBufferOpaqueCaptureAddress = nullptr;
-	PFN_vkGetDeviceMemoryOpaqueCaptureAddress getDeviceMemoryOpaqueCaptureAddress = nullptr;
+	PFN_vkCmdDrawIndirectCount fp_vkCmdDrawIndirectCount = nullptr;
+	PFN_vkCmdDrawIndexedIndirectCount fp_vkCmdDrawIndexedIndirectCount = nullptr;
+	PFN_vkCreateRenderPass2 fp_vkCreateRenderPass2 = nullptr;
+	PFN_vkCmdBeginRenderPass2 fp_vkCmdBeginRenderPass2 = nullptr;
+	PFN_vkCmdNextSubpass2 fp_vkCmdNextSubpass2 = nullptr;
+	PFN_vkCmdEndRenderPass2 fp_vkCmdEndRenderPass2 = nullptr;
+	PFN_vkResetQueryPool fp_vkResetQueryPool = nullptr;
+	PFN_vkGetSemaphoreCounterValue fp_vkGetSemaphoreCounterValue = nullptr;
+	PFN_vkWaitSemaphores fp_vkWaitSemaphores = nullptr;
+	PFN_vkSignalSemaphore fp_vkSignalSemaphore = nullptr;
+	PFN_vkGetBufferDeviceAddress fp_vkGetBufferDeviceAddress = nullptr;
+	PFN_vkGetBufferOpaqueCaptureAddress fp_vkGetBufferOpaqueCaptureAddress = nullptr;
+	PFN_vkGetDeviceMemoryOpaqueCaptureAddress fp_vkGetDeviceMemoryOpaqueCaptureAddress = nullptr;
 #endif
 #if defined(VK_KHR_swapchain) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCreateSwapchainKHR_DECLARE
 #define PFN_vkCreateSwapchainKHR_DECLARE
-	PFN_vkCreateSwapchainKHR createSwapchainKHR = nullptr;
+	PFN_vkCreateSwapchainKHR fp_vkCreateSwapchainKHR = nullptr;
 #endif
 #ifndef PFN_vkDestroySwapchainKHR_DECLARE
 #define PFN_vkDestroySwapchainKHR_DECLARE
-	PFN_vkDestroySwapchainKHR destroySwapchainKHR = nullptr;
+	PFN_vkDestroySwapchainKHR fp_vkDestroySwapchainKHR = nullptr;
 #endif
 #ifndef PFN_vkGetSwapchainImagesKHR_DECLARE
 #define PFN_vkGetSwapchainImagesKHR_DECLARE
-	PFN_vkGetSwapchainImagesKHR getSwapchainImagesKHR = nullptr;
+	PFN_vkGetSwapchainImagesKHR fp_vkGetSwapchainImagesKHR = nullptr;
 #endif
 #ifndef PFN_vkAcquireNextImageKHR_DECLARE
 #define PFN_vkAcquireNextImageKHR_DECLARE
-	PFN_vkAcquireNextImageKHR acquireNextImageKHR = nullptr;
+	PFN_vkAcquireNextImageKHR fp_vkAcquireNextImageKHR = nullptr;
 #endif
 #ifndef PFN_vkQueuePresentKHR_DECLARE
 #define PFN_vkQueuePresentKHR_DECLARE
-	PFN_vkQueuePresentKHR queuePresentKHR = nullptr;
+	PFN_vkQueuePresentKHR fp_vkQueuePresentKHR = nullptr;
 #endif
 #endif
 #if defined(VK_KHR_swapchain) && defined(VK_VERSION_1_1)
 #ifndef PFN_vkGetDeviceGroupPresentCapabilitiesKHR_DECLARE
 #define PFN_vkGetDeviceGroupPresentCapabilitiesKHR_DECLARE
-	PFN_vkGetDeviceGroupPresentCapabilitiesKHR getDeviceGroupPresentCapabilitiesKHR = nullptr;
+	PFN_vkGetDeviceGroupPresentCapabilitiesKHR fp_vkGetDeviceGroupPresentCapabilitiesKHR = nullptr;
 #endif
 #ifndef PFN_vkGetDeviceGroupSurfacePresentModesKHR_DECLARE
 #define PFN_vkGetDeviceGroupSurfacePresentModesKHR_DECLARE
-	PFN_vkGetDeviceGroupSurfacePresentModesKHR getDeviceGroupSurfacePresentModesKHR = nullptr;
+	PFN_vkGetDeviceGroupSurfacePresentModesKHR fp_vkGetDeviceGroupSurfacePresentModesKHR = nullptr;
 #endif
 #ifndef PFN_vkAcquireNextImage2KHR_DECLARE
 #define PFN_vkAcquireNextImage2KHR_DECLARE
-	PFN_vkAcquireNextImage2KHR acquireNextImage2KHR = nullptr;
+	PFN_vkAcquireNextImage2KHR fp_vkAcquireNextImage2KHR = nullptr;
 #endif
 #endif
 #if defined(VK_KHR_display_swapchain) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCreateSharedSwapchainsKHR_DECLARE
 #define PFN_vkCreateSharedSwapchainsKHR_DECLARE
-	PFN_vkCreateSharedSwapchainsKHR createSharedSwapchainsKHR = nullptr;
+	PFN_vkCreateSharedSwapchainsKHR fp_vkCreateSharedSwapchainsKHR = nullptr;
 #endif
 #endif
 #if defined(VK_ANDROID_native_buffer) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetSwapchainGrallocUsageANDROID_DECLARE
 #define PFN_vkGetSwapchainGrallocUsageANDROID_DECLARE
-	PFN_vkGetSwapchainGrallocUsageANDROID getSwapchainGrallocUsageANDROID = nullptr;
+	PFN_vkGetSwapchainGrallocUsageANDROID fp_vkGetSwapchainGrallocUsageANDROID = nullptr;
 #endif
 #ifndef PFN_vkAcquireImageANDROID_DECLARE
 #define PFN_vkAcquireImageANDROID_DECLARE
-	PFN_vkAcquireImageANDROID acquireImageANDROID = nullptr;
+	PFN_vkAcquireImageANDROID fp_vkAcquireImageANDROID = nullptr;
 #endif
 #ifndef PFN_vkQueueSignalReleaseImageANDROID_DECLARE
 #define PFN_vkQueueSignalReleaseImageANDROID_DECLARE
-	PFN_vkQueueSignalReleaseImageANDROID queueSignalReleaseImageANDROID = nullptr;
+	PFN_vkQueueSignalReleaseImageANDROID fp_vkQueueSignalReleaseImageANDROID = nullptr;
 #endif
 #ifndef PFN_vkGetSwapchainGrallocUsage2ANDROID_DECLARE
 #define PFN_vkGetSwapchainGrallocUsage2ANDROID_DECLARE
-	PFN_vkGetSwapchainGrallocUsage2ANDROID getSwapchainGrallocUsage2ANDROID = nullptr;
+	PFN_vkGetSwapchainGrallocUsage2ANDROID fp_vkGetSwapchainGrallocUsage2ANDROID = nullptr;
 #endif
 #endif
 #if defined(VK_EXT_debug_marker) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkDebugMarkerSetObjectTagEXT_DECLARE
 #define PFN_vkDebugMarkerSetObjectTagEXT_DECLARE
-	PFN_vkDebugMarkerSetObjectTagEXT debugMarkerSetObjectTagEXT = nullptr;
+	PFN_vkDebugMarkerSetObjectTagEXT fp_vkDebugMarkerSetObjectTagEXT = nullptr;
 #endif
 #ifndef PFN_vkDebugMarkerSetObjectNameEXT_DECLARE
 #define PFN_vkDebugMarkerSetObjectNameEXT_DECLARE
-	PFN_vkDebugMarkerSetObjectNameEXT debugMarkerSetObjectNameEXT = nullptr;
+	PFN_vkDebugMarkerSetObjectNameEXT fp_vkDebugMarkerSetObjectNameEXT = nullptr;
 #endif
 #ifndef PFN_vkCmdDebugMarkerBeginEXT_DECLARE
 #define PFN_vkCmdDebugMarkerBeginEXT_DECLARE
-	PFN_vkCmdDebugMarkerBeginEXT cmdDebugMarkerBeginEXT = nullptr;
+	PFN_vkCmdDebugMarkerBeginEXT fp_vkCmdDebugMarkerBeginEXT = nullptr;
 #endif
 #ifndef PFN_vkCmdDebugMarkerEndEXT_DECLARE
 #define PFN_vkCmdDebugMarkerEndEXT_DECLARE
-	PFN_vkCmdDebugMarkerEndEXT cmdDebugMarkerEndEXT = nullptr;
+	PFN_vkCmdDebugMarkerEndEXT fp_vkCmdDebugMarkerEndEXT = nullptr;
 #endif
 #ifndef PFN_vkCmdDebugMarkerInsertEXT_DECLARE
 #define PFN_vkCmdDebugMarkerInsertEXT_DECLARE
-	PFN_vkCmdDebugMarkerInsertEXT cmdDebugMarkerInsertEXT = nullptr;
+	PFN_vkCmdDebugMarkerInsertEXT fp_vkCmdDebugMarkerInsertEXT = nullptr;
 #endif
 #endif
 #if defined(VK_KHR_video_queue) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCreateVideoSessionKHR_DECLARE
 #define PFN_vkCreateVideoSessionKHR_DECLARE
-	PFN_vkCreateVideoSessionKHR createVideoSessionKHR = nullptr;
+	PFN_vkCreateVideoSessionKHR fp_vkCreateVideoSessionKHR = nullptr;
 #endif
 #ifndef PFN_vkDestroyVideoSessionKHR_DECLARE
 #define PFN_vkDestroyVideoSessionKHR_DECLARE
-	PFN_vkDestroyVideoSessionKHR destroyVideoSessionKHR = nullptr;
+	PFN_vkDestroyVideoSessionKHR fp_vkDestroyVideoSessionKHR = nullptr;
 #endif
 #ifndef PFN_vkGetVideoSessionMemoryRequirementsKHR_DECLARE
 #define PFN_vkGetVideoSessionMemoryRequirementsKHR_DECLARE
-	PFN_vkGetVideoSessionMemoryRequirementsKHR getVideoSessionMemoryRequirementsKHR = nullptr;
+	PFN_vkGetVideoSessionMemoryRequirementsKHR fp_vkGetVideoSessionMemoryRequirementsKHR = nullptr;
 #endif
 #ifndef PFN_vkBindVideoSessionMemoryKHR_DECLARE
 #define PFN_vkBindVideoSessionMemoryKHR_DECLARE
-	PFN_vkBindVideoSessionMemoryKHR bindVideoSessionMemoryKHR = nullptr;
+	PFN_vkBindVideoSessionMemoryKHR fp_vkBindVideoSessionMemoryKHR = nullptr;
 #endif
 #ifndef PFN_vkCreateVideoSessionParametersKHR_DECLARE
 #define PFN_vkCreateVideoSessionParametersKHR_DECLARE
-	PFN_vkCreateVideoSessionParametersKHR createVideoSessionParametersKHR = nullptr;
+	PFN_vkCreateVideoSessionParametersKHR fp_vkCreateVideoSessionParametersKHR = nullptr;
 #endif
 #ifndef PFN_vkUpdateVideoSessionParametersKHR_DECLARE
 #define PFN_vkUpdateVideoSessionParametersKHR_DECLARE
-	PFN_vkUpdateVideoSessionParametersKHR updateVideoSessionParametersKHR = nullptr;
+	PFN_vkUpdateVideoSessionParametersKHR fp_vkUpdateVideoSessionParametersKHR = nullptr;
 #endif
 #ifndef PFN_vkDestroyVideoSessionParametersKHR_DECLARE
 #define PFN_vkDestroyVideoSessionParametersKHR_DECLARE
-	PFN_vkDestroyVideoSessionParametersKHR destroyVideoSessionParametersKHR = nullptr;
+	PFN_vkDestroyVideoSessionParametersKHR fp_vkDestroyVideoSessionParametersKHR = nullptr;
 #endif
 #ifndef PFN_vkCmdBeginVideoCodingKHR_DECLARE
 #define PFN_vkCmdBeginVideoCodingKHR_DECLARE
-	PFN_vkCmdBeginVideoCodingKHR cmdBeginVideoCodingKHR = nullptr;
+	PFN_vkCmdBeginVideoCodingKHR fp_vkCmdBeginVideoCodingKHR = nullptr;
 #endif
 #ifndef PFN_vkCmdEndVideoCodingKHR_DECLARE
 #define PFN_vkCmdEndVideoCodingKHR_DECLARE
-	PFN_vkCmdEndVideoCodingKHR cmdEndVideoCodingKHR = nullptr;
+	PFN_vkCmdEndVideoCodingKHR fp_vkCmdEndVideoCodingKHR = nullptr;
 #endif
 #ifndef PFN_vkCmdControlVideoCodingKHR_DECLARE
 #define PFN_vkCmdControlVideoCodingKHR_DECLARE
-	PFN_vkCmdControlVideoCodingKHR cmdControlVideoCodingKHR = nullptr;
+	PFN_vkCmdControlVideoCodingKHR fp_vkCmdControlVideoCodingKHR = nullptr;
 #endif
 #endif
 #if defined(VK_KHR_video_decode_queue) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdDecodeVideoKHR_DECLARE
 #define PFN_vkCmdDecodeVideoKHR_DECLARE
-	PFN_vkCmdDecodeVideoKHR cmdDecodeVideoKHR = nullptr;
+	PFN_vkCmdDecodeVideoKHR fp_vkCmdDecodeVideoKHR = nullptr;
 #endif
 #endif
 #if defined(VK_KHR_video_encode_queue) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdEncodeVideoKHR_DECLARE
 #define PFN_vkCmdEncodeVideoKHR_DECLARE
-	PFN_vkCmdEncodeVideoKHR cmdEncodeVideoKHR = nullptr;
+	PFN_vkCmdEncodeVideoKHR fp_vkCmdEncodeVideoKHR = nullptr;
 #endif
 #endif
 #if defined(VK_EXT_transform_feedback) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdBindTransformFeedbackBuffersEXT_DECLARE
 #define PFN_vkCmdBindTransformFeedbackBuffersEXT_DECLARE
-	PFN_vkCmdBindTransformFeedbackBuffersEXT cmdBindTransformFeedbackBuffersEXT = nullptr;
+	PFN_vkCmdBindTransformFeedbackBuffersEXT fp_vkCmdBindTransformFeedbackBuffersEXT = nullptr;
 #endif
 #ifndef PFN_vkCmdBeginTransformFeedbackEXT_DECLARE
 #define PFN_vkCmdBeginTransformFeedbackEXT_DECLARE
-	PFN_vkCmdBeginTransformFeedbackEXT cmdBeginTransformFeedbackEXT = nullptr;
+	PFN_vkCmdBeginTransformFeedbackEXT fp_vkCmdBeginTransformFeedbackEXT = nullptr;
 #endif
 #ifndef PFN_vkCmdEndTransformFeedbackEXT_DECLARE
 #define PFN_vkCmdEndTransformFeedbackEXT_DECLARE
-	PFN_vkCmdEndTransformFeedbackEXT cmdEndTransformFeedbackEXT = nullptr;
+	PFN_vkCmdEndTransformFeedbackEXT fp_vkCmdEndTransformFeedbackEXT = nullptr;
 #endif
 #ifndef PFN_vkCmdBeginQueryIndexedEXT_DECLARE
 #define PFN_vkCmdBeginQueryIndexedEXT_DECLARE
-	PFN_vkCmdBeginQueryIndexedEXT cmdBeginQueryIndexedEXT = nullptr;
+	PFN_vkCmdBeginQueryIndexedEXT fp_vkCmdBeginQueryIndexedEXT = nullptr;
 #endif
 #ifndef PFN_vkCmdEndQueryIndexedEXT_DECLARE
 #define PFN_vkCmdEndQueryIndexedEXT_DECLARE
-	PFN_vkCmdEndQueryIndexedEXT cmdEndQueryIndexedEXT = nullptr;
+	PFN_vkCmdEndQueryIndexedEXT fp_vkCmdEndQueryIndexedEXT = nullptr;
 #endif
 #ifndef PFN_vkCmdDrawIndirectByteCountEXT_DECLARE
 #define PFN_vkCmdDrawIndirectByteCountEXT_DECLARE
-	PFN_vkCmdDrawIndirectByteCountEXT cmdDrawIndirectByteCountEXT = nullptr;
+	PFN_vkCmdDrawIndirectByteCountEXT fp_vkCmdDrawIndirectByteCountEXT = nullptr;
 #endif
 #endif
 #if defined(VK_NVX_image_view_handle) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetImageViewHandleNVX_DECLARE
 #define PFN_vkGetImageViewHandleNVX_DECLARE
-	PFN_vkGetImageViewHandleNVX getImageViewHandleNVX = nullptr;
+	PFN_vkGetImageViewHandleNVX fp_vkGetImageViewHandleNVX = nullptr;
 #endif
 #ifndef PFN_vkGetImageViewAddressNVX_DECLARE
 #define PFN_vkGetImageViewAddressNVX_DECLARE
-	PFN_vkGetImageViewAddressNVX getImageViewAddressNVX = nullptr;
+	PFN_vkGetImageViewAddressNVX fp_vkGetImageViewAddressNVX = nullptr;
 #endif
 #endif
 #if defined(VK_AMD_draw_indirect_count) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdDrawIndirectCountAMD_DECLARE
 #define PFN_vkCmdDrawIndirectCountAMD_DECLARE
-	PFN_vkCmdDrawIndirectCountAMD cmdDrawIndirectCountAMD = nullptr;
+	PFN_vkCmdDrawIndirectCountAMD fp_vkCmdDrawIndirectCountAMD = nullptr;
 #endif
 #ifndef PFN_vkCmdDrawIndexedIndirectCountAMD_DECLARE
 #define PFN_vkCmdDrawIndexedIndirectCountAMD_DECLARE
-	PFN_vkCmdDrawIndexedIndirectCountAMD cmdDrawIndexedIndirectCountAMD = nullptr;
+	PFN_vkCmdDrawIndexedIndirectCountAMD fp_vkCmdDrawIndexedIndirectCountAMD = nullptr;
 #endif
 #endif
 #if defined(VK_AMD_shader_info) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetShaderInfoAMD_DECLARE
 #define PFN_vkGetShaderInfoAMD_DECLARE
-	PFN_vkGetShaderInfoAMD getShaderInfoAMD = nullptr;
+	PFN_vkGetShaderInfoAMD fp_vkGetShaderInfoAMD = nullptr;
 #endif
 #endif
 #if defined(VK_NV_external_memory_win32) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetMemoryWin32HandleNV_DECLARE
 #define PFN_vkGetMemoryWin32HandleNV_DECLARE
-	PFN_vkGetMemoryWin32HandleNV getMemoryWin32HandleNV = nullptr;
+	PFN_vkGetMemoryWin32HandleNV fp_vkGetMemoryWin32HandleNV = nullptr;
 #endif
 #endif
 #if defined(VK_KHR_device_group) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetDeviceGroupPeerMemoryFeaturesKHR_DECLARE
 #define PFN_vkGetDeviceGroupPeerMemoryFeaturesKHR_DECLARE
-	PFN_vkGetDeviceGroupPeerMemoryFeaturesKHR getDeviceGroupPeerMemoryFeaturesKHR = nullptr;
+	PFN_vkGetDeviceGroupPeerMemoryFeaturesKHR fp_vkGetDeviceGroupPeerMemoryFeaturesKHR = nullptr;
 #endif
 #ifndef PFN_vkCmdSetDeviceMaskKHR_DECLARE
 #define PFN_vkCmdSetDeviceMaskKHR_DECLARE
-	PFN_vkCmdSetDeviceMaskKHR cmdSetDeviceMaskKHR = nullptr;
+	PFN_vkCmdSetDeviceMaskKHR fp_vkCmdSetDeviceMaskKHR = nullptr;
 #endif
 #ifndef PFN_vkCmdDispatchBaseKHR_DECLARE
 #define PFN_vkCmdDispatchBaseKHR_DECLARE
-	PFN_vkCmdDispatchBaseKHR cmdDispatchBaseKHR = nullptr;
+	PFN_vkCmdDispatchBaseKHR fp_vkCmdDispatchBaseKHR = nullptr;
 #endif
 #ifndef PFN_vkGetDeviceGroupPresentCapabilitiesKHR_DECLARE
 #define PFN_vkGetDeviceGroupPresentCapabilitiesKHR_DECLARE
-	PFN_vkGetDeviceGroupPresentCapabilitiesKHR getDeviceGroupPresentCapabilitiesKHR = nullptr;
+	PFN_vkGetDeviceGroupPresentCapabilitiesKHR fp_vkGetDeviceGroupPresentCapabilitiesKHR = nullptr;
 #endif
 #ifndef PFN_vkGetDeviceGroupSurfacePresentModesKHR_DECLARE
 #define PFN_vkGetDeviceGroupSurfacePresentModesKHR_DECLARE
-	PFN_vkGetDeviceGroupSurfacePresentModesKHR getDeviceGroupSurfacePresentModesKHR = nullptr;
+	PFN_vkGetDeviceGroupSurfacePresentModesKHR fp_vkGetDeviceGroupSurfacePresentModesKHR = nullptr;
 #endif
 #ifndef PFN_vkAcquireNextImage2KHR_DECLARE
 #define PFN_vkAcquireNextImage2KHR_DECLARE
-	PFN_vkAcquireNextImage2KHR acquireNextImage2KHR = nullptr;
+	PFN_vkAcquireNextImage2KHR fp_vkAcquireNextImage2KHR = nullptr;
 #endif
 #endif
 #if defined(VK_KHR_maintenance1) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkTrimCommandPoolKHR_DECLARE
 #define PFN_vkTrimCommandPoolKHR_DECLARE
-	PFN_vkTrimCommandPoolKHR trimCommandPoolKHR = nullptr;
+	PFN_vkTrimCommandPoolKHR fp_vkTrimCommandPoolKHR = nullptr;
 #endif
 #endif
 #if defined(VK_KHR_external_memory_win32) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetMemoryWin32HandleKHR_DECLARE
 #define PFN_vkGetMemoryWin32HandleKHR_DECLARE
-	PFN_vkGetMemoryWin32HandleKHR getMemoryWin32HandleKHR = nullptr;
+	PFN_vkGetMemoryWin32HandleKHR fp_vkGetMemoryWin32HandleKHR = nullptr;
 #endif
 #ifndef PFN_vkGetMemoryWin32HandlePropertiesKHR_DECLARE
 #define PFN_vkGetMemoryWin32HandlePropertiesKHR_DECLARE
-	PFN_vkGetMemoryWin32HandlePropertiesKHR getMemoryWin32HandlePropertiesKHR = nullptr;
+	PFN_vkGetMemoryWin32HandlePropertiesKHR fp_vkGetMemoryWin32HandlePropertiesKHR = nullptr;
 #endif
 #endif
 #if defined(VK_KHR_external_memory_fd) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetMemoryFdKHR_DECLARE
 #define PFN_vkGetMemoryFdKHR_DECLARE
-	PFN_vkGetMemoryFdKHR getMemoryFdKHR = nullptr;
+	PFN_vkGetMemoryFdKHR fp_vkGetMemoryFdKHR = nullptr;
 #endif
 #ifndef PFN_vkGetMemoryFdPropertiesKHR_DECLARE
 #define PFN_vkGetMemoryFdPropertiesKHR_DECLARE
-	PFN_vkGetMemoryFdPropertiesKHR getMemoryFdPropertiesKHR = nullptr;
+	PFN_vkGetMemoryFdPropertiesKHR fp_vkGetMemoryFdPropertiesKHR = nullptr;
 #endif
 #endif
 #if defined(VK_KHR_external_semaphore_win32) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkImportSemaphoreWin32HandleKHR_DECLARE
 #define PFN_vkImportSemaphoreWin32HandleKHR_DECLARE
-	PFN_vkImportSemaphoreWin32HandleKHR importSemaphoreWin32HandleKHR = nullptr;
+	PFN_vkImportSemaphoreWin32HandleKHR fp_vkImportSemaphoreWin32HandleKHR = nullptr;
 #endif
 #ifndef PFN_vkGetSemaphoreWin32HandleKHR_DECLARE
 #define PFN_vkGetSemaphoreWin32HandleKHR_DECLARE
-	PFN_vkGetSemaphoreWin32HandleKHR getSemaphoreWin32HandleKHR = nullptr;
+	PFN_vkGetSemaphoreWin32HandleKHR fp_vkGetSemaphoreWin32HandleKHR = nullptr;
 #endif
 #endif
 #if defined(VK_KHR_external_semaphore_fd) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkImportSemaphoreFdKHR_DECLARE
 #define PFN_vkImportSemaphoreFdKHR_DECLARE
-	PFN_vkImportSemaphoreFdKHR importSemaphoreFdKHR = nullptr;
+	PFN_vkImportSemaphoreFdKHR fp_vkImportSemaphoreFdKHR = nullptr;
 #endif
 #ifndef PFN_vkGetSemaphoreFdKHR_DECLARE
 #define PFN_vkGetSemaphoreFdKHR_DECLARE
-	PFN_vkGetSemaphoreFdKHR getSemaphoreFdKHR = nullptr;
+	PFN_vkGetSemaphoreFdKHR fp_vkGetSemaphoreFdKHR = nullptr;
 #endif
 #endif
 #if defined(VK_KHR_push_descriptor) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdPushDescriptorSetKHR_DECLARE
 #define PFN_vkCmdPushDescriptorSetKHR_DECLARE
-	PFN_vkCmdPushDescriptorSetKHR cmdPushDescriptorSetKHR = nullptr;
+	PFN_vkCmdPushDescriptorSetKHR fp_vkCmdPushDescriptorSetKHR = nullptr;
 #endif
 #ifndef PFN_vkCmdPushDescriptorSetWithTemplateKHR_DECLARE
 #define PFN_vkCmdPushDescriptorSetWithTemplateKHR_DECLARE
-	PFN_vkCmdPushDescriptorSetWithTemplateKHR cmdPushDescriptorSetWithTemplateKHR = nullptr;
+	PFN_vkCmdPushDescriptorSetWithTemplateKHR fp_vkCmdPushDescriptorSetWithTemplateKHR = nullptr;
 #endif
 #endif
 #if defined(VK_KHR_push_descriptor) && defined(VK_VERSION_1_1)
 #ifndef PFN_vkCmdPushDescriptorSetWithTemplateKHR_DECLARE
 #define PFN_vkCmdPushDescriptorSetWithTemplateKHR_DECLARE
-	PFN_vkCmdPushDescriptorSetWithTemplateKHR cmdPushDescriptorSetWithTemplateKHR = nullptr;
+	PFN_vkCmdPushDescriptorSetWithTemplateKHR fp_vkCmdPushDescriptorSetWithTemplateKHR = nullptr;
 #endif
 #endif
 #if defined(VK_EXT_conditional_rendering) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdBeginConditionalRenderingEXT_DECLARE
 #define PFN_vkCmdBeginConditionalRenderingEXT_DECLARE
-	PFN_vkCmdBeginConditionalRenderingEXT cmdBeginConditionalRenderingEXT = nullptr;
+	PFN_vkCmdBeginConditionalRenderingEXT fp_vkCmdBeginConditionalRenderingEXT = nullptr;
 #endif
 #ifndef PFN_vkCmdEndConditionalRenderingEXT_DECLARE
 #define PFN_vkCmdEndConditionalRenderingEXT_DECLARE
-	PFN_vkCmdEndConditionalRenderingEXT cmdEndConditionalRenderingEXT = nullptr;
+	PFN_vkCmdEndConditionalRenderingEXT fp_vkCmdEndConditionalRenderingEXT = nullptr;
 #endif
 #endif
 #if defined(VK_KHR_descriptor_update_template) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCreateDescriptorUpdateTemplateKHR_DECLARE
 #define PFN_vkCreateDescriptorUpdateTemplateKHR_DECLARE
-	PFN_vkCreateDescriptorUpdateTemplateKHR createDescriptorUpdateTemplateKHR = nullptr;
+	PFN_vkCreateDescriptorUpdateTemplateKHR fp_vkCreateDescriptorUpdateTemplateKHR = nullptr;
 #endif
 #ifndef PFN_vkDestroyDescriptorUpdateTemplateKHR_DECLARE
 #define PFN_vkDestroyDescriptorUpdateTemplateKHR_DECLARE
-	PFN_vkDestroyDescriptorUpdateTemplateKHR destroyDescriptorUpdateTemplateKHR = nullptr;
+	PFN_vkDestroyDescriptorUpdateTemplateKHR fp_vkDestroyDescriptorUpdateTemplateKHR = nullptr;
 #endif
 #ifndef PFN_vkUpdateDescriptorSetWithTemplateKHR_DECLARE
 #define PFN_vkUpdateDescriptorSetWithTemplateKHR_DECLARE
-	PFN_vkUpdateDescriptorSetWithTemplateKHR updateDescriptorSetWithTemplateKHR = nullptr;
+	PFN_vkUpdateDescriptorSetWithTemplateKHR fp_vkUpdateDescriptorSetWithTemplateKHR = nullptr;
 #endif
 #ifndef PFN_vkCmdPushDescriptorSetWithTemplateKHR_DECLARE
 #define PFN_vkCmdPushDescriptorSetWithTemplateKHR_DECLARE
-	PFN_vkCmdPushDescriptorSetWithTemplateKHR cmdPushDescriptorSetWithTemplateKHR = nullptr;
+	PFN_vkCmdPushDescriptorSetWithTemplateKHR fp_vkCmdPushDescriptorSetWithTemplateKHR = nullptr;
 #endif
 #endif
 #if defined(VK_NV_clip_space_w_scaling) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdSetViewportWScalingNV_DECLARE
 #define PFN_vkCmdSetViewportWScalingNV_DECLARE
-	PFN_vkCmdSetViewportWScalingNV cmdSetViewportWScalingNV = nullptr;
+	PFN_vkCmdSetViewportWScalingNV fp_vkCmdSetViewportWScalingNV = nullptr;
 #endif
 #endif
 #if defined(VK_EXT_display_control) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkDisplayPowerControlEXT_DECLARE
 #define PFN_vkDisplayPowerControlEXT_DECLARE
-	PFN_vkDisplayPowerControlEXT displayPowerControlEXT = nullptr;
+	PFN_vkDisplayPowerControlEXT fp_vkDisplayPowerControlEXT = nullptr;
 #endif
 #ifndef PFN_vkRegisterDeviceEventEXT_DECLARE
 #define PFN_vkRegisterDeviceEventEXT_DECLARE
-	PFN_vkRegisterDeviceEventEXT registerDeviceEventEXT = nullptr;
+	PFN_vkRegisterDeviceEventEXT fp_vkRegisterDeviceEventEXT = nullptr;
 #endif
 #ifndef PFN_vkRegisterDisplayEventEXT_DECLARE
 #define PFN_vkRegisterDisplayEventEXT_DECLARE
-	PFN_vkRegisterDisplayEventEXT registerDisplayEventEXT = nullptr;
+	PFN_vkRegisterDisplayEventEXT fp_vkRegisterDisplayEventEXT = nullptr;
 #endif
 #ifndef PFN_vkGetSwapchainCounterEXT_DECLARE
 #define PFN_vkGetSwapchainCounterEXT_DECLARE
-	PFN_vkGetSwapchainCounterEXT getSwapchainCounterEXT = nullptr;
+	PFN_vkGetSwapchainCounterEXT fp_vkGetSwapchainCounterEXT = nullptr;
 #endif
 #endif
 #if defined(VK_GOOGLE_display_timing) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetRefreshCycleDurationGOOGLE_DECLARE
 #define PFN_vkGetRefreshCycleDurationGOOGLE_DECLARE
-	PFN_vkGetRefreshCycleDurationGOOGLE getRefreshCycleDurationGOOGLE = nullptr;
+	PFN_vkGetRefreshCycleDurationGOOGLE fp_vkGetRefreshCycleDurationGOOGLE = nullptr;
 #endif
 #ifndef PFN_vkGetPastPresentationTimingGOOGLE_DECLARE
 #define PFN_vkGetPastPresentationTimingGOOGLE_DECLARE
-	PFN_vkGetPastPresentationTimingGOOGLE getPastPresentationTimingGOOGLE = nullptr;
+	PFN_vkGetPastPresentationTimingGOOGLE fp_vkGetPastPresentationTimingGOOGLE = nullptr;
 #endif
 #endif
 #if defined(VK_EXT_discard_rectangles) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdSetDiscardRectangleEXT_DECLARE
 #define PFN_vkCmdSetDiscardRectangleEXT_DECLARE
-	PFN_vkCmdSetDiscardRectangleEXT cmdSetDiscardRectangleEXT = nullptr;
+	PFN_vkCmdSetDiscardRectangleEXT fp_vkCmdSetDiscardRectangleEXT = nullptr;
 #endif
 #endif
 #if defined(VK_EXT_hdr_metadata) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkSetHdrMetadataEXT_DECLARE
 #define PFN_vkSetHdrMetadataEXT_DECLARE
-	PFN_vkSetHdrMetadataEXT setHdrMetadataEXT = nullptr;
+	PFN_vkSetHdrMetadataEXT fp_vkSetHdrMetadataEXT = nullptr;
 #endif
 #endif
 #if defined(VK_KHR_create_renderpass2) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCreateRenderPass2KHR_DECLARE
 #define PFN_vkCreateRenderPass2KHR_DECLARE
-	PFN_vkCreateRenderPass2KHR createRenderPass2KHR = nullptr;
+	PFN_vkCreateRenderPass2KHR fp_vkCreateRenderPass2KHR = nullptr;
 #endif
 #ifndef PFN_vkCmdBeginRenderPass2KHR_DECLARE
 #define PFN_vkCmdBeginRenderPass2KHR_DECLARE
-	PFN_vkCmdBeginRenderPass2KHR cmdBeginRenderPass2KHR = nullptr;
+	PFN_vkCmdBeginRenderPass2KHR fp_vkCmdBeginRenderPass2KHR = nullptr;
 #endif
 #ifndef PFN_vkCmdNextSubpass2KHR_DECLARE
 #define PFN_vkCmdNextSubpass2KHR_DECLARE
-	PFN_vkCmdNextSubpass2KHR cmdNextSubpass2KHR = nullptr;
+	PFN_vkCmdNextSubpass2KHR fp_vkCmdNextSubpass2KHR = nullptr;
 #endif
 #ifndef PFN_vkCmdEndRenderPass2KHR_DECLARE
 #define PFN_vkCmdEndRenderPass2KHR_DECLARE
-	PFN_vkCmdEndRenderPass2KHR cmdEndRenderPass2KHR = nullptr;
+	PFN_vkCmdEndRenderPass2KHR fp_vkCmdEndRenderPass2KHR = nullptr;
 #endif
 #endif
 #if defined(VK_KHR_shared_presentable_image) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetSwapchainStatusKHR_DECLARE
 #define PFN_vkGetSwapchainStatusKHR_DECLARE
-	PFN_vkGetSwapchainStatusKHR getSwapchainStatusKHR = nullptr;
+	PFN_vkGetSwapchainStatusKHR fp_vkGetSwapchainStatusKHR = nullptr;
 #endif
 #endif
 #if defined(VK_KHR_external_fence_win32) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkImportFenceWin32HandleKHR_DECLARE
 #define PFN_vkImportFenceWin32HandleKHR_DECLARE
-	PFN_vkImportFenceWin32HandleKHR importFenceWin32HandleKHR = nullptr;
+	PFN_vkImportFenceWin32HandleKHR fp_vkImportFenceWin32HandleKHR = nullptr;
 #endif
 #ifndef PFN_vkGetFenceWin32HandleKHR_DECLARE
 #define PFN_vkGetFenceWin32HandleKHR_DECLARE
-	PFN_vkGetFenceWin32HandleKHR getFenceWin32HandleKHR = nullptr;
+	PFN_vkGetFenceWin32HandleKHR fp_vkGetFenceWin32HandleKHR = nullptr;
 #endif
 #endif
 #if defined(VK_KHR_external_fence_fd) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkImportFenceFdKHR_DECLARE
 #define PFN_vkImportFenceFdKHR_DECLARE
-	PFN_vkImportFenceFdKHR importFenceFdKHR = nullptr;
+	PFN_vkImportFenceFdKHR fp_vkImportFenceFdKHR = nullptr;
 #endif
 #ifndef PFN_vkGetFenceFdKHR_DECLARE
 #define PFN_vkGetFenceFdKHR_DECLARE
-	PFN_vkGetFenceFdKHR getFenceFdKHR = nullptr;
+	PFN_vkGetFenceFdKHR fp_vkGetFenceFdKHR = nullptr;
 #endif
 #endif
 #if defined(VK_KHR_performance_query) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkAcquireProfilingLockKHR_DECLARE
 #define PFN_vkAcquireProfilingLockKHR_DECLARE
-	PFN_vkAcquireProfilingLockKHR acquireProfilingLockKHR = nullptr;
+	PFN_vkAcquireProfilingLockKHR fp_vkAcquireProfilingLockKHR = nullptr;
 #endif
 #ifndef PFN_vkReleaseProfilingLockKHR_DECLARE
 #define PFN_vkReleaseProfilingLockKHR_DECLARE
-	PFN_vkReleaseProfilingLockKHR releaseProfilingLockKHR = nullptr;
+	PFN_vkReleaseProfilingLockKHR fp_vkReleaseProfilingLockKHR = nullptr;
 #endif
 #endif
 #if defined(VK_EXT_debug_utils) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkSetDebugUtilsObjectNameEXT_DECLARE
 #define PFN_vkSetDebugUtilsObjectNameEXT_DECLARE
-	PFN_vkSetDebugUtilsObjectNameEXT setDebugUtilsObjectNameEXT = nullptr;
+	PFN_vkSetDebugUtilsObjectNameEXT fp_vkSetDebugUtilsObjectNameEXT = nullptr;
 #endif
 #ifndef PFN_vkSetDebugUtilsObjectTagEXT_DECLARE
 #define PFN_vkSetDebugUtilsObjectTagEXT_DECLARE
-	PFN_vkSetDebugUtilsObjectTagEXT setDebugUtilsObjectTagEXT = nullptr;
+	PFN_vkSetDebugUtilsObjectTagEXT fp_vkSetDebugUtilsObjectTagEXT = nullptr;
 #endif
 #ifndef PFN_vkQueueBeginDebugUtilsLabelEXT_DECLARE
 #define PFN_vkQueueBeginDebugUtilsLabelEXT_DECLARE
-	PFN_vkQueueBeginDebugUtilsLabelEXT queueBeginDebugUtilsLabelEXT = nullptr;
+	PFN_vkQueueBeginDebugUtilsLabelEXT fp_vkQueueBeginDebugUtilsLabelEXT = nullptr;
 #endif
 #ifndef PFN_vkQueueEndDebugUtilsLabelEXT_DECLARE
 #define PFN_vkQueueEndDebugUtilsLabelEXT_DECLARE
-	PFN_vkQueueEndDebugUtilsLabelEXT queueEndDebugUtilsLabelEXT = nullptr;
+	PFN_vkQueueEndDebugUtilsLabelEXT fp_vkQueueEndDebugUtilsLabelEXT = nullptr;
 #endif
 #ifndef PFN_vkQueueInsertDebugUtilsLabelEXT_DECLARE
 #define PFN_vkQueueInsertDebugUtilsLabelEXT_DECLARE
-	PFN_vkQueueInsertDebugUtilsLabelEXT queueInsertDebugUtilsLabelEXT = nullptr;
+	PFN_vkQueueInsertDebugUtilsLabelEXT fp_vkQueueInsertDebugUtilsLabelEXT = nullptr;
 #endif
 #ifndef PFN_vkCmdBeginDebugUtilsLabelEXT_DECLARE
 #define PFN_vkCmdBeginDebugUtilsLabelEXT_DECLARE
-	PFN_vkCmdBeginDebugUtilsLabelEXT cmdBeginDebugUtilsLabelEXT = nullptr;
+	PFN_vkCmdBeginDebugUtilsLabelEXT fp_vkCmdBeginDebugUtilsLabelEXT = nullptr;
 #endif
 #ifndef PFN_vkCmdEndDebugUtilsLabelEXT_DECLARE
 #define PFN_vkCmdEndDebugUtilsLabelEXT_DECLARE
-	PFN_vkCmdEndDebugUtilsLabelEXT cmdEndDebugUtilsLabelEXT = nullptr;
+	PFN_vkCmdEndDebugUtilsLabelEXT fp_vkCmdEndDebugUtilsLabelEXT = nullptr;
 #endif
 #ifndef PFN_vkCmdInsertDebugUtilsLabelEXT_DECLARE
 #define PFN_vkCmdInsertDebugUtilsLabelEXT_DECLARE
-	PFN_vkCmdInsertDebugUtilsLabelEXT cmdInsertDebugUtilsLabelEXT = nullptr;
+	PFN_vkCmdInsertDebugUtilsLabelEXT fp_vkCmdInsertDebugUtilsLabelEXT = nullptr;
 #endif
 #endif
 #if defined(VK_ANDROID_external_memory_android_hardware_buffer) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetAndroidHardwareBufferPropertiesANDROID_DECLARE
 #define PFN_vkGetAndroidHardwareBufferPropertiesANDROID_DECLARE
-	PFN_vkGetAndroidHardwareBufferPropertiesANDROID getAndroidHardwareBufferPropertiesANDROID = nullptr;
+	PFN_vkGetAndroidHardwareBufferPropertiesANDROID fp_vkGetAndroidHardwareBufferPropertiesANDROID = nullptr;
 #endif
 #ifndef PFN_vkGetMemoryAndroidHardwareBufferANDROID_DECLARE
 #define PFN_vkGetMemoryAndroidHardwareBufferANDROID_DECLARE
-	PFN_vkGetMemoryAndroidHardwareBufferANDROID getMemoryAndroidHardwareBufferANDROID = nullptr;
+	PFN_vkGetMemoryAndroidHardwareBufferANDROID fp_vkGetMemoryAndroidHardwareBufferANDROID = nullptr;
 #endif
 #endif
 #if defined(VK_EXT_sample_locations) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdSetSampleLocationsEXT_DECLARE
 #define PFN_vkCmdSetSampleLocationsEXT_DECLARE
-	PFN_vkCmdSetSampleLocationsEXT cmdSetSampleLocationsEXT = nullptr;
+	PFN_vkCmdSetSampleLocationsEXT fp_vkCmdSetSampleLocationsEXT = nullptr;
 #endif
 #endif
 #if defined(VK_KHR_get_memory_requirements2) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetImageMemoryRequirements2KHR_DECLARE
 #define PFN_vkGetImageMemoryRequirements2KHR_DECLARE
-	PFN_vkGetImageMemoryRequirements2KHR getImageMemoryRequirements2KHR = nullptr;
+	PFN_vkGetImageMemoryRequirements2KHR fp_vkGetImageMemoryRequirements2KHR = nullptr;
 #endif
 #ifndef PFN_vkGetBufferMemoryRequirements2KHR_DECLARE
 #define PFN_vkGetBufferMemoryRequirements2KHR_DECLARE
-	PFN_vkGetBufferMemoryRequirements2KHR getBufferMemoryRequirements2KHR = nullptr;
+	PFN_vkGetBufferMemoryRequirements2KHR fp_vkGetBufferMemoryRequirements2KHR = nullptr;
 #endif
 #ifndef PFN_vkGetImageSparseMemoryRequirements2KHR_DECLARE
 #define PFN_vkGetImageSparseMemoryRequirements2KHR_DECLARE
-	PFN_vkGetImageSparseMemoryRequirements2KHR getImageSparseMemoryRequirements2KHR = nullptr;
+	PFN_vkGetImageSparseMemoryRequirements2KHR fp_vkGetImageSparseMemoryRequirements2KHR = nullptr;
 #endif
 #endif
 #if defined(VK_KHR_acceleration_structure) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCreateAccelerationStructureKHR_DECLARE
 #define PFN_vkCreateAccelerationStructureKHR_DECLARE
-	PFN_vkCreateAccelerationStructureKHR createAccelerationStructureKHR = nullptr;
+	PFN_vkCreateAccelerationStructureKHR fp_vkCreateAccelerationStructureKHR = nullptr;
 #endif
 #ifndef PFN_vkDestroyAccelerationStructureKHR_DECLARE
 #define PFN_vkDestroyAccelerationStructureKHR_DECLARE
-	PFN_vkDestroyAccelerationStructureKHR destroyAccelerationStructureKHR = nullptr;
+	PFN_vkDestroyAccelerationStructureKHR fp_vkDestroyAccelerationStructureKHR = nullptr;
 #endif
 #ifndef PFN_vkCmdBuildAccelerationStructuresKHR_DECLARE
 #define PFN_vkCmdBuildAccelerationStructuresKHR_DECLARE
-	PFN_vkCmdBuildAccelerationStructuresKHR cmdBuildAccelerationStructuresKHR = nullptr;
+	PFN_vkCmdBuildAccelerationStructuresKHR fp_vkCmdBuildAccelerationStructuresKHR = nullptr;
 #endif
 #ifndef PFN_vkCmdBuildAccelerationStructuresIndirectKHR_DECLARE
 #define PFN_vkCmdBuildAccelerationStructuresIndirectKHR_DECLARE
-	PFN_vkCmdBuildAccelerationStructuresIndirectKHR cmdBuildAccelerationStructuresIndirectKHR = nullptr;
+	PFN_vkCmdBuildAccelerationStructuresIndirectKHR fp_vkCmdBuildAccelerationStructuresIndirectKHR = nullptr;
 #endif
 #ifndef PFN_vkBuildAccelerationStructuresKHR_DECLARE
 #define PFN_vkBuildAccelerationStructuresKHR_DECLARE
-	PFN_vkBuildAccelerationStructuresKHR buildAccelerationStructuresKHR = nullptr;
+	PFN_vkBuildAccelerationStructuresKHR fp_vkBuildAccelerationStructuresKHR = nullptr;
 #endif
 #ifndef PFN_vkCopyAccelerationStructureKHR_DECLARE
 #define PFN_vkCopyAccelerationStructureKHR_DECLARE
-	PFN_vkCopyAccelerationStructureKHR copyAccelerationStructureKHR = nullptr;
+	PFN_vkCopyAccelerationStructureKHR fp_vkCopyAccelerationStructureKHR = nullptr;
 #endif
 #ifndef PFN_vkCopyAccelerationStructureToMemoryKHR_DECLARE
 #define PFN_vkCopyAccelerationStructureToMemoryKHR_DECLARE
-	PFN_vkCopyAccelerationStructureToMemoryKHR copyAccelerationStructureToMemoryKHR = nullptr;
+	PFN_vkCopyAccelerationStructureToMemoryKHR fp_vkCopyAccelerationStructureToMemoryKHR = nullptr;
 #endif
 #ifndef PFN_vkCopyMemoryToAccelerationStructureKHR_DECLARE
 #define PFN_vkCopyMemoryToAccelerationStructureKHR_DECLARE
-	PFN_vkCopyMemoryToAccelerationStructureKHR copyMemoryToAccelerationStructureKHR = nullptr;
+	PFN_vkCopyMemoryToAccelerationStructureKHR fp_vkCopyMemoryToAccelerationStructureKHR = nullptr;
 #endif
 #ifndef PFN_vkWriteAccelerationStructuresPropertiesKHR_DECLARE
 #define PFN_vkWriteAccelerationStructuresPropertiesKHR_DECLARE
-	PFN_vkWriteAccelerationStructuresPropertiesKHR writeAccelerationStructuresPropertiesKHR = nullptr;
+	PFN_vkWriteAccelerationStructuresPropertiesKHR fp_vkWriteAccelerationStructuresPropertiesKHR = nullptr;
 #endif
 #ifndef PFN_vkCmdCopyAccelerationStructureKHR_DECLARE
 #define PFN_vkCmdCopyAccelerationStructureKHR_DECLARE
-	PFN_vkCmdCopyAccelerationStructureKHR cmdCopyAccelerationStructureKHR = nullptr;
+	PFN_vkCmdCopyAccelerationStructureKHR fp_vkCmdCopyAccelerationStructureKHR = nullptr;
 #endif
 #ifndef PFN_vkCmdCopyAccelerationStructureToMemoryKHR_DECLARE
 #define PFN_vkCmdCopyAccelerationStructureToMemoryKHR_DECLARE
-	PFN_vkCmdCopyAccelerationStructureToMemoryKHR cmdCopyAccelerationStructureToMemoryKHR = nullptr;
+	PFN_vkCmdCopyAccelerationStructureToMemoryKHR fp_vkCmdCopyAccelerationStructureToMemoryKHR = nullptr;
 #endif
 #ifndef PFN_vkCmdCopyMemoryToAccelerationStructureKHR_DECLARE
 #define PFN_vkCmdCopyMemoryToAccelerationStructureKHR_DECLARE
-	PFN_vkCmdCopyMemoryToAccelerationStructureKHR cmdCopyMemoryToAccelerationStructureKHR = nullptr;
+	PFN_vkCmdCopyMemoryToAccelerationStructureKHR fp_vkCmdCopyMemoryToAccelerationStructureKHR = nullptr;
 #endif
 #ifndef PFN_vkGetAccelerationStructureDeviceAddressKHR_DECLARE
 #define PFN_vkGetAccelerationStructureDeviceAddressKHR_DECLARE
-	PFN_vkGetAccelerationStructureDeviceAddressKHR getAccelerationStructureDeviceAddressKHR = nullptr;
+	PFN_vkGetAccelerationStructureDeviceAddressKHR fp_vkGetAccelerationStructureDeviceAddressKHR = nullptr;
 #endif
 #ifndef PFN_vkCmdWriteAccelerationStructuresPropertiesKHR_DECLARE
 #define PFN_vkCmdWriteAccelerationStructuresPropertiesKHR_DECLARE
-	PFN_vkCmdWriteAccelerationStructuresPropertiesKHR cmdWriteAccelerationStructuresPropertiesKHR = nullptr;
+	PFN_vkCmdWriteAccelerationStructuresPropertiesKHR fp_vkCmdWriteAccelerationStructuresPropertiesKHR = nullptr;
 #endif
 #ifndef PFN_vkGetDeviceAccelerationStructureCompatibilityKHR_DECLARE
 #define PFN_vkGetDeviceAccelerationStructureCompatibilityKHR_DECLARE
-	PFN_vkGetDeviceAccelerationStructureCompatibilityKHR getDeviceAccelerationStructureCompatibilityKHR = nullptr;
+	PFN_vkGetDeviceAccelerationStructureCompatibilityKHR fp_vkGetDeviceAccelerationStructureCompatibilityKHR = nullptr;
 #endif
 #ifndef PFN_vkGetAccelerationStructureBuildSizesKHR_DECLARE
 #define PFN_vkGetAccelerationStructureBuildSizesKHR_DECLARE
-	PFN_vkGetAccelerationStructureBuildSizesKHR getAccelerationStructureBuildSizesKHR = nullptr;
+	PFN_vkGetAccelerationStructureBuildSizesKHR fp_vkGetAccelerationStructureBuildSizesKHR = nullptr;
 #endif
 #endif
 #if defined(VK_KHR_ray_tracing_pipeline) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdTraceRaysKHR_DECLARE
 #define PFN_vkCmdTraceRaysKHR_DECLARE
-	PFN_vkCmdTraceRaysKHR cmdTraceRaysKHR = nullptr;
+	PFN_vkCmdTraceRaysKHR fp_vkCmdTraceRaysKHR = nullptr;
 #endif
 #ifndef PFN_vkCreateRayTracingPipelinesKHR_DECLARE
 #define PFN_vkCreateRayTracingPipelinesKHR_DECLARE
-	PFN_vkCreateRayTracingPipelinesKHR createRayTracingPipelinesKHR = nullptr;
+	PFN_vkCreateRayTracingPipelinesKHR fp_vkCreateRayTracingPipelinesKHR = nullptr;
 #endif
 #ifndef PFN_vkGetRayTracingShaderGroupHandlesKHR_DECLARE
 #define PFN_vkGetRayTracingShaderGroupHandlesKHR_DECLARE
-	PFN_vkGetRayTracingShaderGroupHandlesKHR getRayTracingShaderGroupHandlesKHR = nullptr;
+	PFN_vkGetRayTracingShaderGroupHandlesKHR fp_vkGetRayTracingShaderGroupHandlesKHR = nullptr;
 #endif
 #ifndef PFN_vkGetRayTracingCaptureReplayShaderGroupHandlesKHR_DECLARE
 #define PFN_vkGetRayTracingCaptureReplayShaderGroupHandlesKHR_DECLARE
-	PFN_vkGetRayTracingCaptureReplayShaderGroupHandlesKHR getRayTracingCaptureReplayShaderGroupHandlesKHR = nullptr;
+	PFN_vkGetRayTracingCaptureReplayShaderGroupHandlesKHR fp_vkGetRayTracingCaptureReplayShaderGroupHandlesKHR = nullptr;
 #endif
 #ifndef PFN_vkCmdTraceRaysIndirectKHR_DECLARE
 #define PFN_vkCmdTraceRaysIndirectKHR_DECLARE
-	PFN_vkCmdTraceRaysIndirectKHR cmdTraceRaysIndirectKHR = nullptr;
+	PFN_vkCmdTraceRaysIndirectKHR fp_vkCmdTraceRaysIndirectKHR = nullptr;
 #endif
 #ifndef PFN_vkGetRayTracingShaderGroupStackSizeKHR_DECLARE
 #define PFN_vkGetRayTracingShaderGroupStackSizeKHR_DECLARE
-	PFN_vkGetRayTracingShaderGroupStackSizeKHR getRayTracingShaderGroupStackSizeKHR = nullptr;
+	PFN_vkGetRayTracingShaderGroupStackSizeKHR fp_vkGetRayTracingShaderGroupStackSizeKHR = nullptr;
 #endif
 #ifndef PFN_vkCmdSetRayTracingPipelineStackSizeKHR_DECLARE
 #define PFN_vkCmdSetRayTracingPipelineStackSizeKHR_DECLARE
-	PFN_vkCmdSetRayTracingPipelineStackSizeKHR cmdSetRayTracingPipelineStackSizeKHR = nullptr;
+	PFN_vkCmdSetRayTracingPipelineStackSizeKHR fp_vkCmdSetRayTracingPipelineStackSizeKHR = nullptr;
 #endif
 #endif
 #if defined(VK_KHR_sampler_ycbcr_conversion) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCreateSamplerYcbcrConversionKHR_DECLARE
 #define PFN_vkCreateSamplerYcbcrConversionKHR_DECLARE
-	PFN_vkCreateSamplerYcbcrConversionKHR createSamplerYcbcrConversionKHR = nullptr;
+	PFN_vkCreateSamplerYcbcrConversionKHR fp_vkCreateSamplerYcbcrConversionKHR = nullptr;
 #endif
 #ifndef PFN_vkDestroySamplerYcbcrConversionKHR_DECLARE
 #define PFN_vkDestroySamplerYcbcrConversionKHR_DECLARE
-	PFN_vkDestroySamplerYcbcrConversionKHR destroySamplerYcbcrConversionKHR = nullptr;
+	PFN_vkDestroySamplerYcbcrConversionKHR fp_vkDestroySamplerYcbcrConversionKHR = nullptr;
 #endif
 #endif
 #if defined(VK_KHR_bind_memory2) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkBindBufferMemory2KHR_DECLARE
 #define PFN_vkBindBufferMemory2KHR_DECLARE
-	PFN_vkBindBufferMemory2KHR bindBufferMemory2KHR = nullptr;
+	PFN_vkBindBufferMemory2KHR fp_vkBindBufferMemory2KHR = nullptr;
 #endif
 #ifndef PFN_vkBindImageMemory2KHR_DECLARE
 #define PFN_vkBindImageMemory2KHR_DECLARE
-	PFN_vkBindImageMemory2KHR bindImageMemory2KHR = nullptr;
+	PFN_vkBindImageMemory2KHR fp_vkBindImageMemory2KHR = nullptr;
 #endif
 #endif
 #if defined(VK_EXT_image_drm_format_modifier) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetImageDrmFormatModifierPropertiesEXT_DECLARE
 #define PFN_vkGetImageDrmFormatModifierPropertiesEXT_DECLARE
-	PFN_vkGetImageDrmFormatModifierPropertiesEXT getImageDrmFormatModifierPropertiesEXT = nullptr;
+	PFN_vkGetImageDrmFormatModifierPropertiesEXT fp_vkGetImageDrmFormatModifierPropertiesEXT = nullptr;
 #endif
 #endif
 #if defined(VK_EXT_validation_cache) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCreateValidationCacheEXT_DECLARE
 #define PFN_vkCreateValidationCacheEXT_DECLARE
-	PFN_vkCreateValidationCacheEXT createValidationCacheEXT = nullptr;
+	PFN_vkCreateValidationCacheEXT fp_vkCreateValidationCacheEXT = nullptr;
 #endif
 #ifndef PFN_vkDestroyValidationCacheEXT_DECLARE
 #define PFN_vkDestroyValidationCacheEXT_DECLARE
-	PFN_vkDestroyValidationCacheEXT destroyValidationCacheEXT = nullptr;
+	PFN_vkDestroyValidationCacheEXT fp_vkDestroyValidationCacheEXT = nullptr;
 #endif
 #ifndef PFN_vkMergeValidationCachesEXT_DECLARE
 #define PFN_vkMergeValidationCachesEXT_DECLARE
-	PFN_vkMergeValidationCachesEXT mergeValidationCachesEXT = nullptr;
+	PFN_vkMergeValidationCachesEXT fp_vkMergeValidationCachesEXT = nullptr;
 #endif
 #ifndef PFN_vkGetValidationCacheDataEXT_DECLARE
 #define PFN_vkGetValidationCacheDataEXT_DECLARE
-	PFN_vkGetValidationCacheDataEXT getValidationCacheDataEXT = nullptr;
+	PFN_vkGetValidationCacheDataEXT fp_vkGetValidationCacheDataEXT = nullptr;
 #endif
 #endif
 #if defined(VK_NV_shading_rate_image) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdBindShadingRateImageNV_DECLARE
 #define PFN_vkCmdBindShadingRateImageNV_DECLARE
-	PFN_vkCmdBindShadingRateImageNV cmdBindShadingRateImageNV = nullptr;
+	PFN_vkCmdBindShadingRateImageNV fp_vkCmdBindShadingRateImageNV = nullptr;
 #endif
 #ifndef PFN_vkCmdSetViewportShadingRatePaletteNV_DECLARE
 #define PFN_vkCmdSetViewportShadingRatePaletteNV_DECLARE
-	PFN_vkCmdSetViewportShadingRatePaletteNV cmdSetViewportShadingRatePaletteNV = nullptr;
+	PFN_vkCmdSetViewportShadingRatePaletteNV fp_vkCmdSetViewportShadingRatePaletteNV = nullptr;
 #endif
 #ifndef PFN_vkCmdSetCoarseSampleOrderNV_DECLARE
 #define PFN_vkCmdSetCoarseSampleOrderNV_DECLARE
-	PFN_vkCmdSetCoarseSampleOrderNV cmdSetCoarseSampleOrderNV = nullptr;
+	PFN_vkCmdSetCoarseSampleOrderNV fp_vkCmdSetCoarseSampleOrderNV = nullptr;
 #endif
 #endif
 #if defined(VK_NV_ray_tracing) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCreateAccelerationStructureNV_DECLARE
 #define PFN_vkCreateAccelerationStructureNV_DECLARE
-	PFN_vkCreateAccelerationStructureNV createAccelerationStructureNV = nullptr;
+	PFN_vkCreateAccelerationStructureNV fp_vkCreateAccelerationStructureNV = nullptr;
 #endif
 #ifndef PFN_vkDestroyAccelerationStructureNV_DECLARE
 #define PFN_vkDestroyAccelerationStructureNV_DECLARE
-	PFN_vkDestroyAccelerationStructureNV destroyAccelerationStructureNV = nullptr;
+	PFN_vkDestroyAccelerationStructureNV fp_vkDestroyAccelerationStructureNV = nullptr;
 #endif
 #ifndef PFN_vkGetAccelerationStructureMemoryRequirementsNV_DECLARE
 #define PFN_vkGetAccelerationStructureMemoryRequirementsNV_DECLARE
-	PFN_vkGetAccelerationStructureMemoryRequirementsNV getAccelerationStructureMemoryRequirementsNV = nullptr;
+	PFN_vkGetAccelerationStructureMemoryRequirementsNV fp_vkGetAccelerationStructureMemoryRequirementsNV = nullptr;
 #endif
 #ifndef PFN_vkBindAccelerationStructureMemoryNV_DECLARE
 #define PFN_vkBindAccelerationStructureMemoryNV_DECLARE
-	PFN_vkBindAccelerationStructureMemoryNV bindAccelerationStructureMemoryNV = nullptr;
+	PFN_vkBindAccelerationStructureMemoryNV fp_vkBindAccelerationStructureMemoryNV = nullptr;
 #endif
 #ifndef PFN_vkCmdBuildAccelerationStructureNV_DECLARE
 #define PFN_vkCmdBuildAccelerationStructureNV_DECLARE
-	PFN_vkCmdBuildAccelerationStructureNV cmdBuildAccelerationStructureNV = nullptr;
+	PFN_vkCmdBuildAccelerationStructureNV fp_vkCmdBuildAccelerationStructureNV = nullptr;
 #endif
 #ifndef PFN_vkCmdCopyAccelerationStructureNV_DECLARE
 #define PFN_vkCmdCopyAccelerationStructureNV_DECLARE
-	PFN_vkCmdCopyAccelerationStructureNV cmdCopyAccelerationStructureNV = nullptr;
+	PFN_vkCmdCopyAccelerationStructureNV fp_vkCmdCopyAccelerationStructureNV = nullptr;
 #endif
 #ifndef PFN_vkCmdTraceRaysNV_DECLARE
 #define PFN_vkCmdTraceRaysNV_DECLARE
-	PFN_vkCmdTraceRaysNV cmdTraceRaysNV = nullptr;
+	PFN_vkCmdTraceRaysNV fp_vkCmdTraceRaysNV = nullptr;
 #endif
 #ifndef PFN_vkCreateRayTracingPipelinesNV_DECLARE
 #define PFN_vkCreateRayTracingPipelinesNV_DECLARE
-	PFN_vkCreateRayTracingPipelinesNV createRayTracingPipelinesNV = nullptr;
+	PFN_vkCreateRayTracingPipelinesNV fp_vkCreateRayTracingPipelinesNV = nullptr;
 #endif
 #ifndef PFN_vkGetRayTracingShaderGroupHandlesNV_DECLARE
 #define PFN_vkGetRayTracingShaderGroupHandlesNV_DECLARE
-	PFN_vkGetRayTracingShaderGroupHandlesNV getRayTracingShaderGroupHandlesNV = nullptr;
+	PFN_vkGetRayTracingShaderGroupHandlesNV fp_vkGetRayTracingShaderGroupHandlesNV = nullptr;
 #endif
 #ifndef PFN_vkGetAccelerationStructureHandleNV_DECLARE
 #define PFN_vkGetAccelerationStructureHandleNV_DECLARE
-	PFN_vkGetAccelerationStructureHandleNV getAccelerationStructureHandleNV = nullptr;
+	PFN_vkGetAccelerationStructureHandleNV fp_vkGetAccelerationStructureHandleNV = nullptr;
 #endif
 #ifndef PFN_vkCmdWriteAccelerationStructuresPropertiesNV_DECLARE
 #define PFN_vkCmdWriteAccelerationStructuresPropertiesNV_DECLARE
-	PFN_vkCmdWriteAccelerationStructuresPropertiesNV cmdWriteAccelerationStructuresPropertiesNV = nullptr;
+	PFN_vkCmdWriteAccelerationStructuresPropertiesNV fp_vkCmdWriteAccelerationStructuresPropertiesNV = nullptr;
 #endif
 #ifndef PFN_vkCompileDeferredNV_DECLARE
 #define PFN_vkCompileDeferredNV_DECLARE
-	PFN_vkCompileDeferredNV compileDeferredNV = nullptr;
+	PFN_vkCompileDeferredNV fp_vkCompileDeferredNV = nullptr;
 #endif
 #endif
 #if defined(VK_KHR_maintenance3) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetDescriptorSetLayoutSupportKHR_DECLARE
 #define PFN_vkGetDescriptorSetLayoutSupportKHR_DECLARE
-	PFN_vkGetDescriptorSetLayoutSupportKHR getDescriptorSetLayoutSupportKHR = nullptr;
+	PFN_vkGetDescriptorSetLayoutSupportKHR fp_vkGetDescriptorSetLayoutSupportKHR = nullptr;
 #endif
 #endif
 #if defined(VK_EXT_external_memory_host) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetMemoryHostPointerPropertiesEXT_DECLARE
 #define PFN_vkGetMemoryHostPointerPropertiesEXT_DECLARE
-	PFN_vkGetMemoryHostPointerPropertiesEXT getMemoryHostPointerPropertiesEXT = nullptr;
+	PFN_vkGetMemoryHostPointerPropertiesEXT fp_vkGetMemoryHostPointerPropertiesEXT = nullptr;
 #endif
 #endif
 #if defined(VK_AMD_buffer_marker) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdWriteBufferMarkerAMD_DECLARE
 #define PFN_vkCmdWriteBufferMarkerAMD_DECLARE
-	PFN_vkCmdWriteBufferMarkerAMD cmdWriteBufferMarkerAMD = nullptr;
+	PFN_vkCmdWriteBufferMarkerAMD fp_vkCmdWriteBufferMarkerAMD = nullptr;
 #endif
 #endif
 #if defined(VK_EXT_calibrated_timestamps) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetCalibratedTimestampsEXT_DECLARE
 #define PFN_vkGetCalibratedTimestampsEXT_DECLARE
-	PFN_vkGetCalibratedTimestampsEXT getCalibratedTimestampsEXT = nullptr;
+	PFN_vkGetCalibratedTimestampsEXT fp_vkGetCalibratedTimestampsEXT = nullptr;
 #endif
 #endif
 #if defined(VK_NV_mesh_shader) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdDrawMeshTasksNV_DECLARE
 #define PFN_vkCmdDrawMeshTasksNV_DECLARE
-	PFN_vkCmdDrawMeshTasksNV cmdDrawMeshTasksNV = nullptr;
+	PFN_vkCmdDrawMeshTasksNV fp_vkCmdDrawMeshTasksNV = nullptr;
 #endif
 #ifndef PFN_vkCmdDrawMeshTasksIndirectNV_DECLARE
 #define PFN_vkCmdDrawMeshTasksIndirectNV_DECLARE
-	PFN_vkCmdDrawMeshTasksIndirectNV cmdDrawMeshTasksIndirectNV = nullptr;
+	PFN_vkCmdDrawMeshTasksIndirectNV fp_vkCmdDrawMeshTasksIndirectNV = nullptr;
 #endif
 #ifndef PFN_vkCmdDrawMeshTasksIndirectCountNV_DECLARE
 #define PFN_vkCmdDrawMeshTasksIndirectCountNV_DECLARE
-	PFN_vkCmdDrawMeshTasksIndirectCountNV cmdDrawMeshTasksIndirectCountNV = nullptr;
+	PFN_vkCmdDrawMeshTasksIndirectCountNV fp_vkCmdDrawMeshTasksIndirectCountNV = nullptr;
 #endif
 #endif
 #if defined(VK_NV_scissor_exclusive) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdSetExclusiveScissorNV_DECLARE
 #define PFN_vkCmdSetExclusiveScissorNV_DECLARE
-	PFN_vkCmdSetExclusiveScissorNV cmdSetExclusiveScissorNV = nullptr;
+	PFN_vkCmdSetExclusiveScissorNV fp_vkCmdSetExclusiveScissorNV = nullptr;
 #endif
 #endif
 #if defined(VK_NV_device_diagnostic_checkpoints) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdSetCheckpointNV_DECLARE
 #define PFN_vkCmdSetCheckpointNV_DECLARE
-	PFN_vkCmdSetCheckpointNV cmdSetCheckpointNV = nullptr;
+	PFN_vkCmdSetCheckpointNV fp_vkCmdSetCheckpointNV = nullptr;
 #endif
 #ifndef PFN_vkGetQueueCheckpointDataNV_DECLARE
 #define PFN_vkGetQueueCheckpointDataNV_DECLARE
-	PFN_vkGetQueueCheckpointDataNV getQueueCheckpointDataNV = nullptr;
+	PFN_vkGetQueueCheckpointDataNV fp_vkGetQueueCheckpointDataNV = nullptr;
 #endif
 #endif
 #if defined(VK_KHR_timeline_semaphore) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetSemaphoreCounterValueKHR_DECLARE
 #define PFN_vkGetSemaphoreCounterValueKHR_DECLARE
-	PFN_vkGetSemaphoreCounterValueKHR getSemaphoreCounterValueKHR = nullptr;
+	PFN_vkGetSemaphoreCounterValueKHR fp_vkGetSemaphoreCounterValueKHR = nullptr;
 #endif
 #ifndef PFN_vkWaitSemaphoresKHR_DECLARE
 #define PFN_vkWaitSemaphoresKHR_DECLARE
-	PFN_vkWaitSemaphoresKHR waitSemaphoresKHR = nullptr;
+	PFN_vkWaitSemaphoresKHR fp_vkWaitSemaphoresKHR = nullptr;
 #endif
 #ifndef PFN_vkSignalSemaphoreKHR_DECLARE
 #define PFN_vkSignalSemaphoreKHR_DECLARE
-	PFN_vkSignalSemaphoreKHR signalSemaphoreKHR = nullptr;
+	PFN_vkSignalSemaphoreKHR fp_vkSignalSemaphoreKHR = nullptr;
 #endif
 #endif
 #if defined(VK_INTEL_performance_query) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkInitializePerformanceApiINTEL_DECLARE
 #define PFN_vkInitializePerformanceApiINTEL_DECLARE
-	PFN_vkInitializePerformanceApiINTEL initializePerformanceApiINTEL = nullptr;
+	PFN_vkInitializePerformanceApiINTEL fp_vkInitializePerformanceApiINTEL = nullptr;
 #endif
 #ifndef PFN_vkUninitializePerformanceApiINTEL_DECLARE
 #define PFN_vkUninitializePerformanceApiINTEL_DECLARE
-	PFN_vkUninitializePerformanceApiINTEL uninitializePerformanceApiINTEL = nullptr;
+	PFN_vkUninitializePerformanceApiINTEL fp_vkUninitializePerformanceApiINTEL = nullptr;
 #endif
 #ifndef PFN_vkCmdSetPerformanceMarkerINTEL_DECLARE
 #define PFN_vkCmdSetPerformanceMarkerINTEL_DECLARE
-	PFN_vkCmdSetPerformanceMarkerINTEL cmdSetPerformanceMarkerINTEL = nullptr;
+	PFN_vkCmdSetPerformanceMarkerINTEL fp_vkCmdSetPerformanceMarkerINTEL = nullptr;
 #endif
 #ifndef PFN_vkCmdSetPerformanceStreamMarkerINTEL_DECLARE
 #define PFN_vkCmdSetPerformanceStreamMarkerINTEL_DECLARE
-	PFN_vkCmdSetPerformanceStreamMarkerINTEL cmdSetPerformanceStreamMarkerINTEL = nullptr;
+	PFN_vkCmdSetPerformanceStreamMarkerINTEL fp_vkCmdSetPerformanceStreamMarkerINTEL = nullptr;
 #endif
 #ifndef PFN_vkCmdSetPerformanceOverrideINTEL_DECLARE
 #define PFN_vkCmdSetPerformanceOverrideINTEL_DECLARE
-	PFN_vkCmdSetPerformanceOverrideINTEL cmdSetPerformanceOverrideINTEL = nullptr;
+	PFN_vkCmdSetPerformanceOverrideINTEL fp_vkCmdSetPerformanceOverrideINTEL = nullptr;
 #endif
 #ifndef PFN_vkAcquirePerformanceConfigurationINTEL_DECLARE
 #define PFN_vkAcquirePerformanceConfigurationINTEL_DECLARE
-	PFN_vkAcquirePerformanceConfigurationINTEL acquirePerformanceConfigurationINTEL = nullptr;
+	PFN_vkAcquirePerformanceConfigurationINTEL fp_vkAcquirePerformanceConfigurationINTEL = nullptr;
 #endif
 #ifndef PFN_vkReleasePerformanceConfigurationINTEL_DECLARE
 #define PFN_vkReleasePerformanceConfigurationINTEL_DECLARE
-	PFN_vkReleasePerformanceConfigurationINTEL releasePerformanceConfigurationINTEL = nullptr;
+	PFN_vkReleasePerformanceConfigurationINTEL fp_vkReleasePerformanceConfigurationINTEL = nullptr;
 #endif
 #ifndef PFN_vkQueueSetPerformanceConfigurationINTEL_DECLARE
 #define PFN_vkQueueSetPerformanceConfigurationINTEL_DECLARE
-	PFN_vkQueueSetPerformanceConfigurationINTEL queueSetPerformanceConfigurationINTEL = nullptr;
+	PFN_vkQueueSetPerformanceConfigurationINTEL fp_vkQueueSetPerformanceConfigurationINTEL = nullptr;
 #endif
 #ifndef PFN_vkGetPerformanceParameterINTEL_DECLARE
 #define PFN_vkGetPerformanceParameterINTEL_DECLARE
-	PFN_vkGetPerformanceParameterINTEL getPerformanceParameterINTEL = nullptr;
+	PFN_vkGetPerformanceParameterINTEL fp_vkGetPerformanceParameterINTEL = nullptr;
 #endif
 #endif
 #if defined(VK_AMD_display_native_hdr) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkSetLocalDimmingAMD_DECLARE
 #define PFN_vkSetLocalDimmingAMD_DECLARE
-	PFN_vkSetLocalDimmingAMD setLocalDimmingAMD = nullptr;
+	PFN_vkSetLocalDimmingAMD fp_vkSetLocalDimmingAMD = nullptr;
 #endif
 #endif
 #if defined(VK_KHR_fragment_shading_rate) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdSetFragmentShadingRateKHR_DECLARE
 #define PFN_vkCmdSetFragmentShadingRateKHR_DECLARE
-	PFN_vkCmdSetFragmentShadingRateKHR cmdSetFragmentShadingRateKHR = nullptr;
+	PFN_vkCmdSetFragmentShadingRateKHR fp_vkCmdSetFragmentShadingRateKHR = nullptr;
 #endif
 #endif
 #if defined(VK_EXT_buffer_device_address) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetBufferDeviceAddressEXT_DECLARE
 #define PFN_vkGetBufferDeviceAddressEXT_DECLARE
-	PFN_vkGetBufferDeviceAddressEXT getBufferDeviceAddressEXT = nullptr;
+	PFN_vkGetBufferDeviceAddressEXT fp_vkGetBufferDeviceAddressEXT = nullptr;
 #endif
 #endif
 #if defined(VK_EXT_full_screen_exclusive) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkAcquireFullScreenExclusiveModeEXT_DECLARE
 #define PFN_vkAcquireFullScreenExclusiveModeEXT_DECLARE
-	PFN_vkAcquireFullScreenExclusiveModeEXT acquireFullScreenExclusiveModeEXT = nullptr;
+	PFN_vkAcquireFullScreenExclusiveModeEXT fp_vkAcquireFullScreenExclusiveModeEXT = nullptr;
 #endif
 #ifndef PFN_vkReleaseFullScreenExclusiveModeEXT_DECLARE
 #define PFN_vkReleaseFullScreenExclusiveModeEXT_DECLARE
-	PFN_vkReleaseFullScreenExclusiveModeEXT releaseFullScreenExclusiveModeEXT = nullptr;
+	PFN_vkReleaseFullScreenExclusiveModeEXT fp_vkReleaseFullScreenExclusiveModeEXT = nullptr;
 #endif
 #ifndef PFN_vkGetDeviceGroupSurfacePresentModes2EXT_DECLARE
 #define PFN_vkGetDeviceGroupSurfacePresentModes2EXT_DECLARE
-	PFN_vkGetDeviceGroupSurfacePresentModes2EXT getDeviceGroupSurfacePresentModes2EXT = nullptr;
+	PFN_vkGetDeviceGroupSurfacePresentModes2EXT fp_vkGetDeviceGroupSurfacePresentModes2EXT = nullptr;
 #endif
 #endif
 #if defined(VK_EXT_full_screen_exclusive) && defined(VK_VERSION_1_1)
 #ifndef PFN_vkGetDeviceGroupSurfacePresentModes2EXT_DECLARE
 #define PFN_vkGetDeviceGroupSurfacePresentModes2EXT_DECLARE
-	PFN_vkGetDeviceGroupSurfacePresentModes2EXT getDeviceGroupSurfacePresentModes2EXT = nullptr;
+	PFN_vkGetDeviceGroupSurfacePresentModes2EXT fp_vkGetDeviceGroupSurfacePresentModes2EXT = nullptr;
 #endif
 #endif
 #if defined(VK_KHR_buffer_device_address) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetBufferOpaqueCaptureAddressKHR_DECLARE
 #define PFN_vkGetBufferOpaqueCaptureAddressKHR_DECLARE
-	PFN_vkGetBufferOpaqueCaptureAddressKHR getBufferOpaqueCaptureAddressKHR = nullptr;
+	PFN_vkGetBufferOpaqueCaptureAddressKHR fp_vkGetBufferOpaqueCaptureAddressKHR = nullptr;
 #endif
 #ifndef PFN_vkGetDeviceMemoryOpaqueCaptureAddressKHR_DECLARE
 #define PFN_vkGetDeviceMemoryOpaqueCaptureAddressKHR_DECLARE
-	PFN_vkGetDeviceMemoryOpaqueCaptureAddressKHR getDeviceMemoryOpaqueCaptureAddressKHR = nullptr;
+	PFN_vkGetDeviceMemoryOpaqueCaptureAddressKHR fp_vkGetDeviceMemoryOpaqueCaptureAddressKHR = nullptr;
 #endif
 #endif
 #if defined(VK_EXT_line_rasterization) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdSetLineStippleEXT_DECLARE
 #define PFN_vkCmdSetLineStippleEXT_DECLARE
-	PFN_vkCmdSetLineStippleEXT cmdSetLineStippleEXT = nullptr;
+	PFN_vkCmdSetLineStippleEXT fp_vkCmdSetLineStippleEXT = nullptr;
 #endif
 #endif
 #if defined(VK_EXT_host_query_reset) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkResetQueryPoolEXT_DECLARE
 #define PFN_vkResetQueryPoolEXT_DECLARE
-	PFN_vkResetQueryPoolEXT resetQueryPoolEXT = nullptr;
+	PFN_vkResetQueryPoolEXT fp_vkResetQueryPoolEXT = nullptr;
 #endif
 #endif
 #if defined(VK_EXT_extended_dynamic_state) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdSetCullModeEXT_DECLARE
 #define PFN_vkCmdSetCullModeEXT_DECLARE
-	PFN_vkCmdSetCullModeEXT cmdSetCullModeEXT = nullptr;
+	PFN_vkCmdSetCullModeEXT fp_vkCmdSetCullModeEXT = nullptr;
 #endif
 #ifndef PFN_vkCmdSetFrontFaceEXT_DECLARE
 #define PFN_vkCmdSetFrontFaceEXT_DECLARE
-	PFN_vkCmdSetFrontFaceEXT cmdSetFrontFaceEXT = nullptr;
+	PFN_vkCmdSetFrontFaceEXT fp_vkCmdSetFrontFaceEXT = nullptr;
 #endif
 #ifndef PFN_vkCmdSetPrimitiveTopologyEXT_DECLARE
 #define PFN_vkCmdSetPrimitiveTopologyEXT_DECLARE
-	PFN_vkCmdSetPrimitiveTopologyEXT cmdSetPrimitiveTopologyEXT = nullptr;
+	PFN_vkCmdSetPrimitiveTopologyEXT fp_vkCmdSetPrimitiveTopologyEXT = nullptr;
 #endif
 #ifndef PFN_vkCmdSetViewportWithCountEXT_DECLARE
 #define PFN_vkCmdSetViewportWithCountEXT_DECLARE
-	PFN_vkCmdSetViewportWithCountEXT cmdSetViewportWithCountEXT = nullptr;
+	PFN_vkCmdSetViewportWithCountEXT fp_vkCmdSetViewportWithCountEXT = nullptr;
 #endif
 #ifndef PFN_vkCmdSetScissorWithCountEXT_DECLARE
 #define PFN_vkCmdSetScissorWithCountEXT_DECLARE
-	PFN_vkCmdSetScissorWithCountEXT cmdSetScissorWithCountEXT = nullptr;
+	PFN_vkCmdSetScissorWithCountEXT fp_vkCmdSetScissorWithCountEXT = nullptr;
 #endif
 #ifndef PFN_vkCmdBindVertexBuffers2EXT_DECLARE
 #define PFN_vkCmdBindVertexBuffers2EXT_DECLARE
-	PFN_vkCmdBindVertexBuffers2EXT cmdBindVertexBuffers2EXT = nullptr;
+	PFN_vkCmdBindVertexBuffers2EXT fp_vkCmdBindVertexBuffers2EXT = nullptr;
 #endif
 #ifndef PFN_vkCmdSetDepthTestEnableEXT_DECLARE
 #define PFN_vkCmdSetDepthTestEnableEXT_DECLARE
-	PFN_vkCmdSetDepthTestEnableEXT cmdSetDepthTestEnableEXT = nullptr;
+	PFN_vkCmdSetDepthTestEnableEXT fp_vkCmdSetDepthTestEnableEXT = nullptr;
 #endif
 #ifndef PFN_vkCmdSetDepthWriteEnableEXT_DECLARE
 #define PFN_vkCmdSetDepthWriteEnableEXT_DECLARE
-	PFN_vkCmdSetDepthWriteEnableEXT cmdSetDepthWriteEnableEXT = nullptr;
+	PFN_vkCmdSetDepthWriteEnableEXT fp_vkCmdSetDepthWriteEnableEXT = nullptr;
 #endif
 #ifndef PFN_vkCmdSetDepthCompareOpEXT_DECLARE
 #define PFN_vkCmdSetDepthCompareOpEXT_DECLARE
-	PFN_vkCmdSetDepthCompareOpEXT cmdSetDepthCompareOpEXT = nullptr;
+	PFN_vkCmdSetDepthCompareOpEXT fp_vkCmdSetDepthCompareOpEXT = nullptr;
 #endif
 #ifndef PFN_vkCmdSetDepthBoundsTestEnableEXT_DECLARE
 #define PFN_vkCmdSetDepthBoundsTestEnableEXT_DECLARE
-	PFN_vkCmdSetDepthBoundsTestEnableEXT cmdSetDepthBoundsTestEnableEXT = nullptr;
+	PFN_vkCmdSetDepthBoundsTestEnableEXT fp_vkCmdSetDepthBoundsTestEnableEXT = nullptr;
 #endif
 #ifndef PFN_vkCmdSetStencilTestEnableEXT_DECLARE
 #define PFN_vkCmdSetStencilTestEnableEXT_DECLARE
-	PFN_vkCmdSetStencilTestEnableEXT cmdSetStencilTestEnableEXT = nullptr;
+	PFN_vkCmdSetStencilTestEnableEXT fp_vkCmdSetStencilTestEnableEXT = nullptr;
 #endif
 #ifndef PFN_vkCmdSetStencilOpEXT_DECLARE
 #define PFN_vkCmdSetStencilOpEXT_DECLARE
-	PFN_vkCmdSetStencilOpEXT cmdSetStencilOpEXT = nullptr;
+	PFN_vkCmdSetStencilOpEXT fp_vkCmdSetStencilOpEXT = nullptr;
 #endif
 #endif
 #if defined(VK_KHR_deferred_host_operations) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCreateDeferredOperationKHR_DECLARE
 #define PFN_vkCreateDeferredOperationKHR_DECLARE
-	PFN_vkCreateDeferredOperationKHR createDeferredOperationKHR = nullptr;
+	PFN_vkCreateDeferredOperationKHR fp_vkCreateDeferredOperationKHR = nullptr;
 #endif
 #ifndef PFN_vkDestroyDeferredOperationKHR_DECLARE
 #define PFN_vkDestroyDeferredOperationKHR_DECLARE
-	PFN_vkDestroyDeferredOperationKHR destroyDeferredOperationKHR = nullptr;
+	PFN_vkDestroyDeferredOperationKHR fp_vkDestroyDeferredOperationKHR = nullptr;
 #endif
 #ifndef PFN_vkGetDeferredOperationMaxConcurrencyKHR_DECLARE
 #define PFN_vkGetDeferredOperationMaxConcurrencyKHR_DECLARE
-	PFN_vkGetDeferredOperationMaxConcurrencyKHR getDeferredOperationMaxConcurrencyKHR = nullptr;
+	PFN_vkGetDeferredOperationMaxConcurrencyKHR fp_vkGetDeferredOperationMaxConcurrencyKHR = nullptr;
 #endif
 #ifndef PFN_vkGetDeferredOperationResultKHR_DECLARE
 #define PFN_vkGetDeferredOperationResultKHR_DECLARE
-	PFN_vkGetDeferredOperationResultKHR getDeferredOperationResultKHR = nullptr;
+	PFN_vkGetDeferredOperationResultKHR fp_vkGetDeferredOperationResultKHR = nullptr;
 #endif
 #ifndef PFN_vkDeferredOperationJoinKHR_DECLARE
 #define PFN_vkDeferredOperationJoinKHR_DECLARE
-	PFN_vkDeferredOperationJoinKHR deferredOperationJoinKHR = nullptr;
+	PFN_vkDeferredOperationJoinKHR fp_vkDeferredOperationJoinKHR = nullptr;
 #endif
 #endif
 #if defined(VK_KHR_pipeline_executable_properties) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetPipelineExecutablePropertiesKHR_DECLARE
 #define PFN_vkGetPipelineExecutablePropertiesKHR_DECLARE
-	PFN_vkGetPipelineExecutablePropertiesKHR getPipelineExecutablePropertiesKHR = nullptr;
+	PFN_vkGetPipelineExecutablePropertiesKHR fp_vkGetPipelineExecutablePropertiesKHR = nullptr;
 #endif
 #ifndef PFN_vkGetPipelineExecutableStatisticsKHR_DECLARE
 #define PFN_vkGetPipelineExecutableStatisticsKHR_DECLARE
-	PFN_vkGetPipelineExecutableStatisticsKHR getPipelineExecutableStatisticsKHR = nullptr;
+	PFN_vkGetPipelineExecutableStatisticsKHR fp_vkGetPipelineExecutableStatisticsKHR = nullptr;
 #endif
 #ifndef PFN_vkGetPipelineExecutableInternalRepresentationsKHR_DECLARE
 #define PFN_vkGetPipelineExecutableInternalRepresentationsKHR_DECLARE
-	PFN_vkGetPipelineExecutableInternalRepresentationsKHR getPipelineExecutableInternalRepresentationsKHR = nullptr;
+	PFN_vkGetPipelineExecutableInternalRepresentationsKHR fp_vkGetPipelineExecutableInternalRepresentationsKHR = nullptr;
 #endif
 #endif
 #if defined(VK_NV_device_generated_commands) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetGeneratedCommandsMemoryRequirementsNV_DECLARE
 #define PFN_vkGetGeneratedCommandsMemoryRequirementsNV_DECLARE
-	PFN_vkGetGeneratedCommandsMemoryRequirementsNV getGeneratedCommandsMemoryRequirementsNV = nullptr;
+	PFN_vkGetGeneratedCommandsMemoryRequirementsNV fp_vkGetGeneratedCommandsMemoryRequirementsNV = nullptr;
 #endif
 #ifndef PFN_vkCmdPreprocessGeneratedCommandsNV_DECLARE
 #define PFN_vkCmdPreprocessGeneratedCommandsNV_DECLARE
-	PFN_vkCmdPreprocessGeneratedCommandsNV cmdPreprocessGeneratedCommandsNV = nullptr;
+	PFN_vkCmdPreprocessGeneratedCommandsNV fp_vkCmdPreprocessGeneratedCommandsNV = nullptr;
 #endif
 #ifndef PFN_vkCmdExecuteGeneratedCommandsNV_DECLARE
 #define PFN_vkCmdExecuteGeneratedCommandsNV_DECLARE
-	PFN_vkCmdExecuteGeneratedCommandsNV cmdExecuteGeneratedCommandsNV = nullptr;
+	PFN_vkCmdExecuteGeneratedCommandsNV fp_vkCmdExecuteGeneratedCommandsNV = nullptr;
 #endif
 #ifndef PFN_vkCmdBindPipelineShaderGroupNV_DECLARE
 #define PFN_vkCmdBindPipelineShaderGroupNV_DECLARE
-	PFN_vkCmdBindPipelineShaderGroupNV cmdBindPipelineShaderGroupNV = nullptr;
+	PFN_vkCmdBindPipelineShaderGroupNV fp_vkCmdBindPipelineShaderGroupNV = nullptr;
 #endif
 #ifndef PFN_vkCreateIndirectCommandsLayoutNV_DECLARE
 #define PFN_vkCreateIndirectCommandsLayoutNV_DECLARE
-	PFN_vkCreateIndirectCommandsLayoutNV createIndirectCommandsLayoutNV = nullptr;
+	PFN_vkCreateIndirectCommandsLayoutNV fp_vkCreateIndirectCommandsLayoutNV = nullptr;
 #endif
 #ifndef PFN_vkDestroyIndirectCommandsLayoutNV_DECLARE
 #define PFN_vkDestroyIndirectCommandsLayoutNV_DECLARE
-	PFN_vkDestroyIndirectCommandsLayoutNV destroyIndirectCommandsLayoutNV = nullptr;
+	PFN_vkDestroyIndirectCommandsLayoutNV fp_vkDestroyIndirectCommandsLayoutNV = nullptr;
 #endif
 #endif
 #if defined(VK_EXT_private_data) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCreatePrivateDataSlotEXT_DECLARE
 #define PFN_vkCreatePrivateDataSlotEXT_DECLARE
-	PFN_vkCreatePrivateDataSlotEXT createPrivateDataSlotEXT = nullptr;
+	PFN_vkCreatePrivateDataSlotEXT fp_vkCreatePrivateDataSlotEXT = nullptr;
 #endif
 #ifndef PFN_vkDestroyPrivateDataSlotEXT_DECLARE
 #define PFN_vkDestroyPrivateDataSlotEXT_DECLARE
-	PFN_vkDestroyPrivateDataSlotEXT destroyPrivateDataSlotEXT = nullptr;
+	PFN_vkDestroyPrivateDataSlotEXT fp_vkDestroyPrivateDataSlotEXT = nullptr;
 #endif
 #ifndef PFN_vkSetPrivateDataEXT_DECLARE
 #define PFN_vkSetPrivateDataEXT_DECLARE
-	PFN_vkSetPrivateDataEXT setPrivateDataEXT = nullptr;
+	PFN_vkSetPrivateDataEXT fp_vkSetPrivateDataEXT = nullptr;
 #endif
 #ifndef PFN_vkGetPrivateDataEXT_DECLARE
 #define PFN_vkGetPrivateDataEXT_DECLARE
-	PFN_vkGetPrivateDataEXT getPrivateDataEXT = nullptr;
+	PFN_vkGetPrivateDataEXT fp_vkGetPrivateDataEXT = nullptr;
 #endif
 #endif
 #if defined(VK_KHR_synchronization2) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdSetEvent2KHR_DECLARE
 #define PFN_vkCmdSetEvent2KHR_DECLARE
-	PFN_vkCmdSetEvent2KHR cmdSetEvent2KHR = nullptr;
+	PFN_vkCmdSetEvent2KHR fp_vkCmdSetEvent2KHR = nullptr;
 #endif
 #ifndef PFN_vkCmdResetEvent2KHR_DECLARE
 #define PFN_vkCmdResetEvent2KHR_DECLARE
-	PFN_vkCmdResetEvent2KHR cmdResetEvent2KHR = nullptr;
+	PFN_vkCmdResetEvent2KHR fp_vkCmdResetEvent2KHR = nullptr;
 #endif
 #ifndef PFN_vkCmdWaitEvents2KHR_DECLARE
 #define PFN_vkCmdWaitEvents2KHR_DECLARE
-	PFN_vkCmdWaitEvents2KHR cmdWaitEvents2KHR = nullptr;
+	PFN_vkCmdWaitEvents2KHR fp_vkCmdWaitEvents2KHR = nullptr;
 #endif
 #ifndef PFN_vkCmdPipelineBarrier2KHR_DECLARE
 #define PFN_vkCmdPipelineBarrier2KHR_DECLARE
-	PFN_vkCmdPipelineBarrier2KHR cmdPipelineBarrier2KHR = nullptr;
+	PFN_vkCmdPipelineBarrier2KHR fp_vkCmdPipelineBarrier2KHR = nullptr;
 #endif
 #ifndef PFN_vkCmdWriteTimestamp2KHR_DECLARE
 #define PFN_vkCmdWriteTimestamp2KHR_DECLARE
-	PFN_vkCmdWriteTimestamp2KHR cmdWriteTimestamp2KHR = nullptr;
+	PFN_vkCmdWriteTimestamp2KHR fp_vkCmdWriteTimestamp2KHR = nullptr;
 #endif
 #ifndef PFN_vkQueueSubmit2KHR_DECLARE
 #define PFN_vkQueueSubmit2KHR_DECLARE
-	PFN_vkQueueSubmit2KHR queueSubmit2KHR = nullptr;
+	PFN_vkQueueSubmit2KHR fp_vkQueueSubmit2KHR = nullptr;
 #endif
 #ifndef PFN_vkCmdWriteBufferMarker2AMD_DECLARE
 #define PFN_vkCmdWriteBufferMarker2AMD_DECLARE
-	PFN_vkCmdWriteBufferMarker2AMD cmdWriteBufferMarker2AMD = nullptr;
+	PFN_vkCmdWriteBufferMarker2AMD fp_vkCmdWriteBufferMarker2AMD = nullptr;
 #endif
 #ifndef PFN_vkGetQueueCheckpointData2NV_DECLARE
 #define PFN_vkGetQueueCheckpointData2NV_DECLARE
-	PFN_vkGetQueueCheckpointData2NV getQueueCheckpointData2NV = nullptr;
+	PFN_vkGetQueueCheckpointData2NV fp_vkGetQueueCheckpointData2NV = nullptr;
 #endif
 #endif
 #if defined(VK_NV_fragment_shading_rate_enums) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdSetFragmentShadingRateEnumNV_DECLARE
 #define PFN_vkCmdSetFragmentShadingRateEnumNV_DECLARE
-	PFN_vkCmdSetFragmentShadingRateEnumNV cmdSetFragmentShadingRateEnumNV = nullptr;
+	PFN_vkCmdSetFragmentShadingRateEnumNV fp_vkCmdSetFragmentShadingRateEnumNV = nullptr;
 #endif
 #endif
 #if defined(VK_KHR_copy_commands2) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdCopyBuffer2KHR_DECLARE
 #define PFN_vkCmdCopyBuffer2KHR_DECLARE
-	PFN_vkCmdCopyBuffer2KHR cmdCopyBuffer2KHR = nullptr;
+	PFN_vkCmdCopyBuffer2KHR fp_vkCmdCopyBuffer2KHR = nullptr;
 #endif
 #ifndef PFN_vkCmdCopyImage2KHR_DECLARE
 #define PFN_vkCmdCopyImage2KHR_DECLARE
-	PFN_vkCmdCopyImage2KHR cmdCopyImage2KHR = nullptr;
+	PFN_vkCmdCopyImage2KHR fp_vkCmdCopyImage2KHR = nullptr;
 #endif
 #ifndef PFN_vkCmdCopyBufferToImage2KHR_DECLARE
 #define PFN_vkCmdCopyBufferToImage2KHR_DECLARE
-	PFN_vkCmdCopyBufferToImage2KHR cmdCopyBufferToImage2KHR = nullptr;
+	PFN_vkCmdCopyBufferToImage2KHR fp_vkCmdCopyBufferToImage2KHR = nullptr;
 #endif
 #ifndef PFN_vkCmdCopyImageToBuffer2KHR_DECLARE
 #define PFN_vkCmdCopyImageToBuffer2KHR_DECLARE
-	PFN_vkCmdCopyImageToBuffer2KHR cmdCopyImageToBuffer2KHR = nullptr;
+	PFN_vkCmdCopyImageToBuffer2KHR fp_vkCmdCopyImageToBuffer2KHR = nullptr;
 #endif
 #ifndef PFN_vkCmdBlitImage2KHR_DECLARE
 #define PFN_vkCmdBlitImage2KHR_DECLARE
-	PFN_vkCmdBlitImage2KHR cmdBlitImage2KHR = nullptr;
+	PFN_vkCmdBlitImage2KHR fp_vkCmdBlitImage2KHR = nullptr;
 #endif
 #ifndef PFN_vkCmdResolveImage2KHR_DECLARE
 #define PFN_vkCmdResolveImage2KHR_DECLARE
-	PFN_vkCmdResolveImage2KHR cmdResolveImage2KHR = nullptr;
+	PFN_vkCmdResolveImage2KHR fp_vkCmdResolveImage2KHR = nullptr;
 #endif
 #endif
 #if defined(VK_EXT_vertex_input_dynamic_state) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdSetVertexInputEXT_DECLARE
 #define PFN_vkCmdSetVertexInputEXT_DECLARE
-	PFN_vkCmdSetVertexInputEXT cmdSetVertexInputEXT = nullptr;
+	PFN_vkCmdSetVertexInputEXT fp_vkCmdSetVertexInputEXT = nullptr;
 #endif
 #endif
 #if defined(VK_FUCHSIA_external_memory) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetMemoryZirconHandleFUCHSIA_DECLARE
 #define PFN_vkGetMemoryZirconHandleFUCHSIA_DECLARE
-	PFN_vkGetMemoryZirconHandleFUCHSIA getMemoryZirconHandleFUCHSIA = nullptr;
+	PFN_vkGetMemoryZirconHandleFUCHSIA fp_vkGetMemoryZirconHandleFUCHSIA = nullptr;
 #endif
 #ifndef PFN_vkGetMemoryZirconHandlePropertiesFUCHSIA_DECLARE
 #define PFN_vkGetMemoryZirconHandlePropertiesFUCHSIA_DECLARE
-	PFN_vkGetMemoryZirconHandlePropertiesFUCHSIA getMemoryZirconHandlePropertiesFUCHSIA = nullptr;
+	PFN_vkGetMemoryZirconHandlePropertiesFUCHSIA fp_vkGetMemoryZirconHandlePropertiesFUCHSIA = nullptr;
 #endif
 #endif
 #if defined(VK_FUCHSIA_external_semaphore) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkImportSemaphoreZirconHandleFUCHSIA_DECLARE
 #define PFN_vkImportSemaphoreZirconHandleFUCHSIA_DECLARE
-	PFN_vkImportSemaphoreZirconHandleFUCHSIA importSemaphoreZirconHandleFUCHSIA = nullptr;
+	PFN_vkImportSemaphoreZirconHandleFUCHSIA fp_vkImportSemaphoreZirconHandleFUCHSIA = nullptr;
 #endif
 #ifndef PFN_vkGetSemaphoreZirconHandleFUCHSIA_DECLARE
 #define PFN_vkGetSemaphoreZirconHandleFUCHSIA_DECLARE
-	PFN_vkGetSemaphoreZirconHandleFUCHSIA getSemaphoreZirconHandleFUCHSIA = nullptr;
+	PFN_vkGetSemaphoreZirconHandleFUCHSIA fp_vkGetSemaphoreZirconHandleFUCHSIA = nullptr;
 #endif
 #endif
 #if defined(VK_EXT_extended_dynamic_state2) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdSetPatchControlPointsEXT_DECLARE
 #define PFN_vkCmdSetPatchControlPointsEXT_DECLARE
-	PFN_vkCmdSetPatchControlPointsEXT cmdSetPatchControlPointsEXT = nullptr;
+	PFN_vkCmdSetPatchControlPointsEXT fp_vkCmdSetPatchControlPointsEXT = nullptr;
 #endif
 #ifndef PFN_vkCmdSetRasterizerDiscardEnableEXT_DECLARE
 #define PFN_vkCmdSetRasterizerDiscardEnableEXT_DECLARE
-	PFN_vkCmdSetRasterizerDiscardEnableEXT cmdSetRasterizerDiscardEnableEXT = nullptr;
+	PFN_vkCmdSetRasterizerDiscardEnableEXT fp_vkCmdSetRasterizerDiscardEnableEXT = nullptr;
 #endif
 #ifndef PFN_vkCmdSetDepthBiasEnableEXT_DECLARE
 #define PFN_vkCmdSetDepthBiasEnableEXT_DECLARE
-	PFN_vkCmdSetDepthBiasEnableEXT cmdSetDepthBiasEnableEXT = nullptr;
+	PFN_vkCmdSetDepthBiasEnableEXT fp_vkCmdSetDepthBiasEnableEXT = nullptr;
 #endif
 #ifndef PFN_vkCmdSetLogicOpEXT_DECLARE
 #define PFN_vkCmdSetLogicOpEXT_DECLARE
-	PFN_vkCmdSetLogicOpEXT cmdSetLogicOpEXT = nullptr;
+	PFN_vkCmdSetLogicOpEXT fp_vkCmdSetLogicOpEXT = nullptr;
 #endif
 #ifndef PFN_vkCmdSetPrimitiveRestartEnableEXT_DECLARE
 #define PFN_vkCmdSetPrimitiveRestartEnableEXT_DECLARE
-	PFN_vkCmdSetPrimitiveRestartEnableEXT cmdSetPrimitiveRestartEnableEXT = nullptr;
+	PFN_vkCmdSetPrimitiveRestartEnableEXT fp_vkCmdSetPrimitiveRestartEnableEXT = nullptr;
 #endif
 #endif
 #if defined(VK_EXT_color_write_enable) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdSetColorWriteEnableEXT_DECLARE
 #define PFN_vkCmdSetColorWriteEnableEXT_DECLARE
-	PFN_vkCmdSetColorWriteEnableEXT cmdSetColorWriteEnableEXT = nullptr;
+	PFN_vkCmdSetColorWriteEnableEXT fp_vkCmdSetColorWriteEnableEXT = nullptr;
 #endif
 #endif
 };

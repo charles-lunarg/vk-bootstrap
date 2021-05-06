@@ -142,6 +142,7 @@ class VulkanFunctions {
 	PFN_vkGetPhysicalDeviceFormatProperties2 fp_vkGetPhysicalDeviceFormatProperties2 = nullptr;
 	PFN_vkGetPhysicalDeviceMemoryProperties2 fp_vkGetPhysicalDeviceMemoryProperties2 = nullptr;
 
+    PFN_vkGetDeviceProcAddr fp_vkGetDeviceProcAddr = nullptr;
 	PFN_vkCreateDevice fp_vkCreateDevice = nullptr;
 	PFN_vkDestroyDevice fp_vkDestroyDevice = nullptr;
 	PFN_vkEnumerateDeviceExtensionProperties fp_vkEnumerateDeviceExtensionProperties = nullptr;
@@ -189,6 +190,7 @@ class VulkanFunctions {
 		get_proc_addr(fp_vkGetPhysicalDeviceFormatProperties2, "vkGetPhysicalDeviceFormatProperties2");
 		get_proc_addr(fp_vkGetPhysicalDeviceMemoryProperties2, "vkGetPhysicalDeviceMemoryProperties2");
 
+        get_proc_addr(fp_vkGetDeviceProcAddr, "vkGetDeviceProcAddr");
 		get_proc_addr(fp_vkCreateDevice, "vkCreateDevice");
 		get_proc_addr(fp_vkDestroyDevice, "vkDestroyDevice");
 		get_proc_addr(fp_vkEnumerateDeviceExtensionProperties, "vkEnumerateDeviceExtensionProperties");
@@ -738,6 +740,7 @@ detail::Result<Instance> InstanceBuilder::build() const {
 	instance.allocation_callbacks = info.allocation_callbacks;
 	instance.instance_version = api_version;
 	instance.fp_vkGetInstanceProcAddr = detail::vulkan_functions().ptr_vkGetInstanceProcAddr;
+	instance.fp_vkGetDeviceProcAddr = detail::vulkan_functions().fp_vkGetDeviceProcAddr;
 	return instance;
 }
 
@@ -1305,6 +1308,12 @@ std::vector<VkQueueFamilyProperties> PhysicalDevice::get_queue_families() const 
 	return queue_families;
 }
 
+// --- DispatchTable --- //
+
+DispatchTable Device::get_dispatch_table() {
+	return DispatchTable(device, detail::vulkan_functions().fp_vkGetDeviceProcAddr);
+}
+
 // ---- Queues ---- //
 
 detail::Result<uint32_t> Device::get_queue_index(QueueType type) const {
@@ -1474,6 +1483,7 @@ detail::Result<Device> DeviceBuilder::build() const {
 	device.surface = physical_device.surface;
 	device.queue_families = physical_device.queue_families;
 	device.allocation_callbacks = info.allocation_callbacks;
+	device.fp_vkGetDeviceProcAddr =
 	return device;
 }
 DeviceBuilder& DeviceBuilder::custom_queue_setup(std::vector<CustomQueueDescription> queue_descriptions) {

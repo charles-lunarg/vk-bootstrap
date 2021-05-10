@@ -109,7 +109,7 @@ add_subdirectory(vk-bootstrap)
 Then use `target_link_libraries` to use the library in whichever target needs it. 
 
 ```cmake
-target_link_libraries(your_application_name vk-bootstrap)
+target_link_libraries(your_application_name vk-bootstrap::vk-bootstrap)
 ```
 
 ### CMake Fetch Content
@@ -123,7 +123,7 @@ FetchContent_Declare(
     GIT_TAG        BRANCH_OR_TAG #suggest using a tag so the library doesn't update whenever new commits are pushed to a branch 
 )
 FetchContent_MakeAvailable(fetch_vk_bootstrap)
-target_link_libraries(your_application_name vk-bootstrap)
+target_link_libraries(your_application_name vk-bootstrap::vk-bootstrap)
 ```
 
 ### Manually Building

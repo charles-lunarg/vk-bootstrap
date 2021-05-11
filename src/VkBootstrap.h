@@ -545,7 +545,7 @@ struct Device {
 	VkAllocationCallbacks* allocation_callbacks = VK_NULL_HANDLE;
 	PFN_vkGetDeviceProcAddr fp_vkGetDeviceProcAddr = nullptr;
 
-	DispatchTable get_dispatch_table();
+	DispatchTable get_dispatch_table() const;
 
 	detail::Result<uint32_t> get_queue_index(QueueType type) const;
 	// Only a compute or transfer queue type is valid. All other queue types do not support a 'dedicated' queue index

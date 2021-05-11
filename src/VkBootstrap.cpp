@@ -1310,7 +1310,7 @@ std::vector<VkQueueFamilyProperties> PhysicalDevice::get_queue_families() const 
 
 // --- DispatchTable --- //
 
-DispatchTable Device::get_dispatch_table() {
+DispatchTable Device::get_dispatch_table() const {
 	return DispatchTable(device, detail::vulkan_functions().fp_vkGetDeviceProcAddr);
 }
 

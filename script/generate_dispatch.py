@@ -198,22 +198,41 @@ for level in core_commands:
 			else:
 				if '#text' in t:
 					text = t['#text']
-					if 'const' in text:
-						proxy_definition += 'const '
-					proxy_definition += t['type']
-					if '*' in text and not '**' in text:
+					text = text.replace(' ', '')
+					array = '';
+					array_index = text.find('[')
+					if array_index != -1:
+						array = text[array_index:]
+						text = text[0:array_index]
+					if text == '*':
+						proxy_definition += t['type']
 						proxy_definition += '* '
 						proxy_definition += t['name']
-					elif '**' in text:
+					elif text == '**':
+						proxy_definition += t['type']
 						proxy_definition += '** '
 						proxy_definition += t['name']
+					elif text == 'const*':
+						proxy_definition += 'const '
+						proxy_definition += t['type']
+						proxy_definition += '* '
+						proxy_definition += t['name']
+					elif text == 'const**':
+						proxy_definition += 'const '
+						proxy_definition += t['type']
+						proxy_definition += '** '
+						proxy_definition += t['name']
+					elif text == 'const*const*':
+						proxy_definition += 'const '
+						proxy_definition += t['type']
+						proxy_definition += '* const* '
+						proxy_definition += t['name']
 					else:
+						proxy_definition += t['type']
 						proxy_definition += ' '
 						proxy_definition += t['name']
-					if '[' in text and ']' in text:
-						start = text.find('[')
-						end = text.find(']')
-						proxy_definition += text[start:end+1]
+					if array != '':
+						proxy_definition += array
 				else:
 					proxy_definition += t['type']
 					proxy_definition += ' '
@@ -252,6 +271,7 @@ for extension in extension_commands:
 	if len(extension_commands[extension]) > 0:
 		pfn_declaration += '#if defined(' + extension[0] + ') && defined(' + extension[1] + ')\n';
 		pfn_loading += '#if defined(' + extension[0] + ') && defined(' + extension[1] + ')\n';
+		proxy_definition += '#if defined(' + extension[0] + ') && defined(' + extension[1] + ')\n';
 		for command in extension_commands[extension]:
 			fptr_name = 'PFN_' + command
 			member_name = 'fp_' + command
@@ -266,8 +286,94 @@ for extension in extension_commands:
 			pfn_loading += '#define ' + fptr_name + '_LOAD\n'
 			pfn_loading += '\t\t' + member_name + ' = (' + fptr_name + ')procAddr(device, "' + command + '");\n'
 			pfn_loading += '#endif\n'
+			#Duplication guards
+			proxy_definition += '#ifndef ' + fptr_name + '_PROXY\n'
+			proxy_definition += '#define ' + fptr_name + '_PROXY\n'
+			#proxy_definition += '\t\tTEST '+ proxy_name +'\n'
+			types = device_commands[command][0]
+			names = [];
+			i = 0
+			length = len(types) - 1
+			takes_device = False;
+			proxy_definition += '\t'
+			return_type = device_commands[command][1];
+			proxy_definition += return_type
+			proxy_definition += ' '
+			proxy_definition += proxy_name
+			proxy_definition += '('
+			for t in types:
+				if i == 0 and t['type'] == 'VkDevice':
+					takes_device = True
+				else:
+					if '#text' in t:
+						text = t['#text']
+						text = text.replace(' ', '')
+						array = '';
+						array_index = text.find('[')
+						if array_index != -1:
+							array = text[array_index:]
+							text = text[0:array_index]
+						if text == '*':
+							proxy_definition += t['type']
+							proxy_definition += '* '
+							proxy_definition += t['name']
+						elif text == '**':
+							proxy_definition += t['type']
+							proxy_definition += '** '
+							proxy_definition += t['name']
+						elif text == 'const*':
+							proxy_definition += 'const '
+							proxy_definition += t['type']
+							proxy_definition += '* '
+							proxy_definition += t['name']
+						elif text == 'const**':
+							proxy_definition += 'const '
+							proxy_definition += t['type']
+							proxy_definition += '** '
+							proxy_definition += t['name']
+						elif text == 'const*const*':
+							proxy_definition += 'const '
+							proxy_definition += t['type']
+							proxy_definition += '* const* '
+							proxy_definition += t['name']
+						else:
+							proxy_definition += t['type']
+							proxy_definition += ' '
+							proxy_definition += t['name']
+						if array != '':
+							proxy_definition += array
+					else:
+						proxy_definition += t['type']
+						proxy_definition += ' '
+						proxy_definition += t['name']
+					names += [t['name']]
+					if i < length:
+						proxy_definition += ', '
+				i += 1
+			proxy_definition += ') {\n'
+			proxy_definition += '\t\t'
+			if return_type != 'void':
+				proxy_definition += 'return '
+			proxy_definition += member_name
+			proxy_definition += '('
+
+			if takes_device:
+				proxy_definition +='_device'
+				if(len(names) > 0):
+					proxy_definition += ', '
+			i = 0
+			length = len(names) - 1
+			for name in names:
+				proxy_definition += name
+				if i < length:
+					proxy_definition += ', '
+				i += 1
+			proxy_definition += ');\n'
+			proxy_definition += '\t}\n'
+			proxy_definition += '#endif\n'
 		pfn_declaration += '#endif\n'
 		pfn_loading += '#endif\n'
+		proxy_definition += '#endif\n'
 
 header += pfn_loading
 header += '\t}\n'

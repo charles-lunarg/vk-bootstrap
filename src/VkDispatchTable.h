@@ -1299,478 +1299,478 @@ struct DispatchTable {
 #endif
 #endif
 	}
-	void getDeviceQueue(uint32_t queueFamilyIndex, uint32_t queueIndex, VkQueue* pQueue) {
+	void getDeviceQueue(uint32_t queueFamilyIndex, uint32_t queueIndex, VkQueue* pQueue) const {
 		fp_vkGetDeviceQueue(device, queueFamilyIndex, queueIndex, pQueue);
 	}
-	VkResult queueSubmit(VkQueue queue, uint32_t submitCount, const VkSubmitInfo* pSubmits, VkFence fence) {
+	VkResult queueSubmit(VkQueue queue, uint32_t submitCount, const VkSubmitInfo* pSubmits, VkFence fence) const {
 		return fp_vkQueueSubmit(queue, submitCount, pSubmits, fence);
 	}
-	VkResult queueWaitIdle(VkQueue queue) {
+	VkResult queueWaitIdle(VkQueue queue) const {
 		return fp_vkQueueWaitIdle(queue);
 	}
-	VkResult deviceWaitIdle() {
+	VkResult deviceWaitIdle() const {
 		return fp_vkDeviceWaitIdle(device);
 	}
-	VkResult allocateMemory(const VkMemoryAllocateInfo* pAllocateInfo, const VkAllocationCallbacks* pAllocator, VkDeviceMemory* pMemory) {
+	VkResult allocateMemory(const VkMemoryAllocateInfo* pAllocateInfo, const VkAllocationCallbacks* pAllocator, VkDeviceMemory* pMemory) const {
 		return fp_vkAllocateMemory(device, pAllocateInfo, pAllocator, pMemory);
 	}
-	void freeMemory(VkDeviceMemory memory, const VkAllocationCallbacks* pAllocator) {
+	void freeMemory(VkDeviceMemory memory, const VkAllocationCallbacks* pAllocator) const {
 		fp_vkFreeMemory(device, memory, pAllocator);
 	}
-	VkResult mapMemory(VkDeviceMemory memory, VkDeviceSize offset, VkDeviceSize size, VkMemoryMapFlags flags, void** ppData) {
+	VkResult mapMemory(VkDeviceMemory memory, VkDeviceSize offset, VkDeviceSize size, VkMemoryMapFlags flags, void** ppData) const {
 		return fp_vkMapMemory(device, memory, offset, size, flags, ppData);
 	}
-	void unmapMemory(VkDeviceMemory memory) {
+	void unmapMemory(VkDeviceMemory memory) const {
 		fp_vkUnmapMemory(device, memory);
 	}
-	VkResult flushMappedMemoryRanges(uint32_t memoryRangeCount, const VkMappedMemoryRange* pMemoryRanges) {
+	VkResult flushMappedMemoryRanges(uint32_t memoryRangeCount, const VkMappedMemoryRange* pMemoryRanges) const {
 		return fp_vkFlushMappedMemoryRanges(device, memoryRangeCount, pMemoryRanges);
 	}
-	VkResult invalidateMappedMemoryRanges(uint32_t memoryRangeCount, const VkMappedMemoryRange* pMemoryRanges) {
+	VkResult invalidateMappedMemoryRanges(uint32_t memoryRangeCount, const VkMappedMemoryRange* pMemoryRanges) const {
 		return fp_vkInvalidateMappedMemoryRanges(device, memoryRangeCount, pMemoryRanges);
 	}
-	void getDeviceMemoryCommitment(VkDeviceMemory memory, VkDeviceSize* pCommittedMemoryInBytes) {
+	void getDeviceMemoryCommitment(VkDeviceMemory memory, VkDeviceSize* pCommittedMemoryInBytes) const {
 		fp_vkGetDeviceMemoryCommitment(device, memory, pCommittedMemoryInBytes);
 	}
-	VkResult bindBufferMemory(VkBuffer buffer, VkDeviceMemory memory, VkDeviceSize memoryOffset) {
+	VkResult bindBufferMemory(VkBuffer buffer, VkDeviceMemory memory, VkDeviceSize memoryOffset) const {
 		return fp_vkBindBufferMemory(device, buffer, memory, memoryOffset);
 	}
-	VkResult bindImageMemory(VkImage image, VkDeviceMemory memory, VkDeviceSize memoryOffset) {
+	VkResult bindImageMemory(VkImage image, VkDeviceMemory memory, VkDeviceSize memoryOffset) const {
 		return fp_vkBindImageMemory(device, image, memory, memoryOffset);
 	}
-	void getBufferMemoryRequirements(VkBuffer buffer, VkMemoryRequirements* pMemoryRequirements) {
+	void getBufferMemoryRequirements(VkBuffer buffer, VkMemoryRequirements* pMemoryRequirements) const {
 		fp_vkGetBufferMemoryRequirements(device, buffer, pMemoryRequirements);
 	}
-	void getImageMemoryRequirements(VkImage image, VkMemoryRequirements* pMemoryRequirements) {
+	void getImageMemoryRequirements(VkImage image, VkMemoryRequirements* pMemoryRequirements) const {
 		fp_vkGetImageMemoryRequirements(device, image, pMemoryRequirements);
 	}
-	void getImageSparseMemoryRequirements(VkImage image, uint32_t* pSparseMemoryRequirementCount, VkSparseImageMemoryRequirements* pSparseMemoryRequirements) {
+	void getImageSparseMemoryRequirements(VkImage image, uint32_t* pSparseMemoryRequirementCount, VkSparseImageMemoryRequirements* pSparseMemoryRequirements) const {
 		fp_vkGetImageSparseMemoryRequirements(device, image, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
 	}
-	VkResult queueBindSparse(VkQueue queue, uint32_t bindInfoCount, const VkBindSparseInfo* pBindInfo, VkFence fence) {
+	VkResult queueBindSparse(VkQueue queue, uint32_t bindInfoCount, const VkBindSparseInfo* pBindInfo, VkFence fence) const {
 		return fp_vkQueueBindSparse(queue, bindInfoCount, pBindInfo, fence);
 	}
-	VkResult createFence(const VkFenceCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkFence* pFence) {
+	VkResult createFence(const VkFenceCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkFence* pFence) const {
 		return fp_vkCreateFence(device, pCreateInfo, pAllocator, pFence);
 	}
-	void destroyFence(VkFence fence, const VkAllocationCallbacks* pAllocator) {
+	void destroyFence(VkFence fence, const VkAllocationCallbacks* pAllocator) const {
 		fp_vkDestroyFence(device, fence, pAllocator);
 	}
-	VkResult resetFences(uint32_t fenceCount, const VkFence* pFences) {
+	VkResult resetFences(uint32_t fenceCount, const VkFence* pFences) const {
 		return fp_vkResetFences(device, fenceCount, pFences);
 	}
-	VkResult getFenceStatus(VkFence fence) {
+	VkResult getFenceStatus(VkFence fence) const {
 		return fp_vkGetFenceStatus(device, fence);
 	}
-	VkResult waitForFences(uint32_t fenceCount, const VkFence* pFences, VkBool32 waitAll, uint64_t timeout) {
+	VkResult waitForFences(uint32_t fenceCount, const VkFence* pFences, VkBool32 waitAll, uint64_t timeout) const {
 		return fp_vkWaitForFences(device, fenceCount, pFences, waitAll, timeout);
 	}
-	VkResult createSemaphore(const VkSemaphoreCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkSemaphore* pSemaphore) {
+	VkResult createSemaphore(const VkSemaphoreCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkSemaphore* pSemaphore) const {
 		return fp_vkCreateSemaphore(device, pCreateInfo, pAllocator, pSemaphore);
 	}
-	void destroySemaphore(VkSemaphore semaphore, const VkAllocationCallbacks* pAllocator) {
+	void destroySemaphore(VkSemaphore semaphore, const VkAllocationCallbacks* pAllocator) const {
 		fp_vkDestroySemaphore(device, semaphore, pAllocator);
 	}
-	VkResult createEvent(const VkEventCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkEvent* pEvent) {
+	VkResult createEvent(const VkEventCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkEvent* pEvent) const {
 		return fp_vkCreateEvent(device, pCreateInfo, pAllocator, pEvent);
 	}
-	void destroyEvent(VkEvent event, const VkAllocationCallbacks* pAllocator) {
+	void destroyEvent(VkEvent event, const VkAllocationCallbacks* pAllocator) const {
 		fp_vkDestroyEvent(device, event, pAllocator);
 	}
-	VkResult getEventStatus(VkEvent event) {
+	VkResult getEventStatus(VkEvent event) const {
 		return fp_vkGetEventStatus(device, event);
 	}
-	VkResult setEvent(VkEvent event) {
+	VkResult setEvent(VkEvent event) const {
 		return fp_vkSetEvent(device, event);
 	}
-	VkResult resetEvent(VkEvent event) {
+	VkResult resetEvent(VkEvent event) const {
 		return fp_vkResetEvent(device, event);
 	}
-	VkResult createQueryPool(const VkQueryPoolCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkQueryPool* pQueryPool) {
+	VkResult createQueryPool(const VkQueryPoolCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkQueryPool* pQueryPool) const {
 		return fp_vkCreateQueryPool(device, pCreateInfo, pAllocator, pQueryPool);
 	}
-	void destroyQueryPool(VkQueryPool queryPool, const VkAllocationCallbacks* pAllocator) {
+	void destroyQueryPool(VkQueryPool queryPool, const VkAllocationCallbacks* pAllocator) const {
 		fp_vkDestroyQueryPool(device, queryPool, pAllocator);
 	}
-	VkResult getQueryPoolResults(VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount, size_t dataSize, void* pData, VkDeviceSize stride, VkQueryResultFlags flags) {
+	VkResult getQueryPoolResults(VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount, size_t dataSize, void* pData, VkDeviceSize stride, VkQueryResultFlags flags) const {
 		return fp_vkGetQueryPoolResults(device, queryPool, firstQuery, queryCount, dataSize, pData, stride, flags);
 	}
-	VkResult createBuffer(const VkBufferCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkBuffer* pBuffer) {
+	VkResult createBuffer(const VkBufferCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkBuffer* pBuffer) const {
 		return fp_vkCreateBuffer(device, pCreateInfo, pAllocator, pBuffer);
 	}
-	void destroyBuffer(VkBuffer buffer, const VkAllocationCallbacks* pAllocator) {
+	void destroyBuffer(VkBuffer buffer, const VkAllocationCallbacks* pAllocator) const {
 		fp_vkDestroyBuffer(device, buffer, pAllocator);
 	}
-	VkResult createBufferView(const VkBufferViewCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkBufferView* pView) {
+	VkResult createBufferView(const VkBufferViewCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkBufferView* pView) const {
 		return fp_vkCreateBufferView(device, pCreateInfo, pAllocator, pView);
 	}
-	void destroyBufferView(VkBufferView bufferView, const VkAllocationCallbacks* pAllocator) {
+	void destroyBufferView(VkBufferView bufferView, const VkAllocationCallbacks* pAllocator) const {
 		fp_vkDestroyBufferView(device, bufferView, pAllocator);
 	}
-	VkResult createImage(const VkImageCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkImage* pImage) {
+	VkResult createImage(const VkImageCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkImage* pImage) const {
 		return fp_vkCreateImage(device, pCreateInfo, pAllocator, pImage);
 	}
-	void destroyImage(VkImage image, const VkAllocationCallbacks* pAllocator) {
+	void destroyImage(VkImage image, const VkAllocationCallbacks* pAllocator) const {
 		fp_vkDestroyImage(device, image, pAllocator);
 	}
-	void getImageSubresourceLayout(VkImage image, const VkImageSubresource* pSubresource, VkSubresourceLayout* pLayout) {
+	void getImageSubresourceLayout(VkImage image, const VkImageSubresource* pSubresource, VkSubresourceLayout* pLayout) const {
 		fp_vkGetImageSubresourceLayout(device, image, pSubresource, pLayout);
 	}
-	VkResult createImageView(const VkImageViewCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkImageView* pView) {
+	VkResult createImageView(const VkImageViewCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkImageView* pView) const {
 		return fp_vkCreateImageView(device, pCreateInfo, pAllocator, pView);
 	}
-	void destroyImageView(VkImageView imageView, const VkAllocationCallbacks* pAllocator) {
+	void destroyImageView(VkImageView imageView, const VkAllocationCallbacks* pAllocator) const {
 		fp_vkDestroyImageView(device, imageView, pAllocator);
 	}
-	VkResult createShaderModule(const VkShaderModuleCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkShaderModule* pShaderModule) {
+	VkResult createShaderModule(const VkShaderModuleCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkShaderModule* pShaderModule) const {
 		return fp_vkCreateShaderModule(device, pCreateInfo, pAllocator, pShaderModule);
 	}
-	void destroyShaderModule(VkShaderModule shaderModule, const VkAllocationCallbacks* pAllocator) {
+	void destroyShaderModule(VkShaderModule shaderModule, const VkAllocationCallbacks* pAllocator) const {
 		fp_vkDestroyShaderModule(device, shaderModule, pAllocator);
 	}
-	VkResult createPipelineCache(const VkPipelineCacheCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkPipelineCache* pPipelineCache) {
+	VkResult createPipelineCache(const VkPipelineCacheCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkPipelineCache* pPipelineCache) const {
 		return fp_vkCreatePipelineCache(device, pCreateInfo, pAllocator, pPipelineCache);
 	}
-	void destroyPipelineCache(VkPipelineCache pipelineCache, const VkAllocationCallbacks* pAllocator) {
+	void destroyPipelineCache(VkPipelineCache pipelineCache, const VkAllocationCallbacks* pAllocator) const {
 		fp_vkDestroyPipelineCache(device, pipelineCache, pAllocator);
 	}
-	VkResult getPipelineCacheData(VkPipelineCache pipelineCache, size_t* pDataSize, void* pData) {
+	VkResult getPipelineCacheData(VkPipelineCache pipelineCache, size_t* pDataSize, void* pData) const {
 		return fp_vkGetPipelineCacheData(device, pipelineCache, pDataSize, pData);
 	}
-	VkResult mergePipelineCaches(VkPipelineCache dstCache, uint32_t srcCacheCount, const VkPipelineCache* pSrcCaches) {
+	VkResult mergePipelineCaches(VkPipelineCache dstCache, uint32_t srcCacheCount, const VkPipelineCache* pSrcCaches) const {
 		return fp_vkMergePipelineCaches(device, dstCache, srcCacheCount, pSrcCaches);
 	}
-	VkResult createGraphicsPipelines(VkPipelineCache pipelineCache, uint32_t createInfoCount, const VkGraphicsPipelineCreateInfo* pCreateInfos, const VkAllocationCallbacks* pAllocator, VkPipeline* pPipelines) {
+	VkResult createGraphicsPipelines(VkPipelineCache pipelineCache, uint32_t createInfoCount, const VkGraphicsPipelineCreateInfo* pCreateInfos, const VkAllocationCallbacks* pAllocator, VkPipeline* pPipelines) const {
 		return fp_vkCreateGraphicsPipelines(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
 	}
-	VkResult createComputePipelines(VkPipelineCache pipelineCache, uint32_t createInfoCount, const VkComputePipelineCreateInfo* pCreateInfos, const VkAllocationCallbacks* pAllocator, VkPipeline* pPipelines) {
+	VkResult createComputePipelines(VkPipelineCache pipelineCache, uint32_t createInfoCount, const VkComputePipelineCreateInfo* pCreateInfos, const VkAllocationCallbacks* pAllocator, VkPipeline* pPipelines) const {
 		return fp_vkCreateComputePipelines(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
 	}
-	void destroyPipeline(VkPipeline pipeline, const VkAllocationCallbacks* pAllocator) {
+	void destroyPipeline(VkPipeline pipeline, const VkAllocationCallbacks* pAllocator) const {
 		fp_vkDestroyPipeline(device, pipeline, pAllocator);
 	}
-	VkResult createPipelineLayout(const VkPipelineLayoutCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkPipelineLayout* pPipelineLayout) {
+	VkResult createPipelineLayout(const VkPipelineLayoutCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkPipelineLayout* pPipelineLayout) const {
 		return fp_vkCreatePipelineLayout(device, pCreateInfo, pAllocator, pPipelineLayout);
 	}
-	void destroyPipelineLayout(VkPipelineLayout pipelineLayout, const VkAllocationCallbacks* pAllocator) {
+	void destroyPipelineLayout(VkPipelineLayout pipelineLayout, const VkAllocationCallbacks* pAllocator) const {
 		fp_vkDestroyPipelineLayout(device, pipelineLayout, pAllocator);
 	}
-	VkResult createSampler(const VkSamplerCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkSampler* pSampler) {
+	VkResult createSampler(const VkSamplerCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkSampler* pSampler) const {
 		return fp_vkCreateSampler(device, pCreateInfo, pAllocator, pSampler);
 	}
-	void destroySampler(VkSampler sampler, const VkAllocationCallbacks* pAllocator) {
+	void destroySampler(VkSampler sampler, const VkAllocationCallbacks* pAllocator) const {
 		fp_vkDestroySampler(device, sampler, pAllocator);
 	}
-	VkResult createDescriptorSetLayout(const VkDescriptorSetLayoutCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDescriptorSetLayout* pSetLayout) {
+	VkResult createDescriptorSetLayout(const VkDescriptorSetLayoutCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDescriptorSetLayout* pSetLayout) const {
 		return fp_vkCreateDescriptorSetLayout(device, pCreateInfo, pAllocator, pSetLayout);
 	}
-	void destroyDescriptorSetLayout(VkDescriptorSetLayout descriptorSetLayout, const VkAllocationCallbacks* pAllocator) {
+	void destroyDescriptorSetLayout(VkDescriptorSetLayout descriptorSetLayout, const VkAllocationCallbacks* pAllocator) const {
 		fp_vkDestroyDescriptorSetLayout(device, descriptorSetLayout, pAllocator);
 	}
-	VkResult createDescriptorPool(const VkDescriptorPoolCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDescriptorPool* pDescriptorPool) {
+	VkResult createDescriptorPool(const VkDescriptorPoolCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDescriptorPool* pDescriptorPool) const {
 		return fp_vkCreateDescriptorPool(device, pCreateInfo, pAllocator, pDescriptorPool);
 	}
-	void destroyDescriptorPool(VkDescriptorPool descriptorPool, const VkAllocationCallbacks* pAllocator) {
+	void destroyDescriptorPool(VkDescriptorPool descriptorPool, const VkAllocationCallbacks* pAllocator) const {
 		fp_vkDestroyDescriptorPool(device, descriptorPool, pAllocator);
 	}
-	VkResult resetDescriptorPool(VkDescriptorPool descriptorPool, VkDescriptorPoolResetFlags flags) {
+	VkResult resetDescriptorPool(VkDescriptorPool descriptorPool, VkDescriptorPoolResetFlags flags) const {
 		return fp_vkResetDescriptorPool(device, descriptorPool, flags);
 	}
-	VkResult allocateDescriptorSets(const VkDescriptorSetAllocateInfo* pAllocateInfo, VkDescriptorSet* pDescriptorSets) {
+	VkResult allocateDescriptorSets(const VkDescriptorSetAllocateInfo* pAllocateInfo, VkDescriptorSet* pDescriptorSets) const {
 		return fp_vkAllocateDescriptorSets(device, pAllocateInfo, pDescriptorSets);
 	}
-	VkResult freeDescriptorSets(VkDescriptorPool descriptorPool, uint32_t descriptorSetCount, const VkDescriptorSet* pDescriptorSets) {
+	VkResult freeDescriptorSets(VkDescriptorPool descriptorPool, uint32_t descriptorSetCount, const VkDescriptorSet* pDescriptorSets) const {
 		return fp_vkFreeDescriptorSets(device, descriptorPool, descriptorSetCount, pDescriptorSets);
 	}
-	void updateDescriptorSets(uint32_t descriptorWriteCount, const VkWriteDescriptorSet* pDescriptorWrites, uint32_t descriptorCopyCount, const VkCopyDescriptorSet* pDescriptorCopies) {
+	void updateDescriptorSets(uint32_t descriptorWriteCount, const VkWriteDescriptorSet* pDescriptorWrites, uint32_t descriptorCopyCount, const VkCopyDescriptorSet* pDescriptorCopies) const {
 		fp_vkUpdateDescriptorSets(device, descriptorWriteCount, pDescriptorWrites, descriptorCopyCount, pDescriptorCopies);
 	}
-	VkResult createFramebuffer(const VkFramebufferCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkFramebuffer* pFramebuffer) {
+	VkResult createFramebuffer(const VkFramebufferCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkFramebuffer* pFramebuffer) const {
 		return fp_vkCreateFramebuffer(device, pCreateInfo, pAllocator, pFramebuffer);
 	}
-	void destroyFramebuffer(VkFramebuffer framebuffer, const VkAllocationCallbacks* pAllocator) {
+	void destroyFramebuffer(VkFramebuffer framebuffer, const VkAllocationCallbacks* pAllocator) const {
 		fp_vkDestroyFramebuffer(device, framebuffer, pAllocator);
 	}
-	VkResult createRenderPass(const VkRenderPassCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkRenderPass* pRenderPass) {
+	VkResult createRenderPass(const VkRenderPassCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkRenderPass* pRenderPass) const {
 		return fp_vkCreateRenderPass(device, pCreateInfo, pAllocator, pRenderPass);
 	}
-	void destroyRenderPass(VkRenderPass renderPass, const VkAllocationCallbacks* pAllocator) {
+	void destroyRenderPass(VkRenderPass renderPass, const VkAllocationCallbacks* pAllocator) const {
 		fp_vkDestroyRenderPass(device, renderPass, pAllocator);
 	}
-	void getRenderAreaGranularity(VkRenderPass renderPass, VkExtent2D* pGranularity) {
+	void getRenderAreaGranularity(VkRenderPass renderPass, VkExtent2D* pGranularity) const {
 		fp_vkGetRenderAreaGranularity(device, renderPass, pGranularity);
 	}
-	VkResult createCommandPool(const VkCommandPoolCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkCommandPool* pCommandPool) {
+	VkResult createCommandPool(const VkCommandPoolCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkCommandPool* pCommandPool) const {
 		return fp_vkCreateCommandPool(device, pCreateInfo, pAllocator, pCommandPool);
 	}
-	void destroyCommandPool(VkCommandPool commandPool, const VkAllocationCallbacks* pAllocator) {
+	void destroyCommandPool(VkCommandPool commandPool, const VkAllocationCallbacks* pAllocator) const {
 		fp_vkDestroyCommandPool(device, commandPool, pAllocator);
 	}
-	VkResult resetCommandPool(VkCommandPool commandPool, VkCommandPoolResetFlags flags) {
+	VkResult resetCommandPool(VkCommandPool commandPool, VkCommandPoolResetFlags flags) const {
 		return fp_vkResetCommandPool(device, commandPool, flags);
 	}
-	VkResult allocateCommandBuffers(const VkCommandBufferAllocateInfo* pAllocateInfo, VkCommandBuffer* pCommandBuffers) {
+	VkResult allocateCommandBuffers(const VkCommandBufferAllocateInfo* pAllocateInfo, VkCommandBuffer* pCommandBuffers) const {
 		return fp_vkAllocateCommandBuffers(device, pAllocateInfo, pCommandBuffers);
 	}
-	void freeCommandBuffers(VkCommandPool commandPool, uint32_t commandBufferCount, const VkCommandBuffer* pCommandBuffers) {
+	void freeCommandBuffers(VkCommandPool commandPool, uint32_t commandBufferCount, const VkCommandBuffer* pCommandBuffers) const {
 		fp_vkFreeCommandBuffers(device, commandPool, commandBufferCount, pCommandBuffers);
 	}
-	VkResult beginCommandBuffer(VkCommandBuffer commandBuffer, const VkCommandBufferBeginInfo* pBeginInfo) {
+	VkResult beginCommandBuffer(VkCommandBuffer commandBuffer, const VkCommandBufferBeginInfo* pBeginInfo) const {
 		return fp_vkBeginCommandBuffer(commandBuffer, pBeginInfo);
 	}
-	VkResult endCommandBuffer(VkCommandBuffer commandBuffer) {
+	VkResult endCommandBuffer(VkCommandBuffer commandBuffer) const {
 		return fp_vkEndCommandBuffer(commandBuffer);
 	}
-	VkResult resetCommandBuffer(VkCommandBuffer commandBuffer, VkCommandBufferResetFlags flags) {
+	VkResult resetCommandBuffer(VkCommandBuffer commandBuffer, VkCommandBufferResetFlags flags) const {
 		return fp_vkResetCommandBuffer(commandBuffer, flags);
 	}
-	void cmdBindPipeline(VkCommandBuffer commandBuffer, VkPipelineBindPoint pipelineBindPoint, VkPipeline pipeline) {
+	void cmdBindPipeline(VkCommandBuffer commandBuffer, VkPipelineBindPoint pipelineBindPoint, VkPipeline pipeline) const {
 		fp_vkCmdBindPipeline(commandBuffer, pipelineBindPoint, pipeline);
 	}
-	void cmdSetViewport(VkCommandBuffer commandBuffer, uint32_t firstViewport, uint32_t viewportCount, const VkViewport* pViewports) {
+	void cmdSetViewport(VkCommandBuffer commandBuffer, uint32_t firstViewport, uint32_t viewportCount, const VkViewport* pViewports) const {
 		fp_vkCmdSetViewport(commandBuffer, firstViewport, viewportCount, pViewports);
 	}
-	void cmdSetScissor(VkCommandBuffer commandBuffer, uint32_t firstScissor, uint32_t scissorCount, const VkRect2D* pScissors) {
+	void cmdSetScissor(VkCommandBuffer commandBuffer, uint32_t firstScissor, uint32_t scissorCount, const VkRect2D* pScissors) const {
 		fp_vkCmdSetScissor(commandBuffer, firstScissor, scissorCount, pScissors);
 	}
-	void cmdSetLineWidth(VkCommandBuffer commandBuffer, float lineWidth) {
+	void cmdSetLineWidth(VkCommandBuffer commandBuffer, float lineWidth) const {
 		fp_vkCmdSetLineWidth(commandBuffer, lineWidth);
 	}
-	void cmdSetDepthBias(VkCommandBuffer commandBuffer, float depthBiasConstantFactor, float depthBiasClamp, float depthBiasSlopeFactor) {
+	void cmdSetDepthBias(VkCommandBuffer commandBuffer, float depthBiasConstantFactor, float depthBiasClamp, float depthBiasSlopeFactor) const {
 		fp_vkCmdSetDepthBias(commandBuffer, depthBiasConstantFactor, depthBiasClamp, depthBiasSlopeFactor);
 	}
-	void cmdSetBlendConstants(VkCommandBuffer commandBuffer, float blendConstants[4]) {
+	void cmdSetBlendConstants(VkCommandBuffer commandBuffer, float blendConstants[4]) const {
 		fp_vkCmdSetBlendConstants(commandBuffer, blendConstants);
 	}
-	void cmdSetDepthBounds(VkCommandBuffer commandBuffer, float minDepthBounds, float maxDepthBounds) {
+	void cmdSetDepthBounds(VkCommandBuffer commandBuffer, float minDepthBounds, float maxDepthBounds) const {
 		fp_vkCmdSetDepthBounds(commandBuffer, minDepthBounds, maxDepthBounds);
 	}
-	void cmdSetStencilCompareMask(VkCommandBuffer commandBuffer, VkStencilFaceFlags faceMask, uint32_t compareMask) {
+	void cmdSetStencilCompareMask(VkCommandBuffer commandBuffer, VkStencilFaceFlags faceMask, uint32_t compareMask) const {
 		fp_vkCmdSetStencilCompareMask(commandBuffer, faceMask, compareMask);
 	}
-	void cmdSetStencilWriteMask(VkCommandBuffer commandBuffer, VkStencilFaceFlags faceMask, uint32_t writeMask) {
+	void cmdSetStencilWriteMask(VkCommandBuffer commandBuffer, VkStencilFaceFlags faceMask, uint32_t writeMask) const {
 		fp_vkCmdSetStencilWriteMask(commandBuffer, faceMask, writeMask);
 	}
-	void cmdSetStencilReference(VkCommandBuffer commandBuffer, VkStencilFaceFlags faceMask, uint32_t reference) {
+	void cmdSetStencilReference(VkCommandBuffer commandBuffer, VkStencilFaceFlags faceMask, uint32_t reference) const {
 		fp_vkCmdSetStencilReference(commandBuffer, faceMask, reference);
 	}
-	void cmdBindDescriptorSets(VkCommandBuffer commandBuffer, VkPipelineBindPoint pipelineBindPoint, VkPipelineLayout layout, uint32_t firstSet, uint32_t descriptorSetCount, const VkDescriptorSet* pDescriptorSets, uint32_t dynamicOffsetCount, const uint32_t* pDynamicOffsets) {
+	void cmdBindDescriptorSets(VkCommandBuffer commandBuffer, VkPipelineBindPoint pipelineBindPoint, VkPipelineLayout layout, uint32_t firstSet, uint32_t descriptorSetCount, const VkDescriptorSet* pDescriptorSets, uint32_t dynamicOffsetCount, const uint32_t* pDynamicOffsets) const {
 		fp_vkCmdBindDescriptorSets(commandBuffer, pipelineBindPoint, layout, firstSet, descriptorSetCount, pDescriptorSets, dynamicOffsetCount, pDynamicOffsets);
 	}
-	void cmdBindIndexBuffer(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkIndexType indexType) {
+	void cmdBindIndexBuffer(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkIndexType indexType) const {
 		fp_vkCmdBindIndexBuffer(commandBuffer, buffer, offset, indexType);
 	}
-	void cmdBindVertexBuffers(VkCommandBuffer commandBuffer, uint32_t firstBinding, uint32_t bindingCount, const VkBuffer* pBuffers, const VkDeviceSize* pOffsets) {
+	void cmdBindVertexBuffers(VkCommandBuffer commandBuffer, uint32_t firstBinding, uint32_t bindingCount, const VkBuffer* pBuffers, const VkDeviceSize* pOffsets) const {
 		fp_vkCmdBindVertexBuffers(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets);
 	}
-	void cmdDraw(VkCommandBuffer commandBuffer, uint32_t vertexCount, uint32_t instanceCount, uint32_t firstVertex, uint32_t firstInstance) {
+	void cmdDraw(VkCommandBuffer commandBuffer, uint32_t vertexCount, uint32_t instanceCount, uint32_t firstVertex, uint32_t firstInstance) const {
 		fp_vkCmdDraw(commandBuffer, vertexCount, instanceCount, firstVertex, firstInstance);
 	}
-	void cmdDrawIndexed(VkCommandBuffer commandBuffer, uint32_t indexCount, uint32_t instanceCount, uint32_t firstIndex, int32_t vertexOffset, uint32_t firstInstance) {
+	void cmdDrawIndexed(VkCommandBuffer commandBuffer, uint32_t indexCount, uint32_t instanceCount, uint32_t firstIndex, int32_t vertexOffset, uint32_t firstInstance) const {
 		fp_vkCmdDrawIndexed(commandBuffer, indexCount, instanceCount, firstIndex, vertexOffset, firstInstance);
 	}
-	void cmdDrawIndirect(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, uint32_t drawCount, uint32_t stride) {
+	void cmdDrawIndirect(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, uint32_t drawCount, uint32_t stride) const {
 		fp_vkCmdDrawIndirect(commandBuffer, buffer, offset, drawCount, stride);
 	}
-	void cmdDrawIndexedIndirect(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, uint32_t drawCount, uint32_t stride) {
+	void cmdDrawIndexedIndirect(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, uint32_t drawCount, uint32_t stride) const {
 		fp_vkCmdDrawIndexedIndirect(commandBuffer, buffer, offset, drawCount, stride);
 	}
-	void cmdDispatch(VkCommandBuffer commandBuffer, uint32_t groupCountX, uint32_t groupCountY, uint32_t groupCountZ) {
+	void cmdDispatch(VkCommandBuffer commandBuffer, uint32_t groupCountX, uint32_t groupCountY, uint32_t groupCountZ) const {
 		fp_vkCmdDispatch(commandBuffer, groupCountX, groupCountY, groupCountZ);
 	}
-	void cmdDispatchIndirect(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset) {
+	void cmdDispatchIndirect(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset) const {
 		fp_vkCmdDispatchIndirect(commandBuffer, buffer, offset);
 	}
-	void cmdCopyBuffer(VkCommandBuffer commandBuffer, VkBuffer srcBuffer, VkBuffer dstBuffer, uint32_t regionCount, const VkBufferCopy* pRegions) {
+	void cmdCopyBuffer(VkCommandBuffer commandBuffer, VkBuffer srcBuffer, VkBuffer dstBuffer, uint32_t regionCount, const VkBufferCopy* pRegions) const {
 		fp_vkCmdCopyBuffer(commandBuffer, srcBuffer, dstBuffer, regionCount, pRegions);
 	}
-	void cmdCopyImage(VkCommandBuffer commandBuffer, VkImage srcImage, VkImageLayout srcImageLayout, VkImage dstImage, VkImageLayout dstImageLayout, uint32_t regionCount, const VkImageCopy* pRegions) {
+	void cmdCopyImage(VkCommandBuffer commandBuffer, VkImage srcImage, VkImageLayout srcImageLayout, VkImage dstImage, VkImageLayout dstImageLayout, uint32_t regionCount, const VkImageCopy* pRegions) const {
 		fp_vkCmdCopyImage(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions);
 	}
-	void cmdBlitImage(VkCommandBuffer commandBuffer, VkImage srcImage, VkImageLayout srcImageLayout, VkImage dstImage, VkImageLayout dstImageLayout, uint32_t regionCount, const VkImageBlit* pRegions, VkFilter filter) {
+	void cmdBlitImage(VkCommandBuffer commandBuffer, VkImage srcImage, VkImageLayout srcImageLayout, VkImage dstImage, VkImageLayout dstImageLayout, uint32_t regionCount, const VkImageBlit* pRegions, VkFilter filter) const {
 		fp_vkCmdBlitImage(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions, filter);
 	}
-	void cmdCopyBufferToImage(VkCommandBuffer commandBuffer, VkBuffer srcBuffer, VkImage dstImage, VkImageLayout dstImageLayout, uint32_t regionCount, const VkBufferImageCopy* pRegions) {
+	void cmdCopyBufferToImage(VkCommandBuffer commandBuffer, VkBuffer srcBuffer, VkImage dstImage, VkImageLayout dstImageLayout, uint32_t regionCount, const VkBufferImageCopy* pRegions) const {
 		fp_vkCmdCopyBufferToImage(commandBuffer, srcBuffer, dstImage, dstImageLayout, regionCount, pRegions);
 	}
-	void cmdCopyImageToBuffer(VkCommandBuffer commandBuffer, VkImage srcImage, VkImageLayout srcImageLayout, VkBuffer dstBuffer, uint32_t regionCount, const VkBufferImageCopy* pRegions) {
+	void cmdCopyImageToBuffer(VkCommandBuffer commandBuffer, VkImage srcImage, VkImageLayout srcImageLayout, VkBuffer dstBuffer, uint32_t regionCount, const VkBufferImageCopy* pRegions) const {
 		fp_vkCmdCopyImageToBuffer(commandBuffer, srcImage, srcImageLayout, dstBuffer, regionCount, pRegions);
 	}
-	void cmdUpdateBuffer(VkCommandBuffer commandBuffer, VkBuffer dstBuffer, VkDeviceSize dstOffset, VkDeviceSize dataSize, const void* pData) {
+	void cmdUpdateBuffer(VkCommandBuffer commandBuffer, VkBuffer dstBuffer, VkDeviceSize dstOffset, VkDeviceSize dataSize, const void* pData) const {
 		fp_vkCmdUpdateBuffer(commandBuffer, dstBuffer, dstOffset, dataSize, pData);
 	}
-	void cmdFillBuffer(VkCommandBuffer commandBuffer, VkBuffer dstBuffer, VkDeviceSize dstOffset, VkDeviceSize size, uint32_t data) {
+	void cmdFillBuffer(VkCommandBuffer commandBuffer, VkBuffer dstBuffer, VkDeviceSize dstOffset, VkDeviceSize size, uint32_t data) const {
 		fp_vkCmdFillBuffer(commandBuffer, dstBuffer, dstOffset, size, data);
 	}
-	void cmdClearColorImage(VkCommandBuffer commandBuffer, VkImage image, VkImageLayout imageLayout, const VkClearColorValue* pColor, uint32_t rangeCount, const VkImageSubresourceRange* pRanges) {
+	void cmdClearColorImage(VkCommandBuffer commandBuffer, VkImage image, VkImageLayout imageLayout, const VkClearColorValue* pColor, uint32_t rangeCount, const VkImageSubresourceRange* pRanges) const {
 		fp_vkCmdClearColorImage(commandBuffer, image, imageLayout, pColor, rangeCount, pRanges);
 	}
-	void cmdClearDepthStencilImage(VkCommandBuffer commandBuffer, VkImage image, VkImageLayout imageLayout, const VkClearDepthStencilValue* pDepthStencil, uint32_t rangeCount, const VkImageSubresourceRange* pRanges) {
+	void cmdClearDepthStencilImage(VkCommandBuffer commandBuffer, VkImage image, VkImageLayout imageLayout, const VkClearDepthStencilValue* pDepthStencil, uint32_t rangeCount, const VkImageSubresourceRange* pRanges) const {
 		fp_vkCmdClearDepthStencilImage(commandBuffer, image, imageLayout, pDepthStencil, rangeCount, pRanges);
 	}
-	void cmdClearAttachments(VkCommandBuffer commandBuffer, uint32_t attachmentCount, const VkClearAttachment* pAttachments, uint32_t rectCount, const VkClearRect* pRects) {
+	void cmdClearAttachments(VkCommandBuffer commandBuffer, uint32_t attachmentCount, const VkClearAttachment* pAttachments, uint32_t rectCount, const VkClearRect* pRects) const {
 		fp_vkCmdClearAttachments(commandBuffer, attachmentCount, pAttachments, rectCount, pRects);
 	}
-	void cmdResolveImage(VkCommandBuffer commandBuffer, VkImage srcImage, VkImageLayout srcImageLayout, VkImage dstImage, VkImageLayout dstImageLayout, uint32_t regionCount, const VkImageResolve* pRegions) {
+	void cmdResolveImage(VkCommandBuffer commandBuffer, VkImage srcImage, VkImageLayout srcImageLayout, VkImage dstImage, VkImageLayout dstImageLayout, uint32_t regionCount, const VkImageResolve* pRegions) const {
 		fp_vkCmdResolveImage(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions);
 	}
-	void cmdSetEvent(VkCommandBuffer commandBuffer, VkEvent event, VkPipelineStageFlags stageMask) {
+	void cmdSetEvent(VkCommandBuffer commandBuffer, VkEvent event, VkPipelineStageFlags stageMask) const {
 		fp_vkCmdSetEvent(commandBuffer, event, stageMask);
 	}
-	void cmdResetEvent(VkCommandBuffer commandBuffer, VkEvent event, VkPipelineStageFlags stageMask) {
+	void cmdResetEvent(VkCommandBuffer commandBuffer, VkEvent event, VkPipelineStageFlags stageMask) const {
 		fp_vkCmdResetEvent(commandBuffer, event, stageMask);
 	}
-	void cmdWaitEvents(VkCommandBuffer commandBuffer, uint32_t eventCount, const VkEvent* pEvents, VkPipelineStageFlags srcStageMask, VkPipelineStageFlags dstStageMask, uint32_t memoryBarrierCount, const VkMemoryBarrier* pMemoryBarriers, uint32_t bufferMemoryBarrierCount, const VkBufferMemoryBarrier* pBufferMemoryBarriers, uint32_t imageMemoryBarrierCount, const VkImageMemoryBarrier* pImageMemoryBarriers) {
+	void cmdWaitEvents(VkCommandBuffer commandBuffer, uint32_t eventCount, const VkEvent* pEvents, VkPipelineStageFlags srcStageMask, VkPipelineStageFlags dstStageMask, uint32_t memoryBarrierCount, const VkMemoryBarrier* pMemoryBarriers, uint32_t bufferMemoryBarrierCount, const VkBufferMemoryBarrier* pBufferMemoryBarriers, uint32_t imageMemoryBarrierCount, const VkImageMemoryBarrier* pImageMemoryBarriers) const {
 		fp_vkCmdWaitEvents(commandBuffer, eventCount, pEvents, srcStageMask, dstStageMask, memoryBarrierCount, pMemoryBarriers, bufferMemoryBarrierCount, pBufferMemoryBarriers, imageMemoryBarrierCount, pImageMemoryBarriers);
 	}
-	void cmdPipelineBarrier(VkCommandBuffer commandBuffer, VkPipelineStageFlags srcStageMask, VkPipelineStageFlags dstStageMask, VkDependencyFlags dependencyFlags, uint32_t memoryBarrierCount, const VkMemoryBarrier* pMemoryBarriers, uint32_t bufferMemoryBarrierCount, const VkBufferMemoryBarrier* pBufferMemoryBarriers, uint32_t imageMemoryBarrierCount, const VkImageMemoryBarrier* pImageMemoryBarriers) {
+	void cmdPipelineBarrier(VkCommandBuffer commandBuffer, VkPipelineStageFlags srcStageMask, VkPipelineStageFlags dstStageMask, VkDependencyFlags dependencyFlags, uint32_t memoryBarrierCount, const VkMemoryBarrier* pMemoryBarriers, uint32_t bufferMemoryBarrierCount, const VkBufferMemoryBarrier* pBufferMemoryBarriers, uint32_t imageMemoryBarrierCount, const VkImageMemoryBarrier* pImageMemoryBarriers) const {
 		fp_vkCmdPipelineBarrier(commandBuffer, srcStageMask, dstStageMask, dependencyFlags, memoryBarrierCount, pMemoryBarriers, bufferMemoryBarrierCount, pBufferMemoryBarriers, imageMemoryBarrierCount, pImageMemoryBarriers);
 	}
-	void cmdBeginQuery(VkCommandBuffer commandBuffer, VkQueryPool queryPool, uint32_t query, VkQueryControlFlags flags) {
+	void cmdBeginQuery(VkCommandBuffer commandBuffer, VkQueryPool queryPool, uint32_t query, VkQueryControlFlags flags) const {
 		fp_vkCmdBeginQuery(commandBuffer, queryPool, query, flags);
 	}
-	void cmdEndQuery(VkCommandBuffer commandBuffer, VkQueryPool queryPool, uint32_t query) {
+	void cmdEndQuery(VkCommandBuffer commandBuffer, VkQueryPool queryPool, uint32_t query) const {
 		fp_vkCmdEndQuery(commandBuffer, queryPool, query);
 	}
-	void cmdResetQueryPool(VkCommandBuffer commandBuffer, VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount) {
+	void cmdResetQueryPool(VkCommandBuffer commandBuffer, VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount) const {
 		fp_vkCmdResetQueryPool(commandBuffer, queryPool, firstQuery, queryCount);
 	}
-	void cmdWriteTimestamp(VkCommandBuffer commandBuffer, VkPipelineStageFlagBits pipelineStage, VkQueryPool queryPool, uint32_t query) {
+	void cmdWriteTimestamp(VkCommandBuffer commandBuffer, VkPipelineStageFlagBits pipelineStage, VkQueryPool queryPool, uint32_t query) const {
 		fp_vkCmdWriteTimestamp(commandBuffer, pipelineStage, queryPool, query);
 	}
-	void cmdCopyQueryPoolResults(VkCommandBuffer commandBuffer, VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount, VkBuffer dstBuffer, VkDeviceSize dstOffset, VkDeviceSize stride, VkQueryResultFlags flags) {
+	void cmdCopyQueryPoolResults(VkCommandBuffer commandBuffer, VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount, VkBuffer dstBuffer, VkDeviceSize dstOffset, VkDeviceSize stride, VkQueryResultFlags flags) const {
 		fp_vkCmdCopyQueryPoolResults(commandBuffer, queryPool, firstQuery, queryCount, dstBuffer, dstOffset, stride, flags);
 	}
-	void cmdPushConstants(VkCommandBuffer commandBuffer, VkPipelineLayout layout, VkShaderStageFlags stageFlags, uint32_t offset, uint32_t size, const void* pValues) {
+	void cmdPushConstants(VkCommandBuffer commandBuffer, VkPipelineLayout layout, VkShaderStageFlags stageFlags, uint32_t offset, uint32_t size, const void* pValues) const {
 		fp_vkCmdPushConstants(commandBuffer, layout, stageFlags, offset, size, pValues);
 	}
-	void cmdBeginRenderPass(VkCommandBuffer commandBuffer, const VkRenderPassBeginInfo* pRenderPassBegin, VkSubpassContents contents) {
+	void cmdBeginRenderPass(VkCommandBuffer commandBuffer, const VkRenderPassBeginInfo* pRenderPassBegin, VkSubpassContents contents) const {
 		fp_vkCmdBeginRenderPass(commandBuffer, pRenderPassBegin, contents);
 	}
-	void cmdNextSubpass(VkCommandBuffer commandBuffer, VkSubpassContents contents) {
+	void cmdNextSubpass(VkCommandBuffer commandBuffer, VkSubpassContents contents) const {
 		fp_vkCmdNextSubpass(commandBuffer, contents);
 	}
-	void cmdEndRenderPass(VkCommandBuffer commandBuffer) {
+	void cmdEndRenderPass(VkCommandBuffer commandBuffer) const {
 		fp_vkCmdEndRenderPass(commandBuffer);
 	}
-	void cmdExecuteCommands(VkCommandBuffer commandBuffer, uint32_t commandBufferCount, const VkCommandBuffer* pCommandBuffers) {
+	void cmdExecuteCommands(VkCommandBuffer commandBuffer, uint32_t commandBufferCount, const VkCommandBuffer* pCommandBuffers) const {
 		fp_vkCmdExecuteCommands(commandBuffer, commandBufferCount, pCommandBuffers);
 	}
-	VkResult bindBufferMemory2(uint32_t bindInfoCount, const VkBindBufferMemoryInfo* pBindInfos) {
+	VkResult bindBufferMemory2(uint32_t bindInfoCount, const VkBindBufferMemoryInfo* pBindInfos) const {
 		return fp_vkBindBufferMemory2(device, bindInfoCount, pBindInfos);
 	}
-	VkResult bindImageMemory2(uint32_t bindInfoCount, const VkBindImageMemoryInfo* pBindInfos) {
+	VkResult bindImageMemory2(uint32_t bindInfoCount, const VkBindImageMemoryInfo* pBindInfos) const {
 		return fp_vkBindImageMemory2(device, bindInfoCount, pBindInfos);
 	}
-	void getDeviceGroupPeerMemoryFeatures(uint32_t heapIndex, uint32_t localDeviceIndex, uint32_t remoteDeviceIndex, VkPeerMemoryFeatureFlags* pPeerMemoryFeatures) {
+	void getDeviceGroupPeerMemoryFeatures(uint32_t heapIndex, uint32_t localDeviceIndex, uint32_t remoteDeviceIndex, VkPeerMemoryFeatureFlags* pPeerMemoryFeatures) const {
 		fp_vkGetDeviceGroupPeerMemoryFeatures(device, heapIndex, localDeviceIndex, remoteDeviceIndex, pPeerMemoryFeatures);
 	}
-	void cmdSetDeviceMask(VkCommandBuffer commandBuffer, uint32_t deviceMask) {
+	void cmdSetDeviceMask(VkCommandBuffer commandBuffer, uint32_t deviceMask) const {
 		fp_vkCmdSetDeviceMask(commandBuffer, deviceMask);
 	}
-	void cmdDispatchBase(VkCommandBuffer commandBuffer, uint32_t baseGroupX, uint32_t baseGroupY, uint32_t baseGroupZ, uint32_t groupCountX, uint32_t groupCountY, uint32_t groupCountZ) {
+	void cmdDispatchBase(VkCommandBuffer commandBuffer, uint32_t baseGroupX, uint32_t baseGroupY, uint32_t baseGroupZ, uint32_t groupCountX, uint32_t groupCountY, uint32_t groupCountZ) const {
 		fp_vkCmdDispatchBase(commandBuffer, baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ);
 	}
-	void getImageMemoryRequirements2(const VkImageMemoryRequirementsInfo2* pInfo, VkMemoryRequirements2* pMemoryRequirements) {
+	void getImageMemoryRequirements2(const VkImageMemoryRequirementsInfo2* pInfo, VkMemoryRequirements2* pMemoryRequirements) const {
 		fp_vkGetImageMemoryRequirements2(device, pInfo, pMemoryRequirements);
 	}
-	void getBufferMemoryRequirements2(const VkBufferMemoryRequirementsInfo2* pInfo, VkMemoryRequirements2* pMemoryRequirements) {
+	void getBufferMemoryRequirements2(const VkBufferMemoryRequirementsInfo2* pInfo, VkMemoryRequirements2* pMemoryRequirements) const {
 		fp_vkGetBufferMemoryRequirements2(device, pInfo, pMemoryRequirements);
 	}
-	void getImageSparseMemoryRequirements2(const VkImageSparseMemoryRequirementsInfo2* pInfo, uint32_t* pSparseMemoryRequirementCount, VkSparseImageMemoryRequirements2* pSparseMemoryRequirements) {
+	void getImageSparseMemoryRequirements2(const VkImageSparseMemoryRequirementsInfo2* pInfo, uint32_t* pSparseMemoryRequirementCount, VkSparseImageMemoryRequirements2* pSparseMemoryRequirements) const {
 		fp_vkGetImageSparseMemoryRequirements2(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
 	}
-	void trimCommandPool(VkCommandPool commandPool, VkCommandPoolTrimFlags flags) {
+	void trimCommandPool(VkCommandPool commandPool, VkCommandPoolTrimFlags flags) const {
 		fp_vkTrimCommandPool(device, commandPool, flags);
 	}
-	void getDeviceQueue2(const VkDeviceQueueInfo2* pQueueInfo, VkQueue* pQueue) {
+	void getDeviceQueue2(const VkDeviceQueueInfo2* pQueueInfo, VkQueue* pQueue) const {
 		fp_vkGetDeviceQueue2(device, pQueueInfo, pQueue);
 	}
-	VkResult createSamplerYcbcrConversion(const VkSamplerYcbcrConversionCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkSamplerYcbcrConversion* pYcbcrConversion) {
+	VkResult createSamplerYcbcrConversion(const VkSamplerYcbcrConversionCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkSamplerYcbcrConversion* pYcbcrConversion) const {
 		return fp_vkCreateSamplerYcbcrConversion(device, pCreateInfo, pAllocator, pYcbcrConversion);
 	}
-	void destroySamplerYcbcrConversion(VkSamplerYcbcrConversion ycbcrConversion, const VkAllocationCallbacks* pAllocator) {
+	void destroySamplerYcbcrConversion(VkSamplerYcbcrConversion ycbcrConversion, const VkAllocationCallbacks* pAllocator) const {
 		fp_vkDestroySamplerYcbcrConversion(device, ycbcrConversion, pAllocator);
 	}
-	VkResult createDescriptorUpdateTemplate(const VkDescriptorUpdateTemplateCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDescriptorUpdateTemplate* pDescriptorUpdateTemplate) {
+	VkResult createDescriptorUpdateTemplate(const VkDescriptorUpdateTemplateCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDescriptorUpdateTemplate* pDescriptorUpdateTemplate) const {
 		return fp_vkCreateDescriptorUpdateTemplate(device, pCreateInfo, pAllocator, pDescriptorUpdateTemplate);
 	}
-	void destroyDescriptorUpdateTemplate(VkDescriptorUpdateTemplate descriptorUpdateTemplate, const VkAllocationCallbacks* pAllocator) {
+	void destroyDescriptorUpdateTemplate(VkDescriptorUpdateTemplate descriptorUpdateTemplate, const VkAllocationCallbacks* pAllocator) const {
 		fp_vkDestroyDescriptorUpdateTemplate(device, descriptorUpdateTemplate, pAllocator);
 	}
-	void updateDescriptorSetWithTemplate(VkDescriptorSet descriptorSet, VkDescriptorUpdateTemplate descriptorUpdateTemplate, const void* pData) {
+	void updateDescriptorSetWithTemplate(VkDescriptorSet descriptorSet, VkDescriptorUpdateTemplate descriptorUpdateTemplate, const void* pData) const {
 		fp_vkUpdateDescriptorSetWithTemplate(device, descriptorSet, descriptorUpdateTemplate, pData);
 	}
-	void getDescriptorSetLayoutSupport(const VkDescriptorSetLayoutCreateInfo* pCreateInfo, VkDescriptorSetLayoutSupport* pSupport) {
+	void getDescriptorSetLayoutSupport(const VkDescriptorSetLayoutCreateInfo* pCreateInfo, VkDescriptorSetLayoutSupport* pSupport) const {
 		fp_vkGetDescriptorSetLayoutSupport(device, pCreateInfo, pSupport);
 	}
-	void cmdDrawIndirectCount(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint32_t maxDrawCount, uint32_t stride) {
+	void cmdDrawIndirectCount(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint32_t maxDrawCount, uint32_t stride) const {
 		fp_vkCmdDrawIndirectCount(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
 	}
-	void cmdDrawIndexedIndirectCount(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint32_t maxDrawCount, uint32_t stride) {
+	void cmdDrawIndexedIndirectCount(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint32_t maxDrawCount, uint32_t stride) const {
 		fp_vkCmdDrawIndexedIndirectCount(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
 	}
-	VkResult createRenderPass2(const VkRenderPassCreateInfo2* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkRenderPass* pRenderPass) {
+	VkResult createRenderPass2(const VkRenderPassCreateInfo2* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkRenderPass* pRenderPass) const {
 		return fp_vkCreateRenderPass2(device, pCreateInfo, pAllocator, pRenderPass);
 	}
-	void cmdBeginRenderPass2(VkCommandBuffer commandBuffer, const VkRenderPassBeginInfo* pRenderPassBegin, const VkSubpassBeginInfo* pSubpassBeginInfo) {
+	void cmdBeginRenderPass2(VkCommandBuffer commandBuffer, const VkRenderPassBeginInfo* pRenderPassBegin, const VkSubpassBeginInfo* pSubpassBeginInfo) const {
 		fp_vkCmdBeginRenderPass2(commandBuffer, pRenderPassBegin, pSubpassBeginInfo);
 	}
-	void cmdNextSubpass2(VkCommandBuffer commandBuffer, const VkSubpassBeginInfo* pSubpassBeginInfo, const VkSubpassEndInfo* pSubpassEndInfo) {
+	void cmdNextSubpass2(VkCommandBuffer commandBuffer, const VkSubpassBeginInfo* pSubpassBeginInfo, const VkSubpassEndInfo* pSubpassEndInfo) const {
 		fp_vkCmdNextSubpass2(commandBuffer, pSubpassBeginInfo, pSubpassEndInfo);
 	}
-	void cmdEndRenderPass2(VkCommandBuffer commandBuffer, const VkSubpassEndInfo* pSubpassEndInfo) {
+	void cmdEndRenderPass2(VkCommandBuffer commandBuffer, const VkSubpassEndInfo* pSubpassEndInfo) const {
 		fp_vkCmdEndRenderPass2(commandBuffer, pSubpassEndInfo);
 	}
-	void resetQueryPool(VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount) {
+	void resetQueryPool(VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount) const {
 		fp_vkResetQueryPool(device, queryPool, firstQuery, queryCount);
 	}
-	VkResult getSemaphoreCounterValue(VkSemaphore semaphore, uint64_t* pValue) {
+	VkResult getSemaphoreCounterValue(VkSemaphore semaphore, uint64_t* pValue) const {
 		return fp_vkGetSemaphoreCounterValue(device, semaphore, pValue);
 	}
-	VkResult waitSemaphores(const VkSemaphoreWaitInfo* pWaitInfo, uint64_t timeout) {
+	VkResult waitSemaphores(const VkSemaphoreWaitInfo* pWaitInfo, uint64_t timeout) const {
 		return fp_vkWaitSemaphores(device, pWaitInfo, timeout);
 	}
-	VkResult signalSemaphore(const VkSemaphoreSignalInfo* pSignalInfo) {
+	VkResult signalSemaphore(const VkSemaphoreSignalInfo* pSignalInfo) const {
 		return fp_vkSignalSemaphore(device, pSignalInfo);
 	}
-	VkDeviceAddress getBufferDeviceAddress(const VkBufferDeviceAddressInfo* pInfo) {
+	VkDeviceAddress getBufferDeviceAddress(const VkBufferDeviceAddressInfo* pInfo) const {
 		return fp_vkGetBufferDeviceAddress(device, pInfo);
 	}
-	uint64_t getBufferOpaqueCaptureAddress(const VkBufferDeviceAddressInfo* pInfo) {
+	uint64_t getBufferOpaqueCaptureAddress(const VkBufferDeviceAddressInfo* pInfo) const {
 		return fp_vkGetBufferOpaqueCaptureAddress(device, pInfo);
 	}
-	uint64_t getDeviceMemoryOpaqueCaptureAddress(const VkDeviceMemoryOpaqueCaptureAddressInfo* pInfo) {
+	uint64_t getDeviceMemoryOpaqueCaptureAddress(const VkDeviceMemoryOpaqueCaptureAddressInfo* pInfo) const {
 		return fp_vkGetDeviceMemoryOpaqueCaptureAddress(device, pInfo);
 	}
 #if defined(VK_KHR_swapchain) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCreateSwapchainKHR_PROXY
 #define PFN_vkCreateSwapchainKHR_PROXY
-	VkResult createSwapchainKHR(const VkSwapchainCreateInfoKHR* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkSwapchainKHR* pSwapchain) {
+	VkResult createSwapchainKHR(const VkSwapchainCreateInfoKHR* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkSwapchainKHR* pSwapchain) const {
 		return fp_vkCreateSwapchainKHR(device, pCreateInfo, pAllocator, pSwapchain);
 	}
 #endif
 #ifndef PFN_vkDestroySwapchainKHR_PROXY
 #define PFN_vkDestroySwapchainKHR_PROXY
-	void destroySwapchainKHR(VkSwapchainKHR swapchain, const VkAllocationCallbacks* pAllocator) {
+	void destroySwapchainKHR(VkSwapchainKHR swapchain, const VkAllocationCallbacks* pAllocator) const {
 		fp_vkDestroySwapchainKHR(device, swapchain, pAllocator);
 	}
 #endif
 #ifndef PFN_vkGetSwapchainImagesKHR_PROXY
 #define PFN_vkGetSwapchainImagesKHR_PROXY
-	VkResult getSwapchainImagesKHR(VkSwapchainKHR swapchain, uint32_t* pSwapchainImageCount, VkImage* pSwapchainImages) {
+	VkResult getSwapchainImagesKHR(VkSwapchainKHR swapchain, uint32_t* pSwapchainImageCount, VkImage* pSwapchainImages) const {
 		return fp_vkGetSwapchainImagesKHR(device, swapchain, pSwapchainImageCount, pSwapchainImages);
 	}
 #endif
 #ifndef PFN_vkAcquireNextImageKHR_PROXY
 #define PFN_vkAcquireNextImageKHR_PROXY
-	VkResult acquireNextImageKHR(VkSwapchainKHR swapchain, uint64_t timeout, VkSemaphore semaphore, VkFence fence, uint32_t* pImageIndex) {
+	VkResult acquireNextImageKHR(VkSwapchainKHR swapchain, uint64_t timeout, VkSemaphore semaphore, VkFence fence, uint32_t* pImageIndex) const {
 		return fp_vkAcquireNextImageKHR(device, swapchain, timeout, semaphore, fence, pImageIndex);
 	}
 #endif
 #ifndef PFN_vkQueuePresentKHR_PROXY
 #define PFN_vkQueuePresentKHR_PROXY
-	VkResult queuePresentKHR(VkQueue queue, const VkPresentInfoKHR* pPresentInfo) {
+	VkResult queuePresentKHR(VkQueue queue, const VkPresentInfoKHR* pPresentInfo) const {
 		return fp_vkQueuePresentKHR(queue, pPresentInfo);
 	}
 #endif
@@ -1778,19 +1778,19 @@ struct DispatchTable {
 #if defined(VK_KHR_swapchain) && defined(VK_VERSION_1_1)
 #ifndef PFN_vkGetDeviceGroupPresentCapabilitiesKHR_PROXY
 #define PFN_vkGetDeviceGroupPresentCapabilitiesKHR_PROXY
-	VkResult getDeviceGroupPresentCapabilitiesKHR(VkDeviceGroupPresentCapabilitiesKHR* pDeviceGroupPresentCapabilities) {
+	VkResult getDeviceGroupPresentCapabilitiesKHR(VkDeviceGroupPresentCapabilitiesKHR* pDeviceGroupPresentCapabilities) const {
 		return fp_vkGetDeviceGroupPresentCapabilitiesKHR(device, pDeviceGroupPresentCapabilities);
 	}
 #endif
 #ifndef PFN_vkGetDeviceGroupSurfacePresentModesKHR_PROXY
 #define PFN_vkGetDeviceGroupSurfacePresentModesKHR_PROXY
-	VkResult getDeviceGroupSurfacePresentModesKHR(VkSurfaceKHR surface, VkDeviceGroupPresentModeFlagsKHR* pModes) {
+	VkResult getDeviceGroupSurfacePresentModesKHR(VkSurfaceKHR surface, VkDeviceGroupPresentModeFlagsKHR* pModes) const {
 		return fp_vkGetDeviceGroupSurfacePresentModesKHR(device, surface, pModes);
 	}
 #endif
 #ifndef PFN_vkAcquireNextImage2KHR_PROXY
 #define PFN_vkAcquireNextImage2KHR_PROXY
-	VkResult acquireNextImage2KHR(const VkAcquireNextImageInfoKHR* pAcquireInfo, uint32_t* pImageIndex) {
+	VkResult acquireNextImage2KHR(const VkAcquireNextImageInfoKHR* pAcquireInfo, uint32_t* pImageIndex) const {
 		return fp_vkAcquireNextImage2KHR(device, pAcquireInfo, pImageIndex);
 	}
 #endif
@@ -1798,7 +1798,7 @@ struct DispatchTable {
 #if defined(VK_KHR_display_swapchain) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCreateSharedSwapchainsKHR_PROXY
 #define PFN_vkCreateSharedSwapchainsKHR_PROXY
-	VkResult createSharedSwapchainsKHR(uint32_t swapchainCount, const VkSwapchainCreateInfoKHR* pCreateInfos, const VkAllocationCallbacks* pAllocator, VkSwapchainKHR* pSwapchains) {
+	VkResult createSharedSwapchainsKHR(uint32_t swapchainCount, const VkSwapchainCreateInfoKHR* pCreateInfos, const VkAllocationCallbacks* pAllocator, VkSwapchainKHR* pSwapchains) const {
 		return fp_vkCreateSharedSwapchainsKHR(device, swapchainCount, pCreateInfos, pAllocator, pSwapchains);
 	}
 #endif
@@ -1806,25 +1806,25 @@ struct DispatchTable {
 #if defined(VK_ANDROID_native_buffer) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetSwapchainGrallocUsageANDROID_PROXY
 #define PFN_vkGetSwapchainGrallocUsageANDROID_PROXY
-	VkResult getSwapchainGrallocUsageANDROID(VkFormat format, VkImageUsageFlags imageUsage, int* grallocUsage) {
+	VkResult getSwapchainGrallocUsageANDROID(VkFormat format, VkImageUsageFlags imageUsage, int* grallocUsage) const {
 		return fp_vkGetSwapchainGrallocUsageANDROID(device, format, imageUsage, grallocUsage);
 	}
 #endif
 #ifndef PFN_vkAcquireImageANDROID_PROXY
 #define PFN_vkAcquireImageANDROID_PROXY
-	VkResult acquireImageANDROID(VkImage image, int nativeFenceFd, VkSemaphore semaphore, VkFence fence) {
+	VkResult acquireImageANDROID(VkImage image, int nativeFenceFd, VkSemaphore semaphore, VkFence fence) const {
 		return fp_vkAcquireImageANDROID(device, image, nativeFenceFd, semaphore, fence);
 	}
 #endif
 #ifndef PFN_vkQueueSignalReleaseImageANDROID_PROXY
 #define PFN_vkQueueSignalReleaseImageANDROID_PROXY
-	VkResult queueSignalReleaseImageANDROID(VkQueue queue, uint32_t waitSemaphoreCount, const VkSemaphore* pWaitSemaphores, VkImage image, int* pNativeFenceFd) {
+	VkResult queueSignalReleaseImageANDROID(VkQueue queue, uint32_t waitSemaphoreCount, const VkSemaphore* pWaitSemaphores, VkImage image, int* pNativeFenceFd) const {
 		return fp_vkQueueSignalReleaseImageANDROID(queue, waitSemaphoreCount, pWaitSemaphores, image, pNativeFenceFd);
 	}
 #endif
 #ifndef PFN_vkGetSwapchainGrallocUsage2ANDROID_PROXY
 #define PFN_vkGetSwapchainGrallocUsage2ANDROID_PROXY
-	VkResult getSwapchainGrallocUsage2ANDROID(VkFormat format, VkImageUsageFlags imageUsage, VkSwapchainImageUsageFlagsANDROID swapchainImageUsage, uint64_t* grallocConsumerUsage, uint64_t* grallocProducerUsage) {
+	VkResult getSwapchainGrallocUsage2ANDROID(VkFormat format, VkImageUsageFlags imageUsage, VkSwapchainImageUsageFlagsANDROID swapchainImageUsage, uint64_t* grallocConsumerUsage, uint64_t* grallocProducerUsage) const {
 		return fp_vkGetSwapchainGrallocUsage2ANDROID(device, format, imageUsage, swapchainImageUsage, grallocConsumerUsage, grallocProducerUsage);
 	}
 #endif
@@ -1832,31 +1832,31 @@ struct DispatchTable {
 #if defined(VK_EXT_debug_marker) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkDebugMarkerSetObjectTagEXT_PROXY
 #define PFN_vkDebugMarkerSetObjectTagEXT_PROXY
-	VkResult debugMarkerSetObjectTagEXT(const VkDebugMarkerObjectTagInfoEXT* pTagInfo) {
+	VkResult debugMarkerSetObjectTagEXT(const VkDebugMarkerObjectTagInfoEXT* pTagInfo) const {
 		return fp_vkDebugMarkerSetObjectTagEXT(device, pTagInfo);
 	}
 #endif
 #ifndef PFN_vkDebugMarkerSetObjectNameEXT_PROXY
 #define PFN_vkDebugMarkerSetObjectNameEXT_PROXY
-	VkResult debugMarkerSetObjectNameEXT(const VkDebugMarkerObjectNameInfoEXT* pNameInfo) {
+	VkResult debugMarkerSetObjectNameEXT(const VkDebugMarkerObjectNameInfoEXT* pNameInfo) const {
 		return fp_vkDebugMarkerSetObjectNameEXT(device, pNameInfo);
 	}
 #endif
 #ifndef PFN_vkCmdDebugMarkerBeginEXT_PROXY
 #define PFN_vkCmdDebugMarkerBeginEXT_PROXY
-	void cmdDebugMarkerBeginEXT(VkCommandBuffer commandBuffer, const VkDebugMarkerMarkerInfoEXT* pMarkerInfo) {
+	void cmdDebugMarkerBeginEXT(VkCommandBuffer commandBuffer, const VkDebugMarkerMarkerInfoEXT* pMarkerInfo) const {
 		fp_vkCmdDebugMarkerBeginEXT(commandBuffer, pMarkerInfo);
 	}
 #endif
 #ifndef PFN_vkCmdDebugMarkerEndEXT_PROXY
 #define PFN_vkCmdDebugMarkerEndEXT_PROXY
-	void cmdDebugMarkerEndEXT(VkCommandBuffer commandBuffer) {
+	void cmdDebugMarkerEndEXT(VkCommandBuffer commandBuffer) const {
 		fp_vkCmdDebugMarkerEndEXT(commandBuffer);
 	}
 #endif
 #ifndef PFN_vkCmdDebugMarkerInsertEXT_PROXY
 #define PFN_vkCmdDebugMarkerInsertEXT_PROXY
-	void cmdDebugMarkerInsertEXT(VkCommandBuffer commandBuffer, const VkDebugMarkerMarkerInfoEXT* pMarkerInfo) {
+	void cmdDebugMarkerInsertEXT(VkCommandBuffer commandBuffer, const VkDebugMarkerMarkerInfoEXT* pMarkerInfo) const {
 		fp_vkCmdDebugMarkerInsertEXT(commandBuffer, pMarkerInfo);
 	}
 #endif
@@ -1864,61 +1864,61 @@ struct DispatchTable {
 #if defined(VK_KHR_video_queue) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCreateVideoSessionKHR_PROXY
 #define PFN_vkCreateVideoSessionKHR_PROXY
-	VkResult createVideoSessionKHR(const VkVideoSessionCreateInfoKHR* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkVideoSessionKHR* pVideoSession) {
+	VkResult createVideoSessionKHR(const VkVideoSessionCreateInfoKHR* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkVideoSessionKHR* pVideoSession) const {
 		return fp_vkCreateVideoSessionKHR(device, pCreateInfo, pAllocator, pVideoSession);
 	}
 #endif
 #ifndef PFN_vkDestroyVideoSessionKHR_PROXY
 #define PFN_vkDestroyVideoSessionKHR_PROXY
-	void destroyVideoSessionKHR(VkVideoSessionKHR videoSession, const VkAllocationCallbacks* pAllocator) {
+	void destroyVideoSessionKHR(VkVideoSessionKHR videoSession, const VkAllocationCallbacks* pAllocator) const {
 		fp_vkDestroyVideoSessionKHR(device, videoSession, pAllocator);
 	}
 #endif
 #ifndef PFN_vkGetVideoSessionMemoryRequirementsKHR_PROXY
 #define PFN_vkGetVideoSessionMemoryRequirementsKHR_PROXY
-	VkResult getVideoSessionMemoryRequirementsKHR(VkVideoSessionKHR videoSession, uint32_t* pVideoSessionMemoryRequirementsCount, VkVideoGetMemoryPropertiesKHR* pVideoSessionMemoryRequirements) {
+	VkResult getVideoSessionMemoryRequirementsKHR(VkVideoSessionKHR videoSession, uint32_t* pVideoSessionMemoryRequirementsCount, VkVideoGetMemoryPropertiesKHR* pVideoSessionMemoryRequirements) const {
 		return fp_vkGetVideoSessionMemoryRequirementsKHR(device, videoSession, pVideoSessionMemoryRequirementsCount, pVideoSessionMemoryRequirements);
 	}
 #endif
 #ifndef PFN_vkBindVideoSessionMemoryKHR_PROXY
 #define PFN_vkBindVideoSessionMemoryKHR_PROXY
-	VkResult bindVideoSessionMemoryKHR(VkVideoSessionKHR videoSession, uint32_t videoSessionBindMemoryCount, const VkVideoBindMemoryKHR* pVideoSessionBindMemories) {
+	VkResult bindVideoSessionMemoryKHR(VkVideoSessionKHR videoSession, uint32_t videoSessionBindMemoryCount, const VkVideoBindMemoryKHR* pVideoSessionBindMemories) const {
 		return fp_vkBindVideoSessionMemoryKHR(device, videoSession, videoSessionBindMemoryCount, pVideoSessionBindMemories);
 	}
 #endif
 #ifndef PFN_vkCreateVideoSessionParametersKHR_PROXY
 #define PFN_vkCreateVideoSessionParametersKHR_PROXY
-	VkResult createVideoSessionParametersKHR(const VkVideoSessionParametersCreateInfoKHR* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkVideoSessionParametersKHR* pVideoSessionParameters) {
+	VkResult createVideoSessionParametersKHR(const VkVideoSessionParametersCreateInfoKHR* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkVideoSessionParametersKHR* pVideoSessionParameters) const {
 		return fp_vkCreateVideoSessionParametersKHR(device, pCreateInfo, pAllocator, pVideoSessionParameters);
 	}
 #endif
 #ifndef PFN_vkUpdateVideoSessionParametersKHR_PROXY
 #define PFN_vkUpdateVideoSessionParametersKHR_PROXY
-	VkResult updateVideoSessionParametersKHR(VkVideoSessionParametersKHR videoSessionParameters, const VkVideoSessionParametersUpdateInfoKHR* pUpdateInfo) {
+	VkResult updateVideoSessionParametersKHR(VkVideoSessionParametersKHR videoSessionParameters, const VkVideoSessionParametersUpdateInfoKHR* pUpdateInfo) const {
 		return fp_vkUpdateVideoSessionParametersKHR(device, videoSessionParameters, pUpdateInfo);
 	}
 #endif
 #ifndef PFN_vkDestroyVideoSessionParametersKHR_PROXY
 #define PFN_vkDestroyVideoSessionParametersKHR_PROXY
-	void destroyVideoSessionParametersKHR(VkVideoSessionParametersKHR videoSessionParameters, const VkAllocationCallbacks* pAllocator) {
+	void destroyVideoSessionParametersKHR(VkVideoSessionParametersKHR videoSessionParameters, const VkAllocationCallbacks* pAllocator) const {
 		fp_vkDestroyVideoSessionParametersKHR(device, videoSessionParameters, pAllocator);
 	}
 #endif
 #ifndef PFN_vkCmdBeginVideoCodingKHR_PROXY
 #define PFN_vkCmdBeginVideoCodingKHR_PROXY
-	void cmdBeginVideoCodingKHR(VkCommandBuffer commandBuffer, const VkVideoBeginCodingInfoKHR* pBeginInfo) {
+	void cmdBeginVideoCodingKHR(VkCommandBuffer commandBuffer, const VkVideoBeginCodingInfoKHR* pBeginInfo) const {
 		fp_vkCmdBeginVideoCodingKHR(commandBuffer, pBeginInfo);
 	}
 #endif
 #ifndef PFN_vkCmdEndVideoCodingKHR_PROXY
 #define PFN_vkCmdEndVideoCodingKHR_PROXY
-	void cmdEndVideoCodingKHR(VkCommandBuffer commandBuffer, const VkVideoEndCodingInfoKHR* pEndCodingInfo) {
+	void cmdEndVideoCodingKHR(VkCommandBuffer commandBuffer, const VkVideoEndCodingInfoKHR* pEndCodingInfo) const {
 		fp_vkCmdEndVideoCodingKHR(commandBuffer, pEndCodingInfo);
 	}
 #endif
 #ifndef PFN_vkCmdControlVideoCodingKHR_PROXY
 #define PFN_vkCmdControlVideoCodingKHR_PROXY
-	void cmdControlVideoCodingKHR(VkCommandBuffer commandBuffer, const VkVideoCodingControlInfoKHR* pCodingControlInfo) {
+	void cmdControlVideoCodingKHR(VkCommandBuffer commandBuffer, const VkVideoCodingControlInfoKHR* pCodingControlInfo) const {
 		fp_vkCmdControlVideoCodingKHR(commandBuffer, pCodingControlInfo);
 	}
 #endif
@@ -1926,7 +1926,7 @@ struct DispatchTable {
 #if defined(VK_KHR_video_decode_queue) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdDecodeVideoKHR_PROXY
 #define PFN_vkCmdDecodeVideoKHR_PROXY
-	void cmdDecodeVideoKHR(VkCommandBuffer commandBuffer, const VkVideoDecodeInfoKHR* pFrameInfo) {
+	void cmdDecodeVideoKHR(VkCommandBuffer commandBuffer, const VkVideoDecodeInfoKHR* pFrameInfo) const {
 		fp_vkCmdDecodeVideoKHR(commandBuffer, pFrameInfo);
 	}
 #endif
@@ -1934,37 +1934,37 @@ struct DispatchTable {
 #if defined(VK_EXT_transform_feedback) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdBindTransformFeedbackBuffersEXT_PROXY
 #define PFN_vkCmdBindTransformFeedbackBuffersEXT_PROXY
-	void cmdBindTransformFeedbackBuffersEXT(VkCommandBuffer commandBuffer, uint32_t firstBinding, uint32_t bindingCount, const VkBuffer* pBuffers, const VkDeviceSize* pOffsets, const VkDeviceSize* pSizes) {
+	void cmdBindTransformFeedbackBuffersEXT(VkCommandBuffer commandBuffer, uint32_t firstBinding, uint32_t bindingCount, const VkBuffer* pBuffers, const VkDeviceSize* pOffsets, const VkDeviceSize* pSizes) const {
 		fp_vkCmdBindTransformFeedbackBuffersEXT(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets, pSizes);
 	}
 #endif
 #ifndef PFN_vkCmdBeginTransformFeedbackEXT_PROXY
 #define PFN_vkCmdBeginTransformFeedbackEXT_PROXY
-	void cmdBeginTransformFeedbackEXT(VkCommandBuffer commandBuffer, uint32_t firstCounterBuffer, uint32_t counterBufferCount, const VkBuffer* pCounterBuffers, const VkDeviceSize* pCounterBufferOffsets) {
+	void cmdBeginTransformFeedbackEXT(VkCommandBuffer commandBuffer, uint32_t firstCounterBuffer, uint32_t counterBufferCount, const VkBuffer* pCounterBuffers, const VkDeviceSize* pCounterBufferOffsets) const {
 		fp_vkCmdBeginTransformFeedbackEXT(commandBuffer, firstCounterBuffer, counterBufferCount, pCounterBuffers, pCounterBufferOffsets);
 	}
 #endif
 #ifndef PFN_vkCmdEndTransformFeedbackEXT_PROXY
 #define PFN_vkCmdEndTransformFeedbackEXT_PROXY
-	void cmdEndTransformFeedbackEXT(VkCommandBuffer commandBuffer, uint32_t firstCounterBuffer, uint32_t counterBufferCount, const VkBuffer* pCounterBuffers, const VkDeviceSize* pCounterBufferOffsets) {
+	void cmdEndTransformFeedbackEXT(VkCommandBuffer commandBuffer, uint32_t firstCounterBuffer, uint32_t counterBufferCount, const VkBuffer* pCounterBuffers, const VkDeviceSize* pCounterBufferOffsets) const {
 		fp_vkCmdEndTransformFeedbackEXT(commandBuffer, firstCounterBuffer, counterBufferCount, pCounterBuffers, pCounterBufferOffsets);
 	}
 #endif
 #ifndef PFN_vkCmdBeginQueryIndexedEXT_PROXY
 #define PFN_vkCmdBeginQueryIndexedEXT_PROXY
-	void cmdBeginQueryIndexedEXT(VkCommandBuffer commandBuffer, VkQueryPool queryPool, uint32_t query, VkQueryControlFlags flags, uint32_t index) {
+	void cmdBeginQueryIndexedEXT(VkCommandBuffer commandBuffer, VkQueryPool queryPool, uint32_t query, VkQueryControlFlags flags, uint32_t index) const {
 		fp_vkCmdBeginQueryIndexedEXT(commandBuffer, queryPool, query, flags, index);
 	}
 #endif
 #ifndef PFN_vkCmdEndQueryIndexedEXT_PROXY
 #define PFN_vkCmdEndQueryIndexedEXT_PROXY
-	void cmdEndQueryIndexedEXT(VkCommandBuffer commandBuffer, VkQueryPool queryPool, uint32_t query, uint32_t index) {
+	void cmdEndQueryIndexedEXT(VkCommandBuffer commandBuffer, VkQueryPool queryPool, uint32_t query, uint32_t index) const {
 		fp_vkCmdEndQueryIndexedEXT(commandBuffer, queryPool, query, index);
 	}
 #endif
 #ifndef PFN_vkCmdDrawIndirectByteCountEXT_PROXY
 #define PFN_vkCmdDrawIndirectByteCountEXT_PROXY
-	void cmdDrawIndirectByteCountEXT(VkCommandBuffer commandBuffer, uint32_t instanceCount, uint32_t firstInstance, VkBuffer counterBuffer, VkDeviceSize counterBufferOffset, uint32_t counterOffset, uint32_t vertexStride) {
+	void cmdDrawIndirectByteCountEXT(VkCommandBuffer commandBuffer, uint32_t instanceCount, uint32_t firstInstance, VkBuffer counterBuffer, VkDeviceSize counterBufferOffset, uint32_t counterOffset, uint32_t vertexStride) const {
 		fp_vkCmdDrawIndirectByteCountEXT(commandBuffer, instanceCount, firstInstance, counterBuffer, counterBufferOffset, counterOffset, vertexStride);
 	}
 #endif
@@ -1972,31 +1972,31 @@ struct DispatchTable {
 #if defined(VK_NVX_binary_import) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCreateCuModuleNVX_PROXY
 #define PFN_vkCreateCuModuleNVX_PROXY
-	VkResult createCuModuleNVX(const VkCuModuleCreateInfoNVX* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkCuModuleNVX* pModule) {
+	VkResult createCuModuleNVX(const VkCuModuleCreateInfoNVX* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkCuModuleNVX* pModule) const {
 		return fp_vkCreateCuModuleNVX(device, pCreateInfo, pAllocator, pModule);
 	}
 #endif
 #ifndef PFN_vkCreateCuFunctionNVX_PROXY
 #define PFN_vkCreateCuFunctionNVX_PROXY
-	VkResult createCuFunctionNVX(const VkCuFunctionCreateInfoNVX* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkCuFunctionNVX* pFunction) {
+	VkResult createCuFunctionNVX(const VkCuFunctionCreateInfoNVX* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkCuFunctionNVX* pFunction) const {
 		return fp_vkCreateCuFunctionNVX(device, pCreateInfo, pAllocator, pFunction);
 	}
 #endif
 #ifndef PFN_vkDestroyCuModuleNVX_PROXY
 #define PFN_vkDestroyCuModuleNVX_PROXY
-	void destroyCuModuleNVX(VkCuModuleNVX module, const VkAllocationCallbacks* pAllocator) {
+	void destroyCuModuleNVX(VkCuModuleNVX module, const VkAllocationCallbacks* pAllocator) const {
 		fp_vkDestroyCuModuleNVX(device, module, pAllocator);
 	}
 #endif
 #ifndef PFN_vkDestroyCuFunctionNVX_PROXY
 #define PFN_vkDestroyCuFunctionNVX_PROXY
-	void destroyCuFunctionNVX(VkCuFunctionNVX function, const VkAllocationCallbacks* pAllocator) {
+	void destroyCuFunctionNVX(VkCuFunctionNVX function, const VkAllocationCallbacks* pAllocator) const {
 		fp_vkDestroyCuFunctionNVX(device, function, pAllocator);
 	}
 #endif
 #ifndef PFN_vkCmdCuLaunchKernelNVX_PROXY
 #define PFN_vkCmdCuLaunchKernelNVX_PROXY
-	void cmdCuLaunchKernelNVX(VkCommandBuffer commandBuffer, const VkCuLaunchInfoNVX* pLaunchInfo) {
+	void cmdCuLaunchKernelNVX(VkCommandBuffer commandBuffer, const VkCuLaunchInfoNVX* pLaunchInfo) const {
 		fp_vkCmdCuLaunchKernelNVX(commandBuffer, pLaunchInfo);
 	}
 #endif
@@ -2004,13 +2004,13 @@ struct DispatchTable {
 #if defined(VK_NVX_image_view_handle) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetImageViewHandleNVX_PROXY
 #define PFN_vkGetImageViewHandleNVX_PROXY
-	uint32_t getImageViewHandleNVX(const VkImageViewHandleInfoNVX* pInfo) {
+	uint32_t getImageViewHandleNVX(const VkImageViewHandleInfoNVX* pInfo) const {
 		return fp_vkGetImageViewHandleNVX(device, pInfo);
 	}
 #endif
 #ifndef PFN_vkGetImageViewAddressNVX_PROXY
 #define PFN_vkGetImageViewAddressNVX_PROXY
-	VkResult getImageViewAddressNVX(VkImageView imageView, VkImageViewAddressPropertiesNVX* pProperties) {
+	VkResult getImageViewAddressNVX(VkImageView imageView, VkImageViewAddressPropertiesNVX* pProperties) const {
 		return fp_vkGetImageViewAddressNVX(device, imageView, pProperties);
 	}
 #endif
@@ -2018,13 +2018,13 @@ struct DispatchTable {
 #if defined(VK_AMD_draw_indirect_count) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdDrawIndirectCountAMD_PROXY
 #define PFN_vkCmdDrawIndirectCountAMD_PROXY
-	void cmdDrawIndirectCountAMD(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint32_t maxDrawCount, uint32_t stride) {
+	void cmdDrawIndirectCountAMD(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint32_t maxDrawCount, uint32_t stride) const {
 		fp_vkCmdDrawIndirectCountAMD(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
 	}
 #endif
 #ifndef PFN_vkCmdDrawIndexedIndirectCountAMD_PROXY
 #define PFN_vkCmdDrawIndexedIndirectCountAMD_PROXY
-	void cmdDrawIndexedIndirectCountAMD(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint32_t maxDrawCount, uint32_t stride) {
+	void cmdDrawIndexedIndirectCountAMD(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint32_t maxDrawCount, uint32_t stride) const {
 		fp_vkCmdDrawIndexedIndirectCountAMD(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
 	}
 #endif
@@ -2032,7 +2032,7 @@ struct DispatchTable {
 #if defined(VK_AMD_shader_info) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetShaderInfoAMD_PROXY
 #define PFN_vkGetShaderInfoAMD_PROXY
-	VkResult getShaderInfoAMD(VkPipeline pipeline, VkShaderStageFlagBits shaderStage, VkShaderInfoTypeAMD infoType, size_t* pInfoSize, void* pInfo) {
+	VkResult getShaderInfoAMD(VkPipeline pipeline, VkShaderStageFlagBits shaderStage, VkShaderInfoTypeAMD infoType, size_t* pInfoSize, void* pInfo) const {
 		return fp_vkGetShaderInfoAMD(device, pipeline, shaderStage, infoType, pInfoSize, pInfo);
 	}
 #endif
@@ -2040,7 +2040,7 @@ struct DispatchTable {
 #if defined(VK_NV_external_memory_win32) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetMemoryWin32HandleNV_PROXY
 #define PFN_vkGetMemoryWin32HandleNV_PROXY
-	VkResult getMemoryWin32HandleNV(VkDeviceMemory memory, VkExternalMemoryHandleTypeFlagsNV handleType, HANDLE* pHandle) {
+	VkResult getMemoryWin32HandleNV(VkDeviceMemory memory, VkExternalMemoryHandleTypeFlagsNV handleType, HANDLE* pHandle) const {
 		return fp_vkGetMemoryWin32HandleNV(device, memory, handleType, pHandle);
 	}
 #endif
@@ -2048,37 +2048,37 @@ struct DispatchTable {
 #if defined(VK_KHR_device_group) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetDeviceGroupPeerMemoryFeaturesKHR_PROXY
 #define PFN_vkGetDeviceGroupPeerMemoryFeaturesKHR_PROXY
-	void getDeviceGroupPeerMemoryFeaturesKHR(uint32_t heapIndex, uint32_t localDeviceIndex, uint32_t remoteDeviceIndex, VkPeerMemoryFeatureFlags* pPeerMemoryFeatures) {
+	void getDeviceGroupPeerMemoryFeaturesKHR(uint32_t heapIndex, uint32_t localDeviceIndex, uint32_t remoteDeviceIndex, VkPeerMemoryFeatureFlags* pPeerMemoryFeatures) const {
 		fp_vkGetDeviceGroupPeerMemoryFeaturesKHR(device, heapIndex, localDeviceIndex, remoteDeviceIndex, pPeerMemoryFeatures);
 	}
 #endif
 #ifndef PFN_vkCmdSetDeviceMaskKHR_PROXY
 #define PFN_vkCmdSetDeviceMaskKHR_PROXY
-	void cmdSetDeviceMaskKHR(VkCommandBuffer commandBuffer, uint32_t deviceMask) {
+	void cmdSetDeviceMaskKHR(VkCommandBuffer commandBuffer, uint32_t deviceMask) const {
 		fp_vkCmdSetDeviceMaskKHR(commandBuffer, deviceMask);
 	}
 #endif
 #ifndef PFN_vkCmdDispatchBaseKHR_PROXY
 #define PFN_vkCmdDispatchBaseKHR_PROXY
-	void cmdDispatchBaseKHR(VkCommandBuffer commandBuffer, uint32_t baseGroupX, uint32_t baseGroupY, uint32_t baseGroupZ, uint32_t groupCountX, uint32_t groupCountY, uint32_t groupCountZ) {
+	void cmdDispatchBaseKHR(VkCommandBuffer commandBuffer, uint32_t baseGroupX, uint32_t baseGroupY, uint32_t baseGroupZ, uint32_t groupCountX, uint32_t groupCountY, uint32_t groupCountZ) const {
 		fp_vkCmdDispatchBaseKHR(commandBuffer, baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ);
 	}
 #endif
 #ifndef PFN_vkGetDeviceGroupPresentCapabilitiesKHR_PROXY
 #define PFN_vkGetDeviceGroupPresentCapabilitiesKHR_PROXY
-	VkResult getDeviceGroupPresentCapabilitiesKHR(VkDeviceGroupPresentCapabilitiesKHR* pDeviceGroupPresentCapabilities) {
+	VkResult getDeviceGroupPresentCapabilitiesKHR(VkDeviceGroupPresentCapabilitiesKHR* pDeviceGroupPresentCapabilities) const {
 		return fp_vkGetDeviceGroupPresentCapabilitiesKHR(device, pDeviceGroupPresentCapabilities);
 	}
 #endif
 #ifndef PFN_vkGetDeviceGroupSurfacePresentModesKHR_PROXY
 #define PFN_vkGetDeviceGroupSurfacePresentModesKHR_PROXY
-	VkResult getDeviceGroupSurfacePresentModesKHR(VkSurfaceKHR surface, VkDeviceGroupPresentModeFlagsKHR* pModes) {
+	VkResult getDeviceGroupSurfacePresentModesKHR(VkSurfaceKHR surface, VkDeviceGroupPresentModeFlagsKHR* pModes) const {
 		return fp_vkGetDeviceGroupSurfacePresentModesKHR(device, surface, pModes);
 	}
 #endif
 #ifndef PFN_vkAcquireNextImage2KHR_PROXY
 #define PFN_vkAcquireNextImage2KHR_PROXY
-	VkResult acquireNextImage2KHR(const VkAcquireNextImageInfoKHR* pAcquireInfo, uint32_t* pImageIndex) {
+	VkResult acquireNextImage2KHR(const VkAcquireNextImageInfoKHR* pAcquireInfo, uint32_t* pImageIndex) const {
 		return fp_vkAcquireNextImage2KHR(device, pAcquireInfo, pImageIndex);
 	}
 #endif
@@ -2086,7 +2086,7 @@ struct DispatchTable {
 #if defined(VK_KHR_maintenance1) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkTrimCommandPoolKHR_PROXY
 #define PFN_vkTrimCommandPoolKHR_PROXY
-	void trimCommandPoolKHR(VkCommandPool commandPool, VkCommandPoolTrimFlags flags) {
+	void trimCommandPoolKHR(VkCommandPool commandPool, VkCommandPoolTrimFlags flags) const {
 		fp_vkTrimCommandPoolKHR(device, commandPool, flags);
 	}
 #endif
@@ -2094,13 +2094,13 @@ struct DispatchTable {
 #if defined(VK_KHR_external_memory_win32) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetMemoryWin32HandleKHR_PROXY
 #define PFN_vkGetMemoryWin32HandleKHR_PROXY
-	VkResult getMemoryWin32HandleKHR(const VkMemoryGetWin32HandleInfoKHR* pGetWin32HandleInfo, HANDLE* pHandle) {
+	VkResult getMemoryWin32HandleKHR(const VkMemoryGetWin32HandleInfoKHR* pGetWin32HandleInfo, HANDLE* pHandle) const {
 		return fp_vkGetMemoryWin32HandleKHR(device, pGetWin32HandleInfo, pHandle);
 	}
 #endif
 #ifndef PFN_vkGetMemoryWin32HandlePropertiesKHR_PROXY
 #define PFN_vkGetMemoryWin32HandlePropertiesKHR_PROXY
-	VkResult getMemoryWin32HandlePropertiesKHR(VkExternalMemoryHandleTypeFlagBits handleType, HANDLE handle, VkMemoryWin32HandlePropertiesKHR* pMemoryWin32HandleProperties) {
+	VkResult getMemoryWin32HandlePropertiesKHR(VkExternalMemoryHandleTypeFlagBits handleType, HANDLE handle, VkMemoryWin32HandlePropertiesKHR* pMemoryWin32HandleProperties) const {
 		return fp_vkGetMemoryWin32HandlePropertiesKHR(device, handleType, handle, pMemoryWin32HandleProperties);
 	}
 #endif
@@ -2108,13 +2108,13 @@ struct DispatchTable {
 #if defined(VK_KHR_external_memory_fd) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetMemoryFdKHR_PROXY
 #define PFN_vkGetMemoryFdKHR_PROXY
-	VkResult getMemoryFdKHR(const VkMemoryGetFdInfoKHR* pGetFdInfo, int* pFd) {
+	VkResult getMemoryFdKHR(const VkMemoryGetFdInfoKHR* pGetFdInfo, int* pFd) const {
 		return fp_vkGetMemoryFdKHR(device, pGetFdInfo, pFd);
 	}
 #endif
 #ifndef PFN_vkGetMemoryFdPropertiesKHR_PROXY
 #define PFN_vkGetMemoryFdPropertiesKHR_PROXY
-	VkResult getMemoryFdPropertiesKHR(VkExternalMemoryHandleTypeFlagBits handleType, int fd, VkMemoryFdPropertiesKHR* pMemoryFdProperties) {
+	VkResult getMemoryFdPropertiesKHR(VkExternalMemoryHandleTypeFlagBits handleType, int fd, VkMemoryFdPropertiesKHR* pMemoryFdProperties) const {
 		return fp_vkGetMemoryFdPropertiesKHR(device, handleType, fd, pMemoryFdProperties);
 	}
 #endif
@@ -2122,13 +2122,13 @@ struct DispatchTable {
 #if defined(VK_KHR_external_semaphore_win32) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkImportSemaphoreWin32HandleKHR_PROXY
 #define PFN_vkImportSemaphoreWin32HandleKHR_PROXY
-	VkResult importSemaphoreWin32HandleKHR(const VkImportSemaphoreWin32HandleInfoKHR* pImportSemaphoreWin32HandleInfo) {
+	VkResult importSemaphoreWin32HandleKHR(const VkImportSemaphoreWin32HandleInfoKHR* pImportSemaphoreWin32HandleInfo) const {
 		return fp_vkImportSemaphoreWin32HandleKHR(device, pImportSemaphoreWin32HandleInfo);
 	}
 #endif
 #ifndef PFN_vkGetSemaphoreWin32HandleKHR_PROXY
 #define PFN_vkGetSemaphoreWin32HandleKHR_PROXY
-	VkResult getSemaphoreWin32HandleKHR(const VkSemaphoreGetWin32HandleInfoKHR* pGetWin32HandleInfo, HANDLE* pHandle) {
+	VkResult getSemaphoreWin32HandleKHR(const VkSemaphoreGetWin32HandleInfoKHR* pGetWin32HandleInfo, HANDLE* pHandle) const {
 		return fp_vkGetSemaphoreWin32HandleKHR(device, pGetWin32HandleInfo, pHandle);
 	}
 #endif
@@ -2136,13 +2136,13 @@ struct DispatchTable {
 #if defined(VK_KHR_external_semaphore_fd) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkImportSemaphoreFdKHR_PROXY
 #define PFN_vkImportSemaphoreFdKHR_PROXY
-	VkResult importSemaphoreFdKHR(const VkImportSemaphoreFdInfoKHR* pImportSemaphoreFdInfo) {
+	VkResult importSemaphoreFdKHR(const VkImportSemaphoreFdInfoKHR* pImportSemaphoreFdInfo) const {
 		return fp_vkImportSemaphoreFdKHR(device, pImportSemaphoreFdInfo);
 	}
 #endif
 #ifndef PFN_vkGetSemaphoreFdKHR_PROXY
 #define PFN_vkGetSemaphoreFdKHR_PROXY
-	VkResult getSemaphoreFdKHR(const VkSemaphoreGetFdInfoKHR* pGetFdInfo, int* pFd) {
+	VkResult getSemaphoreFdKHR(const VkSemaphoreGetFdInfoKHR* pGetFdInfo, int* pFd) const {
 		return fp_vkGetSemaphoreFdKHR(device, pGetFdInfo, pFd);
 	}
 #endif
@@ -2150,13 +2150,13 @@ struct DispatchTable {
 #if defined(VK_KHR_push_descriptor) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdPushDescriptorSetKHR_PROXY
 #define PFN_vkCmdPushDescriptorSetKHR_PROXY
-	void cmdPushDescriptorSetKHR(VkCommandBuffer commandBuffer, VkPipelineBindPoint pipelineBindPoint, VkPipelineLayout layout, uint32_t set, uint32_t descriptorWriteCount, const VkWriteDescriptorSet* pDescriptorWrites) {
+	void cmdPushDescriptorSetKHR(VkCommandBuffer commandBuffer, VkPipelineBindPoint pipelineBindPoint, VkPipelineLayout layout, uint32_t set, uint32_t descriptorWriteCount, const VkWriteDescriptorSet* pDescriptorWrites) const {
 		fp_vkCmdPushDescriptorSetKHR(commandBuffer, pipelineBindPoint, layout, set, descriptorWriteCount, pDescriptorWrites);
 	}
 #endif
 #ifndef PFN_vkCmdPushDescriptorSetWithTemplateKHR_PROXY
 #define PFN_vkCmdPushDescriptorSetWithTemplateKHR_PROXY
-	void cmdPushDescriptorSetWithTemplateKHR(VkCommandBuffer commandBuffer, VkDescriptorUpdateTemplate descriptorUpdateTemplate, VkPipelineLayout layout, uint32_t set, const void* pData) {
+	void cmdPushDescriptorSetWithTemplateKHR(VkCommandBuffer commandBuffer, VkDescriptorUpdateTemplate descriptorUpdateTemplate, VkPipelineLayout layout, uint32_t set, const void* pData) const {
 		fp_vkCmdPushDescriptorSetWithTemplateKHR(commandBuffer, descriptorUpdateTemplate, layout, set, pData);
 	}
 #endif
@@ -2164,7 +2164,7 @@ struct DispatchTable {
 #if defined(VK_KHR_push_descriptor) && defined(VK_VERSION_1_1)
 #ifndef PFN_vkCmdPushDescriptorSetWithTemplateKHR_PROXY
 #define PFN_vkCmdPushDescriptorSetWithTemplateKHR_PROXY
-	void cmdPushDescriptorSetWithTemplateKHR(VkCommandBuffer commandBuffer, VkDescriptorUpdateTemplate descriptorUpdateTemplate, VkPipelineLayout layout, uint32_t set, const void* pData) {
+	void cmdPushDescriptorSetWithTemplateKHR(VkCommandBuffer commandBuffer, VkDescriptorUpdateTemplate descriptorUpdateTemplate, VkPipelineLayout layout, uint32_t set, const void* pData) const {
 		fp_vkCmdPushDescriptorSetWithTemplateKHR(commandBuffer, descriptorUpdateTemplate, layout, set, pData);
 	}
 #endif
@@ -2172,13 +2172,13 @@ struct DispatchTable {
 #if defined(VK_EXT_conditional_rendering) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdBeginConditionalRenderingEXT_PROXY
 #define PFN_vkCmdBeginConditionalRenderingEXT_PROXY
-	void cmdBeginConditionalRenderingEXT(VkCommandBuffer commandBuffer, const VkConditionalRenderingBeginInfoEXT* pConditionalRenderingBegin) {
+	void cmdBeginConditionalRenderingEXT(VkCommandBuffer commandBuffer, const VkConditionalRenderingBeginInfoEXT* pConditionalRenderingBegin) const {
 		fp_vkCmdBeginConditionalRenderingEXT(commandBuffer, pConditionalRenderingBegin);
 	}
 #endif
 #ifndef PFN_vkCmdEndConditionalRenderingEXT_PROXY
 #define PFN_vkCmdEndConditionalRenderingEXT_PROXY
-	void cmdEndConditionalRenderingEXT(VkCommandBuffer commandBuffer) {
+	void cmdEndConditionalRenderingEXT(VkCommandBuffer commandBuffer) const {
 		fp_vkCmdEndConditionalRenderingEXT(commandBuffer);
 	}
 #endif
@@ -2186,25 +2186,25 @@ struct DispatchTable {
 #if defined(VK_KHR_descriptor_update_template) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCreateDescriptorUpdateTemplateKHR_PROXY
 #define PFN_vkCreateDescriptorUpdateTemplateKHR_PROXY
-	VkResult createDescriptorUpdateTemplateKHR(const VkDescriptorUpdateTemplateCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDescriptorUpdateTemplate* pDescriptorUpdateTemplate) {
+	VkResult createDescriptorUpdateTemplateKHR(const VkDescriptorUpdateTemplateCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDescriptorUpdateTemplate* pDescriptorUpdateTemplate) const {
 		return fp_vkCreateDescriptorUpdateTemplateKHR(device, pCreateInfo, pAllocator, pDescriptorUpdateTemplate);
 	}
 #endif
 #ifndef PFN_vkDestroyDescriptorUpdateTemplateKHR_PROXY
 #define PFN_vkDestroyDescriptorUpdateTemplateKHR_PROXY
-	void destroyDescriptorUpdateTemplateKHR(VkDescriptorUpdateTemplate descriptorUpdateTemplate, const VkAllocationCallbacks* pAllocator) {
+	void destroyDescriptorUpdateTemplateKHR(VkDescriptorUpdateTemplate descriptorUpdateTemplate, const VkAllocationCallbacks* pAllocator) const {
 		fp_vkDestroyDescriptorUpdateTemplateKHR(device, descriptorUpdateTemplate, pAllocator);
 	}
 #endif
 #ifndef PFN_vkUpdateDescriptorSetWithTemplateKHR_PROXY
 #define PFN_vkUpdateDescriptorSetWithTemplateKHR_PROXY
-	void updateDescriptorSetWithTemplateKHR(VkDescriptorSet descriptorSet, VkDescriptorUpdateTemplate descriptorUpdateTemplate, const void* pData) {
+	void updateDescriptorSetWithTemplateKHR(VkDescriptorSet descriptorSet, VkDescriptorUpdateTemplate descriptorUpdateTemplate, const void* pData) const {
 		fp_vkUpdateDescriptorSetWithTemplateKHR(device, descriptorSet, descriptorUpdateTemplate, pData);
 	}
 #endif
 #ifndef PFN_vkCmdPushDescriptorSetWithTemplateKHR_PROXY
 #define PFN_vkCmdPushDescriptorSetWithTemplateKHR_PROXY
-	void cmdPushDescriptorSetWithTemplateKHR(VkCommandBuffer commandBuffer, VkDescriptorUpdateTemplate descriptorUpdateTemplate, VkPipelineLayout layout, uint32_t set, const void* pData) {
+	void cmdPushDescriptorSetWithTemplateKHR(VkCommandBuffer commandBuffer, VkDescriptorUpdateTemplate descriptorUpdateTemplate, VkPipelineLayout layout, uint32_t set, const void* pData) const {
 		fp_vkCmdPushDescriptorSetWithTemplateKHR(commandBuffer, descriptorUpdateTemplate, layout, set, pData);
 	}
 #endif
@@ -2212,7 +2212,7 @@ struct DispatchTable {
 #if defined(VK_NV_clip_space_w_scaling) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdSetViewportWScalingNV_PROXY
 #define PFN_vkCmdSetViewportWScalingNV_PROXY
-	void cmdSetViewportWScalingNV(VkCommandBuffer commandBuffer, uint32_t firstViewport, uint32_t viewportCount, const VkViewportWScalingNV* pViewportWScalings) {
+	void cmdSetViewportWScalingNV(VkCommandBuffer commandBuffer, uint32_t firstViewport, uint32_t viewportCount, const VkViewportWScalingNV* pViewportWScalings) const {
 		fp_vkCmdSetViewportWScalingNV(commandBuffer, firstViewport, viewportCount, pViewportWScalings);
 	}
 #endif
@@ -2220,25 +2220,25 @@ struct DispatchTable {
 #if defined(VK_EXT_display_control) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkDisplayPowerControlEXT_PROXY
 #define PFN_vkDisplayPowerControlEXT_PROXY
-	VkResult displayPowerControlEXT(VkDisplayKHR display, const VkDisplayPowerInfoEXT* pDisplayPowerInfo) {
+	VkResult displayPowerControlEXT(VkDisplayKHR display, const VkDisplayPowerInfoEXT* pDisplayPowerInfo) const {
 		return fp_vkDisplayPowerControlEXT(device, display, pDisplayPowerInfo);
 	}
 #endif
 #ifndef PFN_vkRegisterDeviceEventEXT_PROXY
 #define PFN_vkRegisterDeviceEventEXT_PROXY
-	VkResult registerDeviceEventEXT(const VkDeviceEventInfoEXT* pDeviceEventInfo, const VkAllocationCallbacks* pAllocator, VkFence* pFence) {
+	VkResult registerDeviceEventEXT(const VkDeviceEventInfoEXT* pDeviceEventInfo, const VkAllocationCallbacks* pAllocator, VkFence* pFence) const {
 		return fp_vkRegisterDeviceEventEXT(device, pDeviceEventInfo, pAllocator, pFence);
 	}
 #endif
 #ifndef PFN_vkRegisterDisplayEventEXT_PROXY
 #define PFN_vkRegisterDisplayEventEXT_PROXY
-	VkResult registerDisplayEventEXT(VkDisplayKHR display, const VkDisplayEventInfoEXT* pDisplayEventInfo, const VkAllocationCallbacks* pAllocator, VkFence* pFence) {
+	VkResult registerDisplayEventEXT(VkDisplayKHR display, const VkDisplayEventInfoEXT* pDisplayEventInfo, const VkAllocationCallbacks* pAllocator, VkFence* pFence) const {
 		return fp_vkRegisterDisplayEventEXT(device, display, pDisplayEventInfo, pAllocator, pFence);
 	}
 #endif
 #ifndef PFN_vkGetSwapchainCounterEXT_PROXY
 #define PFN_vkGetSwapchainCounterEXT_PROXY
-	VkResult getSwapchainCounterEXT(VkSwapchainKHR swapchain, VkSurfaceCounterFlagBitsEXT counter, uint64_t* pCounterValue) {
+	VkResult getSwapchainCounterEXT(VkSwapchainKHR swapchain, VkSurfaceCounterFlagBitsEXT counter, uint64_t* pCounterValue) const {
 		return fp_vkGetSwapchainCounterEXT(device, swapchain, counter, pCounterValue);
 	}
 #endif
@@ -2246,13 +2246,13 @@ struct DispatchTable {
 #if defined(VK_GOOGLE_display_timing) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetRefreshCycleDurationGOOGLE_PROXY
 #define PFN_vkGetRefreshCycleDurationGOOGLE_PROXY
-	VkResult getRefreshCycleDurationGOOGLE(VkSwapchainKHR swapchain, VkRefreshCycleDurationGOOGLE* pDisplayTimingProperties) {
+	VkResult getRefreshCycleDurationGOOGLE(VkSwapchainKHR swapchain, VkRefreshCycleDurationGOOGLE* pDisplayTimingProperties) const {
 		return fp_vkGetRefreshCycleDurationGOOGLE(device, swapchain, pDisplayTimingProperties);
 	}
 #endif
 #ifndef PFN_vkGetPastPresentationTimingGOOGLE_PROXY
 #define PFN_vkGetPastPresentationTimingGOOGLE_PROXY
-	VkResult getPastPresentationTimingGOOGLE(VkSwapchainKHR swapchain, uint32_t* pPresentationTimingCount, VkPastPresentationTimingGOOGLE* pPresentationTimings) {
+	VkResult getPastPresentationTimingGOOGLE(VkSwapchainKHR swapchain, uint32_t* pPresentationTimingCount, VkPastPresentationTimingGOOGLE* pPresentationTimings) const {
 		return fp_vkGetPastPresentationTimingGOOGLE(device, swapchain, pPresentationTimingCount, pPresentationTimings);
 	}
 #endif
@@ -2260,7 +2260,7 @@ struct DispatchTable {
 #if defined(VK_EXT_discard_rectangles) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdSetDiscardRectangleEXT_PROXY
 #define PFN_vkCmdSetDiscardRectangleEXT_PROXY
-	void cmdSetDiscardRectangleEXT(VkCommandBuffer commandBuffer, uint32_t firstDiscardRectangle, uint32_t discardRectangleCount, const VkRect2D* pDiscardRectangles) {
+	void cmdSetDiscardRectangleEXT(VkCommandBuffer commandBuffer, uint32_t firstDiscardRectangle, uint32_t discardRectangleCount, const VkRect2D* pDiscardRectangles) const {
 		fp_vkCmdSetDiscardRectangleEXT(commandBuffer, firstDiscardRectangle, discardRectangleCount, pDiscardRectangles);
 	}
 #endif
@@ -2268,7 +2268,7 @@ struct DispatchTable {
 #if defined(VK_EXT_hdr_metadata) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkSetHdrMetadataEXT_PROXY
 #define PFN_vkSetHdrMetadataEXT_PROXY
-	void setHdrMetadataEXT(uint32_t swapchainCount, const VkSwapchainKHR* pSwapchains, const VkHdrMetadataEXT* pMetadata) {
+	void setHdrMetadataEXT(uint32_t swapchainCount, const VkSwapchainKHR* pSwapchains, const VkHdrMetadataEXT* pMetadata) const {
 		fp_vkSetHdrMetadataEXT(device, swapchainCount, pSwapchains, pMetadata);
 	}
 #endif
@@ -2276,25 +2276,25 @@ struct DispatchTable {
 #if defined(VK_KHR_create_renderpass2) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCreateRenderPass2KHR_PROXY
 #define PFN_vkCreateRenderPass2KHR_PROXY
-	VkResult createRenderPass2KHR(const VkRenderPassCreateInfo2* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkRenderPass* pRenderPass) {
+	VkResult createRenderPass2KHR(const VkRenderPassCreateInfo2* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkRenderPass* pRenderPass) const {
 		return fp_vkCreateRenderPass2KHR(device, pCreateInfo, pAllocator, pRenderPass);
 	}
 #endif
 #ifndef PFN_vkCmdBeginRenderPass2KHR_PROXY
 #define PFN_vkCmdBeginRenderPass2KHR_PROXY
-	void cmdBeginRenderPass2KHR(VkCommandBuffer commandBuffer, const VkRenderPassBeginInfo* pRenderPassBegin, const VkSubpassBeginInfo* pSubpassBeginInfo) {
+	void cmdBeginRenderPass2KHR(VkCommandBuffer commandBuffer, const VkRenderPassBeginInfo* pRenderPassBegin, const VkSubpassBeginInfo* pSubpassBeginInfo) const {
 		fp_vkCmdBeginRenderPass2KHR(commandBuffer, pRenderPassBegin, pSubpassBeginInfo);
 	}
 #endif
 #ifndef PFN_vkCmdNextSubpass2KHR_PROXY
 #define PFN_vkCmdNextSubpass2KHR_PROXY
-	void cmdNextSubpass2KHR(VkCommandBuffer commandBuffer, const VkSubpassBeginInfo* pSubpassBeginInfo, const VkSubpassEndInfo* pSubpassEndInfo) {
+	void cmdNextSubpass2KHR(VkCommandBuffer commandBuffer, const VkSubpassBeginInfo* pSubpassBeginInfo, const VkSubpassEndInfo* pSubpassEndInfo) const {
 		fp_vkCmdNextSubpass2KHR(commandBuffer, pSubpassBeginInfo, pSubpassEndInfo);
 	}
 #endif
 #ifndef PFN_vkCmdEndRenderPass2KHR_PROXY
 #define PFN_vkCmdEndRenderPass2KHR_PROXY
-	void cmdEndRenderPass2KHR(VkCommandBuffer commandBuffer, const VkSubpassEndInfo* pSubpassEndInfo) {
+	void cmdEndRenderPass2KHR(VkCommandBuffer commandBuffer, const VkSubpassEndInfo* pSubpassEndInfo) const {
 		fp_vkCmdEndRenderPass2KHR(commandBuffer, pSubpassEndInfo);
 	}
 #endif
@@ -2302,7 +2302,7 @@ struct DispatchTable {
 #if defined(VK_KHR_shared_presentable_image) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetSwapchainStatusKHR_PROXY
 #define PFN_vkGetSwapchainStatusKHR_PROXY
-	VkResult getSwapchainStatusKHR(VkSwapchainKHR swapchain) {
+	VkResult getSwapchainStatusKHR(VkSwapchainKHR swapchain) const {
 		return fp_vkGetSwapchainStatusKHR(device, swapchain);
 	}
 #endif
@@ -2310,13 +2310,13 @@ struct DispatchTable {
 #if defined(VK_KHR_external_fence_win32) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkImportFenceWin32HandleKHR_PROXY
 #define PFN_vkImportFenceWin32HandleKHR_PROXY
-	VkResult importFenceWin32HandleKHR(const VkImportFenceWin32HandleInfoKHR* pImportFenceWin32HandleInfo) {
+	VkResult importFenceWin32HandleKHR(const VkImportFenceWin32HandleInfoKHR* pImportFenceWin32HandleInfo) const {
 		return fp_vkImportFenceWin32HandleKHR(device, pImportFenceWin32HandleInfo);
 	}
 #endif
 #ifndef PFN_vkGetFenceWin32HandleKHR_PROXY
 #define PFN_vkGetFenceWin32HandleKHR_PROXY
-	VkResult getFenceWin32HandleKHR(const VkFenceGetWin32HandleInfoKHR* pGetWin32HandleInfo, HANDLE* pHandle) {
+	VkResult getFenceWin32HandleKHR(const VkFenceGetWin32HandleInfoKHR* pGetWin32HandleInfo, HANDLE* pHandle) const {
 		return fp_vkGetFenceWin32HandleKHR(device, pGetWin32HandleInfo, pHandle);
 	}
 #endif
@@ -2324,13 +2324,13 @@ struct DispatchTable {
 #if defined(VK_KHR_external_fence_fd) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkImportFenceFdKHR_PROXY
 #define PFN_vkImportFenceFdKHR_PROXY
-	VkResult importFenceFdKHR(const VkImportFenceFdInfoKHR* pImportFenceFdInfo) {
+	VkResult importFenceFdKHR(const VkImportFenceFdInfoKHR* pImportFenceFdInfo) const {
 		return fp_vkImportFenceFdKHR(device, pImportFenceFdInfo);
 	}
 #endif
 #ifndef PFN_vkGetFenceFdKHR_PROXY
 #define PFN_vkGetFenceFdKHR_PROXY
-	VkResult getFenceFdKHR(const VkFenceGetFdInfoKHR* pGetFdInfo, int* pFd) {
+	VkResult getFenceFdKHR(const VkFenceGetFdInfoKHR* pGetFdInfo, int* pFd) const {
 		return fp_vkGetFenceFdKHR(device, pGetFdInfo, pFd);
 	}
 #endif
@@ -2338,13 +2338,13 @@ struct DispatchTable {
 #if defined(VK_KHR_performance_query) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkAcquireProfilingLockKHR_PROXY
 #define PFN_vkAcquireProfilingLockKHR_PROXY
-	VkResult acquireProfilingLockKHR(const VkAcquireProfilingLockInfoKHR* pInfo) {
+	VkResult acquireProfilingLockKHR(const VkAcquireProfilingLockInfoKHR* pInfo) const {
 		return fp_vkAcquireProfilingLockKHR(device, pInfo);
 	}
 #endif
 #ifndef PFN_vkReleaseProfilingLockKHR_PROXY
 #define PFN_vkReleaseProfilingLockKHR_PROXY
-	void releaseProfilingLockKHR() {
+	void releaseProfilingLockKHR() const {
 		fp_vkReleaseProfilingLockKHR(device);
 	}
 #endif
@@ -2352,49 +2352,49 @@ struct DispatchTable {
 #if defined(VK_EXT_debug_utils) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkSetDebugUtilsObjectNameEXT_PROXY
 #define PFN_vkSetDebugUtilsObjectNameEXT_PROXY
-	VkResult setDebugUtilsObjectNameEXT(const VkDebugUtilsObjectNameInfoEXT* pNameInfo) {
+	VkResult setDebugUtilsObjectNameEXT(const VkDebugUtilsObjectNameInfoEXT* pNameInfo) const {
 		return fp_vkSetDebugUtilsObjectNameEXT(device, pNameInfo);
 	}
 #endif
 #ifndef PFN_vkSetDebugUtilsObjectTagEXT_PROXY
 #define PFN_vkSetDebugUtilsObjectTagEXT_PROXY
-	VkResult setDebugUtilsObjectTagEXT(const VkDebugUtilsObjectTagInfoEXT* pTagInfo) {
+	VkResult setDebugUtilsObjectTagEXT(const VkDebugUtilsObjectTagInfoEXT* pTagInfo) const {
 		return fp_vkSetDebugUtilsObjectTagEXT(device, pTagInfo);
 	}
 #endif
 #ifndef PFN_vkQueueBeginDebugUtilsLabelEXT_PROXY
 #define PFN_vkQueueBeginDebugUtilsLabelEXT_PROXY
-	void queueBeginDebugUtilsLabelEXT(VkQueue queue, const VkDebugUtilsLabelEXT* pLabelInfo) {
+	void queueBeginDebugUtilsLabelEXT(VkQueue queue, const VkDebugUtilsLabelEXT* pLabelInfo) const {
 		fp_vkQueueBeginDebugUtilsLabelEXT(queue, pLabelInfo);
 	}
 #endif
 #ifndef PFN_vkQueueEndDebugUtilsLabelEXT_PROXY
 #define PFN_vkQueueEndDebugUtilsLabelEXT_PROXY
-	void queueEndDebugUtilsLabelEXT(VkQueue queue) {
+	void queueEndDebugUtilsLabelEXT(VkQueue queue) const {
 		fp_vkQueueEndDebugUtilsLabelEXT(queue);
 	}
 #endif
 #ifndef PFN_vkQueueInsertDebugUtilsLabelEXT_PROXY
 #define PFN_vkQueueInsertDebugUtilsLabelEXT_PROXY
-	void queueInsertDebugUtilsLabelEXT(VkQueue queue, const VkDebugUtilsLabelEXT* pLabelInfo) {
+	void queueInsertDebugUtilsLabelEXT(VkQueue queue, const VkDebugUtilsLabelEXT* pLabelInfo) const {
 		fp_vkQueueInsertDebugUtilsLabelEXT(queue, pLabelInfo);
 	}
 #endif
 #ifndef PFN_vkCmdBeginDebugUtilsLabelEXT_PROXY
 #define PFN_vkCmdBeginDebugUtilsLabelEXT_PROXY
-	void cmdBeginDebugUtilsLabelEXT(VkCommandBuffer commandBuffer, const VkDebugUtilsLabelEXT* pLabelInfo) {
+	void cmdBeginDebugUtilsLabelEXT(VkCommandBuffer commandBuffer, const VkDebugUtilsLabelEXT* pLabelInfo) const {
 		fp_vkCmdBeginDebugUtilsLabelEXT(commandBuffer, pLabelInfo);
 	}
 #endif
 #ifndef PFN_vkCmdEndDebugUtilsLabelEXT_PROXY
 #define PFN_vkCmdEndDebugUtilsLabelEXT_PROXY
-	void cmdEndDebugUtilsLabelEXT(VkCommandBuffer commandBuffer) {
+	void cmdEndDebugUtilsLabelEXT(VkCommandBuffer commandBuffer) const {
 		fp_vkCmdEndDebugUtilsLabelEXT(commandBuffer);
 	}
 #endif
 #ifndef PFN_vkCmdInsertDebugUtilsLabelEXT_PROXY
 #define PFN_vkCmdInsertDebugUtilsLabelEXT_PROXY
-	void cmdInsertDebugUtilsLabelEXT(VkCommandBuffer commandBuffer, const VkDebugUtilsLabelEXT* pLabelInfo) {
+	void cmdInsertDebugUtilsLabelEXT(VkCommandBuffer commandBuffer, const VkDebugUtilsLabelEXT* pLabelInfo) const {
 		fp_vkCmdInsertDebugUtilsLabelEXT(commandBuffer, pLabelInfo);
 	}
 #endif
@@ -2402,13 +2402,13 @@ struct DispatchTable {
 #if defined(VK_ANDROID_external_memory_android_hardware_buffer) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetAndroidHardwareBufferPropertiesANDROID_PROXY
 #define PFN_vkGetAndroidHardwareBufferPropertiesANDROID_PROXY
-	VkResult getAndroidHardwareBufferPropertiesANDROID(AHardwareBuffer buffer, VkAndroidHardwareBufferPropertiesANDROID* pProperties) {
+	VkResult getAndroidHardwareBufferPropertiesANDROID(AHardwareBuffer buffer, VkAndroidHardwareBufferPropertiesANDROID* pProperties) const {
 		return fp_vkGetAndroidHardwareBufferPropertiesANDROID(device, buffer, pProperties);
 	}
 #endif
 #ifndef PFN_vkGetMemoryAndroidHardwareBufferANDROID_PROXY
 #define PFN_vkGetMemoryAndroidHardwareBufferANDROID_PROXY
-	VkResult getMemoryAndroidHardwareBufferANDROID(const VkMemoryGetAndroidHardwareBufferInfoANDROID* pInfo, AHardwareBuffer pBuffer) {
+	VkResult getMemoryAndroidHardwareBufferANDROID(const VkMemoryGetAndroidHardwareBufferInfoANDROID* pInfo, AHardwareBuffer pBuffer) const {
 		return fp_vkGetMemoryAndroidHardwareBufferANDROID(device, pInfo, pBuffer);
 	}
 #endif
@@ -2416,7 +2416,7 @@ struct DispatchTable {
 #if defined(VK_EXT_sample_locations) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdSetSampleLocationsEXT_PROXY
 #define PFN_vkCmdSetSampleLocationsEXT_PROXY
-	void cmdSetSampleLocationsEXT(VkCommandBuffer commandBuffer, const VkSampleLocationsInfoEXT* pSampleLocationsInfo) {
+	void cmdSetSampleLocationsEXT(VkCommandBuffer commandBuffer, const VkSampleLocationsInfoEXT* pSampleLocationsInfo) const {
 		fp_vkCmdSetSampleLocationsEXT(commandBuffer, pSampleLocationsInfo);
 	}
 #endif
@@ -2424,19 +2424,19 @@ struct DispatchTable {
 #if defined(VK_KHR_get_memory_requirements2) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetImageMemoryRequirements2KHR_PROXY
 #define PFN_vkGetImageMemoryRequirements2KHR_PROXY
-	void getImageMemoryRequirements2KHR(const VkImageMemoryRequirementsInfo2* pInfo, VkMemoryRequirements2* pMemoryRequirements) {
+	void getImageMemoryRequirements2KHR(const VkImageMemoryRequirementsInfo2* pInfo, VkMemoryRequirements2* pMemoryRequirements) const {
 		fp_vkGetImageMemoryRequirements2KHR(device, pInfo, pMemoryRequirements);
 	}
 #endif
 #ifndef PFN_vkGetBufferMemoryRequirements2KHR_PROXY
 #define PFN_vkGetBufferMemoryRequirements2KHR_PROXY
-	void getBufferMemoryRequirements2KHR(const VkBufferMemoryRequirementsInfo2* pInfo, VkMemoryRequirements2* pMemoryRequirements) {
+	void getBufferMemoryRequirements2KHR(const VkBufferMemoryRequirementsInfo2* pInfo, VkMemoryRequirements2* pMemoryRequirements) const {
 		fp_vkGetBufferMemoryRequirements2KHR(device, pInfo, pMemoryRequirements);
 	}
 #endif
 #ifndef PFN_vkGetImageSparseMemoryRequirements2KHR_PROXY
 #define PFN_vkGetImageSparseMemoryRequirements2KHR_PROXY
-	void getImageSparseMemoryRequirements2KHR(const VkImageSparseMemoryRequirementsInfo2* pInfo, uint32_t* pSparseMemoryRequirementCount, VkSparseImageMemoryRequirements2* pSparseMemoryRequirements) {
+	void getImageSparseMemoryRequirements2KHR(const VkImageSparseMemoryRequirementsInfo2* pInfo, uint32_t* pSparseMemoryRequirementCount, VkSparseImageMemoryRequirements2* pSparseMemoryRequirements) const {
 		fp_vkGetImageSparseMemoryRequirements2KHR(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
 	}
 #endif
@@ -2444,97 +2444,97 @@ struct DispatchTable {
 #if defined(VK_KHR_acceleration_structure) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCreateAccelerationStructureKHR_PROXY
 #define PFN_vkCreateAccelerationStructureKHR_PROXY
-	VkResult createAccelerationStructureKHR(const VkAccelerationStructureCreateInfoKHR* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkAccelerationStructureKHR* pAccelerationStructure) {
+	VkResult createAccelerationStructureKHR(const VkAccelerationStructureCreateInfoKHR* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkAccelerationStructureKHR* pAccelerationStructure) const {
 		return fp_vkCreateAccelerationStructureKHR(device, pCreateInfo, pAllocator, pAccelerationStructure);
 	}
 #endif
 #ifndef PFN_vkDestroyAccelerationStructureKHR_PROXY
 #define PFN_vkDestroyAccelerationStructureKHR_PROXY
-	void destroyAccelerationStructureKHR(VkAccelerationStructureKHR accelerationStructure, const VkAllocationCallbacks* pAllocator) {
+	void destroyAccelerationStructureKHR(VkAccelerationStructureKHR accelerationStructure, const VkAllocationCallbacks* pAllocator) const {
 		fp_vkDestroyAccelerationStructureKHR(device, accelerationStructure, pAllocator);
 	}
 #endif
 #ifndef PFN_vkCmdBuildAccelerationStructuresKHR_PROXY
 #define PFN_vkCmdBuildAccelerationStructuresKHR_PROXY
-	void cmdBuildAccelerationStructuresKHR(VkCommandBuffer commandBuffer, uint32_t infoCount, const VkAccelerationStructureBuildGeometryInfoKHR* pInfos, const VkAccelerationStructureBuildRangeInfoKHR* const* ppBuildRangeInfos) {
+	void cmdBuildAccelerationStructuresKHR(VkCommandBuffer commandBuffer, uint32_t infoCount, const VkAccelerationStructureBuildGeometryInfoKHR* pInfos, const VkAccelerationStructureBuildRangeInfoKHR* const* ppBuildRangeInfos) const {
 		fp_vkCmdBuildAccelerationStructuresKHR(commandBuffer, infoCount, pInfos, ppBuildRangeInfos);
 	}
 #endif
 #ifndef PFN_vkCmdBuildAccelerationStructuresIndirectKHR_PROXY
 #define PFN_vkCmdBuildAccelerationStructuresIndirectKHR_PROXY
-	void cmdBuildAccelerationStructuresIndirectKHR(VkCommandBuffer commandBuffer, uint32_t infoCount, const VkAccelerationStructureBuildGeometryInfoKHR* pInfos, const VkDeviceAddress* pIndirectDeviceAddresses, const uint32_t* pIndirectStrides, const uint32_t* const* ppMaxPrimitiveCounts) {
+	void cmdBuildAccelerationStructuresIndirectKHR(VkCommandBuffer commandBuffer, uint32_t infoCount, const VkAccelerationStructureBuildGeometryInfoKHR* pInfos, const VkDeviceAddress* pIndirectDeviceAddresses, const uint32_t* pIndirectStrides, const uint32_t* const* ppMaxPrimitiveCounts) const {
 		fp_vkCmdBuildAccelerationStructuresIndirectKHR(commandBuffer, infoCount, pInfos, pIndirectDeviceAddresses, pIndirectStrides, ppMaxPrimitiveCounts);
 	}
 #endif
 #ifndef PFN_vkBuildAccelerationStructuresKHR_PROXY
 #define PFN_vkBuildAccelerationStructuresKHR_PROXY
-	VkResult buildAccelerationStructuresKHR(VkDeferredOperationKHR deferredOperation, uint32_t infoCount, const VkAccelerationStructureBuildGeometryInfoKHR* pInfos, const VkAccelerationStructureBuildRangeInfoKHR* const* ppBuildRangeInfos) {
+	VkResult buildAccelerationStructuresKHR(VkDeferredOperationKHR deferredOperation, uint32_t infoCount, const VkAccelerationStructureBuildGeometryInfoKHR* pInfos, const VkAccelerationStructureBuildRangeInfoKHR* const* ppBuildRangeInfos) const {
 		return fp_vkBuildAccelerationStructuresKHR(device, deferredOperation, infoCount, pInfos, ppBuildRangeInfos);
 	}
 #endif
 #ifndef PFN_vkCopyAccelerationStructureKHR_PROXY
 #define PFN_vkCopyAccelerationStructureKHR_PROXY
-	VkResult copyAccelerationStructureKHR(VkDeferredOperationKHR deferredOperation, const VkCopyAccelerationStructureInfoKHR* pInfo) {
+	VkResult copyAccelerationStructureKHR(VkDeferredOperationKHR deferredOperation, const VkCopyAccelerationStructureInfoKHR* pInfo) const {
 		return fp_vkCopyAccelerationStructureKHR(device, deferredOperation, pInfo);
 	}
 #endif
 #ifndef PFN_vkCopyAccelerationStructureToMemoryKHR_PROXY
 #define PFN_vkCopyAccelerationStructureToMemoryKHR_PROXY
-	VkResult copyAccelerationStructureToMemoryKHR(VkDeferredOperationKHR deferredOperation, const VkCopyAccelerationStructureToMemoryInfoKHR* pInfo) {
+	VkResult copyAccelerationStructureToMemoryKHR(VkDeferredOperationKHR deferredOperation, const VkCopyAccelerationStructureToMemoryInfoKHR* pInfo) const {
 		return fp_vkCopyAccelerationStructureToMemoryKHR(device, deferredOperation, pInfo);
 	}
 #endif
 #ifndef PFN_vkCopyMemoryToAccelerationStructureKHR_PROXY
 #define PFN_vkCopyMemoryToAccelerationStructureKHR_PROXY
-	VkResult copyMemoryToAccelerationStructureKHR(VkDeferredOperationKHR deferredOperation, const VkCopyMemoryToAccelerationStructureInfoKHR* pInfo) {
+	VkResult copyMemoryToAccelerationStructureKHR(VkDeferredOperationKHR deferredOperation, const VkCopyMemoryToAccelerationStructureInfoKHR* pInfo) const {
 		return fp_vkCopyMemoryToAccelerationStructureKHR(device, deferredOperation, pInfo);
 	}
 #endif
 #ifndef PFN_vkWriteAccelerationStructuresPropertiesKHR_PROXY
 #define PFN_vkWriteAccelerationStructuresPropertiesKHR_PROXY
-	VkResult writeAccelerationStructuresPropertiesKHR(uint32_t accelerationStructureCount, const VkAccelerationStructureKHR* pAccelerationStructures, VkQueryType queryType, size_t dataSize, void* pData, size_t stride) {
+	VkResult writeAccelerationStructuresPropertiesKHR(uint32_t accelerationStructureCount, const VkAccelerationStructureKHR* pAccelerationStructures, VkQueryType queryType, size_t dataSize, void* pData, size_t stride) const {
 		return fp_vkWriteAccelerationStructuresPropertiesKHR(device, accelerationStructureCount, pAccelerationStructures, queryType, dataSize, pData, stride);
 	}
 #endif
 #ifndef PFN_vkCmdCopyAccelerationStructureKHR_PROXY
 #define PFN_vkCmdCopyAccelerationStructureKHR_PROXY
-	void cmdCopyAccelerationStructureKHR(VkCommandBuffer commandBuffer, const VkCopyAccelerationStructureInfoKHR* pInfo) {
+	void cmdCopyAccelerationStructureKHR(VkCommandBuffer commandBuffer, const VkCopyAccelerationStructureInfoKHR* pInfo) const {
 		fp_vkCmdCopyAccelerationStructureKHR(commandBuffer, pInfo);
 	}
 #endif
 #ifndef PFN_vkCmdCopyAccelerationStructureToMemoryKHR_PROXY
 #define PFN_vkCmdCopyAccelerationStructureToMemoryKHR_PROXY
-	void cmdCopyAccelerationStructureToMemoryKHR(VkCommandBuffer commandBuffer, const VkCopyAccelerationStructureToMemoryInfoKHR* pInfo) {
+	void cmdCopyAccelerationStructureToMemoryKHR(VkCommandBuffer commandBuffer, const VkCopyAccelerationStructureToMemoryInfoKHR* pInfo) const {
 		fp_vkCmdCopyAccelerationStructureToMemoryKHR(commandBuffer, pInfo);
 	}
 #endif
 #ifndef PFN_vkCmdCopyMemoryToAccelerationStructureKHR_PROXY
 #define PFN_vkCmdCopyMemoryToAccelerationStructureKHR_PROXY
-	void cmdCopyMemoryToAccelerationStructureKHR(VkCommandBuffer commandBuffer, const VkCopyMemoryToAccelerationStructureInfoKHR* pInfo) {
+	void cmdCopyMemoryToAccelerationStructureKHR(VkCommandBuffer commandBuffer, const VkCopyMemoryToAccelerationStructureInfoKHR* pInfo) const {
 		fp_vkCmdCopyMemoryToAccelerationStructureKHR(commandBuffer, pInfo);
 	}
 #endif
 #ifndef PFN_vkGetAccelerationStructureDeviceAddressKHR_PROXY
 #define PFN_vkGetAccelerationStructureDeviceAddressKHR_PROXY
-	VkDeviceAddress getAccelerationStructureDeviceAddressKHR(const VkAccelerationStructureDeviceAddressInfoKHR* pInfo) {
+	VkDeviceAddress getAccelerationStructureDeviceAddressKHR(const VkAccelerationStructureDeviceAddressInfoKHR* pInfo) const {
 		return fp_vkGetAccelerationStructureDeviceAddressKHR(device, pInfo);
 	}
 #endif
 #ifndef PFN_vkCmdWriteAccelerationStructuresPropertiesKHR_PROXY
 #define PFN_vkCmdWriteAccelerationStructuresPropertiesKHR_PROXY
-	void cmdWriteAccelerationStructuresPropertiesKHR(VkCommandBuffer commandBuffer, uint32_t accelerationStructureCount, const VkAccelerationStructureKHR* pAccelerationStructures, VkQueryType queryType, VkQueryPool queryPool, uint32_t firstQuery) {
+	void cmdWriteAccelerationStructuresPropertiesKHR(VkCommandBuffer commandBuffer, uint32_t accelerationStructureCount, const VkAccelerationStructureKHR* pAccelerationStructures, VkQueryType queryType, VkQueryPool queryPool, uint32_t firstQuery) const {
 		fp_vkCmdWriteAccelerationStructuresPropertiesKHR(commandBuffer, accelerationStructureCount, pAccelerationStructures, queryType, queryPool, firstQuery);
 	}
 #endif
 #ifndef PFN_vkGetDeviceAccelerationStructureCompatibilityKHR_PROXY
 #define PFN_vkGetDeviceAccelerationStructureCompatibilityKHR_PROXY
-	void getDeviceAccelerationStructureCompatibilityKHR(const VkAccelerationStructureVersionInfoKHR* pVersionInfo, VkAccelerationStructureCompatibilityKHR* pCompatibility) {
+	void getDeviceAccelerationStructureCompatibilityKHR(const VkAccelerationStructureVersionInfoKHR* pVersionInfo, VkAccelerationStructureCompatibilityKHR* pCompatibility) const {
 		fp_vkGetDeviceAccelerationStructureCompatibilityKHR(device, pVersionInfo, pCompatibility);
 	}
 #endif
 #ifndef PFN_vkGetAccelerationStructureBuildSizesKHR_PROXY
 #define PFN_vkGetAccelerationStructureBuildSizesKHR_PROXY
-	void getAccelerationStructureBuildSizesKHR(VkAccelerationStructureBuildTypeKHR buildType, const VkAccelerationStructureBuildGeometryInfoKHR* pBuildInfo, const uint32_t* pMaxPrimitiveCounts, VkAccelerationStructureBuildSizesInfoKHR* pSizeInfo) {
+	void getAccelerationStructureBuildSizesKHR(VkAccelerationStructureBuildTypeKHR buildType, const VkAccelerationStructureBuildGeometryInfoKHR* pBuildInfo, const uint32_t* pMaxPrimitiveCounts, VkAccelerationStructureBuildSizesInfoKHR* pSizeInfo) const {
 		fp_vkGetAccelerationStructureBuildSizesKHR(device, buildType, pBuildInfo, pMaxPrimitiveCounts, pSizeInfo);
 	}
 #endif
@@ -2542,43 +2542,43 @@ struct DispatchTable {
 #if defined(VK_KHR_ray_tracing_pipeline) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdTraceRaysKHR_PROXY
 #define PFN_vkCmdTraceRaysKHR_PROXY
-	void cmdTraceRaysKHR(VkCommandBuffer commandBuffer, const VkStridedDeviceAddressRegionKHR* pRaygenShaderBindingTable, const VkStridedDeviceAddressRegionKHR* pMissShaderBindingTable, const VkStridedDeviceAddressRegionKHR* pHitShaderBindingTable, const VkStridedDeviceAddressRegionKHR* pCallableShaderBindingTable, uint32_t width, uint32_t height, uint32_t depth) {
+	void cmdTraceRaysKHR(VkCommandBuffer commandBuffer, const VkStridedDeviceAddressRegionKHR* pRaygenShaderBindingTable, const VkStridedDeviceAddressRegionKHR* pMissShaderBindingTable, const VkStridedDeviceAddressRegionKHR* pHitShaderBindingTable, const VkStridedDeviceAddressRegionKHR* pCallableShaderBindingTable, uint32_t width, uint32_t height, uint32_t depth) const {
 		fp_vkCmdTraceRaysKHR(commandBuffer, pRaygenShaderBindingTable, pMissShaderBindingTable, pHitShaderBindingTable, pCallableShaderBindingTable, width, height, depth);
 	}
 #endif
 #ifndef PFN_vkCreateRayTracingPipelinesKHR_PROXY
 #define PFN_vkCreateRayTracingPipelinesKHR_PROXY
-	VkResult createRayTracingPipelinesKHR(VkDeferredOperationKHR deferredOperation, VkPipelineCache pipelineCache, uint32_t createInfoCount, const VkRayTracingPipelineCreateInfoKHR* pCreateInfos, const VkAllocationCallbacks* pAllocator, VkPipeline* pPipelines) {
+	VkResult createRayTracingPipelinesKHR(VkDeferredOperationKHR deferredOperation, VkPipelineCache pipelineCache, uint32_t createInfoCount, const VkRayTracingPipelineCreateInfoKHR* pCreateInfos, const VkAllocationCallbacks* pAllocator, VkPipeline* pPipelines) const {
 		return fp_vkCreateRayTracingPipelinesKHR(device, deferredOperation, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
 	}
 #endif
 #ifndef PFN_vkGetRayTracingShaderGroupHandlesKHR_PROXY
 #define PFN_vkGetRayTracingShaderGroupHandlesKHR_PROXY
-	VkResult getRayTracingShaderGroupHandlesKHR(VkPipeline pipeline, uint32_t firstGroup, uint32_t groupCount, size_t dataSize, void* pData) {
+	VkResult getRayTracingShaderGroupHandlesKHR(VkPipeline pipeline, uint32_t firstGroup, uint32_t groupCount, size_t dataSize, void* pData) const {
 		return fp_vkGetRayTracingShaderGroupHandlesKHR(device, pipeline, firstGroup, groupCount, dataSize, pData);
 	}
 #endif
 #ifndef PFN_vkGetRayTracingCaptureReplayShaderGroupHandlesKHR_PROXY
 #define PFN_vkGetRayTracingCaptureReplayShaderGroupHandlesKHR_PROXY
-	VkResult getRayTracingCaptureReplayShaderGroupHandlesKHR(VkPipeline pipeline, uint32_t firstGroup, uint32_t groupCount, size_t dataSize, void* pData) {
+	VkResult getRayTracingCaptureReplayShaderGroupHandlesKHR(VkPipeline pipeline, uint32_t firstGroup, uint32_t groupCount, size_t dataSize, void* pData) const {
 		return fp_vkGetRayTracingCaptureReplayShaderGroupHandlesKHR(device, pipeline, firstGroup, groupCount, dataSize, pData);
 	}
 #endif
 #ifndef PFN_vkCmdTraceRaysIndirectKHR_PROXY
 #define PFN_vkCmdTraceRaysIndirectKHR_PROXY
-	void cmdTraceRaysIndirectKHR(VkCommandBuffer commandBuffer, const VkStridedDeviceAddressRegionKHR* pRaygenShaderBindingTable, const VkStridedDeviceAddressRegionKHR* pMissShaderBindingTable, const VkStridedDeviceAddressRegionKHR* pHitShaderBindingTable, const VkStridedDeviceAddressRegionKHR* pCallableShaderBindingTable, VkDeviceAddress indirectDeviceAddress) {
+	void cmdTraceRaysIndirectKHR(VkCommandBuffer commandBuffer, const VkStridedDeviceAddressRegionKHR* pRaygenShaderBindingTable, const VkStridedDeviceAddressRegionKHR* pMissShaderBindingTable, const VkStridedDeviceAddressRegionKHR* pHitShaderBindingTable, const VkStridedDeviceAddressRegionKHR* pCallableShaderBindingTable, VkDeviceAddress indirectDeviceAddress) const {
 		fp_vkCmdTraceRaysIndirectKHR(commandBuffer, pRaygenShaderBindingTable, pMissShaderBindingTable, pHitShaderBindingTable, pCallableShaderBindingTable, indirectDeviceAddress);
 	}
 #endif
 #ifndef PFN_vkGetRayTracingShaderGroupStackSizeKHR_PROXY
 #define PFN_vkGetRayTracingShaderGroupStackSizeKHR_PROXY
-	VkDeviceSize getRayTracingShaderGroupStackSizeKHR(VkPipeline pipeline, uint32_t group, VkShaderGroupShaderKHR groupShader) {
+	VkDeviceSize getRayTracingShaderGroupStackSizeKHR(VkPipeline pipeline, uint32_t group, VkShaderGroupShaderKHR groupShader) const {
 		return fp_vkGetRayTracingShaderGroupStackSizeKHR(device, pipeline, group, groupShader);
 	}
 #endif
 #ifndef PFN_vkCmdSetRayTracingPipelineStackSizeKHR_PROXY
 #define PFN_vkCmdSetRayTracingPipelineStackSizeKHR_PROXY
-	void cmdSetRayTracingPipelineStackSizeKHR(VkCommandBuffer commandBuffer, uint32_t pipelineStackSize) {
+	void cmdSetRayTracingPipelineStackSizeKHR(VkCommandBuffer commandBuffer, uint32_t pipelineStackSize) const {
 		fp_vkCmdSetRayTracingPipelineStackSizeKHR(commandBuffer, pipelineStackSize);
 	}
 #endif
@@ -2586,13 +2586,13 @@ struct DispatchTable {
 #if defined(VK_KHR_sampler_ycbcr_conversion) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCreateSamplerYcbcrConversionKHR_PROXY
 #define PFN_vkCreateSamplerYcbcrConversionKHR_PROXY
-	VkResult createSamplerYcbcrConversionKHR(const VkSamplerYcbcrConversionCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkSamplerYcbcrConversion* pYcbcrConversion) {
+	VkResult createSamplerYcbcrConversionKHR(const VkSamplerYcbcrConversionCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkSamplerYcbcrConversion* pYcbcrConversion) const {
 		return fp_vkCreateSamplerYcbcrConversionKHR(device, pCreateInfo, pAllocator, pYcbcrConversion);
 	}
 #endif
 #ifndef PFN_vkDestroySamplerYcbcrConversionKHR_PROXY
 #define PFN_vkDestroySamplerYcbcrConversionKHR_PROXY
-	void destroySamplerYcbcrConversionKHR(VkSamplerYcbcrConversion ycbcrConversion, const VkAllocationCallbacks* pAllocator) {
+	void destroySamplerYcbcrConversionKHR(VkSamplerYcbcrConversion ycbcrConversion, const VkAllocationCallbacks* pAllocator) const {
 		fp_vkDestroySamplerYcbcrConversionKHR(device, ycbcrConversion, pAllocator);
 	}
 #endif
@@ -2600,13 +2600,13 @@ struct DispatchTable {
 #if defined(VK_KHR_bind_memory2) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkBindBufferMemory2KHR_PROXY
 #define PFN_vkBindBufferMemory2KHR_PROXY
-	VkResult bindBufferMemory2KHR(uint32_t bindInfoCount, const VkBindBufferMemoryInfo* pBindInfos) {
+	VkResult bindBufferMemory2KHR(uint32_t bindInfoCount, const VkBindBufferMemoryInfo* pBindInfos) const {
 		return fp_vkBindBufferMemory2KHR(device, bindInfoCount, pBindInfos);
 	}
 #endif
 #ifndef PFN_vkBindImageMemory2KHR_PROXY
 #define PFN_vkBindImageMemory2KHR_PROXY
-	VkResult bindImageMemory2KHR(uint32_t bindInfoCount, const VkBindImageMemoryInfo* pBindInfos) {
+	VkResult bindImageMemory2KHR(uint32_t bindInfoCount, const VkBindImageMemoryInfo* pBindInfos) const {
 		return fp_vkBindImageMemory2KHR(device, bindInfoCount, pBindInfos);
 	}
 #endif
@@ -2614,7 +2614,7 @@ struct DispatchTable {
 #if defined(VK_EXT_image_drm_format_modifier) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetImageDrmFormatModifierPropertiesEXT_PROXY
 #define PFN_vkGetImageDrmFormatModifierPropertiesEXT_PROXY
-	VkResult getImageDrmFormatModifierPropertiesEXT(VkImage image, VkImageDrmFormatModifierPropertiesEXT* pProperties) {
+	VkResult getImageDrmFormatModifierPropertiesEXT(VkImage image, VkImageDrmFormatModifierPropertiesEXT* pProperties) const {
 		return fp_vkGetImageDrmFormatModifierPropertiesEXT(device, image, pProperties);
 	}
 #endif
@@ -2622,25 +2622,25 @@ struct DispatchTable {
 #if defined(VK_EXT_validation_cache) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCreateValidationCacheEXT_PROXY
 #define PFN_vkCreateValidationCacheEXT_PROXY
-	VkResult createValidationCacheEXT(const VkValidationCacheCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkValidationCacheEXT* pValidationCache) {
+	VkResult createValidationCacheEXT(const VkValidationCacheCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkValidationCacheEXT* pValidationCache) const {
 		return fp_vkCreateValidationCacheEXT(device, pCreateInfo, pAllocator, pValidationCache);
 	}
 #endif
 #ifndef PFN_vkDestroyValidationCacheEXT_PROXY
 #define PFN_vkDestroyValidationCacheEXT_PROXY
-	void destroyValidationCacheEXT(VkValidationCacheEXT validationCache, const VkAllocationCallbacks* pAllocator) {
+	void destroyValidationCacheEXT(VkValidationCacheEXT validationCache, const VkAllocationCallbacks* pAllocator) const {
 		fp_vkDestroyValidationCacheEXT(device, validationCache, pAllocator);
 	}
 #endif
 #ifndef PFN_vkMergeValidationCachesEXT_PROXY
 #define PFN_vkMergeValidationCachesEXT_PROXY
-	VkResult mergeValidationCachesEXT(VkValidationCacheEXT dstCache, uint32_t srcCacheCount, const VkValidationCacheEXT* pSrcCaches) {
+	VkResult mergeValidationCachesEXT(VkValidationCacheEXT dstCache, uint32_t srcCacheCount, const VkValidationCacheEXT* pSrcCaches) const {
 		return fp_vkMergeValidationCachesEXT(device, dstCache, srcCacheCount, pSrcCaches);
 	}
 #endif
 #ifndef PFN_vkGetValidationCacheDataEXT_PROXY
 #define PFN_vkGetValidationCacheDataEXT_PROXY
-	VkResult getValidationCacheDataEXT(VkValidationCacheEXT validationCache, size_t* pDataSize, void* pData) {
+	VkResult getValidationCacheDataEXT(VkValidationCacheEXT validationCache, size_t* pDataSize, void* pData) const {
 		return fp_vkGetValidationCacheDataEXT(device, validationCache, pDataSize, pData);
 	}
 #endif
@@ -2648,19 +2648,19 @@ struct DispatchTable {
 #if defined(VK_NV_shading_rate_image) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdBindShadingRateImageNV_PROXY
 #define PFN_vkCmdBindShadingRateImageNV_PROXY
-	void cmdBindShadingRateImageNV(VkCommandBuffer commandBuffer, VkImageView imageView, VkImageLayout imageLayout) {
+	void cmdBindShadingRateImageNV(VkCommandBuffer commandBuffer, VkImageView imageView, VkImageLayout imageLayout) const {
 		fp_vkCmdBindShadingRateImageNV(commandBuffer, imageView, imageLayout);
 	}
 #endif
 #ifndef PFN_vkCmdSetViewportShadingRatePaletteNV_PROXY
 #define PFN_vkCmdSetViewportShadingRatePaletteNV_PROXY
-	void cmdSetViewportShadingRatePaletteNV(VkCommandBuffer commandBuffer, uint32_t firstViewport, uint32_t viewportCount, const VkShadingRatePaletteNV* pShadingRatePalettes) {
+	void cmdSetViewportShadingRatePaletteNV(VkCommandBuffer commandBuffer, uint32_t firstViewport, uint32_t viewportCount, const VkShadingRatePaletteNV* pShadingRatePalettes) const {
 		fp_vkCmdSetViewportShadingRatePaletteNV(commandBuffer, firstViewport, viewportCount, pShadingRatePalettes);
 	}
 #endif
 #ifndef PFN_vkCmdSetCoarseSampleOrderNV_PROXY
 #define PFN_vkCmdSetCoarseSampleOrderNV_PROXY
-	void cmdSetCoarseSampleOrderNV(VkCommandBuffer commandBuffer, VkCoarseSampleOrderTypeNV sampleOrderType, uint32_t customSampleOrderCount, const VkCoarseSampleOrderCustomNV* pCustomSampleOrders) {
+	void cmdSetCoarseSampleOrderNV(VkCommandBuffer commandBuffer, VkCoarseSampleOrderTypeNV sampleOrderType, uint32_t customSampleOrderCount, const VkCoarseSampleOrderCustomNV* pCustomSampleOrders) const {
 		fp_vkCmdSetCoarseSampleOrderNV(commandBuffer, sampleOrderType, customSampleOrderCount, pCustomSampleOrders);
 	}
 #endif
@@ -2668,73 +2668,73 @@ struct DispatchTable {
 #if defined(VK_NV_ray_tracing) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCreateAccelerationStructureNV_PROXY
 #define PFN_vkCreateAccelerationStructureNV_PROXY
-	VkResult createAccelerationStructureNV(const VkAccelerationStructureCreateInfoNV* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkAccelerationStructureNV* pAccelerationStructure) {
+	VkResult createAccelerationStructureNV(const VkAccelerationStructureCreateInfoNV* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkAccelerationStructureNV* pAccelerationStructure) const {
 		return fp_vkCreateAccelerationStructureNV(device, pCreateInfo, pAllocator, pAccelerationStructure);
 	}
 #endif
 #ifndef PFN_vkDestroyAccelerationStructureNV_PROXY
 #define PFN_vkDestroyAccelerationStructureNV_PROXY
-	void destroyAccelerationStructureNV(VkAccelerationStructureNV accelerationStructure, const VkAllocationCallbacks* pAllocator) {
+	void destroyAccelerationStructureNV(VkAccelerationStructureNV accelerationStructure, const VkAllocationCallbacks* pAllocator) const {
 		fp_vkDestroyAccelerationStructureNV(device, accelerationStructure, pAllocator);
 	}
 #endif
 #ifndef PFN_vkGetAccelerationStructureMemoryRequirementsNV_PROXY
 #define PFN_vkGetAccelerationStructureMemoryRequirementsNV_PROXY
-	void getAccelerationStructureMemoryRequirementsNV(const VkAccelerationStructureMemoryRequirementsInfoNV* pInfo, VkMemoryRequirements2KHR* pMemoryRequirements) {
+	void getAccelerationStructureMemoryRequirementsNV(const VkAccelerationStructureMemoryRequirementsInfoNV* pInfo, VkMemoryRequirements2KHR* pMemoryRequirements) const {
 		fp_vkGetAccelerationStructureMemoryRequirementsNV(device, pInfo, pMemoryRequirements);
 	}
 #endif
 #ifndef PFN_vkBindAccelerationStructureMemoryNV_PROXY
 #define PFN_vkBindAccelerationStructureMemoryNV_PROXY
-	VkResult bindAccelerationStructureMemoryNV(uint32_t bindInfoCount, const VkBindAccelerationStructureMemoryInfoNV* pBindInfos) {
+	VkResult bindAccelerationStructureMemoryNV(uint32_t bindInfoCount, const VkBindAccelerationStructureMemoryInfoNV* pBindInfos) const {
 		return fp_vkBindAccelerationStructureMemoryNV(device, bindInfoCount, pBindInfos);
 	}
 #endif
 #ifndef PFN_vkCmdBuildAccelerationStructureNV_PROXY
 #define PFN_vkCmdBuildAccelerationStructureNV_PROXY
-	void cmdBuildAccelerationStructureNV(VkCommandBuffer commandBuffer, const VkAccelerationStructureInfoNV* pInfo, VkBuffer instanceData, VkDeviceSize instanceOffset, VkBool32 update, VkAccelerationStructureNV dst, VkAccelerationStructureNV src, VkBuffer scratch, VkDeviceSize scratchOffset) {
+	void cmdBuildAccelerationStructureNV(VkCommandBuffer commandBuffer, const VkAccelerationStructureInfoNV* pInfo, VkBuffer instanceData, VkDeviceSize instanceOffset, VkBool32 update, VkAccelerationStructureNV dst, VkAccelerationStructureNV src, VkBuffer scratch, VkDeviceSize scratchOffset) const {
 		fp_vkCmdBuildAccelerationStructureNV(commandBuffer, pInfo, instanceData, instanceOffset, update, dst, src, scratch, scratchOffset);
 	}
 #endif
 #ifndef PFN_vkCmdCopyAccelerationStructureNV_PROXY
 #define PFN_vkCmdCopyAccelerationStructureNV_PROXY
-	void cmdCopyAccelerationStructureNV(VkCommandBuffer commandBuffer, VkAccelerationStructureNV dst, VkAccelerationStructureNV src, VkCopyAccelerationStructureModeKHR mode) {
+	void cmdCopyAccelerationStructureNV(VkCommandBuffer commandBuffer, VkAccelerationStructureNV dst, VkAccelerationStructureNV src, VkCopyAccelerationStructureModeKHR mode) const {
 		fp_vkCmdCopyAccelerationStructureNV(commandBuffer, dst, src, mode);
 	}
 #endif
 #ifndef PFN_vkCmdTraceRaysNV_PROXY
 #define PFN_vkCmdTraceRaysNV_PROXY
-	void cmdTraceRaysNV(VkCommandBuffer commandBuffer, VkBuffer raygenShaderBindingTableBuffer, VkDeviceSize raygenShaderBindingOffset, VkBuffer missShaderBindingTableBuffer, VkDeviceSize missShaderBindingOffset, VkDeviceSize missShaderBindingStride, VkBuffer hitShaderBindingTableBuffer, VkDeviceSize hitShaderBindingOffset, VkDeviceSize hitShaderBindingStride, VkBuffer callableShaderBindingTableBuffer, VkDeviceSize callableShaderBindingOffset, VkDeviceSize callableShaderBindingStride, uint32_t width, uint32_t height, uint32_t depth) {
+	void cmdTraceRaysNV(VkCommandBuffer commandBuffer, VkBuffer raygenShaderBindingTableBuffer, VkDeviceSize raygenShaderBindingOffset, VkBuffer missShaderBindingTableBuffer, VkDeviceSize missShaderBindingOffset, VkDeviceSize missShaderBindingStride, VkBuffer hitShaderBindingTableBuffer, VkDeviceSize hitShaderBindingOffset, VkDeviceSize hitShaderBindingStride, VkBuffer callableShaderBindingTableBuffer, VkDeviceSize callableShaderBindingOffset, VkDeviceSize callableShaderBindingStride, uint32_t width, uint32_t height, uint32_t depth) const {
 		fp_vkCmdTraceRaysNV(commandBuffer, raygenShaderBindingTableBuffer, raygenShaderBindingOffset, missShaderBindingTableBuffer, missShaderBindingOffset, missShaderBindingStride, hitShaderBindingTableBuffer, hitShaderBindingOffset, hitShaderBindingStride, callableShaderBindingTableBuffer, callableShaderBindingOffset, callableShaderBindingStride, width, height, depth);
 	}
 #endif
 #ifndef PFN_vkCreateRayTracingPipelinesNV_PROXY
 #define PFN_vkCreateRayTracingPipelinesNV_PROXY
-	VkResult createRayTracingPipelinesNV(VkPipelineCache pipelineCache, uint32_t createInfoCount, const VkRayTracingPipelineCreateInfoNV* pCreateInfos, const VkAllocationCallbacks* pAllocator, VkPipeline* pPipelines) {
+	VkResult createRayTracingPipelinesNV(VkPipelineCache pipelineCache, uint32_t createInfoCount, const VkRayTracingPipelineCreateInfoNV* pCreateInfos, const VkAllocationCallbacks* pAllocator, VkPipeline* pPipelines) const {
 		return fp_vkCreateRayTracingPipelinesNV(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
 	}
 #endif
 #ifndef PFN_vkGetRayTracingShaderGroupHandlesNV_PROXY
 #define PFN_vkGetRayTracingShaderGroupHandlesNV_PROXY
-	VkResult getRayTracingShaderGroupHandlesNV(VkPipeline pipeline, uint32_t firstGroup, uint32_t groupCount, size_t dataSize, void* pData) {
+	VkResult getRayTracingShaderGroupHandlesNV(VkPipeline pipeline, uint32_t firstGroup, uint32_t groupCount, size_t dataSize, void* pData) const {
 		return fp_vkGetRayTracingShaderGroupHandlesNV(device, pipeline, firstGroup, groupCount, dataSize, pData);
 	}
 #endif
 #ifndef PFN_vkGetAccelerationStructureHandleNV_PROXY
 #define PFN_vkGetAccelerationStructureHandleNV_PROXY
-	VkResult getAccelerationStructureHandleNV(VkAccelerationStructureNV accelerationStructure, size_t dataSize, void* pData) {
+	VkResult getAccelerationStructureHandleNV(VkAccelerationStructureNV accelerationStructure, size_t dataSize, void* pData) const {
 		return fp_vkGetAccelerationStructureHandleNV(device, accelerationStructure, dataSize, pData);
 	}
 #endif
 #ifndef PFN_vkCmdWriteAccelerationStructuresPropertiesNV_PROXY
 #define PFN_vkCmdWriteAccelerationStructuresPropertiesNV_PROXY
-	void cmdWriteAccelerationStructuresPropertiesNV(VkCommandBuffer commandBuffer, uint32_t accelerationStructureCount, const VkAccelerationStructureNV* pAccelerationStructures, VkQueryType queryType, VkQueryPool queryPool, uint32_t firstQuery) {
+	void cmdWriteAccelerationStructuresPropertiesNV(VkCommandBuffer commandBuffer, uint32_t accelerationStructureCount, const VkAccelerationStructureNV* pAccelerationStructures, VkQueryType queryType, VkQueryPool queryPool, uint32_t firstQuery) const {
 		fp_vkCmdWriteAccelerationStructuresPropertiesNV(commandBuffer, accelerationStructureCount, pAccelerationStructures, queryType, queryPool, firstQuery);
 	}
 #endif
 #ifndef PFN_vkCompileDeferredNV_PROXY
 #define PFN_vkCompileDeferredNV_PROXY
-	VkResult compileDeferredNV(VkPipeline pipeline, uint32_t shader) {
+	VkResult compileDeferredNV(VkPipeline pipeline, uint32_t shader) const {
 		return fp_vkCompileDeferredNV(device, pipeline, shader);
 	}
 #endif
@@ -2742,7 +2742,7 @@ struct DispatchTable {
 #if defined(VK_KHR_maintenance3) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetDescriptorSetLayoutSupportKHR_PROXY
 #define PFN_vkGetDescriptorSetLayoutSupportKHR_PROXY
-	void getDescriptorSetLayoutSupportKHR(const VkDescriptorSetLayoutCreateInfo* pCreateInfo, VkDescriptorSetLayoutSupport* pSupport) {
+	void getDescriptorSetLayoutSupportKHR(const VkDescriptorSetLayoutCreateInfo* pCreateInfo, VkDescriptorSetLayoutSupport* pSupport) const {
 		fp_vkGetDescriptorSetLayoutSupportKHR(device, pCreateInfo, pSupport);
 	}
 #endif
@@ -2750,7 +2750,7 @@ struct DispatchTable {
 #if defined(VK_EXT_external_memory_host) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetMemoryHostPointerPropertiesEXT_PROXY
 #define PFN_vkGetMemoryHostPointerPropertiesEXT_PROXY
-	VkResult getMemoryHostPointerPropertiesEXT(VkExternalMemoryHandleTypeFlagBits handleType, const void* pHostPointer, VkMemoryHostPointerPropertiesEXT* pMemoryHostPointerProperties) {
+	VkResult getMemoryHostPointerPropertiesEXT(VkExternalMemoryHandleTypeFlagBits handleType, const void* pHostPointer, VkMemoryHostPointerPropertiesEXT* pMemoryHostPointerProperties) const {
 		return fp_vkGetMemoryHostPointerPropertiesEXT(device, handleType, pHostPointer, pMemoryHostPointerProperties);
 	}
 #endif
@@ -2758,7 +2758,7 @@ struct DispatchTable {
 #if defined(VK_AMD_buffer_marker) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdWriteBufferMarkerAMD_PROXY
 #define PFN_vkCmdWriteBufferMarkerAMD_PROXY
-	void cmdWriteBufferMarkerAMD(VkCommandBuffer commandBuffer, VkPipelineStageFlagBits pipelineStage, VkBuffer dstBuffer, VkDeviceSize dstOffset, uint32_t marker) {
+	void cmdWriteBufferMarkerAMD(VkCommandBuffer commandBuffer, VkPipelineStageFlagBits pipelineStage, VkBuffer dstBuffer, VkDeviceSize dstOffset, uint32_t marker) const {
 		fp_vkCmdWriteBufferMarkerAMD(commandBuffer, pipelineStage, dstBuffer, dstOffset, marker);
 	}
 #endif
@@ -2766,7 +2766,7 @@ struct DispatchTable {
 #if defined(VK_EXT_calibrated_timestamps) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetCalibratedTimestampsEXT_PROXY
 #define PFN_vkGetCalibratedTimestampsEXT_PROXY
-	VkResult getCalibratedTimestampsEXT(uint32_t timestampCount, const VkCalibratedTimestampInfoEXT* pTimestampInfos, uint64_t* pTimestamps, uint64_t* pMaxDeviation) {
+	VkResult getCalibratedTimestampsEXT(uint32_t timestampCount, const VkCalibratedTimestampInfoEXT* pTimestampInfos, uint64_t* pTimestamps, uint64_t* pMaxDeviation) const {
 		return fp_vkGetCalibratedTimestampsEXT(device, timestampCount, pTimestampInfos, pTimestamps, pMaxDeviation);
 	}
 #endif
@@ -2774,19 +2774,19 @@ struct DispatchTable {
 #if defined(VK_NV_mesh_shader) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdDrawMeshTasksNV_PROXY
 #define PFN_vkCmdDrawMeshTasksNV_PROXY
-	void cmdDrawMeshTasksNV(VkCommandBuffer commandBuffer, uint32_t taskCount, uint32_t firstTask) {
+	void cmdDrawMeshTasksNV(VkCommandBuffer commandBuffer, uint32_t taskCount, uint32_t firstTask) const {
 		fp_vkCmdDrawMeshTasksNV(commandBuffer, taskCount, firstTask);
 	}
 #endif
 #ifndef PFN_vkCmdDrawMeshTasksIndirectNV_PROXY
 #define PFN_vkCmdDrawMeshTasksIndirectNV_PROXY
-	void cmdDrawMeshTasksIndirectNV(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, uint32_t drawCount, uint32_t stride) {
+	void cmdDrawMeshTasksIndirectNV(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, uint32_t drawCount, uint32_t stride) const {
 		fp_vkCmdDrawMeshTasksIndirectNV(commandBuffer, buffer, offset, drawCount, stride);
 	}
 #endif
 #ifndef PFN_vkCmdDrawMeshTasksIndirectCountNV_PROXY
 #define PFN_vkCmdDrawMeshTasksIndirectCountNV_PROXY
-	void cmdDrawMeshTasksIndirectCountNV(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint32_t maxDrawCount, uint32_t stride) {
+	void cmdDrawMeshTasksIndirectCountNV(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint32_t maxDrawCount, uint32_t stride) const {
 		fp_vkCmdDrawMeshTasksIndirectCountNV(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
 	}
 #endif
@@ -2794,7 +2794,7 @@ struct DispatchTable {
 #if defined(VK_NV_scissor_exclusive) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdSetExclusiveScissorNV_PROXY
 #define PFN_vkCmdSetExclusiveScissorNV_PROXY
-	void cmdSetExclusiveScissorNV(VkCommandBuffer commandBuffer, uint32_t firstExclusiveScissor, uint32_t exclusiveScissorCount, const VkRect2D* pExclusiveScissors) {
+	void cmdSetExclusiveScissorNV(VkCommandBuffer commandBuffer, uint32_t firstExclusiveScissor, uint32_t exclusiveScissorCount, const VkRect2D* pExclusiveScissors) const {
 		fp_vkCmdSetExclusiveScissorNV(commandBuffer, firstExclusiveScissor, exclusiveScissorCount, pExclusiveScissors);
 	}
 #endif
@@ -2802,13 +2802,13 @@ struct DispatchTable {
 #if defined(VK_NV_device_diagnostic_checkpoints) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdSetCheckpointNV_PROXY
 #define PFN_vkCmdSetCheckpointNV_PROXY
-	void cmdSetCheckpointNV(VkCommandBuffer commandBuffer, const void* pCheckpointMarker) {
+	void cmdSetCheckpointNV(VkCommandBuffer commandBuffer, const void* pCheckpointMarker) const {
 		fp_vkCmdSetCheckpointNV(commandBuffer, pCheckpointMarker);
 	}
 #endif
 #ifndef PFN_vkGetQueueCheckpointDataNV_PROXY
 #define PFN_vkGetQueueCheckpointDataNV_PROXY
-	void getQueueCheckpointDataNV(VkQueue queue, uint32_t* pCheckpointDataCount, VkCheckpointDataNV* pCheckpointData) {
+	void getQueueCheckpointDataNV(VkQueue queue, uint32_t* pCheckpointDataCount, VkCheckpointDataNV* pCheckpointData) const {
 		fp_vkGetQueueCheckpointDataNV(queue, pCheckpointDataCount, pCheckpointData);
 	}
 #endif
@@ -2816,19 +2816,19 @@ struct DispatchTable {
 #if defined(VK_KHR_timeline_semaphore) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetSemaphoreCounterValueKHR_PROXY
 #define PFN_vkGetSemaphoreCounterValueKHR_PROXY
-	VkResult getSemaphoreCounterValueKHR(VkSemaphore semaphore, uint64_t* pValue) {
+	VkResult getSemaphoreCounterValueKHR(VkSemaphore semaphore, uint64_t* pValue) const {
 		return fp_vkGetSemaphoreCounterValueKHR(device, semaphore, pValue);
 	}
 #endif
 #ifndef PFN_vkWaitSemaphoresKHR_PROXY
 #define PFN_vkWaitSemaphoresKHR_PROXY
-	VkResult waitSemaphoresKHR(const VkSemaphoreWaitInfo* pWaitInfo, uint64_t timeout) {
+	VkResult waitSemaphoresKHR(const VkSemaphoreWaitInfo* pWaitInfo, uint64_t timeout) const {
 		return fp_vkWaitSemaphoresKHR(device, pWaitInfo, timeout);
 	}
 #endif
 #ifndef PFN_vkSignalSemaphoreKHR_PROXY
 #define PFN_vkSignalSemaphoreKHR_PROXY
-	VkResult signalSemaphoreKHR(const VkSemaphoreSignalInfo* pSignalInfo) {
+	VkResult signalSemaphoreKHR(const VkSemaphoreSignalInfo* pSignalInfo) const {
 		return fp_vkSignalSemaphoreKHR(device, pSignalInfo);
 	}
 #endif
@@ -2836,55 +2836,55 @@ struct DispatchTable {
 #if defined(VK_INTEL_performance_query) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkInitializePerformanceApiINTEL_PROXY
 #define PFN_vkInitializePerformanceApiINTEL_PROXY
-	VkResult initializePerformanceApiINTEL(const VkInitializePerformanceApiInfoINTEL* pInitializeInfo) {
+	VkResult initializePerformanceApiINTEL(const VkInitializePerformanceApiInfoINTEL* pInitializeInfo) const {
 		return fp_vkInitializePerformanceApiINTEL(device, pInitializeInfo);
 	}
 #endif
 #ifndef PFN_vkUninitializePerformanceApiINTEL_PROXY
 #define PFN_vkUninitializePerformanceApiINTEL_PROXY
-	void uninitializePerformanceApiINTEL() {
+	void uninitializePerformanceApiINTEL() const {
 		fp_vkUninitializePerformanceApiINTEL(device);
 	}
 #endif
 #ifndef PFN_vkCmdSetPerformanceMarkerINTEL_PROXY
 #define PFN_vkCmdSetPerformanceMarkerINTEL_PROXY
-	VkResult cmdSetPerformanceMarkerINTEL(VkCommandBuffer commandBuffer, const VkPerformanceMarkerInfoINTEL* pMarkerInfo) {
+	VkResult cmdSetPerformanceMarkerINTEL(VkCommandBuffer commandBuffer, const VkPerformanceMarkerInfoINTEL* pMarkerInfo) const {
 		return fp_vkCmdSetPerformanceMarkerINTEL(commandBuffer, pMarkerInfo);
 	}
 #endif
 #ifndef PFN_vkCmdSetPerformanceStreamMarkerINTEL_PROXY
 #define PFN_vkCmdSetPerformanceStreamMarkerINTEL_PROXY
-	VkResult cmdSetPerformanceStreamMarkerINTEL(VkCommandBuffer commandBuffer, const VkPerformanceStreamMarkerInfoINTEL* pMarkerInfo) {
+	VkResult cmdSetPerformanceStreamMarkerINTEL(VkCommandBuffer commandBuffer, const VkPerformanceStreamMarkerInfoINTEL* pMarkerInfo) const {
 		return fp_vkCmdSetPerformanceStreamMarkerINTEL(commandBuffer, pMarkerInfo);
 	}
 #endif
 #ifndef PFN_vkCmdSetPerformanceOverrideINTEL_PROXY
 #define PFN_vkCmdSetPerformanceOverrideINTEL_PROXY
-	VkResult cmdSetPerformanceOverrideINTEL(VkCommandBuffer commandBuffer, const VkPerformanceOverrideInfoINTEL* pOverrideInfo) {
+	VkResult cmdSetPerformanceOverrideINTEL(VkCommandBuffer commandBuffer, const VkPerformanceOverrideInfoINTEL* pOverrideInfo) const {
 		return fp_vkCmdSetPerformanceOverrideINTEL(commandBuffer, pOverrideInfo);
 	}
 #endif
 #ifndef PFN_vkAcquirePerformanceConfigurationINTEL_PROXY
 #define PFN_vkAcquirePerformanceConfigurationINTEL_PROXY
-	VkResult acquirePerformanceConfigurationINTEL(const VkPerformanceConfigurationAcquireInfoINTEL* pAcquireInfo, VkPerformanceConfigurationINTEL* pConfiguration) {
+	VkResult acquirePerformanceConfigurationINTEL(const VkPerformanceConfigurationAcquireInfoINTEL* pAcquireInfo, VkPerformanceConfigurationINTEL* pConfiguration) const {
 		return fp_vkAcquirePerformanceConfigurationINTEL(device, pAcquireInfo, pConfiguration);
 	}
 #endif
 #ifndef PFN_vkReleasePerformanceConfigurationINTEL_PROXY
 #define PFN_vkReleasePerformanceConfigurationINTEL_PROXY
-	VkResult releasePerformanceConfigurationINTEL(VkPerformanceConfigurationINTEL configuration) {
+	VkResult releasePerformanceConfigurationINTEL(VkPerformanceConfigurationINTEL configuration) const {
 		return fp_vkReleasePerformanceConfigurationINTEL(device, configuration);
 	}
 #endif
 #ifndef PFN_vkQueueSetPerformanceConfigurationINTEL_PROXY
 #define PFN_vkQueueSetPerformanceConfigurationINTEL_PROXY
-	VkResult queueSetPerformanceConfigurationINTEL(VkQueue queue, VkPerformanceConfigurationINTEL configuration) {
+	VkResult queueSetPerformanceConfigurationINTEL(VkQueue queue, VkPerformanceConfigurationINTEL configuration) const {
 		return fp_vkQueueSetPerformanceConfigurationINTEL(queue, configuration);
 	}
 #endif
 #ifndef PFN_vkGetPerformanceParameterINTEL_PROXY
 #define PFN_vkGetPerformanceParameterINTEL_PROXY
-	VkResult getPerformanceParameterINTEL(VkPerformanceParameterTypeINTEL parameter, VkPerformanceValueINTEL* pValue) {
+	VkResult getPerformanceParameterINTEL(VkPerformanceParameterTypeINTEL parameter, VkPerformanceValueINTEL* pValue) const {
 		return fp_vkGetPerformanceParameterINTEL(device, parameter, pValue);
 	}
 #endif
@@ -2892,7 +2892,7 @@ struct DispatchTable {
 #if defined(VK_AMD_display_native_hdr) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkSetLocalDimmingAMD_PROXY
 #define PFN_vkSetLocalDimmingAMD_PROXY
-	void setLocalDimmingAMD(VkSwapchainKHR swapChain, VkBool32 localDimmingEnable) {
+	void setLocalDimmingAMD(VkSwapchainKHR swapChain, VkBool32 localDimmingEnable) const {
 		fp_vkSetLocalDimmingAMD(device, swapChain, localDimmingEnable);
 	}
 #endif
@@ -2900,7 +2900,7 @@ struct DispatchTable {
 #if defined(VK_KHR_fragment_shading_rate) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdSetFragmentShadingRateKHR_PROXY
 #define PFN_vkCmdSetFragmentShadingRateKHR_PROXY
-	void cmdSetFragmentShadingRateKHR(VkCommandBuffer commandBuffer, const VkExtent2D* pFragmentSize, VkFragmentShadingRateCombinerOpKHR combinerOps[2]) {
+	void cmdSetFragmentShadingRateKHR(VkCommandBuffer commandBuffer, const VkExtent2D* pFragmentSize, VkFragmentShadingRateCombinerOpKHR combinerOps[2]) const {
 		fp_vkCmdSetFragmentShadingRateKHR(commandBuffer, pFragmentSize, combinerOps);
 	}
 #endif
@@ -2908,7 +2908,7 @@ struct DispatchTable {
 #if defined(VK_EXT_buffer_device_address) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetBufferDeviceAddressEXT_PROXY
 #define PFN_vkGetBufferDeviceAddressEXT_PROXY
-	VkDeviceAddress getBufferDeviceAddressEXT(const VkBufferDeviceAddressInfo* pInfo) {
+	VkDeviceAddress getBufferDeviceAddressEXT(const VkBufferDeviceAddressInfo* pInfo) const {
 		return fp_vkGetBufferDeviceAddressEXT(device, pInfo);
 	}
 #endif
@@ -2916,19 +2916,19 @@ struct DispatchTable {
 #if defined(VK_EXT_full_screen_exclusive) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkAcquireFullScreenExclusiveModeEXT_PROXY
 #define PFN_vkAcquireFullScreenExclusiveModeEXT_PROXY
-	VkResult acquireFullScreenExclusiveModeEXT(VkSwapchainKHR swapchain) {
+	VkResult acquireFullScreenExclusiveModeEXT(VkSwapchainKHR swapchain) const {
 		return fp_vkAcquireFullScreenExclusiveModeEXT(device, swapchain);
 	}
 #endif
 #ifndef PFN_vkReleaseFullScreenExclusiveModeEXT_PROXY
 #define PFN_vkReleaseFullScreenExclusiveModeEXT_PROXY
-	VkResult releaseFullScreenExclusiveModeEXT(VkSwapchainKHR swapchain) {
+	VkResult releaseFullScreenExclusiveModeEXT(VkSwapchainKHR swapchain) const {
 		return fp_vkReleaseFullScreenExclusiveModeEXT(device, swapchain);
 	}
 #endif
 #ifndef PFN_vkGetDeviceGroupSurfacePresentModes2EXT_PROXY
 #define PFN_vkGetDeviceGroupSurfacePresentModes2EXT_PROXY
-	VkResult getDeviceGroupSurfacePresentModes2EXT(const VkPhysicalDeviceSurfaceInfo2KHR* pSurfaceInfo, VkDeviceGroupPresentModeFlagsKHR* pModes) {
+	VkResult getDeviceGroupSurfacePresentModes2EXT(const VkPhysicalDeviceSurfaceInfo2KHR* pSurfaceInfo, VkDeviceGroupPresentModeFlagsKHR* pModes) const {
 		return fp_vkGetDeviceGroupSurfacePresentModes2EXT(device, pSurfaceInfo, pModes);
 	}
 #endif
@@ -2936,7 +2936,7 @@ struct DispatchTable {
 #if defined(VK_EXT_full_screen_exclusive) && defined(VK_VERSION_1_1)
 #ifndef PFN_vkGetDeviceGroupSurfacePresentModes2EXT_PROXY
 #define PFN_vkGetDeviceGroupSurfacePresentModes2EXT_PROXY
-	VkResult getDeviceGroupSurfacePresentModes2EXT(const VkPhysicalDeviceSurfaceInfo2KHR* pSurfaceInfo, VkDeviceGroupPresentModeFlagsKHR* pModes) {
+	VkResult getDeviceGroupSurfacePresentModes2EXT(const VkPhysicalDeviceSurfaceInfo2KHR* pSurfaceInfo, VkDeviceGroupPresentModeFlagsKHR* pModes) const {
 		return fp_vkGetDeviceGroupSurfacePresentModes2EXT(device, pSurfaceInfo, pModes);
 	}
 #endif
@@ -2944,13 +2944,13 @@ struct DispatchTable {
 #if defined(VK_KHR_buffer_device_address) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetBufferOpaqueCaptureAddressKHR_PROXY
 #define PFN_vkGetBufferOpaqueCaptureAddressKHR_PROXY
-	uint64_t getBufferOpaqueCaptureAddressKHR(const VkBufferDeviceAddressInfo* pInfo) {
+	uint64_t getBufferOpaqueCaptureAddressKHR(const VkBufferDeviceAddressInfo* pInfo) const {
 		return fp_vkGetBufferOpaqueCaptureAddressKHR(device, pInfo);
 	}
 #endif
 #ifndef PFN_vkGetDeviceMemoryOpaqueCaptureAddressKHR_PROXY
 #define PFN_vkGetDeviceMemoryOpaqueCaptureAddressKHR_PROXY
-	uint64_t getDeviceMemoryOpaqueCaptureAddressKHR(const VkDeviceMemoryOpaqueCaptureAddressInfo* pInfo) {
+	uint64_t getDeviceMemoryOpaqueCaptureAddressKHR(const VkDeviceMemoryOpaqueCaptureAddressInfo* pInfo) const {
 		return fp_vkGetDeviceMemoryOpaqueCaptureAddressKHR(device, pInfo);
 	}
 #endif
@@ -2958,7 +2958,7 @@ struct DispatchTable {
 #if defined(VK_EXT_line_rasterization) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdSetLineStippleEXT_PROXY
 #define PFN_vkCmdSetLineStippleEXT_PROXY
-	void cmdSetLineStippleEXT(VkCommandBuffer commandBuffer, uint32_t lineStippleFactor, uint16_t lineStipplePattern) {
+	void cmdSetLineStippleEXT(VkCommandBuffer commandBuffer, uint32_t lineStippleFactor, uint16_t lineStipplePattern) const {
 		fp_vkCmdSetLineStippleEXT(commandBuffer, lineStippleFactor, lineStipplePattern);
 	}
 #endif
@@ -2966,7 +2966,7 @@ struct DispatchTable {
 #if defined(VK_EXT_host_query_reset) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkResetQueryPoolEXT_PROXY
 #define PFN_vkResetQueryPoolEXT_PROXY
-	void resetQueryPoolEXT(VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount) {
+	void resetQueryPoolEXT(VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount) const {
 		fp_vkResetQueryPoolEXT(device, queryPool, firstQuery, queryCount);
 	}
 #endif
@@ -2974,73 +2974,73 @@ struct DispatchTable {
 #if defined(VK_EXT_extended_dynamic_state) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdSetCullModeEXT_PROXY
 #define PFN_vkCmdSetCullModeEXT_PROXY
-	void cmdSetCullModeEXT(VkCommandBuffer commandBuffer, VkCullModeFlags cullMode) {
+	void cmdSetCullModeEXT(VkCommandBuffer commandBuffer, VkCullModeFlags cullMode) const {
 		fp_vkCmdSetCullModeEXT(commandBuffer, cullMode);
 	}
 #endif
 #ifndef PFN_vkCmdSetFrontFaceEXT_PROXY
 #define PFN_vkCmdSetFrontFaceEXT_PROXY
-	void cmdSetFrontFaceEXT(VkCommandBuffer commandBuffer, VkFrontFace frontFace) {
+	void cmdSetFrontFaceEXT(VkCommandBuffer commandBuffer, VkFrontFace frontFace) const {
 		fp_vkCmdSetFrontFaceEXT(commandBuffer, frontFace);
 	}
 #endif
 #ifndef PFN_vkCmdSetPrimitiveTopologyEXT_PROXY
 #define PFN_vkCmdSetPrimitiveTopologyEXT_PROXY
-	void cmdSetPrimitiveTopologyEXT(VkCommandBuffer commandBuffer, VkPrimitiveTopology primitiveTopology) {
+	void cmdSetPrimitiveTopologyEXT(VkCommandBuffer commandBuffer, VkPrimitiveTopology primitiveTopology) const {
 		fp_vkCmdSetPrimitiveTopologyEXT(commandBuffer, primitiveTopology);
 	}
 #endif
 #ifndef PFN_vkCmdSetViewportWithCountEXT_PROXY
 #define PFN_vkCmdSetViewportWithCountEXT_PROXY
-	void cmdSetViewportWithCountEXT(VkCommandBuffer commandBuffer, uint32_t viewportCount, const VkViewport* pViewports) {
+	void cmdSetViewportWithCountEXT(VkCommandBuffer commandBuffer, uint32_t viewportCount, const VkViewport* pViewports) const {
 		fp_vkCmdSetViewportWithCountEXT(commandBuffer, viewportCount, pViewports);
 	}
 #endif
 #ifndef PFN_vkCmdSetScissorWithCountEXT_PROXY
 #define PFN_vkCmdSetScissorWithCountEXT_PROXY
-	void cmdSetScissorWithCountEXT(VkCommandBuffer commandBuffer, uint32_t scissorCount, const VkRect2D* pScissors) {
+	void cmdSetScissorWithCountEXT(VkCommandBuffer commandBuffer, uint32_t scissorCount, const VkRect2D* pScissors) const {
 		fp_vkCmdSetScissorWithCountEXT(commandBuffer, scissorCount, pScissors);
 	}
 #endif
 #ifndef PFN_vkCmdBindVertexBuffers2EXT_PROXY
 #define PFN_vkCmdBindVertexBuffers2EXT_PROXY
-	void cmdBindVertexBuffers2EXT(VkCommandBuffer commandBuffer, uint32_t firstBinding, uint32_t bindingCount, const VkBuffer* pBuffers, const VkDeviceSize* pOffsets, const VkDeviceSize* pSizes, const VkDeviceSize* pStrides) {
+	void cmdBindVertexBuffers2EXT(VkCommandBuffer commandBuffer, uint32_t firstBinding, uint32_t bindingCount, const VkBuffer* pBuffers, const VkDeviceSize* pOffsets, const VkDeviceSize* pSizes, const VkDeviceSize* pStrides) const {
 		fp_vkCmdBindVertexBuffers2EXT(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets, pSizes, pStrides);
 	}
 #endif
 #ifndef PFN_vkCmdSetDepthTestEnableEXT_PROXY
 #define PFN_vkCmdSetDepthTestEnableEXT_PROXY
-	void cmdSetDepthTestEnableEXT(VkCommandBuffer commandBuffer, VkBool32 depthTestEnable) {
+	void cmdSetDepthTestEnableEXT(VkCommandBuffer commandBuffer, VkBool32 depthTestEnable) const {
 		fp_vkCmdSetDepthTestEnableEXT(commandBuffer, depthTestEnable);
 	}
 #endif
 #ifndef PFN_vkCmdSetDepthWriteEnableEXT_PROXY
 #define PFN_vkCmdSetDepthWriteEnableEXT_PROXY
-	void cmdSetDepthWriteEnableEXT(VkCommandBuffer commandBuffer, VkBool32 depthWriteEnable) {
+	void cmdSetDepthWriteEnableEXT(VkCommandBuffer commandBuffer, VkBool32 depthWriteEnable) const {
 		fp_vkCmdSetDepthWriteEnableEXT(commandBuffer, depthWriteEnable);
 	}
 #endif
 #ifndef PFN_vkCmdSetDepthCompareOpEXT_PROXY
 #define PFN_vkCmdSetDepthCompareOpEXT_PROXY
-	void cmdSetDepthCompareOpEXT(VkCommandBuffer commandBuffer, VkCompareOp depthCompareOp) {
+	void cmdSetDepthCompareOpEXT(VkCommandBuffer commandBuffer, VkCompareOp depthCompareOp) const {
 		fp_vkCmdSetDepthCompareOpEXT(commandBuffer, depthCompareOp);
 	}
 #endif
 #ifndef PFN_vkCmdSetDepthBoundsTestEnableEXT_PROXY
 #define PFN_vkCmdSetDepthBoundsTestEnableEXT_PROXY
-	void cmdSetDepthBoundsTestEnableEXT(VkCommandBuffer commandBuffer, VkBool32 depthBoundsTestEnable) {
+	void cmdSetDepthBoundsTestEnableEXT(VkCommandBuffer commandBuffer, VkBool32 depthBoundsTestEnable) const {
 		fp_vkCmdSetDepthBoundsTestEnableEXT(commandBuffer, depthBoundsTestEnable);
 	}
 #endif
 #ifndef PFN_vkCmdSetStencilTestEnableEXT_PROXY
 #define PFN_vkCmdSetStencilTestEnableEXT_PROXY
-	void cmdSetStencilTestEnableEXT(VkCommandBuffer commandBuffer, VkBool32 stencilTestEnable) {
+	void cmdSetStencilTestEnableEXT(VkCommandBuffer commandBuffer, VkBool32 stencilTestEnable) const {
 		fp_vkCmdSetStencilTestEnableEXT(commandBuffer, stencilTestEnable);
 	}
 #endif
 #ifndef PFN_vkCmdSetStencilOpEXT_PROXY
 #define PFN_vkCmdSetStencilOpEXT_PROXY
-	void cmdSetStencilOpEXT(VkCommandBuffer commandBuffer, VkStencilFaceFlags faceMask, VkStencilOp failOp, VkStencilOp passOp, VkStencilOp depthFailOp, VkCompareOp compareOp) {
+	void cmdSetStencilOpEXT(VkCommandBuffer commandBuffer, VkStencilFaceFlags faceMask, VkStencilOp failOp, VkStencilOp passOp, VkStencilOp depthFailOp, VkCompareOp compareOp) const {
 		fp_vkCmdSetStencilOpEXT(commandBuffer, faceMask, failOp, passOp, depthFailOp, compareOp);
 	}
 #endif
@@ -3048,31 +3048,31 @@ struct DispatchTable {
 #if defined(VK_KHR_deferred_host_operations) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCreateDeferredOperationKHR_PROXY
 #define PFN_vkCreateDeferredOperationKHR_PROXY
-	VkResult createDeferredOperationKHR(const VkAllocationCallbacks* pAllocator, VkDeferredOperationKHR* pDeferredOperation) {
+	VkResult createDeferredOperationKHR(const VkAllocationCallbacks* pAllocator, VkDeferredOperationKHR* pDeferredOperation) const {
 		return fp_vkCreateDeferredOperationKHR(device, pAllocator, pDeferredOperation);
 	}
 #endif
 #ifndef PFN_vkDestroyDeferredOperationKHR_PROXY
 #define PFN_vkDestroyDeferredOperationKHR_PROXY
-	void destroyDeferredOperationKHR(VkDeferredOperationKHR operation, const VkAllocationCallbacks* pAllocator) {
+	void destroyDeferredOperationKHR(VkDeferredOperationKHR operation, const VkAllocationCallbacks* pAllocator) const {
 		fp_vkDestroyDeferredOperationKHR(device, operation, pAllocator);
 	}
 #endif
 #ifndef PFN_vkGetDeferredOperationMaxConcurrencyKHR_PROXY
 #define PFN_vkGetDeferredOperationMaxConcurrencyKHR_PROXY
-	uint32_t getDeferredOperationMaxConcurrencyKHR(VkDeferredOperationKHR operation) {
+	uint32_t getDeferredOperationMaxConcurrencyKHR(VkDeferredOperationKHR operation) const {
 		return fp_vkGetDeferredOperationMaxConcurrencyKHR(device, operation);
 	}
 #endif
 #ifndef PFN_vkGetDeferredOperationResultKHR_PROXY
 #define PFN_vkGetDeferredOperationResultKHR_PROXY
-	VkResult getDeferredOperationResultKHR(VkDeferredOperationKHR operation) {
+	VkResult getDeferredOperationResultKHR(VkDeferredOperationKHR operation) const {
 		return fp_vkGetDeferredOperationResultKHR(device, operation);
 	}
 #endif
 #ifndef PFN_vkDeferredOperationJoinKHR_PROXY
 #define PFN_vkDeferredOperationJoinKHR_PROXY
-	VkResult deferredOperationJoinKHR(VkDeferredOperationKHR operation) {
+	VkResult deferredOperationJoinKHR(VkDeferredOperationKHR operation) const {
 		return fp_vkDeferredOperationJoinKHR(device, operation);
 	}
 #endif
@@ -3080,19 +3080,19 @@ struct DispatchTable {
 #if defined(VK_KHR_pipeline_executable_properties) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetPipelineExecutablePropertiesKHR_PROXY
 #define PFN_vkGetPipelineExecutablePropertiesKHR_PROXY
-	VkResult getPipelineExecutablePropertiesKHR(const VkPipelineInfoKHR* pPipelineInfo, uint32_t* pExecutableCount, VkPipelineExecutablePropertiesKHR* pProperties) {
+	VkResult getPipelineExecutablePropertiesKHR(const VkPipelineInfoKHR* pPipelineInfo, uint32_t* pExecutableCount, VkPipelineExecutablePropertiesKHR* pProperties) const {
 		return fp_vkGetPipelineExecutablePropertiesKHR(device, pPipelineInfo, pExecutableCount, pProperties);
 	}
 #endif
 #ifndef PFN_vkGetPipelineExecutableStatisticsKHR_PROXY
 #define PFN_vkGetPipelineExecutableStatisticsKHR_PROXY
-	VkResult getPipelineExecutableStatisticsKHR(const VkPipelineExecutableInfoKHR* pExecutableInfo, uint32_t* pStatisticCount, VkPipelineExecutableStatisticKHR* pStatistics) {
+	VkResult getPipelineExecutableStatisticsKHR(const VkPipelineExecutableInfoKHR* pExecutableInfo, uint32_t* pStatisticCount, VkPipelineExecutableStatisticKHR* pStatistics) const {
 		return fp_vkGetPipelineExecutableStatisticsKHR(device, pExecutableInfo, pStatisticCount, pStatistics);
 	}
 #endif
 #ifndef PFN_vkGetPipelineExecutableInternalRepresentationsKHR_PROXY
 #define PFN_vkGetPipelineExecutableInternalRepresentationsKHR_PROXY
-	VkResult getPipelineExecutableInternalRepresentationsKHR(const VkPipelineExecutableInfoKHR* pExecutableInfo, uint32_t* pInternalRepresentationCount, VkPipelineExecutableInternalRepresentationKHR* pInternalRepresentations) {
+	VkResult getPipelineExecutableInternalRepresentationsKHR(const VkPipelineExecutableInfoKHR* pExecutableInfo, uint32_t* pInternalRepresentationCount, VkPipelineExecutableInternalRepresentationKHR* pInternalRepresentations) const {
 		return fp_vkGetPipelineExecutableInternalRepresentationsKHR(device, pExecutableInfo, pInternalRepresentationCount, pInternalRepresentations);
 	}
 #endif
@@ -3100,37 +3100,37 @@ struct DispatchTable {
 #if defined(VK_NV_device_generated_commands) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetGeneratedCommandsMemoryRequirementsNV_PROXY
 #define PFN_vkGetGeneratedCommandsMemoryRequirementsNV_PROXY
-	void getGeneratedCommandsMemoryRequirementsNV(const VkGeneratedCommandsMemoryRequirementsInfoNV* pInfo, VkMemoryRequirements2* pMemoryRequirements) {
+	void getGeneratedCommandsMemoryRequirementsNV(const VkGeneratedCommandsMemoryRequirementsInfoNV* pInfo, VkMemoryRequirements2* pMemoryRequirements) const {
 		fp_vkGetGeneratedCommandsMemoryRequirementsNV(device, pInfo, pMemoryRequirements);
 	}
 #endif
 #ifndef PFN_vkCmdPreprocessGeneratedCommandsNV_PROXY
 #define PFN_vkCmdPreprocessGeneratedCommandsNV_PROXY
-	void cmdPreprocessGeneratedCommandsNV(VkCommandBuffer commandBuffer, const VkGeneratedCommandsInfoNV* pGeneratedCommandsInfo) {
+	void cmdPreprocessGeneratedCommandsNV(VkCommandBuffer commandBuffer, const VkGeneratedCommandsInfoNV* pGeneratedCommandsInfo) const {
 		fp_vkCmdPreprocessGeneratedCommandsNV(commandBuffer, pGeneratedCommandsInfo);
 	}
 #endif
 #ifndef PFN_vkCmdExecuteGeneratedCommandsNV_PROXY
 #define PFN_vkCmdExecuteGeneratedCommandsNV_PROXY
-	void cmdExecuteGeneratedCommandsNV(VkCommandBuffer commandBuffer, VkBool32 isPreprocessed, const VkGeneratedCommandsInfoNV* pGeneratedCommandsInfo) {
+	void cmdExecuteGeneratedCommandsNV(VkCommandBuffer commandBuffer, VkBool32 isPreprocessed, const VkGeneratedCommandsInfoNV* pGeneratedCommandsInfo) const {
 		fp_vkCmdExecuteGeneratedCommandsNV(commandBuffer, isPreprocessed, pGeneratedCommandsInfo);
 	}
 #endif
 #ifndef PFN_vkCmdBindPipelineShaderGroupNV_PROXY
 #define PFN_vkCmdBindPipelineShaderGroupNV_PROXY
-	void cmdBindPipelineShaderGroupNV(VkCommandBuffer commandBuffer, VkPipelineBindPoint pipelineBindPoint, VkPipeline pipeline, uint32_t groupIndex) {
+	void cmdBindPipelineShaderGroupNV(VkCommandBuffer commandBuffer, VkPipelineBindPoint pipelineBindPoint, VkPipeline pipeline, uint32_t groupIndex) const {
 		fp_vkCmdBindPipelineShaderGroupNV(commandBuffer, pipelineBindPoint, pipeline, groupIndex);
 	}
 #endif
 #ifndef PFN_vkCreateIndirectCommandsLayoutNV_PROXY
 #define PFN_vkCreateIndirectCommandsLayoutNV_PROXY
-	VkResult createIndirectCommandsLayoutNV(const VkIndirectCommandsLayoutCreateInfoNV* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkIndirectCommandsLayoutNV* pIndirectCommandsLayout) {
+	VkResult createIndirectCommandsLayoutNV(const VkIndirectCommandsLayoutCreateInfoNV* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkIndirectCommandsLayoutNV* pIndirectCommandsLayout) const {
 		return fp_vkCreateIndirectCommandsLayoutNV(device, pCreateInfo, pAllocator, pIndirectCommandsLayout);
 	}
 #endif
 #ifndef PFN_vkDestroyIndirectCommandsLayoutNV_PROXY
 #define PFN_vkDestroyIndirectCommandsLayoutNV_PROXY
-	void destroyIndirectCommandsLayoutNV(VkIndirectCommandsLayoutNV indirectCommandsLayout, const VkAllocationCallbacks* pAllocator) {
+	void destroyIndirectCommandsLayoutNV(VkIndirectCommandsLayoutNV indirectCommandsLayout, const VkAllocationCallbacks* pAllocator) const {
 		fp_vkDestroyIndirectCommandsLayoutNV(device, indirectCommandsLayout, pAllocator);
 	}
 #endif
@@ -3138,25 +3138,25 @@ struct DispatchTable {
 #if defined(VK_EXT_private_data) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCreatePrivateDataSlotEXT_PROXY
 #define PFN_vkCreatePrivateDataSlotEXT_PROXY
-	VkResult createPrivateDataSlotEXT(const VkPrivateDataSlotCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkPrivateDataSlotEXT* pPrivateDataSlot) {
+	VkResult createPrivateDataSlotEXT(const VkPrivateDataSlotCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkPrivateDataSlotEXT* pPrivateDataSlot) const {
 		return fp_vkCreatePrivateDataSlotEXT(device, pCreateInfo, pAllocator, pPrivateDataSlot);
 	}
 #endif
 #ifndef PFN_vkDestroyPrivateDataSlotEXT_PROXY
 #define PFN_vkDestroyPrivateDataSlotEXT_PROXY
-	void destroyPrivateDataSlotEXT(VkPrivateDataSlotEXT privateDataSlot, const VkAllocationCallbacks* pAllocator) {
+	void destroyPrivateDataSlotEXT(VkPrivateDataSlotEXT privateDataSlot, const VkAllocationCallbacks* pAllocator) const {
 		fp_vkDestroyPrivateDataSlotEXT(device, privateDataSlot, pAllocator);
 	}
 #endif
 #ifndef PFN_vkSetPrivateDataEXT_PROXY
 #define PFN_vkSetPrivateDataEXT_PROXY
-	VkResult setPrivateDataEXT(VkObjectType objectType, uint64_t objectHandle, VkPrivateDataSlotEXT privateDataSlot, uint64_t data) {
+	VkResult setPrivateDataEXT(VkObjectType objectType, uint64_t objectHandle, VkPrivateDataSlotEXT privateDataSlot, uint64_t data) const {
 		return fp_vkSetPrivateDataEXT(device, objectType, objectHandle, privateDataSlot, data);
 	}
 #endif
 #ifndef PFN_vkGetPrivateDataEXT_PROXY
 #define PFN_vkGetPrivateDataEXT_PROXY
-	void getPrivateDataEXT(VkObjectType objectType, uint64_t objectHandle, VkPrivateDataSlotEXT privateDataSlot, uint64_t* pData) {
+	void getPrivateDataEXT(VkObjectType objectType, uint64_t objectHandle, VkPrivateDataSlotEXT privateDataSlot, uint64_t* pData) const {
 		fp_vkGetPrivateDataEXT(device, objectType, objectHandle, privateDataSlot, pData);
 	}
 #endif
@@ -3164,7 +3164,7 @@ struct DispatchTable {
 #if defined(VK_KHR_video_encode_queue) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdEncodeVideoKHR_PROXY
 #define PFN_vkCmdEncodeVideoKHR_PROXY
-	void cmdEncodeVideoKHR(VkCommandBuffer commandBuffer, const VkVideoEncodeInfoKHR* pEncodeInfo) {
+	void cmdEncodeVideoKHR(VkCommandBuffer commandBuffer, const VkVideoEncodeInfoKHR* pEncodeInfo) const {
 		fp_vkCmdEncodeVideoKHR(commandBuffer, pEncodeInfo);
 	}
 #endif
@@ -3172,49 +3172,49 @@ struct DispatchTable {
 #if defined(VK_KHR_synchronization2) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdSetEvent2KHR_PROXY
 #define PFN_vkCmdSetEvent2KHR_PROXY
-	void cmdSetEvent2KHR(VkCommandBuffer commandBuffer, VkEvent event, const VkDependencyInfoKHR* pDependencyInfo) {
+	void cmdSetEvent2KHR(VkCommandBuffer commandBuffer, VkEvent event, const VkDependencyInfoKHR* pDependencyInfo) const {
 		fp_vkCmdSetEvent2KHR(commandBuffer, event, pDependencyInfo);
 	}
 #endif
 #ifndef PFN_vkCmdResetEvent2KHR_PROXY
 #define PFN_vkCmdResetEvent2KHR_PROXY
-	void cmdResetEvent2KHR(VkCommandBuffer commandBuffer, VkEvent event, VkPipelineStageFlags2KHR stageMask) {
+	void cmdResetEvent2KHR(VkCommandBuffer commandBuffer, VkEvent event, VkPipelineStageFlags2KHR stageMask) const {
 		fp_vkCmdResetEvent2KHR(commandBuffer, event, stageMask);
 	}
 #endif
 #ifndef PFN_vkCmdWaitEvents2KHR_PROXY
 #define PFN_vkCmdWaitEvents2KHR_PROXY
-	void cmdWaitEvents2KHR(VkCommandBuffer commandBuffer, uint32_t eventCount, const VkEvent* pEvents, const VkDependencyInfoKHR* pDependencyInfos) {
+	void cmdWaitEvents2KHR(VkCommandBuffer commandBuffer, uint32_t eventCount, const VkEvent* pEvents, const VkDependencyInfoKHR* pDependencyInfos) const {
 		fp_vkCmdWaitEvents2KHR(commandBuffer, eventCount, pEvents, pDependencyInfos);
 	}
 #endif
 #ifndef PFN_vkCmdPipelineBarrier2KHR_PROXY
 #define PFN_vkCmdPipelineBarrier2KHR_PROXY
-	void cmdPipelineBarrier2KHR(VkCommandBuffer commandBuffer, const VkDependencyInfoKHR* pDependencyInfo) {
+	void cmdPipelineBarrier2KHR(VkCommandBuffer commandBuffer, const VkDependencyInfoKHR* pDependencyInfo) const {
 		fp_vkCmdPipelineBarrier2KHR(commandBuffer, pDependencyInfo);
 	}
 #endif
 #ifndef PFN_vkCmdWriteTimestamp2KHR_PROXY
 #define PFN_vkCmdWriteTimestamp2KHR_PROXY
-	void cmdWriteTimestamp2KHR(VkCommandBuffer commandBuffer, VkPipelineStageFlags2KHR stage, VkQueryPool queryPool, uint32_t query) {
+	void cmdWriteTimestamp2KHR(VkCommandBuffer commandBuffer, VkPipelineStageFlags2KHR stage, VkQueryPool queryPool, uint32_t query) const {
 		fp_vkCmdWriteTimestamp2KHR(commandBuffer, stage, queryPool, query);
 	}
 #endif
 #ifndef PFN_vkQueueSubmit2KHR_PROXY
 #define PFN_vkQueueSubmit2KHR_PROXY
-	VkResult queueSubmit2KHR(VkQueue queue, uint32_t submitCount, const VkSubmitInfo2KHR* pSubmits, VkFence fence) {
+	VkResult queueSubmit2KHR(VkQueue queue, uint32_t submitCount, const VkSubmitInfo2KHR* pSubmits, VkFence fence) const {
 		return fp_vkQueueSubmit2KHR(queue, submitCount, pSubmits, fence);
 	}
 #endif
 #ifndef PFN_vkCmdWriteBufferMarker2AMD_PROXY
 #define PFN_vkCmdWriteBufferMarker2AMD_PROXY
-	void cmdWriteBufferMarker2AMD(VkCommandBuffer commandBuffer, VkPipelineStageFlags2KHR stage, VkBuffer dstBuffer, VkDeviceSize dstOffset, uint32_t marker) {
+	void cmdWriteBufferMarker2AMD(VkCommandBuffer commandBuffer, VkPipelineStageFlags2KHR stage, VkBuffer dstBuffer, VkDeviceSize dstOffset, uint32_t marker) const {
 		fp_vkCmdWriteBufferMarker2AMD(commandBuffer, stage, dstBuffer, dstOffset, marker);
 	}
 #endif
 #ifndef PFN_vkGetQueueCheckpointData2NV_PROXY
 #define PFN_vkGetQueueCheckpointData2NV_PROXY
-	void getQueueCheckpointData2NV(VkQueue queue, uint32_t* pCheckpointDataCount, VkCheckpointData2NV* pCheckpointData) {
+	void getQueueCheckpointData2NV(VkQueue queue, uint32_t* pCheckpointDataCount, VkCheckpointData2NV* pCheckpointData) const {
 		fp_vkGetQueueCheckpointData2NV(queue, pCheckpointDataCount, pCheckpointData);
 	}
 #endif
@@ -3222,7 +3222,7 @@ struct DispatchTable {
 #if defined(VK_NV_fragment_shading_rate_enums) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdSetFragmentShadingRateEnumNV_PROXY
 #define PFN_vkCmdSetFragmentShadingRateEnumNV_PROXY
-	void cmdSetFragmentShadingRateEnumNV(VkCommandBuffer commandBuffer, VkFragmentShadingRateNV shadingRate, VkFragmentShadingRateCombinerOpKHR combinerOps[2]) {
+	void cmdSetFragmentShadingRateEnumNV(VkCommandBuffer commandBuffer, VkFragmentShadingRateNV shadingRate, VkFragmentShadingRateCombinerOpKHR combinerOps[2]) const {
 		fp_vkCmdSetFragmentShadingRateEnumNV(commandBuffer, shadingRate, combinerOps);
 	}
 #endif
@@ -3230,37 +3230,37 @@ struct DispatchTable {
 #if defined(VK_KHR_copy_commands2) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdCopyBuffer2KHR_PROXY
 #define PFN_vkCmdCopyBuffer2KHR_PROXY
-	void cmdCopyBuffer2KHR(VkCommandBuffer commandBuffer, const VkCopyBufferInfo2KHR* pCopyBufferInfo) {
+	void cmdCopyBuffer2KHR(VkCommandBuffer commandBuffer, const VkCopyBufferInfo2KHR* pCopyBufferInfo) const {
 		fp_vkCmdCopyBuffer2KHR(commandBuffer, pCopyBufferInfo);
 	}
 #endif
 #ifndef PFN_vkCmdCopyImage2KHR_PROXY
 #define PFN_vkCmdCopyImage2KHR_PROXY
-	void cmdCopyImage2KHR(VkCommandBuffer commandBuffer, const VkCopyImageInfo2KHR* pCopyImageInfo) {
+	void cmdCopyImage2KHR(VkCommandBuffer commandBuffer, const VkCopyImageInfo2KHR* pCopyImageInfo) const {
 		fp_vkCmdCopyImage2KHR(commandBuffer, pCopyImageInfo);
 	}
 #endif
 #ifndef PFN_vkCmdCopyBufferToImage2KHR_PROXY
 #define PFN_vkCmdCopyBufferToImage2KHR_PROXY
-	void cmdCopyBufferToImage2KHR(VkCommandBuffer commandBuffer, const VkCopyBufferToImageInfo2KHR* pCopyBufferToImageInfo) {
+	void cmdCopyBufferToImage2KHR(VkCommandBuffer commandBuffer, const VkCopyBufferToImageInfo2KHR* pCopyBufferToImageInfo) const {
 		fp_vkCmdCopyBufferToImage2KHR(commandBuffer, pCopyBufferToImageInfo);
 	}
 #endif
 #ifndef PFN_vkCmdCopyImageToBuffer2KHR_PROXY
 #define PFN_vkCmdCopyImageToBuffer2KHR_PROXY
-	void cmdCopyImageToBuffer2KHR(VkCommandBuffer commandBuffer, const VkCopyImageToBufferInfo2KHR* pCopyImageToBufferInfo) {
+	void cmdCopyImageToBuffer2KHR(VkCommandBuffer commandBuffer, const VkCopyImageToBufferInfo2KHR* pCopyImageToBufferInfo) const {
 		fp_vkCmdCopyImageToBuffer2KHR(commandBuffer, pCopyImageToBufferInfo);
 	}
 #endif
 #ifndef PFN_vkCmdBlitImage2KHR_PROXY
 #define PFN_vkCmdBlitImage2KHR_PROXY
-	void cmdBlitImage2KHR(VkCommandBuffer commandBuffer, const VkBlitImageInfo2KHR* pBlitImageInfo) {
+	void cmdBlitImage2KHR(VkCommandBuffer commandBuffer, const VkBlitImageInfo2KHR* pBlitImageInfo) const {
 		fp_vkCmdBlitImage2KHR(commandBuffer, pBlitImageInfo);
 	}
 #endif
 #ifndef PFN_vkCmdResolveImage2KHR_PROXY
 #define PFN_vkCmdResolveImage2KHR_PROXY
-	void cmdResolveImage2KHR(VkCommandBuffer commandBuffer, const VkResolveImageInfo2KHR* pResolveImageInfo) {
+	void cmdResolveImage2KHR(VkCommandBuffer commandBuffer, const VkResolveImageInfo2KHR* pResolveImageInfo) const {
 		fp_vkCmdResolveImage2KHR(commandBuffer, pResolveImageInfo);
 	}
 #endif
@@ -3268,7 +3268,7 @@ struct DispatchTable {
 #if defined(VK_EXT_vertex_input_dynamic_state) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdSetVertexInputEXT_PROXY
 #define PFN_vkCmdSetVertexInputEXT_PROXY
-	void cmdSetVertexInputEXT(VkCommandBuffer commandBuffer, uint32_t vertexBindingDescriptionCount, const VkVertexInputBindingDescription2EXT* pVertexBindingDescriptions, uint32_t vertexAttributeDescriptionCount, const VkVertexInputAttributeDescription2EXT* pVertexAttributeDescriptions) {
+	void cmdSetVertexInputEXT(VkCommandBuffer commandBuffer, uint32_t vertexBindingDescriptionCount, const VkVertexInputBindingDescription2EXT* pVertexBindingDescriptions, uint32_t vertexAttributeDescriptionCount, const VkVertexInputAttributeDescription2EXT* pVertexAttributeDescriptions) const {
 		fp_vkCmdSetVertexInputEXT(commandBuffer, vertexBindingDescriptionCount, pVertexBindingDescriptions, vertexAttributeDescriptionCount, pVertexAttributeDescriptions);
 	}
 #endif
@@ -3276,13 +3276,13 @@ struct DispatchTable {
 #if defined(VK_FUCHSIA_external_memory) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkGetMemoryZirconHandleFUCHSIA_PROXY
 #define PFN_vkGetMemoryZirconHandleFUCHSIA_PROXY
-	VkResult getMemoryZirconHandleFUCHSIA(const VkMemoryGetZirconHandleInfoFUCHSIA* pGetZirconHandleInfo, zx_handle_t* pZirconHandle) {
+	VkResult getMemoryZirconHandleFUCHSIA(const VkMemoryGetZirconHandleInfoFUCHSIA* pGetZirconHandleInfo, zx_handle_t* pZirconHandle) const {
 		return fp_vkGetMemoryZirconHandleFUCHSIA(device, pGetZirconHandleInfo, pZirconHandle);
 	}
 #endif
 #ifndef PFN_vkGetMemoryZirconHandlePropertiesFUCHSIA_PROXY
 #define PFN_vkGetMemoryZirconHandlePropertiesFUCHSIA_PROXY
-	VkResult getMemoryZirconHandlePropertiesFUCHSIA(VkExternalMemoryHandleTypeFlagBits handleType, zx_handle_t zirconHandle, VkMemoryZirconHandlePropertiesFUCHSIA* pMemoryZirconHandleProperties) {
+	VkResult getMemoryZirconHandlePropertiesFUCHSIA(VkExternalMemoryHandleTypeFlagBits handleType, zx_handle_t zirconHandle, VkMemoryZirconHandlePropertiesFUCHSIA* pMemoryZirconHandleProperties) const {
 		return fp_vkGetMemoryZirconHandlePropertiesFUCHSIA(device, handleType, zirconHandle, pMemoryZirconHandleProperties);
 	}
 #endif
@@ -3290,13 +3290,13 @@ struct DispatchTable {
 #if defined(VK_FUCHSIA_external_semaphore) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkImportSemaphoreZirconHandleFUCHSIA_PROXY
 #define PFN_vkImportSemaphoreZirconHandleFUCHSIA_PROXY
-	VkResult importSemaphoreZirconHandleFUCHSIA(const VkImportSemaphoreZirconHandleInfoFUCHSIA* pImportSemaphoreZirconHandleInfo) {
+	VkResult importSemaphoreZirconHandleFUCHSIA(const VkImportSemaphoreZirconHandleInfoFUCHSIA* pImportSemaphoreZirconHandleInfo) const {
 		return fp_vkImportSemaphoreZirconHandleFUCHSIA(device, pImportSemaphoreZirconHandleInfo);
 	}
 #endif
 #ifndef PFN_vkGetSemaphoreZirconHandleFUCHSIA_PROXY
 #define PFN_vkGetSemaphoreZirconHandleFUCHSIA_PROXY
-	VkResult getSemaphoreZirconHandleFUCHSIA(const VkSemaphoreGetZirconHandleInfoFUCHSIA* pGetZirconHandleInfo, zx_handle_t* pZirconHandle) {
+	VkResult getSemaphoreZirconHandleFUCHSIA(const VkSemaphoreGetZirconHandleInfoFUCHSIA* pGetZirconHandleInfo, zx_handle_t* pZirconHandle) const {
 		return fp_vkGetSemaphoreZirconHandleFUCHSIA(device, pGetZirconHandleInfo, pZirconHandle);
 	}
 #endif
@@ -3304,31 +3304,31 @@ struct DispatchTable {
 #if defined(VK_EXT_extended_dynamic_state2) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdSetPatchControlPointsEXT_PROXY
 #define PFN_vkCmdSetPatchControlPointsEXT_PROXY
-	void cmdSetPatchControlPointsEXT(VkCommandBuffer commandBuffer, uint32_t patchControlPoints) {
+	void cmdSetPatchControlPointsEXT(VkCommandBuffer commandBuffer, uint32_t patchControlPoints) const {
 		fp_vkCmdSetPatchControlPointsEXT(commandBuffer, patchControlPoints);
 	}
 #endif
 #ifndef PFN_vkCmdSetRasterizerDiscardEnableEXT_PROXY
 #define PFN_vkCmdSetRasterizerDiscardEnableEXT_PROXY
-	void cmdSetRasterizerDiscardEnableEXT(VkCommandBuffer commandBuffer, VkBool32 rasterizerDiscardEnable) {
+	void cmdSetRasterizerDiscardEnableEXT(VkCommandBuffer commandBuffer, VkBool32 rasterizerDiscardEnable) const {
 		fp_vkCmdSetRasterizerDiscardEnableEXT(commandBuffer, rasterizerDiscardEnable);
 	}
 #endif
 #ifndef PFN_vkCmdSetDepthBiasEnableEXT_PROXY
 #define PFN_vkCmdSetDepthBiasEnableEXT_PROXY
-	void cmdSetDepthBiasEnableEXT(VkCommandBuffer commandBuffer, VkBool32 depthBiasEnable) {
+	void cmdSetDepthBiasEnableEXT(VkCommandBuffer commandBuffer, VkBool32 depthBiasEnable) const {
 		fp_vkCmdSetDepthBiasEnableEXT(commandBuffer, depthBiasEnable);
 	}
 #endif
 #ifndef PFN_vkCmdSetLogicOpEXT_PROXY
 #define PFN_vkCmdSetLogicOpEXT_PROXY
-	void cmdSetLogicOpEXT(VkCommandBuffer commandBuffer, VkLogicOp logicOp) {
+	void cmdSetLogicOpEXT(VkCommandBuffer commandBuffer, VkLogicOp logicOp) const {
 		fp_vkCmdSetLogicOpEXT(commandBuffer, logicOp);
 	}
 #endif
 #ifndef PFN_vkCmdSetPrimitiveRestartEnableEXT_PROXY
 #define PFN_vkCmdSetPrimitiveRestartEnableEXT_PROXY
-	void cmdSetPrimitiveRestartEnableEXT(VkCommandBuffer commandBuffer, VkBool32 primitiveRestartEnable) {
+	void cmdSetPrimitiveRestartEnableEXT(VkCommandBuffer commandBuffer, VkBool32 primitiveRestartEnable) const {
 		fp_vkCmdSetPrimitiveRestartEnableEXT(commandBuffer, primitiveRestartEnable);
 	}
 #endif
@@ -3336,7 +3336,7 @@ struct DispatchTable {
 #if defined(VK_EXT_color_write_enable) && defined(VK_VERSION_1_0)
 #ifndef PFN_vkCmdSetColorWriteEnableEXT_PROXY
 #define PFN_vkCmdSetColorWriteEnableEXT_PROXY
-	void cmdSetColorWriteEnableEXT(VkCommandBuffer commandBuffer, uint32_t attachmentCount, const VkBool32* pColorWriteEnables) {
+	void cmdSetColorWriteEnableEXT(VkCommandBuffer commandBuffer, uint32_t attachmentCount, const VkBool32* pColorWriteEnables) const {
 		fp_vkCmdSetColorWriteEnableEXT(commandBuffer, attachmentCount, pColorWriteEnables);
 	}
 #endif

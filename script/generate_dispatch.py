@@ -166,8 +166,7 @@ header += '\n#pragma once\n\n#include <vulkan/vulkan.h>\n\n'
 header += 'namespace vkb {\n\n'
 header += 'struct DispatchTable {\n'
 header += '\tDispatchTable() = default;\n'
-header += '\tDispatchTable(VkDevice const& device, PFN_vkGetDeviceProcAddr const& procAddr) {\n'
-header += '\t\t_device = device;\n'
+header += '\tDispatchTable(VkDevice const& device, PFN_vkGetDeviceProcAddr const& procAddr) : device(device) {\n'
 
 proxy_definition = ''
 pfn_declaration = ''
@@ -249,7 +248,7 @@ for level in core_commands:
 		proxy_definition += '('
 
 		if takes_device:
-			proxy_definition +='_device'
+			proxy_definition +='device'
 			if(len(names) > 0):
 				proxy_definition += ', '
 		i = 0
@@ -358,7 +357,7 @@ for extension in extension_commands:
 			proxy_definition += '('
 
 			if takes_device:
-				proxy_definition +='_device'
+				proxy_definition +='device'
 				if(len(names) > 0):
 					proxy_definition += ', '
 			i = 0
@@ -378,8 +377,8 @@ for extension in extension_commands:
 header += pfn_loading
 header += '\t}\n'
 header += proxy_definition
-header += 'private:\n\n\tVkDevice _device = VK_NULL_HANDLE;\n\n'
 header += pfn_declaration
+header += '\tVkDevice device = VK_NULL_HANDLE;\n'
 header += '};\n\n'
 header += '} // namespace vkb'
 

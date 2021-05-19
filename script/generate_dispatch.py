@@ -240,7 +240,7 @@ for level in core_commands:
 				if i < length:
 					proxy_definition += ', '
 			i += 1
-		proxy_definition += ') {\n'
+		proxy_definition += ') const {\n'
 		proxy_definition += '\t\t'
 		if return_type != 'void':
 			proxy_definition += 'return '
@@ -349,7 +349,7 @@ for extension in extension_commands:
 					if i < length:
 						proxy_definition += ', '
 				i += 1
-			proxy_definition += ') {\n'
+			proxy_definition += ') const {\n'
 			proxy_definition += '\t\t'
 			if return_type != 'void':
 				proxy_definition += 'return '

@@ -59,8 +59,6 @@ vk_xml = xmltodict.parse(vk_xml_raw,process_namespaces=True)
 command_params = {'return_type': '', 'args': [], 'requirements': [], 'macro_template': Template('')}
 
 device_commands = {}
-core_commands = {}
-extension_commands = {}
 
 # Gather all device functions/aliases for filtering core/extension function fetching
 commands_node = vk_xml['registry']['commands']['command']

@@ -27,7 +27,7 @@ namespace vkb {
 
 struct DispatchTable {
 	DispatchTable() = default;
-	DispatchTable(VkDevice const& device, PFN_vkGetDeviceProcAddr const& procAddr) : device(device) {
+	DispatchTable(VkDevice device, PFN_vkGetDeviceProcAddr procAddr) : device(device) {
 		fp_vkGetDeviceQueue = (PFN_vkGetDeviceQueue)procAddr(device, "vkGetDeviceQueue");
 		fp_vkQueueSubmit = (PFN_vkQueueSubmit)procAddr(device, "vkQueueSubmit");
 		fp_vkQueueWaitIdle = (PFN_vkQueueWaitIdle)procAddr(device, "vkQueueWaitIdle");

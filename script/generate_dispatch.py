@@ -38,6 +38,7 @@ exclusions = [
 import sys
 import subprocess
 import pkg_resources
+import copy
 
 installed = {pkg.key for pkg in pkg_resources.working_set}
 xmltodict_missing = {'xmltodict'} - installed
@@ -54,8 +55,7 @@ with urllib.request.urlopen('https://raw.githubusercontent.com/KhronosGroup/Vulk
 
 vk_xml = xmltodict.parse(vk_xml_raw,process_namespaces=True)
 
-criteria = { 'extension': '', 'feature': 'VK_VERSION_1_0' }
-command_params = {'return_type': '', 'args': [], 'criterias': []}
+command_params = { 'return_type': '', 'args': [], 'requirements': []}
 
 device_commands = {}
 core_commands = {}
@@ -67,7 +67,7 @@ aliases = {}
 for command_node in commands_node:
 	if 'proto' in command_node:
 		command_name = command_node['proto']['name']
-		new_command_params = command_params.copy()
+		new_command_params = copy.deepcopy(command_params)
 		new_command_params['return_type'] = command_node['proto']['type']
 		if type(command_node['param']) is list:
 			new_command_params['args'] = command_node['param']
@@ -85,7 +85,7 @@ for alias in aliases:
 		aliased_command_params = device_commands[alias].copy()
 		device_commands[aliases[alias]] = aliased_command_params;
 
-# Add criterias for core device pfns
+# Add requirements for core PFN's
 features_node = vk_xml['registry']['feature']
 for feature_node in features_node:
 	for require_node in feature_node['require']:
@@ -94,67 +94,42 @@ for feature_node in features_node:
 				if type(require_node[param_node]) is list:
 					for param in require_node[param_node]:
 						if param['@name'] in device_commands:
-							new_criteria = criteria.copy()
-							new_criteria['feature'] = feature_node['@name']
-							device_commands[param['@name']]['criterias'] += [new_criteria]
+							device_commands[param['@name']]['requirements'] += [[feature_node['@name']]]
 
+
+# Add requirements for extension PFN's
 extensions_node = vk_xml['registry']['extensions']['extension']
 for extension_node in extensions_node:
 	extension_name = extension_node['@name']
-	new_criteria = criteria.copy()
-	new_criteria['extension'] = extension_name
-	new_criteria['feature'] = 'VK_VERSION_1_0'
-	if 'require' in extension_node:
-		for require_node in extension_node['require']: 
-			if '@feature' in extension_node['require']:
-				print('aye')
-				new_criteria['feature'] = extension_node['require']['@feature']
-			#print(extension_node['require']['command'])
-		# for command_node in extension_node['require']['command']:
-		# 	for command_name in command_node['name']:
-		# 		print(command_name)
+	if 'require' in extension_node.keys():
+		require_nodes = extension_node['require']
+		for require_node in require_nodes:
+			requirements = [extension_name];
+			if type(require_node) is not str:
+				if 'command' in require_node.keys():
+					if '@feature' in require_node.keys():
+						requirements.append(require_node['@feature'])
+					if '@extension' in require_node.keys():
+						requirements.append(require_node['@extension'])
+					if type(require_node['command']) is not list:
+						if require_node['command']['@name'] in device_commands:
+							device_commands[require_node['command']['@name']]['requirements'] += [requirements]
+					else:
+						for command_node in require_node['command']:
+							if command_node['@name'] in device_commands:
+								device_commands[command_node['@name']]['requirements'] += [requirements]
+			elif require_node == 'command':
+				if type(require_nodes['command']) is not list:
+					if require_nodes['command']['@name'] in device_commands:
+						device_commands[require_nodes['command']['@name']]['requirements'] += [requirements]
+				else:
+					for command_node in require_nodes['command']:
+						if command_node['@name'] in device_commands:
+							device_commands[command_node['@name']]['requirements'] += [requirements]
 
-# Gather extension functions
-#extensions = vk_xml['registry']['extensions']['extension']
-#for extension in extensions:
-#	extension_name = extension['@name']
-#	extension_commands[(extension_name, 'VK_VERSION_1_0')] = []
-#	for key in extension.keys():
-#		if key == 'require':
-#			requires = [extension[key]]
-#			for required in requires:
-#				if type(required) is list:
-#					for n_required in required:
-#						if '@feature' in n_required and 'command' in n_required:
-#							extension_commands[(extension_name, n_required['@feature'])] = []
-#							commands = [n_required['command']]
-#							for command in commands:
-#								if type(command) is list:
-#									for n_command in command:
-#										if n_command['@name'] in device_commands:
-#											extension_commands[(extension_name, n_required['@feature'])] += [n_command['@name']]
-#								elif command['@name'] in device_commands:
-#									extension_commands[(extension_name, n_required['@feature'])] += [command['@name']]
-#						elif 'command' in n_required:
-#							commands = [n_required['command']]
-#							for command in commands:
-#								if type(command) is list:
-#									for n_command in command:
-#										if n_command['@name'] in device_commands:
-#											extension_commands[(extension_name, 'VK_VERSION_1_0')] += [n_command['@name']]
-#								elif command['@name'] in device_commands:
-#									extension_commands[(extension_name, 'VK_VERSION_1_0')] += [command['@name']]
-#				elif 'command' in required:
-#					commands = [required['command']]
-#					for command in commands:
-#						if type(command) is list:
-#							for n_command in command:
-#								if n_command['@name'] in device_commands:
-#									extension_commands[(extension_name, 'VK_VERSION_1_0')] += [n_command['@name']]
-#						elif command['@name'] in device_commands:
-#							extension_commands[(extension_name, 'VK_VERSION_1_0')] += [command['@name']]
-#
-# Build header
+# Test
+for a in device_commands:
+	print(device_commands[a])
 
 # License
 # header = '/* \n'

@@ -39,6 +39,7 @@ import sys
 import subprocess
 import pkg_resources
 import copy
+from string import Template
 
 installed = {pkg.key for pkg in pkg_resources.working_set}
 xmltodict_missing = {'xmltodict'} - installed
@@ -55,7 +56,7 @@ with urllib.request.urlopen('https://raw.githubusercontent.com/KhronosGroup/Vulk
 
 vk_xml = xmltodict.parse(vk_xml_raw,process_namespaces=True)
 
-command_params = { 'return_type': '', 'args': [], 'requirements': []}
+command_params = {'return_type': '', 'args': [], 'requirements': [], 'macro_template': Template('')}
 
 device_commands = {}
 core_commands = {}
@@ -88,13 +89,14 @@ for alias in aliases:
 # Add requirements for core PFN's
 features_node = vk_xml['registry']['feature']
 for feature_node in features_node:
-	for require_node in feature_node['require']:
-		for param_node in require_node:
-			if param_node == 'command':
-				if type(require_node[param_node]) is list:
-					for param in require_node[param_node]:
-						if param['@name'] in device_commands:
-							device_commands[param['@name']]['requirements'] += [[feature_node['@name']]]
+	if feature_node['@name'] != 'VK_VERSION_1_0':
+		for require_node in feature_node['require']:
+			for param_node in require_node:
+				if param_node == 'command':
+					if type(require_node[param_node]) is list:
+						for param in require_node[param_node]:
+							if param['@name'] in device_commands:
+								device_commands[param['@name']]['requirements'] += [[feature_node['@name']]]
 
 
 # Add requirements for extension PFN's
@@ -127,253 +129,149 @@ for extension_node in extensions_node:
 						if command_node['@name'] in device_commands:
 							device_commands[command_node['@name']]['requirements'] += [requirements]
 
-# Test
-for a in device_commands:
-	print(device_commands[a])
+# Generate macro templates
+for command in device_commands:
+	macro = ''
+	requirements_collection = device_commands[command]['requirements']
+	collection_count = len(requirements_collection)
+	if collection_count > 0:
+		macro = '#if '
+		while(collection_count > 0):
+			for requirements in requirements_collection:
+				requirements_count = len(requirements)
+				macro += '('
+				for requirement in requirements:
+					macro += 'defined({})'.format(requirement)
+					requirements_count -= 1
+					if requirements_count > 0:
+						macro += ' && '
+				macro += ')'
+				if collection_count > 0:
+					collection_count -= 1
+					if collection_count > 0:
+				 		macro += ' || '
+		macro += '\n$body#endif\n'
+	else:
+		macro = '$body'
+	device_commands[command]['macro_template'] = Template(macro)
 
 # License
-# header = '/* \n'
-# header += ' * Copyright © 2021 Cody Goodson (contact@vibimanx.com)\n'
-# header += ' * \n'
-# header += ' * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated\n'
-# header += ' * documentation files (the “Software”), to deal in the Software without restriction, including without\n'
-# header += ' * limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies\n'
-# header += ' * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\n'
-# header += ' * \n'
-# header += ' * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\n'
-# header += ' * \n'
-# header += ' * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT\n'
-# header += ' * LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.\n'
-# header += ' * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,\n'
-# header += ' * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n'
-# header += ' * \n'
-# header += ' */\n\n'
+license = '/* \n'
+license += ' * Copyright © 2021 Cody Goodson (contact@vibimanx.com)\n'
+license += ' * \n'
+license += ' * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated\n'
+license += ' * documentation files (the “Software”), to deal in the Software without restriction, including without\n'
+license += ' * limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies\n'
+license += ' * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\n'
+license += ' * \n'
+license += ' * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\n'
+license += ' * \n'
+license += ' * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT\n'
+license += ' * LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.\n'
+license += ' * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,\n'
+license += ' * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n'
+license += ' * \n'
+license += ' */\n\n'
 
-# # Info
-# header += '// This file is a part of VkBootstrap\n'
-# header += '// https://github.com/charles-lunarg/vk-bootstrap\n\n'
+# Info
+info = '// This file is a part of VkBootstrap\n'
+info += '// https://github.com/charles-lunarg/vk-bootstrap\n\n'
 
 # # Content
-# header += '\n#pragma once\n\n#include <vulkan/vulkan.h>\n\n'
-# header += 'namespace vkb {\n\n'
-# header += 'struct DispatchTable {\n'
-# header += '\tDispatchTable() = default;\n'
-# header += '\tDispatchTable(VkDevice const& device, PFN_vkGetDeviceProcAddr const& procAddr) : device(device) {\n'
+body = '\n#pragma once\n\n#include <vulkan/vulkan.h>\n\n'
+body += 'namespace vkb {\n\n'
+body += 'struct DispatchTable {\n'
+body += '\tDispatchTable() = default;\n'
+body += '\tDispatchTable(VkDevice const& device, PFN_vkGetDeviceProcAddr const& procAddr) : device(device) {\n'
 
-# proxy_definition = ''
-# pfn_declaration = ''
-# pfn_loading = ''
+proxy_section = ''
+fp_decl_section = ''
+pfn_load_section = ''
 
-# for level in core_commands:
-# 	pfn_declaration += '#ifdef ' + level + '\n';
-# 	pfn_loading += '#ifdef ' + level + '\n';
-# 	for command in core_commands[level]:
-# 		fptr_name = 'PFN_' + command
-# 		member_name = 'fp_' + command
-# 		proxy_name = command[2].lower() + command[3:]
+proxy_template = Template('\t$return_type $proxy_name($args_full) const {\n\t\t$opt_return$fp_name($args_names);\n\t}\n')
+fp_decl_template = Template('\t$pfn_name $fp_name = nullptr;\n')
+pfn_load_template = Template('\t\t$fp_name = ($pfn_name)procAddr(device, "$command_name");\n')
 
-# 		types = device_commands[command][0]
-# 		names = [];
-# 		i = 0
-# 		length = len(types) - 1
-# 		takes_device = False;
-# 		proxy_definition += '\t'
-# 		return_type = device_commands[command][1];
-# 		proxy_definition += return_type
-# 		proxy_definition += ' '
-# 		proxy_definition += proxy_name
-# 		proxy_definition += '('
-# 		for t in types:
-# 			if i == 0 and t['type'] == 'VkDevice':
-# 				takes_device = True
-# 			else:
-# 				if '#text' in t:
-# 					text = t['#text']
-# 					text = text.replace(' ', '')
-# 					array = '';
-# 					array_index = text.find('[')
-# 					if array_index != -1:
-# 						array = text[array_index:]
-# 						text = text[0:array_index]
-# 					if text == '*':
-# 						proxy_definition += t['type']
-# 						proxy_definition += '* '
-# 						proxy_definition += t['name']
-# 					elif text == '**':
-# 						proxy_definition += t['type']
-# 						proxy_definition += '** '
-# 						proxy_definition += t['name']
-# 					elif text == 'const*':
-# 						proxy_definition += 'const '
-# 						proxy_definition += t['type']
-# 						proxy_definition += '* '
-# 						proxy_definition += t['name']
-# 					elif text == 'const**':
-# 						proxy_definition += 'const '
-# 						proxy_definition += t['type']
-# 						proxy_definition += '** '
-# 						proxy_definition += t['name']
-# 					elif text == 'const*const*':
-# 						proxy_definition += 'const '
-# 						proxy_definition += t['type']
-# 						proxy_definition += '* const* '
-# 						proxy_definition += t['name']
-# 					else:
-# 						proxy_definition += t['type']
-# 						proxy_definition += ' '
-# 						proxy_definition += t['name']
-# 					if array != '':
-# 						proxy_definition += array
-# 				else:
-# 					proxy_definition += t['type']
-# 					proxy_definition += ' '
-# 					proxy_definition += t['name']
-# 				names += [t['name']]
-# 				if i < length:
-# 					proxy_definition += ', '
-# 			i += 1
-# 		proxy_definition += ') const {\n'
-# 		proxy_definition += '\t\t'
-# 		if return_type != 'void':
-# 			proxy_definition += 'return '
-# 		proxy_definition += member_name
-# 		proxy_definition += '('
+for command in device_commands:
+	params = device_commands[command]
+	# easy stuff out of the way
+	return_type = params['return_type']
+	if(return_type != 'void'):
+		opt_return = 'return '
+	else:
+		opt_return = ''
+	proxy_name = command[2].lower() + command[3:]
+	fp_name = 'fp_' + command
+	pfn_name = 'PFN_' + command
 
-# 		if takes_device:
-# 			proxy_definition +='device'
-# 			if(len(names) > 0):
-# 				proxy_definition += ', '
-# 		i = 0
-# 		length = len(names) - 1
-# 		for name in names:
-# 			proxy_definition += name
-# 			if i < length:
-# 				proxy_definition += ', '
-# 			i += 1
-# 		proxy_definition += ');\n'
-# 		proxy_definition += '\t}\n'
+	# Now for args
+	arg_template = Template('$front_mods$arg_type$back_mods$arg_name$array')
+	args_full = ''
+	args_names = ''
+	args_count = len(params['args'])
+	i = args_count
+	for arg in params['args']:
+		front_mods = '';
+		back_mods = ' ';
+		array = '';
+		arg_type = arg['type']
+		arg_name = arg['name']
+		if '#text' in arg:
+			text = arg['#text']
+			text = text.replace(' ', '')
+			array_index = text.find('[')
+			if array_index != -1:
+				array = text[array_index:]
+				text = text[0:array_index]
+			if text == '*':
+				front_mods = ''
+				back_mods = '* '
+			elif text == '**':
+				front_mods = ''
+				back_mods = '** '
+			elif text == 'const*':
+				front_mods = 'const '
+				back_mods = '* '
+			elif text == 'const**':
+				front_mods = 'const '
+				back_mods = '** '
+			elif text == 'const*const*':
+				front_mods = 'const '
+				back_mods = '* const* '
+		if i == args_count and arg_type == 'VkDevice':
+			args_names += arg_name
+			if i > 0:
+				i -= 1
+				if i > 0:
+			 		args_names += ', '
+		else:
+			args_full += arg_template.substitute(front_mods = front_mods, arg_type = arg_type, back_mods = back_mods, arg_name = arg_name, array = array)
+			args_names += arg_name
+			if i > 0:
+				i -= 1
+				if i > 0:
+			 		args_full += ', '
+			 		args_names += ', '
 
-# 		pfn_declaration += '\t' + fptr_name + ' ' + member_name + ' = nullptr;\n'
-# 		pfn_loading += '\t\t' + member_name + ' = (' + fptr_name + ')procAddr(device, "' + command + '");\n'
-# 	pfn_declaration += '#endif\n'
-# 	pfn_loading += '#endif\n'
+	proxy_body = proxy_template.substitute(return_type = return_type, proxy_name = proxy_name, args_full = args_full, opt_return = opt_return, fp_name = fp_name, args_names = args_names)
+	fp_decl_body = fp_decl_template.substitute(pfn_name = pfn_name, fp_name = fp_name)
+	pfn_load_body = pfn_load_template.substitute(fp_name = fp_name, pfn_name = pfn_name, command_name = command)
 
-# for extension in extension_commands:
-# 	if len(extension_commands[extension]) > 0:
-# 		pfn_declaration += '#if defined(' + extension[0] + ') && defined(' + extension[1] + ')\n';
-# 		pfn_loading += '#if defined(' + extension[0] + ') && defined(' + extension[1] + ')\n';
-# 		proxy_definition += '#if defined(' + extension[0] + ') && defined(' + extension[1] + ')\n';
-# 		for command in extension_commands[extension]:
-# 			fptr_name = 'PFN_' + command
-# 			member_name = 'fp_' + command
-# 			proxy_name = command[2].lower() + command[3:]
-# 			#Duplication guards
-# 			pfn_declaration += '#ifndef ' + fptr_name + '_DECLARE\n'
-# 			pfn_declaration += '#define ' + fptr_name + '_DECLARE\n'
-# 			pfn_declaration += '\t' + fptr_name + ' ' + member_name + ' = nullptr;\n'
-# 			pfn_declaration += '#endif\n'
-# 			#Duplication guards
-# 			pfn_loading += '#ifndef ' + fptr_name + '_LOAD\n'
-# 			pfn_loading += '#define ' + fptr_name + '_LOAD\n'
-# 			pfn_loading += '\t\t' + member_name + ' = (' + fptr_name + ')procAddr(device, "' + command + '");\n'
-# 			pfn_loading += '#endif\n'
-# 			#Duplication guards
-# 			proxy_definition += '#ifndef ' + fptr_name + '_PROXY\n'
-# 			proxy_definition += '#define ' + fptr_name + '_PROXY\n'
-# 			#proxy_definition += '\t\tTEST '+ proxy_name +'\n'
-# 			types = device_commands[command][0]
-# 			names = [];
-# 			i = 0
-# 			length = len(types) - 1
-# 			takes_device = False;
-# 			proxy_definition += '\t'
-# 			return_type = device_commands[command][1];
-# 			proxy_definition += return_type
-# 			proxy_definition += ' '
-# 			proxy_definition += proxy_name
-# 			proxy_definition += '('
-# 			for t in types:
-# 				if i == 0 and t['type'] == 'VkDevice':
-# 					takes_device = True
-# 				else:
-# 					if '#text' in t:
-# 						text = t['#text']
-# 						text = text.replace(' ', '')
-# 						array = '';
-# 						array_index = text.find('[')
-# 						if array_index != -1:
-# 							array = text[array_index:]
-# 							text = text[0:array_index]
-# 						if text == '*':
-# 							proxy_definition += t['type']
-# 							proxy_definition += '* '
-# 							proxy_definition += t['name']
-# 						elif text == '**':
-# 							proxy_definition += t['type']
-# 							proxy_definition += '** '
-# 							proxy_definition += t['name']
-# 						elif text == 'const*':
-# 							proxy_definition += 'const '
-# 							proxy_definition += t['type']
-# 							proxy_definition += '* '
-# 							proxy_definition += t['name']
-# 						elif text == 'const**':
-# 							proxy_definition += 'const '
-# 							proxy_definition += t['type']
-# 							proxy_definition += '** '
-# 							proxy_definition += t['name']
-# 						elif text == 'const*const*':
-# 							proxy_definition += 'const '
-# 							proxy_definition += t['type']
-# 							proxy_definition += '* const* '
-# 							proxy_definition += t['name']
-# 						else:
-# 							proxy_definition += t['type']
-# 							proxy_definition += ' '
-# 							proxy_definition += t['name']
-# 						if array != '':
-# 							proxy_definition += array
-# 					else:
-# 						proxy_definition += t['type']
-# 						proxy_definition += ' '
-# 						proxy_definition += t['name']
-# 					names += [t['name']]
-# 					if i < length:
-# 						proxy_definition += ', '
-# 				i += 1
-# 			proxy_definition += ') const {\n'
-# 			proxy_definition += '\t\t'
-# 			if return_type != 'void':
-# 				proxy_definition += 'return '
-# 			proxy_definition += member_name
-# 			proxy_definition += '('
+	macro_template = params['macro_template']
+	proxy_section += macro_template.substitute(body=proxy_body)
+	fp_decl_section += macro_template.substitute(body=fp_decl_body)
+	pfn_load_section +=macro_template.substitute(body=pfn_load_body)
 
-# 			if takes_device:
-# 				proxy_definition +='device'
-# 				if(len(names) > 0):
-# 					proxy_definition += ', '
-# 			i = 0
-# 			length = len(names) - 1
-# 			for name in names:
-# 				proxy_definition += name
-# 				if i < length:
-# 					proxy_definition += ', '
-# 				i += 1
-# 			proxy_definition += ');\n'
-# 			proxy_definition += '\t}\n'
-# 			proxy_definition += '#endif\n'
-# 		pfn_declaration += '#endif\n'
-# 		pfn_loading += '#endif\n'
-# 		proxy_definition += '#endif\n'
+body += pfn_load_section
+body += '\t}\n'
+body += proxy_section
+body += fp_decl_section
+body += '\tVkDevice device = VK_NULL_HANDLE;\n'
+body += '};\n\n'
+body += '} // namespace vkb'
 
-# header += pfn_loading
-# header += '\t}\n'
-# header += proxy_definition
-# header += pfn_declaration
-# header += '\tVkDevice device = VK_NULL_HANDLE;\n'
-# header += '};\n\n'
-# header += '} // namespace vkb'
+header = license + info + body
 
-# header_file = open("../src/VkDispatchTable.h", "w")
-# header_file.write(header)
-# header_file.close();
+header_file = open("../src/VkDispatchTable.h", "w")
+header_file.write(header)
+header_file.close();

@@ -180,7 +180,7 @@ body = '\n#pragma once\n\n#include <vulkan/vulkan.h>\n\n'
 body += 'namespace vkb {\n\n'
 body += 'struct DispatchTable {\n'
 body += '\tDispatchTable() = default;\n'
-body += '\tDispatchTable(VkDevice const& device, PFN_vkGetDeviceProcAddr const& procAddr) : device(device) {\n'
+body += '\tDispatchTable(VkDevice device, PFN_vkGetDeviceProcAddr procAddr) : device(device) {\n'
 
 proxy_section = ''
 fp_decl_section = ''

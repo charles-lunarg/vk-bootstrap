@@ -930,65 +930,44 @@ bool supports_features(VkPhysicalDeviceFeatures supported,
     return true;
 }
 // clang-format on
-// finds the first queue which supports graphics operations. returns QUEUE_INDEX_MAX_VALUE if none is found
-uint32_t get_graphics_queue_index(std::vector<VkQueueFamilyProperties> const& families) {
+// Finds the first queue which supports the desired operations. Returns QUEUE_INDEX_MAX_VALUE if none is found
+uint32_t get_first_queue_index(std::vector<VkQueueFamilyProperties> const& families, VkQueueFlags desired_flags) {
 	for (uint32_t i = 0; i < static_cast<uint32_t>(families.size()); i++) {
-		if (families[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) return i;
+		if (families[i].queueFlags & desired_flags) return i;
 	}
 	return QUEUE_INDEX_MAX_VALUE;
 }
-// finds a compute queue which is separate from the graphics queue and tries to find one without
-// transfer support returns QUEUE_INDEX_MAX_VALUE if none is found
-uint32_t get_separate_compute_queue_index(std::vector<VkQueueFamilyProperties> const& families) {
-	uint32_t compute = QUEUE_INDEX_MAX_VALUE;
+// Finds the queue which is separate from the graphics queue and has the desired flag and not the
+// undesired flag, but will select it if no better options are available compute support. Returns
+// QUEUE_INDEX_MAX_VALUE if none is found.
+uint32_t get_separate_queue_index(std::vector<VkQueueFamilyProperties> const& families,
+    VkQueueFlags desired_flags,
+    VkQueueFlags undesired_flags) {
+	uint32_t index = QUEUE_INDEX_MAX_VALUE;
 	for (uint32_t i = 0; i < static_cast<uint32_t>(families.size()); i++) {
-		if ((families[i].queueFlags & VK_QUEUE_COMPUTE_BIT) &&
-		    ((families[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) == 0)) {
-			if ((families[i].queueFlags & VK_QUEUE_TRANSFER_BIT) == 0) {
+		if ((families[i].queueFlags & desired_flags) && ((families[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) == 0)) {
+			if ((families[i].queueFlags & undesired_flags) == 0) {
 				return i;
 			} else {
-				compute = i;
+				index = i;
 			}
 		}
 	}
-	return compute;
+	return index;
 }
-// finds a transfer queue which is separate from the graphics queue and tries to find one without
-// compute support returns QUEUE_INDEX_MAX_VALUE if none is found
-uint32_t get_separate_transfer_queue_index(std::vector<VkQueueFamilyProperties> const& families) {
-	uint32_t transfer = QUEUE_INDEX_MAX_VALUE;
+
+// finds the first queue which supports only the desired flag (not graphics or transfer). Returns QUEUE_INDEX_MAX_VALUE if none is found.
+uint32_t get_dedicated_queue_index(std::vector<VkQueueFamilyProperties> const& families,
+    VkQueueFlags desired_flags,
+    VkQueueFlags undesired_flags) {
 	for (uint32_t i = 0; i < static_cast<uint32_t>(families.size()); i++) {
-		if ((families[i].queueFlags & VK_QUEUE_TRANSFER_BIT) &&
-		    ((families[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) == 0)) {
-			if ((families[i].queueFlags & VK_QUEUE_COMPUTE_BIT) == 0) {
-				return i;
-			} else {
-				transfer = i;
-			}
-		}
-	}
-	return transfer;
-}
-// finds the first queue which supports only compute (not graphics or transfer). returns QUEUE_INDEX_MAX_VALUE if none is found
-uint32_t get_dedicated_compute_queue_index(std::vector<VkQueueFamilyProperties> const& families) {
-	for (uint32_t i = 0; i < static_cast<uint32_t>(families.size()); i++) {
-		if ((families[i].queueFlags & VK_QUEUE_COMPUTE_BIT) &&
-		    (families[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) == 0 &&
-		    (families[i].queueFlags & VK_QUEUE_TRANSFER_BIT) == 0)
+		if ((families[i].queueFlags & desired_flags) && (families[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) == 0 &&
+		    (families[i].queueFlags & undesired_flags) == 0)
 			return i;
 	}
 	return QUEUE_INDEX_MAX_VALUE;
 }
-// finds the first queue which supports only transfer (not graphics or compute). returns QUEUE_INDEX_MAX_VALUE if none is found
-uint32_t get_dedicated_transfer_queue_index(std::vector<VkQueueFamilyProperties> const& families) {
-	for (uint32_t i = 0; i < static_cast<uint32_t>(families.size()); i++) {
-		if ((families[i].queueFlags & VK_QUEUE_TRANSFER_BIT) &&
-		    (families[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) == 0 &&
-		    (families[i].queueFlags & VK_QUEUE_COMPUTE_BIT) == 0)
-			return i;
-	}
-	return QUEUE_INDEX_MAX_VALUE;
-}
+
 // finds the first queue which supports presenting. returns QUEUE_INDEX_MAX_VALUE if none is found
 uint32_t get_present_queue_index(VkPhysicalDevice const phys_device,
     VkSurfaceKHR const surface,
@@ -1054,14 +1033,18 @@ PhysicalDeviceSelector::Suitable PhysicalDeviceSelector::is_device_suitable(Phys
 	if (criteria.required_version > pd.device_properties.apiVersion) return Suitable::no;
 	if (criteria.desired_version > pd.device_properties.apiVersion) suitable = Suitable::partial;
 
-	bool dedicated_compute =
-	    detail::get_dedicated_compute_queue_index(pd.queue_families) != detail::QUEUE_INDEX_MAX_VALUE;
-	bool dedicated_transfer =
-	    detail::get_dedicated_transfer_queue_index(pd.queue_families) != detail::QUEUE_INDEX_MAX_VALUE;
+	bool dedicated_compute = detail::get_dedicated_queue_index(pd.queue_families,
+	                             VK_QUEUE_COMPUTE_BIT,
+	                             VK_QUEUE_TRANSFER_BIT) != detail::QUEUE_INDEX_MAX_VALUE;
+	bool dedicated_transfer = detail::get_dedicated_queue_index(pd.queue_families,
+	                              VK_QUEUE_TRANSFER_BIT,
+	                              VK_QUEUE_COMPUTE_BIT) != detail::QUEUE_INDEX_MAX_VALUE;
 	bool separate_compute =
-	    detail::get_separate_compute_queue_index(pd.queue_families) != detail::QUEUE_INDEX_MAX_VALUE;
+	    detail::get_separate_queue_index(pd.queue_families, VK_QUEUE_COMPUTE_BIT, VK_QUEUE_TRANSFER_BIT) !=
+	    detail::QUEUE_INDEX_MAX_VALUE;
 	bool separate_transfer =
-	    detail::get_separate_transfer_queue_index(pd.queue_families) != detail::QUEUE_INDEX_MAX_VALUE;
+	    detail::get_separate_queue_index(pd.queue_families, VK_QUEUE_TRANSFER_BIT, VK_QUEUE_COMPUTE_BIT) !=
+	    detail::QUEUE_INDEX_MAX_VALUE;
 
 	bool present_queue =
 	    detail::get_present_queue_index(pd.phys_device, instance_info.surface, pd.queue_families) !=
@@ -1306,16 +1289,20 @@ PhysicalDeviceSelector& PhysicalDeviceSelector::select_first_device_unconditiona
 }
 
 bool PhysicalDevice::has_dedicated_compute_queue() const {
-	return detail::get_dedicated_compute_queue_index(queue_families) != detail::QUEUE_INDEX_MAX_VALUE;
+	return detail::get_dedicated_queue_index(queue_families, VK_QUEUE_COMPUTE_BIT, VK_QUEUE_TRANSFER_BIT) !=
+	       detail::QUEUE_INDEX_MAX_VALUE;
 }
 bool PhysicalDevice::has_separate_compute_queue() const {
-	return detail::get_separate_compute_queue_index(queue_families) != detail::QUEUE_INDEX_MAX_VALUE;
+	return detail::get_separate_queue_index(queue_families, VK_QUEUE_COMPUTE_BIT, VK_QUEUE_TRANSFER_BIT) !=
+	       detail::QUEUE_INDEX_MAX_VALUE;
 }
 bool PhysicalDevice::has_dedicated_transfer_queue() const {
-	return detail::get_dedicated_transfer_queue_index(queue_families) != detail::QUEUE_INDEX_MAX_VALUE;
+	return detail::get_dedicated_queue_index(queue_families, VK_QUEUE_TRANSFER_BIT, VK_QUEUE_COMPUTE_BIT) !=
+	       detail::QUEUE_INDEX_MAX_VALUE;
 }
 bool PhysicalDevice::has_separate_transfer_queue() const {
-	return detail::get_separate_transfer_queue_index(queue_families) != detail::QUEUE_INDEX_MAX_VALUE;
+	return detail::get_separate_queue_index(queue_families, VK_QUEUE_TRANSFER_BIT, VK_QUEUE_COMPUTE_BIT) !=
+	       detail::QUEUE_INDEX_MAX_VALUE;
 }
 std::vector<VkQueueFamilyProperties> PhysicalDevice::get_queue_families() const {
 	return queue_families;
@@ -1338,17 +1325,17 @@ detail::Result<uint32_t> Device::get_queue_index(QueueType type) const {
 				return detail::Result<uint32_t>{ QueueError::present_unavailable };
 			break;
 		case QueueType::graphics:
-			index = detail::get_graphics_queue_index(queue_families);
+			index = detail::get_first_queue_index(queue_families, VK_QUEUE_GRAPHICS_BIT);
 			if (index == detail::QUEUE_INDEX_MAX_VALUE)
 				return detail::Result<uint32_t>{ QueueError::graphics_unavailable };
 			break;
 		case QueueType::compute:
-			index = detail::get_separate_compute_queue_index(queue_families);
+			index = detail::get_separate_queue_index(queue_families, VK_QUEUE_COMPUTE_BIT, VK_QUEUE_TRANSFER_BIT);
 			if (index == detail::QUEUE_INDEX_MAX_VALUE)
 				return detail::Result<uint32_t>{ QueueError::compute_unavailable };
 			break;
 		case QueueType::transfer:
-			index = detail::get_separate_transfer_queue_index(queue_families);
+			index = detail::get_separate_queue_index(queue_families, VK_QUEUE_TRANSFER_BIT, VK_QUEUE_COMPUTE_BIT);
 			if (index == detail::QUEUE_INDEX_MAX_VALUE)
 				return detail::Result<uint32_t>{ QueueError::transfer_unavailable };
 			break;
@@ -1361,12 +1348,12 @@ detail::Result<uint32_t> Device::get_dedicated_queue_index(QueueType type) const
 	uint32_t index = detail::QUEUE_INDEX_MAX_VALUE;
 	switch (type) {
 		case QueueType::compute:
-			index = detail::get_dedicated_compute_queue_index(queue_families);
+			index = detail::get_dedicated_queue_index(queue_families, VK_QUEUE_COMPUTE_BIT, VK_QUEUE_TRANSFER_BIT);
 			if (index == detail::QUEUE_INDEX_MAX_VALUE)
 				return detail::Result<uint32_t>{ QueueError::compute_unavailable };
 			break;
 		case QueueType::transfer:
-			index = detail::get_dedicated_transfer_queue_index(queue_families);
+			index = detail::get_dedicated_queue_index(queue_families, VK_QUEUE_TRANSFER_BIT, VK_QUEUE_COMPUTE_BIT);
 			if (index == detail::QUEUE_INDEX_MAX_VALUE)
 				return detail::Result<uint32_t>{ QueueError::transfer_unavailable };
 			break;
@@ -1638,7 +1625,7 @@ SwapchainBuilder::SwapchainBuilder(Device const& device) {
 	info.surface = device.surface;
 	auto present = device.get_queue_index(QueueType::present);
 	auto graphics = device.get_queue_index(QueueType::graphics);
-	// TODO: handle error of queue's not available
+	assert(graphics.has_value() && present.has_value() && "Graphics and Present queue indexes must be valid");
 	info.graphics_queue_index = present.value();
 	info.present_queue_index = graphics.value();
 	info.allocation_callbacks = device.allocation_callbacks;
@@ -1651,7 +1638,7 @@ SwapchainBuilder::SwapchainBuilder(Device const& device, VkSurfaceKHR const surf
 	temp_device.surface = surface;
 	auto present = temp_device.get_queue_index(QueueType::present);
 	auto graphics = temp_device.get_queue_index(QueueType::graphics);
-	// TODO: handle error of queue's not available
+	assert(graphics.has_value() && present.has_value() && "Graphics and Present queue indexes must be valid");
 	info.graphics_queue_index = present.value();
 	info.present_queue_index = graphics.value();
 	info.allocation_callbacks = device.allocation_callbacks;
@@ -1670,7 +1657,7 @@ SwapchainBuilder::SwapchainBuilder(VkPhysicalDevice const physical_device,
 		auto queue_families = detail::get_vector_noerror<VkQueueFamilyProperties>(
 		    detail::vulkan_functions().fp_vkGetPhysicalDeviceQueueFamilyProperties, physical_device);
 		if (graphics_queue_index == detail::QUEUE_INDEX_MAX_VALUE)
-			info.graphics_queue_index = detail::get_graphics_queue_index(queue_families);
+			info.graphics_queue_index = detail::get_first_queue_index(queue_families, VK_QUEUE_GRAPHICS_BIT);
 		if (present_queue_index == detail::QUEUE_INDEX_MAX_VALUE)
 			info.present_queue_index = detail::get_present_queue_index(physical_device, surface, queue_families);
 	}

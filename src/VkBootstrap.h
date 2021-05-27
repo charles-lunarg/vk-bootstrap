@@ -25,6 +25,7 @@
 #include <vulkan/vulkan.h>
 
 #include "VkBootstrapDispatch.h"
+#include "VulkanFeatureConfig.h"
 
 namespace vkb {
 
@@ -443,6 +444,11 @@ class PhysicalDeviceSelector {
 	PhysicalDeviceSelector& prefer_gpu_device_type(PreferredDeviceType type = PreferredDeviceType::discrete);
 	// Allow selection of a gpu device type that isn't the preferred physical device type. Defaults to true.
 	PhysicalDeviceSelector& allow_any_gpu_device_type(bool allow_any_type = true);
+
+	// Sets the "Vulkan Feature Config" to use when selecting a VkPhysicalDevice.
+	// A Feature Config is a pre defined collection of extensions, features, and properties that are
+	// required to be supported. For more information, go to `VulkanFeatureConfig.h`
+	PhysicalDeviceSelector& set_vulkan_feature_config(VulkanFeatureConfig& feature_config);
 
 	// Require that a physical device supports presentation. Defaults to true.
 	PhysicalDeviceSelector& require_present(bool require = true);

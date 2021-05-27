@@ -20,18 +20,18 @@
 
 #include "../src/VkBootstrap.h"
 
-GLFWwindow* create_window_glfw(const char* window_name = "", bool resize = true) {
+inline GLFWwindow* create_window_glfw(const char* window_name = "", bool resize = true) {
 	glfwInit();
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 	if (!resize) glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
 	return glfwCreateWindow(1024, 1024, window_name, NULL, NULL);
 }
-void destroy_window_glfw(GLFWwindow* window) {
+inline void destroy_window_glfw(GLFWwindow* window) {
 	glfwDestroyWindow(window);
 	glfwTerminate();
 }
-VkSurfaceKHR create_surface_glfw(
+inline VkSurfaceKHR create_surface_glfw(
     VkInstance instance, GLFWwindow* window, VkAllocationCallbacks* allocator = nullptr) {
 	VkSurfaceKHR surface = VK_NULL_HANDLE;
 	VkResult err = glfwCreateWindowSurface(instance, window, allocator, &surface);
@@ -46,6 +46,12 @@ VkSurfaceKHR create_surface_glfw(
 		surface = VK_NULL_HANDLE;
 	}
 	return surface;
+}
+
+inline void destroy_surface(vkb::Instance& instance_ret, VkSurfaceKHR surface) {
+	PFN_vkDestroySurfaceKHR fp_vkDestroySurfaceKHR = reinterpret_cast<PFN_vkDestroySurfaceKHR>(
+	    instance_ret.fp_vkGetInstanceProcAddr(instance_ret.instance, "vkDestroySurfaceKHR"));
+	fp_vkDestroySurfaceKHR(instance_ret.instance, surface, nullptr);
 }
 
 struct VulkanLibrary {

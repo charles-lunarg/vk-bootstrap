@@ -23,6 +23,7 @@
 
 #include <vulkan/vulkan.h>
 
+#include "VulkanFeatureConfig.h"
 
 namespace vkb {
 
@@ -398,6 +399,11 @@ class PhysicalDeviceSelector {
 	// Allow selection of a gpu device type that isn't the preferred physical device type. Defaults to true.
 	PhysicalDeviceSelector& allow_any_gpu_device_type(bool allow_any_type = true);
 
+	// Sets the "Vulkan Feature Config" to use when selecting a VkPhysicalDevice.
+	// A Feature Config is a pre defined collection of extensions, features, and properties that are
+	// required to be supported. For more information, go to `VulkanFeatureConfig.h`
+	PhysicalDeviceSelector& set_vulkan_feature_config(VulkanFeatureConfig& feature_config);
+
 	// Require that a physical device supports presentation. Defaults to true.
 	PhysicalDeviceSelector& require_present(bool require = true);
 
@@ -614,13 +620,13 @@ void destroy_swapchain(Swapchain const& swapchain);
 
 class SwapchainBuilder {
 	public:
-    // Construct a SwapchainBuilder with a `vkb::Device`
+	// Construct a SwapchainBuilder with a `vkb::Device`
 	explicit SwapchainBuilder(Device const& device);
 	// Construct a SwapchainBuilder with a specific VkSurfaceKHR handle and `vkb::Device`
-    explicit SwapchainBuilder(Device const& device, VkSurfaceKHR const surface);
-    // Construct a SwapchainBuilder with Vulkan handles for the physical device, device, and surface
-    // Optionally can provide the uint32_t indices for the graphics and present queue
-    // Note: The constructor will query the graphics & present queue if the indices are not provided
+	explicit SwapchainBuilder(Device const& device, VkSurfaceKHR const surface);
+	// Construct a SwapchainBuilder with Vulkan handles for the physical device, device, and surface
+	// Optionally can provide the uint32_t indices for the graphics and present queue
+	// Note: The constructor will query the graphics & present queue if the indices are not provided
 	explicit SwapchainBuilder(VkPhysicalDevice const physical_device,
 	    VkDevice const device,
 	    VkSurfaceKHR const surface,

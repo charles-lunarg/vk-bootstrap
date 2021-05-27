@@ -942,7 +942,8 @@ uint32_t get_separate_queue_index(std::vector<VkQueueFamilyProperties> const& fa
     VkQueueFlags undesired_flags) {
 	uint32_t index = QUEUE_INDEX_MAX_VALUE;
 	for (uint32_t i = 0; i < static_cast<uint32_t>(families.size()); i++) {
-		if ((families[i].queueFlags & desired_flags) && ((families[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) == 0)) {
+		if ((families[i].queueFlags & desired_flags) &&
+		    ((families[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) == 0)) {
 			if ((families[i].queueFlags & undesired_flags) == 0) {
 				return i;
 			} else {
@@ -1201,6 +1202,15 @@ PhysicalDeviceSelector& PhysicalDeviceSelector::prefer_gpu_device_type(Preferred
 }
 PhysicalDeviceSelector& PhysicalDeviceSelector::allow_any_gpu_device_type(bool allow_any_type) {
 	criteria.allow_any_type = allow_any_type;
+	return *this;
+}
+PhysicalDeviceSelector& PhysicalDeviceSelector::set_vulkan_feature_config(VulkanFeatureConfig& feature_config) {
+	set_minimum_version(feature_config.api_major_version, feature_config.api_minor_version);
+	require_present(feature_config.require_presentation);
+	add_required_extensions(feature_config.required_extensions);
+	set_required_features(feature_config.features_1_0);
+	set_required_features_11(feature_config.features_1_1);
+	set_required_features_12(feature_config.features_1_2);
 	return *this;
 }
 PhysicalDeviceSelector& PhysicalDeviceSelector::require_present(bool require) {

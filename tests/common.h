@@ -20,18 +20,18 @@
 
 #include "../src/VkBootstrap.h"
 
-GLFWwindow* create_window_glfw(const char* window_name = "", bool resize = true) {
+inline GLFWwindow* create_window_glfw(const char* window_name = "", bool resize = true) {
 	glfwInit();
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 	if (!resize) glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
 	return glfwCreateWindow(1024, 1024, window_name, NULL, NULL);
 }
-void destroy_window_glfw(GLFWwindow* window) {
+inline void destroy_window_glfw(GLFWwindow* window) {
 	glfwDestroyWindow(window);
 	glfwTerminate();
 }
-VkSurfaceKHR create_surface_glfw(VkInstance instance, GLFWwindow* window) {
+inline VkSurfaceKHR create_surface_glfw(VkInstance instance, GLFWwindow* window) {
 	VkSurfaceKHR surface = VK_NULL_HANDLE;
 	VkResult err = glfwCreateWindowSurface(instance, window, NULL, &surface);
 	if (err) {
@@ -45,6 +45,12 @@ VkSurfaceKHR create_surface_glfw(VkInstance instance, GLFWwindow* window) {
 		surface = VK_NULL_HANDLE;
 	}
 	return surface;
+}
+
+inline void destroy_surface(vkb::Instance& instance_ret, VkSurfaceKHR surface) {
+	PFN_vkDestroySurfaceKHR fp_vkDestroySurfaceKHR = reinterpret_cast<PFN_vkDestroySurfaceKHR>(
+	    instance_ret.fp_vkGetInstanceProcAddr(instance_ret.instance, "vkDestroySurfaceKHR"));
+	fp_vkDestroySurfaceKHR(instance_ret.instance, surface, nullptr);
 }
 
 struct VulkanLibrary {
@@ -126,8 +132,8 @@ struct VulkanLibrary {
 		vkDestroyPipeline = (PFN_vkDestroyPipeline)vkGetDeviceProcAddr(device, "vkDestroyPipeline");
 		vkDestroyPipelineLayout =
 		    (PFN_vkDestroyPipelineLayout)vkGetDeviceProcAddr(device, "vkDestroyPipelineLayout");
-        vkDestroyRenderPass = (PFN_vkDestroyRenderPass)vkGetDeviceProcAddr(device, "vkDestroyRenderPass");
-    }
+		vkDestroyRenderPass = (PFN_vkDestroyRenderPass)vkGetDeviceProcAddr(device, "vkDestroyRenderPass");
+	}
 
 	PFN_vkGetInstanceProcAddr vkGetInstanceProcAddr = VK_NULL_HANDLE;
 	PFN_vkGetDeviceProcAddr vkGetDeviceProcAddr = VK_NULL_HANDLE;
@@ -163,5 +169,5 @@ struct VulkanLibrary {
 	PFN_vkDestroyPipeline vkDestroyPipeline = VK_NULL_HANDLE;
 	PFN_vkDestroyPipelineLayout vkDestroyPipelineLayout = VK_NULL_HANDLE;
 	PFN_vkDestroySurfaceKHR vkDestroySurfaceKHR = VK_NULL_HANDLE;
-    PFN_vkDestroyRenderPass vkDestroyRenderPass = VK_NULL_HANDLE;
+	PFN_vkDestroyRenderPass vkDestroyRenderPass = VK_NULL_HANDLE;
 };

@@ -50,7 +50,7 @@ if xmltodict_missing:
 		try:
 			subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'xmltodict'])
 		except subprocess.CalledProcessError as error:
-			print("Unable to install xmltodict due to error:");
+			print("Failed to install xmltodict due to error:");
 			print(error);
 			input("Press Enter to continue...");
 			sys.exit();
@@ -61,8 +61,14 @@ if xmltodict_missing:
 import urllib.request
 import xmltodict
 
-with urllib.request.urlopen('https://raw.githubusercontent.com/KhronosGroup/Vulkan-Headers/master/registry/vk.xml') as response:
-   vk_xml_raw = response.read()
+try: 
+	response = urllib.request.urlopen('https://raw.githubusercontent.com/KhronosGroup/Vulkan-Headers/master/registry/vk.xml')
+except urllib.error.URLError as error:
+	print("Failed to download vk.xml due to error:");
+	print(error.reason)
+	input("Press Enter to continue...");
+	sys.exit();
+vk_xml_raw = response.read()
 
 vk_xml = xmltodict.parse(vk_xml_raw,process_namespaces=True)
 
@@ -188,6 +194,7 @@ body += 'namespace vkb {\n\n'
 body += 'struct DispatchTable {\n'
 body += '\tDispatchTable() = default;\n'
 body += '\tDispatchTable(VkDevice device, PFN_vkGetDeviceProcAddr procAddr) : device(device) {\n'
+body += '\t\tpopulated = true;\n'
 
 proxy_section = ''
 fp_decl_section = ''
@@ -271,7 +278,10 @@ body += pfn_load_section
 body += '\t}\n'
 body += proxy_section
 body += fp_decl_section
+body += '\tbool is_populated() const { return populated; }\n'
 body += '\tVkDevice device = VK_NULL_HANDLE;\n'
+body += 'private:\n'
+body += '\t bool populated = false;\n'
 body += '};\n\n'
 body += '} // namespace vkb'
 

@@ -45,7 +45,17 @@ installed = {pkg.key for pkg in pkg_resources.working_set}
 xmltodict_missing = {'xmltodict'} - installed
 
 if xmltodict_missing:
-	subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'xmltodict'])
+	val = input("xmltodict is required to run this script. Would you like to install? (y/n): ");
+	if(val.lower() == "y"):
+		try:
+			subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'xmltodict'])
+		except subprocess.CalledProcessError as error:
+			print("Unable to install xmltodict due to error:");
+			print(error);
+			input("Press Enter to continue...");
+			sys.exit();
+	else:
+		sys.exit();
 
 # Fetch fresh vk.xml from Khronos repo
 import urllib.request
@@ -270,3 +280,5 @@ header = license + info + body
 header_file = open("../src/VkDispatchTable.h", "w")
 header_file.write(header)
 header_file.close();
+
+input("Generation finished. Press Enter to continue...")

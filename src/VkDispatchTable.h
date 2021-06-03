@@ -28,6 +28,7 @@ namespace vkb {
 struct DispatchTable {
 	DispatchTable() = default;
 	DispatchTable(VkDevice device, PFN_vkGetDeviceProcAddr procAddr) : device(device) {
+		populated = true;
 		fp_vkGetDeviceQueue = (PFN_vkGetDeviceQueue)procAddr(device, "vkGetDeviceQueue");
 		fp_vkQueueSubmit = (PFN_vkQueueSubmit)procAddr(device, "vkQueueSubmit");
 		fp_vkQueueWaitIdle = (PFN_vkQueueWaitIdle)procAddr(device, "vkQueueWaitIdle");
@@ -3528,7 +3529,10 @@ struct DispatchTable {
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_buffer_device_address))
 	PFN_vkGetDeviceMemoryOpaqueCaptureAddressKHR fp_vkGetDeviceMemoryOpaqueCaptureAddressKHR = nullptr;
 #endif
+	bool is_populated() const { return populated; }
 	VkDevice device = VK_NULL_HANDLE;
+private:
+	 bool populated = false;
 };
 
 } // namespace vkb

@@ -60,7 +60,7 @@ struct DispatchTable {
 		fp_vkCreateQueryPool = (PFN_vkCreateQueryPool)procAddr(device, "vkCreateQueryPool");
 		fp_vkDestroyQueryPool = (PFN_vkDestroyQueryPool)procAddr(device, "vkDestroyQueryPool");
 		fp_vkGetQueryPoolResults = (PFN_vkGetQueryPoolResults)procAddr(device, "vkGetQueryPoolResults");
-#if (defined(VK_EXT_host_query_reset))
+#if (defined(VK_VERSION_1_2)) || (defined(VK_EXT_host_query_reset))
 		fp_vkResetQueryPool = (PFN_vkResetQueryPool)procAddr(device, "vkResetQueryPool");
 #endif
 		fp_vkCreateBuffer = (PFN_vkCreateBuffer)procAddr(device, "vkCreateBuffer");
@@ -213,7 +213,7 @@ struct DispatchTable {
 #if (defined(VK_KHR_push_descriptor))
 		fp_vkCmdPushDescriptorSetKHR = (PFN_vkCmdPushDescriptorSetKHR)procAddr(device, "vkCmdPushDescriptorSetKHR");
 #endif
-#if (defined(VK_KHR_maintenance1))
+#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_maintenance1))
 		fp_vkTrimCommandPool = (PFN_vkTrimCommandPool)procAddr(device, "vkTrimCommandPool");
 #endif
 #if (defined(VK_KHR_external_memory_win32))
@@ -348,7 +348,9 @@ struct DispatchTable {
 #if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_sampler_ycbcr_conversion))
 		fp_vkDestroySamplerYcbcrConversion = (PFN_vkDestroySamplerYcbcrConversion)procAddr(device, "vkDestroySamplerYcbcrConversion");
 #endif
+#if (defined(VK_VERSION_1_1))
 		fp_vkGetDeviceQueue2 = (PFN_vkGetDeviceQueue2)procAddr(device, "vkGetDeviceQueue2");
+#endif
 #if (defined(VK_EXT_validation_cache))
 		fp_vkCreateValidationCacheEXT = (PFN_vkCreateValidationCacheEXT)procAddr(device, "vkCreateValidationCacheEXT");
 #endif
@@ -361,7 +363,7 @@ struct DispatchTable {
 #if (defined(VK_EXT_validation_cache))
 		fp_vkMergeValidationCachesEXT = (PFN_vkMergeValidationCachesEXT)procAddr(device, "vkMergeValidationCachesEXT");
 #endif
-#if (defined(VK_KHR_maintenance3))
+#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_maintenance3))
 		fp_vkGetDescriptorSetLayoutSupport = (PFN_vkGetDescriptorSetLayoutSupport)procAddr(device, "vkGetDescriptorSetLayoutSupport");
 #endif
 #if (defined(VK_ANDROID_native_buffer))
@@ -850,10 +852,10 @@ struct DispatchTable {
 #if (defined(VK_NVX_binary_import))
 		fp_vkCmdCuLaunchKernelNVX = (PFN_vkCmdCuLaunchKernelNVX)procAddr(device, "vkCmdCuLaunchKernelNVX");
 #endif
-#if (defined(VK_EXT_host_query_reset))
+#if (defined(VK_VERSION_1_2)) || (defined(VK_EXT_host_query_reset))
 		fp_vkResetQueryPoolEXT = (PFN_vkResetQueryPoolEXT)procAddr(device, "vkResetQueryPoolEXT");
 #endif
-#if (defined(VK_KHR_maintenance1))
+#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_maintenance1))
 		fp_vkTrimCommandPoolKHR = (PFN_vkTrimCommandPoolKHR)procAddr(device, "vkTrimCommandPoolKHR");
 #endif
 #if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_device_group))
@@ -895,7 +897,7 @@ struct DispatchTable {
 #if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_sampler_ycbcr_conversion))
 		fp_vkDestroySamplerYcbcrConversionKHR = (PFN_vkDestroySamplerYcbcrConversionKHR)procAddr(device, "vkDestroySamplerYcbcrConversionKHR");
 #endif
-#if (defined(VK_KHR_maintenance3))
+#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_maintenance3))
 		fp_vkGetDescriptorSetLayoutSupportKHR = (PFN_vkGetDescriptorSetLayoutSupportKHR)procAddr(device, "vkGetDescriptorSetLayoutSupportKHR");
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_create_renderpass2))
@@ -1034,7 +1036,7 @@ struct DispatchTable {
 	VkResult getQueryPoolResults(VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount, size_t dataSize, void* pData, VkDeviceSize stride, VkQueryResultFlags flags) const {
 		return fp_vkGetQueryPoolResults(device, queryPool, firstQuery, queryCount, dataSize, pData, stride, flags);
 	}
-#if (defined(VK_EXT_host_query_reset))
+#if (defined(VK_VERSION_1_2)) || (defined(VK_EXT_host_query_reset))
 	void resetQueryPool(VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount) const {
 		fp_vkResetQueryPool(device, queryPool, firstQuery, queryCount);
 	}
@@ -1405,7 +1407,7 @@ struct DispatchTable {
 		fp_vkCmdPushDescriptorSetKHR(commandBuffer, pipelineBindPoint, layout, set, descriptorWriteCount, pDescriptorWrites);
 	}
 #endif
-#if (defined(VK_KHR_maintenance1))
+#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_maintenance1))
 	void trimCommandPool(VkCommandPool commandPool, VkCommandPoolTrimFlags flags) const {
 		fp_vkTrimCommandPool(device, commandPool, flags);
 	}
@@ -1630,9 +1632,11 @@ struct DispatchTable {
 		fp_vkDestroySamplerYcbcrConversion(device, ycbcrConversion, pAllocator);
 	}
 #endif
+#if (defined(VK_VERSION_1_1))
 	void getDeviceQueue2(const VkDeviceQueueInfo2* pQueueInfo, VkQueue* pQueue) const {
 		fp_vkGetDeviceQueue2(device, pQueueInfo, pQueue);
 	}
+#endif
 #if (defined(VK_EXT_validation_cache))
 	VkResult createValidationCacheEXT(const VkValidationCacheCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkValidationCacheEXT* pValidationCache) const {
 		return fp_vkCreateValidationCacheEXT(device, pCreateInfo, pAllocator, pValidationCache);
@@ -1653,7 +1657,7 @@ struct DispatchTable {
 		return fp_vkMergeValidationCachesEXT(device, dstCache, srcCacheCount, pSrcCaches);
 	}
 #endif
-#if (defined(VK_KHR_maintenance3))
+#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_maintenance3))
 	void getDescriptorSetLayoutSupport(const VkDescriptorSetLayoutCreateInfo* pCreateInfo, VkDescriptorSetLayoutSupport* pSupport) const {
 		fp_vkGetDescriptorSetLayoutSupport(device, pCreateInfo, pSupport);
 	}
@@ -2468,12 +2472,12 @@ struct DispatchTable {
 		fp_vkCmdCuLaunchKernelNVX(commandBuffer, pLaunchInfo);
 	}
 #endif
-#if (defined(VK_EXT_host_query_reset))
+#if (defined(VK_VERSION_1_2)) || (defined(VK_EXT_host_query_reset))
 	void resetQueryPoolEXT(VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount) const {
 		fp_vkResetQueryPoolEXT(device, queryPool, firstQuery, queryCount);
 	}
 #endif
-#if (defined(VK_KHR_maintenance1))
+#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_maintenance1))
 	void trimCommandPoolKHR(VkCommandPool commandPool, VkCommandPoolTrimFlags flags) const {
 		fp_vkTrimCommandPoolKHR(device, commandPool, flags);
 	}
@@ -2543,7 +2547,7 @@ struct DispatchTable {
 		fp_vkDestroySamplerYcbcrConversionKHR(device, ycbcrConversion, pAllocator);
 	}
 #endif
-#if (defined(VK_KHR_maintenance3))
+#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_maintenance3))
 	void getDescriptorSetLayoutSupportKHR(const VkDescriptorSetLayoutCreateInfo* pCreateInfo, VkDescriptorSetLayoutSupport* pSupport) const {
 		fp_vkGetDescriptorSetLayoutSupportKHR(device, pCreateInfo, pSupport);
 	}
@@ -2645,7 +2649,7 @@ struct DispatchTable {
 	PFN_vkCreateQueryPool fp_vkCreateQueryPool = nullptr;
 	PFN_vkDestroyQueryPool fp_vkDestroyQueryPool = nullptr;
 	PFN_vkGetQueryPoolResults fp_vkGetQueryPoolResults = nullptr;
-#if (defined(VK_EXT_host_query_reset))
+#if (defined(VK_VERSION_1_2)) || (defined(VK_EXT_host_query_reset))
 	PFN_vkResetQueryPool fp_vkResetQueryPool = nullptr;
 #endif
 	PFN_vkCreateBuffer fp_vkCreateBuffer = nullptr;
@@ -2798,7 +2802,7 @@ struct DispatchTable {
 #if (defined(VK_KHR_push_descriptor))
 	PFN_vkCmdPushDescriptorSetKHR fp_vkCmdPushDescriptorSetKHR = nullptr;
 #endif
-#if (defined(VK_KHR_maintenance1))
+#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_maintenance1))
 	PFN_vkTrimCommandPool fp_vkTrimCommandPool = nullptr;
 #endif
 #if (defined(VK_KHR_external_memory_win32))
@@ -2933,7 +2937,9 @@ struct DispatchTable {
 #if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_sampler_ycbcr_conversion))
 	PFN_vkDestroySamplerYcbcrConversion fp_vkDestroySamplerYcbcrConversion = nullptr;
 #endif
+#if (defined(VK_VERSION_1_1))
 	PFN_vkGetDeviceQueue2 fp_vkGetDeviceQueue2 = nullptr;
+#endif
 #if (defined(VK_EXT_validation_cache))
 	PFN_vkCreateValidationCacheEXT fp_vkCreateValidationCacheEXT = nullptr;
 #endif
@@ -2946,7 +2952,7 @@ struct DispatchTable {
 #if (defined(VK_EXT_validation_cache))
 	PFN_vkMergeValidationCachesEXT fp_vkMergeValidationCachesEXT = nullptr;
 #endif
-#if (defined(VK_KHR_maintenance3))
+#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_maintenance3))
 	PFN_vkGetDescriptorSetLayoutSupport fp_vkGetDescriptorSetLayoutSupport = nullptr;
 #endif
 #if (defined(VK_ANDROID_native_buffer))
@@ -3435,10 +3441,10 @@ struct DispatchTable {
 #if (defined(VK_NVX_binary_import))
 	PFN_vkCmdCuLaunchKernelNVX fp_vkCmdCuLaunchKernelNVX = nullptr;
 #endif
-#if (defined(VK_EXT_host_query_reset))
+#if (defined(VK_VERSION_1_2)) || (defined(VK_EXT_host_query_reset))
 	PFN_vkResetQueryPoolEXT fp_vkResetQueryPoolEXT = nullptr;
 #endif
-#if (defined(VK_KHR_maintenance1))
+#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_maintenance1))
 	PFN_vkTrimCommandPoolKHR fp_vkTrimCommandPoolKHR = nullptr;
 #endif
 #if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_device_group))
@@ -3480,7 +3486,7 @@ struct DispatchTable {
 #if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_sampler_ycbcr_conversion))
 	PFN_vkDestroySamplerYcbcrConversionKHR fp_vkDestroySamplerYcbcrConversionKHR = nullptr;
 #endif
-#if (defined(VK_KHR_maintenance3))
+#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_maintenance3))
 	PFN_vkGetDescriptorSetLayoutSupportKHR fp_vkGetDescriptorSetLayoutSupportKHR = nullptr;
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_create_renderpass2))

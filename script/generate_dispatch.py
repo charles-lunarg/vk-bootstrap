@@ -91,10 +91,11 @@ for feature_node in features_node:
 		for require_node in feature_node['require']:
 			for param_node in require_node:
 				if param_node == 'command':
-					if type(require_node[param_node]) is list:
-						for param in require_node[param_node]:
-							if param['@name'] in device_commands:
-								device_commands[param['@name']]['requirements'] += [[feature_node['@name']]]
+					if type(require_node[param_node]) is not list:
+						require_node[param_node] = [require_node[param_node]]
+					for param in require_node[param_node]:
+						if param['@name'] in device_commands:
+							device_commands[param['@name']]['requirements'] += [[feature_node['@name']]]
 
 
 # Add requirements for extension PFN's
@@ -112,20 +113,16 @@ for extension_node in extensions_node:
 					if '@extension' in require_node.keys():
 						requirements.append(require_node['@extension'])
 					if type(require_node['command']) is not list:
-						if require_node['command']['@name'] in device_commands:
-							device_commands[require_node['command']['@name']]['requirements'] += [requirements]
-					else:
-						for command_node in require_node['command']:
-							if command_node['@name'] in device_commands:
-								device_commands[command_node['@name']]['requirements'] += [requirements]
-			elif require_node == 'command':
-				if type(require_nodes['command']) is not list:
-					if require_nodes['command']['@name'] in device_commands:
-						device_commands[require_nodes['command']['@name']]['requirements'] += [requirements]
-				else:
-					for command_node in require_nodes['command']:
+						require_node['command'] = [require_node['command']]
+					for command_node in require_node['command']:
 						if command_node['@name'] in device_commands:
 							device_commands[command_node['@name']]['requirements'] += [requirements]
+			elif require_node == 'command':
+				if type(require_nodes['command']) is not list:
+					require_nodes['command'] = [require_nodes['command']]
+				for command_node in require_nodes['command']:
+					if command_node['@name'] in device_commands:
+						device_commands[command_node['@name']]['requirements'] += [requirements]
 
 # Generate macro templates
 for command in device_commands:

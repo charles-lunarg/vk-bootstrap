@@ -200,20 +200,19 @@ TEST_CASE("Loading Dispatch Table", "[VkBootstrap.bootstrap]") {
 		REQUIRE(phys_dev_ret.has_value());
 
 		vkb::DeviceBuilder device_builder(phys_dev_ret.value());
-		auto device_ret = device_builder.build();
+		auto device_ret = device_builder.populate_dispatch_table().build();
 		REQUIRE(device_ret.has_value());
-
-		vkb::DispatchTable table = device_ret->get_dispatch_table();
+		auto device = device_ret.value();
 
 		// Create a basic Device specific type to test with
 		VkFenceCreateInfo info{};
 		info.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
 
 		VkFence fence = VK_NULL_HANDLE;
-		table.createFence(&info, nullptr, &fence);
+		device.dispatch.createFence(&info, nullptr, &fence);
 		REQUIRE(fence != VK_NULL_HANDLE);
 
-		table.destroyFence(fence, nullptr);
+		device.dispatch.destroyFence(fence, nullptr);
 		vkb::destroy_device(device_ret.value());
 	}
 	vkb::destroy_instance(instance_ret.value());

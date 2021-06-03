@@ -214,7 +214,6 @@ struct Instance {
 	VkInstance instance = VK_NULL_HANDLE;
 	VkDebugUtilsMessengerEXT debug_messenger = VK_NULL_HANDLE;
 	VkAllocationCallbacks* allocation_callbacks = VK_NULL_HANDLE;
-
 	PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr = nullptr;
 	PFN_vkGetDeviceProcAddr fp_vkGetDeviceProcAddr = nullptr;
 
@@ -544,8 +543,7 @@ struct Device {
 	std::vector<VkQueueFamilyProperties> queue_families;
 	VkAllocationCallbacks* allocation_callbacks = VK_NULL_HANDLE;
 	PFN_vkGetDeviceProcAddr fp_vkGetDeviceProcAddr = nullptr;
-
-	DispatchTable get_dispatch_table() const;
+	DispatchTable dispatch;
 
 	detail::Result<uint32_t> get_queue_index(QueueType type) const;
 	// Only a compute or transfer queue type is valid. All other queue types do not support a 'dedicated' queue index
@@ -587,6 +585,8 @@ class DeviceBuilder {
 	// Provide custom allocation callbacks.
 	DeviceBuilder& set_allocation_callbacks(VkAllocationCallbacks* callbacks);
 
+	// Populate dispatch table for the device
+	DeviceBuilder& populate_dispatch_table();
 	private:
 	PhysicalDevice physical_device;
 	struct DeviceInfo {
@@ -594,6 +594,7 @@ class DeviceBuilder {
 		std::vector<VkBaseOutStructure*> pNext_chain;
 		std::vector<CustomQueueDescription> queue_descriptions;
 		VkAllocationCallbacks* allocation_callbacks = VK_NULL_HANDLE;
+		bool load_dispatch = false;
 	} info;
 };
 

@@ -541,7 +541,7 @@ SystemInfo::SystemInfo() {
 		auto layer_extensions_ret = detail::get_vector<VkExtensionProperties>(layer_extensions,
 		    detail::vulkan_functions().fp_vkEnumerateInstanceExtensionProperties,
 		    layer.layerName);
-		if (layer_extensions_ret != VK_SUCCESS) {
+		if (layer_extensions_ret == VK_SUCCESS) {
 			for (auto& ext : layer_extensions)
 				if (strcmp(ext.extensionName, VK_EXT_DEBUG_UTILS_EXTENSION_NAME) == 0)
 					debug_utils_available = true;

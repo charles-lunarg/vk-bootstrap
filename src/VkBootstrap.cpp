@@ -1374,6 +1374,12 @@ detail::Result<VkQueue> Device::get_dedicated_queue(QueueType type) const {
 	return detail::get_queue(device, index.value());
 }
 
+// ---- Dispatch ---- //
+
+DispatchTable Device::make_table() const {
+    return {device, fp_vkGetDeviceProcAddr};
+}
+
 // ---- Device ---- //
 
 CustomQueueDescription::CustomQueueDescription(uint32_t index, uint32_t count, std::vector<float> priorities)
@@ -1478,9 +1484,6 @@ detail::Result<Device> DeviceBuilder::build() const {
 	device.queue_families = physical_device.queue_families;
 	device.allocation_callbacks = info.allocation_callbacks;
 	device.fp_vkGetDeviceProcAddr = detail::vulkan_functions().fp_vkGetDeviceProcAddr;
-	if(info.load_dispatch) {
-		device.dispatch = DispatchTable(device.device, device.fp_vkGetDeviceProcAddr);
-	}
 	return device;
 }
 DeviceBuilder& DeviceBuilder::custom_queue_setup(std::vector<CustomQueueDescription> queue_descriptions) {
@@ -1489,10 +1492,6 @@ DeviceBuilder& DeviceBuilder::custom_queue_setup(std::vector<CustomQueueDescript
 }
 DeviceBuilder& DeviceBuilder::set_allocation_callbacks(VkAllocationCallbacks* callbacks) {
 	info.allocation_callbacks = callbacks;
-	return *this;
-}
-DeviceBuilder& DeviceBuilder::populate_dispatch_table() {
-	info.load_dispatch = true;
 	return *this;
 }
 

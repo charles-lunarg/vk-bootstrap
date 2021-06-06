@@ -31,9 +31,10 @@ void destroy_window_glfw(GLFWwindow* window) {
 	glfwDestroyWindow(window);
 	glfwTerminate();
 }
-VkSurfaceKHR create_surface_glfw(VkInstance instance, GLFWwindow* window) {
+VkSurfaceKHR create_surface_glfw(
+    VkInstance instance, GLFWwindow* window, VkAllocationCallbacks* allocator = nullptr) {
 	VkSurfaceKHR surface = VK_NULL_HANDLE;
-	VkResult err = glfwCreateWindowSurface(instance, window, NULL, &surface);
+	VkResult err = glfwCreateWindowSurface(instance, window, allocator, &surface);
 	if (err) {
 		const char* error_msg;
 		int ret = glfwGetError(&error_msg);
@@ -126,8 +127,8 @@ struct VulkanLibrary {
 		vkDestroyPipeline = (PFN_vkDestroyPipeline)vkGetDeviceProcAddr(device, "vkDestroyPipeline");
 		vkDestroyPipelineLayout =
 		    (PFN_vkDestroyPipelineLayout)vkGetDeviceProcAddr(device, "vkDestroyPipelineLayout");
-        vkDestroyRenderPass = (PFN_vkDestroyRenderPass)vkGetDeviceProcAddr(device, "vkDestroyRenderPass");
-    }
+		vkDestroyRenderPass = (PFN_vkDestroyRenderPass)vkGetDeviceProcAddr(device, "vkDestroyRenderPass");
+	}
 
 	PFN_vkGetInstanceProcAddr vkGetInstanceProcAddr = VK_NULL_HANDLE;
 	PFN_vkGetDeviceProcAddr vkGetDeviceProcAddr = VK_NULL_HANDLE;
@@ -163,5 +164,5 @@ struct VulkanLibrary {
 	PFN_vkDestroyPipeline vkDestroyPipeline = VK_NULL_HANDLE;
 	PFN_vkDestroyPipelineLayout vkDestroyPipelineLayout = VK_NULL_HANDLE;
 	PFN_vkDestroySurfaceKHR vkDestroySurfaceKHR = VK_NULL_HANDLE;
-    PFN_vkDestroyRenderPass vkDestroyRenderPass = VK_NULL_HANDLE;
+	PFN_vkDestroyRenderPass vkDestroyRenderPass = VK_NULL_HANDLE;
 };

@@ -142,7 +142,7 @@ class VulkanFunctions {
 	PFN_vkGetPhysicalDeviceFormatProperties2 fp_vkGetPhysicalDeviceFormatProperties2 = nullptr;
 	PFN_vkGetPhysicalDeviceMemoryProperties2 fp_vkGetPhysicalDeviceMemoryProperties2 = nullptr;
 
-    PFN_vkGetDeviceProcAddr fp_vkGetDeviceProcAddr = nullptr;
+	PFN_vkGetDeviceProcAddr fp_vkGetDeviceProcAddr = nullptr;
 	PFN_vkCreateDevice fp_vkCreateDevice = nullptr;
 	PFN_vkDestroyDevice fp_vkDestroyDevice = nullptr;
 	PFN_vkEnumerateDeviceExtensionProperties fp_vkEnumerateDeviceExtensionProperties = nullptr;
@@ -190,7 +190,7 @@ class VulkanFunctions {
 		get_proc_addr(fp_vkGetPhysicalDeviceFormatProperties2, "vkGetPhysicalDeviceFormatProperties2");
 		get_proc_addr(fp_vkGetPhysicalDeviceMemoryProperties2, "vkGetPhysicalDeviceMemoryProperties2");
 
-        get_proc_addr(fp_vkGetDeviceProcAddr, "vkGetDeviceProcAddr");
+		get_proc_addr(fp_vkGetDeviceProcAddr, "vkGetDeviceProcAddr");
 		get_proc_addr(fp_vkCreateDevice, "vkCreateDevice");
 		get_proc_addr(fp_vkDestroyDevice, "vkDestroyDevice");
 		get_proc_addr(fp_vkEnumerateDeviceExtensionProperties, "vkEnumerateDeviceExtensionProperties");
@@ -558,7 +558,16 @@ bool SystemInfo::is_layer_available(const char* layer_name) const {
 	if (!layer_name) return false;
 	return detail::check_layer_supported(available_layers, layer_name);
 }
-
+void destroy_surface(Instance instance, VkSurfaceKHR surface) {
+	if (instance.instance != VK_NULL_HANDLE && surface != VK_NULL_HANDLE) {
+		detail::vulkan_functions().fp_vkDestroySurfaceKHR(instance.instance, surface, instance.allocation_callbacks);
+	}
+}
+void destroy_surface(VkInstance instance, VkSurfaceKHR surface, VkAllocationCallbacks* callbacks) {
+	if (instance != VK_NULL_HANDLE && surface != VK_NULL_HANDLE) {
+		detail::vulkan_functions().fp_vkDestroySurfaceKHR(instance, surface, callbacks);
+	}
+}
 void destroy_instance(Instance instance) {
 	if (instance.instance != VK_NULL_HANDLE) {
 		if (instance.debug_messenger != VK_NULL_HANDLE)
@@ -945,7 +954,8 @@ uint32_t get_separate_queue_index(std::vector<VkQueueFamilyProperties> const& fa
     VkQueueFlags undesired_flags) {
 	uint32_t index = QUEUE_INDEX_MAX_VALUE;
 	for (uint32_t i = 0; i < static_cast<uint32_t>(families.size()); i++) {
-		if ((families[i].queueFlags & desired_flags) && ((families[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) == 0)) {
+		if ((families[i].queueFlags & desired_flags) &&
+		    ((families[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) == 0)) {
 			if ((families[i].queueFlags & undesired_flags) == 0) {
 				return i;
 			} else {
@@ -1376,9 +1386,7 @@ detail::Result<VkQueue> Device::get_dedicated_queue(QueueType type) const {
 
 // ---- Dispatch ---- //
 
-DispatchTable Device::make_table() const {
-    return {device, fp_vkGetDeviceProcAddr};
-}
+DispatchTable Device::make_table() const { return { device, fp_vkGetDeviceProcAddr }; }
 
 // ---- Device ---- //
 

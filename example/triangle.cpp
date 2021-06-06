@@ -547,7 +547,7 @@ void cleanup (Init& init, RenderData& data) {
 
 	vkb::destroy_swapchain (init.swapchain);
 	vkb::destroy_device (init.device);
-	init->vkDestroySurfaceKHR (init.instance.instance, init.surface, nullptr);
+    vkb::destroy_surface(init.instance, init.surface);
 	vkb::destroy_instance (init.instance);
 	destroy_window_glfw (init.window);
 }

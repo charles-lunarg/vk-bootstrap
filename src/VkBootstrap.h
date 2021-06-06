@@ -225,6 +225,8 @@ struct Instance {
 	friend class PhysicalDeviceSelector;
 };
 
+void destroy_surface(Instance instance, VkSurfaceKHR surface); // release surface handle
+void destroy_surface(VkInstance instance, VkSurfaceKHR surface, VkAllocationCallbacks* callbacks = nullptr); // release surface handle
 void destroy_instance(Instance instance); // release instance resources
 
 class InstanceBuilder {
@@ -619,13 +621,13 @@ void destroy_swapchain(Swapchain const& swapchain);
 
 class SwapchainBuilder {
 	public:
-    // Construct a SwapchainBuilder with a `vkb::Device`
+	// Construct a SwapchainBuilder with a `vkb::Device`
 	explicit SwapchainBuilder(Device const& device);
 	// Construct a SwapchainBuilder with a specific VkSurfaceKHR handle and `vkb::Device`
-    explicit SwapchainBuilder(Device const& device, VkSurfaceKHR const surface);
-    // Construct a SwapchainBuilder with Vulkan handles for the physical device, device, and surface
-    // Optionally can provide the uint32_t indices for the graphics and present queue
-    // Note: The constructor will query the graphics & present queue if the indices are not provided
+	explicit SwapchainBuilder(Device const& device, VkSurfaceKHR const surface);
+	// Construct a SwapchainBuilder with Vulkan handles for the physical device, device, and surface
+	// Optionally can provide the uint32_t indices for the graphics and present queue
+	// Note: The constructor will query the graphics & present queue if the indices are not provided
 	explicit SwapchainBuilder(VkPhysicalDevice const physical_device,
 	    VkDevice const device,
 	    VkSurfaceKHR const surface,

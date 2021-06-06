@@ -940,1680 +940,1680 @@ struct DispatchTable {
 		fp_vkGetDeviceMemoryOpaqueCaptureAddressKHR = (PFN_vkGetDeviceMemoryOpaqueCaptureAddressKHR)procAddr(device, "vkGetDeviceMemoryOpaqueCaptureAddressKHR");
 #endif
 	}
-	void getDeviceQueue(uint32_t queueFamilyIndex, uint32_t queueIndex, VkQueue* pQueue) const {
+	void getDeviceQueue(uint32_t queueFamilyIndex, uint32_t queueIndex, VkQueue* pQueue) const noexcept {
 		fp_vkGetDeviceQueue(device, queueFamilyIndex, queueIndex, pQueue);
 	}
-	VkResult queueSubmit(VkQueue queue, uint32_t submitCount, const VkSubmitInfo* pSubmits, VkFence fence) const {
+	VkResult queueSubmit(VkQueue queue, uint32_t submitCount, const VkSubmitInfo* pSubmits, VkFence fence) const noexcept {
 		return fp_vkQueueSubmit(queue, submitCount, pSubmits, fence);
 	}
-	VkResult queueWaitIdle(VkQueue queue) const {
+	VkResult queueWaitIdle(VkQueue queue) const noexcept {
 		return fp_vkQueueWaitIdle(queue);
 	}
-	VkResult deviceWaitIdle() const {
+	VkResult deviceWaitIdle() const noexcept {
 		return fp_vkDeviceWaitIdle(device);
 	}
-	VkResult allocateMemory(const VkMemoryAllocateInfo* pAllocateInfo, const VkAllocationCallbacks* pAllocator, VkDeviceMemory* pMemory) const {
+	VkResult allocateMemory(const VkMemoryAllocateInfo* pAllocateInfo, const VkAllocationCallbacks* pAllocator, VkDeviceMemory* pMemory) const noexcept {
 		return fp_vkAllocateMemory(device, pAllocateInfo, pAllocator, pMemory);
 	}
-	void freeMemory(VkDeviceMemory memory, const VkAllocationCallbacks* pAllocator) const {
+	void freeMemory(VkDeviceMemory memory, const VkAllocationCallbacks* pAllocator) const noexcept {
 		fp_vkFreeMemory(device, memory, pAllocator);
 	}
-	VkResult mapMemory(VkDeviceMemory memory, VkDeviceSize offset, VkDeviceSize size, VkMemoryMapFlags flags, void** ppData) const {
+	VkResult mapMemory(VkDeviceMemory memory, VkDeviceSize offset, VkDeviceSize size, VkMemoryMapFlags flags, void** ppData) const noexcept {
 		return fp_vkMapMemory(device, memory, offset, size, flags, ppData);
 	}
-	void unmapMemory(VkDeviceMemory memory) const {
+	void unmapMemory(VkDeviceMemory memory) const noexcept {
 		fp_vkUnmapMemory(device, memory);
 	}
-	VkResult flushMappedMemoryRanges(uint32_t memoryRangeCount, const VkMappedMemoryRange* pMemoryRanges) const {
+	VkResult flushMappedMemoryRanges(uint32_t memoryRangeCount, const VkMappedMemoryRange* pMemoryRanges) const noexcept {
 		return fp_vkFlushMappedMemoryRanges(device, memoryRangeCount, pMemoryRanges);
 	}
-	VkResult invalidateMappedMemoryRanges(uint32_t memoryRangeCount, const VkMappedMemoryRange* pMemoryRanges) const {
+	VkResult invalidateMappedMemoryRanges(uint32_t memoryRangeCount, const VkMappedMemoryRange* pMemoryRanges) const noexcept {
 		return fp_vkInvalidateMappedMemoryRanges(device, memoryRangeCount, pMemoryRanges);
 	}
-	void getDeviceMemoryCommitment(VkDeviceMemory memory, VkDeviceSize* pCommittedMemoryInBytes) const {
+	void getDeviceMemoryCommitment(VkDeviceMemory memory, VkDeviceSize* pCommittedMemoryInBytes) const noexcept {
 		fp_vkGetDeviceMemoryCommitment(device, memory, pCommittedMemoryInBytes);
 	}
-	void getBufferMemoryRequirements(VkBuffer buffer, VkMemoryRequirements* pMemoryRequirements) const {
+	void getBufferMemoryRequirements(VkBuffer buffer, VkMemoryRequirements* pMemoryRequirements) const noexcept {
 		fp_vkGetBufferMemoryRequirements(device, buffer, pMemoryRequirements);
 	}
-	VkResult bindBufferMemory(VkBuffer buffer, VkDeviceMemory memory, VkDeviceSize memoryOffset) const {
+	VkResult bindBufferMemory(VkBuffer buffer, VkDeviceMemory memory, VkDeviceSize memoryOffset) const noexcept {
 		return fp_vkBindBufferMemory(device, buffer, memory, memoryOffset);
 	}
-	void getImageMemoryRequirements(VkImage image, VkMemoryRequirements* pMemoryRequirements) const {
+	void getImageMemoryRequirements(VkImage image, VkMemoryRequirements* pMemoryRequirements) const noexcept {
 		fp_vkGetImageMemoryRequirements(device, image, pMemoryRequirements);
 	}
-	VkResult bindImageMemory(VkImage image, VkDeviceMemory memory, VkDeviceSize memoryOffset) const {
+	VkResult bindImageMemory(VkImage image, VkDeviceMemory memory, VkDeviceSize memoryOffset) const noexcept {
 		return fp_vkBindImageMemory(device, image, memory, memoryOffset);
 	}
-	void getImageSparseMemoryRequirements(VkImage image, uint32_t* pSparseMemoryRequirementCount, VkSparseImageMemoryRequirements* pSparseMemoryRequirements) const {
+	void getImageSparseMemoryRequirements(VkImage image, uint32_t* pSparseMemoryRequirementCount, VkSparseImageMemoryRequirements* pSparseMemoryRequirements) const noexcept {
 		fp_vkGetImageSparseMemoryRequirements(device, image, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
 	}
-	VkResult queueBindSparse(VkQueue queue, uint32_t bindInfoCount, const VkBindSparseInfo* pBindInfo, VkFence fence) const {
+	VkResult queueBindSparse(VkQueue queue, uint32_t bindInfoCount, const VkBindSparseInfo* pBindInfo, VkFence fence) const noexcept {
 		return fp_vkQueueBindSparse(queue, bindInfoCount, pBindInfo, fence);
 	}
-	VkResult createFence(const VkFenceCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkFence* pFence) const {
+	VkResult createFence(const VkFenceCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkFence* pFence) const noexcept {
 		return fp_vkCreateFence(device, pCreateInfo, pAllocator, pFence);
 	}
-	void destroyFence(VkFence fence, const VkAllocationCallbacks* pAllocator) const {
+	void destroyFence(VkFence fence, const VkAllocationCallbacks* pAllocator) const noexcept {
 		fp_vkDestroyFence(device, fence, pAllocator);
 	}
-	VkResult resetFences(uint32_t fenceCount, const VkFence* pFences) const {
+	VkResult resetFences(uint32_t fenceCount, const VkFence* pFences) const noexcept {
 		return fp_vkResetFences(device, fenceCount, pFences);
 	}
-	VkResult getFenceStatus(VkFence fence) const {
+	VkResult getFenceStatus(VkFence fence) const noexcept {
 		return fp_vkGetFenceStatus(device, fence);
 	}
-	VkResult waitForFences(uint32_t fenceCount, const VkFence* pFences, VkBool32 waitAll, uint64_t timeout) const {
+	VkResult waitForFences(uint32_t fenceCount, const VkFence* pFences, VkBool32 waitAll, uint64_t timeout) const noexcept {
 		return fp_vkWaitForFences(device, fenceCount, pFences, waitAll, timeout);
 	}
-	VkResult createSemaphore(const VkSemaphoreCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkSemaphore* pSemaphore) const {
+	VkResult createSemaphore(const VkSemaphoreCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkSemaphore* pSemaphore) const noexcept {
 		return fp_vkCreateSemaphore(device, pCreateInfo, pAllocator, pSemaphore);
 	}
-	void destroySemaphore(VkSemaphore semaphore, const VkAllocationCallbacks* pAllocator) const {
+	void destroySemaphore(VkSemaphore semaphore, const VkAllocationCallbacks* pAllocator) const noexcept {
 		fp_vkDestroySemaphore(device, semaphore, pAllocator);
 	}
-	VkResult createEvent(const VkEventCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkEvent* pEvent) const {
+	VkResult createEvent(const VkEventCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkEvent* pEvent) const noexcept {
 		return fp_vkCreateEvent(device, pCreateInfo, pAllocator, pEvent);
 	}
-	void destroyEvent(VkEvent event, const VkAllocationCallbacks* pAllocator) const {
+	void destroyEvent(VkEvent event, const VkAllocationCallbacks* pAllocator) const noexcept {
 		fp_vkDestroyEvent(device, event, pAllocator);
 	}
-	VkResult getEventStatus(VkEvent event) const {
+	VkResult getEventStatus(VkEvent event) const noexcept {
 		return fp_vkGetEventStatus(device, event);
 	}
-	VkResult setEvent(VkEvent event) const {
+	VkResult setEvent(VkEvent event) const noexcept {
 		return fp_vkSetEvent(device, event);
 	}
-	VkResult resetEvent(VkEvent event) const {
+	VkResult resetEvent(VkEvent event) const noexcept {
 		return fp_vkResetEvent(device, event);
 	}
-	VkResult createQueryPool(const VkQueryPoolCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkQueryPool* pQueryPool) const {
+	VkResult createQueryPool(const VkQueryPoolCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkQueryPool* pQueryPool) const noexcept {
 		return fp_vkCreateQueryPool(device, pCreateInfo, pAllocator, pQueryPool);
 	}
-	void destroyQueryPool(VkQueryPool queryPool, const VkAllocationCallbacks* pAllocator) const {
+	void destroyQueryPool(VkQueryPool queryPool, const VkAllocationCallbacks* pAllocator) const noexcept {
 		fp_vkDestroyQueryPool(device, queryPool, pAllocator);
 	}
-	VkResult getQueryPoolResults(VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount, size_t dataSize, void* pData, VkDeviceSize stride, VkQueryResultFlags flags) const {
+	VkResult getQueryPoolResults(VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount, size_t dataSize, void* pData, VkDeviceSize stride, VkQueryResultFlags flags) const noexcept {
 		return fp_vkGetQueryPoolResults(device, queryPool, firstQuery, queryCount, dataSize, pData, stride, flags);
 	}
 #if (defined(VK_VERSION_1_2)) || (defined(VK_EXT_host_query_reset))
-	void resetQueryPool(VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount) const {
+	void resetQueryPool(VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount) const noexcept {
 		fp_vkResetQueryPool(device, queryPool, firstQuery, queryCount);
 	}
 #endif
-	VkResult createBuffer(const VkBufferCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkBuffer* pBuffer) const {
+	VkResult createBuffer(const VkBufferCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkBuffer* pBuffer) const noexcept {
 		return fp_vkCreateBuffer(device, pCreateInfo, pAllocator, pBuffer);
 	}
-	void destroyBuffer(VkBuffer buffer, const VkAllocationCallbacks* pAllocator) const {
+	void destroyBuffer(VkBuffer buffer, const VkAllocationCallbacks* pAllocator) const noexcept {
 		fp_vkDestroyBuffer(device, buffer, pAllocator);
 	}
-	VkResult createBufferView(const VkBufferViewCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkBufferView* pView) const {
+	VkResult createBufferView(const VkBufferViewCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkBufferView* pView) const noexcept {
 		return fp_vkCreateBufferView(device, pCreateInfo, pAllocator, pView);
 	}
-	void destroyBufferView(VkBufferView bufferView, const VkAllocationCallbacks* pAllocator) const {
+	void destroyBufferView(VkBufferView bufferView, const VkAllocationCallbacks* pAllocator) const noexcept {
 		fp_vkDestroyBufferView(device, bufferView, pAllocator);
 	}
-	VkResult createImage(const VkImageCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkImage* pImage) const {
+	VkResult createImage(const VkImageCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkImage* pImage) const noexcept {
 		return fp_vkCreateImage(device, pCreateInfo, pAllocator, pImage);
 	}
-	void destroyImage(VkImage image, const VkAllocationCallbacks* pAllocator) const {
+	void destroyImage(VkImage image, const VkAllocationCallbacks* pAllocator) const noexcept {
 		fp_vkDestroyImage(device, image, pAllocator);
 	}
-	void getImageSubresourceLayout(VkImage image, const VkImageSubresource* pSubresource, VkSubresourceLayout* pLayout) const {
+	void getImageSubresourceLayout(VkImage image, const VkImageSubresource* pSubresource, VkSubresourceLayout* pLayout) const noexcept {
 		fp_vkGetImageSubresourceLayout(device, image, pSubresource, pLayout);
 	}
-	VkResult createImageView(const VkImageViewCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkImageView* pView) const {
+	VkResult createImageView(const VkImageViewCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkImageView* pView) const noexcept {
 		return fp_vkCreateImageView(device, pCreateInfo, pAllocator, pView);
 	}
-	void destroyImageView(VkImageView imageView, const VkAllocationCallbacks* pAllocator) const {
+	void destroyImageView(VkImageView imageView, const VkAllocationCallbacks* pAllocator) const noexcept {
 		fp_vkDestroyImageView(device, imageView, pAllocator);
 	}
-	VkResult createShaderModule(const VkShaderModuleCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkShaderModule* pShaderModule) const {
+	VkResult createShaderModule(const VkShaderModuleCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkShaderModule* pShaderModule) const noexcept {
 		return fp_vkCreateShaderModule(device, pCreateInfo, pAllocator, pShaderModule);
 	}
-	void destroyShaderModule(VkShaderModule shaderModule, const VkAllocationCallbacks* pAllocator) const {
+	void destroyShaderModule(VkShaderModule shaderModule, const VkAllocationCallbacks* pAllocator) const noexcept {
 		fp_vkDestroyShaderModule(device, shaderModule, pAllocator);
 	}
-	VkResult createPipelineCache(const VkPipelineCacheCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkPipelineCache* pPipelineCache) const {
+	VkResult createPipelineCache(const VkPipelineCacheCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkPipelineCache* pPipelineCache) const noexcept {
 		return fp_vkCreatePipelineCache(device, pCreateInfo, pAllocator, pPipelineCache);
 	}
-	void destroyPipelineCache(VkPipelineCache pipelineCache, const VkAllocationCallbacks* pAllocator) const {
+	void destroyPipelineCache(VkPipelineCache pipelineCache, const VkAllocationCallbacks* pAllocator) const noexcept {
 		fp_vkDestroyPipelineCache(device, pipelineCache, pAllocator);
 	}
-	VkResult getPipelineCacheData(VkPipelineCache pipelineCache, size_t* pDataSize, void* pData) const {
+	VkResult getPipelineCacheData(VkPipelineCache pipelineCache, size_t* pDataSize, void* pData) const noexcept {
 		return fp_vkGetPipelineCacheData(device, pipelineCache, pDataSize, pData);
 	}
-	VkResult mergePipelineCaches(VkPipelineCache dstCache, uint32_t srcCacheCount, const VkPipelineCache* pSrcCaches) const {
+	VkResult mergePipelineCaches(VkPipelineCache dstCache, uint32_t srcCacheCount, const VkPipelineCache* pSrcCaches) const noexcept {
 		return fp_vkMergePipelineCaches(device, dstCache, srcCacheCount, pSrcCaches);
 	}
-	VkResult createGraphicsPipelines(VkPipelineCache pipelineCache, uint32_t createInfoCount, const VkGraphicsPipelineCreateInfo* pCreateInfos, const VkAllocationCallbacks* pAllocator, VkPipeline* pPipelines) const {
+	VkResult createGraphicsPipelines(VkPipelineCache pipelineCache, uint32_t createInfoCount, const VkGraphicsPipelineCreateInfo* pCreateInfos, const VkAllocationCallbacks* pAllocator, VkPipeline* pPipelines) const noexcept {
 		return fp_vkCreateGraphicsPipelines(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
 	}
-	VkResult createComputePipelines(VkPipelineCache pipelineCache, uint32_t createInfoCount, const VkComputePipelineCreateInfo* pCreateInfos, const VkAllocationCallbacks* pAllocator, VkPipeline* pPipelines) const {
+	VkResult createComputePipelines(VkPipelineCache pipelineCache, uint32_t createInfoCount, const VkComputePipelineCreateInfo* pCreateInfos, const VkAllocationCallbacks* pAllocator, VkPipeline* pPipelines) const noexcept {
 		return fp_vkCreateComputePipelines(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
 	}
-	void destroyPipeline(VkPipeline pipeline, const VkAllocationCallbacks* pAllocator) const {
+	void destroyPipeline(VkPipeline pipeline, const VkAllocationCallbacks* pAllocator) const noexcept {
 		fp_vkDestroyPipeline(device, pipeline, pAllocator);
 	}
-	VkResult createPipelineLayout(const VkPipelineLayoutCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkPipelineLayout* pPipelineLayout) const {
+	VkResult createPipelineLayout(const VkPipelineLayoutCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkPipelineLayout* pPipelineLayout) const noexcept {
 		return fp_vkCreatePipelineLayout(device, pCreateInfo, pAllocator, pPipelineLayout);
 	}
-	void destroyPipelineLayout(VkPipelineLayout pipelineLayout, const VkAllocationCallbacks* pAllocator) const {
+	void destroyPipelineLayout(VkPipelineLayout pipelineLayout, const VkAllocationCallbacks* pAllocator) const noexcept {
 		fp_vkDestroyPipelineLayout(device, pipelineLayout, pAllocator);
 	}
-	VkResult createSampler(const VkSamplerCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkSampler* pSampler) const {
+	VkResult createSampler(const VkSamplerCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkSampler* pSampler) const noexcept {
 		return fp_vkCreateSampler(device, pCreateInfo, pAllocator, pSampler);
 	}
-	void destroySampler(VkSampler sampler, const VkAllocationCallbacks* pAllocator) const {
+	void destroySampler(VkSampler sampler, const VkAllocationCallbacks* pAllocator) const noexcept {
 		fp_vkDestroySampler(device, sampler, pAllocator);
 	}
-	VkResult createDescriptorSetLayout(const VkDescriptorSetLayoutCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDescriptorSetLayout* pSetLayout) const {
+	VkResult createDescriptorSetLayout(const VkDescriptorSetLayoutCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDescriptorSetLayout* pSetLayout) const noexcept {
 		return fp_vkCreateDescriptorSetLayout(device, pCreateInfo, pAllocator, pSetLayout);
 	}
-	void destroyDescriptorSetLayout(VkDescriptorSetLayout descriptorSetLayout, const VkAllocationCallbacks* pAllocator) const {
+	void destroyDescriptorSetLayout(VkDescriptorSetLayout descriptorSetLayout, const VkAllocationCallbacks* pAllocator) const noexcept {
 		fp_vkDestroyDescriptorSetLayout(device, descriptorSetLayout, pAllocator);
 	}
-	VkResult createDescriptorPool(const VkDescriptorPoolCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDescriptorPool* pDescriptorPool) const {
+	VkResult createDescriptorPool(const VkDescriptorPoolCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDescriptorPool* pDescriptorPool) const noexcept {
 		return fp_vkCreateDescriptorPool(device, pCreateInfo, pAllocator, pDescriptorPool);
 	}
-	void destroyDescriptorPool(VkDescriptorPool descriptorPool, const VkAllocationCallbacks* pAllocator) const {
+	void destroyDescriptorPool(VkDescriptorPool descriptorPool, const VkAllocationCallbacks* pAllocator) const noexcept {
 		fp_vkDestroyDescriptorPool(device, descriptorPool, pAllocator);
 	}
-	VkResult resetDescriptorPool(VkDescriptorPool descriptorPool, VkDescriptorPoolResetFlags flags) const {
+	VkResult resetDescriptorPool(VkDescriptorPool descriptorPool, VkDescriptorPoolResetFlags flags) const noexcept {
 		return fp_vkResetDescriptorPool(device, descriptorPool, flags);
 	}
-	VkResult allocateDescriptorSets(const VkDescriptorSetAllocateInfo* pAllocateInfo, VkDescriptorSet* pDescriptorSets) const {
+	VkResult allocateDescriptorSets(const VkDescriptorSetAllocateInfo* pAllocateInfo, VkDescriptorSet* pDescriptorSets) const noexcept {
 		return fp_vkAllocateDescriptorSets(device, pAllocateInfo, pDescriptorSets);
 	}
-	VkResult freeDescriptorSets(VkDescriptorPool descriptorPool, uint32_t descriptorSetCount, const VkDescriptorSet* pDescriptorSets) const {
+	VkResult freeDescriptorSets(VkDescriptorPool descriptorPool, uint32_t descriptorSetCount, const VkDescriptorSet* pDescriptorSets) const noexcept {
 		return fp_vkFreeDescriptorSets(device, descriptorPool, descriptorSetCount, pDescriptorSets);
 	}
-	void updateDescriptorSets(uint32_t descriptorWriteCount, const VkWriteDescriptorSet* pDescriptorWrites, uint32_t descriptorCopyCount, const VkCopyDescriptorSet* pDescriptorCopies) const {
+	void updateDescriptorSets(uint32_t descriptorWriteCount, const VkWriteDescriptorSet* pDescriptorWrites, uint32_t descriptorCopyCount, const VkCopyDescriptorSet* pDescriptorCopies) const noexcept {
 		fp_vkUpdateDescriptorSets(device, descriptorWriteCount, pDescriptorWrites, descriptorCopyCount, pDescriptorCopies);
 	}
-	VkResult createFramebuffer(const VkFramebufferCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkFramebuffer* pFramebuffer) const {
+	VkResult createFramebuffer(const VkFramebufferCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkFramebuffer* pFramebuffer) const noexcept {
 		return fp_vkCreateFramebuffer(device, pCreateInfo, pAllocator, pFramebuffer);
 	}
-	void destroyFramebuffer(VkFramebuffer framebuffer, const VkAllocationCallbacks* pAllocator) const {
+	void destroyFramebuffer(VkFramebuffer framebuffer, const VkAllocationCallbacks* pAllocator) const noexcept {
 		fp_vkDestroyFramebuffer(device, framebuffer, pAllocator);
 	}
-	VkResult createRenderPass(const VkRenderPassCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkRenderPass* pRenderPass) const {
+	VkResult createRenderPass(const VkRenderPassCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkRenderPass* pRenderPass) const noexcept {
 		return fp_vkCreateRenderPass(device, pCreateInfo, pAllocator, pRenderPass);
 	}
-	void destroyRenderPass(VkRenderPass renderPass, const VkAllocationCallbacks* pAllocator) const {
+	void destroyRenderPass(VkRenderPass renderPass, const VkAllocationCallbacks* pAllocator) const noexcept {
 		fp_vkDestroyRenderPass(device, renderPass, pAllocator);
 	}
-	void getRenderAreaGranularity(VkRenderPass renderPass, VkExtent2D* pGranularity) const {
+	void getRenderAreaGranularity(VkRenderPass renderPass, VkExtent2D* pGranularity) const noexcept {
 		fp_vkGetRenderAreaGranularity(device, renderPass, pGranularity);
 	}
-	VkResult createCommandPool(const VkCommandPoolCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkCommandPool* pCommandPool) const {
+	VkResult createCommandPool(const VkCommandPoolCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkCommandPool* pCommandPool) const noexcept {
 		return fp_vkCreateCommandPool(device, pCreateInfo, pAllocator, pCommandPool);
 	}
-	void destroyCommandPool(VkCommandPool commandPool, const VkAllocationCallbacks* pAllocator) const {
+	void destroyCommandPool(VkCommandPool commandPool, const VkAllocationCallbacks* pAllocator) const noexcept {
 		fp_vkDestroyCommandPool(device, commandPool, pAllocator);
 	}
-	VkResult resetCommandPool(VkCommandPool commandPool, VkCommandPoolResetFlags flags) const {
+	VkResult resetCommandPool(VkCommandPool commandPool, VkCommandPoolResetFlags flags) const noexcept {
 		return fp_vkResetCommandPool(device, commandPool, flags);
 	}
-	VkResult allocateCommandBuffers(const VkCommandBufferAllocateInfo* pAllocateInfo, VkCommandBuffer* pCommandBuffers) const {
+	VkResult allocateCommandBuffers(const VkCommandBufferAllocateInfo* pAllocateInfo, VkCommandBuffer* pCommandBuffers) const noexcept {
 		return fp_vkAllocateCommandBuffers(device, pAllocateInfo, pCommandBuffers);
 	}
-	void freeCommandBuffers(VkCommandPool commandPool, uint32_t commandBufferCount, const VkCommandBuffer* pCommandBuffers) const {
+	void freeCommandBuffers(VkCommandPool commandPool, uint32_t commandBufferCount, const VkCommandBuffer* pCommandBuffers) const noexcept {
 		fp_vkFreeCommandBuffers(device, commandPool, commandBufferCount, pCommandBuffers);
 	}
-	VkResult beginCommandBuffer(VkCommandBuffer commandBuffer, const VkCommandBufferBeginInfo* pBeginInfo) const {
+	VkResult beginCommandBuffer(VkCommandBuffer commandBuffer, const VkCommandBufferBeginInfo* pBeginInfo) const noexcept {
 		return fp_vkBeginCommandBuffer(commandBuffer, pBeginInfo);
 	}
-	VkResult endCommandBuffer(VkCommandBuffer commandBuffer) const {
+	VkResult endCommandBuffer(VkCommandBuffer commandBuffer) const noexcept {
 		return fp_vkEndCommandBuffer(commandBuffer);
 	}
-	VkResult resetCommandBuffer(VkCommandBuffer commandBuffer, VkCommandBufferResetFlags flags) const {
+	VkResult resetCommandBuffer(VkCommandBuffer commandBuffer, VkCommandBufferResetFlags flags) const noexcept {
 		return fp_vkResetCommandBuffer(commandBuffer, flags);
 	}
-	void cmdBindPipeline(VkCommandBuffer commandBuffer, VkPipelineBindPoint pipelineBindPoint, VkPipeline pipeline) const {
+	void cmdBindPipeline(VkCommandBuffer commandBuffer, VkPipelineBindPoint pipelineBindPoint, VkPipeline pipeline) const noexcept {
 		fp_vkCmdBindPipeline(commandBuffer, pipelineBindPoint, pipeline);
 	}
-	void cmdSetViewport(VkCommandBuffer commandBuffer, uint32_t firstViewport, uint32_t viewportCount, const VkViewport* pViewports) const {
+	void cmdSetViewport(VkCommandBuffer commandBuffer, uint32_t firstViewport, uint32_t viewportCount, const VkViewport* pViewports) const noexcept {
 		fp_vkCmdSetViewport(commandBuffer, firstViewport, viewportCount, pViewports);
 	}
-	void cmdSetScissor(VkCommandBuffer commandBuffer, uint32_t firstScissor, uint32_t scissorCount, const VkRect2D* pScissors) const {
+	void cmdSetScissor(VkCommandBuffer commandBuffer, uint32_t firstScissor, uint32_t scissorCount, const VkRect2D* pScissors) const noexcept {
 		fp_vkCmdSetScissor(commandBuffer, firstScissor, scissorCount, pScissors);
 	}
-	void cmdSetLineWidth(VkCommandBuffer commandBuffer, float lineWidth) const {
+	void cmdSetLineWidth(VkCommandBuffer commandBuffer, float lineWidth) const noexcept {
 		fp_vkCmdSetLineWidth(commandBuffer, lineWidth);
 	}
-	void cmdSetDepthBias(VkCommandBuffer commandBuffer, float depthBiasConstantFactor, float depthBiasClamp, float depthBiasSlopeFactor) const {
+	void cmdSetDepthBias(VkCommandBuffer commandBuffer, float depthBiasConstantFactor, float depthBiasClamp, float depthBiasSlopeFactor) const noexcept {
 		fp_vkCmdSetDepthBias(commandBuffer, depthBiasConstantFactor, depthBiasClamp, depthBiasSlopeFactor);
 	}
-	void cmdSetBlendConstants(VkCommandBuffer commandBuffer, float blendConstants[4]) const {
+	void cmdSetBlendConstants(VkCommandBuffer commandBuffer, float blendConstants[4]) const noexcept {
 		fp_vkCmdSetBlendConstants(commandBuffer, blendConstants);
 	}
-	void cmdSetDepthBounds(VkCommandBuffer commandBuffer, float minDepthBounds, float maxDepthBounds) const {
+	void cmdSetDepthBounds(VkCommandBuffer commandBuffer, float minDepthBounds, float maxDepthBounds) const noexcept {
 		fp_vkCmdSetDepthBounds(commandBuffer, minDepthBounds, maxDepthBounds);
 	}
-	void cmdSetStencilCompareMask(VkCommandBuffer commandBuffer, VkStencilFaceFlags faceMask, uint32_t compareMask) const {
+	void cmdSetStencilCompareMask(VkCommandBuffer commandBuffer, VkStencilFaceFlags faceMask, uint32_t compareMask) const noexcept {
 		fp_vkCmdSetStencilCompareMask(commandBuffer, faceMask, compareMask);
 	}
-	void cmdSetStencilWriteMask(VkCommandBuffer commandBuffer, VkStencilFaceFlags faceMask, uint32_t writeMask) const {
+	void cmdSetStencilWriteMask(VkCommandBuffer commandBuffer, VkStencilFaceFlags faceMask, uint32_t writeMask) const noexcept {
 		fp_vkCmdSetStencilWriteMask(commandBuffer, faceMask, writeMask);
 	}
-	void cmdSetStencilReference(VkCommandBuffer commandBuffer, VkStencilFaceFlags faceMask, uint32_t reference) const {
+	void cmdSetStencilReference(VkCommandBuffer commandBuffer, VkStencilFaceFlags faceMask, uint32_t reference) const noexcept {
 		fp_vkCmdSetStencilReference(commandBuffer, faceMask, reference);
 	}
-	void cmdBindDescriptorSets(VkCommandBuffer commandBuffer, VkPipelineBindPoint pipelineBindPoint, VkPipelineLayout layout, uint32_t firstSet, uint32_t descriptorSetCount, const VkDescriptorSet* pDescriptorSets, uint32_t dynamicOffsetCount, const uint32_t* pDynamicOffsets) const {
+	void cmdBindDescriptorSets(VkCommandBuffer commandBuffer, VkPipelineBindPoint pipelineBindPoint, VkPipelineLayout layout, uint32_t firstSet, uint32_t descriptorSetCount, const VkDescriptorSet* pDescriptorSets, uint32_t dynamicOffsetCount, const uint32_t* pDynamicOffsets) const noexcept {
 		fp_vkCmdBindDescriptorSets(commandBuffer, pipelineBindPoint, layout, firstSet, descriptorSetCount, pDescriptorSets, dynamicOffsetCount, pDynamicOffsets);
 	}
-	void cmdBindIndexBuffer(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkIndexType indexType) const {
+	void cmdBindIndexBuffer(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkIndexType indexType) const noexcept {
 		fp_vkCmdBindIndexBuffer(commandBuffer, buffer, offset, indexType);
 	}
-	void cmdBindVertexBuffers(VkCommandBuffer commandBuffer, uint32_t firstBinding, uint32_t bindingCount, const VkBuffer* pBuffers, const VkDeviceSize* pOffsets) const {
+	void cmdBindVertexBuffers(VkCommandBuffer commandBuffer, uint32_t firstBinding, uint32_t bindingCount, const VkBuffer* pBuffers, const VkDeviceSize* pOffsets) const noexcept {
 		fp_vkCmdBindVertexBuffers(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets);
 	}
-	void cmdDraw(VkCommandBuffer commandBuffer, uint32_t vertexCount, uint32_t instanceCount, uint32_t firstVertex, uint32_t firstInstance) const {
+	void cmdDraw(VkCommandBuffer commandBuffer, uint32_t vertexCount, uint32_t instanceCount, uint32_t firstVertex, uint32_t firstInstance) const noexcept {
 		fp_vkCmdDraw(commandBuffer, vertexCount, instanceCount, firstVertex, firstInstance);
 	}
-	void cmdDrawIndexed(VkCommandBuffer commandBuffer, uint32_t indexCount, uint32_t instanceCount, uint32_t firstIndex, int32_t vertexOffset, uint32_t firstInstance) const {
+	void cmdDrawIndexed(VkCommandBuffer commandBuffer, uint32_t indexCount, uint32_t instanceCount, uint32_t firstIndex, int32_t vertexOffset, uint32_t firstInstance) const noexcept {
 		fp_vkCmdDrawIndexed(commandBuffer, indexCount, instanceCount, firstIndex, vertexOffset, firstInstance);
 	}
-	void cmdDrawIndirect(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, uint32_t drawCount, uint32_t stride) const {
+	void cmdDrawIndirect(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, uint32_t drawCount, uint32_t stride) const noexcept {
 		fp_vkCmdDrawIndirect(commandBuffer, buffer, offset, drawCount, stride);
 	}
-	void cmdDrawIndexedIndirect(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, uint32_t drawCount, uint32_t stride) const {
+	void cmdDrawIndexedIndirect(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, uint32_t drawCount, uint32_t stride) const noexcept {
 		fp_vkCmdDrawIndexedIndirect(commandBuffer, buffer, offset, drawCount, stride);
 	}
-	void cmdDispatch(VkCommandBuffer commandBuffer, uint32_t groupCountX, uint32_t groupCountY, uint32_t groupCountZ) const {
+	void cmdDispatch(VkCommandBuffer commandBuffer, uint32_t groupCountX, uint32_t groupCountY, uint32_t groupCountZ) const noexcept {
 		fp_vkCmdDispatch(commandBuffer, groupCountX, groupCountY, groupCountZ);
 	}
-	void cmdDispatchIndirect(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset) const {
+	void cmdDispatchIndirect(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset) const noexcept {
 		fp_vkCmdDispatchIndirect(commandBuffer, buffer, offset);
 	}
-	void cmdCopyBuffer(VkCommandBuffer commandBuffer, VkBuffer srcBuffer, VkBuffer dstBuffer, uint32_t regionCount, const VkBufferCopy* pRegions) const {
+	void cmdCopyBuffer(VkCommandBuffer commandBuffer, VkBuffer srcBuffer, VkBuffer dstBuffer, uint32_t regionCount, const VkBufferCopy* pRegions) const noexcept {
 		fp_vkCmdCopyBuffer(commandBuffer, srcBuffer, dstBuffer, regionCount, pRegions);
 	}
-	void cmdCopyImage(VkCommandBuffer commandBuffer, VkImage srcImage, VkImageLayout srcImageLayout, VkImage dstImage, VkImageLayout dstImageLayout, uint32_t regionCount, const VkImageCopy* pRegions) const {
+	void cmdCopyImage(VkCommandBuffer commandBuffer, VkImage srcImage, VkImageLayout srcImageLayout, VkImage dstImage, VkImageLayout dstImageLayout, uint32_t regionCount, const VkImageCopy* pRegions) const noexcept {
 		fp_vkCmdCopyImage(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions);
 	}
-	void cmdBlitImage(VkCommandBuffer commandBuffer, VkImage srcImage, VkImageLayout srcImageLayout, VkImage dstImage, VkImageLayout dstImageLayout, uint32_t regionCount, const VkImageBlit* pRegions, VkFilter filter) const {
+	void cmdBlitImage(VkCommandBuffer commandBuffer, VkImage srcImage, VkImageLayout srcImageLayout, VkImage dstImage, VkImageLayout dstImageLayout, uint32_t regionCount, const VkImageBlit* pRegions, VkFilter filter) const noexcept {
 		fp_vkCmdBlitImage(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions, filter);
 	}
-	void cmdCopyBufferToImage(VkCommandBuffer commandBuffer, VkBuffer srcBuffer, VkImage dstImage, VkImageLayout dstImageLayout, uint32_t regionCount, const VkBufferImageCopy* pRegions) const {
+	void cmdCopyBufferToImage(VkCommandBuffer commandBuffer, VkBuffer srcBuffer, VkImage dstImage, VkImageLayout dstImageLayout, uint32_t regionCount, const VkBufferImageCopy* pRegions) const noexcept {
 		fp_vkCmdCopyBufferToImage(commandBuffer, srcBuffer, dstImage, dstImageLayout, regionCount, pRegions);
 	}
-	void cmdCopyImageToBuffer(VkCommandBuffer commandBuffer, VkImage srcImage, VkImageLayout srcImageLayout, VkBuffer dstBuffer, uint32_t regionCount, const VkBufferImageCopy* pRegions) const {
+	void cmdCopyImageToBuffer(VkCommandBuffer commandBuffer, VkImage srcImage, VkImageLayout srcImageLayout, VkBuffer dstBuffer, uint32_t regionCount, const VkBufferImageCopy* pRegions) const noexcept {
 		fp_vkCmdCopyImageToBuffer(commandBuffer, srcImage, srcImageLayout, dstBuffer, regionCount, pRegions);
 	}
-	void cmdUpdateBuffer(VkCommandBuffer commandBuffer, VkBuffer dstBuffer, VkDeviceSize dstOffset, VkDeviceSize dataSize, const void* pData) const {
+	void cmdUpdateBuffer(VkCommandBuffer commandBuffer, VkBuffer dstBuffer, VkDeviceSize dstOffset, VkDeviceSize dataSize, const void* pData) const noexcept {
 		fp_vkCmdUpdateBuffer(commandBuffer, dstBuffer, dstOffset, dataSize, pData);
 	}
-	void cmdFillBuffer(VkCommandBuffer commandBuffer, VkBuffer dstBuffer, VkDeviceSize dstOffset, VkDeviceSize size, uint32_t data) const {
+	void cmdFillBuffer(VkCommandBuffer commandBuffer, VkBuffer dstBuffer, VkDeviceSize dstOffset, VkDeviceSize size, uint32_t data) const noexcept {
 		fp_vkCmdFillBuffer(commandBuffer, dstBuffer, dstOffset, size, data);
 	}
-	void cmdClearColorImage(VkCommandBuffer commandBuffer, VkImage image, VkImageLayout imageLayout, const VkClearColorValue* pColor, uint32_t rangeCount, const VkImageSubresourceRange* pRanges) const {
+	void cmdClearColorImage(VkCommandBuffer commandBuffer, VkImage image, VkImageLayout imageLayout, const VkClearColorValue* pColor, uint32_t rangeCount, const VkImageSubresourceRange* pRanges) const noexcept {
 		fp_vkCmdClearColorImage(commandBuffer, image, imageLayout, pColor, rangeCount, pRanges);
 	}
-	void cmdClearDepthStencilImage(VkCommandBuffer commandBuffer, VkImage image, VkImageLayout imageLayout, const VkClearDepthStencilValue* pDepthStencil, uint32_t rangeCount, const VkImageSubresourceRange* pRanges) const {
+	void cmdClearDepthStencilImage(VkCommandBuffer commandBuffer, VkImage image, VkImageLayout imageLayout, const VkClearDepthStencilValue* pDepthStencil, uint32_t rangeCount, const VkImageSubresourceRange* pRanges) const noexcept {
 		fp_vkCmdClearDepthStencilImage(commandBuffer, image, imageLayout, pDepthStencil, rangeCount, pRanges);
 	}
-	void cmdClearAttachments(VkCommandBuffer commandBuffer, uint32_t attachmentCount, const VkClearAttachment* pAttachments, uint32_t rectCount, const VkClearRect* pRects) const {
+	void cmdClearAttachments(VkCommandBuffer commandBuffer, uint32_t attachmentCount, const VkClearAttachment* pAttachments, uint32_t rectCount, const VkClearRect* pRects) const noexcept {
 		fp_vkCmdClearAttachments(commandBuffer, attachmentCount, pAttachments, rectCount, pRects);
 	}
-	void cmdResolveImage(VkCommandBuffer commandBuffer, VkImage srcImage, VkImageLayout srcImageLayout, VkImage dstImage, VkImageLayout dstImageLayout, uint32_t regionCount, const VkImageResolve* pRegions) const {
+	void cmdResolveImage(VkCommandBuffer commandBuffer, VkImage srcImage, VkImageLayout srcImageLayout, VkImage dstImage, VkImageLayout dstImageLayout, uint32_t regionCount, const VkImageResolve* pRegions) const noexcept {
 		fp_vkCmdResolveImage(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions);
 	}
-	void cmdSetEvent(VkCommandBuffer commandBuffer, VkEvent event, VkPipelineStageFlags stageMask) const {
+	void cmdSetEvent(VkCommandBuffer commandBuffer, VkEvent event, VkPipelineStageFlags stageMask) const noexcept {
 		fp_vkCmdSetEvent(commandBuffer, event, stageMask);
 	}
-	void cmdResetEvent(VkCommandBuffer commandBuffer, VkEvent event, VkPipelineStageFlags stageMask) const {
+	void cmdResetEvent(VkCommandBuffer commandBuffer, VkEvent event, VkPipelineStageFlags stageMask) const noexcept {
 		fp_vkCmdResetEvent(commandBuffer, event, stageMask);
 	}
-	void cmdWaitEvents(VkCommandBuffer commandBuffer, uint32_t eventCount, const VkEvent* pEvents, VkPipelineStageFlags srcStageMask, VkPipelineStageFlags dstStageMask, uint32_t memoryBarrierCount, const VkMemoryBarrier* pMemoryBarriers, uint32_t bufferMemoryBarrierCount, const VkBufferMemoryBarrier* pBufferMemoryBarriers, uint32_t imageMemoryBarrierCount, const VkImageMemoryBarrier* pImageMemoryBarriers) const {
+	void cmdWaitEvents(VkCommandBuffer commandBuffer, uint32_t eventCount, const VkEvent* pEvents, VkPipelineStageFlags srcStageMask, VkPipelineStageFlags dstStageMask, uint32_t memoryBarrierCount, const VkMemoryBarrier* pMemoryBarriers, uint32_t bufferMemoryBarrierCount, const VkBufferMemoryBarrier* pBufferMemoryBarriers, uint32_t imageMemoryBarrierCount, const VkImageMemoryBarrier* pImageMemoryBarriers) const noexcept {
 		fp_vkCmdWaitEvents(commandBuffer, eventCount, pEvents, srcStageMask, dstStageMask, memoryBarrierCount, pMemoryBarriers, bufferMemoryBarrierCount, pBufferMemoryBarriers, imageMemoryBarrierCount, pImageMemoryBarriers);
 	}
-	void cmdPipelineBarrier(VkCommandBuffer commandBuffer, VkPipelineStageFlags srcStageMask, VkPipelineStageFlags dstStageMask, VkDependencyFlags dependencyFlags, uint32_t memoryBarrierCount, const VkMemoryBarrier* pMemoryBarriers, uint32_t bufferMemoryBarrierCount, const VkBufferMemoryBarrier* pBufferMemoryBarriers, uint32_t imageMemoryBarrierCount, const VkImageMemoryBarrier* pImageMemoryBarriers) const {
+	void cmdPipelineBarrier(VkCommandBuffer commandBuffer, VkPipelineStageFlags srcStageMask, VkPipelineStageFlags dstStageMask, VkDependencyFlags dependencyFlags, uint32_t memoryBarrierCount, const VkMemoryBarrier* pMemoryBarriers, uint32_t bufferMemoryBarrierCount, const VkBufferMemoryBarrier* pBufferMemoryBarriers, uint32_t imageMemoryBarrierCount, const VkImageMemoryBarrier* pImageMemoryBarriers) const noexcept {
 		fp_vkCmdPipelineBarrier(commandBuffer, srcStageMask, dstStageMask, dependencyFlags, memoryBarrierCount, pMemoryBarriers, bufferMemoryBarrierCount, pBufferMemoryBarriers, imageMemoryBarrierCount, pImageMemoryBarriers);
 	}
-	void cmdBeginQuery(VkCommandBuffer commandBuffer, VkQueryPool queryPool, uint32_t query, VkQueryControlFlags flags) const {
+	void cmdBeginQuery(VkCommandBuffer commandBuffer, VkQueryPool queryPool, uint32_t query, VkQueryControlFlags flags) const noexcept {
 		fp_vkCmdBeginQuery(commandBuffer, queryPool, query, flags);
 	}
-	void cmdEndQuery(VkCommandBuffer commandBuffer, VkQueryPool queryPool, uint32_t query) const {
+	void cmdEndQuery(VkCommandBuffer commandBuffer, VkQueryPool queryPool, uint32_t query) const noexcept {
 		fp_vkCmdEndQuery(commandBuffer, queryPool, query);
 	}
 #if (defined(VK_EXT_conditional_rendering))
-	void cmdBeginConditionalRenderingEXT(VkCommandBuffer commandBuffer, const VkConditionalRenderingBeginInfoEXT* pConditionalRenderingBegin) const {
+	void cmdBeginConditionalRenderingEXT(VkCommandBuffer commandBuffer, const VkConditionalRenderingBeginInfoEXT* pConditionalRenderingBegin) const noexcept {
 		fp_vkCmdBeginConditionalRenderingEXT(commandBuffer, pConditionalRenderingBegin);
 	}
 #endif
 #if (defined(VK_EXT_conditional_rendering))
-	void cmdEndConditionalRenderingEXT(VkCommandBuffer commandBuffer) const {
+	void cmdEndConditionalRenderingEXT(VkCommandBuffer commandBuffer) const noexcept {
 		fp_vkCmdEndConditionalRenderingEXT(commandBuffer);
 	}
 #endif
-	void cmdResetQueryPool(VkCommandBuffer commandBuffer, VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount) const {
+	void cmdResetQueryPool(VkCommandBuffer commandBuffer, VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount) const noexcept {
 		fp_vkCmdResetQueryPool(commandBuffer, queryPool, firstQuery, queryCount);
 	}
-	void cmdWriteTimestamp(VkCommandBuffer commandBuffer, VkPipelineStageFlagBits pipelineStage, VkQueryPool queryPool, uint32_t query) const {
+	void cmdWriteTimestamp(VkCommandBuffer commandBuffer, VkPipelineStageFlagBits pipelineStage, VkQueryPool queryPool, uint32_t query) const noexcept {
 		fp_vkCmdWriteTimestamp(commandBuffer, pipelineStage, queryPool, query);
 	}
-	void cmdCopyQueryPoolResults(VkCommandBuffer commandBuffer, VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount, VkBuffer dstBuffer, VkDeviceSize dstOffset, VkDeviceSize stride, VkQueryResultFlags flags) const {
+	void cmdCopyQueryPoolResults(VkCommandBuffer commandBuffer, VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount, VkBuffer dstBuffer, VkDeviceSize dstOffset, VkDeviceSize stride, VkQueryResultFlags flags) const noexcept {
 		fp_vkCmdCopyQueryPoolResults(commandBuffer, queryPool, firstQuery, queryCount, dstBuffer, dstOffset, stride, flags);
 	}
-	void cmdPushConstants(VkCommandBuffer commandBuffer, VkPipelineLayout layout, VkShaderStageFlags stageFlags, uint32_t offset, uint32_t size, const void* pValues) const {
+	void cmdPushConstants(VkCommandBuffer commandBuffer, VkPipelineLayout layout, VkShaderStageFlags stageFlags, uint32_t offset, uint32_t size, const void* pValues) const noexcept {
 		fp_vkCmdPushConstants(commandBuffer, layout, stageFlags, offset, size, pValues);
 	}
-	void cmdBeginRenderPass(VkCommandBuffer commandBuffer, const VkRenderPassBeginInfo* pRenderPassBegin, VkSubpassContents contents) const {
+	void cmdBeginRenderPass(VkCommandBuffer commandBuffer, const VkRenderPassBeginInfo* pRenderPassBegin, VkSubpassContents contents) const noexcept {
 		fp_vkCmdBeginRenderPass(commandBuffer, pRenderPassBegin, contents);
 	}
-	void cmdNextSubpass(VkCommandBuffer commandBuffer, VkSubpassContents contents) const {
+	void cmdNextSubpass(VkCommandBuffer commandBuffer, VkSubpassContents contents) const noexcept {
 		fp_vkCmdNextSubpass(commandBuffer, contents);
 	}
-	void cmdEndRenderPass(VkCommandBuffer commandBuffer) const {
+	void cmdEndRenderPass(VkCommandBuffer commandBuffer) const noexcept {
 		fp_vkCmdEndRenderPass(commandBuffer);
 	}
-	void cmdExecuteCommands(VkCommandBuffer commandBuffer, uint32_t commandBufferCount, const VkCommandBuffer* pCommandBuffers) const {
+	void cmdExecuteCommands(VkCommandBuffer commandBuffer, uint32_t commandBufferCount, const VkCommandBuffer* pCommandBuffers) const noexcept {
 		fp_vkCmdExecuteCommands(commandBuffer, commandBufferCount, pCommandBuffers);
 	}
 #if (defined(VK_KHR_display_swapchain))
-	VkResult createSharedSwapchainsKHR(uint32_t swapchainCount, const VkSwapchainCreateInfoKHR* pCreateInfos, const VkAllocationCallbacks* pAllocator, VkSwapchainKHR* pSwapchains) const {
+	VkResult createSharedSwapchainsKHR(uint32_t swapchainCount, const VkSwapchainCreateInfoKHR* pCreateInfos, const VkAllocationCallbacks* pAllocator, VkSwapchainKHR* pSwapchains) const noexcept {
 		return fp_vkCreateSharedSwapchainsKHR(device, swapchainCount, pCreateInfos, pAllocator, pSwapchains);
 	}
 #endif
 #if (defined(VK_KHR_swapchain))
-	VkResult createSwapchainKHR(const VkSwapchainCreateInfoKHR* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkSwapchainKHR* pSwapchain) const {
+	VkResult createSwapchainKHR(const VkSwapchainCreateInfoKHR* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkSwapchainKHR* pSwapchain) const noexcept {
 		return fp_vkCreateSwapchainKHR(device, pCreateInfo, pAllocator, pSwapchain);
 	}
 #endif
 #if (defined(VK_KHR_swapchain))
-	void destroySwapchainKHR(VkSwapchainKHR swapchain, const VkAllocationCallbacks* pAllocator) const {
+	void destroySwapchainKHR(VkSwapchainKHR swapchain, const VkAllocationCallbacks* pAllocator) const noexcept {
 		fp_vkDestroySwapchainKHR(device, swapchain, pAllocator);
 	}
 #endif
 #if (defined(VK_KHR_swapchain))
-	VkResult getSwapchainImagesKHR(VkSwapchainKHR swapchain, uint32_t* pSwapchainImageCount, VkImage* pSwapchainImages) const {
+	VkResult getSwapchainImagesKHR(VkSwapchainKHR swapchain, uint32_t* pSwapchainImageCount, VkImage* pSwapchainImages) const noexcept {
 		return fp_vkGetSwapchainImagesKHR(device, swapchain, pSwapchainImageCount, pSwapchainImages);
 	}
 #endif
 #if (defined(VK_KHR_swapchain))
-	VkResult acquireNextImageKHR(VkSwapchainKHR swapchain, uint64_t timeout, VkSemaphore semaphore, VkFence fence, uint32_t* pImageIndex) const {
+	VkResult acquireNextImageKHR(VkSwapchainKHR swapchain, uint64_t timeout, VkSemaphore semaphore, VkFence fence, uint32_t* pImageIndex) const noexcept {
 		return fp_vkAcquireNextImageKHR(device, swapchain, timeout, semaphore, fence, pImageIndex);
 	}
 #endif
 #if (defined(VK_KHR_swapchain))
-	VkResult queuePresentKHR(VkQueue queue, const VkPresentInfoKHR* pPresentInfo) const {
+	VkResult queuePresentKHR(VkQueue queue, const VkPresentInfoKHR* pPresentInfo) const noexcept {
 		return fp_vkQueuePresentKHR(queue, pPresentInfo);
 	}
 #endif
 #if (defined(VK_EXT_debug_marker))
-	VkResult debugMarkerSetObjectNameEXT(const VkDebugMarkerObjectNameInfoEXT* pNameInfo) const {
+	VkResult debugMarkerSetObjectNameEXT(const VkDebugMarkerObjectNameInfoEXT* pNameInfo) const noexcept {
 		return fp_vkDebugMarkerSetObjectNameEXT(device, pNameInfo);
 	}
 #endif
 #if (defined(VK_EXT_debug_marker))
-	VkResult debugMarkerSetObjectTagEXT(const VkDebugMarkerObjectTagInfoEXT* pTagInfo) const {
+	VkResult debugMarkerSetObjectTagEXT(const VkDebugMarkerObjectTagInfoEXT* pTagInfo) const noexcept {
 		return fp_vkDebugMarkerSetObjectTagEXT(device, pTagInfo);
 	}
 #endif
 #if (defined(VK_EXT_debug_marker))
-	void cmdDebugMarkerBeginEXT(VkCommandBuffer commandBuffer, const VkDebugMarkerMarkerInfoEXT* pMarkerInfo) const {
+	void cmdDebugMarkerBeginEXT(VkCommandBuffer commandBuffer, const VkDebugMarkerMarkerInfoEXT* pMarkerInfo) const noexcept {
 		fp_vkCmdDebugMarkerBeginEXT(commandBuffer, pMarkerInfo);
 	}
 #endif
 #if (defined(VK_EXT_debug_marker))
-	void cmdDebugMarkerEndEXT(VkCommandBuffer commandBuffer) const {
+	void cmdDebugMarkerEndEXT(VkCommandBuffer commandBuffer) const noexcept {
 		fp_vkCmdDebugMarkerEndEXT(commandBuffer);
 	}
 #endif
 #if (defined(VK_EXT_debug_marker))
-	void cmdDebugMarkerInsertEXT(VkCommandBuffer commandBuffer, const VkDebugMarkerMarkerInfoEXT* pMarkerInfo) const {
+	void cmdDebugMarkerInsertEXT(VkCommandBuffer commandBuffer, const VkDebugMarkerMarkerInfoEXT* pMarkerInfo) const noexcept {
 		fp_vkCmdDebugMarkerInsertEXT(commandBuffer, pMarkerInfo);
 	}
 #endif
 #if (defined(VK_NV_external_memory_win32))
-	VkResult getMemoryWin32HandleNV(VkDeviceMemory memory, VkExternalMemoryHandleTypeFlagsNV handleType, HANDLE* pHandle) const {
+	VkResult getMemoryWin32HandleNV(VkDeviceMemory memory, VkExternalMemoryHandleTypeFlagsNV handleType, HANDLE* pHandle) const noexcept {
 		return fp_vkGetMemoryWin32HandleNV(device, memory, handleType, pHandle);
 	}
 #endif
 #if (defined(VK_NV_device_generated_commands))
-	void cmdExecuteGeneratedCommandsNV(VkCommandBuffer commandBuffer, VkBool32 isPreprocessed, const VkGeneratedCommandsInfoNV* pGeneratedCommandsInfo) const {
+	void cmdExecuteGeneratedCommandsNV(VkCommandBuffer commandBuffer, VkBool32 isPreprocessed, const VkGeneratedCommandsInfoNV* pGeneratedCommandsInfo) const noexcept {
 		fp_vkCmdExecuteGeneratedCommandsNV(commandBuffer, isPreprocessed, pGeneratedCommandsInfo);
 	}
 #endif
 #if (defined(VK_NV_device_generated_commands))
-	void cmdPreprocessGeneratedCommandsNV(VkCommandBuffer commandBuffer, const VkGeneratedCommandsInfoNV* pGeneratedCommandsInfo) const {
+	void cmdPreprocessGeneratedCommandsNV(VkCommandBuffer commandBuffer, const VkGeneratedCommandsInfoNV* pGeneratedCommandsInfo) const noexcept {
 		fp_vkCmdPreprocessGeneratedCommandsNV(commandBuffer, pGeneratedCommandsInfo);
 	}
 #endif
 #if (defined(VK_NV_device_generated_commands))
-	void cmdBindPipelineShaderGroupNV(VkCommandBuffer commandBuffer, VkPipelineBindPoint pipelineBindPoint, VkPipeline pipeline, uint32_t groupIndex) const {
+	void cmdBindPipelineShaderGroupNV(VkCommandBuffer commandBuffer, VkPipelineBindPoint pipelineBindPoint, VkPipeline pipeline, uint32_t groupIndex) const noexcept {
 		fp_vkCmdBindPipelineShaderGroupNV(commandBuffer, pipelineBindPoint, pipeline, groupIndex);
 	}
 #endif
 #if (defined(VK_NV_device_generated_commands))
-	void getGeneratedCommandsMemoryRequirementsNV(const VkGeneratedCommandsMemoryRequirementsInfoNV* pInfo, VkMemoryRequirements2* pMemoryRequirements) const {
+	void getGeneratedCommandsMemoryRequirementsNV(const VkGeneratedCommandsMemoryRequirementsInfoNV* pInfo, VkMemoryRequirements2* pMemoryRequirements) const noexcept {
 		fp_vkGetGeneratedCommandsMemoryRequirementsNV(device, pInfo, pMemoryRequirements);
 	}
 #endif
 #if (defined(VK_NV_device_generated_commands))
-	VkResult createIndirectCommandsLayoutNV(const VkIndirectCommandsLayoutCreateInfoNV* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkIndirectCommandsLayoutNV* pIndirectCommandsLayout) const {
+	VkResult createIndirectCommandsLayoutNV(const VkIndirectCommandsLayoutCreateInfoNV* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkIndirectCommandsLayoutNV* pIndirectCommandsLayout) const noexcept {
 		return fp_vkCreateIndirectCommandsLayoutNV(device, pCreateInfo, pAllocator, pIndirectCommandsLayout);
 	}
 #endif
 #if (defined(VK_NV_device_generated_commands))
-	void destroyIndirectCommandsLayoutNV(VkIndirectCommandsLayoutNV indirectCommandsLayout, const VkAllocationCallbacks* pAllocator) const {
+	void destroyIndirectCommandsLayoutNV(VkIndirectCommandsLayoutNV indirectCommandsLayout, const VkAllocationCallbacks* pAllocator) const noexcept {
 		fp_vkDestroyIndirectCommandsLayoutNV(device, indirectCommandsLayout, pAllocator);
 	}
 #endif
 #if (defined(VK_KHR_push_descriptor))
-	void cmdPushDescriptorSetKHR(VkCommandBuffer commandBuffer, VkPipelineBindPoint pipelineBindPoint, VkPipelineLayout layout, uint32_t set, uint32_t descriptorWriteCount, const VkWriteDescriptorSet* pDescriptorWrites) const {
+	void cmdPushDescriptorSetKHR(VkCommandBuffer commandBuffer, VkPipelineBindPoint pipelineBindPoint, VkPipelineLayout layout, uint32_t set, uint32_t descriptorWriteCount, const VkWriteDescriptorSet* pDescriptorWrites) const noexcept {
 		fp_vkCmdPushDescriptorSetKHR(commandBuffer, pipelineBindPoint, layout, set, descriptorWriteCount, pDescriptorWrites);
 	}
 #endif
 #if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_maintenance1))
-	void trimCommandPool(VkCommandPool commandPool, VkCommandPoolTrimFlags flags) const {
+	void trimCommandPool(VkCommandPool commandPool, VkCommandPoolTrimFlags flags) const noexcept {
 		fp_vkTrimCommandPool(device, commandPool, flags);
 	}
 #endif
 #if (defined(VK_KHR_external_memory_win32))
-	VkResult getMemoryWin32HandleKHR(const VkMemoryGetWin32HandleInfoKHR* pGetWin32HandleInfo, HANDLE* pHandle) const {
+	VkResult getMemoryWin32HandleKHR(const VkMemoryGetWin32HandleInfoKHR* pGetWin32HandleInfo, HANDLE* pHandle) const noexcept {
 		return fp_vkGetMemoryWin32HandleKHR(device, pGetWin32HandleInfo, pHandle);
 	}
 #endif
 #if (defined(VK_KHR_external_memory_win32))
-	VkResult getMemoryWin32HandlePropertiesKHR(VkExternalMemoryHandleTypeFlagBits handleType, HANDLE handle, VkMemoryWin32HandlePropertiesKHR* pMemoryWin32HandleProperties) const {
+	VkResult getMemoryWin32HandlePropertiesKHR(VkExternalMemoryHandleTypeFlagBits handleType, HANDLE handle, VkMemoryWin32HandlePropertiesKHR* pMemoryWin32HandleProperties) const noexcept {
 		return fp_vkGetMemoryWin32HandlePropertiesKHR(device, handleType, handle, pMemoryWin32HandleProperties);
 	}
 #endif
 #if (defined(VK_KHR_external_memory_fd))
-	VkResult getMemoryFdKHR(const VkMemoryGetFdInfoKHR* pGetFdInfo, int* pFd) const {
+	VkResult getMemoryFdKHR(const VkMemoryGetFdInfoKHR* pGetFdInfo, int* pFd) const noexcept {
 		return fp_vkGetMemoryFdKHR(device, pGetFdInfo, pFd);
 	}
 #endif
 #if (defined(VK_KHR_external_memory_fd))
-	VkResult getMemoryFdPropertiesKHR(VkExternalMemoryHandleTypeFlagBits handleType, int fd, VkMemoryFdPropertiesKHR* pMemoryFdProperties) const {
+	VkResult getMemoryFdPropertiesKHR(VkExternalMemoryHandleTypeFlagBits handleType, int fd, VkMemoryFdPropertiesKHR* pMemoryFdProperties) const noexcept {
 		return fp_vkGetMemoryFdPropertiesKHR(device, handleType, fd, pMemoryFdProperties);
 	}
 #endif
 #if (defined(VK_FUCHSIA_external_memory))
-	VkResult getMemoryZirconHandleFUCHSIA(const VkMemoryGetZirconHandleInfoFUCHSIA* pGetZirconHandleInfo, zx_handle_t* pZirconHandle) const {
+	VkResult getMemoryZirconHandleFUCHSIA(const VkMemoryGetZirconHandleInfoFUCHSIA* pGetZirconHandleInfo, zx_handle_t* pZirconHandle) const noexcept {
 		return fp_vkGetMemoryZirconHandleFUCHSIA(device, pGetZirconHandleInfo, pZirconHandle);
 	}
 #endif
 #if (defined(VK_FUCHSIA_external_memory))
-	VkResult getMemoryZirconHandlePropertiesFUCHSIA(VkExternalMemoryHandleTypeFlagBits handleType, zx_handle_t zirconHandle, VkMemoryZirconHandlePropertiesFUCHSIA* pMemoryZirconHandleProperties) const {
+	VkResult getMemoryZirconHandlePropertiesFUCHSIA(VkExternalMemoryHandleTypeFlagBits handleType, zx_handle_t zirconHandle, VkMemoryZirconHandlePropertiesFUCHSIA* pMemoryZirconHandleProperties) const noexcept {
 		return fp_vkGetMemoryZirconHandlePropertiesFUCHSIA(device, handleType, zirconHandle, pMemoryZirconHandleProperties);
 	}
 #endif
 #if (defined(VK_KHR_external_semaphore_win32))
-	VkResult getSemaphoreWin32HandleKHR(const VkSemaphoreGetWin32HandleInfoKHR* pGetWin32HandleInfo, HANDLE* pHandle) const {
+	VkResult getSemaphoreWin32HandleKHR(const VkSemaphoreGetWin32HandleInfoKHR* pGetWin32HandleInfo, HANDLE* pHandle) const noexcept {
 		return fp_vkGetSemaphoreWin32HandleKHR(device, pGetWin32HandleInfo, pHandle);
 	}
 #endif
 #if (defined(VK_KHR_external_semaphore_win32))
-	VkResult importSemaphoreWin32HandleKHR(const VkImportSemaphoreWin32HandleInfoKHR* pImportSemaphoreWin32HandleInfo) const {
+	VkResult importSemaphoreWin32HandleKHR(const VkImportSemaphoreWin32HandleInfoKHR* pImportSemaphoreWin32HandleInfo) const noexcept {
 		return fp_vkImportSemaphoreWin32HandleKHR(device, pImportSemaphoreWin32HandleInfo);
 	}
 #endif
 #if (defined(VK_KHR_external_semaphore_fd))
-	VkResult getSemaphoreFdKHR(const VkSemaphoreGetFdInfoKHR* pGetFdInfo, int* pFd) const {
+	VkResult getSemaphoreFdKHR(const VkSemaphoreGetFdInfoKHR* pGetFdInfo, int* pFd) const noexcept {
 		return fp_vkGetSemaphoreFdKHR(device, pGetFdInfo, pFd);
 	}
 #endif
 #if (defined(VK_KHR_external_semaphore_fd))
-	VkResult importSemaphoreFdKHR(const VkImportSemaphoreFdInfoKHR* pImportSemaphoreFdInfo) const {
+	VkResult importSemaphoreFdKHR(const VkImportSemaphoreFdInfoKHR* pImportSemaphoreFdInfo) const noexcept {
 		return fp_vkImportSemaphoreFdKHR(device, pImportSemaphoreFdInfo);
 	}
 #endif
 #if (defined(VK_FUCHSIA_external_semaphore))
-	VkResult getSemaphoreZirconHandleFUCHSIA(const VkSemaphoreGetZirconHandleInfoFUCHSIA* pGetZirconHandleInfo, zx_handle_t* pZirconHandle) const {
+	VkResult getSemaphoreZirconHandleFUCHSIA(const VkSemaphoreGetZirconHandleInfoFUCHSIA* pGetZirconHandleInfo, zx_handle_t* pZirconHandle) const noexcept {
 		return fp_vkGetSemaphoreZirconHandleFUCHSIA(device, pGetZirconHandleInfo, pZirconHandle);
 	}
 #endif
 #if (defined(VK_FUCHSIA_external_semaphore))
-	VkResult importSemaphoreZirconHandleFUCHSIA(const VkImportSemaphoreZirconHandleInfoFUCHSIA* pImportSemaphoreZirconHandleInfo) const {
+	VkResult importSemaphoreZirconHandleFUCHSIA(const VkImportSemaphoreZirconHandleInfoFUCHSIA* pImportSemaphoreZirconHandleInfo) const noexcept {
 		return fp_vkImportSemaphoreZirconHandleFUCHSIA(device, pImportSemaphoreZirconHandleInfo);
 	}
 #endif
 #if (defined(VK_KHR_external_fence_win32))
-	VkResult getFenceWin32HandleKHR(const VkFenceGetWin32HandleInfoKHR* pGetWin32HandleInfo, HANDLE* pHandle) const {
+	VkResult getFenceWin32HandleKHR(const VkFenceGetWin32HandleInfoKHR* pGetWin32HandleInfo, HANDLE* pHandle) const noexcept {
 		return fp_vkGetFenceWin32HandleKHR(device, pGetWin32HandleInfo, pHandle);
 	}
 #endif
 #if (defined(VK_KHR_external_fence_win32))
-	VkResult importFenceWin32HandleKHR(const VkImportFenceWin32HandleInfoKHR* pImportFenceWin32HandleInfo) const {
+	VkResult importFenceWin32HandleKHR(const VkImportFenceWin32HandleInfoKHR* pImportFenceWin32HandleInfo) const noexcept {
 		return fp_vkImportFenceWin32HandleKHR(device, pImportFenceWin32HandleInfo);
 	}
 #endif
 #if (defined(VK_KHR_external_fence_fd))
-	VkResult getFenceFdKHR(const VkFenceGetFdInfoKHR* pGetFdInfo, int* pFd) const {
+	VkResult getFenceFdKHR(const VkFenceGetFdInfoKHR* pGetFdInfo, int* pFd) const noexcept {
 		return fp_vkGetFenceFdKHR(device, pGetFdInfo, pFd);
 	}
 #endif
 #if (defined(VK_KHR_external_fence_fd))
-	VkResult importFenceFdKHR(const VkImportFenceFdInfoKHR* pImportFenceFdInfo) const {
+	VkResult importFenceFdKHR(const VkImportFenceFdInfoKHR* pImportFenceFdInfo) const noexcept {
 		return fp_vkImportFenceFdKHR(device, pImportFenceFdInfo);
 	}
 #endif
 #if (defined(VK_EXT_display_control))
-	VkResult displayPowerControlEXT(VkDisplayKHR display, const VkDisplayPowerInfoEXT* pDisplayPowerInfo) const {
+	VkResult displayPowerControlEXT(VkDisplayKHR display, const VkDisplayPowerInfoEXT* pDisplayPowerInfo) const noexcept {
 		return fp_vkDisplayPowerControlEXT(device, display, pDisplayPowerInfo);
 	}
 #endif
 #if (defined(VK_EXT_display_control))
-	VkResult registerDeviceEventEXT(const VkDeviceEventInfoEXT* pDeviceEventInfo, const VkAllocationCallbacks* pAllocator, VkFence* pFence) const {
+	VkResult registerDeviceEventEXT(const VkDeviceEventInfoEXT* pDeviceEventInfo, const VkAllocationCallbacks* pAllocator, VkFence* pFence) const noexcept {
 		return fp_vkRegisterDeviceEventEXT(device, pDeviceEventInfo, pAllocator, pFence);
 	}
 #endif
 #if (defined(VK_EXT_display_control))
-	VkResult registerDisplayEventEXT(VkDisplayKHR display, const VkDisplayEventInfoEXT* pDisplayEventInfo, const VkAllocationCallbacks* pAllocator, VkFence* pFence) const {
+	VkResult registerDisplayEventEXT(VkDisplayKHR display, const VkDisplayEventInfoEXT* pDisplayEventInfo, const VkAllocationCallbacks* pAllocator, VkFence* pFence) const noexcept {
 		return fp_vkRegisterDisplayEventEXT(device, display, pDisplayEventInfo, pAllocator, pFence);
 	}
 #endif
 #if (defined(VK_EXT_display_control))
-	VkResult getSwapchainCounterEXT(VkSwapchainKHR swapchain, VkSurfaceCounterFlagBitsEXT counter, uint64_t* pCounterValue) const {
+	VkResult getSwapchainCounterEXT(VkSwapchainKHR swapchain, VkSurfaceCounterFlagBitsEXT counter, uint64_t* pCounterValue) const noexcept {
 		return fp_vkGetSwapchainCounterEXT(device, swapchain, counter, pCounterValue);
 	}
 #endif
 #if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_device_group))
-	void getDeviceGroupPeerMemoryFeatures(uint32_t heapIndex, uint32_t localDeviceIndex, uint32_t remoteDeviceIndex, VkPeerMemoryFeatureFlags* pPeerMemoryFeatures) const {
+	void getDeviceGroupPeerMemoryFeatures(uint32_t heapIndex, uint32_t localDeviceIndex, uint32_t remoteDeviceIndex, VkPeerMemoryFeatureFlags* pPeerMemoryFeatures) const noexcept {
 		fp_vkGetDeviceGroupPeerMemoryFeatures(device, heapIndex, localDeviceIndex, remoteDeviceIndex, pPeerMemoryFeatures);
 	}
 #endif
 #if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_bind_memory2))
-	VkResult bindBufferMemory2(uint32_t bindInfoCount, const VkBindBufferMemoryInfo* pBindInfos) const {
+	VkResult bindBufferMemory2(uint32_t bindInfoCount, const VkBindBufferMemoryInfo* pBindInfos) const noexcept {
 		return fp_vkBindBufferMemory2(device, bindInfoCount, pBindInfos);
 	}
 #endif
 #if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_bind_memory2))
-	VkResult bindImageMemory2(uint32_t bindInfoCount, const VkBindImageMemoryInfo* pBindInfos) const {
+	VkResult bindImageMemory2(uint32_t bindInfoCount, const VkBindImageMemoryInfo* pBindInfos) const noexcept {
 		return fp_vkBindImageMemory2(device, bindInfoCount, pBindInfos);
 	}
 #endif
 #if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_device_group))
-	void cmdSetDeviceMask(VkCommandBuffer commandBuffer, uint32_t deviceMask) const {
+	void cmdSetDeviceMask(VkCommandBuffer commandBuffer, uint32_t deviceMask) const noexcept {
 		fp_vkCmdSetDeviceMask(commandBuffer, deviceMask);
 	}
 #endif
 #if (defined(VK_KHR_swapchain) && defined(VK_VERSION_1_1)) || (defined(VK_KHR_device_group) && defined(VK_KHR_surface))
-	VkResult getDeviceGroupPresentCapabilitiesKHR(VkDeviceGroupPresentCapabilitiesKHR* pDeviceGroupPresentCapabilities) const {
+	VkResult getDeviceGroupPresentCapabilitiesKHR(VkDeviceGroupPresentCapabilitiesKHR* pDeviceGroupPresentCapabilities) const noexcept {
 		return fp_vkGetDeviceGroupPresentCapabilitiesKHR(device, pDeviceGroupPresentCapabilities);
 	}
 #endif
 #if (defined(VK_KHR_swapchain) && defined(VK_VERSION_1_1)) || (defined(VK_KHR_device_group) && defined(VK_KHR_surface))
-	VkResult getDeviceGroupSurfacePresentModesKHR(VkSurfaceKHR surface, VkDeviceGroupPresentModeFlagsKHR* pModes) const {
+	VkResult getDeviceGroupSurfacePresentModesKHR(VkSurfaceKHR surface, VkDeviceGroupPresentModeFlagsKHR* pModes) const noexcept {
 		return fp_vkGetDeviceGroupSurfacePresentModesKHR(device, surface, pModes);
 	}
 #endif
 #if (defined(VK_KHR_swapchain) && defined(VK_VERSION_1_1)) || (defined(VK_KHR_device_group) && defined(VK_KHR_swapchain))
-	VkResult acquireNextImage2KHR(const VkAcquireNextImageInfoKHR* pAcquireInfo, uint32_t* pImageIndex) const {
+	VkResult acquireNextImage2KHR(const VkAcquireNextImageInfoKHR* pAcquireInfo, uint32_t* pImageIndex) const noexcept {
 		return fp_vkAcquireNextImage2KHR(device, pAcquireInfo, pImageIndex);
 	}
 #endif
 #if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_device_group))
-	void cmdDispatchBase(VkCommandBuffer commandBuffer, uint32_t baseGroupX, uint32_t baseGroupY, uint32_t baseGroupZ, uint32_t groupCountX, uint32_t groupCountY, uint32_t groupCountZ) const {
+	void cmdDispatchBase(VkCommandBuffer commandBuffer, uint32_t baseGroupX, uint32_t baseGroupY, uint32_t baseGroupZ, uint32_t groupCountX, uint32_t groupCountY, uint32_t groupCountZ) const noexcept {
 		fp_vkCmdDispatchBase(commandBuffer, baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ);
 	}
 #endif
 #if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_descriptor_update_template))
-	VkResult createDescriptorUpdateTemplate(const VkDescriptorUpdateTemplateCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDescriptorUpdateTemplate* pDescriptorUpdateTemplate) const {
+	VkResult createDescriptorUpdateTemplate(const VkDescriptorUpdateTemplateCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDescriptorUpdateTemplate* pDescriptorUpdateTemplate) const noexcept {
 		return fp_vkCreateDescriptorUpdateTemplate(device, pCreateInfo, pAllocator, pDescriptorUpdateTemplate);
 	}
 #endif
 #if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_descriptor_update_template))
-	void destroyDescriptorUpdateTemplate(VkDescriptorUpdateTemplate descriptorUpdateTemplate, const VkAllocationCallbacks* pAllocator) const {
+	void destroyDescriptorUpdateTemplate(VkDescriptorUpdateTemplate descriptorUpdateTemplate, const VkAllocationCallbacks* pAllocator) const noexcept {
 		fp_vkDestroyDescriptorUpdateTemplate(device, descriptorUpdateTemplate, pAllocator);
 	}
 #endif
 #if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_descriptor_update_template))
-	void updateDescriptorSetWithTemplate(VkDescriptorSet descriptorSet, VkDescriptorUpdateTemplate descriptorUpdateTemplate, const void* pData) const {
+	void updateDescriptorSetWithTemplate(VkDescriptorSet descriptorSet, VkDescriptorUpdateTemplate descriptorUpdateTemplate, const void* pData) const noexcept {
 		fp_vkUpdateDescriptorSetWithTemplate(device, descriptorSet, descriptorUpdateTemplate, pData);
 	}
 #endif
 #if (defined(VK_KHR_push_descriptor) && defined(VK_VERSION_1_1)) || (defined(VK_KHR_push_descriptor) && defined(VK_KHR_descriptor_update_template)) || (defined(VK_KHR_descriptor_update_template) && defined(VK_KHR_push_descriptor))
-	void cmdPushDescriptorSetWithTemplateKHR(VkCommandBuffer commandBuffer, VkDescriptorUpdateTemplate descriptorUpdateTemplate, VkPipelineLayout layout, uint32_t set, const void* pData) const {
+	void cmdPushDescriptorSetWithTemplateKHR(VkCommandBuffer commandBuffer, VkDescriptorUpdateTemplate descriptorUpdateTemplate, VkPipelineLayout layout, uint32_t set, const void* pData) const noexcept {
 		fp_vkCmdPushDescriptorSetWithTemplateKHR(commandBuffer, descriptorUpdateTemplate, layout, set, pData);
 	}
 #endif
 #if (defined(VK_EXT_hdr_metadata))
-	void setHdrMetadataEXT(uint32_t swapchainCount, const VkSwapchainKHR* pSwapchains, const VkHdrMetadataEXT* pMetadata) const {
+	void setHdrMetadataEXT(uint32_t swapchainCount, const VkSwapchainKHR* pSwapchains, const VkHdrMetadataEXT* pMetadata) const noexcept {
 		fp_vkSetHdrMetadataEXT(device, swapchainCount, pSwapchains, pMetadata);
 	}
 #endif
 #if (defined(VK_KHR_shared_presentable_image))
-	VkResult getSwapchainStatusKHR(VkSwapchainKHR swapchain) const {
+	VkResult getSwapchainStatusKHR(VkSwapchainKHR swapchain) const noexcept {
 		return fp_vkGetSwapchainStatusKHR(device, swapchain);
 	}
 #endif
 #if (defined(VK_GOOGLE_display_timing))
-	VkResult getRefreshCycleDurationGOOGLE(VkSwapchainKHR swapchain, VkRefreshCycleDurationGOOGLE* pDisplayTimingProperties) const {
+	VkResult getRefreshCycleDurationGOOGLE(VkSwapchainKHR swapchain, VkRefreshCycleDurationGOOGLE* pDisplayTimingProperties) const noexcept {
 		return fp_vkGetRefreshCycleDurationGOOGLE(device, swapchain, pDisplayTimingProperties);
 	}
 #endif
 #if (defined(VK_GOOGLE_display_timing))
-	VkResult getPastPresentationTimingGOOGLE(VkSwapchainKHR swapchain, uint32_t* pPresentationTimingCount, VkPastPresentationTimingGOOGLE* pPresentationTimings) const {
+	VkResult getPastPresentationTimingGOOGLE(VkSwapchainKHR swapchain, uint32_t* pPresentationTimingCount, VkPastPresentationTimingGOOGLE* pPresentationTimings) const noexcept {
 		return fp_vkGetPastPresentationTimingGOOGLE(device, swapchain, pPresentationTimingCount, pPresentationTimings);
 	}
 #endif
 #if (defined(VK_NV_clip_space_w_scaling))
-	void cmdSetViewportWScalingNV(VkCommandBuffer commandBuffer, uint32_t firstViewport, uint32_t viewportCount, const VkViewportWScalingNV* pViewportWScalings) const {
+	void cmdSetViewportWScalingNV(VkCommandBuffer commandBuffer, uint32_t firstViewport, uint32_t viewportCount, const VkViewportWScalingNV* pViewportWScalings) const noexcept {
 		fp_vkCmdSetViewportWScalingNV(commandBuffer, firstViewport, viewportCount, pViewportWScalings);
 	}
 #endif
 #if (defined(VK_EXT_discard_rectangles))
-	void cmdSetDiscardRectangleEXT(VkCommandBuffer commandBuffer, uint32_t firstDiscardRectangle, uint32_t discardRectangleCount, const VkRect2D* pDiscardRectangles) const {
+	void cmdSetDiscardRectangleEXT(VkCommandBuffer commandBuffer, uint32_t firstDiscardRectangle, uint32_t discardRectangleCount, const VkRect2D* pDiscardRectangles) const noexcept {
 		fp_vkCmdSetDiscardRectangleEXT(commandBuffer, firstDiscardRectangle, discardRectangleCount, pDiscardRectangles);
 	}
 #endif
 #if (defined(VK_EXT_sample_locations))
-	void cmdSetSampleLocationsEXT(VkCommandBuffer commandBuffer, const VkSampleLocationsInfoEXT* pSampleLocationsInfo) const {
+	void cmdSetSampleLocationsEXT(VkCommandBuffer commandBuffer, const VkSampleLocationsInfoEXT* pSampleLocationsInfo) const noexcept {
 		fp_vkCmdSetSampleLocationsEXT(commandBuffer, pSampleLocationsInfo);
 	}
 #endif
 #if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_get_memory_requirements2))
-	void getBufferMemoryRequirements2(const VkBufferMemoryRequirementsInfo2* pInfo, VkMemoryRequirements2* pMemoryRequirements) const {
+	void getBufferMemoryRequirements2(const VkBufferMemoryRequirementsInfo2* pInfo, VkMemoryRequirements2* pMemoryRequirements) const noexcept {
 		fp_vkGetBufferMemoryRequirements2(device, pInfo, pMemoryRequirements);
 	}
 #endif
 #if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_get_memory_requirements2))
-	void getImageMemoryRequirements2(const VkImageMemoryRequirementsInfo2* pInfo, VkMemoryRequirements2* pMemoryRequirements) const {
+	void getImageMemoryRequirements2(const VkImageMemoryRequirementsInfo2* pInfo, VkMemoryRequirements2* pMemoryRequirements) const noexcept {
 		fp_vkGetImageMemoryRequirements2(device, pInfo, pMemoryRequirements);
 	}
 #endif
 #if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_get_memory_requirements2))
-	void getImageSparseMemoryRequirements2(const VkImageSparseMemoryRequirementsInfo2* pInfo, uint32_t* pSparseMemoryRequirementCount, VkSparseImageMemoryRequirements2* pSparseMemoryRequirements) const {
+	void getImageSparseMemoryRequirements2(const VkImageSparseMemoryRequirementsInfo2* pInfo, uint32_t* pSparseMemoryRequirementCount, VkSparseImageMemoryRequirements2* pSparseMemoryRequirements) const noexcept {
 		fp_vkGetImageSparseMemoryRequirements2(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
 	}
 #endif
 #if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_sampler_ycbcr_conversion))
-	VkResult createSamplerYcbcrConversion(const VkSamplerYcbcrConversionCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkSamplerYcbcrConversion* pYcbcrConversion) const {
+	VkResult createSamplerYcbcrConversion(const VkSamplerYcbcrConversionCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkSamplerYcbcrConversion* pYcbcrConversion) const noexcept {
 		return fp_vkCreateSamplerYcbcrConversion(device, pCreateInfo, pAllocator, pYcbcrConversion);
 	}
 #endif
 #if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_sampler_ycbcr_conversion))
-	void destroySamplerYcbcrConversion(VkSamplerYcbcrConversion ycbcrConversion, const VkAllocationCallbacks* pAllocator) const {
+	void destroySamplerYcbcrConversion(VkSamplerYcbcrConversion ycbcrConversion, const VkAllocationCallbacks* pAllocator) const noexcept {
 		fp_vkDestroySamplerYcbcrConversion(device, ycbcrConversion, pAllocator);
 	}
 #endif
 #if (defined(VK_VERSION_1_1))
-	void getDeviceQueue2(const VkDeviceQueueInfo2* pQueueInfo, VkQueue* pQueue) const {
+	void getDeviceQueue2(const VkDeviceQueueInfo2* pQueueInfo, VkQueue* pQueue) const noexcept {
 		fp_vkGetDeviceQueue2(device, pQueueInfo, pQueue);
 	}
 #endif
 #if (defined(VK_EXT_validation_cache))
-	VkResult createValidationCacheEXT(const VkValidationCacheCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkValidationCacheEXT* pValidationCache) const {
+	VkResult createValidationCacheEXT(const VkValidationCacheCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkValidationCacheEXT* pValidationCache) const noexcept {
 		return fp_vkCreateValidationCacheEXT(device, pCreateInfo, pAllocator, pValidationCache);
 	}
 #endif
 #if (defined(VK_EXT_validation_cache))
-	void destroyValidationCacheEXT(VkValidationCacheEXT validationCache, const VkAllocationCallbacks* pAllocator) const {
+	void destroyValidationCacheEXT(VkValidationCacheEXT validationCache, const VkAllocationCallbacks* pAllocator) const noexcept {
 		fp_vkDestroyValidationCacheEXT(device, validationCache, pAllocator);
 	}
 #endif
 #if (defined(VK_EXT_validation_cache))
-	VkResult getValidationCacheDataEXT(VkValidationCacheEXT validationCache, size_t* pDataSize, void* pData) const {
+	VkResult getValidationCacheDataEXT(VkValidationCacheEXT validationCache, size_t* pDataSize, void* pData) const noexcept {
 		return fp_vkGetValidationCacheDataEXT(device, validationCache, pDataSize, pData);
 	}
 #endif
 #if (defined(VK_EXT_validation_cache))
-	VkResult mergeValidationCachesEXT(VkValidationCacheEXT dstCache, uint32_t srcCacheCount, const VkValidationCacheEXT* pSrcCaches) const {
+	VkResult mergeValidationCachesEXT(VkValidationCacheEXT dstCache, uint32_t srcCacheCount, const VkValidationCacheEXT* pSrcCaches) const noexcept {
 		return fp_vkMergeValidationCachesEXT(device, dstCache, srcCacheCount, pSrcCaches);
 	}
 #endif
 #if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_maintenance3))
-	void getDescriptorSetLayoutSupport(const VkDescriptorSetLayoutCreateInfo* pCreateInfo, VkDescriptorSetLayoutSupport* pSupport) const {
+	void getDescriptorSetLayoutSupport(const VkDescriptorSetLayoutCreateInfo* pCreateInfo, VkDescriptorSetLayoutSupport* pSupport) const noexcept {
 		fp_vkGetDescriptorSetLayoutSupport(device, pCreateInfo, pSupport);
 	}
 #endif
 #if (defined(VK_ANDROID_native_buffer))
-	VkResult getSwapchainGrallocUsageANDROID(VkFormat format, VkImageUsageFlags imageUsage, int* grallocUsage) const {
+	VkResult getSwapchainGrallocUsageANDROID(VkFormat format, VkImageUsageFlags imageUsage, int* grallocUsage) const noexcept {
 		return fp_vkGetSwapchainGrallocUsageANDROID(device, format, imageUsage, grallocUsage);
 	}
 #endif
 #if (defined(VK_ANDROID_native_buffer))
-	VkResult getSwapchainGrallocUsage2ANDROID(VkFormat format, VkImageUsageFlags imageUsage, VkSwapchainImageUsageFlagsANDROID swapchainImageUsage, uint64_t* grallocConsumerUsage, uint64_t* grallocProducerUsage) const {
+	VkResult getSwapchainGrallocUsage2ANDROID(VkFormat format, VkImageUsageFlags imageUsage, VkSwapchainImageUsageFlagsANDROID swapchainImageUsage, uint64_t* grallocConsumerUsage, uint64_t* grallocProducerUsage) const noexcept {
 		return fp_vkGetSwapchainGrallocUsage2ANDROID(device, format, imageUsage, swapchainImageUsage, grallocConsumerUsage, grallocProducerUsage);
 	}
 #endif
 #if (defined(VK_ANDROID_native_buffer))
-	VkResult acquireImageANDROID(VkImage image, int nativeFenceFd, VkSemaphore semaphore, VkFence fence) const {
+	VkResult acquireImageANDROID(VkImage image, int nativeFenceFd, VkSemaphore semaphore, VkFence fence) const noexcept {
 		return fp_vkAcquireImageANDROID(device, image, nativeFenceFd, semaphore, fence);
 	}
 #endif
 #if (defined(VK_ANDROID_native_buffer))
-	VkResult queueSignalReleaseImageANDROID(VkQueue queue, uint32_t waitSemaphoreCount, const VkSemaphore* pWaitSemaphores, VkImage image, int* pNativeFenceFd) const {
+	VkResult queueSignalReleaseImageANDROID(VkQueue queue, uint32_t waitSemaphoreCount, const VkSemaphore* pWaitSemaphores, VkImage image, int* pNativeFenceFd) const noexcept {
 		return fp_vkQueueSignalReleaseImageANDROID(queue, waitSemaphoreCount, pWaitSemaphores, image, pNativeFenceFd);
 	}
 #endif
 #if (defined(VK_AMD_shader_info))
-	VkResult getShaderInfoAMD(VkPipeline pipeline, VkShaderStageFlagBits shaderStage, VkShaderInfoTypeAMD infoType, size_t* pInfoSize, void* pInfo) const {
+	VkResult getShaderInfoAMD(VkPipeline pipeline, VkShaderStageFlagBits shaderStage, VkShaderInfoTypeAMD infoType, size_t* pInfoSize, void* pInfo) const noexcept {
 		return fp_vkGetShaderInfoAMD(device, pipeline, shaderStage, infoType, pInfoSize, pInfo);
 	}
 #endif
 #if (defined(VK_AMD_display_native_hdr))
-	void setLocalDimmingAMD(VkSwapchainKHR swapChain, VkBool32 localDimmingEnable) const {
+	void setLocalDimmingAMD(VkSwapchainKHR swapChain, VkBool32 localDimmingEnable) const noexcept {
 		fp_vkSetLocalDimmingAMD(device, swapChain, localDimmingEnable);
 	}
 #endif
 #if (defined(VK_EXT_calibrated_timestamps))
-	VkResult getCalibratedTimestampsEXT(uint32_t timestampCount, const VkCalibratedTimestampInfoEXT* pTimestampInfos, uint64_t* pTimestamps, uint64_t* pMaxDeviation) const {
+	VkResult getCalibratedTimestampsEXT(uint32_t timestampCount, const VkCalibratedTimestampInfoEXT* pTimestampInfos, uint64_t* pTimestamps, uint64_t* pMaxDeviation) const noexcept {
 		return fp_vkGetCalibratedTimestampsEXT(device, timestampCount, pTimestampInfos, pTimestamps, pMaxDeviation);
 	}
 #endif
 #if (defined(VK_EXT_debug_utils))
-	VkResult setDebugUtilsObjectNameEXT(const VkDebugUtilsObjectNameInfoEXT* pNameInfo) const {
+	VkResult setDebugUtilsObjectNameEXT(const VkDebugUtilsObjectNameInfoEXT* pNameInfo) const noexcept {
 		return fp_vkSetDebugUtilsObjectNameEXT(device, pNameInfo);
 	}
 #endif
 #if (defined(VK_EXT_debug_utils))
-	VkResult setDebugUtilsObjectTagEXT(const VkDebugUtilsObjectTagInfoEXT* pTagInfo) const {
+	VkResult setDebugUtilsObjectTagEXT(const VkDebugUtilsObjectTagInfoEXT* pTagInfo) const noexcept {
 		return fp_vkSetDebugUtilsObjectTagEXT(device, pTagInfo);
 	}
 #endif
 #if (defined(VK_EXT_debug_utils))
-	void queueBeginDebugUtilsLabelEXT(VkQueue queue, const VkDebugUtilsLabelEXT* pLabelInfo) const {
+	void queueBeginDebugUtilsLabelEXT(VkQueue queue, const VkDebugUtilsLabelEXT* pLabelInfo) const noexcept {
 		fp_vkQueueBeginDebugUtilsLabelEXT(queue, pLabelInfo);
 	}
 #endif
 #if (defined(VK_EXT_debug_utils))
-	void queueEndDebugUtilsLabelEXT(VkQueue queue) const {
+	void queueEndDebugUtilsLabelEXT(VkQueue queue) const noexcept {
 		fp_vkQueueEndDebugUtilsLabelEXT(queue);
 	}
 #endif
 #if (defined(VK_EXT_debug_utils))
-	void queueInsertDebugUtilsLabelEXT(VkQueue queue, const VkDebugUtilsLabelEXT* pLabelInfo) const {
+	void queueInsertDebugUtilsLabelEXT(VkQueue queue, const VkDebugUtilsLabelEXT* pLabelInfo) const noexcept {
 		fp_vkQueueInsertDebugUtilsLabelEXT(queue, pLabelInfo);
 	}
 #endif
 #if (defined(VK_EXT_debug_utils))
-	void cmdBeginDebugUtilsLabelEXT(VkCommandBuffer commandBuffer, const VkDebugUtilsLabelEXT* pLabelInfo) const {
+	void cmdBeginDebugUtilsLabelEXT(VkCommandBuffer commandBuffer, const VkDebugUtilsLabelEXT* pLabelInfo) const noexcept {
 		fp_vkCmdBeginDebugUtilsLabelEXT(commandBuffer, pLabelInfo);
 	}
 #endif
 #if (defined(VK_EXT_debug_utils))
-	void cmdEndDebugUtilsLabelEXT(VkCommandBuffer commandBuffer) const {
+	void cmdEndDebugUtilsLabelEXT(VkCommandBuffer commandBuffer) const noexcept {
 		fp_vkCmdEndDebugUtilsLabelEXT(commandBuffer);
 	}
 #endif
 #if (defined(VK_EXT_debug_utils))
-	void cmdInsertDebugUtilsLabelEXT(VkCommandBuffer commandBuffer, const VkDebugUtilsLabelEXT* pLabelInfo) const {
+	void cmdInsertDebugUtilsLabelEXT(VkCommandBuffer commandBuffer, const VkDebugUtilsLabelEXT* pLabelInfo) const noexcept {
 		fp_vkCmdInsertDebugUtilsLabelEXT(commandBuffer, pLabelInfo);
 	}
 #endif
 #if (defined(VK_EXT_external_memory_host))
-	VkResult getMemoryHostPointerPropertiesEXT(VkExternalMemoryHandleTypeFlagBits handleType, const void* pHostPointer, VkMemoryHostPointerPropertiesEXT* pMemoryHostPointerProperties) const {
+	VkResult getMemoryHostPointerPropertiesEXT(VkExternalMemoryHandleTypeFlagBits handleType, const void* pHostPointer, VkMemoryHostPointerPropertiesEXT* pMemoryHostPointerProperties) const noexcept {
 		return fp_vkGetMemoryHostPointerPropertiesEXT(device, handleType, pHostPointer, pMemoryHostPointerProperties);
 	}
 #endif
 #if (defined(VK_AMD_buffer_marker))
-	void cmdWriteBufferMarkerAMD(VkCommandBuffer commandBuffer, VkPipelineStageFlagBits pipelineStage, VkBuffer dstBuffer, VkDeviceSize dstOffset, uint32_t marker) const {
+	void cmdWriteBufferMarkerAMD(VkCommandBuffer commandBuffer, VkPipelineStageFlagBits pipelineStage, VkBuffer dstBuffer, VkDeviceSize dstOffset, uint32_t marker) const noexcept {
 		fp_vkCmdWriteBufferMarkerAMD(commandBuffer, pipelineStage, dstBuffer, dstOffset, marker);
 	}
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_create_renderpass2))
-	VkResult createRenderPass2(const VkRenderPassCreateInfo2* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkRenderPass* pRenderPass) const {
+	VkResult createRenderPass2(const VkRenderPassCreateInfo2* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkRenderPass* pRenderPass) const noexcept {
 		return fp_vkCreateRenderPass2(device, pCreateInfo, pAllocator, pRenderPass);
 	}
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_create_renderpass2))
-	void cmdBeginRenderPass2(VkCommandBuffer commandBuffer, const VkRenderPassBeginInfo* pRenderPassBegin, const VkSubpassBeginInfo* pSubpassBeginInfo) const {
+	void cmdBeginRenderPass2(VkCommandBuffer commandBuffer, const VkRenderPassBeginInfo* pRenderPassBegin, const VkSubpassBeginInfo* pSubpassBeginInfo) const noexcept {
 		fp_vkCmdBeginRenderPass2(commandBuffer, pRenderPassBegin, pSubpassBeginInfo);
 	}
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_create_renderpass2))
-	void cmdNextSubpass2(VkCommandBuffer commandBuffer, const VkSubpassBeginInfo* pSubpassBeginInfo, const VkSubpassEndInfo* pSubpassEndInfo) const {
+	void cmdNextSubpass2(VkCommandBuffer commandBuffer, const VkSubpassBeginInfo* pSubpassBeginInfo, const VkSubpassEndInfo* pSubpassEndInfo) const noexcept {
 		fp_vkCmdNextSubpass2(commandBuffer, pSubpassBeginInfo, pSubpassEndInfo);
 	}
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_create_renderpass2))
-	void cmdEndRenderPass2(VkCommandBuffer commandBuffer, const VkSubpassEndInfo* pSubpassEndInfo) const {
+	void cmdEndRenderPass2(VkCommandBuffer commandBuffer, const VkSubpassEndInfo* pSubpassEndInfo) const noexcept {
 		fp_vkCmdEndRenderPass2(commandBuffer, pSubpassEndInfo);
 	}
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_timeline_semaphore))
-	VkResult getSemaphoreCounterValue(VkSemaphore semaphore, uint64_t* pValue) const {
+	VkResult getSemaphoreCounterValue(VkSemaphore semaphore, uint64_t* pValue) const noexcept {
 		return fp_vkGetSemaphoreCounterValue(device, semaphore, pValue);
 	}
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_timeline_semaphore))
-	VkResult waitSemaphores(const VkSemaphoreWaitInfo* pWaitInfo, uint64_t timeout) const {
+	VkResult waitSemaphores(const VkSemaphoreWaitInfo* pWaitInfo, uint64_t timeout) const noexcept {
 		return fp_vkWaitSemaphores(device, pWaitInfo, timeout);
 	}
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_timeline_semaphore))
-	VkResult signalSemaphore(const VkSemaphoreSignalInfo* pSignalInfo) const {
+	VkResult signalSemaphore(const VkSemaphoreSignalInfo* pSignalInfo) const noexcept {
 		return fp_vkSignalSemaphore(device, pSignalInfo);
 	}
 #endif
 #if (defined(VK_ANDROID_external_memory_android_hardware_buffer))
-	VkResult getAndroidHardwareBufferPropertiesANDROID(AHardwareBuffer buffer, VkAndroidHardwareBufferPropertiesANDROID* pProperties) const {
+	VkResult getAndroidHardwareBufferPropertiesANDROID(AHardwareBuffer buffer, VkAndroidHardwareBufferPropertiesANDROID* pProperties) const noexcept {
 		return fp_vkGetAndroidHardwareBufferPropertiesANDROID(device, buffer, pProperties);
 	}
 #endif
 #if (defined(VK_ANDROID_external_memory_android_hardware_buffer))
-	VkResult getMemoryAndroidHardwareBufferANDROID(const VkMemoryGetAndroidHardwareBufferInfoANDROID* pInfo, AHardwareBuffer pBuffer) const {
+	VkResult getMemoryAndroidHardwareBufferANDROID(const VkMemoryGetAndroidHardwareBufferInfoANDROID* pInfo, AHardwareBuffer pBuffer) const noexcept {
 		return fp_vkGetMemoryAndroidHardwareBufferANDROID(device, pInfo, pBuffer);
 	}
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_AMD_draw_indirect_count))
-	void cmdDrawIndirectCount(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint32_t maxDrawCount, uint32_t stride) const {
+	void cmdDrawIndirectCount(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint32_t maxDrawCount, uint32_t stride) const noexcept {
 		fp_vkCmdDrawIndirectCount(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
 	}
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_AMD_draw_indirect_count))
-	void cmdDrawIndexedIndirectCount(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint32_t maxDrawCount, uint32_t stride) const {
+	void cmdDrawIndexedIndirectCount(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint32_t maxDrawCount, uint32_t stride) const noexcept {
 		fp_vkCmdDrawIndexedIndirectCount(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
 	}
 #endif
 #if (defined(VK_NV_device_diagnostic_checkpoints))
-	void cmdSetCheckpointNV(VkCommandBuffer commandBuffer, const void* pCheckpointMarker) const {
+	void cmdSetCheckpointNV(VkCommandBuffer commandBuffer, const void* pCheckpointMarker) const noexcept {
 		fp_vkCmdSetCheckpointNV(commandBuffer, pCheckpointMarker);
 	}
 #endif
 #if (defined(VK_NV_device_diagnostic_checkpoints))
-	void getQueueCheckpointDataNV(VkQueue queue, uint32_t* pCheckpointDataCount, VkCheckpointDataNV* pCheckpointData) const {
+	void getQueueCheckpointDataNV(VkQueue queue, uint32_t* pCheckpointDataCount, VkCheckpointDataNV* pCheckpointData) const noexcept {
 		fp_vkGetQueueCheckpointDataNV(queue, pCheckpointDataCount, pCheckpointData);
 	}
 #endif
 #if (defined(VK_EXT_transform_feedback))
-	void cmdBindTransformFeedbackBuffersEXT(VkCommandBuffer commandBuffer, uint32_t firstBinding, uint32_t bindingCount, const VkBuffer* pBuffers, const VkDeviceSize* pOffsets, const VkDeviceSize* pSizes) const {
+	void cmdBindTransformFeedbackBuffersEXT(VkCommandBuffer commandBuffer, uint32_t firstBinding, uint32_t bindingCount, const VkBuffer* pBuffers, const VkDeviceSize* pOffsets, const VkDeviceSize* pSizes) const noexcept {
 		fp_vkCmdBindTransformFeedbackBuffersEXT(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets, pSizes);
 	}
 #endif
 #if (defined(VK_EXT_transform_feedback))
-	void cmdBeginTransformFeedbackEXT(VkCommandBuffer commandBuffer, uint32_t firstCounterBuffer, uint32_t counterBufferCount, const VkBuffer* pCounterBuffers, const VkDeviceSize* pCounterBufferOffsets) const {
+	void cmdBeginTransformFeedbackEXT(VkCommandBuffer commandBuffer, uint32_t firstCounterBuffer, uint32_t counterBufferCount, const VkBuffer* pCounterBuffers, const VkDeviceSize* pCounterBufferOffsets) const noexcept {
 		fp_vkCmdBeginTransformFeedbackEXT(commandBuffer, firstCounterBuffer, counterBufferCount, pCounterBuffers, pCounterBufferOffsets);
 	}
 #endif
 #if (defined(VK_EXT_transform_feedback))
-	void cmdEndTransformFeedbackEXT(VkCommandBuffer commandBuffer, uint32_t firstCounterBuffer, uint32_t counterBufferCount, const VkBuffer* pCounterBuffers, const VkDeviceSize* pCounterBufferOffsets) const {
+	void cmdEndTransformFeedbackEXT(VkCommandBuffer commandBuffer, uint32_t firstCounterBuffer, uint32_t counterBufferCount, const VkBuffer* pCounterBuffers, const VkDeviceSize* pCounterBufferOffsets) const noexcept {
 		fp_vkCmdEndTransformFeedbackEXT(commandBuffer, firstCounterBuffer, counterBufferCount, pCounterBuffers, pCounterBufferOffsets);
 	}
 #endif
 #if (defined(VK_EXT_transform_feedback))
-	void cmdBeginQueryIndexedEXT(VkCommandBuffer commandBuffer, VkQueryPool queryPool, uint32_t query, VkQueryControlFlags flags, uint32_t index) const {
+	void cmdBeginQueryIndexedEXT(VkCommandBuffer commandBuffer, VkQueryPool queryPool, uint32_t query, VkQueryControlFlags flags, uint32_t index) const noexcept {
 		fp_vkCmdBeginQueryIndexedEXT(commandBuffer, queryPool, query, flags, index);
 	}
 #endif
 #if (defined(VK_EXT_transform_feedback))
-	void cmdEndQueryIndexedEXT(VkCommandBuffer commandBuffer, VkQueryPool queryPool, uint32_t query, uint32_t index) const {
+	void cmdEndQueryIndexedEXT(VkCommandBuffer commandBuffer, VkQueryPool queryPool, uint32_t query, uint32_t index) const noexcept {
 		fp_vkCmdEndQueryIndexedEXT(commandBuffer, queryPool, query, index);
 	}
 #endif
 #if (defined(VK_EXT_transform_feedback))
-	void cmdDrawIndirectByteCountEXT(VkCommandBuffer commandBuffer, uint32_t instanceCount, uint32_t firstInstance, VkBuffer counterBuffer, VkDeviceSize counterBufferOffset, uint32_t counterOffset, uint32_t vertexStride) const {
+	void cmdDrawIndirectByteCountEXT(VkCommandBuffer commandBuffer, uint32_t instanceCount, uint32_t firstInstance, VkBuffer counterBuffer, VkDeviceSize counterBufferOffset, uint32_t counterOffset, uint32_t vertexStride) const noexcept {
 		fp_vkCmdDrawIndirectByteCountEXT(commandBuffer, instanceCount, firstInstance, counterBuffer, counterBufferOffset, counterOffset, vertexStride);
 	}
 #endif
 #if (defined(VK_NV_scissor_exclusive))
-	void cmdSetExclusiveScissorNV(VkCommandBuffer commandBuffer, uint32_t firstExclusiveScissor, uint32_t exclusiveScissorCount, const VkRect2D* pExclusiveScissors) const {
+	void cmdSetExclusiveScissorNV(VkCommandBuffer commandBuffer, uint32_t firstExclusiveScissor, uint32_t exclusiveScissorCount, const VkRect2D* pExclusiveScissors) const noexcept {
 		fp_vkCmdSetExclusiveScissorNV(commandBuffer, firstExclusiveScissor, exclusiveScissorCount, pExclusiveScissors);
 	}
 #endif
 #if (defined(VK_NV_shading_rate_image))
-	void cmdBindShadingRateImageNV(VkCommandBuffer commandBuffer, VkImageView imageView, VkImageLayout imageLayout) const {
+	void cmdBindShadingRateImageNV(VkCommandBuffer commandBuffer, VkImageView imageView, VkImageLayout imageLayout) const noexcept {
 		fp_vkCmdBindShadingRateImageNV(commandBuffer, imageView, imageLayout);
 	}
 #endif
 #if (defined(VK_NV_shading_rate_image))
-	void cmdSetViewportShadingRatePaletteNV(VkCommandBuffer commandBuffer, uint32_t firstViewport, uint32_t viewportCount, const VkShadingRatePaletteNV* pShadingRatePalettes) const {
+	void cmdSetViewportShadingRatePaletteNV(VkCommandBuffer commandBuffer, uint32_t firstViewport, uint32_t viewportCount, const VkShadingRatePaletteNV* pShadingRatePalettes) const noexcept {
 		fp_vkCmdSetViewportShadingRatePaletteNV(commandBuffer, firstViewport, viewportCount, pShadingRatePalettes);
 	}
 #endif
 #if (defined(VK_NV_shading_rate_image))
-	void cmdSetCoarseSampleOrderNV(VkCommandBuffer commandBuffer, VkCoarseSampleOrderTypeNV sampleOrderType, uint32_t customSampleOrderCount, const VkCoarseSampleOrderCustomNV* pCustomSampleOrders) const {
+	void cmdSetCoarseSampleOrderNV(VkCommandBuffer commandBuffer, VkCoarseSampleOrderTypeNV sampleOrderType, uint32_t customSampleOrderCount, const VkCoarseSampleOrderCustomNV* pCustomSampleOrders) const noexcept {
 		fp_vkCmdSetCoarseSampleOrderNV(commandBuffer, sampleOrderType, customSampleOrderCount, pCustomSampleOrders);
 	}
 #endif
 #if (defined(VK_NV_mesh_shader))
-	void cmdDrawMeshTasksNV(VkCommandBuffer commandBuffer, uint32_t taskCount, uint32_t firstTask) const {
+	void cmdDrawMeshTasksNV(VkCommandBuffer commandBuffer, uint32_t taskCount, uint32_t firstTask) const noexcept {
 		fp_vkCmdDrawMeshTasksNV(commandBuffer, taskCount, firstTask);
 	}
 #endif
 #if (defined(VK_NV_mesh_shader))
-	void cmdDrawMeshTasksIndirectNV(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, uint32_t drawCount, uint32_t stride) const {
+	void cmdDrawMeshTasksIndirectNV(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, uint32_t drawCount, uint32_t stride) const noexcept {
 		fp_vkCmdDrawMeshTasksIndirectNV(commandBuffer, buffer, offset, drawCount, stride);
 	}
 #endif
 #if (defined(VK_NV_mesh_shader))
-	void cmdDrawMeshTasksIndirectCountNV(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint32_t maxDrawCount, uint32_t stride) const {
+	void cmdDrawMeshTasksIndirectCountNV(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint32_t maxDrawCount, uint32_t stride) const noexcept {
 		fp_vkCmdDrawMeshTasksIndirectCountNV(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
 	}
 #endif
 #if (defined(VK_NV_ray_tracing))
-	VkResult compileDeferredNV(VkPipeline pipeline, uint32_t shader) const {
+	VkResult compileDeferredNV(VkPipeline pipeline, uint32_t shader) const noexcept {
 		return fp_vkCompileDeferredNV(device, pipeline, shader);
 	}
 #endif
 #if (defined(VK_NV_ray_tracing))
-	VkResult createAccelerationStructureNV(const VkAccelerationStructureCreateInfoNV* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkAccelerationStructureNV* pAccelerationStructure) const {
+	VkResult createAccelerationStructureNV(const VkAccelerationStructureCreateInfoNV* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkAccelerationStructureNV* pAccelerationStructure) const noexcept {
 		return fp_vkCreateAccelerationStructureNV(device, pCreateInfo, pAllocator, pAccelerationStructure);
 	}
 #endif
 #if (defined(VK_KHR_acceleration_structure))
-	void destroyAccelerationStructureKHR(VkAccelerationStructureKHR accelerationStructure, const VkAllocationCallbacks* pAllocator) const {
+	void destroyAccelerationStructureKHR(VkAccelerationStructureKHR accelerationStructure, const VkAllocationCallbacks* pAllocator) const noexcept {
 		fp_vkDestroyAccelerationStructureKHR(device, accelerationStructure, pAllocator);
 	}
 #endif
 #if (defined(VK_NV_ray_tracing))
-	void destroyAccelerationStructureNV(VkAccelerationStructureNV accelerationStructure, const VkAllocationCallbacks* pAllocator) const {
+	void destroyAccelerationStructureNV(VkAccelerationStructureNV accelerationStructure, const VkAllocationCallbacks* pAllocator) const noexcept {
 		fp_vkDestroyAccelerationStructureNV(device, accelerationStructure, pAllocator);
 	}
 #endif
 #if (defined(VK_NV_ray_tracing))
-	void getAccelerationStructureMemoryRequirementsNV(const VkAccelerationStructureMemoryRequirementsInfoNV* pInfo, VkMemoryRequirements2KHR* pMemoryRequirements) const {
+	void getAccelerationStructureMemoryRequirementsNV(const VkAccelerationStructureMemoryRequirementsInfoNV* pInfo, VkMemoryRequirements2KHR* pMemoryRequirements) const noexcept {
 		fp_vkGetAccelerationStructureMemoryRequirementsNV(device, pInfo, pMemoryRequirements);
 	}
 #endif
 #if (defined(VK_NV_ray_tracing))
-	VkResult bindAccelerationStructureMemoryNV(uint32_t bindInfoCount, const VkBindAccelerationStructureMemoryInfoNV* pBindInfos) const {
+	VkResult bindAccelerationStructureMemoryNV(uint32_t bindInfoCount, const VkBindAccelerationStructureMemoryInfoNV* pBindInfos) const noexcept {
 		return fp_vkBindAccelerationStructureMemoryNV(device, bindInfoCount, pBindInfos);
 	}
 #endif
 #if (defined(VK_NV_ray_tracing))
-	void cmdCopyAccelerationStructureNV(VkCommandBuffer commandBuffer, VkAccelerationStructureNV dst, VkAccelerationStructureNV src, VkCopyAccelerationStructureModeKHR mode) const {
+	void cmdCopyAccelerationStructureNV(VkCommandBuffer commandBuffer, VkAccelerationStructureNV dst, VkAccelerationStructureNV src, VkCopyAccelerationStructureModeKHR mode) const noexcept {
 		fp_vkCmdCopyAccelerationStructureNV(commandBuffer, dst, src, mode);
 	}
 #endif
 #if (defined(VK_KHR_acceleration_structure))
-	void cmdCopyAccelerationStructureKHR(VkCommandBuffer commandBuffer, const VkCopyAccelerationStructureInfoKHR* pInfo) const {
+	void cmdCopyAccelerationStructureKHR(VkCommandBuffer commandBuffer, const VkCopyAccelerationStructureInfoKHR* pInfo) const noexcept {
 		fp_vkCmdCopyAccelerationStructureKHR(commandBuffer, pInfo);
 	}
 #endif
 #if (defined(VK_KHR_acceleration_structure))
-	VkResult copyAccelerationStructureKHR(VkDeferredOperationKHR deferredOperation, const VkCopyAccelerationStructureInfoKHR* pInfo) const {
+	VkResult copyAccelerationStructureKHR(VkDeferredOperationKHR deferredOperation, const VkCopyAccelerationStructureInfoKHR* pInfo) const noexcept {
 		return fp_vkCopyAccelerationStructureKHR(device, deferredOperation, pInfo);
 	}
 #endif
 #if (defined(VK_KHR_acceleration_structure))
-	void cmdCopyAccelerationStructureToMemoryKHR(VkCommandBuffer commandBuffer, const VkCopyAccelerationStructureToMemoryInfoKHR* pInfo) const {
+	void cmdCopyAccelerationStructureToMemoryKHR(VkCommandBuffer commandBuffer, const VkCopyAccelerationStructureToMemoryInfoKHR* pInfo) const noexcept {
 		fp_vkCmdCopyAccelerationStructureToMemoryKHR(commandBuffer, pInfo);
 	}
 #endif
 #if (defined(VK_KHR_acceleration_structure))
-	VkResult copyAccelerationStructureToMemoryKHR(VkDeferredOperationKHR deferredOperation, const VkCopyAccelerationStructureToMemoryInfoKHR* pInfo) const {
+	VkResult copyAccelerationStructureToMemoryKHR(VkDeferredOperationKHR deferredOperation, const VkCopyAccelerationStructureToMemoryInfoKHR* pInfo) const noexcept {
 		return fp_vkCopyAccelerationStructureToMemoryKHR(device, deferredOperation, pInfo);
 	}
 #endif
 #if (defined(VK_KHR_acceleration_structure))
-	void cmdCopyMemoryToAccelerationStructureKHR(VkCommandBuffer commandBuffer, const VkCopyMemoryToAccelerationStructureInfoKHR* pInfo) const {
+	void cmdCopyMemoryToAccelerationStructureKHR(VkCommandBuffer commandBuffer, const VkCopyMemoryToAccelerationStructureInfoKHR* pInfo) const noexcept {
 		fp_vkCmdCopyMemoryToAccelerationStructureKHR(commandBuffer, pInfo);
 	}
 #endif
 #if (defined(VK_KHR_acceleration_structure))
-	VkResult copyMemoryToAccelerationStructureKHR(VkDeferredOperationKHR deferredOperation, const VkCopyMemoryToAccelerationStructureInfoKHR* pInfo) const {
+	VkResult copyMemoryToAccelerationStructureKHR(VkDeferredOperationKHR deferredOperation, const VkCopyMemoryToAccelerationStructureInfoKHR* pInfo) const noexcept {
 		return fp_vkCopyMemoryToAccelerationStructureKHR(device, deferredOperation, pInfo);
 	}
 #endif
 #if (defined(VK_KHR_acceleration_structure))
-	void cmdWriteAccelerationStructuresPropertiesKHR(VkCommandBuffer commandBuffer, uint32_t accelerationStructureCount, const VkAccelerationStructureKHR* pAccelerationStructures, VkQueryType queryType, VkQueryPool queryPool, uint32_t firstQuery) const {
+	void cmdWriteAccelerationStructuresPropertiesKHR(VkCommandBuffer commandBuffer, uint32_t accelerationStructureCount, const VkAccelerationStructureKHR* pAccelerationStructures, VkQueryType queryType, VkQueryPool queryPool, uint32_t firstQuery) const noexcept {
 		fp_vkCmdWriteAccelerationStructuresPropertiesKHR(commandBuffer, accelerationStructureCount, pAccelerationStructures, queryType, queryPool, firstQuery);
 	}
 #endif
 #if (defined(VK_NV_ray_tracing))
-	void cmdWriteAccelerationStructuresPropertiesNV(VkCommandBuffer commandBuffer, uint32_t accelerationStructureCount, const VkAccelerationStructureNV* pAccelerationStructures, VkQueryType queryType, VkQueryPool queryPool, uint32_t firstQuery) const {
+	void cmdWriteAccelerationStructuresPropertiesNV(VkCommandBuffer commandBuffer, uint32_t accelerationStructureCount, const VkAccelerationStructureNV* pAccelerationStructures, VkQueryType queryType, VkQueryPool queryPool, uint32_t firstQuery) const noexcept {
 		fp_vkCmdWriteAccelerationStructuresPropertiesNV(commandBuffer, accelerationStructureCount, pAccelerationStructures, queryType, queryPool, firstQuery);
 	}
 #endif
 #if (defined(VK_NV_ray_tracing))
-	void cmdBuildAccelerationStructureNV(VkCommandBuffer commandBuffer, const VkAccelerationStructureInfoNV* pInfo, VkBuffer instanceData, VkDeviceSize instanceOffset, VkBool32 update, VkAccelerationStructureNV dst, VkAccelerationStructureNV src, VkBuffer scratch, VkDeviceSize scratchOffset) const {
+	void cmdBuildAccelerationStructureNV(VkCommandBuffer commandBuffer, const VkAccelerationStructureInfoNV* pInfo, VkBuffer instanceData, VkDeviceSize instanceOffset, VkBool32 update, VkAccelerationStructureNV dst, VkAccelerationStructureNV src, VkBuffer scratch, VkDeviceSize scratchOffset) const noexcept {
 		fp_vkCmdBuildAccelerationStructureNV(commandBuffer, pInfo, instanceData, instanceOffset, update, dst, src, scratch, scratchOffset);
 	}
 #endif
 #if (defined(VK_KHR_acceleration_structure))
-	VkResult writeAccelerationStructuresPropertiesKHR(uint32_t accelerationStructureCount, const VkAccelerationStructureKHR* pAccelerationStructures, VkQueryType queryType, size_t dataSize, void* pData, size_t stride) const {
+	VkResult writeAccelerationStructuresPropertiesKHR(uint32_t accelerationStructureCount, const VkAccelerationStructureKHR* pAccelerationStructures, VkQueryType queryType, size_t dataSize, void* pData, size_t stride) const noexcept {
 		return fp_vkWriteAccelerationStructuresPropertiesKHR(device, accelerationStructureCount, pAccelerationStructures, queryType, dataSize, pData, stride);
 	}
 #endif
 #if (defined(VK_KHR_ray_tracing_pipeline))
-	void cmdTraceRaysKHR(VkCommandBuffer commandBuffer, const VkStridedDeviceAddressRegionKHR* pRaygenShaderBindingTable, const VkStridedDeviceAddressRegionKHR* pMissShaderBindingTable, const VkStridedDeviceAddressRegionKHR* pHitShaderBindingTable, const VkStridedDeviceAddressRegionKHR* pCallableShaderBindingTable, uint32_t width, uint32_t height, uint32_t depth) const {
+	void cmdTraceRaysKHR(VkCommandBuffer commandBuffer, const VkStridedDeviceAddressRegionKHR* pRaygenShaderBindingTable, const VkStridedDeviceAddressRegionKHR* pMissShaderBindingTable, const VkStridedDeviceAddressRegionKHR* pHitShaderBindingTable, const VkStridedDeviceAddressRegionKHR* pCallableShaderBindingTable, uint32_t width, uint32_t height, uint32_t depth) const noexcept {
 		fp_vkCmdTraceRaysKHR(commandBuffer, pRaygenShaderBindingTable, pMissShaderBindingTable, pHitShaderBindingTable, pCallableShaderBindingTable, width, height, depth);
 	}
 #endif
 #if (defined(VK_NV_ray_tracing))
-	void cmdTraceRaysNV(VkCommandBuffer commandBuffer, VkBuffer raygenShaderBindingTableBuffer, VkDeviceSize raygenShaderBindingOffset, VkBuffer missShaderBindingTableBuffer, VkDeviceSize missShaderBindingOffset, VkDeviceSize missShaderBindingStride, VkBuffer hitShaderBindingTableBuffer, VkDeviceSize hitShaderBindingOffset, VkDeviceSize hitShaderBindingStride, VkBuffer callableShaderBindingTableBuffer, VkDeviceSize callableShaderBindingOffset, VkDeviceSize callableShaderBindingStride, uint32_t width, uint32_t height, uint32_t depth) const {
+	void cmdTraceRaysNV(VkCommandBuffer commandBuffer, VkBuffer raygenShaderBindingTableBuffer, VkDeviceSize raygenShaderBindingOffset, VkBuffer missShaderBindingTableBuffer, VkDeviceSize missShaderBindingOffset, VkDeviceSize missShaderBindingStride, VkBuffer hitShaderBindingTableBuffer, VkDeviceSize hitShaderBindingOffset, VkDeviceSize hitShaderBindingStride, VkBuffer callableShaderBindingTableBuffer, VkDeviceSize callableShaderBindingOffset, VkDeviceSize callableShaderBindingStride, uint32_t width, uint32_t height, uint32_t depth) const noexcept {
 		fp_vkCmdTraceRaysNV(commandBuffer, raygenShaderBindingTableBuffer, raygenShaderBindingOffset, missShaderBindingTableBuffer, missShaderBindingOffset, missShaderBindingStride, hitShaderBindingTableBuffer, hitShaderBindingOffset, hitShaderBindingStride, callableShaderBindingTableBuffer, callableShaderBindingOffset, callableShaderBindingStride, width, height, depth);
 	}
 #endif
 #if (defined(VK_KHR_ray_tracing_pipeline)) || (defined(VK_NV_ray_tracing))
-	VkResult getRayTracingShaderGroupHandlesKHR(VkPipeline pipeline, uint32_t firstGroup, uint32_t groupCount, size_t dataSize, void* pData) const {
+	VkResult getRayTracingShaderGroupHandlesKHR(VkPipeline pipeline, uint32_t firstGroup, uint32_t groupCount, size_t dataSize, void* pData) const noexcept {
 		return fp_vkGetRayTracingShaderGroupHandlesKHR(device, pipeline, firstGroup, groupCount, dataSize, pData);
 	}
 #endif
 #if (defined(VK_KHR_ray_tracing_pipeline))
-	VkResult getRayTracingCaptureReplayShaderGroupHandlesKHR(VkPipeline pipeline, uint32_t firstGroup, uint32_t groupCount, size_t dataSize, void* pData) const {
+	VkResult getRayTracingCaptureReplayShaderGroupHandlesKHR(VkPipeline pipeline, uint32_t firstGroup, uint32_t groupCount, size_t dataSize, void* pData) const noexcept {
 		return fp_vkGetRayTracingCaptureReplayShaderGroupHandlesKHR(device, pipeline, firstGroup, groupCount, dataSize, pData);
 	}
 #endif
 #if (defined(VK_NV_ray_tracing))
-	VkResult getAccelerationStructureHandleNV(VkAccelerationStructureNV accelerationStructure, size_t dataSize, void* pData) const {
+	VkResult getAccelerationStructureHandleNV(VkAccelerationStructureNV accelerationStructure, size_t dataSize, void* pData) const noexcept {
 		return fp_vkGetAccelerationStructureHandleNV(device, accelerationStructure, dataSize, pData);
 	}
 #endif
 #if (defined(VK_NV_ray_tracing))
-	VkResult createRayTracingPipelinesNV(VkPipelineCache pipelineCache, uint32_t createInfoCount, const VkRayTracingPipelineCreateInfoNV* pCreateInfos, const VkAllocationCallbacks* pAllocator, VkPipeline* pPipelines) const {
+	VkResult createRayTracingPipelinesNV(VkPipelineCache pipelineCache, uint32_t createInfoCount, const VkRayTracingPipelineCreateInfoNV* pCreateInfos, const VkAllocationCallbacks* pAllocator, VkPipeline* pPipelines) const noexcept {
 		return fp_vkCreateRayTracingPipelinesNV(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
 	}
 #endif
 #if (defined(VK_KHR_ray_tracing_pipeline))
-	VkResult createRayTracingPipelinesKHR(VkDeferredOperationKHR deferredOperation, VkPipelineCache pipelineCache, uint32_t createInfoCount, const VkRayTracingPipelineCreateInfoKHR* pCreateInfos, const VkAllocationCallbacks* pAllocator, VkPipeline* pPipelines) const {
+	VkResult createRayTracingPipelinesKHR(VkDeferredOperationKHR deferredOperation, VkPipelineCache pipelineCache, uint32_t createInfoCount, const VkRayTracingPipelineCreateInfoKHR* pCreateInfos, const VkAllocationCallbacks* pAllocator, VkPipeline* pPipelines) const noexcept {
 		return fp_vkCreateRayTracingPipelinesKHR(device, deferredOperation, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
 	}
 #endif
 #if (defined(VK_KHR_ray_tracing_pipeline))
-	void cmdTraceRaysIndirectKHR(VkCommandBuffer commandBuffer, const VkStridedDeviceAddressRegionKHR* pRaygenShaderBindingTable, const VkStridedDeviceAddressRegionKHR* pMissShaderBindingTable, const VkStridedDeviceAddressRegionKHR* pHitShaderBindingTable, const VkStridedDeviceAddressRegionKHR* pCallableShaderBindingTable, VkDeviceAddress indirectDeviceAddress) const {
+	void cmdTraceRaysIndirectKHR(VkCommandBuffer commandBuffer, const VkStridedDeviceAddressRegionKHR* pRaygenShaderBindingTable, const VkStridedDeviceAddressRegionKHR* pMissShaderBindingTable, const VkStridedDeviceAddressRegionKHR* pHitShaderBindingTable, const VkStridedDeviceAddressRegionKHR* pCallableShaderBindingTable, VkDeviceAddress indirectDeviceAddress) const noexcept {
 		fp_vkCmdTraceRaysIndirectKHR(commandBuffer, pRaygenShaderBindingTable, pMissShaderBindingTable, pHitShaderBindingTable, pCallableShaderBindingTable, indirectDeviceAddress);
 	}
 #endif
 #if (defined(VK_KHR_acceleration_structure))
-	void getDeviceAccelerationStructureCompatibilityKHR(const VkAccelerationStructureVersionInfoKHR* pVersionInfo, VkAccelerationStructureCompatibilityKHR* pCompatibility) const {
+	void getDeviceAccelerationStructureCompatibilityKHR(const VkAccelerationStructureVersionInfoKHR* pVersionInfo, VkAccelerationStructureCompatibilityKHR* pCompatibility) const noexcept {
 		fp_vkGetDeviceAccelerationStructureCompatibilityKHR(device, pVersionInfo, pCompatibility);
 	}
 #endif
 #if (defined(VK_KHR_ray_tracing_pipeline))
-	VkDeviceSize getRayTracingShaderGroupStackSizeKHR(VkPipeline pipeline, uint32_t group, VkShaderGroupShaderKHR groupShader) const {
+	VkDeviceSize getRayTracingShaderGroupStackSizeKHR(VkPipeline pipeline, uint32_t group, VkShaderGroupShaderKHR groupShader) const noexcept {
 		return fp_vkGetRayTracingShaderGroupStackSizeKHR(device, pipeline, group, groupShader);
 	}
 #endif
 #if (defined(VK_KHR_ray_tracing_pipeline))
-	void cmdSetRayTracingPipelineStackSizeKHR(VkCommandBuffer commandBuffer, uint32_t pipelineStackSize) const {
+	void cmdSetRayTracingPipelineStackSizeKHR(VkCommandBuffer commandBuffer, uint32_t pipelineStackSize) const noexcept {
 		fp_vkCmdSetRayTracingPipelineStackSizeKHR(commandBuffer, pipelineStackSize);
 	}
 #endif
 #if (defined(VK_NVX_image_view_handle))
-	uint32_t getImageViewHandleNVX(const VkImageViewHandleInfoNVX* pInfo) const {
+	uint32_t getImageViewHandleNVX(const VkImageViewHandleInfoNVX* pInfo) const noexcept {
 		return fp_vkGetImageViewHandleNVX(device, pInfo);
 	}
 #endif
 #if (defined(VK_NVX_image_view_handle))
-	VkResult getImageViewAddressNVX(VkImageView imageView, VkImageViewAddressPropertiesNVX* pProperties) const {
+	VkResult getImageViewAddressNVX(VkImageView imageView, VkImageViewAddressPropertiesNVX* pProperties) const noexcept {
 		return fp_vkGetImageViewAddressNVX(device, imageView, pProperties);
 	}
 #endif
 #if (defined(VK_EXT_full_screen_exclusive) && defined(VK_KHR_device_group)) || (defined(VK_EXT_full_screen_exclusive) && defined(VK_VERSION_1_1))
-	VkResult getDeviceGroupSurfacePresentModes2EXT(const VkPhysicalDeviceSurfaceInfo2KHR* pSurfaceInfo, VkDeviceGroupPresentModeFlagsKHR* pModes) const {
+	VkResult getDeviceGroupSurfacePresentModes2EXT(const VkPhysicalDeviceSurfaceInfo2KHR* pSurfaceInfo, VkDeviceGroupPresentModeFlagsKHR* pModes) const noexcept {
 		return fp_vkGetDeviceGroupSurfacePresentModes2EXT(device, pSurfaceInfo, pModes);
 	}
 #endif
 #if (defined(VK_EXT_full_screen_exclusive))
-	VkResult acquireFullScreenExclusiveModeEXT(VkSwapchainKHR swapchain) const {
+	VkResult acquireFullScreenExclusiveModeEXT(VkSwapchainKHR swapchain) const noexcept {
 		return fp_vkAcquireFullScreenExclusiveModeEXT(device, swapchain);
 	}
 #endif
 #if (defined(VK_EXT_full_screen_exclusive))
-	VkResult releaseFullScreenExclusiveModeEXT(VkSwapchainKHR swapchain) const {
+	VkResult releaseFullScreenExclusiveModeEXT(VkSwapchainKHR swapchain) const noexcept {
 		return fp_vkReleaseFullScreenExclusiveModeEXT(device, swapchain);
 	}
 #endif
 #if (defined(VK_KHR_performance_query))
-	VkResult acquireProfilingLockKHR(const VkAcquireProfilingLockInfoKHR* pInfo) const {
+	VkResult acquireProfilingLockKHR(const VkAcquireProfilingLockInfoKHR* pInfo) const noexcept {
 		return fp_vkAcquireProfilingLockKHR(device, pInfo);
 	}
 #endif
 #if (defined(VK_KHR_performance_query))
-	void releaseProfilingLockKHR() const {
+	void releaseProfilingLockKHR() const noexcept {
 		fp_vkReleaseProfilingLockKHR(device);
 	}
 #endif
 #if (defined(VK_EXT_image_drm_format_modifier))
-	VkResult getImageDrmFormatModifierPropertiesEXT(VkImage image, VkImageDrmFormatModifierPropertiesEXT* pProperties) const {
+	VkResult getImageDrmFormatModifierPropertiesEXT(VkImage image, VkImageDrmFormatModifierPropertiesEXT* pProperties) const noexcept {
 		return fp_vkGetImageDrmFormatModifierPropertiesEXT(device, image, pProperties);
 	}
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_buffer_device_address))
-	uint64_t getBufferOpaqueCaptureAddress(const VkBufferDeviceAddressInfo* pInfo) const {
+	uint64_t getBufferOpaqueCaptureAddress(const VkBufferDeviceAddressInfo* pInfo) const noexcept {
 		return fp_vkGetBufferOpaqueCaptureAddress(device, pInfo);
 	}
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_EXT_buffer_device_address))
-	VkDeviceAddress getBufferDeviceAddress(const VkBufferDeviceAddressInfo* pInfo) const {
+	VkDeviceAddress getBufferDeviceAddress(const VkBufferDeviceAddressInfo* pInfo) const noexcept {
 		return fp_vkGetBufferDeviceAddress(device, pInfo);
 	}
 #endif
 #if (defined(VK_INTEL_performance_query))
-	VkResult initializePerformanceApiINTEL(const VkInitializePerformanceApiInfoINTEL* pInitializeInfo) const {
+	VkResult initializePerformanceApiINTEL(const VkInitializePerformanceApiInfoINTEL* pInitializeInfo) const noexcept {
 		return fp_vkInitializePerformanceApiINTEL(device, pInitializeInfo);
 	}
 #endif
 #if (defined(VK_INTEL_performance_query))
-	void uninitializePerformanceApiINTEL() const {
+	void uninitializePerformanceApiINTEL() const noexcept {
 		fp_vkUninitializePerformanceApiINTEL(device);
 	}
 #endif
 #if (defined(VK_INTEL_performance_query))
-	VkResult cmdSetPerformanceMarkerINTEL(VkCommandBuffer commandBuffer, const VkPerformanceMarkerInfoINTEL* pMarkerInfo) const {
+	VkResult cmdSetPerformanceMarkerINTEL(VkCommandBuffer commandBuffer, const VkPerformanceMarkerInfoINTEL* pMarkerInfo) const noexcept {
 		return fp_vkCmdSetPerformanceMarkerINTEL(commandBuffer, pMarkerInfo);
 	}
 #endif
 #if (defined(VK_INTEL_performance_query))
-	VkResult cmdSetPerformanceStreamMarkerINTEL(VkCommandBuffer commandBuffer, const VkPerformanceStreamMarkerInfoINTEL* pMarkerInfo) const {
+	VkResult cmdSetPerformanceStreamMarkerINTEL(VkCommandBuffer commandBuffer, const VkPerformanceStreamMarkerInfoINTEL* pMarkerInfo) const noexcept {
 		return fp_vkCmdSetPerformanceStreamMarkerINTEL(commandBuffer, pMarkerInfo);
 	}
 #endif
 #if (defined(VK_INTEL_performance_query))
-	VkResult cmdSetPerformanceOverrideINTEL(VkCommandBuffer commandBuffer, const VkPerformanceOverrideInfoINTEL* pOverrideInfo) const {
+	VkResult cmdSetPerformanceOverrideINTEL(VkCommandBuffer commandBuffer, const VkPerformanceOverrideInfoINTEL* pOverrideInfo) const noexcept {
 		return fp_vkCmdSetPerformanceOverrideINTEL(commandBuffer, pOverrideInfo);
 	}
 #endif
 #if (defined(VK_INTEL_performance_query))
-	VkResult acquirePerformanceConfigurationINTEL(const VkPerformanceConfigurationAcquireInfoINTEL* pAcquireInfo, VkPerformanceConfigurationINTEL* pConfiguration) const {
+	VkResult acquirePerformanceConfigurationINTEL(const VkPerformanceConfigurationAcquireInfoINTEL* pAcquireInfo, VkPerformanceConfigurationINTEL* pConfiguration) const noexcept {
 		return fp_vkAcquirePerformanceConfigurationINTEL(device, pAcquireInfo, pConfiguration);
 	}
 #endif
 #if (defined(VK_INTEL_performance_query))
-	VkResult releasePerformanceConfigurationINTEL(VkPerformanceConfigurationINTEL configuration) const {
+	VkResult releasePerformanceConfigurationINTEL(VkPerformanceConfigurationINTEL configuration) const noexcept {
 		return fp_vkReleasePerformanceConfigurationINTEL(device, configuration);
 	}
 #endif
 #if (defined(VK_INTEL_performance_query))
-	VkResult queueSetPerformanceConfigurationINTEL(VkQueue queue, VkPerformanceConfigurationINTEL configuration) const {
+	VkResult queueSetPerformanceConfigurationINTEL(VkQueue queue, VkPerformanceConfigurationINTEL configuration) const noexcept {
 		return fp_vkQueueSetPerformanceConfigurationINTEL(queue, configuration);
 	}
 #endif
 #if (defined(VK_INTEL_performance_query))
-	VkResult getPerformanceParameterINTEL(VkPerformanceParameterTypeINTEL parameter, VkPerformanceValueINTEL* pValue) const {
+	VkResult getPerformanceParameterINTEL(VkPerformanceParameterTypeINTEL parameter, VkPerformanceValueINTEL* pValue) const noexcept {
 		return fp_vkGetPerformanceParameterINTEL(device, parameter, pValue);
 	}
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_buffer_device_address))
-	uint64_t getDeviceMemoryOpaqueCaptureAddress(const VkDeviceMemoryOpaqueCaptureAddressInfo* pInfo) const {
+	uint64_t getDeviceMemoryOpaqueCaptureAddress(const VkDeviceMemoryOpaqueCaptureAddressInfo* pInfo) const noexcept {
 		return fp_vkGetDeviceMemoryOpaqueCaptureAddress(device, pInfo);
 	}
 #endif
 #if (defined(VK_KHR_pipeline_executable_properties))
-	VkResult getPipelineExecutablePropertiesKHR(const VkPipelineInfoKHR* pPipelineInfo, uint32_t* pExecutableCount, VkPipelineExecutablePropertiesKHR* pProperties) const {
+	VkResult getPipelineExecutablePropertiesKHR(const VkPipelineInfoKHR* pPipelineInfo, uint32_t* pExecutableCount, VkPipelineExecutablePropertiesKHR* pProperties) const noexcept {
 		return fp_vkGetPipelineExecutablePropertiesKHR(device, pPipelineInfo, pExecutableCount, pProperties);
 	}
 #endif
 #if (defined(VK_KHR_pipeline_executable_properties))
-	VkResult getPipelineExecutableStatisticsKHR(const VkPipelineExecutableInfoKHR* pExecutableInfo, uint32_t* pStatisticCount, VkPipelineExecutableStatisticKHR* pStatistics) const {
+	VkResult getPipelineExecutableStatisticsKHR(const VkPipelineExecutableInfoKHR* pExecutableInfo, uint32_t* pStatisticCount, VkPipelineExecutableStatisticKHR* pStatistics) const noexcept {
 		return fp_vkGetPipelineExecutableStatisticsKHR(device, pExecutableInfo, pStatisticCount, pStatistics);
 	}
 #endif
 #if (defined(VK_KHR_pipeline_executable_properties))
-	VkResult getPipelineExecutableInternalRepresentationsKHR(const VkPipelineExecutableInfoKHR* pExecutableInfo, uint32_t* pInternalRepresentationCount, VkPipelineExecutableInternalRepresentationKHR* pInternalRepresentations) const {
+	VkResult getPipelineExecutableInternalRepresentationsKHR(const VkPipelineExecutableInfoKHR* pExecutableInfo, uint32_t* pInternalRepresentationCount, VkPipelineExecutableInternalRepresentationKHR* pInternalRepresentations) const noexcept {
 		return fp_vkGetPipelineExecutableInternalRepresentationsKHR(device, pExecutableInfo, pInternalRepresentationCount, pInternalRepresentations);
 	}
 #endif
 #if (defined(VK_EXT_line_rasterization))
-	void cmdSetLineStippleEXT(VkCommandBuffer commandBuffer, uint32_t lineStippleFactor, uint16_t lineStipplePattern) const {
+	void cmdSetLineStippleEXT(VkCommandBuffer commandBuffer, uint32_t lineStippleFactor, uint16_t lineStipplePattern) const noexcept {
 		fp_vkCmdSetLineStippleEXT(commandBuffer, lineStippleFactor, lineStipplePattern);
 	}
 #endif
 #if (defined(VK_KHR_acceleration_structure))
-	VkResult createAccelerationStructureKHR(const VkAccelerationStructureCreateInfoKHR* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkAccelerationStructureKHR* pAccelerationStructure) const {
+	VkResult createAccelerationStructureKHR(const VkAccelerationStructureCreateInfoKHR* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkAccelerationStructureKHR* pAccelerationStructure) const noexcept {
 		return fp_vkCreateAccelerationStructureKHR(device, pCreateInfo, pAllocator, pAccelerationStructure);
 	}
 #endif
 #if (defined(VK_KHR_acceleration_structure))
-	void cmdBuildAccelerationStructuresKHR(VkCommandBuffer commandBuffer, uint32_t infoCount, const VkAccelerationStructureBuildGeometryInfoKHR* pInfos, const VkAccelerationStructureBuildRangeInfoKHR* const* ppBuildRangeInfos) const {
+	void cmdBuildAccelerationStructuresKHR(VkCommandBuffer commandBuffer, uint32_t infoCount, const VkAccelerationStructureBuildGeometryInfoKHR* pInfos, const VkAccelerationStructureBuildRangeInfoKHR* const* ppBuildRangeInfos) const noexcept {
 		fp_vkCmdBuildAccelerationStructuresKHR(commandBuffer, infoCount, pInfos, ppBuildRangeInfos);
 	}
 #endif
 #if (defined(VK_KHR_acceleration_structure))
-	void cmdBuildAccelerationStructuresIndirectKHR(VkCommandBuffer commandBuffer, uint32_t infoCount, const VkAccelerationStructureBuildGeometryInfoKHR* pInfos, const VkDeviceAddress* pIndirectDeviceAddresses, const uint32_t* pIndirectStrides, const uint32_t* const* ppMaxPrimitiveCounts) const {
+	void cmdBuildAccelerationStructuresIndirectKHR(VkCommandBuffer commandBuffer, uint32_t infoCount, const VkAccelerationStructureBuildGeometryInfoKHR* pInfos, const VkDeviceAddress* pIndirectDeviceAddresses, const uint32_t* pIndirectStrides, const uint32_t* const* ppMaxPrimitiveCounts) const noexcept {
 		fp_vkCmdBuildAccelerationStructuresIndirectKHR(commandBuffer, infoCount, pInfos, pIndirectDeviceAddresses, pIndirectStrides, ppMaxPrimitiveCounts);
 	}
 #endif
 #if (defined(VK_KHR_acceleration_structure))
-	VkResult buildAccelerationStructuresKHR(VkDeferredOperationKHR deferredOperation, uint32_t infoCount, const VkAccelerationStructureBuildGeometryInfoKHR* pInfos, const VkAccelerationStructureBuildRangeInfoKHR* const* ppBuildRangeInfos) const {
+	VkResult buildAccelerationStructuresKHR(VkDeferredOperationKHR deferredOperation, uint32_t infoCount, const VkAccelerationStructureBuildGeometryInfoKHR* pInfos, const VkAccelerationStructureBuildRangeInfoKHR* const* ppBuildRangeInfos) const noexcept {
 		return fp_vkBuildAccelerationStructuresKHR(device, deferredOperation, infoCount, pInfos, ppBuildRangeInfos);
 	}
 #endif
 #if (defined(VK_KHR_acceleration_structure))
-	VkDeviceAddress getAccelerationStructureDeviceAddressKHR(const VkAccelerationStructureDeviceAddressInfoKHR* pInfo) const {
+	VkDeviceAddress getAccelerationStructureDeviceAddressKHR(const VkAccelerationStructureDeviceAddressInfoKHR* pInfo) const noexcept {
 		return fp_vkGetAccelerationStructureDeviceAddressKHR(device, pInfo);
 	}
 #endif
 #if (defined(VK_KHR_deferred_host_operations))
-	VkResult createDeferredOperationKHR(const VkAllocationCallbacks* pAllocator, VkDeferredOperationKHR* pDeferredOperation) const {
+	VkResult createDeferredOperationKHR(const VkAllocationCallbacks* pAllocator, VkDeferredOperationKHR* pDeferredOperation) const noexcept {
 		return fp_vkCreateDeferredOperationKHR(device, pAllocator, pDeferredOperation);
 	}
 #endif
 #if (defined(VK_KHR_deferred_host_operations))
-	void destroyDeferredOperationKHR(VkDeferredOperationKHR operation, const VkAllocationCallbacks* pAllocator) const {
+	void destroyDeferredOperationKHR(VkDeferredOperationKHR operation, const VkAllocationCallbacks* pAllocator) const noexcept {
 		fp_vkDestroyDeferredOperationKHR(device, operation, pAllocator);
 	}
 #endif
 #if (defined(VK_KHR_deferred_host_operations))
-	uint32_t getDeferredOperationMaxConcurrencyKHR(VkDeferredOperationKHR operation) const {
+	uint32_t getDeferredOperationMaxConcurrencyKHR(VkDeferredOperationKHR operation) const noexcept {
 		return fp_vkGetDeferredOperationMaxConcurrencyKHR(device, operation);
 	}
 #endif
 #if (defined(VK_KHR_deferred_host_operations))
-	VkResult getDeferredOperationResultKHR(VkDeferredOperationKHR operation) const {
+	VkResult getDeferredOperationResultKHR(VkDeferredOperationKHR operation) const noexcept {
 		return fp_vkGetDeferredOperationResultKHR(device, operation);
 	}
 #endif
 #if (defined(VK_KHR_deferred_host_operations))
-	VkResult deferredOperationJoinKHR(VkDeferredOperationKHR operation) const {
+	VkResult deferredOperationJoinKHR(VkDeferredOperationKHR operation) const noexcept {
 		return fp_vkDeferredOperationJoinKHR(device, operation);
 	}
 #endif
 #if (defined(VK_EXT_extended_dynamic_state))
-	void cmdSetCullModeEXT(VkCommandBuffer commandBuffer, VkCullModeFlags cullMode) const {
+	void cmdSetCullModeEXT(VkCommandBuffer commandBuffer, VkCullModeFlags cullMode) const noexcept {
 		fp_vkCmdSetCullModeEXT(commandBuffer, cullMode);
 	}
 #endif
 #if (defined(VK_EXT_extended_dynamic_state))
-	void cmdSetFrontFaceEXT(VkCommandBuffer commandBuffer, VkFrontFace frontFace) const {
+	void cmdSetFrontFaceEXT(VkCommandBuffer commandBuffer, VkFrontFace frontFace) const noexcept {
 		fp_vkCmdSetFrontFaceEXT(commandBuffer, frontFace);
 	}
 #endif
 #if (defined(VK_EXT_extended_dynamic_state))
-	void cmdSetPrimitiveTopologyEXT(VkCommandBuffer commandBuffer, VkPrimitiveTopology primitiveTopology) const {
+	void cmdSetPrimitiveTopologyEXT(VkCommandBuffer commandBuffer, VkPrimitiveTopology primitiveTopology) const noexcept {
 		fp_vkCmdSetPrimitiveTopologyEXT(commandBuffer, primitiveTopology);
 	}
 #endif
 #if (defined(VK_EXT_extended_dynamic_state))
-	void cmdSetViewportWithCountEXT(VkCommandBuffer commandBuffer, uint32_t viewportCount, const VkViewport* pViewports) const {
+	void cmdSetViewportWithCountEXT(VkCommandBuffer commandBuffer, uint32_t viewportCount, const VkViewport* pViewports) const noexcept {
 		fp_vkCmdSetViewportWithCountEXT(commandBuffer, viewportCount, pViewports);
 	}
 #endif
 #if (defined(VK_EXT_extended_dynamic_state))
-	void cmdSetScissorWithCountEXT(VkCommandBuffer commandBuffer, uint32_t scissorCount, const VkRect2D* pScissors) const {
+	void cmdSetScissorWithCountEXT(VkCommandBuffer commandBuffer, uint32_t scissorCount, const VkRect2D* pScissors) const noexcept {
 		fp_vkCmdSetScissorWithCountEXT(commandBuffer, scissorCount, pScissors);
 	}
 #endif
 #if (defined(VK_EXT_extended_dynamic_state))
-	void cmdBindVertexBuffers2EXT(VkCommandBuffer commandBuffer, uint32_t firstBinding, uint32_t bindingCount, const VkBuffer* pBuffers, const VkDeviceSize* pOffsets, const VkDeviceSize* pSizes, const VkDeviceSize* pStrides) const {
+	void cmdBindVertexBuffers2EXT(VkCommandBuffer commandBuffer, uint32_t firstBinding, uint32_t bindingCount, const VkBuffer* pBuffers, const VkDeviceSize* pOffsets, const VkDeviceSize* pSizes, const VkDeviceSize* pStrides) const noexcept {
 		fp_vkCmdBindVertexBuffers2EXT(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets, pSizes, pStrides);
 	}
 #endif
 #if (defined(VK_EXT_extended_dynamic_state))
-	void cmdSetDepthTestEnableEXT(VkCommandBuffer commandBuffer, VkBool32 depthTestEnable) const {
+	void cmdSetDepthTestEnableEXT(VkCommandBuffer commandBuffer, VkBool32 depthTestEnable) const noexcept {
 		fp_vkCmdSetDepthTestEnableEXT(commandBuffer, depthTestEnable);
 	}
 #endif
 #if (defined(VK_EXT_extended_dynamic_state))
-	void cmdSetDepthWriteEnableEXT(VkCommandBuffer commandBuffer, VkBool32 depthWriteEnable) const {
+	void cmdSetDepthWriteEnableEXT(VkCommandBuffer commandBuffer, VkBool32 depthWriteEnable) const noexcept {
 		fp_vkCmdSetDepthWriteEnableEXT(commandBuffer, depthWriteEnable);
 	}
 #endif
 #if (defined(VK_EXT_extended_dynamic_state))
-	void cmdSetDepthCompareOpEXT(VkCommandBuffer commandBuffer, VkCompareOp depthCompareOp) const {
+	void cmdSetDepthCompareOpEXT(VkCommandBuffer commandBuffer, VkCompareOp depthCompareOp) const noexcept {
 		fp_vkCmdSetDepthCompareOpEXT(commandBuffer, depthCompareOp);
 	}
 #endif
 #if (defined(VK_EXT_extended_dynamic_state))
-	void cmdSetDepthBoundsTestEnableEXT(VkCommandBuffer commandBuffer, VkBool32 depthBoundsTestEnable) const {
+	void cmdSetDepthBoundsTestEnableEXT(VkCommandBuffer commandBuffer, VkBool32 depthBoundsTestEnable) const noexcept {
 		fp_vkCmdSetDepthBoundsTestEnableEXT(commandBuffer, depthBoundsTestEnable);
 	}
 #endif
 #if (defined(VK_EXT_extended_dynamic_state))
-	void cmdSetStencilTestEnableEXT(VkCommandBuffer commandBuffer, VkBool32 stencilTestEnable) const {
+	void cmdSetStencilTestEnableEXT(VkCommandBuffer commandBuffer, VkBool32 stencilTestEnable) const noexcept {
 		fp_vkCmdSetStencilTestEnableEXT(commandBuffer, stencilTestEnable);
 	}
 #endif
 #if (defined(VK_EXT_extended_dynamic_state))
-	void cmdSetStencilOpEXT(VkCommandBuffer commandBuffer, VkStencilFaceFlags faceMask, VkStencilOp failOp, VkStencilOp passOp, VkStencilOp depthFailOp, VkCompareOp compareOp) const {
+	void cmdSetStencilOpEXT(VkCommandBuffer commandBuffer, VkStencilFaceFlags faceMask, VkStencilOp failOp, VkStencilOp passOp, VkStencilOp depthFailOp, VkCompareOp compareOp) const noexcept {
 		fp_vkCmdSetStencilOpEXT(commandBuffer, faceMask, failOp, passOp, depthFailOp, compareOp);
 	}
 #endif
 #if (defined(VK_EXT_extended_dynamic_state2))
-	void cmdSetPatchControlPointsEXT(VkCommandBuffer commandBuffer, uint32_t patchControlPoints) const {
+	void cmdSetPatchControlPointsEXT(VkCommandBuffer commandBuffer, uint32_t patchControlPoints) const noexcept {
 		fp_vkCmdSetPatchControlPointsEXT(commandBuffer, patchControlPoints);
 	}
 #endif
 #if (defined(VK_EXT_extended_dynamic_state2))
-	void cmdSetRasterizerDiscardEnableEXT(VkCommandBuffer commandBuffer, VkBool32 rasterizerDiscardEnable) const {
+	void cmdSetRasterizerDiscardEnableEXT(VkCommandBuffer commandBuffer, VkBool32 rasterizerDiscardEnable) const noexcept {
 		fp_vkCmdSetRasterizerDiscardEnableEXT(commandBuffer, rasterizerDiscardEnable);
 	}
 #endif
 #if (defined(VK_EXT_extended_dynamic_state2))
-	void cmdSetDepthBiasEnableEXT(VkCommandBuffer commandBuffer, VkBool32 depthBiasEnable) const {
+	void cmdSetDepthBiasEnableEXT(VkCommandBuffer commandBuffer, VkBool32 depthBiasEnable) const noexcept {
 		fp_vkCmdSetDepthBiasEnableEXT(commandBuffer, depthBiasEnable);
 	}
 #endif
 #if (defined(VK_EXT_extended_dynamic_state2))
-	void cmdSetLogicOpEXT(VkCommandBuffer commandBuffer, VkLogicOp logicOp) const {
+	void cmdSetLogicOpEXT(VkCommandBuffer commandBuffer, VkLogicOp logicOp) const noexcept {
 		fp_vkCmdSetLogicOpEXT(commandBuffer, logicOp);
 	}
 #endif
 #if (defined(VK_EXT_extended_dynamic_state2))
-	void cmdSetPrimitiveRestartEnableEXT(VkCommandBuffer commandBuffer, VkBool32 primitiveRestartEnable) const {
+	void cmdSetPrimitiveRestartEnableEXT(VkCommandBuffer commandBuffer, VkBool32 primitiveRestartEnable) const noexcept {
 		fp_vkCmdSetPrimitiveRestartEnableEXT(commandBuffer, primitiveRestartEnable);
 	}
 #endif
 #if (defined(VK_EXT_private_data))
-	VkResult createPrivateDataSlotEXT(const VkPrivateDataSlotCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkPrivateDataSlotEXT* pPrivateDataSlot) const {
+	VkResult createPrivateDataSlotEXT(const VkPrivateDataSlotCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkPrivateDataSlotEXT* pPrivateDataSlot) const noexcept {
 		return fp_vkCreatePrivateDataSlotEXT(device, pCreateInfo, pAllocator, pPrivateDataSlot);
 	}
 #endif
 #if (defined(VK_EXT_private_data))
-	void destroyPrivateDataSlotEXT(VkPrivateDataSlotEXT privateDataSlot, const VkAllocationCallbacks* pAllocator) const {
+	void destroyPrivateDataSlotEXT(VkPrivateDataSlotEXT privateDataSlot, const VkAllocationCallbacks* pAllocator) const noexcept {
 		fp_vkDestroyPrivateDataSlotEXT(device, privateDataSlot, pAllocator);
 	}
 #endif
 #if (defined(VK_EXT_private_data))
-	VkResult setPrivateDataEXT(VkObjectType objectType, uint64_t objectHandle, VkPrivateDataSlotEXT privateDataSlot, uint64_t data) const {
+	VkResult setPrivateDataEXT(VkObjectType objectType, uint64_t objectHandle, VkPrivateDataSlotEXT privateDataSlot, uint64_t data) const noexcept {
 		return fp_vkSetPrivateDataEXT(device, objectType, objectHandle, privateDataSlot, data);
 	}
 #endif
 #if (defined(VK_EXT_private_data))
-	void getPrivateDataEXT(VkObjectType objectType, uint64_t objectHandle, VkPrivateDataSlotEXT privateDataSlot, uint64_t* pData) const {
+	void getPrivateDataEXT(VkObjectType objectType, uint64_t objectHandle, VkPrivateDataSlotEXT privateDataSlot, uint64_t* pData) const noexcept {
 		fp_vkGetPrivateDataEXT(device, objectType, objectHandle, privateDataSlot, pData);
 	}
 #endif
 #if (defined(VK_KHR_copy_commands2))
-	void cmdCopyBuffer2KHR(VkCommandBuffer commandBuffer, const VkCopyBufferInfo2KHR* pCopyBufferInfo) const {
+	void cmdCopyBuffer2KHR(VkCommandBuffer commandBuffer, const VkCopyBufferInfo2KHR* pCopyBufferInfo) const noexcept {
 		fp_vkCmdCopyBuffer2KHR(commandBuffer, pCopyBufferInfo);
 	}
 #endif
 #if (defined(VK_KHR_copy_commands2))
-	void cmdCopyImage2KHR(VkCommandBuffer commandBuffer, const VkCopyImageInfo2KHR* pCopyImageInfo) const {
+	void cmdCopyImage2KHR(VkCommandBuffer commandBuffer, const VkCopyImageInfo2KHR* pCopyImageInfo) const noexcept {
 		fp_vkCmdCopyImage2KHR(commandBuffer, pCopyImageInfo);
 	}
 #endif
 #if (defined(VK_KHR_copy_commands2))
-	void cmdBlitImage2KHR(VkCommandBuffer commandBuffer, const VkBlitImageInfo2KHR* pBlitImageInfo) const {
+	void cmdBlitImage2KHR(VkCommandBuffer commandBuffer, const VkBlitImageInfo2KHR* pBlitImageInfo) const noexcept {
 		fp_vkCmdBlitImage2KHR(commandBuffer, pBlitImageInfo);
 	}
 #endif
 #if (defined(VK_KHR_copy_commands2))
-	void cmdCopyBufferToImage2KHR(VkCommandBuffer commandBuffer, const VkCopyBufferToImageInfo2KHR* pCopyBufferToImageInfo) const {
+	void cmdCopyBufferToImage2KHR(VkCommandBuffer commandBuffer, const VkCopyBufferToImageInfo2KHR* pCopyBufferToImageInfo) const noexcept {
 		fp_vkCmdCopyBufferToImage2KHR(commandBuffer, pCopyBufferToImageInfo);
 	}
 #endif
 #if (defined(VK_KHR_copy_commands2))
-	void cmdCopyImageToBuffer2KHR(VkCommandBuffer commandBuffer, const VkCopyImageToBufferInfo2KHR* pCopyImageToBufferInfo) const {
+	void cmdCopyImageToBuffer2KHR(VkCommandBuffer commandBuffer, const VkCopyImageToBufferInfo2KHR* pCopyImageToBufferInfo) const noexcept {
 		fp_vkCmdCopyImageToBuffer2KHR(commandBuffer, pCopyImageToBufferInfo);
 	}
 #endif
 #if (defined(VK_KHR_copy_commands2))
-	void cmdResolveImage2KHR(VkCommandBuffer commandBuffer, const VkResolveImageInfo2KHR* pResolveImageInfo) const {
+	void cmdResolveImage2KHR(VkCommandBuffer commandBuffer, const VkResolveImageInfo2KHR* pResolveImageInfo) const noexcept {
 		fp_vkCmdResolveImage2KHR(commandBuffer, pResolveImageInfo);
 	}
 #endif
 #if (defined(VK_KHR_fragment_shading_rate))
-	void cmdSetFragmentShadingRateKHR(VkCommandBuffer commandBuffer, const VkExtent2D* pFragmentSize, VkFragmentShadingRateCombinerOpKHR combinerOps[2]) const {
+	void cmdSetFragmentShadingRateKHR(VkCommandBuffer commandBuffer, const VkExtent2D* pFragmentSize, VkFragmentShadingRateCombinerOpKHR combinerOps[2]) const noexcept {
 		fp_vkCmdSetFragmentShadingRateKHR(commandBuffer, pFragmentSize, combinerOps);
 	}
 #endif
 #if (defined(VK_NV_fragment_shading_rate_enums))
-	void cmdSetFragmentShadingRateEnumNV(VkCommandBuffer commandBuffer, VkFragmentShadingRateNV shadingRate, VkFragmentShadingRateCombinerOpKHR combinerOps[2]) const {
+	void cmdSetFragmentShadingRateEnumNV(VkCommandBuffer commandBuffer, VkFragmentShadingRateNV shadingRate, VkFragmentShadingRateCombinerOpKHR combinerOps[2]) const noexcept {
 		fp_vkCmdSetFragmentShadingRateEnumNV(commandBuffer, shadingRate, combinerOps);
 	}
 #endif
 #if (defined(VK_KHR_acceleration_structure))
-	void getAccelerationStructureBuildSizesKHR(VkAccelerationStructureBuildTypeKHR buildType, const VkAccelerationStructureBuildGeometryInfoKHR* pBuildInfo, const uint32_t* pMaxPrimitiveCounts, VkAccelerationStructureBuildSizesInfoKHR* pSizeInfo) const {
+	void getAccelerationStructureBuildSizesKHR(VkAccelerationStructureBuildTypeKHR buildType, const VkAccelerationStructureBuildGeometryInfoKHR* pBuildInfo, const uint32_t* pMaxPrimitiveCounts, VkAccelerationStructureBuildSizesInfoKHR* pSizeInfo) const noexcept {
 		fp_vkGetAccelerationStructureBuildSizesKHR(device, buildType, pBuildInfo, pMaxPrimitiveCounts, pSizeInfo);
 	}
 #endif
 #if (defined(VK_EXT_vertex_input_dynamic_state))
-	void cmdSetVertexInputEXT(VkCommandBuffer commandBuffer, uint32_t vertexBindingDescriptionCount, const VkVertexInputBindingDescription2EXT* pVertexBindingDescriptions, uint32_t vertexAttributeDescriptionCount, const VkVertexInputAttributeDescription2EXT* pVertexAttributeDescriptions) const {
+	void cmdSetVertexInputEXT(VkCommandBuffer commandBuffer, uint32_t vertexBindingDescriptionCount, const VkVertexInputBindingDescription2EXT* pVertexBindingDescriptions, uint32_t vertexAttributeDescriptionCount, const VkVertexInputAttributeDescription2EXT* pVertexAttributeDescriptions) const noexcept {
 		fp_vkCmdSetVertexInputEXT(commandBuffer, vertexBindingDescriptionCount, pVertexBindingDescriptions, vertexAttributeDescriptionCount, pVertexAttributeDescriptions);
 	}
 #endif
 #if (defined(VK_EXT_color_write_enable))
-	void cmdSetColorWriteEnableEXT(VkCommandBuffer commandBuffer, uint32_t attachmentCount, const VkBool32* pColorWriteEnables) const {
+	void cmdSetColorWriteEnableEXT(VkCommandBuffer commandBuffer, uint32_t attachmentCount, const VkBool32* pColorWriteEnables) const noexcept {
 		fp_vkCmdSetColorWriteEnableEXT(commandBuffer, attachmentCount, pColorWriteEnables);
 	}
 #endif
 #if (defined(VK_KHR_synchronization2))
-	void cmdSetEvent2KHR(VkCommandBuffer commandBuffer, VkEvent event, const VkDependencyInfoKHR* pDependencyInfo) const {
+	void cmdSetEvent2KHR(VkCommandBuffer commandBuffer, VkEvent event, const VkDependencyInfoKHR* pDependencyInfo) const noexcept {
 		fp_vkCmdSetEvent2KHR(commandBuffer, event, pDependencyInfo);
 	}
 #endif
 #if (defined(VK_KHR_synchronization2))
-	void cmdResetEvent2KHR(VkCommandBuffer commandBuffer, VkEvent event, VkPipelineStageFlags2KHR stageMask) const {
+	void cmdResetEvent2KHR(VkCommandBuffer commandBuffer, VkEvent event, VkPipelineStageFlags2KHR stageMask) const noexcept {
 		fp_vkCmdResetEvent2KHR(commandBuffer, event, stageMask);
 	}
 #endif
 #if (defined(VK_KHR_synchronization2))
-	void cmdWaitEvents2KHR(VkCommandBuffer commandBuffer, uint32_t eventCount, const VkEvent* pEvents, const VkDependencyInfoKHR* pDependencyInfos) const {
+	void cmdWaitEvents2KHR(VkCommandBuffer commandBuffer, uint32_t eventCount, const VkEvent* pEvents, const VkDependencyInfoKHR* pDependencyInfos) const noexcept {
 		fp_vkCmdWaitEvents2KHR(commandBuffer, eventCount, pEvents, pDependencyInfos);
 	}
 #endif
 #if (defined(VK_KHR_synchronization2))
-	void cmdPipelineBarrier2KHR(VkCommandBuffer commandBuffer, const VkDependencyInfoKHR* pDependencyInfo) const {
+	void cmdPipelineBarrier2KHR(VkCommandBuffer commandBuffer, const VkDependencyInfoKHR* pDependencyInfo) const noexcept {
 		fp_vkCmdPipelineBarrier2KHR(commandBuffer, pDependencyInfo);
 	}
 #endif
 #if (defined(VK_KHR_synchronization2))
-	VkResult queueSubmit2KHR(VkQueue queue, uint32_t submitCount, const VkSubmitInfo2KHR* pSubmits, VkFence fence) const {
+	VkResult queueSubmit2KHR(VkQueue queue, uint32_t submitCount, const VkSubmitInfo2KHR* pSubmits, VkFence fence) const noexcept {
 		return fp_vkQueueSubmit2KHR(queue, submitCount, pSubmits, fence);
 	}
 #endif
 #if (defined(VK_KHR_synchronization2))
-	void cmdWriteTimestamp2KHR(VkCommandBuffer commandBuffer, VkPipelineStageFlags2KHR stage, VkQueryPool queryPool, uint32_t query) const {
+	void cmdWriteTimestamp2KHR(VkCommandBuffer commandBuffer, VkPipelineStageFlags2KHR stage, VkQueryPool queryPool, uint32_t query) const noexcept {
 		fp_vkCmdWriteTimestamp2KHR(commandBuffer, stage, queryPool, query);
 	}
 #endif
 #if (defined(VK_KHR_synchronization2) && defined(VK_AMD_buffer_marker))
-	void cmdWriteBufferMarker2AMD(VkCommandBuffer commandBuffer, VkPipelineStageFlags2KHR stage, VkBuffer dstBuffer, VkDeviceSize dstOffset, uint32_t marker) const {
+	void cmdWriteBufferMarker2AMD(VkCommandBuffer commandBuffer, VkPipelineStageFlags2KHR stage, VkBuffer dstBuffer, VkDeviceSize dstOffset, uint32_t marker) const noexcept {
 		fp_vkCmdWriteBufferMarker2AMD(commandBuffer, stage, dstBuffer, dstOffset, marker);
 	}
 #endif
 #if (defined(VK_KHR_synchronization2) && defined(VK_NV_device_diagnostic_checkpoints))
-	void getQueueCheckpointData2NV(VkQueue queue, uint32_t* pCheckpointDataCount, VkCheckpointData2NV* pCheckpointData) const {
+	void getQueueCheckpointData2NV(VkQueue queue, uint32_t* pCheckpointDataCount, VkCheckpointData2NV* pCheckpointData) const noexcept {
 		fp_vkGetQueueCheckpointData2NV(queue, pCheckpointDataCount, pCheckpointData);
 	}
 #endif
 #if (defined(VK_KHR_video_queue))
-	VkResult createVideoSessionKHR(const VkVideoSessionCreateInfoKHR* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkVideoSessionKHR* pVideoSession) const {
+	VkResult createVideoSessionKHR(const VkVideoSessionCreateInfoKHR* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkVideoSessionKHR* pVideoSession) const noexcept {
 		return fp_vkCreateVideoSessionKHR(device, pCreateInfo, pAllocator, pVideoSession);
 	}
 #endif
 #if (defined(VK_KHR_video_queue))
-	void destroyVideoSessionKHR(VkVideoSessionKHR videoSession, const VkAllocationCallbacks* pAllocator) const {
+	void destroyVideoSessionKHR(VkVideoSessionKHR videoSession, const VkAllocationCallbacks* pAllocator) const noexcept {
 		fp_vkDestroyVideoSessionKHR(device, videoSession, pAllocator);
 	}
 #endif
 #if (defined(VK_KHR_video_queue))
-	VkResult createVideoSessionParametersKHR(const VkVideoSessionParametersCreateInfoKHR* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkVideoSessionParametersKHR* pVideoSessionParameters) const {
+	VkResult createVideoSessionParametersKHR(const VkVideoSessionParametersCreateInfoKHR* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkVideoSessionParametersKHR* pVideoSessionParameters) const noexcept {
 		return fp_vkCreateVideoSessionParametersKHR(device, pCreateInfo, pAllocator, pVideoSessionParameters);
 	}
 #endif
 #if (defined(VK_KHR_video_queue))
-	VkResult updateVideoSessionParametersKHR(VkVideoSessionParametersKHR videoSessionParameters, const VkVideoSessionParametersUpdateInfoKHR* pUpdateInfo) const {
+	VkResult updateVideoSessionParametersKHR(VkVideoSessionParametersKHR videoSessionParameters, const VkVideoSessionParametersUpdateInfoKHR* pUpdateInfo) const noexcept {
 		return fp_vkUpdateVideoSessionParametersKHR(device, videoSessionParameters, pUpdateInfo);
 	}
 #endif
 #if (defined(VK_KHR_video_queue))
-	void destroyVideoSessionParametersKHR(VkVideoSessionParametersKHR videoSessionParameters, const VkAllocationCallbacks* pAllocator) const {
+	void destroyVideoSessionParametersKHR(VkVideoSessionParametersKHR videoSessionParameters, const VkAllocationCallbacks* pAllocator) const noexcept {
 		fp_vkDestroyVideoSessionParametersKHR(device, videoSessionParameters, pAllocator);
 	}
 #endif
 #if (defined(VK_KHR_video_queue))
-	VkResult getVideoSessionMemoryRequirementsKHR(VkVideoSessionKHR videoSession, uint32_t* pVideoSessionMemoryRequirementsCount, VkVideoGetMemoryPropertiesKHR* pVideoSessionMemoryRequirements) const {
+	VkResult getVideoSessionMemoryRequirementsKHR(VkVideoSessionKHR videoSession, uint32_t* pVideoSessionMemoryRequirementsCount, VkVideoGetMemoryPropertiesKHR* pVideoSessionMemoryRequirements) const noexcept {
 		return fp_vkGetVideoSessionMemoryRequirementsKHR(device, videoSession, pVideoSessionMemoryRequirementsCount, pVideoSessionMemoryRequirements);
 	}
 #endif
 #if (defined(VK_KHR_video_queue))
-	VkResult bindVideoSessionMemoryKHR(VkVideoSessionKHR videoSession, uint32_t videoSessionBindMemoryCount, const VkVideoBindMemoryKHR* pVideoSessionBindMemories) const {
+	VkResult bindVideoSessionMemoryKHR(VkVideoSessionKHR videoSession, uint32_t videoSessionBindMemoryCount, const VkVideoBindMemoryKHR* pVideoSessionBindMemories) const noexcept {
 		return fp_vkBindVideoSessionMemoryKHR(device, videoSession, videoSessionBindMemoryCount, pVideoSessionBindMemories);
 	}
 #endif
 #if (defined(VK_KHR_video_decode_queue))
-	void cmdDecodeVideoKHR(VkCommandBuffer commandBuffer, const VkVideoDecodeInfoKHR* pFrameInfo) const {
+	void cmdDecodeVideoKHR(VkCommandBuffer commandBuffer, const VkVideoDecodeInfoKHR* pFrameInfo) const noexcept {
 		fp_vkCmdDecodeVideoKHR(commandBuffer, pFrameInfo);
 	}
 #endif
 #if (defined(VK_KHR_video_queue))
-	void cmdBeginVideoCodingKHR(VkCommandBuffer commandBuffer, const VkVideoBeginCodingInfoKHR* pBeginInfo) const {
+	void cmdBeginVideoCodingKHR(VkCommandBuffer commandBuffer, const VkVideoBeginCodingInfoKHR* pBeginInfo) const noexcept {
 		fp_vkCmdBeginVideoCodingKHR(commandBuffer, pBeginInfo);
 	}
 #endif
 #if (defined(VK_KHR_video_queue))
-	void cmdControlVideoCodingKHR(VkCommandBuffer commandBuffer, const VkVideoCodingControlInfoKHR* pCodingControlInfo) const {
+	void cmdControlVideoCodingKHR(VkCommandBuffer commandBuffer, const VkVideoCodingControlInfoKHR* pCodingControlInfo) const noexcept {
 		fp_vkCmdControlVideoCodingKHR(commandBuffer, pCodingControlInfo);
 	}
 #endif
 #if (defined(VK_KHR_video_queue))
-	void cmdEndVideoCodingKHR(VkCommandBuffer commandBuffer, const VkVideoEndCodingInfoKHR* pEndCodingInfo) const {
+	void cmdEndVideoCodingKHR(VkCommandBuffer commandBuffer, const VkVideoEndCodingInfoKHR* pEndCodingInfo) const noexcept {
 		fp_vkCmdEndVideoCodingKHR(commandBuffer, pEndCodingInfo);
 	}
 #endif
 #if (defined(VK_KHR_video_encode_queue))
-	void cmdEncodeVideoKHR(VkCommandBuffer commandBuffer, const VkVideoEncodeInfoKHR* pEncodeInfo) const {
+	void cmdEncodeVideoKHR(VkCommandBuffer commandBuffer, const VkVideoEncodeInfoKHR* pEncodeInfo) const noexcept {
 		fp_vkCmdEncodeVideoKHR(commandBuffer, pEncodeInfo);
 	}
 #endif
 #if (defined(VK_NVX_binary_import))
-	VkResult createCuModuleNVX(const VkCuModuleCreateInfoNVX* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkCuModuleNVX* pModule) const {
+	VkResult createCuModuleNVX(const VkCuModuleCreateInfoNVX* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkCuModuleNVX* pModule) const noexcept {
 		return fp_vkCreateCuModuleNVX(device, pCreateInfo, pAllocator, pModule);
 	}
 #endif
 #if (defined(VK_NVX_binary_import))
-	VkResult createCuFunctionNVX(const VkCuFunctionCreateInfoNVX* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkCuFunctionNVX* pFunction) const {
+	VkResult createCuFunctionNVX(const VkCuFunctionCreateInfoNVX* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkCuFunctionNVX* pFunction) const noexcept {
 		return fp_vkCreateCuFunctionNVX(device, pCreateInfo, pAllocator, pFunction);
 	}
 #endif
 #if (defined(VK_NVX_binary_import))
-	void destroyCuModuleNVX(VkCuModuleNVX module, const VkAllocationCallbacks* pAllocator) const {
+	void destroyCuModuleNVX(VkCuModuleNVX module, const VkAllocationCallbacks* pAllocator) const noexcept {
 		fp_vkDestroyCuModuleNVX(device, module, pAllocator);
 	}
 #endif
 #if (defined(VK_NVX_binary_import))
-	void destroyCuFunctionNVX(VkCuFunctionNVX function, const VkAllocationCallbacks* pAllocator) const {
+	void destroyCuFunctionNVX(VkCuFunctionNVX function, const VkAllocationCallbacks* pAllocator) const noexcept {
 		fp_vkDestroyCuFunctionNVX(device, function, pAllocator);
 	}
 #endif
 #if (defined(VK_NVX_binary_import))
-	void cmdCuLaunchKernelNVX(VkCommandBuffer commandBuffer, const VkCuLaunchInfoNVX* pLaunchInfo) const {
+	void cmdCuLaunchKernelNVX(VkCommandBuffer commandBuffer, const VkCuLaunchInfoNVX* pLaunchInfo) const noexcept {
 		fp_vkCmdCuLaunchKernelNVX(commandBuffer, pLaunchInfo);
 	}
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_EXT_host_query_reset))
-	void resetQueryPoolEXT(VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount) const {
+	void resetQueryPoolEXT(VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount) const noexcept {
 		fp_vkResetQueryPoolEXT(device, queryPool, firstQuery, queryCount);
 	}
 #endif
 #if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_maintenance1))
-	void trimCommandPoolKHR(VkCommandPool commandPool, VkCommandPoolTrimFlags flags) const {
+	void trimCommandPoolKHR(VkCommandPool commandPool, VkCommandPoolTrimFlags flags) const noexcept {
 		fp_vkTrimCommandPoolKHR(device, commandPool, flags);
 	}
 #endif
 #if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_device_group))
-	void getDeviceGroupPeerMemoryFeaturesKHR(uint32_t heapIndex, uint32_t localDeviceIndex, uint32_t remoteDeviceIndex, VkPeerMemoryFeatureFlags* pPeerMemoryFeatures) const {
+	void getDeviceGroupPeerMemoryFeaturesKHR(uint32_t heapIndex, uint32_t localDeviceIndex, uint32_t remoteDeviceIndex, VkPeerMemoryFeatureFlags* pPeerMemoryFeatures) const noexcept {
 		fp_vkGetDeviceGroupPeerMemoryFeaturesKHR(device, heapIndex, localDeviceIndex, remoteDeviceIndex, pPeerMemoryFeatures);
 	}
 #endif
 #if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_bind_memory2))
-	VkResult bindBufferMemory2KHR(uint32_t bindInfoCount, const VkBindBufferMemoryInfo* pBindInfos) const {
+	VkResult bindBufferMemory2KHR(uint32_t bindInfoCount, const VkBindBufferMemoryInfo* pBindInfos) const noexcept {
 		return fp_vkBindBufferMemory2KHR(device, bindInfoCount, pBindInfos);
 	}
 #endif
 #if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_bind_memory2))
-	VkResult bindImageMemory2KHR(uint32_t bindInfoCount, const VkBindImageMemoryInfo* pBindInfos) const {
+	VkResult bindImageMemory2KHR(uint32_t bindInfoCount, const VkBindImageMemoryInfo* pBindInfos) const noexcept {
 		return fp_vkBindImageMemory2KHR(device, bindInfoCount, pBindInfos);
 	}
 #endif
 #if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_device_group))
-	void cmdSetDeviceMaskKHR(VkCommandBuffer commandBuffer, uint32_t deviceMask) const {
+	void cmdSetDeviceMaskKHR(VkCommandBuffer commandBuffer, uint32_t deviceMask) const noexcept {
 		fp_vkCmdSetDeviceMaskKHR(commandBuffer, deviceMask);
 	}
 #endif
 #if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_device_group))
-	void cmdDispatchBaseKHR(VkCommandBuffer commandBuffer, uint32_t baseGroupX, uint32_t baseGroupY, uint32_t baseGroupZ, uint32_t groupCountX, uint32_t groupCountY, uint32_t groupCountZ) const {
+	void cmdDispatchBaseKHR(VkCommandBuffer commandBuffer, uint32_t baseGroupX, uint32_t baseGroupY, uint32_t baseGroupZ, uint32_t groupCountX, uint32_t groupCountY, uint32_t groupCountZ) const noexcept {
 		fp_vkCmdDispatchBaseKHR(commandBuffer, baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ);
 	}
 #endif
 #if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_descriptor_update_template))
-	VkResult createDescriptorUpdateTemplateKHR(const VkDescriptorUpdateTemplateCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDescriptorUpdateTemplate* pDescriptorUpdateTemplate) const {
+	VkResult createDescriptorUpdateTemplateKHR(const VkDescriptorUpdateTemplateCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDescriptorUpdateTemplate* pDescriptorUpdateTemplate) const noexcept {
 		return fp_vkCreateDescriptorUpdateTemplateKHR(device, pCreateInfo, pAllocator, pDescriptorUpdateTemplate);
 	}
 #endif
 #if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_descriptor_update_template))
-	void destroyDescriptorUpdateTemplateKHR(VkDescriptorUpdateTemplate descriptorUpdateTemplate, const VkAllocationCallbacks* pAllocator) const {
+	void destroyDescriptorUpdateTemplateKHR(VkDescriptorUpdateTemplate descriptorUpdateTemplate, const VkAllocationCallbacks* pAllocator) const noexcept {
 		fp_vkDestroyDescriptorUpdateTemplateKHR(device, descriptorUpdateTemplate, pAllocator);
 	}
 #endif
 #if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_descriptor_update_template))
-	void updateDescriptorSetWithTemplateKHR(VkDescriptorSet descriptorSet, VkDescriptorUpdateTemplate descriptorUpdateTemplate, const void* pData) const {
+	void updateDescriptorSetWithTemplateKHR(VkDescriptorSet descriptorSet, VkDescriptorUpdateTemplate descriptorUpdateTemplate, const void* pData) const noexcept {
 		fp_vkUpdateDescriptorSetWithTemplateKHR(device, descriptorSet, descriptorUpdateTemplate, pData);
 	}
 #endif
 #if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_get_memory_requirements2))
-	void getBufferMemoryRequirements2KHR(const VkBufferMemoryRequirementsInfo2* pInfo, VkMemoryRequirements2* pMemoryRequirements) const {
+	void getBufferMemoryRequirements2KHR(const VkBufferMemoryRequirementsInfo2* pInfo, VkMemoryRequirements2* pMemoryRequirements) const noexcept {
 		fp_vkGetBufferMemoryRequirements2KHR(device, pInfo, pMemoryRequirements);
 	}
 #endif
 #if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_get_memory_requirements2))
-	void getImageMemoryRequirements2KHR(const VkImageMemoryRequirementsInfo2* pInfo, VkMemoryRequirements2* pMemoryRequirements) const {
+	void getImageMemoryRequirements2KHR(const VkImageMemoryRequirementsInfo2* pInfo, VkMemoryRequirements2* pMemoryRequirements) const noexcept {
 		fp_vkGetImageMemoryRequirements2KHR(device, pInfo, pMemoryRequirements);
 	}
 #endif
 #if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_get_memory_requirements2))
-	void getImageSparseMemoryRequirements2KHR(const VkImageSparseMemoryRequirementsInfo2* pInfo, uint32_t* pSparseMemoryRequirementCount, VkSparseImageMemoryRequirements2* pSparseMemoryRequirements) const {
+	void getImageSparseMemoryRequirements2KHR(const VkImageSparseMemoryRequirementsInfo2* pInfo, uint32_t* pSparseMemoryRequirementCount, VkSparseImageMemoryRequirements2* pSparseMemoryRequirements) const noexcept {
 		fp_vkGetImageSparseMemoryRequirements2KHR(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
 	}
 #endif
 #if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_sampler_ycbcr_conversion))
-	VkResult createSamplerYcbcrConversionKHR(const VkSamplerYcbcrConversionCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkSamplerYcbcrConversion* pYcbcrConversion) const {
+	VkResult createSamplerYcbcrConversionKHR(const VkSamplerYcbcrConversionCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkSamplerYcbcrConversion* pYcbcrConversion) const noexcept {
 		return fp_vkCreateSamplerYcbcrConversionKHR(device, pCreateInfo, pAllocator, pYcbcrConversion);
 	}
 #endif
 #if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_sampler_ycbcr_conversion))
-	void destroySamplerYcbcrConversionKHR(VkSamplerYcbcrConversion ycbcrConversion, const VkAllocationCallbacks* pAllocator) const {
+	void destroySamplerYcbcrConversionKHR(VkSamplerYcbcrConversion ycbcrConversion, const VkAllocationCallbacks* pAllocator) const noexcept {
 		fp_vkDestroySamplerYcbcrConversionKHR(device, ycbcrConversion, pAllocator);
 	}
 #endif
 #if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_maintenance3))
-	void getDescriptorSetLayoutSupportKHR(const VkDescriptorSetLayoutCreateInfo* pCreateInfo, VkDescriptorSetLayoutSupport* pSupport) const {
+	void getDescriptorSetLayoutSupportKHR(const VkDescriptorSetLayoutCreateInfo* pCreateInfo, VkDescriptorSetLayoutSupport* pSupport) const noexcept {
 		fp_vkGetDescriptorSetLayoutSupportKHR(device, pCreateInfo, pSupport);
 	}
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_create_renderpass2))
-	VkResult createRenderPass2KHR(const VkRenderPassCreateInfo2* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkRenderPass* pRenderPass) const {
+	VkResult createRenderPass2KHR(const VkRenderPassCreateInfo2* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkRenderPass* pRenderPass) const noexcept {
 		return fp_vkCreateRenderPass2KHR(device, pCreateInfo, pAllocator, pRenderPass);
 	}
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_create_renderpass2))
-	void cmdBeginRenderPass2KHR(VkCommandBuffer commandBuffer, const VkRenderPassBeginInfo* pRenderPassBegin, const VkSubpassBeginInfo* pSubpassBeginInfo) const {
+	void cmdBeginRenderPass2KHR(VkCommandBuffer commandBuffer, const VkRenderPassBeginInfo* pRenderPassBegin, const VkSubpassBeginInfo* pSubpassBeginInfo) const noexcept {
 		fp_vkCmdBeginRenderPass2KHR(commandBuffer, pRenderPassBegin, pSubpassBeginInfo);
 	}
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_create_renderpass2))
-	void cmdNextSubpass2KHR(VkCommandBuffer commandBuffer, const VkSubpassBeginInfo* pSubpassBeginInfo, const VkSubpassEndInfo* pSubpassEndInfo) const {
+	void cmdNextSubpass2KHR(VkCommandBuffer commandBuffer, const VkSubpassBeginInfo* pSubpassBeginInfo, const VkSubpassEndInfo* pSubpassEndInfo) const noexcept {
 		fp_vkCmdNextSubpass2KHR(commandBuffer, pSubpassBeginInfo, pSubpassEndInfo);
 	}
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_create_renderpass2))
-	void cmdEndRenderPass2KHR(VkCommandBuffer commandBuffer, const VkSubpassEndInfo* pSubpassEndInfo) const {
+	void cmdEndRenderPass2KHR(VkCommandBuffer commandBuffer, const VkSubpassEndInfo* pSubpassEndInfo) const noexcept {
 		fp_vkCmdEndRenderPass2KHR(commandBuffer, pSubpassEndInfo);
 	}
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_timeline_semaphore))
-	VkResult getSemaphoreCounterValueKHR(VkSemaphore semaphore, uint64_t* pValue) const {
+	VkResult getSemaphoreCounterValueKHR(VkSemaphore semaphore, uint64_t* pValue) const noexcept {
 		return fp_vkGetSemaphoreCounterValueKHR(device, semaphore, pValue);
 	}
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_timeline_semaphore))
-	VkResult waitSemaphoresKHR(const VkSemaphoreWaitInfo* pWaitInfo, uint64_t timeout) const {
+	VkResult waitSemaphoresKHR(const VkSemaphoreWaitInfo* pWaitInfo, uint64_t timeout) const noexcept {
 		return fp_vkWaitSemaphoresKHR(device, pWaitInfo, timeout);
 	}
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_timeline_semaphore))
-	VkResult signalSemaphoreKHR(const VkSemaphoreSignalInfo* pSignalInfo) const {
+	VkResult signalSemaphoreKHR(const VkSemaphoreSignalInfo* pSignalInfo) const noexcept {
 		return fp_vkSignalSemaphoreKHR(device, pSignalInfo);
 	}
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_AMD_draw_indirect_count))
-	void cmdDrawIndirectCountAMD(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint32_t maxDrawCount, uint32_t stride) const {
+	void cmdDrawIndirectCountAMD(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint32_t maxDrawCount, uint32_t stride) const noexcept {
 		fp_vkCmdDrawIndirectCountAMD(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
 	}
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_AMD_draw_indirect_count))
-	void cmdDrawIndexedIndirectCountAMD(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint32_t maxDrawCount, uint32_t stride) const {
+	void cmdDrawIndexedIndirectCountAMD(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint32_t maxDrawCount, uint32_t stride) const noexcept {
 		fp_vkCmdDrawIndexedIndirectCountAMD(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
 	}
 #endif
 #if (defined(VK_KHR_ray_tracing_pipeline)) || (defined(VK_NV_ray_tracing))
-	VkResult getRayTracingShaderGroupHandlesNV(VkPipeline pipeline, uint32_t firstGroup, uint32_t groupCount, size_t dataSize, void* pData) const {
+	VkResult getRayTracingShaderGroupHandlesNV(VkPipeline pipeline, uint32_t firstGroup, uint32_t groupCount, size_t dataSize, void* pData) const noexcept {
 		return fp_vkGetRayTracingShaderGroupHandlesNV(device, pipeline, firstGroup, groupCount, dataSize, pData);
 	}
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_buffer_device_address))
-	uint64_t getBufferOpaqueCaptureAddressKHR(const VkBufferDeviceAddressInfo* pInfo) const {
+	uint64_t getBufferOpaqueCaptureAddressKHR(const VkBufferDeviceAddressInfo* pInfo) const noexcept {
 		return fp_vkGetBufferOpaqueCaptureAddressKHR(device, pInfo);
 	}
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_EXT_buffer_device_address))
-	VkDeviceAddress getBufferDeviceAddressEXT(const VkBufferDeviceAddressInfo* pInfo) const {
+	VkDeviceAddress getBufferDeviceAddressEXT(const VkBufferDeviceAddressInfo* pInfo) const noexcept {
 		return fp_vkGetBufferDeviceAddressEXT(device, pInfo);
 	}
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_buffer_device_address))
-	uint64_t getDeviceMemoryOpaqueCaptureAddressKHR(const VkDeviceMemoryOpaqueCaptureAddressInfo* pInfo) const {
+	uint64_t getDeviceMemoryOpaqueCaptureAddressKHR(const VkDeviceMemoryOpaqueCaptureAddressInfo* pInfo) const noexcept {
 		return fp_vkGetDeviceMemoryOpaqueCaptureAddressKHR(device, pInfo);
 	}
 #endif

@@ -19,13 +19,13 @@
 # This file is a part of VkBootstrap
 # https://github.com/charles-lunarg/vk-bootstrap
 
-# On run, vk.xml is pulled from the master of Khronos's Vulkan-Headers repo and a VkDispatchTable type 
+# On run, vk.xml is pulled from the master of Khronos's Vulkan-Headers repo and a VkBoostrapDispatch header
 # is generated and placed in VkBoostrap's source directory
 # https://raw.githubusercontent.com/KhronosGroup/Vulkan-Headers/master/registry/vk.xml
 
 # This script makes use of xmltodict
 # https://github.com/martinblech/xmltodict
-# The module will be auto-installed if not detected
+# User will be prompted to install if not detected
 
 # Exclusions
 exclusions = [
@@ -44,6 +44,7 @@ from string import Template
 installed = {pkg.key for pkg in pkg_resources.working_set}
 xmltodict_missing = {'xmltodict'} - installed
 
+# Install xmltodict
 if xmltodict_missing:
 	val = input("xmltodict is required to run this script. Would you like to install? (y/n): ");
 	if(val.lower() == "y"):
@@ -199,7 +200,7 @@ proxy_section = ''
 fp_decl_section = ''
 pfn_load_section = ''
 
-proxy_template = Template('\t$return_type $proxy_name($args_full) const {\n\t\t$opt_return$fp_name($args_names);\n\t}\n')
+proxy_template = Template('\t$return_type $proxy_name($args_full) const noexcept {\n\t\t$opt_return$fp_name($args_names);\n\t}\n')
 fp_decl_template = Template('\t$pfn_name $fp_name = nullptr;\n')
 pfn_load_template = Template('\t\t$fp_name = ($pfn_name)procAddr(device, "$command_name");\n')
 
@@ -286,7 +287,7 @@ body += '} // namespace vkb'
 
 header = license + info + body
 
-header_file = open("../src/VkDispatchTable.h", "w")
+header_file = open("../src/VkBootstrapDispatch.h", "w")
 header_file.write(header)
 header_file.close();
 

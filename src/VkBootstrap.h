@@ -23,7 +23,7 @@
 
 #include <vulkan/vulkan.h>
 
-#include "VkDispatchTable.h"
+#include "VkBootstrapDispatch.h"
 
 namespace vkb {
 
@@ -543,7 +543,6 @@ struct Device {
 	std::vector<VkQueueFamilyProperties> queue_families;
 	VkAllocationCallbacks* allocation_callbacks = VK_NULL_HANDLE;
 	PFN_vkGetDeviceProcAddr fp_vkGetDeviceProcAddr = nullptr;
-	DispatchTable dispatch;
 
 	detail::Result<uint32_t> get_queue_index(QueueType type) const;
 	// Only a compute or transfer queue type is valid. All other queue types do not support a 'dedicated' queue index
@@ -552,6 +551,9 @@ struct Device {
 	detail::Result<VkQueue> get_queue(QueueType type) const;
 	// Only a compute or transfer queue type is valid. All other queue types do not support a 'dedicated' queue
 	detail::Result<VkQueue> get_dedicated_queue(QueueType type) const;
+
+	// Return a loaded dispatch table
+	DispatchTable make_table() const;
 };
 
 // For advanced device queue setup
@@ -585,8 +587,6 @@ class DeviceBuilder {
 	// Provide custom allocation callbacks.
 	DeviceBuilder& set_allocation_callbacks(VkAllocationCallbacks* callbacks);
 
-	// Populate dispatch table for the device
-	DeviceBuilder& populate_dispatch_table();
 	private:
 	PhysicalDevice physical_device;
 	struct DeviceInfo {
@@ -594,7 +594,6 @@ class DeviceBuilder {
 		std::vector<VkBaseOutStructure*> pNext_chain;
 		std::vector<CustomQueueDescription> queue_descriptions;
 		VkAllocationCallbacks* allocation_callbacks = VK_NULL_HANDLE;
-		bool load_dispatch = false;
 	} info;
 };
 

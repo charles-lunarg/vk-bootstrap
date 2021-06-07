@@ -715,7 +715,7 @@ class SwapchainBuilder {
 	SwapchainBuilder& set_allocation_callbacks(VkAllocationCallbacks* callbacks);
 
 	// Provide an optional dispatch table for the builder to use for device pfn's
-    SwapchainBuilder& use_dispatch_table(DispatchTable& dispatch_table);
+    SwapchainBuilder& use_dispatch_table(const DispatchTable& dispatch_table);
 
 	private:
 	void add_desired_formats(std::vector<VkSurfaceFormatKHR>& formats) const;
@@ -741,7 +741,7 @@ class SwapchainBuilder {
 		bool clipped = true;
 		VkSwapchainKHR old_swapchain = VK_NULL_HANDLE;
 		VkAllocationCallbacks* allocation_callbacks = VK_NULL_HANDLE;
-        DispatchTable* dispatch_table = nullptr;
+        const DispatchTable* dispatch_table = nullptr;
 	} info;
 };
 

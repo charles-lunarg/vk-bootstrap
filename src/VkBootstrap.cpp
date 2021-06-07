@@ -1622,8 +1622,6 @@ VkExtent2D find_extent(VkSurfaceCapabilitiesKHR const& capabilities, uint32_t de
 
 void destroy_swapchain(Swapchain const& swapchain) {
 	if (swapchain.device != VK_NULL_HANDLE && swapchain.swapchain != VK_NULL_HANDLE) {
-		/*detail::vulkan_functions().fp_vkDestroySwapchainKHR(
-		    swapchain.device, swapchain.swapchain, swapchain.allocation_callbacks);*/
 		swapchain.internal_table.fp_vkDestroySwapchainKHR(swapchain.device, swapchain.swapchain, swapchain.allocation_callbacks);
 	}
 }
@@ -1808,8 +1806,6 @@ detail::Result<std::vector<VkImageView>> Swapchain::get_image_views() {
 		createInfo.subresourceRange.baseArrayLayer = 0;
 		createInfo.subresourceRange.layerCount = 1;
 
-		/*VkResult res = detail::vulkan_functions().fp_vkCreateImageView(
-		    device, &createInfo, allocation_callbacks, &views[i]);*/
         VkResult res = internal_table.fp_vkCreateImageView(device, &createInfo, allocation_callbacks, &views[i]);
 		if (res != VK_SUCCESS)
 			return detail::Error{ SwapchainError::failed_create_swapchain_image_views, res };

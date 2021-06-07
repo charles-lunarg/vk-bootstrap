@@ -1622,8 +1622,9 @@ VkExtent2D find_extent(VkSurfaceCapabilitiesKHR const& capabilities, uint32_t de
 
 void destroy_swapchain(Swapchain const& swapchain) {
 	if (swapchain.device != VK_NULL_HANDLE && swapchain.swapchain != VK_NULL_HANDLE) {
-		detail::vulkan_functions().fp_vkDestroySwapchainKHR(
-		    swapchain.device, swapchain.swapchain, swapchain.allocation_callbacks);
+		/*detail::vulkan_functions().fp_vkDestroySwapchainKHR(
+		    swapchain.device, swapchain.swapchain, swapchain.allocation_callbacks);*/
+		swapchain.internal_table.fp_vkDestroySwapchainKHR(swapchain.device, swapchain.swapchain, swapchain.allocation_callbacks);
 	}
 }
 
@@ -1740,14 +1741,31 @@ detail::Result<Swapchain> SwapchainBuilder::build() const {
 	swapchain_create_info.clipped = info.clipped;
 	swapchain_create_info.oldSwapchain = info.old_swapchain;
 	Swapchain swapchain{};
-	VkResult res = detail::vulkan_functions().fp_vkCreateSwapchainKHR(
-	    info.device, &swapchain_create_info, info.allocation_callbacks, &swapchain.swapchain);
+    VkResult res;
+	if(info.dispatch_table != nullptr) {
+		assert(info.dispatch_table->device == info.device);
+        res = info.dispatch_table->createSwapchainKHR(&swapchain_create_info, info.allocation_callbacks, &swapchain.swapchain);
+	} else {
+		res = detail::vulkan_functions().fp_vkCreateSwapchainKHR(
+		    info.device, &swapchain_create_info, info.allocation_callbacks, &swapchain.swapchain);
+	}
 	if (res != VK_SUCCESS) {
 		return detail::Error{ SwapchainError::failed_create_swapchain, res };
 	}
 	swapchain.device = info.device;
 	swapchain.image_format = surface_format.format;
 	swapchain.extent = extent;
+    if(info.dispatch_table != nullptr) {
+        swapchain.internal_table.fp_vkGetSwapchainImagesKHR = info.dispatch_table->fp_vkGetSwapchainImagesKHR;
+        swapchain.internal_table.fp_vkCreateImageView = info.dispatch_table->fp_vkCreateImageView;
+        swapchain.internal_table.fp_vkDestroyImageView = info.dispatch_table->fp_vkDestroyImageView;
+        swapchain.internal_table.fp_vkDestroySwapchainKHR = info.dispatch_table->fp_vkDestroySwapchainKHR;
+	} else {
+        swapchain.internal_table.fp_vkGetSwapchainImagesKHR = detail::vulkan_functions().fp_vkGetSwapchainImagesKHR;
+        swapchain.internal_table.fp_vkCreateImageView = detail::vulkan_functions().fp_vkCreateImageView;
+        swapchain.internal_table.fp_vkDestroyImageView = detail::vulkan_functions().fp_vkDestroyImageView;
+        swapchain.internal_table.fp_vkDestroySwapchainKHR = detail::vulkan_functions().fp_vkDestroySwapchainKHR;
+	}
 	auto images = swapchain.get_images();
 	if (!images) {
 		return detail::Error{ SwapchainError::failed_get_swapchain_images };
@@ -1790,8 +1808,9 @@ detail::Result<std::vector<VkImageView>> Swapchain::get_image_views() {
 		createInfo.subresourceRange.baseArrayLayer = 0;
 		createInfo.subresourceRange.layerCount = 1;
 
-		VkResult res = detail::vulkan_functions().fp_vkCreateImageView(
-		    device, &createInfo, allocation_callbacks, &views[i]);
+		/*VkResult res = detail::vulkan_functions().fp_vkCreateImageView(
+		    device, &createInfo, allocation_callbacks, &views[i]);*/
+        VkResult res = internal_table.fp_vkCreateImageView(device, &createInfo, allocation_callbacks, &views[i]);
 		if (res != VK_SUCCESS)
 			return detail::Error{ SwapchainError::failed_create_swapchain_image_views, res };
 	}
@@ -1799,7 +1818,7 @@ detail::Result<std::vector<VkImageView>> Swapchain::get_image_views() {
 }
 void Swapchain::destroy_image_views(std::vector<VkImageView> const& image_views) {
 	for (auto& image_view : image_views) {
-		detail::vulkan_functions().fp_vkDestroyImageView(device, image_view, allocation_callbacks);
+		internal_table.fp_vkDestroyImageView(device, image_view, allocation_callbacks);
 	}
 }
 SwapchainBuilder& SwapchainBuilder::set_old_swapchain(VkSwapchainKHR old_swapchain) {
@@ -1844,6 +1863,10 @@ SwapchainBuilder& SwapchainBuilder::use_default_present_mode_selection() {
 }
 SwapchainBuilder& SwapchainBuilder::set_allocation_callbacks(VkAllocationCallbacks* callbacks) {
 	info.allocation_callbacks = callbacks;
+	return *this;
+}
+SwapchainBuilder& SwapchainBuilder::use_dispatch_table(DispatchTable& dispatch_table) {
+	info.dispatch_table = &dispatch_table;
 	return *this;
 }
 SwapchainBuilder& SwapchainBuilder::set_image_usage_flags(VkImageUsageFlags usage_flags) {

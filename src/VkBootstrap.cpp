@@ -1861,7 +1861,7 @@ SwapchainBuilder& SwapchainBuilder::set_allocation_callbacks(VkAllocationCallbac
 	info.allocation_callbacks = callbacks;
 	return *this;
 }
-SwapchainBuilder& SwapchainBuilder::use_dispatch_table(DispatchTable& dispatch_table) {
+SwapchainBuilder& SwapchainBuilder::use_dispatch_table(const DispatchTable& dispatch_table) {
 	info.dispatch_table = &dispatch_table;
 	return *this;
 }

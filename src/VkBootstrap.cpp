@@ -168,13 +168,10 @@ class VulkanFunctions {
 	}
 
 	template <typename T> void get_inst_proc_addr(T& out_ptr, const char* func_name) {
-		std::lock_guard<std::mutex> lg(init_mutex);
 		get_proc_addr(out_ptr, func_name);
 	}
 
 	void init_instance_funcs(VkInstance inst) {
-		std::lock_guard<std::mutex> lg(init_mutex);
-
 		instance = inst;
 		get_proc_addr(fp_vkDestroyInstance, "vkDestroyInstance");
 		get_proc_addr(fp_vkEnumeratePhysicalDevices, "vkEnumeratePhysicalDevices");
@@ -583,7 +580,7 @@ InstanceBuilder::InstanceBuilder() {}
 
 detail::Result<Instance> InstanceBuilder::build() const {
 
-	auto sys_info_ret = SystemInfo::get_system_info();
+	auto sys_info_ret = SystemInfo::get_system_info(info.fp_vkGetInstanceProcAddr);
 	if (!sys_info_ret) return sys_info_ret.error();
 	auto system = sys_info_ret.value();
 

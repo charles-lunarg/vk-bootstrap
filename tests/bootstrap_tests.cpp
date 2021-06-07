@@ -322,6 +322,15 @@ TEST_CASE("Swapchain", "[VkBootstrap.bootstrap]") {
 
 			vkb::destroy_swapchain(recreated_swapchain_ret.value());
 		}
+        AND_THEN("Swapchain can be created with a dispatch table") {
+			vkb::DispatchTable dispatch_table = device.make_table();
+            vkb::SwapchainBuilder swapchain_builder(
+                device.physical_device.physical_device, device.device, surface);
+            auto swapchain_ret = swapchain_builder.use_dispatch_table(dispatch_table).build();
+            REQUIRE(swapchain_ret.has_value());
+
+            vkb::destroy_swapchain(swapchain_ret.value());
+		}
 
 		vkb::destroy_device(device_ret.value());
 		vkb::destroy_surface(instance_ret.value(), surface);

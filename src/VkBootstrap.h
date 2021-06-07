@@ -615,6 +615,15 @@ struct Swapchain {
 	// VkImageViews must be destroyed.
 	detail::Result<std::vector<VkImageView>> get_image_views();
 	void destroy_image_views(std::vector<VkImageView> const& image_views);
+	private:
+	struct {
+        PFN_vkGetSwapchainImagesKHR fp_vkGetSwapchainImagesKHR = nullptr;
+        PFN_vkCreateImageView fp_vkCreateImageView = nullptr;
+        PFN_vkDestroyImageView fp_vkDestroyImageView = nullptr;
+		PFN_vkDestroySwapchainKHR fp_vkDestroySwapchainKHR = nullptr;
+	} internal_table;
+	friend class SwapchainBuilder;
+	friend void destroy_swapchain(Swapchain const& swapchain);
 };
 
 void destroy_swapchain(Swapchain const& swapchain);
@@ -705,6 +714,9 @@ class SwapchainBuilder {
 	// Provide custom allocation callbacks.
 	SwapchainBuilder& set_allocation_callbacks(VkAllocationCallbacks* callbacks);
 
+	// Provide an optional dispatch table for the builder to use for device pfn's
+    SwapchainBuilder& use_dispatch_table(DispatchTable& dispatch_table);
+
 	private:
 	void add_desired_formats(std::vector<VkSurfaceFormatKHR>& formats) const;
 	void add_desired_present_modes(std::vector<VkPresentModeKHR>& modes) const;
@@ -729,6 +741,7 @@ class SwapchainBuilder {
 		bool clipped = true;
 		VkSwapchainKHR old_swapchain = VK_NULL_HANDLE;
 		VkAllocationCallbacks* allocation_callbacks = VK_NULL_HANDLE;
+        DispatchTable* dispatch_table = nullptr;
 	} info;
 };
 

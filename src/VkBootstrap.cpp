@@ -1351,7 +1351,6 @@ detail::Result<uint32_t> Device::get_dedicated_queue_index(QueueType type) const
 detail::Result<VkQueue> Device::get_queue(QueueType type) const {
 	auto index = get_queue_index(type);
 	if (!index.has_value()) return { index.error() };
-	//return detail::get_queue(device, index.value());
 	VkQueue out_queue;
 	internal_table.fp_vkGetDeviceQueue(device, index.value(), 0, &out_queue);
 	return out_queue;
@@ -1472,10 +1471,12 @@ detail::Result<Device> DeviceBuilder::build() const {
 	device.queue_families = physical_device.queue_families;
 	device.allocation_callbacks = info.allocation_callbacks;
 	device.fp_vkGetDeviceProcAddr = detail::vulkan_functions().fp_vkGetDeviceProcAddr;
-	device.internal_table.fp_vkGetDeviceQueue =
-			reinterpret_cast<PFN_vkGetDeviceQueue>(device.fp_vkGetDeviceProcAddr(device.device, "vkGetDeviceProcAddr"));
-	device.internal_table.fp_vkDestroyDevice =
-			reinterpret_cast<PFN_vkDestroyDevice>(device.fp_vkGetDeviceProcAddr(device.device, "vkDestroyDevice"));
+	detail::vulkan_functions().get_device_proc_addr(device.device,
+													device.internal_table.fp_vkGetDeviceQueue,
+													"vkGetDeviceQueue");
+	detail::vulkan_functions().get_device_proc_addr(device.device,
+													device.internal_table.fp_vkDestroyDevice,
+													"vkDestroyDevice");
 	return device;
 }
 DeviceBuilder& DeviceBuilder::custom_queue_setup(std::vector<CustomQueueDescription> queue_descriptions) {

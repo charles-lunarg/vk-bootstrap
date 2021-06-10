@@ -219,6 +219,7 @@ struct Instance {
 
 	private:
 	bool headless = false;
+	bool supports_properties2_ext = false;
 	uint32_t instance_version = VK_MAKE_VERSION(1, 0, 0);
 
 	friend class InstanceBuilder;
@@ -474,7 +475,6 @@ class PhysicalDeviceSelector {
 		VkInstance instance = VK_NULL_HANDLE;
 		VkSurfaceKHR surface = VK_NULL_HANDLE;
 		uint32_t version = VK_MAKE_VERSION(1, 0, 0);
-		std::vector<VkExtensionProperties> extensions;
 		bool headless = false;
 		bool supports_properties2_ext = false;
 	} instance_info;

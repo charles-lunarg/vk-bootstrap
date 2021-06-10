@@ -618,8 +618,9 @@ detail::Result<Instance> InstanceBuilder::build() const {
 	if (info.debug_callback != nullptr && system.debug_utils_available) {
 		extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
 	}
-	if (detail::check_extension_supported(
-	        system.available_extensions, VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME)) {
+	bool supports_properties2_ext = detail::check_extension_supported(
+	    system.available_extensions, VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME);
+	if (supports_properties2_ext) {
 		extensions.push_back(VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME);
 	}
 
@@ -731,9 +732,8 @@ detail::Result<Instance> InstanceBuilder::build() const {
 		}
 	}
 
-	if (info.headless_context) {
-		instance.headless = true;
-	}
+	instance.headless = info.headless_context;
+	instance.supports_properties2_ext = supports_properties2_ext;
 	instance.allocation_callbacks = info.allocation_callbacks;
 	instance.instance_version = api_version;
 	instance.fp_vkGetInstanceProcAddr = detail::vulkan_functions().ptr_vkGetInstanceProcAddr;
@@ -1020,7 +1020,7 @@ PhysicalDeviceSelector::PhysicalDeviceDesc PhysicalDeviceSelector::populate_devi
 		VkPhysicalDeviceFeatures2 local_features{};
 		local_features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
 		local_features.pNext = &fill_chain.front();
-		if (desc.device_properties.apiVersion >= VK_API_VERSION_1_1) {
+		if (instance_info.version >= VK_API_VERSION_1_1 && desc.device_properties.apiVersion >= VK_API_VERSION_1_1) {
 			detail::vulkan_functions().fp_vkGetPhysicalDeviceFeatures2(phys_device, &local_features);
 		} else if (instance_info.supports_properties2_ext) {
 			detail::vulkan_functions().fp_vkGetPhysicalDeviceFeatures2KHR(phys_device, &local_features);
@@ -1134,13 +1134,10 @@ PhysicalDeviceSelector::PhysicalDeviceSelector(Instance const& instance) {
 	instance_info.instance = instance.instance;
 	instance_info.headless = instance.headless;
 	instance_info.version = instance.instance_version;
+	instance_info.supports_properties2_ext = instance.supports_properties2_ext;
 	criteria.require_present = !instance.headless;
 	criteria.required_version = instance.instance_version;
 	criteria.desired_version = instance.instance_version;
-	detail::get_vector<VkExtensionProperties>(
-	    instance_info.extensions, detail::vulkan_functions().fp_vkEnumerateInstanceExtensionProperties, nullptr);
-	instance_info.supports_properties2_ext = detail::check_extension_supported(
-	    instance_info.extensions, VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME);
 }
 
 detail::Result<PhysicalDevice> PhysicalDeviceSelector::select() const {
@@ -1148,9 +1145,6 @@ detail::Result<PhysicalDevice> PhysicalDeviceSelector::select() const {
 		if (instance_info.surface == VK_NULL_HANDLE)
 			return detail::Result<PhysicalDevice>{ PhysicalDeviceError::no_surface_provided };
 	}
-
-
-
 
 	std::vector<VkPhysicalDevice> physical_devices;
 

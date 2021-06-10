@@ -1753,7 +1753,7 @@ detail::Result<Swapchain> SwapchainBuilder::build() const {
 	detail::vulkan_functions().get_device_proc_addr(info.device, swapchain_create_proc, "vkCreateSwapchainKHR");
 	auto res = swapchain_create_proc(
 	    info.device, &swapchain_create_info, info.allocation_callbacks, &swapchain.swapchain);
-	;
+
 	if (res != VK_SUCCESS) {
 		return detail::Error{ SwapchainError::failed_create_swapchain, res };
 	}

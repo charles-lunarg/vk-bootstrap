@@ -2,6 +2,26 @@
 
 #include <catch2/catch.hpp>
 
+vkb::Instance get_instance(uint32_t minor_version = 0) {
+	auto instance_ret = vkb::InstanceBuilder()
+	                        .request_validation_layers()
+	                        .require_api_version(1, minor_version)
+	                        .use_default_debug_messenger()
+	                        .build();
+	REQUIRE(instance_ret.has_value());
+	return instance_ret.value();
+}
+vkb::Instance get_headless_instance(uint32_t minor_version = 0) {
+	auto instance_ret = vkb::InstanceBuilder()
+	                        .request_validation_layers()
+	                        .require_api_version(1, minor_version)
+	                        .set_headless()
+	                        .use_default_debug_messenger()
+	                        .build();
+	REQUIRE(instance_ret.has_value());
+	return instance_ret.value();
+}
+
 // TODO
 // changing present modes and/or image formats
 
@@ -98,13 +118,9 @@ TEST_CASE("instance configuration", "[VkBootstrap.bootstrap]") {
 }
 
 TEST_CASE("Headless Vulkan", "[VkBootstrap.bootstrap]") {
-	vkb::InstanceBuilder builder;
+	auto instance = get_headless_instance();
 
-	auto instance_ret =
-	    builder.request_validation_layers().set_headless().use_default_debug_messenger().build();
-	REQUIRE(instance_ret.has_value());
-
-	vkb::PhysicalDeviceSelector phys_device_selector(instance_ret.value());
+	vkb::PhysicalDeviceSelector phys_device_selector(instance);
 	auto phys_device_ret = phys_device_selector.select();
 	REQUIRE(phys_device_ret.has_value());
 	auto phys_device = phys_device_ret.value();
@@ -114,20 +130,16 @@ TEST_CASE("Headless Vulkan", "[VkBootstrap.bootstrap]") {
 	REQUIRE(device_ret.has_value());
 	vkb::destroy_device(device_ret.value());
 
-	vkb::destroy_instance(instance_ret.value());
+	vkb::destroy_instance(instance);
 }
 
 TEST_CASE("Device Configuration", "[VkBootstrap.bootstrap]") {
 
 	auto window = create_window_glfw("Device Configuration");
-	vkb::InstanceBuilder builder;
+	auto instance = get_instance(1);
+	auto surface = create_surface_glfw(instance.instance, window);
 
-	auto instance_ret =
-	    builder.request_validation_layers().require_api_version(1, 1).use_default_debug_messenger().build();
-	REQUIRE(instance_ret.has_value());
-	auto surface = create_surface_glfw(instance_ret.value().instance, window);
-
-	vkb::PhysicalDeviceSelector phys_device_selector(instance_ret.value());
+	vkb::PhysicalDeviceSelector phys_device_selector(instance);
 
 	auto phys_device_ret = phys_device_selector.set_minimum_version(1, 1).set_surface(surface).select();
 	REQUIRE(phys_device_ret.has_value());
@@ -179,22 +191,14 @@ TEST_CASE("Device Configuration", "[VkBootstrap.bootstrap]") {
 		vkb::destroy_device(device_ret.value());
 	}
 
-	vkb::destroy_surface(instance_ret.value(), surface);
-	vkb::destroy_instance(instance_ret.value());
+	vkb::destroy_surface(instance, surface);
+	vkb::destroy_instance(instance);
 }
 
 TEST_CASE("Loading Dispatch Table", "[VkBootstrap.bootstrap]") {
-	vkb::InstanceBuilder builder;
-
-	auto instance_ret = builder.request_validation_layers()
-	                        .require_api_version(1, 0)
-	                        .set_headless()
-	                        .use_default_debug_messenger()
-	                        .build();
-	REQUIRE(instance_ret.has_value());
+	auto instance = get_headless_instance(0);
 	{
-
-		vkb::PhysicalDeviceSelector selector(instance_ret.value());
+		vkb::PhysicalDeviceSelector selector(instance);
 		auto phys_dev_ret = selector.select_first_device_unconditionally().select();
 		REQUIRE(phys_dev_ret.has_value());
 
@@ -214,19 +218,16 @@ TEST_CASE("Loading Dispatch Table", "[VkBootstrap.bootstrap]") {
 		dispatch_table.destroyFence(fence, nullptr);
 		vkb::destroy_device(device_ret.value());
 	}
-	vkb::destroy_instance(instance_ret.value());
+	vkb::destroy_instance(instance);
 }
 
 TEST_CASE("Swapchain", "[VkBootstrap.bootstrap]") {
 	GIVEN("A working instance, window, surface, and device") {
 		auto window = create_window_glfw("Swapchain");
-		vkb::InstanceBuilder builder;
+		auto instance = get_instance(1);
+		auto surface = create_surface_glfw(instance.instance, window);
 
-		auto instance_ret = builder.request_validation_layers().use_default_debug_messenger().build();
-		REQUIRE(instance_ret.has_value());
-		auto surface = create_surface_glfw(instance_ret.value().instance, window);
-
-		vkb::PhysicalDeviceSelector phys_device_selector(instance_ret.value());
+		vkb::PhysicalDeviceSelector phys_device_selector(instance);
 		auto phys_device_ret = phys_device_selector.set_surface(surface).select();
 		REQUIRE(phys_device_ret.has_value());
 		auto phys_device = phys_device_ret.value();
@@ -324,8 +325,8 @@ TEST_CASE("Swapchain", "[VkBootstrap.bootstrap]") {
 		}
 
 		vkb::destroy_device(device_ret.value());
-		vkb::destroy_surface(instance_ret.value(), surface);
-		vkb::destroy_instance(instance_ret.value());
+		vkb::destroy_surface(instance, surface);
+		vkb::destroy_instance(instance);
 	}
 }
 
@@ -443,24 +444,16 @@ TEST_CASE("ReLoading Vulkan Manually", "[VkBootstrap.loading]") {
 	}
 }
 
-#if defined(VK_API_VERSION_1_1)
-TEST_CASE("Querying Required Extension Features", "[VkBootstrap.version]") {
+TEST_CASE("Querying Required Extension Features but with 1.0", "[VkBootstrap.select_features]") {
 	GIVEN("A working instance") {
-		vkb::InstanceBuilder builder;
-
-		auto instance_ret = builder.request_validation_layers()
-		                        .require_api_version(1, 2)
-		                        .set_headless()
-		                        .use_default_debug_messenger()
-		                        .build();
-		REQUIRE(instance_ret.has_value());
+		auto instance = get_headless_instance();
 		// Requires a device that supports runtime descriptor arrays via descriptor indexing extension.
 		{
 			VkPhysicalDeviceDescriptorIndexingFeaturesEXT descriptor_indexing_features{};
 			descriptor_indexing_features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT;
 			descriptor_indexing_features.runtimeDescriptorArray = true;
 
-			vkb::PhysicalDeviceSelector selector(instance_ret.value());
+			vkb::PhysicalDeviceSelector selector(instance);
 			auto phys_dev_ret =
 			    selector.add_required_extension(VK_EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME)
 			        .add_required_extension_features(descriptor_indexing_features)
@@ -473,23 +466,68 @@ TEST_CASE("Querying Required Extension Features", "[VkBootstrap.version]") {
 			REQUIRE(device_ret.has_value());
 			vkb::destroy_device(device_ret.value());
 		}
-		vkb::destroy_instance(instance_ret.value());
+		vkb::destroy_instance(instance);
+	}
+}
+TEST_CASE("Querying Required Extension Features", "[VkBootstrap.select_features]") {
+	GIVEN("A working instance") {
+		auto instance = get_headless_instance();
+		// Requires a device that supports runtime descriptor arrays via descriptor indexing extension.
+		{
+			VkPhysicalDeviceDescriptorIndexingFeaturesEXT descriptor_indexing_features{};
+			descriptor_indexing_features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT;
+			descriptor_indexing_features.runtimeDescriptorArray = true;
+
+			vkb::PhysicalDeviceSelector selector(instance);
+			auto phys_dev_ret =
+			    selector.add_required_extension(VK_EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME)
+			        .add_required_extension_features(descriptor_indexing_features)
+			        .select();
+			// Ignore if hardware support isn't true
+			REQUIRE(phys_dev_ret.has_value());
+
+			vkb::DeviceBuilder device_builder(phys_dev_ret.value());
+			auto device_ret = device_builder.build();
+			REQUIRE(device_ret.has_value());
+			vkb::destroy_device(device_ret.value());
+		}
+		vkb::destroy_instance(instance);
 	}
 }
 
+#if defined(VK_API_VERSION_1_1)
+TEST_CASE("Querying Required Extension Features in 1.1", "[VkBootstrap.version]") {
+	GIVEN("A working instance") {
+		auto instance = get_headless_instance();
+		// Requires a device that supports runtime descriptor arrays via descriptor indexing extension.
+		{
+			VkPhysicalDeviceDescriptorIndexingFeaturesEXT descriptor_indexing_features{};
+			descriptor_indexing_features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT;
+			descriptor_indexing_features.runtimeDescriptorArray = true;
+
+			vkb::PhysicalDeviceSelector selector(instance);
+			auto phys_dev_ret =
+			    selector.add_required_extension(VK_EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME)
+			        .add_required_extension_features(descriptor_indexing_features)
+			        .select();
+			// Ignore if hardware support isn't true
+			REQUIRE(phys_dev_ret.has_value());
+
+			vkb::DeviceBuilder device_builder(phys_dev_ret.value());
+			auto device_ret = device_builder.build();
+			REQUIRE(device_ret.has_value());
+			vkb::destroy_device(device_ret.value());
+		}
+		vkb::destroy_instance(instance);
+	}
+}
 #endif
 
 #if defined(VK_API_VERSION_1_2)
 TEST_CASE("Querying Vulkan 1.1 and 1.2 features", "[VkBootstrap.version]") {
 	GIVEN("A working instance") {
 		vkb::InstanceBuilder builder;
-
-		auto instance_ret = builder.request_validation_layers()
-		                        .require_api_version(1, 2)
-		                        .set_headless()
-		                        .use_default_debug_messenger()
-		                        .build();
-		REQUIRE(instance_ret.has_value());
+		auto instance = get_headless_instance();
 		// Requires a device that supports multiview and bufferDeviceAddress
 		{
 			VkPhysicalDeviceVulkan11Features features_11{};
@@ -499,7 +537,7 @@ TEST_CASE("Querying Vulkan 1.1 and 1.2 features", "[VkBootstrap.version]") {
 			features_11.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES;
 			features_12.bufferDeviceAddress = true;
 
-			vkb::PhysicalDeviceSelector selector(instance_ret.value());
+			vkb::PhysicalDeviceSelector selector(instance);
 			auto phys_dev_ret =
 			    selector.set_required_features_11(features_11).set_required_features_12(features_12).select();
 			// Ignore if hardware support isn't true
@@ -516,12 +554,12 @@ TEST_CASE("Querying Vulkan 1.1 and 1.2 features", "[VkBootstrap.version]") {
 			features_11.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES;
 			features_11.protectedMemory = true;
 
-			vkb::PhysicalDeviceSelector selector(instance_ret.value());
+			vkb::PhysicalDeviceSelector selector(instance);
 			auto phys_dev_ret = selector.set_required_features_11(features_11).select();
 			// Ignore if hardware support differs
 			REQUIRE(!phys_dev_ret.has_value());
 		}
-		vkb::destroy_instance(instance_ret.value());
+		vkb::destroy_instance(instance);
 	}
 }
 

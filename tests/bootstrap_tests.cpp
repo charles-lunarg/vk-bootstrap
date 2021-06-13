@@ -3,11 +3,8 @@
 #include <catch2/catch.hpp>
 
 vkb::Instance get_instance(uint32_t minor_version = 0) {
-	auto instance_ret = vkb::InstanceBuilder()
-	                        .request_validation_layers()
-	                        .require_api_version(1, minor_version)
-	                        .use_default_debug_messenger()
-	                        .build();
+	auto instance_ret =
+	    vkb::InstanceBuilder().request_validation_layers().require_api_version(1, minor_version).build();
 	REQUIRE(instance_ret.has_value());
 	return instance_ret.value();
 }
@@ -16,7 +13,6 @@ vkb::Instance get_headless_instance(uint32_t minor_version = 0) {
 	                        .request_validation_layers()
 	                        .require_api_version(1, minor_version)
 	                        .set_headless()
-	                        .use_default_debug_messenger()
 	                        .build();
 	REQUIRE(instance_ret.has_value());
 	return instance_ret.value();

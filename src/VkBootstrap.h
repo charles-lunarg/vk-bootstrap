@@ -17,6 +17,7 @@
 #pragma once
 
 #include <cassert>
+#include <cstdio>
 
 #include <vector>
 #include <system_error>
@@ -206,6 +207,22 @@ struct SystemInfo {
 	bool debug_utils_available = false;
 };
 
+// Forward declared - check VkBoostrap.cpp for implementations
+const char* to_string_message_severity(VkDebugUtilsMessageSeverityFlagBitsEXT s);
+const char* to_string_message_type(VkDebugUtilsMessageTypeFlagsEXT s);
+
+// Default debug messenger
+// Feel free to copy-paste it into your own code, change it as needed, then call `set_debug_callback()` to use that instead
+inline VKAPI_ATTR VkBool32 VKAPI_CALL default_debug_callback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
+    VkDebugUtilsMessageTypeFlagsEXT messageType,
+    const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
+    void*) {
+	auto ms = to_string_message_severity(messageSeverity);
+	auto mt = to_string_message_type(messageType);
+	printf("[%s: %s]\n%s\n", ms, mt, pCallbackData->pMessage);
+
+	return VK_FALSE; // Applications must return false here
+}
 
 class InstanceBuilder;
 class PhysicalDeviceSelector;
@@ -270,6 +287,8 @@ class InstanceBuilder {
 	InstanceBuilder& use_default_debug_messenger();
 	// Provide a user defined debug callback.
 	InstanceBuilder& set_debug_callback(PFN_vkDebugUtilsMessengerCallbackEXT callback);
+	// Sets the void* to use in the debug messenger - only useful with a custom callback
+	InstanceBuilder& set_debug_callback_user_data_pointer(void* user_data_pointer);
 	// Set what message severity is needed to trigger the callback.
 	InstanceBuilder& set_debug_messenger_severity(VkDebugUtilsMessageSeverityFlagsEXT severity);
 	// Add a message severity to the list that triggers the callback.
@@ -310,13 +329,14 @@ class InstanceBuilder {
 		VkInstanceCreateFlags flags = 0;
 		std::vector<VkBaseOutStructure*> pNext_elements;
 
-		// debug callback
-		PFN_vkDebugUtilsMessengerCallbackEXT debug_callback = nullptr;
+		// debug callback - use the default so it is not nullptr
+		PFN_vkDebugUtilsMessengerCallbackEXT debug_callback = default_debug_callback;
 		VkDebugUtilsMessageSeverityFlagsEXT debug_message_severity =
 		    VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
 		VkDebugUtilsMessageTypeFlagsEXT debug_message_type =
 		    VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT |
 		    VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
+		void* debug_user_data_pointer = nullptr;
 
 		// validation features
 		std::vector<VkValidationCheckEXT> disabled_validation_checks;

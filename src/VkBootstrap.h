@@ -122,11 +122,11 @@ struct GenericFeaturesPNextNode {
 	GenericFeaturesPNextNode();
 
 	template <typename T>
-	GenericFeaturesPNextNode(T const& features) {
+	GenericFeaturesPNextNode(T const& features) noexcept {
 		*reinterpret_cast<T*>(this) = features;
 	}
 
-	static bool match(GenericFeaturesPNextNode const& requested, GenericFeaturesPNextNode const& supported);
+	static bool match(GenericFeaturesPNextNode const& requested, GenericFeaturesPNextNode const& supported) noexcept;
 
 	VkStructureType sType = static_cast<VkStructureType>(0);
 	void* pNext = nullptr;

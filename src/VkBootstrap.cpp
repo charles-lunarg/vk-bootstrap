@@ -40,7 +40,7 @@ GenericFeaturesPNextNode::GenericFeaturesPNextNode()
 : fields() {} // zero initializes the array of fields
 
 bool GenericFeaturesPNextNode::match(
-    GenericFeaturesPNextNode const& requested, GenericFeaturesPNextNode const& supported) {
+    GenericFeaturesPNextNode const& requested, GenericFeaturesPNextNode const& supported) noexcept {
 	assert(requested.sType == supported.sType && "Non-matching sTypes in features nodes!");
 	for (uint32_t i = 0; i < field_capacity; i++) {
 		if (requested.fields[i] && !supported.fields[i]) return false;
@@ -1138,6 +1138,7 @@ PhysicalDeviceSelector::PhysicalDeviceSelector(Instance const& instance) {
 
 detail::Result<PhysicalDevice> PhysicalDeviceSelector::select() const {
 
+#if !defined(NDEBUG)
 	// Validation
 	for(const auto& node : criteria.extended_features_chain) {
 		assert(node.sType != 0 && "Features struct sType must be filled with the struct's "
@@ -1147,6 +1148,7 @@ detail::Result<PhysicalDevice> PhysicalDeviceSelector::select() const {
 			"Do not pass VkPhysicalDeviceFeatures2 as a required extension feature structure. An "
 			"instance of this is managed internally for selection criteria and device creation.");
 	}
+#endif
 
 	if (!instance_info.headless && !criteria.defer_surface_initialization) {
 		if (instance_info.surface == VK_NULL_HANDLE)

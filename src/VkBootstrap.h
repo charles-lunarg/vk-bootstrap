@@ -121,7 +121,10 @@ struct GenericFeaturesPNextNode {
 
 	GenericFeaturesPNextNode();
 
-	template <typename T> void set(T const& features) { *reinterpret_cast<T*>(this) = features; }
+	template <typename T>
+	GenericFeaturesPNextNode(T const& features) {
+		*reinterpret_cast<T*>(this) = features;
+	}
 
 	static bool match(GenericFeaturesPNextNode const& requested, GenericFeaturesPNextNode const& supported);
 
@@ -459,15 +462,7 @@ class PhysicalDeviceSelector {
 #if defined(VK_API_VERSION_1_1)
 	template <typename T>
 	PhysicalDeviceSelector& add_required_extension_features(T const& features) {
-		assert(features.sType != 0 && "Features struct sType must be filled with the struct's "
-		                              "corresponding VkStructureType enum");
-		assert(
-		    features.sType != VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2 &&
-		    "Do not pass VkPhysicalDeviceFeatures2 as a required extension feature structure. An "
-		    "instance of this is managed internally for selection criteria and device creation.");
-		detail::GenericFeaturesPNextNode node;
-		node.set(features);
-		criteria.extended_features_chain.push_back(node);
+		criteria.extended_features_chain.push_back(features);
 		return *this;
 	}
 #endif

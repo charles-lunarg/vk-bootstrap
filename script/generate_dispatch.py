@@ -39,6 +39,7 @@ import sys
 import subprocess
 import pkg_resources
 import copy
+import codecs
 from string import Template
 
 installed = {pkg.key for pkg in pkg_resources.working_set}
@@ -287,7 +288,7 @@ body += '} // namespace vkb'
 
 header = license + info + body
 
-header_file = open("../src/VkBootstrapDispatch.h", "w")
+header_file = codecs.open("../src/VkBootstrapDispatch.h", "w", "utf-8")
 header_file.write(header)
 header_file.close();
 

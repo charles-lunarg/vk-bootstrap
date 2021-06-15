@@ -1137,6 +1137,17 @@ PhysicalDeviceSelector::PhysicalDeviceSelector(Instance const& instance) {
 }
 
 detail::Result<PhysicalDevice> PhysicalDeviceSelector::select() const {
+
+	// Validation
+	for(const auto& node : criteria.extended_features_chain) {
+		assert(node.sType != 0 && "Features struct sType must be filled with the struct's "
+									  "corresponding VkStructureType enum");
+		assert(
+			node.sType != VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2 &&
+			"Do not pass VkPhysicalDeviceFeatures2 as a required extension feature structure. An "
+			"instance of this is managed internally for selection criteria and device creation.");
+	}
+
 	if (!instance_info.headless && !criteria.defer_surface_initialization) {
 		if (instance_info.surface == VK_NULL_HANDLE)
 			return detail::Result<PhysicalDevice>{ PhysicalDeviceError::no_surface_provided };

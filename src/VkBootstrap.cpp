@@ -2299,6 +2299,8 @@ SwapchainManager::SwapchainManager(SwapchainBuilder const& builder,
 	detail::vulkan_functions().get_device_proc_addr(device, detail.fp_vkGetDeviceQueue, "vkGetDeviceQueue");
 	detail::vulkan_functions().get_device_proc_addr(device, detail.fp_vkAcquireNextImageKHR, "vkAcquireNextImageKHR");
 	detail::vulkan_functions().get_device_proc_addr(device, detail.fp_vkQueuePresentKHR, "vkQueuePresentKHR");
+	detail::vulkan_functions().get_device_proc_addr(device, detail.fp_vkQueueSubmit, "vkQueueSubmit");
+
 	detail.fp_vkGetSwapchainImagesKHR = fp_vkGetSwapchainImagesKHR;
 	detail.fp_vkCreateImageView = fp_vkCreateImageView;
 	detail.fp_vkGetDeviceQueue(device, detail.builder.info.graphics_queue_index, 0, &detail.graphics_queue);
@@ -2387,21 +2389,15 @@ detail::Result<SwapchainAcquireInfo> SwapchainManager::acquire_image() noexcept 
 	SwapchainAcquireInfo out{};
 	out.image_view = detail.swapchain_resources.image_views[detail.current_image_index];
 	out.image_index = detail.current_image_index;
+	out.wait_semaphore = detail.semaphore_manager.get_acquire_semaphore();
+	out.signal_semaphore = detail.semaphore_manager.get_submit_semaphore();
+	detail.current_acquire_semaphore = out.wait_semaphore;
+	detail.current_present_semaphore = out.signal_semaphore;
 	return out;
 }
 
-detail::Result<SwapchainSubmitSemaphores> SwapchainManager::get_submit_semaphores() noexcept {
-	assert(detail.current_status != Status::destroyed && "SwapchainManager was destroyed!");
-	if (detail.current_status == Status::expired) {
-		return make_error_code(SwapchainManagerError::swapchain_out_of_date);
-	}
-	if (detail.current_status == Status::ready_to_acquire) {
-		return make_error_code(SwapchainManagerError::must_call_acquire_image_first);
-	}
-	SwapchainSubmitSemaphores semaphores;
-	semaphores.signal = detail.semaphore_manager.get_submit_semaphore();
-	semaphores.wait = detail.semaphore_manager.get_acquire_semaphore();
-	return semaphores;
+bool SwapchainManager::able_to_present() noexcept {
+	return detail.current_status == Status::ready_to_present;
 }
 
 detail::Result<detail::void_t> SwapchainManager::present() noexcept {
@@ -2413,7 +2409,9 @@ detail::Result<detail::void_t> SwapchainManager::present() noexcept {
 		return make_error_code(SwapchainManagerError::must_call_acquire_image_first);
 	}
 
-	VkSemaphore wait_semaphores[1] = { detail.semaphore_manager.get_submit_semaphore() };
+	VkSemaphore wait_semaphores[1] = { detail.current_present_semaphore };
+	detail.current_acquire_semaphore = VK_NULL_HANDLE;
+	detail.current_present_semaphore = VK_NULL_HANDLE;
 
 	VkPresentInfoKHR present_info = {};
 	present_info.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
@@ -2437,11 +2435,41 @@ detail::Result<detail::void_t> SwapchainManager::present() noexcept {
 	} else {
 		detail.current_status = Status::ready_to_acquire;
 	}
-
 	// clean up old swapchain resources
 	detail.delete_queue.tick();
 
 	return detail::void_t{};
+}
+
+void SwapchainManager::cancel_acquire_frame() noexcept {
+	VkPipelineStageFlags wait_stages[1] = { VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT };
+
+	VkSubmitInfo submit_info = {};
+	submit_info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+	submit_info.waitSemaphoreCount = 1;
+	submit_info.pWaitSemaphores = &detail.current_acquire_semaphore;
+	submit_info.pWaitDstStageMask = wait_stages;
+
+	VkResult res = detail.fp_vkQueueSubmit(detail.graphics_queue, 1, &submit_info, VK_NULL_HANDLE);
+	assert(res == VK_SUCCESS);
+
+	detail.current_acquire_semaphore = VK_NULL_HANDLE;
+	detail.current_present_semaphore = VK_NULL_HANDLE;
+}
+void SwapchainManager::cancel_present_frame() noexcept {
+	VkPipelineStageFlags wait_stages[1] = { VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT };
+
+	VkSubmitInfo submit_info = {};
+	submit_info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+	submit_info.waitSemaphoreCount = 1;
+	submit_info.pWaitSemaphores = &detail.current_present_semaphore;
+	submit_info.pWaitDstStageMask = wait_stages;
+
+
+	VkResult res = detail.fp_vkQueueSubmit(detail.graphics_queue, 1, &submit_info, VK_NULL_HANDLE);
+	assert(res == VK_SUCCESS);
+	detail.current_acquire_semaphore = VK_NULL_HANDLE;
+	detail.current_present_semaphore = VK_NULL_HANDLE;
 }
 
 detail::Result<SwapchainInfo> SwapchainManager::recreate(uint32_t width, uint32_t height) noexcept {

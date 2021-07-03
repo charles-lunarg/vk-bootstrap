@@ -22,10 +22,11 @@ std::atomic_bool should_resize;
 uint32_t current_width = default_window_width;
 uint32_t current_height = default_window_height;
 
-std::mutex main_mutex;
+std::mutex swapchain_mutex;
+std::mutex render_mutex;
 
-std::mutex render_wait_mutex;
-std::condition_variable render_wait_condition_variable;
+std::mutex render_thread_sleep_mutex;
+std::condition_variable render_thread_sleep_condition_variable;
 
 const bool run_multithreaded = true;
 const bool use_refresh_callback = true;
@@ -46,6 +47,8 @@ struct Renderer {
 
 	vkb::SwapchainManager swapchain_manager;
 	vkb::SwapchainInfo swap_info;
+	// where to place the new framebuffer when a resize event happens
+	VkFramebuffer new_framebuffer = VK_NULL_HANDLE;
 
 	vkb::DeletionQueue delete_queue;
 
@@ -73,7 +76,7 @@ void unlock(std::mutex& mutex) {
 }
 
 int recreate_swapchain(Renderer& renderer);
-int draw_frame(Renderer& renderer);
+int draw_frame(Renderer& renderer, bool try_lock);
 
 void glfw_resize_callback(GLFWwindow* window, int width, int height) {
 	if (!is_running || width == 0 || height == 0) {
@@ -82,8 +85,6 @@ void glfw_resize_callback(GLFWwindow* window, int width, int height) {
 	should_resize = true;
 	current_width = width;
 	current_height = height;
-
-	std::lock_guard<std::mutex> lg(main_mutex);
 	Renderer* renderer = reinterpret_cast<Renderer*>(glfwGetWindowUserPointer(window));
 	int res = recreate_swapchain(*renderer);
 	if (res < 0) {
@@ -91,23 +92,23 @@ void glfw_resize_callback(GLFWwindow* window, int width, int height) {
 		return;
 	}
 	if (!use_refresh_callback) {
-		res = draw_frame(*renderer);
+		res = draw_frame(*renderer, false);
 		if (res < 0) {
 			is_running = false;
 		}
 	}
 	should_resize = false;
-	render_wait_condition_variable.notify_one();
+	render_thread_sleep_condition_variable.notify_one();
 }
 void glfw_refresh_callback(GLFWwindow* window) {
-	if (try_lock(main_mutex)) {
-		Renderer* renderer = reinterpret_cast<Renderer*>(glfwGetWindowUserPointer(window));
-		int res = draw_frame(*renderer);
-		if (res < 0) {
-			is_running = false;
-		}
-		unlock(main_mutex);
+	// if (try_lock(render_mutex)) {
+	Renderer* renderer = reinterpret_cast<Renderer*>(glfwGetWindowUserPointer(window));
+	int res = draw_frame(*renderer, true);
+	if (res < 0) {
+		is_running = false;
 	}
+	// unlock(render_mutex);
+	//}
 }
 inline VKAPI_ATTR VkBool32 VKAPI_CALL debug_callback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
     VkDebugUtilsMessageTypeFlagsEXT messageType,
@@ -240,15 +241,14 @@ int create_render_pass(Renderer& renderer) {
 	return 0;
 }
 
-int create_framebuffer(Renderer& renderer) {
+int create_framebuffer(Renderer& renderer, VkFramebuffer& output) {
 
 	vkb::ImagelessFramebufferBuilder if_builder(renderer.device);
-	renderer.framebuffer =
-	    if_builder.set_renderpass(renderer.render_pass)
-	        .set_extent(renderer.swap_info.extent)
-	        .set_layers(1)
-	        .add_attachment(renderer.swap_info.image_usage_flags, renderer.swap_info.image_format)
-	        .build();
+	output = if_builder.set_renderpass(renderer.render_pass)
+	             .set_extent(renderer.swap_info.extent)
+	             .set_layers(1)
+	             .add_attachment(renderer.swap_info.image_usage_flags, renderer.swap_info.image_format)
+	             .build();
 
 	return 0;
 }
@@ -507,41 +507,59 @@ int record_command_buffer(Renderer& renderer, VkCommandBuffer command_buffer, Vk
 }
 
 int recreate_swapchain(Renderer& renderer) {
-	renderer.delete_queue.add_framebuffer(renderer.framebuffer);
-	renderer.framebuffer = VK_NULL_HANDLE;
+	std::lock_guard<std::mutex> lg(swapchain_mutex);
+
 	auto ret = renderer.swapchain_manager.recreate();
 	if (!ret) {
 		std::cout << "failed to recreate swapchain\n";
 		return -1;
 	}
 	renderer.swap_info = ret.value();
-	if (0 != create_framebuffer(renderer)) return -1;
+	if (renderer.new_framebuffer != VK_NULL_HANDLE) {
+		renderer.delete_queue.add_framebuffer(renderer.new_framebuffer);
+	}
+	if (0 != create_framebuffer(renderer, renderer.new_framebuffer)) return -1;
 	return 0;
 }
 
-int draw_frame(Renderer& renderer) {
-
-	vkb::SwapchainAcquireInfo acquire_info;
-	auto acquire_ret = renderer.swapchain_manager.acquire_image();
-	if (acquire_ret.matches_error(vkb::SwapchainManagerError::swapchain_out_of_date)) {
-		return 1;
-	} else if (!acquire_ret.has_value()) {
-		std::cout << "failed to acquire swapchain image\n";
-		return -1;
+int draw_frame(Renderer& renderer, bool try_lock) {
+	std::unique_lock<std::mutex> lg(render_mutex, std::try_to_lock);
+	if (!try_lock && !lg.owns_lock()) {
+		lg.lock();
+	} else if (!lg.owns_lock()) {
+		return 0;
 	}
+	vkb::SwapchainAcquireInfo acquire_info;
+	{
+		std::lock_guard<std::mutex> slg(swapchain_mutex);
+		// swap old framebuffer with new one now that both locks are held
+		if (renderer.new_framebuffer != VK_NULL_HANDLE) {
+			renderer.delete_queue.add_framebuffer(renderer.framebuffer);
+			renderer.framebuffer = renderer.new_framebuffer;
+			renderer.new_framebuffer = VK_NULL_HANDLE;
+		}
 
-	acquire_info = acquire_ret.value();
-	if (should_resize) return 1;
+		auto acquire_ret = renderer.swapchain_manager.acquire_image();
+		if (acquire_ret.matches_error(vkb::SwapchainManagerError::swapchain_out_of_date)) {
+			return 1;
+		} else if (!acquire_ret.has_value()) {
+			std::cout << "failed to acquire swapchain image\n";
+			return -1;
+		}
+		acquire_info = acquire_ret.value();
+	}
+	if (should_resize) {
+		renderer.swapchain_manager.cancel_acquire_frame();
+		return 1;
+	}
 
 	renderer.dispatch.waitForFences(1, &renderer.fences[renderer.current_index], VK_TRUE, UINT64_MAX);
 	renderer.dispatch.resetFences(1, &renderer.fences[renderer.current_index]);
 
 	record_command_buffer(renderer, renderer.command_buffers[renderer.current_index], acquire_info.image_view);
 
-	auto semaphores = renderer.swapchain_manager.get_submit_semaphores().value();
-
-	VkSemaphore wait_semaphores[1] = { semaphores.wait };
-	VkSemaphore signal_semaphores[1] = { semaphores.signal };
+	VkSemaphore wait_semaphores[1] = { acquire_info.wait_semaphore };
+	VkSemaphore signal_semaphores[1] = { acquire_info.signal_semaphore };
 	VkPipelineStageFlags wait_stages[1] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
 
 	VkSubmitInfo submit_info = {};
@@ -554,21 +572,31 @@ int draw_frame(Renderer& renderer) {
 	submit_info.signalSemaphoreCount = 1;
 	submit_info.pSignalSemaphores = signal_semaphores;
 
-	if (renderer.dispatch.queueSubmit(
-	        renderer.graphics_queue, 1, &submit_info, renderer.fences[renderer.current_index]) != VK_SUCCESS) {
-		std::cout << "failed to submit command buffer\n";
+	VkResult res = renderer.dispatch.queueSubmit(
+	    renderer.graphics_queue, 1, &submit_info, renderer.fences[renderer.current_index]);
+	if (res != VK_SUCCESS) {
+		std::cout << "failed to submit command buffer" << res << "\n";
 		return -1;
 	}
 	renderer.current_index = (renderer.current_index + 1) % MAX_FRAMES_IN_FLIGHT;
-	if (should_resize) return 1;
 
-	auto present_ret = renderer.swapchain_manager.present();
-
-	if (present_ret.matches_error(vkb::SwapchainManagerError::swapchain_out_of_date)) {
+	if (should_resize) {
+		renderer.swapchain_manager.cancel_present_frame();
 		return 1;
-	} else if (!present_ret) {
-		std::cout << "failed to present swapchain image\n";
-		return -1;
+	}
+	{
+		std::lock_guard<std::mutex> slg(swapchain_mutex);
+		if (!renderer.swapchain_manager.able_to_present()) {
+			renderer.swapchain_manager.cancel_present_frame();
+			return 0;
+		}
+		auto present_ret = renderer.swapchain_manager.present();
+		if (present_ret.matches_error(vkb::SwapchainManagerError::swapchain_out_of_date)) {
+			return 1;
+		} else if (!present_ret) {
+			std::cout << "failed to present swapchain image " << present_ret.error().message() << "\n";
+			return -1;
+		}
 	}
 	renderer.delete_queue.tick();
 	renderer.current_time = glfwGetTime();
@@ -600,21 +628,14 @@ void cleanup(Renderer& renderer) {
 
 void render_loop(Renderer* renderer) {
 	while (is_running) {
-		std::unique_lock<std::mutex> lg(main_mutex, std::try_to_lock);
-		if (!lg.owns_lock()) {
-			std::unique_lock<std::mutex> ulg(render_wait_mutex);
-			render_wait_condition_variable.wait(ulg);
-			continue;
-		} else {
-			int res = draw_frame(*renderer);
-			if (res < 0) {
-				is_running = false;
-			}
-			if (res == 1) {
-				lg.unlock();
-				std::unique_lock<std::mutex> ulg(render_wait_mutex);
-				render_wait_condition_variable.wait(ulg);
-			}
+		int res = draw_frame(*renderer, true);
+		if (res < 0) {
+			is_running = false;
+			break;
+		}
+		if (res == 1) {
+			std::unique_lock<std::mutex> ulg(render_thread_sleep_mutex);
+			render_thread_sleep_condition_variable.wait(ulg);
 		}
 	}
 }
@@ -628,25 +649,24 @@ int main() {
 	if (0 != device_initialization(renderer)) return -1;
 	if (0 != get_queues(renderer)) return -1;
 	if (0 != create_render_pass(renderer)) return -1;
-	if (0 != create_framebuffer(renderer)) return -1;
+	if (0 != create_framebuffer(renderer, renderer.framebuffer)) return -1;
 	if (0 != create_graphics_pipeline(renderer)) return -1;
 	if (0 != create_command_buffers(renderer)) return -1;
 	is_running = true;
 	renderer.current_time = glfwGetTime();
 	if (run_multithreaded) {
 		std::thread render_thread{ render_loop, &renderer };
-
 		while (!glfwWindowShouldClose(renderer.window) && is_running) {
 			glfwPollEvents();
 			glfwWaitEvents();
 		}
 		is_running = false;
-		render_wait_condition_variable.notify_one();
+		render_thread_sleep_condition_variable.notify_one();
 		render_thread.join();
 	} else {
 		while (!glfwWindowShouldClose(renderer.window) && is_running) {
 			glfwPollEvents();
-			int res = draw_frame(renderer);
+			int res = draw_frame(renderer, false);
 			if (res < 0) {
 				is_running = false;
 			}

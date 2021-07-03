@@ -978,11 +978,8 @@ struct SwapchainAcquireInfo {
 	VkImageView image_view{};
 	// index of the swapchain image to use this frame
 	uint32_t image_index = detail::INDEX_MAX_VALUE;
-};
-
-struct SwapchainSubmitSemaphores {
-	VkSemaphore signal;
-	VkSemaphore wait;
+	VkSemaphore signal_semaphore;
+	VkSemaphore wait_semaphore;
 };
 
 /**
@@ -1098,9 +1095,11 @@ class SwapchainManager {
 	// Get a VkImageView handle to use in rendering
 	detail::Result<SwapchainAcquireInfo> acquire_image() noexcept;
 
-	detail::Result<SwapchainSubmitSemaphores> get_submit_semaphores() noexcept;
-
+	bool able_to_present() noexcept;
 	detail::Result<detail::void_t> present() noexcept;
+
+	void cancel_acquire_frame() noexcept;
+	void cancel_present_frame() noexcept;
 
 	// Recreate the swapchain, putting currently in-use internal resources in a delete queue
 	detail::Result<SwapchainInfo> recreate(uint32_t width = 0, uint32_t height = 0) noexcept;
@@ -1138,6 +1137,9 @@ class SwapchainManager {
 		PFN_vkQueuePresentKHR fp_vkQueuePresentKHR;
 		PFN_vkGetSwapchainImagesKHR fp_vkGetSwapchainImagesKHR;
 		PFN_vkCreateImageView fp_vkCreateImageView;
+		PFN_vkQueueSubmit fp_vkQueueSubmit;
+		VkSemaphore current_acquire_semaphore;
+		VkSemaphore current_present_semaphore;
 	} detail;
 
 	explicit SwapchainManager(SwapchainBuilder const& builder,

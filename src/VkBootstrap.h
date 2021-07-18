@@ -250,6 +250,26 @@ void destroy_surface(Instance instance, VkSurfaceKHR surface); // release surfac
 void destroy_surface(VkInstance instance, VkSurfaceKHR surface, VkAllocationCallbacks* callbacks = nullptr); // release surface handle
 void destroy_instance(Instance instance); // release instance resources
 
+/* If headless mode is false, by default vk-bootstrap use the following logic to enable the windowing extensions
+
+#if defined(_WIN32)
+    VK_KHR_win32_surface
+#elif defined(__linux__)
+    VK_KHR_xcb_surface
+    VK_KHR_xlib_surface
+    VK_KHR_wayland_surface
+#elif defined(__APPLE__)
+    VK_EXT_metal_surface
+#elif defined(__ANDROID__)
+    VK_KHR_android_surface
+#elif defined(_DIRECT2DISPLAY)
+    VK_KHR_display
+#endif
+
+Use `InstanceBuilder::enable_extension()` to add new extensions without altering the default behavior
+Feel free to make a PR or raise an issue to include additional platforms.
+*/
+
 class InstanceBuilder {
 	public:
 	// Default constructor, will load vulkan.

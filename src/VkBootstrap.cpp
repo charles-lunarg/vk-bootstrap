@@ -64,8 +64,7 @@ class VulkanFunctions {
 			library = dlopen("libvulkan.so.1", RTLD_NOW | RTLD_LOCAL);
 			if (!library) library = dlopen("libvulkan.so", RTLD_NOW | RTLD_LOCAL);
 #elif defined(__APPLE__)
-			library = dlopen("libvulkan.dylib", RTLD_NOW | RTLD_LOCAL);
-			if (!library) library = dlopen("libvulkan.1.dylib", RTLD_NOW | RTLD_LOCAL);
+			library = dlopen("libvulkan.1.dylib", RTLD_NOW | RTLD_LOCAL);
 #elif defined(_WIN32)
 			library = LoadLibrary(TEXT("vulkan-1.dll"));
 #else

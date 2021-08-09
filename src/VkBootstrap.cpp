@@ -205,7 +205,7 @@ auto get_vector(std::vector<T>& out, F&& f, Ts&&... ts) -> VkResult {
 	VkResult err;
 	do {
 		err = f(ts..., &count, nullptr);
-		if (err) {
+		if (err != VK_SUCCESS) {
 			return err;
 		};
 		out.resize(count);
@@ -229,13 +229,13 @@ auto get_vector_noerror(F&& f, Ts&&... ts) -> std::vector<T> {
 
 const char* to_string_message_severity(VkDebugUtilsMessageSeverityFlagBitsEXT s) {
 	switch (s) {
-		case VkDebugUtilsMessageSeverityFlagBitsEXT::VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT:
+		case VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT:
 			return "VERBOSE";
-		case VkDebugUtilsMessageSeverityFlagBitsEXT::VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT:
+		case VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT:
 			return "ERROR";
-		case VkDebugUtilsMessageSeverityFlagBitsEXT::VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT:
+		case VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT:
 			return "WARNING";
-		case VkDebugUtilsMessageSeverityFlagBitsEXT::VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT:
+		case VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT:
 			return "INFO";
 		default:
 			return "UNKNOWN";
@@ -1111,7 +1111,7 @@ PhysicalDeviceSelector::Suitable PhysicalDeviceSelector::is_device_suitable(Phys
 	bool has_required_memory = false;
 	bool has_preferred_memory = false;
 	for (uint32_t i = 0; i < pd.mem_properties.memoryHeapCount; i++) {
-		if (pd.mem_properties.memoryHeaps[i].flags & VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT) {
+		if (pd.mem_properties.memoryHeaps[i].flags & VK_MEMORY_HEAP_DEVICE_LOCAL_BIT) {
 			if (pd.mem_properties.memoryHeaps[i].size > criteria.required_mem_size) {
 				has_required_memory = true;
 			}
@@ -1140,13 +1140,14 @@ detail::Result<PhysicalDevice> PhysicalDeviceSelector::select() const {
 
 #if !defined(NDEBUG)
 	// Validation
-	for(const auto& node : criteria.extended_features_chain) {
-		assert(node.sType != 0 && "Features struct sType must be filled with the struct's "
-									  "corresponding VkStructureType enum");
+	for (const auto& node : criteria.extended_features_chain) {
+		assert(node.sType != static_cast<VkStructureType>(0) &&
+		       "Features struct sType must be filled with the struct's "
+		       "corresponding VkStructureType enum");
 		assert(
-			node.sType != VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2 &&
-			"Do not pass VkPhysicalDeviceFeatures2 as a required extension feature structure. An "
-			"instance of this is managed internally for selection criteria and device creation.");
+		    node.sType != VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2 &&
+		    "Do not pass VkPhysicalDeviceFeatures2 as a required extension feature structure. An "
+		    "instance of this is managed internally for selection criteria and device creation.");
 	}
 #endif
 

@@ -121,8 +121,7 @@ struct GenericFeaturesPNextNode {
 
 	GenericFeaturesPNextNode();
 
-	template <typename T>
-	GenericFeaturesPNextNode(T const& features) noexcept {
+	template <typename T> GenericFeaturesPNextNode(T const& features) noexcept {
 		*reinterpret_cast<T*>(this) = features;
 	}
 
@@ -349,7 +348,7 @@ class InstanceBuilder {
 		// VkInstanceCreateInfo
 		std::vector<const char*> layers;
 		std::vector<const char*> extensions;
-		VkInstanceCreateFlags flags = 0;
+		VkInstanceCreateFlags flags = static_cast<VkInstanceCreateFlags>(0);
 		std::vector<VkBaseOutStructure*> pNext_elements;
 
 		// debug callback - use the default so it is not nullptr
@@ -640,7 +639,7 @@ class DeviceBuilder {
 	private:
 	PhysicalDevice physical_device;
 	struct DeviceInfo {
-		VkDeviceCreateFlags flags = 0;
+		VkDeviceCreateFlags flags = static_cast<VkDeviceCreateFlags>(0);
 		std::vector<VkBaseOutStructure*> pNext_chain;
 		std::vector<CustomQueueDescription> queue_descriptions;
 		VkAllocationCallbacks* allocation_callbacks = VK_NULL_HANDLE;

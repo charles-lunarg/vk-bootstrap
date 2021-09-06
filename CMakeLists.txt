@@ -3,13 +3,13 @@ project(VulkanBootstrap)
 
 option(VK_BOOTSTRAP_WERROR "Enable warnings as errors during compilation" OFF)
 
-add_library(vk-boostrap-vulkan-headers INTERFACE)
+add_library(vk-bootstrap-vulkan-headers INTERFACE)
 
 set(VK_BOOTSTRAP_VULKAN_HEADER_DIR "" CACHE STRING "Specify the location of the Vulkan-Headers include directory.")
 mark_as_advanced(VK_BOOTSTRAP_VULKAN_HEADER_DIR)
 
 if(NOT "${VK_BOOTSTRAP_VULKAN_HEADER_DIR}" STREQUAL "")
-  target_include_directories(vk-boostrap-vulkan-headers INTERFACE ${VK_BOOTSTRAP_VULKAN_HEADER_DIR})
+  target_include_directories(vk-bootstrap-vulkan-headers INTERFACE $<BUILD_INTERFACE:${VK_BOOTSTRAP_VULKAN_HEADER_DIR}>)
 else ()
   find_package(Vulkan QUIET)
 
@@ -21,9 +21,9 @@ else ()
           GIT_TAG        v1.2.171
       )
       FetchContent_MakeAvailable(VulkanHeaders)
-      target_link_libraries(vk-boostrap-vulkan-headers INTERFACE Vulkan::Headers)
+      target_link_libraries(vk-bootstrap-vulkan-headers INTERFACE Vulkan::Headers)
   else()
-      set_target_properties(vk-boostrap-vulkan-headers PROPERTIES INTERFACE_INCLUDE_DIRECTORIES ${Vulkan_INCLUDE_DIR})
+      set_target_properties(vk-bootstrap-vulkan-headers PROPERTIES INTERFACE_INCLUDE_DIRECTORIES ${Vulkan_INCLUDE_DIR})
   endif()
 endif()
 
@@ -64,11 +64,10 @@ endif()
 target_include_directories(vk-bootstrap PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
     $<INSTALL_INTERFACE:include>)
-target_include_directories(vk-bootstrap PUBLIC src)
 target_link_libraries(vk-bootstrap
         PRIVATE
         vk-bootstrap-compiler-warnings
-        vk-boostrap-vulkan-headers
+        vk-bootstrap-vulkan-headers
         ${CMAKE_DL_LIBS})
 target_compile_features(vk-bootstrap PUBLIC cxx_std_14)
 

@@ -4,7 +4,7 @@ target_link_libraries(vk-bootstrap-triangle
         glfw
         vk-bootstrap
         vk-bootstrap-compiler-warnings
-        vk-boostrap-vulkan-headers)
+        vk-bootstrap-vulkan-headers)
 target_include_directories(vk-bootstrap-triangle PRIVATE ${CMAKE_CURRENT_BINARY_DIR}) #path to build directory for shaders
 
 add_custom_command(

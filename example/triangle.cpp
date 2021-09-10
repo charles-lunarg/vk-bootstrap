@@ -55,9 +55,9 @@ int device_initialization (Init& init) {
 	}
 	init.instance = instance_ret.value ();
 
-    init.vk_lib.init(init.instance.instance);
+    init.vk_lib.init(init.instance);
 
-	init.surface = create_surface_glfw (init.instance.instance, init.window);
+	init.surface = create_surface_glfw (init.instance, init.window);
 
 	vkb::PhysicalDeviceSelector phys_device_selector (init.instance);
 	auto phys_device_ret = phys_device_selector.set_surface (init.surface).select ();
@@ -74,7 +74,7 @@ int device_initialization (Init& init) {
 		return -1;
 	}
 	init.device = device_ret.value ();
-    init.vk_lib.init(init.device.device);
+    init.vk_lib.init(init.device);
 
 	return 0;
 }
@@ -146,7 +146,7 @@ int create_render_pass (Init& init, RenderData& data) {
 	render_pass_info.dependencyCount = 1;
 	render_pass_info.pDependencies = &dependency;
 
-	if (init->vkCreateRenderPass (init.device.device, &render_pass_info, nullptr, &data.render_pass) != VK_SUCCESS) {
+	if (init->vkCreateRenderPass (init.device, &render_pass_info, nullptr, &data.render_pass) != VK_SUCCESS) {
 		std::cout << "failed to create render pass\n";
 		return -1; // failed to create render pass!
 	}
@@ -178,7 +178,7 @@ VkShaderModule createShaderModule (Init& init, const std::vector<char>& code) {
 	create_info.pCode = reinterpret_cast<const uint32_t*> (code.data ());
 
 	VkShaderModule shaderModule;
-	if (init->vkCreateShaderModule (init.device.device, &create_info, nullptr, &shaderModule) != VK_SUCCESS) {
+	if (init->vkCreateShaderModule (init.device, &create_info, nullptr, &shaderModule) != VK_SUCCESS) {
 		return VK_NULL_HANDLE; // failed to create shader module
 	}
 
@@ -276,7 +276,7 @@ int create_graphics_pipeline (Init& init, RenderData& data) {
 	pipeline_layout_info.pushConstantRangeCount = 0;
 
 	if (init->vkCreatePipelineLayout (
-	        init.device.device, &pipeline_layout_info, nullptr, &data.pipeline_layout) != VK_SUCCESS) {
+	        init.device, &pipeline_layout_info, nullptr, &data.pipeline_layout) != VK_SUCCESS) {
 		std::cout << "failed to create pipeline layout\n";
 		return -1; // failed to create pipeline layout
 	}
@@ -305,13 +305,13 @@ int create_graphics_pipeline (Init& init, RenderData& data) {
 	pipeline_info.basePipelineHandle = VK_NULL_HANDLE;
 
 	if (init->vkCreateGraphicsPipelines (
-	        init.device.device, VK_NULL_HANDLE, 1, &pipeline_info, nullptr, &data.graphics_pipeline) != VK_SUCCESS) {
+	        init.device, VK_NULL_HANDLE, 1, &pipeline_info, nullptr, &data.graphics_pipeline) != VK_SUCCESS) {
 		std::cout << "failed to create pipline\n";
 		return -1; // failed to create graphics pipeline
 	}
 
-	init->vkDestroyShaderModule (init.device.device, frag_module, nullptr);
-	init->vkDestroyShaderModule (init.device.device, vert_module, nullptr);
+	init->vkDestroyShaderModule (init.device, frag_module, nullptr);
+	init->vkDestroyShaderModule (init.device, vert_module, nullptr);
 	return 0;
 }
 
@@ -333,7 +333,7 @@ int create_framebuffers (Init& init, RenderData& data) {
 		framebuffer_info.height = init.swapchain.extent.height;
 		framebuffer_info.layers = 1;
 
-		if (init->vkCreateFramebuffer (init.device.device, &framebuffer_info, nullptr, &data.framebuffers[i]) != VK_SUCCESS) {
+		if (init->vkCreateFramebuffer (init.device, &framebuffer_info, nullptr, &data.framebuffers[i]) != VK_SUCCESS) {
 			return -1; // failed to create framebuffer
 		}
 	}
@@ -345,7 +345,7 @@ int create_command_pool (Init& init, RenderData& data) {
 	pool_info.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
 	pool_info.queueFamilyIndex = init.device.get_queue_index (vkb::QueueType::graphics).value ();
 
-	if (init->vkCreateCommandPool (init.device.device, &pool_info, nullptr, &data.command_pool) != VK_SUCCESS) {
+	if (init->vkCreateCommandPool (init.device, &pool_info, nullptr, &data.command_pool) != VK_SUCCESS) {
 		std::cout << "failed to create command pool\n";
 		return -1; // failed to create command pool
 	}
@@ -361,7 +361,7 @@ int create_command_buffers (Init& init, RenderData& data) {
 	allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
 	allocInfo.commandBufferCount = (uint32_t)data.command_buffers.size ();
 
-	if (init->vkAllocateCommandBuffers (init.device.device, &allocInfo, data.command_buffers.data ()) != VK_SUCCESS) {
+	if (init->vkAllocateCommandBuffers (init.device, &allocInfo, data.command_buffers.data ()) != VK_SUCCESS) {
 		return -1; // failed to allocate command buffers;
 	}
 
@@ -428,9 +428,9 @@ int create_sync_objects (Init& init, RenderData& data) {
 	fence_info.flags = VK_FENCE_CREATE_SIGNALED_BIT;
 
 	for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
-		if (init->vkCreateSemaphore (init.device.device, &semaphore_info, nullptr, &data.available_semaphores[i]) != VK_SUCCESS ||
-		    init->vkCreateSemaphore (init.device.device, &semaphore_info, nullptr, &data.finished_semaphore[i]) != VK_SUCCESS ||
-		    init->vkCreateFence (init.device.device, &fence_info, nullptr, &data.in_flight_fences[i]) != VK_SUCCESS) {
+		if (init->vkCreateSemaphore (init.device, &semaphore_info, nullptr, &data.available_semaphores[i]) != VK_SUCCESS ||
+		    init->vkCreateSemaphore (init.device, &semaphore_info, nullptr, &data.finished_semaphore[i]) != VK_SUCCESS ||
+		    init->vkCreateFence (init.device, &fence_info, nullptr, &data.in_flight_fences[i]) != VK_SUCCESS) {
 			std::cout << "failed to create sync objects\n";
 			return -1; // failed to create synchronization objects for a frame
 		}
@@ -439,12 +439,12 @@ int create_sync_objects (Init& init, RenderData& data) {
 }
 
 int recreate_swapchain (Init& init, RenderData& data) {
-	init->vkDeviceWaitIdle (init.device.device);
+	init->vkDeviceWaitIdle (init.device);
 
-	init->vkDestroyCommandPool (init.device.device, data.command_pool, nullptr);
+	init->vkDestroyCommandPool (init.device, data.command_pool, nullptr);
 
 	for (auto framebuffer : data.framebuffers) {
-		init->vkDestroyFramebuffer (init.device.device, framebuffer, nullptr);
+		init->vkDestroyFramebuffer (init.device, framebuffer, nullptr);
 	}
 
 	init.swapchain.destroy_image_views (data.swapchain_image_views);
@@ -457,11 +457,11 @@ int recreate_swapchain (Init& init, RenderData& data) {
 }
 
 int draw_frame (Init& init, RenderData& data) {
-	init->vkWaitForFences (init.device.device, 1, &data.in_flight_fences[data.current_frame], VK_TRUE, UINT64_MAX);
+	init->vkWaitForFences (init.device, 1, &data.in_flight_fences[data.current_frame], VK_TRUE, UINT64_MAX);
 
 	uint32_t image_index = 0;
-	VkResult result = init->vkAcquireNextImageKHR (init.device.device,
-	    init.swapchain.swapchain,
+	VkResult result = init->vkAcquireNextImageKHR (init.device,
+	    init.swapchain,
 	    UINT64_MAX,
 	    data.available_semaphores[data.current_frame],
 	    VK_NULL_HANDLE,
@@ -475,7 +475,7 @@ int draw_frame (Init& init, RenderData& data) {
 	}
 
 	if (data.image_in_flight[image_index] != VK_NULL_HANDLE) {
-		init->vkWaitForFences (init.device.device, 1, &data.image_in_flight[image_index], VK_TRUE, UINT64_MAX);
+		init->vkWaitForFences (init.device, 1, &data.image_in_flight[image_index], VK_TRUE, UINT64_MAX);
 	}
 	data.image_in_flight[image_index] = data.in_flight_fences[data.current_frame];
 
@@ -495,7 +495,7 @@ int draw_frame (Init& init, RenderData& data) {
 	submitInfo.signalSemaphoreCount = 1;
 	submitInfo.pSignalSemaphores = signal_semaphores;
 
-	init->vkResetFences (init.device.device, 1, &data.in_flight_fences[data.current_frame]);
+	init->vkResetFences (init.device, 1, &data.in_flight_fences[data.current_frame]);
 
 	if (init->vkQueueSubmit (data.graphics_queue, 1, &submitInfo, data.in_flight_fences[data.current_frame]) != VK_SUCCESS) {
 		std::cout << "failed to submit draw command buffer\n";
@@ -508,7 +508,7 @@ int draw_frame (Init& init, RenderData& data) {
 	present_info.waitSemaphoreCount = 1;
 	present_info.pWaitSemaphores = signal_semaphores;
 
-	VkSwapchainKHR swapChains[] = { init.swapchain.swapchain };
+	VkSwapchainKHR swapChains[] = { init.swapchain };
 	present_info.swapchainCount = 1;
 	present_info.pSwapchains = swapChains;
 
@@ -528,20 +528,20 @@ int draw_frame (Init& init, RenderData& data) {
 
 void cleanup (Init& init, RenderData& data) {
 	for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
-		init->vkDestroySemaphore (init.device.device, data.finished_semaphore[i], nullptr);
-		init->vkDestroySemaphore (init.device.device, data.available_semaphores[i], nullptr);
-		init->vkDestroyFence (init.device.device, data.in_flight_fences[i], nullptr);
+		init->vkDestroySemaphore (init.device, data.finished_semaphore[i], nullptr);
+		init->vkDestroySemaphore (init.device, data.available_semaphores[i], nullptr);
+		init->vkDestroyFence (init.device, data.in_flight_fences[i], nullptr);
 	}
 
-	init->vkDestroyCommandPool (init.device.device, data.command_pool, nullptr);
+	init->vkDestroyCommandPool (init.device, data.command_pool, nullptr);
 
 	for (auto framebuffer : data.framebuffers) {
-		init->vkDestroyFramebuffer (init.device.device, framebuffer, nullptr);
+		init->vkDestroyFramebuffer (init.device, framebuffer, nullptr);
 	}
 
-	init->vkDestroyPipeline (init.device.device, data.graphics_pipeline, nullptr);
-	init->vkDestroyPipelineLayout (init.device.device, data.pipeline_layout, nullptr);
-	init->vkDestroyRenderPass (init.device.device, data.render_pass, nullptr);
+	init->vkDestroyPipeline (init.device, data.graphics_pipeline, nullptr);
+	init->vkDestroyPipelineLayout (init.device, data.pipeline_layout, nullptr);
+	init->vkDestroyRenderPass (init.device, data.render_pass, nullptr);
 
 	init.swapchain.destroy_image_views (data.swapchain_image_views);
 
@@ -574,7 +574,7 @@ int main () {
 			return -1;
 		}
 	}
-	init->vkDeviceWaitIdle (init.device.device);
+	init->vkDeviceWaitIdle (init.device);
 
 	cleanup (init, render_data);
 	return 0;

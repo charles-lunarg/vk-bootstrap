@@ -236,6 +236,10 @@ struct Instance {
 	PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr = nullptr;
 	PFN_vkGetDeviceProcAddr fp_vkGetDeviceProcAddr = nullptr;
 
+	// A conversion function which allows this Instance to be used
+	// in places where VkInstance would have been used.
+	operator VkInstance() const;
+
 	private:
 	bool headless = false;
 	bool supports_properties2_ext = false;
@@ -411,6 +415,10 @@ struct PhysicalDevice {
 
 	// Advanced: Get the VkQueueFamilyProperties of the device if special queue setup is needed
 	std::vector<VkQueueFamilyProperties> get_queue_families() const;
+
+	// A conversion function which allows this PhysicalDevice to be used
+	// in places where VkPhysicalDevice would have been used.
+	operator VkPhysicalDevice() const;
 
 	private:
 	uint32_t instance_version = VK_MAKE_VERSION(1, 0, 0);
@@ -596,6 +604,10 @@ struct Device {
 	// Return a loaded dispatch table
 	DispatchTable make_table() const;
 
+	// A conversion function which allows this Device to be used
+	// in places where VkDevice would have been used.
+	operator VkDevice() const;
+
 	private:
 	struct {
 		PFN_vkGetDeviceQueue fp_vkGetDeviceQueue = nullptr;
@@ -662,6 +674,10 @@ struct Swapchain {
 	// VkImageViews must be destroyed.
 	detail::Result<std::vector<VkImageView>> get_image_views();
 	void destroy_image_views(std::vector<VkImageView> const& image_views);
+
+	// A conversion function which allows this Swapchain to be used
+	// in places where VkSwapchainKHR would have been used.
+	operator VkSwapchainKHR() const;
 
 	private:
 	struct {

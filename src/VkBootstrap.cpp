@@ -550,6 +550,10 @@ void destroy_instance(Instance instance) {
 	}
 }
 
+Instance::operator VkInstance() const {
+	return this->instance;
+}
+
 InstanceBuilder::InstanceBuilder(PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr) {
 	info.fp_vkGetInstanceProcAddr = fp_vkGetInstanceProcAddr;
 }
@@ -1329,6 +1333,10 @@ std::vector<VkQueueFamilyProperties> PhysicalDevice::get_queue_families() const 
 	return queue_families;
 }
 
+PhysicalDevice::operator VkPhysicalDevice() const {
+	return this->physical_device;
+}
+
 // ---- Queues ---- //
 
 detail::Result<uint32_t> Device::get_queue_index(QueueType type) const {
@@ -1398,6 +1406,10 @@ detail::Result<VkQueue> Device::get_dedicated_queue(QueueType type) const {
 DispatchTable Device::make_table() const { return { device, fp_vkGetDeviceProcAddr }; }
 
 // ---- Device ---- //
+
+Device::operator VkDevice() const {
+	return this->device;
+}
 
 CustomQueueDescription::CustomQueueDescription(uint32_t index, uint32_t count, std::vector<float> priorities)
 : index(index), count(count), priorities(priorities) {
@@ -1825,6 +1837,9 @@ void Swapchain::destroy_image_views(std::vector<VkImageView> const& image_views)
 	for (auto& image_view : image_views) {
 		internal_table.fp_vkDestroyImageView(device, image_view, allocation_callbacks);
 	}
+}
+Swapchain::operator VkSwapchainKHR() const {
+	return this->swapchain;
 }
 SwapchainBuilder& SwapchainBuilder::set_old_swapchain(VkSwapchainKHR old_swapchain) {
 	info.old_swapchain = old_swapchain;

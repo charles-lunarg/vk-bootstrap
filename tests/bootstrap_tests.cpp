@@ -491,6 +491,33 @@ TEST_CASE("Querying Required Extension Features", "[VkBootstrap.select_features]
 	}
 }
 
+TEST_CASE("Passing vkb classes to Vulkan handles", "[VkBootstrap.pass_class_to_handle") {
+	GIVEN("A working instance") {
+		auto instance = get_instance();
+
+		// Check if we can get instance functions.
+		PFN_vkVoidFunction instanceFunction = instance.fp_vkGetInstanceProcAddr(instance, "vkSetDebugUtilsObjectNameEXT"); // validation layers should be provided.
+		REQUIRE(instanceFunction != NULL);
+
+		auto window = create_window_glfw("Conversion operators");
+		auto surface = create_surface_glfw(instance, window);
+
+		vkb::PhysicalDeviceSelector physicalDeviceSelector(instance);
+		auto physicalDevice = physicalDeviceSelector
+			.add_required_extension(VK_KHR_SWAPCHAIN_EXTENSION_NAME)
+			.set_surface(surface)
+			.select();
+		REQUIRE(physicalDevice.has_value());
+		vkb::DeviceBuilder deviceBuilder(physicalDevice.value());
+		auto device = deviceBuilder.build();
+		REQUIRE(device.has_value());
+
+		// Check if we can get a device function address, passing vkb::Device to the function.
+		PFN_vkVoidFunction deviceFunction = instance.fp_vkGetDeviceProcAddr(device.value(), "vkAcquireNextImageKHR");
+		REQUIRE(deviceFunction != NULL);
+	}
+}
+
 #if defined(VK_API_VERSION_1_1)
 TEST_CASE("Querying Required Extension Features in 1.1", "[VkBootstrap.version]") {
 	GIVEN("A working instance") {

@@ -29,7 +29,7 @@ TEST_CASE("TargetBaseVulkanDesktop", "[VkBootstrap.feature_config]") {
 		}
 	}
 
-	destroy_surface(*instance_ret, surface);
+	vkb::destroy_surface(instance, surface);
 	vkb::destroy_instance(instance);
 	destroy_window_glfw(window);
 }

@@ -36,8 +36,9 @@ namespace vkb {
 
 namespace detail {
 
-GenericFeaturesPNextNode::GenericFeaturesPNextNode()
-: fields() {} // zero initializes the array of fields
+GenericFeaturesPNextNode::GenericFeaturesPNextNode() {
+	memset(this, UINT8_MAX, sizeof(GenericFeaturesPNextNode));
+}
 
 bool GenericFeaturesPNextNode::match(
     GenericFeaturesPNextNode const& requested, GenericFeaturesPNextNode const& supported) noexcept {

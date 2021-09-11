@@ -120,10 +120,12 @@ template <typename T> class Result {
 
 struct GenericFeaturesPNextNode {
 
+	static const uint32_t field_capacity = 256;
+
 	GenericFeaturesPNextNode();
 
 	template <typename T> GenericFeaturesPNextNode(T const& features) noexcept {
-		memset(this, UINT8_MAX, sizeof(GenericFeaturesPNextNode));
+		memset(fields, UINT8_MAX, sizeof(VkBool32) * field_capacity);
 		memcpy(this, &features, sizeof(T));
 	}
 
@@ -131,7 +133,6 @@ struct GenericFeaturesPNextNode {
 
 	VkStructureType sType = static_cast<VkStructureType>(0);
 	void* pNext = nullptr;
-	static const uint32_t field_capacity = 256;
 	VkBool32 fields[field_capacity];
 };
 

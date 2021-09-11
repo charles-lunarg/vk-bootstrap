@@ -37,7 +37,7 @@ namespace vkb {
 namespace detail {
 
 GenericFeaturesPNextNode::GenericFeaturesPNextNode() {
-	memset(this, UINT8_MAX, sizeof(GenericFeaturesPNextNode));
+	memset(fields, UINT8_MAX, sizeof(VkBool32) * field_capacity);
 }
 
 bool GenericFeaturesPNextNode::match(

@@ -18,6 +18,7 @@
 
 #include <cassert>
 #include <cstdio>
+#include <cstring>
 
 #include <vector>
 #include <system_error>
@@ -122,7 +123,8 @@ struct GenericFeaturesPNextNode {
 	GenericFeaturesPNextNode();
 
 	template <typename T> GenericFeaturesPNextNode(T const& features) noexcept {
-		*reinterpret_cast<T*>(this) = features;
+		memset(this, UINT8_MAX, sizeof(GenericFeaturesPNextNode));
+		memcpy(this, &features, sizeof(T));
 	}
 
 	static bool match(GenericFeaturesPNextNode const& requested, GenericFeaturesPNextNode const& supported) noexcept;

@@ -615,7 +615,8 @@ detail::Result<Instance> InstanceBuilder::build() const {
 	}
 	bool supports_properties2_ext = detail::check_extension_supported(
 	    system.available_extensions, VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME);
-	if (supports_properties2_ext) {
+		
+	if (supports_properties2_ext && api_version < VK_API_VERSION_1_1) {
 		extensions.push_back(VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME);
 	}
 

@@ -749,16 +749,32 @@ InstanceBuilder& InstanceBuilder::set_engine_name(const char* engine_name) {
 	info.engine_name = engine_name;
 	return *this;
 }
+InstanceBuilder& InstanceBuilder::set_app_version(uint32_t app_version) {
+	info.application_version = app_version;
+	return *this;
+}
 InstanceBuilder& InstanceBuilder::set_app_version(uint32_t major, uint32_t minor, uint32_t patch) {
 	info.application_version = VK_MAKE_VERSION(major, minor, patch);
+	return *this;
+}
+InstanceBuilder& InstanceBuilder::set_engine_version(uint32_t engine_version) {
+	info.engine_version = engine_version;
 	return *this;
 }
 InstanceBuilder& InstanceBuilder::set_engine_version(uint32_t major, uint32_t minor, uint32_t patch) {
 	info.engine_version = VK_MAKE_VERSION(major, minor, patch);
 	return *this;
 }
+InstanceBuilder& InstanceBuilder::require_api_version(uint32_t required_api_version) {
+	info.required_api_version = required_api_version;
+	return *this;
+}
 InstanceBuilder& InstanceBuilder::require_api_version(uint32_t major, uint32_t minor, uint32_t patch) {
 	info.required_api_version = VK_MAKE_VERSION(major, minor, patch);
+	return *this;
+}
+InstanceBuilder& InstanceBuilder::desire_api_version(uint32_t preferred_vulkan_version) {
+	info.desired_api_version = preferred_vulkan_version;
 	return *this;
 }
 InstanceBuilder& InstanceBuilder::desire_api_version(uint32_t major, uint32_t minor, uint32_t patch) {

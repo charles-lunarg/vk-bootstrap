@@ -290,12 +290,28 @@ class InstanceBuilder {
 	InstanceBuilder& set_app_name(const char* app_name);
 	// Sets the name of the engine. Defaults to "" if none is provided.
 	InstanceBuilder& set_engine_name(const char* engine_name);
+
+	// Sets the version of the application.
+	// Should be constructed with VK_MAKE_VERSION or VK_MAKE_API_VERSION.
+	InstanceBuilder& set_app_version(uint32_t app_version);
 	// Sets the (major, minor, patch) version of the application.
 	InstanceBuilder& set_app_version(uint32_t major, uint32_t minor, uint32_t patch = 0);
+
+	// Sets the version of the engine.
+	// Should be constructed with VK_MAKE_VERSION or VK_MAKE_API_VERSION.
+	InstanceBuilder& set_engine_version(uint32_t engine_version);
 	// Sets the (major, minor, patch) version of the engine.
 	InstanceBuilder& set_engine_version(uint32_t major, uint32_t minor, uint32_t patch = 0);
+
+	// Require a vulkan instance API version. Will fail to create if this version isn't available.
+	// Should be constructed with VK_MAKE_VERSION or VK_MAKE_API_VERSION.
+	InstanceBuilder& require_api_version(uint32_t required_api_version);
 	// Require a vulkan instance API version. Will fail to create if this version isn't available.
 	InstanceBuilder& require_api_version(uint32_t major, uint32_t minor, uint32_t patch = 0);
+
+	// Prefer a vulkan instance API version. If the desired version isn't available, it will use the highest version available.
+	// Should be constructed with VK_MAKE_VERSION or VK_MAKE_API_VERSION.
+	InstanceBuilder& desire_api_version(uint32_t preferred_vulkan_version);
 	// Prefer a vulkan instance API version. If the desired version isn't available, it will use the highest version available.
 	InstanceBuilder& desire_api_version(uint32_t major, uint32_t minor, uint32_t patch = 0);
 

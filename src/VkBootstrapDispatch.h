@@ -552,7 +552,7 @@ struct DispatchTable {
 #if (defined(VK_NV_ray_tracing))
 		fp_vkCmdTraceRaysNV = (PFN_vkCmdTraceRaysNV)procAddr(device, "vkCmdTraceRaysNV");
 #endif
-#if (defined(VK_KHR_ray_tracing_pipeline)) || (defined(VK_NV_ray_tracing))
+#if (defined(VK_KHR_ray_tracing_pipeline))
 		fp_vkGetRayTracingShaderGroupHandlesKHR = (PFN_vkGetRayTracingShaderGroupHandlesKHR)procAddr(device, "vkGetRayTracingShaderGroupHandlesKHR");
 #endif
 #if (defined(VK_KHR_ray_tracing_pipeline))
@@ -927,7 +927,7 @@ struct DispatchTable {
 #if (defined(VK_VERSION_1_2)) || (defined(VK_AMD_draw_indirect_count))
 		fp_vkCmdDrawIndexedIndirectCountAMD = (PFN_vkCmdDrawIndexedIndirectCountAMD)procAddr(device, "vkCmdDrawIndexedIndirectCountAMD");
 #endif
-#if (defined(VK_KHR_ray_tracing_pipeline)) || (defined(VK_NV_ray_tracing))
+#if (defined(VK_NV_ray_tracing))
 		fp_vkGetRayTracingShaderGroupHandlesNV = (PFN_vkGetRayTracingShaderGroupHandlesNV)procAddr(device, "vkGetRayTracingShaderGroupHandlesNV");
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_buffer_device_address))
@@ -1972,7 +1972,7 @@ struct DispatchTable {
 		fp_vkCmdTraceRaysNV(commandBuffer, raygenShaderBindingTableBuffer, raygenShaderBindingOffset, missShaderBindingTableBuffer, missShaderBindingOffset, missShaderBindingStride, hitShaderBindingTableBuffer, hitShaderBindingOffset, hitShaderBindingStride, callableShaderBindingTableBuffer, callableShaderBindingOffset, callableShaderBindingStride, width, height, depth);
 	}
 #endif
-#if (defined(VK_KHR_ray_tracing_pipeline)) || (defined(VK_NV_ray_tracing))
+#if (defined(VK_KHR_ray_tracing_pipeline))
 	VkResult getRayTracingShaderGroupHandlesKHR(VkPipeline pipeline, uint32_t firstGroup, uint32_t groupCount, size_t dataSize, void* pData) const noexcept {
 		return fp_vkGetRayTracingShaderGroupHandlesKHR(device, pipeline, firstGroup, groupCount, dataSize, pData);
 	}
@@ -2597,7 +2597,7 @@ struct DispatchTable {
 		fp_vkCmdDrawIndexedIndirectCountAMD(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
 	}
 #endif
-#if (defined(VK_KHR_ray_tracing_pipeline)) || (defined(VK_NV_ray_tracing))
+#if (defined(VK_NV_ray_tracing))
 	VkResult getRayTracingShaderGroupHandlesNV(VkPipeline pipeline, uint32_t firstGroup, uint32_t groupCount, size_t dataSize, void* pData) const noexcept {
 		return fp_vkGetRayTracingShaderGroupHandlesNV(device, pipeline, firstGroup, groupCount, dataSize, pData);
 	}
@@ -3141,8 +3141,8 @@ struct DispatchTable {
 #if (defined(VK_NV_ray_tracing))
 	PFN_vkCmdTraceRaysNV fp_vkCmdTraceRaysNV = nullptr;
 #endif
-#if (defined(VK_KHR_ray_tracing_pipeline)) || (defined(VK_NV_ray_tracing))
-	PFN_vkGetRayTracingShaderGroupHandlesNV fp_vkGetRayTracingShaderGroupHandlesNV = nullptr;
+#if (defined(VK_KHR_ray_tracing_pipeline))
+	PFN_vkGetRayTracingShaderGroupHandlesKHR fp_vkGetRayTracingShaderGroupHandlesKHR = nullptr;
 #endif
 #if (defined(VK_KHR_ray_tracing_pipeline))
 	PFN_vkGetRayTracingCaptureReplayShaderGroupHandlesKHR fp_vkGetRayTracingCaptureReplayShaderGroupHandlesKHR = nullptr;
@@ -3516,7 +3516,7 @@ struct DispatchTable {
 #if (defined(VK_VERSION_1_2)) || (defined(VK_AMD_draw_indirect_count))
 	PFN_vkCmdDrawIndexedIndirectCountAMD fp_vkCmdDrawIndexedIndirectCountAMD = nullptr;
 #endif
-#if (defined(VK_KHR_ray_tracing_pipeline)) || (defined(VK_NV_ray_tracing))
+#if (defined(VK_NV_ray_tracing))
 	PFN_vkGetRayTracingShaderGroupHandlesNV fp_vkGetRayTracingShaderGroupHandlesNV = nullptr;
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_buffer_device_address))

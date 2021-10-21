@@ -1908,7 +1908,7 @@ struct DispatchTable {
 	}
 #endif
 #if (defined(VK_NV_ray_tracing))
-	void cmdCopyAccelerationStructureNV(VkCommandBuffer commandBuffer, VkAccelerationStructureNV dst, VkAccelerationStructureNV src, VkCopyAccelerationStructureModeKHR mode) const noexcept {
+	void cmdCopyAccelerationStructureNV(VkCommandBuffer commandBuffer, VkAccelerationStructureNV dst, VkAccelerationStructureNV src, VkCopyAccelerationStructureModeNV mode) const noexcept {
 		fp_vkCmdCopyAccelerationStructureNV(commandBuffer, dst, src, mode);
 	}
 #endif

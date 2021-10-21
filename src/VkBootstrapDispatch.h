@@ -607,7 +607,7 @@ struct DispatchTable {
 		fp_vkGetBufferOpaqueCaptureAddress = (PFN_vkGetBufferOpaqueCaptureAddressKHR)procAddr(device, "vkGetBufferOpaqueCaptureAddressKHR");
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_EXT_buffer_device_address))
-		fp_vkGetBufferDeviceAddress = (PFN_vkGetBufferDeviceAddressKHR)procAddr(device, "vkGetBufferDeviceAddressKHR");
+		fp_vkGetBufferDeviceAddress = (PFN_vkGetBufferDeviceAddressEXT)procAddr(device, "vkGetBufferDeviceAddressEXT");
 #endif
 #if (defined(VK_INTEL_performance_query))
 		fp_vkInitializePerformanceApiINTEL = (PFN_vkInitializePerformanceApiINTEL)procAddr(device, "vkInitializePerformanceApiINTEL");
@@ -2608,7 +2608,7 @@ struct DispatchTable {
 	}
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_EXT_buffer_device_address))
-	VkDeviceAddress getBufferDeviceAddressEXT(const VkBufferDeviceAddressInfoKHR* pInfo) const noexcept {
+	VkDeviceAddress getBufferDeviceAddressEXT(const VkBufferDeviceAddressInfoEXT* pInfo) const noexcept {
 		return fp_vkGetBufferDeviceAddressEXT(device, pInfo);
 	}
 #endif
@@ -3196,7 +3196,7 @@ struct DispatchTable {
 	PFN_vkGetBufferOpaqueCaptureAddressKHR fp_vkGetBufferOpaqueCaptureAddress = nullptr;
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_EXT_buffer_device_address))
-	PFN_vkGetBufferDeviceAddressKHR fp_vkGetBufferDeviceAddress = nullptr;
+	PFN_vkGetBufferDeviceAddressEXT fp_vkGetBufferDeviceAddress = nullptr;
 #endif
 #if (defined(VK_INTEL_performance_query))
 	PFN_vkInitializePerformanceApiINTEL fp_vkInitializePerformanceApiINTEL = nullptr;

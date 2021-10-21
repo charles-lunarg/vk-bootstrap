@@ -61,7 +61,7 @@ struct DispatchTable {
 		fp_vkDestroyQueryPool = (PFN_vkDestroyQueryPool)procAddr(device, "vkDestroyQueryPool");
 		fp_vkGetQueryPoolResults = (PFN_vkGetQueryPoolResults)procAddr(device, "vkGetQueryPoolResults");
 #if (defined(VK_VERSION_1_2)) || (defined(VK_EXT_host_query_reset))
-		fp_vkResetQueryPool = (PFN_vkResetQueryPool)procAddr(device, "vkResetQueryPoolEXT");
+		fp_vkResetQueryPool = (PFN_vkResetQueryPoolEXT)procAddr(device, "vkResetQueryPoolEXT");
 #endif
 		fp_vkCreateBuffer = (PFN_vkCreateBuffer)procAddr(device, "vkCreateBuffer");
 		fp_vkDestroyBuffer = (PFN_vkDestroyBuffer)procAddr(device, "vkDestroyBuffer");
@@ -418,25 +418,25 @@ struct DispatchTable {
 		fp_vkCmdWriteBufferMarkerAMD = (PFN_vkCmdWriteBufferMarkerAMD)procAddr(device, "vkCmdWriteBufferMarkerAMD");
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_create_renderpass2))
-		fp_vkCreateRenderPass2 = (PFN_vkCreateRenderPass2)procAddr(device, "vkCreateRenderPass2KHR");
+		fp_vkCreateRenderPass2 = (PFN_vkCreateRenderPass2KHR)procAddr(device, "vkCreateRenderPass2KHR");
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_create_renderpass2))
-		fp_vkCmdBeginRenderPass2 = (PFN_vkCmdBeginRenderPass2)procAddr(device, "vkCmdBeginRenderPass2KHR");
+		fp_vkCmdBeginRenderPass2 = (PFN_vkCmdBeginRenderPass2KHR)procAddr(device, "vkCmdBeginRenderPass2KHR");
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_create_renderpass2))
-		fp_vkCmdNextSubpass2 = (PFN_vkCmdNextSubpass2)procAddr(device, "vkCmdNextSubpass2KHR");
+		fp_vkCmdNextSubpass2 = (PFN_vkCmdNextSubpass2KHR)procAddr(device, "vkCmdNextSubpass2KHR");
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_create_renderpass2))
-		fp_vkCmdEndRenderPass2 = (PFN_vkCmdEndRenderPass2)procAddr(device, "vkCmdEndRenderPass2KHR");
+		fp_vkCmdEndRenderPass2 = (PFN_vkCmdEndRenderPass2KHR)procAddr(device, "vkCmdEndRenderPass2KHR");
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_timeline_semaphore))
-		fp_vkGetSemaphoreCounterValue = (PFN_vkGetSemaphoreCounterValue)procAddr(device, "vkGetSemaphoreCounterValueKHR");
+		fp_vkGetSemaphoreCounterValue = (PFN_vkGetSemaphoreCounterValueKHR)procAddr(device, "vkGetSemaphoreCounterValueKHR");
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_timeline_semaphore))
-		fp_vkWaitSemaphores = (PFN_vkWaitSemaphores)procAddr(device, "vkWaitSemaphoresKHR");
+		fp_vkWaitSemaphores = (PFN_vkWaitSemaphoresKHR)procAddr(device, "vkWaitSemaphoresKHR");
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_timeline_semaphore))
-		fp_vkSignalSemaphore = (PFN_vkSignalSemaphore)procAddr(device, "vkSignalSemaphoreKHR");
+		fp_vkSignalSemaphore = (PFN_vkSignalSemaphoreKHR)procAddr(device, "vkSignalSemaphoreKHR");
 #endif
 #if (defined(VK_ANDROID_external_memory_android_hardware_buffer))
 		fp_vkGetAndroidHardwareBufferPropertiesANDROID = (PFN_vkGetAndroidHardwareBufferPropertiesANDROID)procAddr(device, "vkGetAndroidHardwareBufferPropertiesANDROID");
@@ -445,10 +445,10 @@ struct DispatchTable {
 		fp_vkGetMemoryAndroidHardwareBufferANDROID = (PFN_vkGetMemoryAndroidHardwareBufferANDROID)procAddr(device, "vkGetMemoryAndroidHardwareBufferANDROID");
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_AMD_draw_indirect_count))
-		fp_vkCmdDrawIndirectCount = (PFN_vkCmdDrawIndirectCount)procAddr(device, "vkCmdDrawIndirectCountAMD");
+		fp_vkCmdDrawIndirectCount = (PFN_vkCmdDrawIndirectCountAMD)procAddr(device, "vkCmdDrawIndirectCountAMD");
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_AMD_draw_indirect_count))
-		fp_vkCmdDrawIndexedIndirectCount = (PFN_vkCmdDrawIndexedIndirectCount)procAddr(device, "vkCmdDrawIndexedIndirectCountAMD");
+		fp_vkCmdDrawIndexedIndirectCount = (PFN_vkCmdDrawIndexedIndirectCountAMD)procAddr(device, "vkCmdDrawIndexedIndirectCountAMD");
 #endif
 #if (defined(VK_NV_device_diagnostic_checkpoints))
 		fp_vkCmdSetCheckpointNV = (PFN_vkCmdSetCheckpointNV)procAddr(device, "vkCmdSetCheckpointNV");
@@ -604,10 +604,10 @@ struct DispatchTable {
 		fp_vkGetImageDrmFormatModifierPropertiesEXT = (PFN_vkGetImageDrmFormatModifierPropertiesEXT)procAddr(device, "vkGetImageDrmFormatModifierPropertiesEXT");
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_buffer_device_address))
-		fp_vkGetBufferOpaqueCaptureAddress = (PFN_vkGetBufferOpaqueCaptureAddress)procAddr(device, "vkGetBufferOpaqueCaptureAddressKHR");
+		fp_vkGetBufferOpaqueCaptureAddress = (PFN_vkGetBufferOpaqueCaptureAddressKHR)procAddr(device, "vkGetBufferOpaqueCaptureAddressKHR");
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_EXT_buffer_device_address))
-		fp_vkGetBufferDeviceAddress = (PFN_vkGetBufferDeviceAddress)procAddr(device, "vkGetBufferDeviceAddressKHR");
+		fp_vkGetBufferDeviceAddress = (PFN_vkGetBufferDeviceAddressKHR)procAddr(device, "vkGetBufferDeviceAddressKHR");
 #endif
 #if (defined(VK_INTEL_performance_query))
 		fp_vkInitializePerformanceApiINTEL = (PFN_vkInitializePerformanceApiINTEL)procAddr(device, "vkInitializePerformanceApiINTEL");
@@ -637,7 +637,7 @@ struct DispatchTable {
 		fp_vkGetPerformanceParameterINTEL = (PFN_vkGetPerformanceParameterINTEL)procAddr(device, "vkGetPerformanceParameterINTEL");
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_buffer_device_address))
-		fp_vkGetDeviceMemoryOpaqueCaptureAddress = (PFN_vkGetDeviceMemoryOpaqueCaptureAddress)procAddr(device, "vkGetDeviceMemoryOpaqueCaptureAddressKHR");
+		fp_vkGetDeviceMemoryOpaqueCaptureAddress = (PFN_vkGetDeviceMemoryOpaqueCaptureAddressKHR)procAddr(device, "vkGetDeviceMemoryOpaqueCaptureAddressKHR");
 #endif
 #if (defined(VK_KHR_pipeline_executable_properties))
 		fp_vkGetPipelineExecutablePropertiesKHR = (PFN_vkGetPipelineExecutablePropertiesKHR)procAddr(device, "vkGetPipelineExecutablePropertiesKHR");
@@ -2650,7 +2650,7 @@ struct DispatchTable {
 	PFN_vkDestroyQueryPool fp_vkDestroyQueryPool = nullptr;
 	PFN_vkGetQueryPoolResults fp_vkGetQueryPoolResults = nullptr;
 #if (defined(VK_VERSION_1_2)) || (defined(VK_EXT_host_query_reset))
-	PFN_vkResetQueryPool fp_vkResetQueryPool = nullptr;
+	PFN_vkResetQueryPoolEXT fp_vkResetQueryPool = nullptr;
 #endif
 	PFN_vkCreateBuffer fp_vkCreateBuffer = nullptr;
 	PFN_vkDestroyBuffer fp_vkDestroyBuffer = nullptr;
@@ -3007,25 +3007,25 @@ struct DispatchTable {
 	PFN_vkCmdWriteBufferMarkerAMD fp_vkCmdWriteBufferMarkerAMD = nullptr;
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_create_renderpass2))
-	PFN_vkCreateRenderPass2 fp_vkCreateRenderPass2 = nullptr;
+	PFN_vkCreateRenderPass2KHR fp_vkCreateRenderPass2 = nullptr;
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_create_renderpass2))
-	PFN_vkCmdBeginRenderPass2 fp_vkCmdBeginRenderPass2 = nullptr;
+	PFN_vkCmdBeginRenderPass2KHR fp_vkCmdBeginRenderPass2 = nullptr;
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_create_renderpass2))
-	PFN_vkCmdNextSubpass2 fp_vkCmdNextSubpass2 = nullptr;
+	PFN_vkCmdNextSubpass2KHR fp_vkCmdNextSubpass2 = nullptr;
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_create_renderpass2))
-	PFN_vkCmdEndRenderPass2 fp_vkCmdEndRenderPass2 = nullptr;
+	PFN_vkCmdEndRenderPass2KHR fp_vkCmdEndRenderPass2 = nullptr;
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_timeline_semaphore))
-	PFN_vkGetSemaphoreCounterValue fp_vkGetSemaphoreCounterValue = nullptr;
+	PFN_vkGetSemaphoreCounterValueKHR fp_vkGetSemaphoreCounterValue = nullptr;
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_timeline_semaphore))
-	PFN_vkWaitSemaphores fp_vkWaitSemaphores = nullptr;
+	PFN_vkWaitSemaphoresKHR fp_vkWaitSemaphores = nullptr;
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_timeline_semaphore))
-	PFN_vkSignalSemaphore fp_vkSignalSemaphore = nullptr;
+	PFN_vkSignalSemaphoreKHR fp_vkSignalSemaphore = nullptr;
 #endif
 #if (defined(VK_ANDROID_external_memory_android_hardware_buffer))
 	PFN_vkGetAndroidHardwareBufferPropertiesANDROID fp_vkGetAndroidHardwareBufferPropertiesANDROID = nullptr;
@@ -3034,10 +3034,10 @@ struct DispatchTable {
 	PFN_vkGetMemoryAndroidHardwareBufferANDROID fp_vkGetMemoryAndroidHardwareBufferANDROID = nullptr;
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_AMD_draw_indirect_count))
-	PFN_vkCmdDrawIndirectCount fp_vkCmdDrawIndirectCount = nullptr;
+	PFN_vkCmdDrawIndirectCountAMD fp_vkCmdDrawIndirectCount = nullptr;
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_AMD_draw_indirect_count))
-	PFN_vkCmdDrawIndexedIndirectCount fp_vkCmdDrawIndexedIndirectCount = nullptr;
+	PFN_vkCmdDrawIndexedIndirectCountAMD fp_vkCmdDrawIndexedIndirectCount = nullptr;
 #endif
 #if (defined(VK_NV_device_diagnostic_checkpoints))
 	PFN_vkCmdSetCheckpointNV fp_vkCmdSetCheckpointNV = nullptr;
@@ -3193,10 +3193,10 @@ struct DispatchTable {
 	PFN_vkGetImageDrmFormatModifierPropertiesEXT fp_vkGetImageDrmFormatModifierPropertiesEXT = nullptr;
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_buffer_device_address))
-	PFN_vkGetBufferOpaqueCaptureAddress fp_vkGetBufferOpaqueCaptureAddress = nullptr;
+	PFN_vkGetBufferOpaqueCaptureAddressKHR fp_vkGetBufferOpaqueCaptureAddress = nullptr;
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_EXT_buffer_device_address))
-	PFN_vkGetBufferDeviceAddress fp_vkGetBufferDeviceAddress = nullptr;
+	PFN_vkGetBufferDeviceAddressKHR fp_vkGetBufferDeviceAddress = nullptr;
 #endif
 #if (defined(VK_INTEL_performance_query))
 	PFN_vkInitializePerformanceApiINTEL fp_vkInitializePerformanceApiINTEL = nullptr;
@@ -3226,7 +3226,7 @@ struct DispatchTable {
 	PFN_vkGetPerformanceParameterINTEL fp_vkGetPerformanceParameterINTEL = nullptr;
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_buffer_device_address))
-	PFN_vkGetDeviceMemoryOpaqueCaptureAddress fp_vkGetDeviceMemoryOpaqueCaptureAddress = nullptr;
+	PFN_vkGetDeviceMemoryOpaqueCaptureAddressKHR fp_vkGetDeviceMemoryOpaqueCaptureAddress = nullptr;
 #endif
 #if (defined(VK_KHR_pipeline_executable_properties))
 	PFN_vkGetPipelineExecutablePropertiesKHR fp_vkGetPipelineExecutablePropertiesKHR = nullptr;

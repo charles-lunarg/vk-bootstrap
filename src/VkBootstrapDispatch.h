@@ -61,7 +61,7 @@ struct DispatchTable {
 		fp_vkDestroyQueryPool = (PFN_vkDestroyQueryPool)procAddr(device, "vkDestroyQueryPool");
 		fp_vkGetQueryPoolResults = (PFN_vkGetQueryPoolResults)procAddr(device, "vkGetQueryPoolResults");
 #if (defined(VK_VERSION_1_2)) || (defined(VK_EXT_host_query_reset))
-		fp_vkResetQueryPool = (PFN_vkResetQueryPool)procAddr(device, "vkResetQueryPool");
+		fp_vkResetQueryPool = (PFN_vkResetQueryPool)procAddr(device, "vkResetQueryPoolEXT");
 #endif
 		fp_vkCreateBuffer = (PFN_vkCreateBuffer)procAddr(device, "vkCreateBuffer");
 		fp_vkDestroyBuffer = (PFN_vkDestroyBuffer)procAddr(device, "vkDestroyBuffer");
@@ -418,25 +418,25 @@ struct DispatchTable {
 		fp_vkCmdWriteBufferMarkerAMD = (PFN_vkCmdWriteBufferMarkerAMD)procAddr(device, "vkCmdWriteBufferMarkerAMD");
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_create_renderpass2))
-		fp_vkCreateRenderPass2 = (PFN_vkCreateRenderPass2)procAddr(device, "vkCreateRenderPass2");
+		fp_vkCreateRenderPass2 = (PFN_vkCreateRenderPass2)procAddr(device, "vkCreateRenderPass2KHR");
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_create_renderpass2))
-		fp_vkCmdBeginRenderPass2 = (PFN_vkCmdBeginRenderPass2)procAddr(device, "vkCmdBeginRenderPass2");
+		fp_vkCmdBeginRenderPass2 = (PFN_vkCmdBeginRenderPass2)procAddr(device, "vkCmdBeginRenderPass2KHR");
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_create_renderpass2))
-		fp_vkCmdNextSubpass2 = (PFN_vkCmdNextSubpass2)procAddr(device, "vkCmdNextSubpass2");
+		fp_vkCmdNextSubpass2 = (PFN_vkCmdNextSubpass2)procAddr(device, "vkCmdNextSubpass2KHR");
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_create_renderpass2))
-		fp_vkCmdEndRenderPass2 = (PFN_vkCmdEndRenderPass2)procAddr(device, "vkCmdEndRenderPass2");
+		fp_vkCmdEndRenderPass2 = (PFN_vkCmdEndRenderPass2)procAddr(device, "vkCmdEndRenderPass2KHR");
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_timeline_semaphore))
-		fp_vkGetSemaphoreCounterValue = (PFN_vkGetSemaphoreCounterValue)procAddr(device, "vkGetSemaphoreCounterValue");
+		fp_vkGetSemaphoreCounterValue = (PFN_vkGetSemaphoreCounterValue)procAddr(device, "vkGetSemaphoreCounterValueKHR");
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_timeline_semaphore))
-		fp_vkWaitSemaphores = (PFN_vkWaitSemaphores)procAddr(device, "vkWaitSemaphores");
+		fp_vkWaitSemaphores = (PFN_vkWaitSemaphores)procAddr(device, "vkWaitSemaphoresKHR");
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_timeline_semaphore))
-		fp_vkSignalSemaphore = (PFN_vkSignalSemaphore)procAddr(device, "vkSignalSemaphore");
+		fp_vkSignalSemaphore = (PFN_vkSignalSemaphore)procAddr(device, "vkSignalSemaphoreKHR");
 #endif
 #if (defined(VK_ANDROID_external_memory_android_hardware_buffer))
 		fp_vkGetAndroidHardwareBufferPropertiesANDROID = (PFN_vkGetAndroidHardwareBufferPropertiesANDROID)procAddr(device, "vkGetAndroidHardwareBufferPropertiesANDROID");
@@ -445,10 +445,10 @@ struct DispatchTable {
 		fp_vkGetMemoryAndroidHardwareBufferANDROID = (PFN_vkGetMemoryAndroidHardwareBufferANDROID)procAddr(device, "vkGetMemoryAndroidHardwareBufferANDROID");
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_AMD_draw_indirect_count))
-		fp_vkCmdDrawIndirectCount = (PFN_vkCmdDrawIndirectCount)procAddr(device, "vkCmdDrawIndirectCount");
+		fp_vkCmdDrawIndirectCount = (PFN_vkCmdDrawIndirectCount)procAddr(device, "vkCmdDrawIndirectCountAMD");
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_AMD_draw_indirect_count))
-		fp_vkCmdDrawIndexedIndirectCount = (PFN_vkCmdDrawIndexedIndirectCount)procAddr(device, "vkCmdDrawIndexedIndirectCount");
+		fp_vkCmdDrawIndexedIndirectCount = (PFN_vkCmdDrawIndexedIndirectCount)procAddr(device, "vkCmdDrawIndexedIndirectCountAMD");
 #endif
 #if (defined(VK_NV_device_diagnostic_checkpoints))
 		fp_vkCmdSetCheckpointNV = (PFN_vkCmdSetCheckpointNV)procAddr(device, "vkCmdSetCheckpointNV");
@@ -604,10 +604,10 @@ struct DispatchTable {
 		fp_vkGetImageDrmFormatModifierPropertiesEXT = (PFN_vkGetImageDrmFormatModifierPropertiesEXT)procAddr(device, "vkGetImageDrmFormatModifierPropertiesEXT");
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_buffer_device_address))
-		fp_vkGetBufferOpaqueCaptureAddress = (PFN_vkGetBufferOpaqueCaptureAddress)procAddr(device, "vkGetBufferOpaqueCaptureAddress");
+		fp_vkGetBufferOpaqueCaptureAddress = (PFN_vkGetBufferOpaqueCaptureAddress)procAddr(device, "vkGetBufferOpaqueCaptureAddressKHR");
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_EXT_buffer_device_address))
-		fp_vkGetBufferDeviceAddress = (PFN_vkGetBufferDeviceAddress)procAddr(device, "vkGetBufferDeviceAddress");
+		fp_vkGetBufferDeviceAddress = (PFN_vkGetBufferDeviceAddress)procAddr(device, "vkGetBufferDeviceAddressKHR");
 #endif
 #if (defined(VK_INTEL_performance_query))
 		fp_vkInitializePerformanceApiINTEL = (PFN_vkInitializePerformanceApiINTEL)procAddr(device, "vkInitializePerformanceApiINTEL");
@@ -637,7 +637,7 @@ struct DispatchTable {
 		fp_vkGetPerformanceParameterINTEL = (PFN_vkGetPerformanceParameterINTEL)procAddr(device, "vkGetPerformanceParameterINTEL");
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_buffer_device_address))
-		fp_vkGetDeviceMemoryOpaqueCaptureAddress = (PFN_vkGetDeviceMemoryOpaqueCaptureAddress)procAddr(device, "vkGetDeviceMemoryOpaqueCaptureAddress");
+		fp_vkGetDeviceMemoryOpaqueCaptureAddress = (PFN_vkGetDeviceMemoryOpaqueCaptureAddress)procAddr(device, "vkGetDeviceMemoryOpaqueCaptureAddressKHR");
 #endif
 #if (defined(VK_KHR_pipeline_executable_properties))
 		fp_vkGetPipelineExecutablePropertiesKHR = (PFN_vkGetPipelineExecutablePropertiesKHR)procAddr(device, "vkGetPipelineExecutablePropertiesKHR");
@@ -1748,22 +1748,22 @@ struct DispatchTable {
 	}
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_create_renderpass2))
-	VkResult createRenderPass2(const VkRenderPassCreateInfo2* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkRenderPass* pRenderPass) const noexcept {
+	VkResult createRenderPass2(const VkRenderPassCreateInfo2KHR* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkRenderPass* pRenderPass) const noexcept {
 		return fp_vkCreateRenderPass2(device, pCreateInfo, pAllocator, pRenderPass);
 	}
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_create_renderpass2))
-	void cmdBeginRenderPass2(VkCommandBuffer commandBuffer, const VkRenderPassBeginInfo* pRenderPassBegin, const VkSubpassBeginInfo* pSubpassBeginInfo) const noexcept {
+	void cmdBeginRenderPass2(VkCommandBuffer commandBuffer, const VkRenderPassBeginInfo* pRenderPassBegin, const VkSubpassBeginInfoKHR* pSubpassBeginInfo) const noexcept {
 		fp_vkCmdBeginRenderPass2(commandBuffer, pRenderPassBegin, pSubpassBeginInfo);
 	}
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_create_renderpass2))
-	void cmdNextSubpass2(VkCommandBuffer commandBuffer, const VkSubpassBeginInfo* pSubpassBeginInfo, const VkSubpassEndInfo* pSubpassEndInfo) const noexcept {
+	void cmdNextSubpass2(VkCommandBuffer commandBuffer, const VkSubpassBeginInfoKHR* pSubpassBeginInfo, const VkSubpassEndInfoKHR* pSubpassEndInfo) const noexcept {
 		fp_vkCmdNextSubpass2(commandBuffer, pSubpassBeginInfo, pSubpassEndInfo);
 	}
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_create_renderpass2))
-	void cmdEndRenderPass2(VkCommandBuffer commandBuffer, const VkSubpassEndInfo* pSubpassEndInfo) const noexcept {
+	void cmdEndRenderPass2(VkCommandBuffer commandBuffer, const VkSubpassEndInfoKHR* pSubpassEndInfo) const noexcept {
 		fp_vkCmdEndRenderPass2(commandBuffer, pSubpassEndInfo);
 	}
 #endif
@@ -1773,12 +1773,12 @@ struct DispatchTable {
 	}
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_timeline_semaphore))
-	VkResult waitSemaphores(const VkSemaphoreWaitInfo* pWaitInfo, uint64_t timeout) const noexcept {
+	VkResult waitSemaphores(const VkSemaphoreWaitInfoKHR* pWaitInfo, uint64_t timeout) const noexcept {
 		return fp_vkWaitSemaphores(device, pWaitInfo, timeout);
 	}
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_timeline_semaphore))
-	VkResult signalSemaphore(const VkSemaphoreSignalInfo* pSignalInfo) const noexcept {
+	VkResult signalSemaphore(const VkSemaphoreSignalInfoKHR* pSignalInfo) const noexcept {
 		return fp_vkSignalSemaphore(device, pSignalInfo);
 	}
 #endif
@@ -2058,12 +2058,12 @@ struct DispatchTable {
 	}
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_buffer_device_address))
-	uint64_t getBufferOpaqueCaptureAddress(const VkBufferDeviceAddressInfo* pInfo) const noexcept {
+	uint64_t getBufferOpaqueCaptureAddress(const VkBufferDeviceAddressInfoKHR* pInfo) const noexcept {
 		return fp_vkGetBufferOpaqueCaptureAddress(device, pInfo);
 	}
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_EXT_buffer_device_address))
-	VkDeviceAddress getBufferDeviceAddress(const VkBufferDeviceAddressInfo* pInfo) const noexcept {
+	VkDeviceAddress getBufferDeviceAddress(const VkBufferDeviceAddressInfoKHR* pInfo) const noexcept {
 		return fp_vkGetBufferDeviceAddress(device, pInfo);
 	}
 #endif
@@ -2113,7 +2113,7 @@ struct DispatchTable {
 	}
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_buffer_device_address))
-	uint64_t getDeviceMemoryOpaqueCaptureAddress(const VkDeviceMemoryOpaqueCaptureAddressInfo* pInfo) const noexcept {
+	uint64_t getDeviceMemoryOpaqueCaptureAddress(const VkDeviceMemoryOpaqueCaptureAddressInfoKHR* pInfo) const noexcept {
 		return fp_vkGetDeviceMemoryOpaqueCaptureAddress(device, pInfo);
 	}
 #endif
@@ -2553,22 +2553,22 @@ struct DispatchTable {
 	}
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_create_renderpass2))
-	VkResult createRenderPass2KHR(const VkRenderPassCreateInfo2* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkRenderPass* pRenderPass) const noexcept {
+	VkResult createRenderPass2KHR(const VkRenderPassCreateInfo2KHR* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkRenderPass* pRenderPass) const noexcept {
 		return fp_vkCreateRenderPass2KHR(device, pCreateInfo, pAllocator, pRenderPass);
 	}
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_create_renderpass2))
-	void cmdBeginRenderPass2KHR(VkCommandBuffer commandBuffer, const VkRenderPassBeginInfo* pRenderPassBegin, const VkSubpassBeginInfo* pSubpassBeginInfo) const noexcept {
+	void cmdBeginRenderPass2KHR(VkCommandBuffer commandBuffer, const VkRenderPassBeginInfo* pRenderPassBegin, const VkSubpassBeginInfoKHR* pSubpassBeginInfo) const noexcept {
 		fp_vkCmdBeginRenderPass2KHR(commandBuffer, pRenderPassBegin, pSubpassBeginInfo);
 	}
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_create_renderpass2))
-	void cmdNextSubpass2KHR(VkCommandBuffer commandBuffer, const VkSubpassBeginInfo* pSubpassBeginInfo, const VkSubpassEndInfo* pSubpassEndInfo) const noexcept {
+	void cmdNextSubpass2KHR(VkCommandBuffer commandBuffer, const VkSubpassBeginInfoKHR* pSubpassBeginInfo, const VkSubpassEndInfoKHR* pSubpassEndInfo) const noexcept {
 		fp_vkCmdNextSubpass2KHR(commandBuffer, pSubpassBeginInfo, pSubpassEndInfo);
 	}
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_create_renderpass2))
-	void cmdEndRenderPass2KHR(VkCommandBuffer commandBuffer, const VkSubpassEndInfo* pSubpassEndInfo) const noexcept {
+	void cmdEndRenderPass2KHR(VkCommandBuffer commandBuffer, const VkSubpassEndInfoKHR* pSubpassEndInfo) const noexcept {
 		fp_vkCmdEndRenderPass2KHR(commandBuffer, pSubpassEndInfo);
 	}
 #endif
@@ -2578,12 +2578,12 @@ struct DispatchTable {
 	}
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_timeline_semaphore))
-	VkResult waitSemaphoresKHR(const VkSemaphoreWaitInfo* pWaitInfo, uint64_t timeout) const noexcept {
+	VkResult waitSemaphoresKHR(const VkSemaphoreWaitInfoKHR* pWaitInfo, uint64_t timeout) const noexcept {
 		return fp_vkWaitSemaphoresKHR(device, pWaitInfo, timeout);
 	}
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_timeline_semaphore))
-	VkResult signalSemaphoreKHR(const VkSemaphoreSignalInfo* pSignalInfo) const noexcept {
+	VkResult signalSemaphoreKHR(const VkSemaphoreSignalInfoKHR* pSignalInfo) const noexcept {
 		return fp_vkSignalSemaphoreKHR(device, pSignalInfo);
 	}
 #endif
@@ -2603,17 +2603,17 @@ struct DispatchTable {
 	}
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_buffer_device_address))
-	uint64_t getBufferOpaqueCaptureAddressKHR(const VkBufferDeviceAddressInfo* pInfo) const noexcept {
+	uint64_t getBufferOpaqueCaptureAddressKHR(const VkBufferDeviceAddressInfoKHR* pInfo) const noexcept {
 		return fp_vkGetBufferOpaqueCaptureAddressKHR(device, pInfo);
 	}
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_EXT_buffer_device_address))
-	VkDeviceAddress getBufferDeviceAddressEXT(const VkBufferDeviceAddressInfo* pInfo) const noexcept {
+	VkDeviceAddress getBufferDeviceAddressEXT(const VkBufferDeviceAddressInfoKHR* pInfo) const noexcept {
 		return fp_vkGetBufferDeviceAddressEXT(device, pInfo);
 	}
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_buffer_device_address))
-	uint64_t getDeviceMemoryOpaqueCaptureAddressKHR(const VkDeviceMemoryOpaqueCaptureAddressInfo* pInfo) const noexcept {
+	uint64_t getDeviceMemoryOpaqueCaptureAddressKHR(const VkDeviceMemoryOpaqueCaptureAddressInfoKHR* pInfo) const noexcept {
 		return fp_vkGetDeviceMemoryOpaqueCaptureAddressKHR(device, pInfo);
 	}
 #endif

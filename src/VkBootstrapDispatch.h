@@ -2063,7 +2063,7 @@ struct DispatchTable {
 	}
 #endif
 #if (defined(VK_VERSION_1_2)) || (defined(VK_EXT_buffer_device_address))
-	VkDeviceAddress getBufferDeviceAddress(const VkBufferDeviceAddressInfoKHR* pInfo) const noexcept {
+	VkDeviceAddress getBufferDeviceAddress(const VkBufferDeviceAddressInfoEXT* pInfo) const noexcept {
 		return fp_vkGetBufferDeviceAddress(device, pInfo);
 	}
 #endif

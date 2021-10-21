@@ -1783,12 +1783,12 @@ struct DispatchTable {
 	}
 #endif
 #if (defined(VK_ANDROID_external_memory_android_hardware_buffer))
-	VkResult getAndroidHardwareBufferPropertiesANDROID(AHardwareBuffer buffer, VkAndroidHardwareBufferPropertiesANDROID* pProperties) const noexcept {
+	VkResult getAndroidHardwareBufferPropertiesANDROID(AHardwareBuffer* buffer, VkAndroidHardwareBufferPropertiesANDROID* pProperties) const noexcept {
 		return fp_vkGetAndroidHardwareBufferPropertiesANDROID(device, buffer, pProperties);
 	}
 #endif
 #if (defined(VK_ANDROID_external_memory_android_hardware_buffer))
-	VkResult getMemoryAndroidHardwareBufferANDROID(const VkMemoryGetAndroidHardwareBufferInfoANDROID* pInfo, AHardwareBuffer pBuffer) const noexcept {
+	VkResult getMemoryAndroidHardwareBufferANDROID(const VkMemoryGetAndroidHardwareBufferInfoANDROID* pInfo, AHardwareBuffer** pBuffer) const noexcept {
 		return fp_vkGetMemoryAndroidHardwareBufferANDROID(device, pInfo, pBuffer);
 	}
 #endif

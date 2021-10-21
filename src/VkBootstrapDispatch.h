@@ -2022,7 +2022,7 @@ struct DispatchTable {
 		return fp_vkGetImageViewHandleNVX(device, pInfo);
 	}
 #endif
-#if (defined(VK_NVX_image_view_handle))
+#if (defined(VK_NVX_image_view_handle) && VK_NVX_IMAGE_VIEW_HANDLE_SPEC_VERSION == 2)
 	VkResult getImageViewAddressNVX(VkImageView imageView, VkImageViewAddressPropertiesNVX* pProperties) const noexcept {
 		return fp_vkGetImageViewAddressNVX(device, imageView, pProperties);
 	}

@@ -3171,7 +3171,7 @@ struct DispatchTable {
 #if (defined(VK_NVX_image_view_handle))
 	PFN_vkGetImageViewHandleNVX fp_vkGetImageViewHandleNVX = nullptr;
 #endif
-#if (defined(VK_NVX_image_view_handle))
+#if (defined(VK_NVX_image_view_handle) && VK_NVX_IMAGE_VIEW_HANDLE_SPEC_VERSION == 2)
 	PFN_vkGetImageViewAddressNVX fp_vkGetImageViewAddressNVX = nullptr;
 #endif
 #if (defined(VK_EXT_full_screen_exclusive) && defined(VK_KHR_device_group)) || (defined(VK_EXT_full_screen_exclusive) && defined(VK_VERSION_1_1))

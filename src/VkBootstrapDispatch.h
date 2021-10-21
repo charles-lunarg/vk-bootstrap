@@ -3142,7 +3142,7 @@ struct DispatchTable {
 	PFN_vkCmdTraceRaysNV fp_vkCmdTraceRaysNV = nullptr;
 #endif
 #if (defined(VK_KHR_ray_tracing_pipeline)) || (defined(VK_NV_ray_tracing))
-	PFN_vkGetRayTracingShaderGroupHandlesKHR fp_vkGetRayTracingShaderGroupHandlesKHR = nullptr;
+	PFN_vkGetRayTracingShaderGroupHandlesNV fp_vkGetRayTracingShaderGroupHandlesNV = nullptr;
 #endif
 #if (defined(VK_KHR_ray_tracing_pipeline))
 	PFN_vkGetRayTracingCaptureReplayShaderGroupHandlesKHR fp_vkGetRayTracingCaptureReplayShaderGroupHandlesKHR = nullptr;

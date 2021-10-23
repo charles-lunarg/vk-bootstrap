@@ -80,7 +80,7 @@ install(TARGETS vk-bootstrap
 
 option(VK_BOOTSTRAP_TEST "Test Vk-Bootstrap with glfw and Catch2" OFF)
 
-if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME OR VK_BOOTSTRAP_TEST)
+if (${CMAKE_PROJECT_NAME} STREQUAL ${PROJECT_NAME} OR ${VK_BOOTSTRAP_TEST})
 
     add_subdirectory(ext)
     add_subdirectory(tests)

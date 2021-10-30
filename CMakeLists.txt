@@ -27,7 +27,7 @@ else ()
   endif()
 endif()
 
-add_library(vk-bootstrap src/VkBootstrap.h src/VkBootstrap.cpp)
+add_library(vk-bootstrap src/VkBootstrap.h src/VkBootstrap.cpp src/VkBootstrapDispatch.h)
 add_library(vk-bootstrap::vk-bootstrap ALIAS vk-bootstrap)
 
 add_library(vk-bootstrap-compiler-warnings INTERFACE)
@@ -72,7 +72,7 @@ target_link_libraries(vk-bootstrap
 target_compile_features(vk-bootstrap PUBLIC cxx_std_14)
 
 include(GNUInstallDirs)
-install(FILES src/VkBootstrap.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+install(FILES src/VkBootstrap.h src/VkBootstrapDispatch.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 install(TARGETS vk-bootstrap
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}

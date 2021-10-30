@@ -519,9 +519,13 @@ SystemInfo::SystemInfo() {
 		    detail::vulkan_functions().fp_vkEnumerateInstanceExtensionProperties,
 		    layer.layerName);
 		if (layer_extensions_ret == VK_SUCCESS) {
-			for (auto& ext : layer_extensions)
-				if (strcmp(ext.extensionName, VK_EXT_DEBUG_UTILS_EXTENSION_NAME) == 0)
+			for (auto& ext : layer_extensions) {
+				if (strcmp(ext.extensionName, VK_EXT_DEBUG_UTILS_EXTENSION_NAME) == 0) {
 					debug_utils_available = true;
+				}
+			}
+			this->available_extensions.insert(
+			    this->available_extensions.end(), layer_extensions.begin(), layer_extensions.end());
 		}
 	}
 }

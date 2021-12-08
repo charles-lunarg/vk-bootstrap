@@ -68,6 +68,17 @@ TEST_CASE("Instance with surface", "[VkBootstrap.bootstrap]") {
 		vkb::destroy_instance(instance);
 		destroy_window_glfw(window);
 	}
+	GIVEN("Two Instances") {
+		vkb::InstanceBuilder instance_builder1;
+		auto instance_ret1 = instance_builder1.use_default_debug_messenger().build();
+		REQUIRE(instance_ret1);
+		vkb::InstanceBuilder instance_builder2;
+		auto instance_ret2 = instance_builder2.use_default_debug_messenger().build();
+		REQUIRE(instance_ret2);
+
+		vkb::destroy_instance(instance_ret1.value());
+		vkb::destroy_instance(instance_ret2.value());
+	}
 }
 
 TEST_CASE("instance configuration", "[VkBootstrap.bootstrap]") {
@@ -496,24 +507,26 @@ TEST_CASE("Passing vkb classes to Vulkan handles", "[VkBootstrap.pass_class_to_h
 		auto instance = get_instance();
 
 		// Check if we can get instance functions.
-		PFN_vkVoidFunction instanceFunction = instance.fp_vkGetInstanceProcAddr(instance, "vkSetDebugUtilsObjectNameEXT"); // validation layers should be provided.
+		PFN_vkVoidFunction instanceFunction = instance.fp_vkGetInstanceProcAddr(
+		    instance, "vkSetDebugUtilsObjectNameEXT"); // validation layers should be provided.
 		REQUIRE(instanceFunction != NULL);
 
 		auto window = create_window_glfw("Conversion operators");
 		auto surface = create_surface_glfw(instance, window);
 
 		vkb::PhysicalDeviceSelector physicalDeviceSelector(instance);
-		auto physicalDevice = physicalDeviceSelector
-			.add_required_extension(VK_KHR_SWAPCHAIN_EXTENSION_NAME)
-			.set_surface(surface)
-			.select();
+		auto physicalDevice =
+		    physicalDeviceSelector.add_required_extension(VK_KHR_SWAPCHAIN_EXTENSION_NAME)
+		        .set_surface(surface)
+		        .select();
 		REQUIRE(physicalDevice.has_value());
 		vkb::DeviceBuilder deviceBuilder(physicalDevice.value());
 		auto device = deviceBuilder.build();
 		REQUIRE(device.has_value());
 
 		// Check if we can get a device function address, passing vkb::Device to the function.
-		PFN_vkVoidFunction deviceFunction = instance.fp_vkGetDeviceProcAddr(device.value(), "vkAcquireNextImageKHR");
+		PFN_vkVoidFunction deviceFunction =
+		    instance.fp_vkGetDeviceProcAddr(device.value(), "vkAcquireNextImageKHR");
 		REQUIRE(deviceFunction != NULL);
 	}
 }

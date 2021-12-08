@@ -109,10 +109,14 @@ class VulkanFunctions {
 	}
 
 	void init_pre_instance_funcs() {
-		get_inst_proc_addr(fp_vkEnumerateInstanceExtensionProperties, "vkEnumerateInstanceExtensionProperties");
-		get_inst_proc_addr(fp_vkEnumerateInstanceLayerProperties, "vkEnumerateInstanceLayerProperties");
-		get_inst_proc_addr(fp_vkEnumerateInstanceVersion, "vkEnumerateInstanceVersion");
-		get_inst_proc_addr(fp_vkCreateInstance, "vkCreateInstance");
+		fp_vkEnumerateInstanceExtensionProperties = reinterpret_cast<PFN_vkEnumerateInstanceExtensionProperties>(
+		    ptr_vkGetInstanceProcAddr(VK_NULL_HANDLE, "vkEnumerateInstanceExtensionProperties"));
+		fp_vkEnumerateInstanceLayerProperties = reinterpret_cast<PFN_vkEnumerateInstanceLayerProperties>(
+		    ptr_vkGetInstanceProcAddr(VK_NULL_HANDLE, "vkEnumerateInstanceLayerProperties"));
+		fp_vkEnumerateInstanceVersion = reinterpret_cast<PFN_vkEnumerateInstanceVersion>(
+		    ptr_vkGetInstanceProcAddr(VK_NULL_HANDLE, "vkEnumerateInstanceVersion"));
+		fp_vkCreateInstance = reinterpret_cast<PFN_vkCreateInstance>(
+		    ptr_vkGetInstanceProcAddr(VK_NULL_HANDLE, "vkCreateInstance"));
 	}
 
 	public:
@@ -488,7 +492,9 @@ detail::Result<SystemInfo> SystemInfo::get_system_info() {
 
 detail::Result<SystemInfo> SystemInfo::get_system_info(PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr) {
 	// Using externally provided function pointers, assume the loader is available
-	detail::vulkan_functions().init_vulkan_funcs(fp_vkGetInstanceProcAddr);
+	if (!detail::vulkan_functions().init_vulkan_funcs(fp_vkGetInstanceProcAddr)) {
+		return make_error_code(InstanceError::vulkan_unavailable);
+	}
 	return SystemInfo();
 }
 
@@ -551,9 +557,7 @@ void destroy_instance(Instance instance) {
 	}
 }
 
-Instance::operator VkInstance() const {
-	return this->instance;
-}
+Instance::operator VkInstance() const { return this->instance; }
 
 InstanceBuilder::InstanceBuilder(PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr) {
 	info.fp_vkGetInstanceProcAddr = fp_vkGetInstanceProcAddr;
@@ -615,7 +619,7 @@ detail::Result<Instance> InstanceBuilder::build() const {
 	}
 	bool supports_properties2_ext = detail::check_extension_supported(
 	    system.available_extensions, VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME);
-		
+
 	if (supports_properties2_ext && api_version < VK_API_VERSION_1_1) {
 		extensions.push_back(VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME);
 	}
@@ -699,9 +703,11 @@ detail::Result<Instance> InstanceBuilder::build() const {
 	VkInstanceCreateInfo instance_create_info = {};
 	instance_create_info.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
 	detail::setup_pNext_chain(instance_create_info, pNext_chain);
+#if !defined(NDEBUG)
 	for (auto& node : pNext_chain) {
 		assert(node->sType != VK_STRUCTURE_TYPE_APPLICATION_INFO);
 	}
+#endif
 	instance_create_info.flags = info.flags;
 	instance_create_info.pApplicationInfo = &app_info;
 	instance_create_info.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
@@ -1351,9 +1357,7 @@ std::vector<VkQueueFamilyProperties> PhysicalDevice::get_queue_families() const 
 	return queue_families;
 }
 
-PhysicalDevice::operator VkPhysicalDevice() const {
-	return this->physical_device;
-}
+PhysicalDevice::operator VkPhysicalDevice() const { return this->physical_device; }
 
 // ---- Queues ---- //
 
@@ -1425,9 +1429,7 @@ DispatchTable Device::make_table() const { return { device, fp_vkGetDeviceProcAd
 
 // ---- Device ---- //
 
-Device::operator VkDevice() const {
-	return this->device;
-}
+Device::operator VkDevice() const { return this->device; }
 
 CustomQueueDescription::CustomQueueDescription(uint32_t index, uint32_t count, std::vector<float> priorities)
 : index(index), count(count), priorities(priorities) {
@@ -1507,10 +1509,11 @@ detail::Result<Device> DeviceBuilder::build() const {
 	}
 
 	detail::setup_pNext_chain(device_create_info, final_pnext_chain);
+#if !defined(NDEBUG)
 	for (auto& node : final_pnext_chain) {
 		assert(node->sType != VK_STRUCTURE_TYPE_APPLICATION_INFO);
 	}
-
+#endif
 	device_create_info.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
 	device_create_info.flags = info.flags;
 	device_create_info.queueCreateInfoCount = static_cast<uint32_t>(queueCreateInfos.size());
@@ -1757,9 +1760,11 @@ detail::Result<Swapchain> SwapchainBuilder::build() const {
 	VkSwapchainCreateInfoKHR swapchain_create_info = {};
 	swapchain_create_info.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
 	detail::setup_pNext_chain(swapchain_create_info, info.pNext_chain);
+#if !defined(NDEBUG)
 	for (auto& node : info.pNext_chain) {
 		assert(node->sType != VK_STRUCTURE_TYPE_APPLICATION_INFO);
 	}
+#endif
 	swapchain_create_info.flags = info.create_flags;
 	swapchain_create_info.surface = info.surface;
 	swapchain_create_info.minImageCount = image_count;
@@ -1856,9 +1861,7 @@ void Swapchain::destroy_image_views(std::vector<VkImageView> const& image_views)
 		internal_table.fp_vkDestroyImageView(device, image_view, allocation_callbacks);
 	}
 }
-Swapchain::operator VkSwapchainKHR() const {
-	return this->swapchain;
-}
+Swapchain::operator VkSwapchainKHR() const { return this->swapchain; }
 SwapchainBuilder& SwapchainBuilder::set_old_swapchain(VkSwapchainKHR old_swapchain) {
 	info.old_swapchain = old_swapchain;
 	return *this;

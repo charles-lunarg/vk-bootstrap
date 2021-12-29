@@ -563,7 +563,7 @@ TEST_CASE("Querying Required Extension Features in 1.1", "[VkBootstrap.version]"
 TEST_CASE("Querying Vulkan 1.1 and 1.2 features", "[VkBootstrap.version]") {
 	GIVEN("A working instance") {
 		vkb::InstanceBuilder builder;
-		auto instance = get_headless_instance();
+		auto instance = get_headless_instance(2); // make sure we use 1.2
 		// Requires a device that supports multiview and bufferDeviceAddress
 		{
 			VkPhysicalDeviceVulkan11Features features_11{};

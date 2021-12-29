@@ -620,7 +620,7 @@ detail::Result<Instance> InstanceBuilder::build() const {
 	bool supports_properties2_ext = detail::check_extension_supported(
 	    system.available_extensions, VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME);
 
-	if (supports_properties2_ext && api_version < VK_API_VERSION_1_1) {
+	if (supports_properties2_ext) {
 		extensions.push_back(VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME);
 	}
 
@@ -1041,20 +1041,23 @@ PhysicalDeviceSelector::PhysicalDeviceDesc PhysicalDeviceSelector::populate_devi
 		}
 
 #if defined(VK_API_VERSION_1_1)
-		VkPhysicalDeviceFeatures2 local_features{};
-		local_features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
-		local_features.pNext = &fill_chain.front();
 		if (instance_info.version >= VK_API_VERSION_1_1 && desc.device_properties.apiVersion >= VK_API_VERSION_1_1) {
+			VkPhysicalDeviceFeatures2 local_features{};
+			local_features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
+			local_features.pNext = &fill_chain.front();
 			detail::vulkan_functions().fp_vkGetPhysicalDeviceFeatures2(phys_device, &local_features);
 		} else if (instance_info.supports_properties2_ext) {
-			detail::vulkan_functions().fp_vkGetPhysicalDeviceFeatures2KHR(phys_device, &local_features);
+			VkPhysicalDeviceFeatures2KHR local_features_khr{};
+			local_features_khr.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2_KHR;
+			local_features_khr.pNext = &fill_chain.front();
+			detail::vulkan_functions().fp_vkGetPhysicalDeviceFeatures2KHR(phys_device, &local_features_khr);
 		}
 #else
-		VkPhysicalDeviceFeatures2KHR local_features{};
-		local_features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
-		local_features.pNext = &fill_chain.front();
+		VkPhysicalDeviceFeatures2KHR local_features_khr{};
+		local_features_khr.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2_KHR;
+		local_features_khr.pNext = &fill_chain.front();
 		if (instance_info.supports_properties2_ext) {
-			detail::vulkan_functions().fp_vkGetPhysicalDeviceFeatures2KHR(phys_device, &local_features);
+			detail::vulkan_functions().fp_vkGetPhysicalDeviceFeatures2KHR(phys_device, &local_features_khr);
 		}
 #endif
 		desc.extended_features_chain = fill_chain;

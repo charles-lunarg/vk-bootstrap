@@ -1069,7 +1069,7 @@ PhysicalDeviceSelector::Suitable PhysicalDeviceSelector::is_device_suitable(Phys
 	if (criteria.required_version > pd.device_properties.apiVersion) return Suitable::no;
 	if (criteria.desired_version > pd.device_properties.apiVersion) suitable = Suitable::partial;
 
-	bool name = strcmp(criteria.desired_device_name, pd.device_properties.deviceName) == 0;
+	bool name = strcmp(criteria.requested_device_name, pd.device_properties.deviceName) == 0;
 
 	bool dedicated_compute = detail::get_dedicated_queue_index(pd.queue_families,
 	                             VK_QUEUE_COMPUTE_BIT,
@@ -1365,9 +1365,9 @@ PhysicalDeviceSelector& PhysicalDeviceSelector::desired_device_memory_size(VkDev
 	criteria.desired_mem_size = size;
 	return *this;
 }
-PhysicalDeviceSelector& PhysicalDeviceSelector::set_required_device_name(const char* extension) {
+PhysicalDeviceSelector& PhysicalDeviceSelector::set_required_device_name(const char* device_name) {
 	criteria.require_device_name = true;
-	criteria.desired_device_name = extension;
+	criteria.requested_device_name = device_name;
 	return *this;
 }
 PhysicalDeviceSelector& PhysicalDeviceSelector::add_required_extension(const char* extension) {

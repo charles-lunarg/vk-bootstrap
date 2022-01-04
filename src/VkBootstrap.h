@@ -440,7 +440,6 @@ struct PhysicalDevice {
 	operator VkPhysicalDevice() const;
 
 	private:
-	char device_name[VK_MAX_PHYSICAL_DEVICE_NAME_SIZE];
 	uint32_t instance_version = VK_MAKE_VERSION(1, 0, 0);
 	std::vector<const char*> extensions_to_enable;
 	std::vector<VkQueueFamilyProperties> queue_families;
@@ -493,7 +492,7 @@ class PhysicalDeviceSelector {
 	PhysicalDeviceSelector& desired_device_memory_size(VkDeviceSize size);
 
 	// Require a physical device which has a specific name.
-	PhysicalDeviceSelector& set_required_device_name(const char* extension);
+	PhysicalDeviceSelector& set_required_device_name(const char* device_name);
 
 	// Require a physical device which supports a specific extension.
 	PhysicalDeviceSelector& add_required_extension(const char* extension);
@@ -585,7 +584,7 @@ class PhysicalDeviceSelector {
 		bool require_separate_compute_queue = false;
 		VkDeviceSize required_mem_size = 0;
 		VkDeviceSize desired_mem_size = 0;
-		const char* desired_device_name = "";
+		const char* requested_device_name = "";
 		std::vector<const char*> required_extensions;
 		std::vector<const char*> desired_extensions;
 

@@ -1247,8 +1247,6 @@ detail::Result<std::vector<PhysicalDevice>> PhysicalDeviceSelector::get_suitable
 	std::vector<PhysicalDeviceSelector::PhysicalDeviceDesc> phys_device_descriptions =
 	    phys_device_descriptions_ret.value();
 
-	PhysicalDeviceDesc selected_device{};
-
 	std::vector<PhysicalDeviceDesc> selected_devices{};
 
 	if (criteria.use_first_gpu_unconditionally) {

@@ -1069,6 +1069,8 @@ PhysicalDeviceSelector::Suitable PhysicalDeviceSelector::is_device_suitable(Phys
 	if (criteria.required_version > pd.device_properties.apiVersion) return Suitable::no;
 	if (criteria.desired_version > pd.device_properties.apiVersion) suitable = Suitable::partial;
 
+	bool name = strcmp(criteria.desired_device_name, pd.device_properties.deviceName) == 0;
+
 	bool dedicated_compute = detail::get_dedicated_queue_index(pd.queue_families,
 	                             VK_QUEUE_COMPUTE_BIT,
 	                             VK_QUEUE_TRANSFER_BIT) != detail::QUEUE_INDEX_MAX_VALUE;
@@ -1086,6 +1088,7 @@ PhysicalDeviceSelector::Suitable PhysicalDeviceSelector::is_device_suitable(Phys
 	    detail::get_present_queue_index(pd.phys_device, instance_info.surface, pd.queue_families) !=
 	    detail::QUEUE_INDEX_MAX_VALUE;
 
+	if (criteria.require_device_name && !name) return Suitable::no;
 	if (criteria.require_dedicated_compute_queue && !dedicated_compute) return Suitable::no;
 	if (criteria.require_dedicated_transfer_queue && !dedicated_transfer) return Suitable::no;
 	if (criteria.require_separate_compute_queue && !separate_compute) return Suitable::no;
@@ -1184,22 +1187,12 @@ detail::Result<PhysicalDevice> PhysicalDeviceSelector::select() const {
 			return detail::Result<PhysicalDevice>{ PhysicalDeviceError::no_surface_provided };
 	}
 
-	std::vector<VkPhysicalDevice> physical_devices;
+	detail::Result<std::vector<PhysicalDeviceSelector::PhysicalDeviceDesc>> phys_device_descriptions_ret =
+	    get_physical_device_descriptions();
 
-	auto physical_devices_ret = detail::get_vector<VkPhysicalDevice>(
-	    physical_devices, detail::vulkan_functions().fp_vkEnumeratePhysicalDevices, instance_info.instance);
-	if (physical_devices_ret != VK_SUCCESS) {
-		return detail::Result<PhysicalDevice>{ PhysicalDeviceError::failed_enumerate_physical_devices,
-			physical_devices_ret };
-	}
-	if (physical_devices.size() == 0) {
-		return detail::Result<PhysicalDevice>{ PhysicalDeviceError::no_physical_devices_found };
-	}
-
-	std::vector<PhysicalDeviceDesc> phys_device_descriptions;
-	for (auto& phys_device : physical_devices) {
-		phys_device_descriptions.push_back(populate_device_details(phys_device, criteria.extended_features_chain));
-	}
+	if (!phys_device_descriptions_ret.has_value()) return { phys_device_descriptions_ret.error() };
+	std::vector<PhysicalDeviceSelector::PhysicalDeviceDesc> phys_device_descriptions =
+	    phys_device_descriptions_ret.value();
 
 	PhysicalDeviceDesc selected_device{};
 
@@ -1220,14 +1213,102 @@ detail::Result<PhysicalDevice> PhysicalDeviceSelector::select() const {
 	if (selected_device.phys_device == VK_NULL_HANDLE) {
 		return detail::Result<PhysicalDevice>{ PhysicalDeviceError::no_suitable_device };
 	}
+	PhysicalDevice out_device = populate_physical_device(selected_device);
+
+	return out_device;
+}
+
+detail::Result<std::vector<PhysicalDevice>> PhysicalDeviceSelector::get_suitable_devices(
+    bool return_partially_suitable) const {
+	std::vector<PhysicalDevice> physical_devices_return;
+
+#if !defined(NDEBUG)
+	// Validation
+	for (const auto& node : criteria.extended_features_chain) {
+		assert(node.sType != static_cast<VkStructureType>(0) &&
+		       "Features struct sType must be filled with the struct's "
+		       "corresponding VkStructureType enum");
+		assert(
+		    node.sType != VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2 &&
+		    "Do not pass VkPhysicalDeviceFeatures2 as a required extension feature structure. An "
+		    "instance of this is managed internally for selection criteria and device creation.");
+	}
+#endif
+
+	if (!instance_info.headless && !criteria.defer_surface_initialization) {
+		if (instance_info.surface == VK_NULL_HANDLE)
+			return detail::Result<std::vector<PhysicalDevice>>{ PhysicalDeviceError::no_surface_provided };
+	}
+
+	detail::Result<std::vector<PhysicalDeviceSelector::PhysicalDeviceDesc>> phys_device_descriptions_ret =
+	    get_physical_device_descriptions();
+
+	if (!phys_device_descriptions_ret.has_value()) return { phys_device_descriptions_ret.error() };
+	std::vector<PhysicalDeviceSelector::PhysicalDeviceDesc> phys_device_descriptions =
+	    phys_device_descriptions_ret.value();
+
+	PhysicalDeviceDesc selected_device{};
+
+	std::vector<PhysicalDeviceDesc> selected_devices{};
+
+	if (criteria.use_first_gpu_unconditionally) {
+		selected_devices.emplace_back(phys_device_descriptions.at(0));
+	} else {
+		for (const auto& device : phys_device_descriptions) {
+			auto suitable = is_device_suitable(device);
+
+			if (suitable == Suitable::yes || (return_partially_suitable && (suitable == Suitable::partial))) {
+				selected_devices.emplace_back(device);
+			}
+		}
+	}
+
+	for (const auto& selected_device : selected_devices) {
+		if (selected_device.phys_device == VK_NULL_HANDLE) {
+			return detail::Result<std::vector<PhysicalDevice>>{ PhysicalDeviceError::no_suitable_device };
+		}
+
+		physical_devices_return.emplace_back(populate_physical_device(selected_device));
+	}
+
+	return physical_devices_return;
+}
+
+detail::Result<std::vector<PhysicalDeviceSelector::PhysicalDeviceDesc>>
+PhysicalDeviceSelector::get_physical_device_descriptions() const {
+	std::vector<VkPhysicalDevice> physical_devices;
+
+	auto physical_devices_ret = detail::get_vector<VkPhysicalDevice>(
+	    physical_devices, detail::vulkan_functions().fp_vkEnumeratePhysicalDevices, instance_info.instance);
+	if (physical_devices_ret != VK_SUCCESS) {
+		return detail::Result<std::vector<PhysicalDeviceSelector::PhysicalDeviceDesc>>{
+			PhysicalDeviceError::failed_enumerate_physical_devices, physical_devices_ret
+		};
+	}
+	if (physical_devices.size() == 0) {
+		return detail::Result<std::vector<PhysicalDeviceSelector::PhysicalDeviceDesc>>{
+			PhysicalDeviceError::no_physical_devices_found
+		};
+	}
+
+	std::vector<PhysicalDeviceDesc> phys_device_descriptions;
+	for (auto& phys_device : physical_devices) {
+		phys_device_descriptions.push_back(populate_device_details(phys_device, criteria.extended_features_chain));
+	}
+
+	return phys_device_descriptions;
+}
+
+PhysicalDevice PhysicalDeviceSelector::populate_physical_device(
+    PhysicalDeviceDesc const& selected_device_desc) const {
 	PhysicalDevice out_device{};
-	out_device.physical_device = selected_device.phys_device;
+	out_device.physical_device = selected_device_desc.phys_device;
 	out_device.surface = instance_info.surface;
 	out_device.features = criteria.required_features;
 	out_device.extended_features_chain = criteria.extended_features_chain;
-	out_device.properties = selected_device.device_properties;
-	out_device.memory_properties = selected_device.mem_properties;
-	out_device.queue_families = selected_device.queue_families;
+	out_device.properties = selected_device_desc.device_properties;
+	out_device.memory_properties = selected_device_desc.mem_properties;
+	out_device.queue_families = selected_device_desc.queue_families;
 	out_device.defer_surface_initialization = criteria.defer_surface_initialization;
 	out_device.instance_version = instance_info.version;
 
@@ -1239,6 +1320,7 @@ detail::Result<PhysicalDevice> PhysicalDeviceSelector::select() const {
 	out_device.extensions_to_enable.insert(out_device.extensions_to_enable.end(),
 	    desired_extensions_supported.begin(),
 	    desired_extensions_supported.end());
+
 	return out_device;
 }
 
@@ -1281,6 +1363,11 @@ PhysicalDeviceSelector& PhysicalDeviceSelector::required_device_memory_size(VkDe
 }
 PhysicalDeviceSelector& PhysicalDeviceSelector::desired_device_memory_size(VkDeviceSize size) {
 	criteria.desired_mem_size = size;
+	return *this;
+}
+PhysicalDeviceSelector& PhysicalDeviceSelector::set_required_device_name(const char* extension) {
+	criteria.require_device_name = true;
+	criteria.desired_device_name = extension;
 	return *this;
 }
 PhysicalDeviceSelector& PhysicalDeviceSelector::add_required_extension(const char* extension) {

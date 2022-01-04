@@ -440,6 +440,7 @@ struct PhysicalDevice {
 	operator VkPhysicalDevice() const;
 
 	private:
+	char device_name[VK_MAX_PHYSICAL_DEVICE_NAME_SIZE];
 	uint32_t instance_version = VK_MAKE_VERSION(1, 0, 0);
 	std::vector<const char*> extensions_to_enable;
 	std::vector<VkQueueFamilyProperties> queue_families;
@@ -463,6 +464,8 @@ class PhysicalDeviceSelector {
 	explicit PhysicalDeviceSelector(Instance const& instance);
 
 	detail::Result<PhysicalDevice> select() const;
+	detail::Result<std::vector<PhysicalDevice>> get_suitable_devices(
+	    bool return_partially_suitable) const;
 
 	// Set the surface in which the physical device should render to.
 	PhysicalDeviceSelector& set_surface(VkSurfaceKHR surface);
@@ -488,6 +491,9 @@ class PhysicalDeviceSelector {
 	PhysicalDeviceSelector& required_device_memory_size(VkDeviceSize size);
 	// Prefer a memory heap from VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT with `size` memory available.
 	PhysicalDeviceSelector& desired_device_memory_size(VkDeviceSize size);
+
+	// Require a physical device which has a specific name.
+	PhysicalDeviceSelector& set_required_device_name(const char* extension);
 
 	// Require a physical device which supports a specific extension.
 	PhysicalDeviceSelector& add_required_extension(const char* extension);
@@ -557,15 +563,21 @@ class PhysicalDeviceSelector {
 		std::vector<detail::GenericFeaturesPNextNode> extended_features_chain;
 	};
 
+	detail::Result<std::vector<PhysicalDeviceSelector::PhysicalDeviceDesc>>
+	get_physical_device_descriptions() const;
+
 	// We copy the extension features stored in the selector criteria under the prose of a
 	// "template" to ensure that after fetching everything is compared 1:1 during a match.
 
 	PhysicalDeviceDesc populate_device_details(VkPhysicalDevice phys_device,
 	    std::vector<detail::GenericFeaturesPNextNode> const& src_extended_features_chain) const;
 
+	PhysicalDevice populate_physical_device(PhysicalDeviceDesc const& selected_device_desc) const;
+
 	struct SelectionCriteria {
 		PreferredDeviceType preferred_type = PreferredDeviceType::discrete;
 		bool allow_any_type = true;
+		bool require_device_name = false;
 		bool require_present = true;
 		bool require_dedicated_transfer_queue = false;
 		bool require_dedicated_compute_queue = false;
@@ -573,7 +585,7 @@ class PhysicalDeviceSelector {
 		bool require_separate_compute_queue = false;
 		VkDeviceSize required_mem_size = 0;
 		VkDeviceSize desired_mem_size = 0;
-
+		const char* desired_device_name = "";
 		std::vector<const char*> required_extensions;
 		std::vector<const char*> desired_extensions;
 

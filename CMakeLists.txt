@@ -73,7 +73,8 @@ target_compile_features(vk-bootstrap PUBLIC cxx_std_14)
 
 include(GNUInstallDirs)
 install(FILES src/VkBootstrap.h src/VkBootstrapDispatch.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-install(TARGETS vk-bootstrap
+install(TARGETS vk-bootstrap vk-bootstrap-compiler-warnings vk-bootstrap-vulkan-headers
+        EXPORT vk-bootstrap-targets
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})

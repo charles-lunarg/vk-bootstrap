@@ -435,6 +435,9 @@ struct PhysicalDevice {
 	// Advanced: Get the VkQueueFamilyProperties of the device if special queue setup is needed
 	std::vector<VkQueueFamilyProperties> get_queue_families() const;
 
+	// Query the list of extensions which should be enabled
+	std::vector<const char*> get_extensions() const;
+
 	// A conversion function which allows this PhysicalDevice to be used
 	// in places where VkPhysicalDevice would have been used.
 	operator VkPhysicalDevice() const;

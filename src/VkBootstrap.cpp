@@ -1359,7 +1359,7 @@ bool PhysicalDevice::has_separate_transfer_queue() const {
 std::vector<VkQueueFamilyProperties> PhysicalDevice::get_queue_families() const {
 	return queue_families;
 }
-
+std::vector<const char*> PhysicalDevice::get_extensions() const { return extensions_to_enable; }
 PhysicalDevice::operator VkPhysicalDevice() const { return this->physical_device; }
 
 // ---- Queues ---- //

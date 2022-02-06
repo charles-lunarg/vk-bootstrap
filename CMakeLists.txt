@@ -18,7 +18,7 @@ else ()
       FetchContent_Declare(
           VulkanHeaders
           GIT_REPOSITORY https://github.com/KhronosGroup/Vulkan-Headers
-          GIT_TAG        v1.2.171
+          GIT_TAG        v1.3.204
       )
       FetchContent_MakeAvailable(VulkanHeaders)
       target_link_libraries(vk-bootstrap-vulkan-headers INTERFACE Vulkan::Headers)

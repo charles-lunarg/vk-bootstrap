@@ -1,8 +1,9 @@
 
 #
 # generate_dispatch.py
-# 
+#
 # Copyright © 2021 Cody Goodson (contact@vibimanx.com)
+# Copyright © 2022 Charles Giessen (charles@lunarg.com)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 # documentation files (the “Software”), to deal in the Software without restriction, including without
@@ -63,8 +64,8 @@ if xmltodict_missing:
 import urllib.request
 import xmltodict
 
-try: 
-	response = urllib.request.urlopen('https://raw.githubusercontent.com/KhronosGroup/Vulkan-Headers/master/registry/vk.xml')
+try:
+	response = urllib.request.urlopen('https://raw.githubusercontent.com/KhronosGroup/Vulkan-Headers/main/registry/vk.xml')
 except urllib.error.URLError as error:
 	print("Failed to download vk.xml due to error:");
 	print(error.reason)
@@ -171,6 +172,7 @@ for command in device_commands:
 # License
 license = '/* \n'
 license += ' * Copyright © 2021 Cody Goodson (contact@vibimanx.com)\n'
+license += ' * Copyright © 2022 Charles Giessen (charles@lunarg.com)\n'
 license += ' * \n'
 license += ' * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated\n'
 license += ' * documentation files (the “Software”), to deal in the Software without restriction, including without\n'
@@ -290,6 +292,6 @@ header = license + info + body
 
 header_file = codecs.open("../src/VkBootstrapDispatch.h", "w", "utf-8")
 header_file.write(header)
-header_file.close();
+header_file.close()
 
-input("Generation finished. Press Enter to continue...")
+print("Generation finished.")

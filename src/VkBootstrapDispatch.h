@@ -61,7 +61,7 @@ struct DispatchTable {
 		fp_vkCreateQueryPool = (PFN_vkCreateQueryPool)procAddr(device, "vkCreateQueryPool");
 		fp_vkDestroyQueryPool = (PFN_vkDestroyQueryPool)procAddr(device, "vkDestroyQueryPool");
 		fp_vkGetQueryPoolResults = (PFN_vkGetQueryPoolResults)procAddr(device, "vkGetQueryPoolResults");
-#if (defined(VK_VERSION_1_2)) || (defined(VK_EXT_host_query_reset))
+#if (defined(VK_VERSION_1_2))
 		fp_vkResetQueryPool = (PFN_vkResetQueryPool)procAddr(device, "vkResetQueryPool");
 #endif
 		fp_vkCreateBuffer = (PFN_vkCreateBuffer)procAddr(device, "vkCreateBuffer");
@@ -226,7 +226,7 @@ struct DispatchTable {
 #if (defined(VK_KHR_push_descriptor))
 		fp_vkCmdPushDescriptorSetKHR = (PFN_vkCmdPushDescriptorSetKHR)procAddr(device, "vkCmdPushDescriptorSetKHR");
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_maintenance1))
+#if (defined(VK_VERSION_1_1))
 		fp_vkTrimCommandPool = (PFN_vkTrimCommandPool)procAddr(device, "vkTrimCommandPool");
 #endif
 #if (defined(VK_KHR_external_memory_win32))
@@ -292,16 +292,16 @@ struct DispatchTable {
 #if (defined(VK_EXT_display_control))
 		fp_vkGetSwapchainCounterEXT = (PFN_vkGetSwapchainCounterEXT)procAddr(device, "vkGetSwapchainCounterEXT");
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_device_group))
+#if (defined(VK_VERSION_1_1))
 		fp_vkGetDeviceGroupPeerMemoryFeatures = (PFN_vkGetDeviceGroupPeerMemoryFeatures)procAddr(device, "vkGetDeviceGroupPeerMemoryFeatures");
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_bind_memory2))
+#if (defined(VK_VERSION_1_1))
 		fp_vkBindBufferMemory2 = (PFN_vkBindBufferMemory2)procAddr(device, "vkBindBufferMemory2");
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_bind_memory2))
+#if (defined(VK_VERSION_1_1))
 		fp_vkBindImageMemory2 = (PFN_vkBindImageMemory2)procAddr(device, "vkBindImageMemory2");
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_device_group))
+#if (defined(VK_VERSION_1_1))
 		fp_vkCmdSetDeviceMask = (PFN_vkCmdSetDeviceMask)procAddr(device, "vkCmdSetDeviceMask");
 #endif
 #if (defined(VK_KHR_swapchain) && defined(VK_VERSION_1_1)) || (defined(VK_KHR_device_group) && defined(VK_KHR_surface))
@@ -313,16 +313,16 @@ struct DispatchTable {
 #if (defined(VK_KHR_swapchain) && defined(VK_VERSION_1_1)) || (defined(VK_KHR_device_group) && defined(VK_KHR_swapchain))
 		fp_vkAcquireNextImage2KHR = (PFN_vkAcquireNextImage2KHR)procAddr(device, "vkAcquireNextImage2KHR");
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_device_group))
+#if (defined(VK_VERSION_1_1))
 		fp_vkCmdDispatchBase = (PFN_vkCmdDispatchBase)procAddr(device, "vkCmdDispatchBase");
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_descriptor_update_template))
+#if (defined(VK_VERSION_1_1))
 		fp_vkCreateDescriptorUpdateTemplate = (PFN_vkCreateDescriptorUpdateTemplate)procAddr(device, "vkCreateDescriptorUpdateTemplate");
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_descriptor_update_template))
+#if (defined(VK_VERSION_1_1))
 		fp_vkDestroyDescriptorUpdateTemplate = (PFN_vkDestroyDescriptorUpdateTemplate)procAddr(device, "vkDestroyDescriptorUpdateTemplate");
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_descriptor_update_template))
+#if (defined(VK_VERSION_1_1))
 		fp_vkUpdateDescriptorSetWithTemplate = (PFN_vkUpdateDescriptorSetWithTemplate)procAddr(device, "vkUpdateDescriptorSetWithTemplate");
 #endif
 #if (defined(VK_KHR_push_descriptor) && defined(VK_VERSION_1_1)) || (defined(VK_KHR_push_descriptor) && defined(VK_KHR_descriptor_update_template)) || (defined(VK_KHR_descriptor_update_template) && defined(VK_KHR_push_descriptor))
@@ -349,28 +349,28 @@ struct DispatchTable {
 #if (defined(VK_EXT_sample_locations))
 		fp_vkCmdSetSampleLocationsEXT = (PFN_vkCmdSetSampleLocationsEXT)procAddr(device, "vkCmdSetSampleLocationsEXT");
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_get_memory_requirements2))
+#if (defined(VK_VERSION_1_1))
 		fp_vkGetBufferMemoryRequirements2 = (PFN_vkGetBufferMemoryRequirements2)procAddr(device, "vkGetBufferMemoryRequirements2");
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_get_memory_requirements2))
+#if (defined(VK_VERSION_1_1))
 		fp_vkGetImageMemoryRequirements2 = (PFN_vkGetImageMemoryRequirements2)procAddr(device, "vkGetImageMemoryRequirements2");
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_get_memory_requirements2))
+#if (defined(VK_VERSION_1_1))
 		fp_vkGetImageSparseMemoryRequirements2 = (PFN_vkGetImageSparseMemoryRequirements2)procAddr(device, "vkGetImageSparseMemoryRequirements2");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_maintenance4))
+#if (defined(VK_VERSION_1_3))
 		fp_vkGetDeviceBufferMemoryRequirements = (PFN_vkGetDeviceBufferMemoryRequirements)procAddr(device, "vkGetDeviceBufferMemoryRequirements");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_maintenance4))
+#if (defined(VK_VERSION_1_3))
 		fp_vkGetDeviceImageMemoryRequirements = (PFN_vkGetDeviceImageMemoryRequirements)procAddr(device, "vkGetDeviceImageMemoryRequirements");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_maintenance4))
+#if (defined(VK_VERSION_1_3))
 		fp_vkGetDeviceImageSparseMemoryRequirements = (PFN_vkGetDeviceImageSparseMemoryRequirements)procAddr(device, "vkGetDeviceImageSparseMemoryRequirements");
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_sampler_ycbcr_conversion))
+#if (defined(VK_VERSION_1_1))
 		fp_vkCreateSamplerYcbcrConversion = (PFN_vkCreateSamplerYcbcrConversion)procAddr(device, "vkCreateSamplerYcbcrConversion");
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_sampler_ycbcr_conversion))
+#if (defined(VK_VERSION_1_1))
 		fp_vkDestroySamplerYcbcrConversion = (PFN_vkDestroySamplerYcbcrConversion)procAddr(device, "vkDestroySamplerYcbcrConversion");
 #endif
 #if (defined(VK_VERSION_1_1))
@@ -388,7 +388,7 @@ struct DispatchTable {
 #if (defined(VK_EXT_validation_cache))
 		fp_vkMergeValidationCachesEXT = (PFN_vkMergeValidationCachesEXT)procAddr(device, "vkMergeValidationCachesEXT");
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_maintenance3))
+#if (defined(VK_VERSION_1_1))
 		fp_vkGetDescriptorSetLayoutSupport = (PFN_vkGetDescriptorSetLayoutSupport)procAddr(device, "vkGetDescriptorSetLayoutSupport");
 #endif
 #if (defined(VK_ANDROID_native_buffer))
@@ -442,25 +442,25 @@ struct DispatchTable {
 #if (defined(VK_AMD_buffer_marker))
 		fp_vkCmdWriteBufferMarkerAMD = (PFN_vkCmdWriteBufferMarkerAMD)procAddr(device, "vkCmdWriteBufferMarkerAMD");
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_create_renderpass2))
+#if (defined(VK_VERSION_1_2))
 		fp_vkCreateRenderPass2 = (PFN_vkCreateRenderPass2)procAddr(device, "vkCreateRenderPass2");
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_create_renderpass2))
+#if (defined(VK_VERSION_1_2))
 		fp_vkCmdBeginRenderPass2 = (PFN_vkCmdBeginRenderPass2)procAddr(device, "vkCmdBeginRenderPass2");
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_create_renderpass2))
+#if (defined(VK_VERSION_1_2))
 		fp_vkCmdNextSubpass2 = (PFN_vkCmdNextSubpass2)procAddr(device, "vkCmdNextSubpass2");
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_create_renderpass2))
+#if (defined(VK_VERSION_1_2))
 		fp_vkCmdEndRenderPass2 = (PFN_vkCmdEndRenderPass2)procAddr(device, "vkCmdEndRenderPass2");
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_timeline_semaphore))
+#if (defined(VK_VERSION_1_2))
 		fp_vkGetSemaphoreCounterValue = (PFN_vkGetSemaphoreCounterValue)procAddr(device, "vkGetSemaphoreCounterValue");
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_timeline_semaphore))
+#if (defined(VK_VERSION_1_2))
 		fp_vkWaitSemaphores = (PFN_vkWaitSemaphores)procAddr(device, "vkWaitSemaphores");
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_timeline_semaphore))
+#if (defined(VK_VERSION_1_2))
 		fp_vkSignalSemaphore = (PFN_vkSignalSemaphore)procAddr(device, "vkSignalSemaphore");
 #endif
 #if (defined(VK_ANDROID_external_memory_android_hardware_buffer))
@@ -469,10 +469,10 @@ struct DispatchTable {
 #if (defined(VK_ANDROID_external_memory_android_hardware_buffer))
 		fp_vkGetMemoryAndroidHardwareBufferANDROID = (PFN_vkGetMemoryAndroidHardwareBufferANDROID)procAddr(device, "vkGetMemoryAndroidHardwareBufferANDROID");
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_AMD_draw_indirect_count))
+#if (defined(VK_VERSION_1_2))
 		fp_vkCmdDrawIndirectCount = (PFN_vkCmdDrawIndirectCount)procAddr(device, "vkCmdDrawIndirectCount");
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_AMD_draw_indirect_count))
+#if (defined(VK_VERSION_1_2))
 		fp_vkCmdDrawIndexedIndirectCount = (PFN_vkCmdDrawIndexedIndirectCount)procAddr(device, "vkCmdDrawIndexedIndirectCount");
 #endif
 #if (defined(VK_NV_device_diagnostic_checkpoints))
@@ -580,7 +580,7 @@ struct DispatchTable {
 #if (defined(VK_NV_ray_tracing))
 		fp_vkCmdTraceRaysNV = (PFN_vkCmdTraceRaysNV)procAddr(device, "vkCmdTraceRaysNV");
 #endif
-#if (defined(VK_KHR_ray_tracing_pipeline)) || (defined(VK_NV_ray_tracing))
+#if (defined(VK_KHR_ray_tracing_pipeline))
 		fp_vkGetRayTracingShaderGroupHandlesKHR = (PFN_vkGetRayTracingShaderGroupHandlesKHR)procAddr(device, "vkGetRayTracingShaderGroupHandlesKHR");
 #endif
 #if (defined(VK_KHR_ray_tracing_pipeline))
@@ -607,12 +607,6 @@ struct DispatchTable {
 #if (defined(VK_KHR_ray_tracing_pipeline))
 		fp_vkCmdSetRayTracingPipelineStackSizeKHR = (PFN_vkCmdSetRayTracingPipelineStackSizeKHR)procAddr(device, "vkCmdSetRayTracingPipelineStackSizeKHR");
 #endif
-#if (defined(VK_NVX_image_view_handle))
-		fp_vkGetImageViewHandleNVX = (PFN_vkGetImageViewHandleNVX)procAddr(device, "vkGetImageViewHandleNVX");
-#endif
-#if (defined(VK_NVX_image_view_handle))
-		fp_vkGetImageViewAddressNVX = (PFN_vkGetImageViewAddressNVX)procAddr(device, "vkGetImageViewAddressNVX");
-#endif
 #if (defined(VK_EXT_full_screen_exclusive) && defined(VK_KHR_device_group)) || (defined(VK_EXT_full_screen_exclusive) && defined(VK_VERSION_1_1))
 		fp_vkGetDeviceGroupSurfacePresentModes2EXT = (PFN_vkGetDeviceGroupSurfacePresentModes2EXT)procAddr(device, "vkGetDeviceGroupSurfacePresentModes2EXT");
 #endif
@@ -631,10 +625,10 @@ struct DispatchTable {
 #if (defined(VK_EXT_image_drm_format_modifier))
 		fp_vkGetImageDrmFormatModifierPropertiesEXT = (PFN_vkGetImageDrmFormatModifierPropertiesEXT)procAddr(device, "vkGetImageDrmFormatModifierPropertiesEXT");
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_buffer_device_address))
+#if (defined(VK_VERSION_1_2))
 		fp_vkGetBufferOpaqueCaptureAddress = (PFN_vkGetBufferOpaqueCaptureAddress)procAddr(device, "vkGetBufferOpaqueCaptureAddress");
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_EXT_buffer_device_address))
+#if (defined(VK_VERSION_1_2))
 		fp_vkGetBufferDeviceAddress = (PFN_vkGetBufferDeviceAddress)procAddr(device, "vkGetBufferDeviceAddress");
 #endif
 #if (defined(VK_INTEL_performance_query))
@@ -664,7 +658,7 @@ struct DispatchTable {
 #if (defined(VK_INTEL_performance_query))
 		fp_vkGetPerformanceParameterINTEL = (PFN_vkGetPerformanceParameterINTEL)procAddr(device, "vkGetPerformanceParameterINTEL");
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_buffer_device_address))
+#if (defined(VK_VERSION_1_2))
 		fp_vkGetDeviceMemoryOpaqueCaptureAddress = (PFN_vkGetDeviceMemoryOpaqueCaptureAddress)procAddr(device, "vkGetDeviceMemoryOpaqueCaptureAddress");
 #endif
 #if (defined(VK_KHR_pipeline_executable_properties))
@@ -709,85 +703,85 @@ struct DispatchTable {
 #if (defined(VK_KHR_deferred_host_operations))
 		fp_vkDeferredOperationJoinKHR = (PFN_vkDeferredOperationJoinKHR)procAddr(device, "vkDeferredOperationJoinKHR");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_VERSION_1_3))
 		fp_vkCmdSetCullMode = (PFN_vkCmdSetCullMode)procAddr(device, "vkCmdSetCullMode");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_VERSION_1_3))
 		fp_vkCmdSetFrontFace = (PFN_vkCmdSetFrontFace)procAddr(device, "vkCmdSetFrontFace");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_VERSION_1_3))
 		fp_vkCmdSetPrimitiveTopology = (PFN_vkCmdSetPrimitiveTopology)procAddr(device, "vkCmdSetPrimitiveTopology");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_VERSION_1_3))
 		fp_vkCmdSetViewportWithCount = (PFN_vkCmdSetViewportWithCount)procAddr(device, "vkCmdSetViewportWithCount");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_VERSION_1_3))
 		fp_vkCmdSetScissorWithCount = (PFN_vkCmdSetScissorWithCount)procAddr(device, "vkCmdSetScissorWithCount");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_VERSION_1_3))
 		fp_vkCmdBindVertexBuffers2 = (PFN_vkCmdBindVertexBuffers2)procAddr(device, "vkCmdBindVertexBuffers2");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_VERSION_1_3))
 		fp_vkCmdSetDepthTestEnable = (PFN_vkCmdSetDepthTestEnable)procAddr(device, "vkCmdSetDepthTestEnable");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_VERSION_1_3))
 		fp_vkCmdSetDepthWriteEnable = (PFN_vkCmdSetDepthWriteEnable)procAddr(device, "vkCmdSetDepthWriteEnable");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_VERSION_1_3))
 		fp_vkCmdSetDepthCompareOp = (PFN_vkCmdSetDepthCompareOp)procAddr(device, "vkCmdSetDepthCompareOp");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_VERSION_1_3))
 		fp_vkCmdSetDepthBoundsTestEnable = (PFN_vkCmdSetDepthBoundsTestEnable)procAddr(device, "vkCmdSetDepthBoundsTestEnable");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_VERSION_1_3))
 		fp_vkCmdSetStencilTestEnable = (PFN_vkCmdSetStencilTestEnable)procAddr(device, "vkCmdSetStencilTestEnable");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_VERSION_1_3))
 		fp_vkCmdSetStencilOp = (PFN_vkCmdSetStencilOp)procAddr(device, "vkCmdSetStencilOp");
 #endif
 #if (defined(VK_EXT_extended_dynamic_state2))
 		fp_vkCmdSetPatchControlPointsEXT = (PFN_vkCmdSetPatchControlPointsEXT)procAddr(device, "vkCmdSetPatchControlPointsEXT");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state2))
+#if (defined(VK_VERSION_1_3))
 		fp_vkCmdSetRasterizerDiscardEnable = (PFN_vkCmdSetRasterizerDiscardEnable)procAddr(device, "vkCmdSetRasterizerDiscardEnable");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state2))
+#if (defined(VK_VERSION_1_3))
 		fp_vkCmdSetDepthBiasEnable = (PFN_vkCmdSetDepthBiasEnable)procAddr(device, "vkCmdSetDepthBiasEnable");
 #endif
 #if (defined(VK_EXT_extended_dynamic_state2))
 		fp_vkCmdSetLogicOpEXT = (PFN_vkCmdSetLogicOpEXT)procAddr(device, "vkCmdSetLogicOpEXT");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state2))
+#if (defined(VK_VERSION_1_3))
 		fp_vkCmdSetPrimitiveRestartEnable = (PFN_vkCmdSetPrimitiveRestartEnable)procAddr(device, "vkCmdSetPrimitiveRestartEnable");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_private_data))
+#if (defined(VK_VERSION_1_3))
 		fp_vkCreatePrivateDataSlot = (PFN_vkCreatePrivateDataSlot)procAddr(device, "vkCreatePrivateDataSlot");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_private_data))
+#if (defined(VK_VERSION_1_3))
 		fp_vkDestroyPrivateDataSlot = (PFN_vkDestroyPrivateDataSlot)procAddr(device, "vkDestroyPrivateDataSlot");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_private_data))
+#if (defined(VK_VERSION_1_3))
 		fp_vkSetPrivateData = (PFN_vkSetPrivateData)procAddr(device, "vkSetPrivateData");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_private_data))
+#if (defined(VK_VERSION_1_3))
 		fp_vkGetPrivateData = (PFN_vkGetPrivateData)procAddr(device, "vkGetPrivateData");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_copy_commands2))
+#if (defined(VK_VERSION_1_3))
 		fp_vkCmdCopyBuffer2 = (PFN_vkCmdCopyBuffer2)procAddr(device, "vkCmdCopyBuffer2");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_copy_commands2))
+#if (defined(VK_VERSION_1_3))
 		fp_vkCmdCopyImage2 = (PFN_vkCmdCopyImage2)procAddr(device, "vkCmdCopyImage2");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_copy_commands2))
+#if (defined(VK_VERSION_1_3))
 		fp_vkCmdBlitImage2 = (PFN_vkCmdBlitImage2)procAddr(device, "vkCmdBlitImage2");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_copy_commands2))
+#if (defined(VK_VERSION_1_3))
 		fp_vkCmdCopyBufferToImage2 = (PFN_vkCmdCopyBufferToImage2)procAddr(device, "vkCmdCopyBufferToImage2");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_copy_commands2))
+#if (defined(VK_VERSION_1_3))
 		fp_vkCmdCopyImageToBuffer2 = (PFN_vkCmdCopyImageToBuffer2)procAddr(device, "vkCmdCopyImageToBuffer2");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_copy_commands2))
+#if (defined(VK_VERSION_1_3))
 		fp_vkCmdResolveImage2 = (PFN_vkCmdResolveImage2)procAddr(device, "vkCmdResolveImage2");
 #endif
 #if (defined(VK_KHR_fragment_shading_rate))
@@ -805,22 +799,22 @@ struct DispatchTable {
 #if (defined(VK_EXT_color_write_enable))
 		fp_vkCmdSetColorWriteEnableEXT = (PFN_vkCmdSetColorWriteEnableEXT)procAddr(device, "vkCmdSetColorWriteEnableEXT");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_synchronization2))
+#if (defined(VK_VERSION_1_3))
 		fp_vkCmdSetEvent2 = (PFN_vkCmdSetEvent2)procAddr(device, "vkCmdSetEvent2");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_synchronization2))
+#if (defined(VK_VERSION_1_3))
 		fp_vkCmdResetEvent2 = (PFN_vkCmdResetEvent2)procAddr(device, "vkCmdResetEvent2");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_synchronization2))
+#if (defined(VK_VERSION_1_3))
 		fp_vkCmdWaitEvents2 = (PFN_vkCmdWaitEvents2)procAddr(device, "vkCmdWaitEvents2");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_synchronization2))
+#if (defined(VK_VERSION_1_3))
 		fp_vkCmdPipelineBarrier2 = (PFN_vkCmdPipelineBarrier2)procAddr(device, "vkCmdPipelineBarrier2");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_synchronization2))
+#if (defined(VK_VERSION_1_3))
 		fp_vkQueueSubmit2 = (PFN_vkQueueSubmit2)procAddr(device, "vkQueueSubmit2");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_synchronization2))
+#if (defined(VK_VERSION_1_3))
 		fp_vkCmdWriteTimestamp2 = (PFN_vkCmdWriteTimestamp2)procAddr(device, "vkCmdWriteTimestamp2");
 #endif
 #if (defined(VK_KHR_synchronization2) && defined(VK_AMD_buffer_marker))
@@ -865,21 +859,6 @@ struct DispatchTable {
 #if (defined(VK_KHR_video_encode_queue))
 		fp_vkCmdEncodeVideoKHR = (PFN_vkCmdEncodeVideoKHR)procAddr(device, "vkCmdEncodeVideoKHR");
 #endif
-#if (defined(VK_NVX_binary_import))
-		fp_vkCreateCuModuleNVX = (PFN_vkCreateCuModuleNVX)procAddr(device, "vkCreateCuModuleNVX");
-#endif
-#if (defined(VK_NVX_binary_import))
-		fp_vkCreateCuFunctionNVX = (PFN_vkCreateCuFunctionNVX)procAddr(device, "vkCreateCuFunctionNVX");
-#endif
-#if (defined(VK_NVX_binary_import))
-		fp_vkDestroyCuModuleNVX = (PFN_vkDestroyCuModuleNVX)procAddr(device, "vkDestroyCuModuleNVX");
-#endif
-#if (defined(VK_NVX_binary_import))
-		fp_vkDestroyCuFunctionNVX = (PFN_vkDestroyCuFunctionNVX)procAddr(device, "vkDestroyCuFunctionNVX");
-#endif
-#if (defined(VK_NVX_binary_import))
-		fp_vkCmdCuLaunchKernelNVX = (PFN_vkCmdCuLaunchKernelNVX)procAddr(device, "vkCmdCuLaunchKernelNVX");
-#endif
 #if (defined(VK_EXT_pageable_device_local_memory))
 		fp_vkSetDeviceMemoryPriorityEXT = (PFN_vkSetDeviceMemoryPriorityEXT)procAddr(device, "vkSetDeviceMemoryPriorityEXT");
 #endif
@@ -901,205 +880,205 @@ struct DispatchTable {
 #if (defined(VK_FUCHSIA_buffer_collection))
 		fp_vkGetBufferCollectionPropertiesFUCHSIA = (PFN_vkGetBufferCollectionPropertiesFUCHSIA)procAddr(device, "vkGetBufferCollectionPropertiesFUCHSIA");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_dynamic_rendering))
+#if (defined(VK_VERSION_1_3))
 		fp_vkCmdBeginRendering = (PFN_vkCmdBeginRendering)procAddr(device, "vkCmdBeginRendering");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_dynamic_rendering))
+#if (defined(VK_VERSION_1_3))
 		fp_vkCmdEndRendering = (PFN_vkCmdEndRendering)procAddr(device, "vkCmdEndRendering");
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_EXT_host_query_reset))
+#if (defined(VK_EXT_host_query_reset))
 		fp_vkResetQueryPoolEXT = (PFN_vkResetQueryPoolEXT)procAddr(device, "vkResetQueryPoolEXT");
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_maintenance1))
+#if (defined(VK_KHR_maintenance1))
 		fp_vkTrimCommandPoolKHR = (PFN_vkTrimCommandPoolKHR)procAddr(device, "vkTrimCommandPoolKHR");
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_device_group))
+#if (defined(VK_KHR_device_group))
 		fp_vkGetDeviceGroupPeerMemoryFeaturesKHR = (PFN_vkGetDeviceGroupPeerMemoryFeaturesKHR)procAddr(device, "vkGetDeviceGroupPeerMemoryFeaturesKHR");
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_bind_memory2))
+#if (defined(VK_KHR_bind_memory2))
 		fp_vkBindBufferMemory2KHR = (PFN_vkBindBufferMemory2KHR)procAddr(device, "vkBindBufferMemory2KHR");
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_bind_memory2))
+#if (defined(VK_KHR_bind_memory2))
 		fp_vkBindImageMemory2KHR = (PFN_vkBindImageMemory2KHR)procAddr(device, "vkBindImageMemory2KHR");
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_device_group))
+#if (defined(VK_KHR_device_group))
 		fp_vkCmdSetDeviceMaskKHR = (PFN_vkCmdSetDeviceMaskKHR)procAddr(device, "vkCmdSetDeviceMaskKHR");
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_device_group))
+#if (defined(VK_KHR_device_group))
 		fp_vkCmdDispatchBaseKHR = (PFN_vkCmdDispatchBaseKHR)procAddr(device, "vkCmdDispatchBaseKHR");
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_descriptor_update_template))
+#if (defined(VK_KHR_descriptor_update_template))
 		fp_vkCreateDescriptorUpdateTemplateKHR = (PFN_vkCreateDescriptorUpdateTemplateKHR)procAddr(device, "vkCreateDescriptorUpdateTemplateKHR");
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_descriptor_update_template))
+#if (defined(VK_KHR_descriptor_update_template))
 		fp_vkDestroyDescriptorUpdateTemplateKHR = (PFN_vkDestroyDescriptorUpdateTemplateKHR)procAddr(device, "vkDestroyDescriptorUpdateTemplateKHR");
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_descriptor_update_template))
+#if (defined(VK_KHR_descriptor_update_template))
 		fp_vkUpdateDescriptorSetWithTemplateKHR = (PFN_vkUpdateDescriptorSetWithTemplateKHR)procAddr(device, "vkUpdateDescriptorSetWithTemplateKHR");
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_get_memory_requirements2))
+#if (defined(VK_KHR_get_memory_requirements2))
 		fp_vkGetBufferMemoryRequirements2KHR = (PFN_vkGetBufferMemoryRequirements2KHR)procAddr(device, "vkGetBufferMemoryRequirements2KHR");
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_get_memory_requirements2))
+#if (defined(VK_KHR_get_memory_requirements2))
 		fp_vkGetImageMemoryRequirements2KHR = (PFN_vkGetImageMemoryRequirements2KHR)procAddr(device, "vkGetImageMemoryRequirements2KHR");
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_get_memory_requirements2))
+#if (defined(VK_KHR_get_memory_requirements2))
 		fp_vkGetImageSparseMemoryRequirements2KHR = (PFN_vkGetImageSparseMemoryRequirements2KHR)procAddr(device, "vkGetImageSparseMemoryRequirements2KHR");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_maintenance4))
+#if (defined(VK_KHR_maintenance4))
 		fp_vkGetDeviceBufferMemoryRequirementsKHR = (PFN_vkGetDeviceBufferMemoryRequirementsKHR)procAddr(device, "vkGetDeviceBufferMemoryRequirementsKHR");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_maintenance4))
+#if (defined(VK_KHR_maintenance4))
 		fp_vkGetDeviceImageMemoryRequirementsKHR = (PFN_vkGetDeviceImageMemoryRequirementsKHR)procAddr(device, "vkGetDeviceImageMemoryRequirementsKHR");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_maintenance4))
+#if (defined(VK_KHR_maintenance4))
 		fp_vkGetDeviceImageSparseMemoryRequirementsKHR = (PFN_vkGetDeviceImageSparseMemoryRequirementsKHR)procAddr(device, "vkGetDeviceImageSparseMemoryRequirementsKHR");
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_sampler_ycbcr_conversion))
+#if (defined(VK_KHR_sampler_ycbcr_conversion))
 		fp_vkCreateSamplerYcbcrConversionKHR = (PFN_vkCreateSamplerYcbcrConversionKHR)procAddr(device, "vkCreateSamplerYcbcrConversionKHR");
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_sampler_ycbcr_conversion))
+#if (defined(VK_KHR_sampler_ycbcr_conversion))
 		fp_vkDestroySamplerYcbcrConversionKHR = (PFN_vkDestroySamplerYcbcrConversionKHR)procAddr(device, "vkDestroySamplerYcbcrConversionKHR");
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_maintenance3))
+#if (defined(VK_KHR_maintenance3))
 		fp_vkGetDescriptorSetLayoutSupportKHR = (PFN_vkGetDescriptorSetLayoutSupportKHR)procAddr(device, "vkGetDescriptorSetLayoutSupportKHR");
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_create_renderpass2))
+#if (defined(VK_KHR_create_renderpass2))
 		fp_vkCreateRenderPass2KHR = (PFN_vkCreateRenderPass2KHR)procAddr(device, "vkCreateRenderPass2KHR");
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_create_renderpass2))
+#if (defined(VK_KHR_create_renderpass2))
 		fp_vkCmdBeginRenderPass2KHR = (PFN_vkCmdBeginRenderPass2KHR)procAddr(device, "vkCmdBeginRenderPass2KHR");
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_create_renderpass2))
+#if (defined(VK_KHR_create_renderpass2))
 		fp_vkCmdNextSubpass2KHR = (PFN_vkCmdNextSubpass2KHR)procAddr(device, "vkCmdNextSubpass2KHR");
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_create_renderpass2))
+#if (defined(VK_KHR_create_renderpass2))
 		fp_vkCmdEndRenderPass2KHR = (PFN_vkCmdEndRenderPass2KHR)procAddr(device, "vkCmdEndRenderPass2KHR");
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_timeline_semaphore))
+#if (defined(VK_KHR_timeline_semaphore))
 		fp_vkGetSemaphoreCounterValueKHR = (PFN_vkGetSemaphoreCounterValueKHR)procAddr(device, "vkGetSemaphoreCounterValueKHR");
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_timeline_semaphore))
+#if (defined(VK_KHR_timeline_semaphore))
 		fp_vkWaitSemaphoresKHR = (PFN_vkWaitSemaphoresKHR)procAddr(device, "vkWaitSemaphoresKHR");
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_timeline_semaphore))
+#if (defined(VK_KHR_timeline_semaphore))
 		fp_vkSignalSemaphoreKHR = (PFN_vkSignalSemaphoreKHR)procAddr(device, "vkSignalSemaphoreKHR");
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_AMD_draw_indirect_count))
+#if (defined(VK_AMD_draw_indirect_count))
 		fp_vkCmdDrawIndirectCountAMD = (PFN_vkCmdDrawIndirectCountAMD)procAddr(device, "vkCmdDrawIndirectCountAMD");
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_AMD_draw_indirect_count))
+#if (defined(VK_AMD_draw_indirect_count))
 		fp_vkCmdDrawIndexedIndirectCountAMD = (PFN_vkCmdDrawIndexedIndirectCountAMD)procAddr(device, "vkCmdDrawIndexedIndirectCountAMD");
 #endif
-#if (defined(VK_KHR_ray_tracing_pipeline)) || (defined(VK_NV_ray_tracing))
+#if (defined(VK_NV_ray_tracing))
 		fp_vkGetRayTracingShaderGroupHandlesNV = (PFN_vkGetRayTracingShaderGroupHandlesNV)procAddr(device, "vkGetRayTracingShaderGroupHandlesNV");
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_buffer_device_address))
+#if (defined(VK_KHR_buffer_device_address))
 		fp_vkGetBufferOpaqueCaptureAddressKHR = (PFN_vkGetBufferOpaqueCaptureAddressKHR)procAddr(device, "vkGetBufferOpaqueCaptureAddressKHR");
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_EXT_buffer_device_address))
+#if (defined(VK_EXT_buffer_device_address))
 		fp_vkGetBufferDeviceAddressEXT = (PFN_vkGetBufferDeviceAddressEXT)procAddr(device, "vkGetBufferDeviceAddressEXT");
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_buffer_device_address))
+#if (defined(VK_KHR_buffer_device_address))
 		fp_vkGetDeviceMemoryOpaqueCaptureAddressKHR = (PFN_vkGetDeviceMemoryOpaqueCaptureAddressKHR)procAddr(device, "vkGetDeviceMemoryOpaqueCaptureAddressKHR");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_EXT_extended_dynamic_state))
 		fp_vkCmdSetCullModeEXT = (PFN_vkCmdSetCullModeEXT)procAddr(device, "vkCmdSetCullModeEXT");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_EXT_extended_dynamic_state))
 		fp_vkCmdSetFrontFaceEXT = (PFN_vkCmdSetFrontFaceEXT)procAddr(device, "vkCmdSetFrontFaceEXT");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_EXT_extended_dynamic_state))
 		fp_vkCmdSetPrimitiveTopologyEXT = (PFN_vkCmdSetPrimitiveTopologyEXT)procAddr(device, "vkCmdSetPrimitiveTopologyEXT");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_EXT_extended_dynamic_state))
 		fp_vkCmdSetViewportWithCountEXT = (PFN_vkCmdSetViewportWithCountEXT)procAddr(device, "vkCmdSetViewportWithCountEXT");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_EXT_extended_dynamic_state))
 		fp_vkCmdSetScissorWithCountEXT = (PFN_vkCmdSetScissorWithCountEXT)procAddr(device, "vkCmdSetScissorWithCountEXT");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_EXT_extended_dynamic_state))
 		fp_vkCmdBindVertexBuffers2EXT = (PFN_vkCmdBindVertexBuffers2EXT)procAddr(device, "vkCmdBindVertexBuffers2EXT");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_EXT_extended_dynamic_state))
 		fp_vkCmdSetDepthTestEnableEXT = (PFN_vkCmdSetDepthTestEnableEXT)procAddr(device, "vkCmdSetDepthTestEnableEXT");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_EXT_extended_dynamic_state))
 		fp_vkCmdSetDepthWriteEnableEXT = (PFN_vkCmdSetDepthWriteEnableEXT)procAddr(device, "vkCmdSetDepthWriteEnableEXT");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_EXT_extended_dynamic_state))
 		fp_vkCmdSetDepthCompareOpEXT = (PFN_vkCmdSetDepthCompareOpEXT)procAddr(device, "vkCmdSetDepthCompareOpEXT");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_EXT_extended_dynamic_state))
 		fp_vkCmdSetDepthBoundsTestEnableEXT = (PFN_vkCmdSetDepthBoundsTestEnableEXT)procAddr(device, "vkCmdSetDepthBoundsTestEnableEXT");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_EXT_extended_dynamic_state))
 		fp_vkCmdSetStencilTestEnableEXT = (PFN_vkCmdSetStencilTestEnableEXT)procAddr(device, "vkCmdSetStencilTestEnableEXT");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_EXT_extended_dynamic_state))
 		fp_vkCmdSetStencilOpEXT = (PFN_vkCmdSetStencilOpEXT)procAddr(device, "vkCmdSetStencilOpEXT");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state2))
+#if (defined(VK_EXT_extended_dynamic_state2))
 		fp_vkCmdSetRasterizerDiscardEnableEXT = (PFN_vkCmdSetRasterizerDiscardEnableEXT)procAddr(device, "vkCmdSetRasterizerDiscardEnableEXT");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state2))
+#if (defined(VK_EXT_extended_dynamic_state2))
 		fp_vkCmdSetDepthBiasEnableEXT = (PFN_vkCmdSetDepthBiasEnableEXT)procAddr(device, "vkCmdSetDepthBiasEnableEXT");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state2))
+#if (defined(VK_EXT_extended_dynamic_state2))
 		fp_vkCmdSetPrimitiveRestartEnableEXT = (PFN_vkCmdSetPrimitiveRestartEnableEXT)procAddr(device, "vkCmdSetPrimitiveRestartEnableEXT");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_private_data))
+#if (defined(VK_EXT_private_data))
 		fp_vkCreatePrivateDataSlotEXT = (PFN_vkCreatePrivateDataSlotEXT)procAddr(device, "vkCreatePrivateDataSlotEXT");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_private_data))
+#if (defined(VK_EXT_private_data))
 		fp_vkDestroyPrivateDataSlotEXT = (PFN_vkDestroyPrivateDataSlotEXT)procAddr(device, "vkDestroyPrivateDataSlotEXT");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_private_data))
+#if (defined(VK_EXT_private_data))
 		fp_vkSetPrivateDataEXT = (PFN_vkSetPrivateDataEXT)procAddr(device, "vkSetPrivateDataEXT");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_private_data))
+#if (defined(VK_EXT_private_data))
 		fp_vkGetPrivateDataEXT = (PFN_vkGetPrivateDataEXT)procAddr(device, "vkGetPrivateDataEXT");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_copy_commands2))
+#if (defined(VK_KHR_copy_commands2))
 		fp_vkCmdCopyBuffer2KHR = (PFN_vkCmdCopyBuffer2KHR)procAddr(device, "vkCmdCopyBuffer2KHR");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_copy_commands2))
+#if (defined(VK_KHR_copy_commands2))
 		fp_vkCmdCopyImage2KHR = (PFN_vkCmdCopyImage2KHR)procAddr(device, "vkCmdCopyImage2KHR");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_copy_commands2))
+#if (defined(VK_KHR_copy_commands2))
 		fp_vkCmdBlitImage2KHR = (PFN_vkCmdBlitImage2KHR)procAddr(device, "vkCmdBlitImage2KHR");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_copy_commands2))
+#if (defined(VK_KHR_copy_commands2))
 		fp_vkCmdCopyBufferToImage2KHR = (PFN_vkCmdCopyBufferToImage2KHR)procAddr(device, "vkCmdCopyBufferToImage2KHR");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_copy_commands2))
+#if (defined(VK_KHR_copy_commands2))
 		fp_vkCmdCopyImageToBuffer2KHR = (PFN_vkCmdCopyImageToBuffer2KHR)procAddr(device, "vkCmdCopyImageToBuffer2KHR");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_copy_commands2))
+#if (defined(VK_KHR_copy_commands2))
 		fp_vkCmdResolveImage2KHR = (PFN_vkCmdResolveImage2KHR)procAddr(device, "vkCmdResolveImage2KHR");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_synchronization2))
+#if (defined(VK_KHR_synchronization2))
 		fp_vkCmdSetEvent2KHR = (PFN_vkCmdSetEvent2KHR)procAddr(device, "vkCmdSetEvent2KHR");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_synchronization2))
+#if (defined(VK_KHR_synchronization2))
 		fp_vkCmdResetEvent2KHR = (PFN_vkCmdResetEvent2KHR)procAddr(device, "vkCmdResetEvent2KHR");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_synchronization2))
+#if (defined(VK_KHR_synchronization2))
 		fp_vkCmdWaitEvents2KHR = (PFN_vkCmdWaitEvents2KHR)procAddr(device, "vkCmdWaitEvents2KHR");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_synchronization2))
+#if (defined(VK_KHR_synchronization2))
 		fp_vkCmdPipelineBarrier2KHR = (PFN_vkCmdPipelineBarrier2KHR)procAddr(device, "vkCmdPipelineBarrier2KHR");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_synchronization2))
+#if (defined(VK_KHR_synchronization2))
 		fp_vkQueueSubmit2KHR = (PFN_vkQueueSubmit2KHR)procAddr(device, "vkQueueSubmit2KHR");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_synchronization2))
+#if (defined(VK_KHR_synchronization2))
 		fp_vkCmdWriteTimestamp2KHR = (PFN_vkCmdWriteTimestamp2KHR)procAddr(device, "vkCmdWriteTimestamp2KHR");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_dynamic_rendering))
+#if (defined(VK_KHR_dynamic_rendering))
 		fp_vkCmdBeginRenderingKHR = (PFN_vkCmdBeginRenderingKHR)procAddr(device, "vkCmdBeginRenderingKHR");
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_dynamic_rendering))
+#if (defined(VK_KHR_dynamic_rendering))
 		fp_vkCmdEndRenderingKHR = (PFN_vkCmdEndRenderingKHR)procAddr(device, "vkCmdEndRenderingKHR");
 #endif
 	}
@@ -1199,7 +1178,7 @@ struct DispatchTable {
 	VkResult getQueryPoolResults(VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount, size_t dataSize, void* pData, VkDeviceSize stride, VkQueryResultFlags flags) const noexcept {
 		return fp_vkGetQueryPoolResults(device, queryPool, firstQuery, queryCount, dataSize, pData, stride, flags);
 	}
-#if (defined(VK_VERSION_1_2)) || (defined(VK_EXT_host_query_reset))
+#if (defined(VK_VERSION_1_2))
 	void resetQueryPool(VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount) const noexcept {
 		fp_vkResetQueryPool(device, queryPool, firstQuery, queryCount);
 	}
@@ -1571,7 +1550,7 @@ struct DispatchTable {
 	}
 #endif
 #if (defined(VK_NV_device_generated_commands))
-	void getGeneratedCommandsMemoryRequirementsNV(const VkGeneratedCommandsMemoryRequirementsInfoNV* pInfo, VkMemoryRequirements2* pMemoryRequirements) const noexcept {
+	void getGeneratedCommandsMemoryRequirementsNV(const VkGeneratedCommandsMemoryRequirementsInfoNV* pInfo, VkMemoryRequirements2KHR* pMemoryRequirements) const noexcept {
 		fp_vkGetGeneratedCommandsMemoryRequirementsNV(device, pInfo, pMemoryRequirements);
 	}
 #endif
@@ -1590,8 +1569,8 @@ struct DispatchTable {
 		fp_vkCmdPushDescriptorSetKHR(commandBuffer, pipelineBindPoint, layout, set, descriptorWriteCount, pDescriptorWrites);
 	}
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_maintenance1))
-	void trimCommandPool(VkCommandPool commandPool, VkCommandPoolTrimFlags flags) const noexcept {
+#if (defined(VK_VERSION_1_1))
+	void trimCommandPool(VkCommandPool commandPool, VkCommandPoolTrimFlagsKHR flags) const noexcept {
 		fp_vkTrimCommandPool(device, commandPool, flags);
 	}
 #endif
@@ -1601,7 +1580,7 @@ struct DispatchTable {
 	}
 #endif
 #if (defined(VK_KHR_external_memory_win32))
-	VkResult getMemoryWin32HandlePropertiesKHR(VkExternalMemoryHandleTypeFlagBits handleType, HANDLE handle, VkMemoryWin32HandlePropertiesKHR* pMemoryWin32HandleProperties) const noexcept {
+	VkResult getMemoryWin32HandlePropertiesKHR(VkExternalMemoryHandleTypeFlagBitsKHR handleType, HANDLE handle, VkMemoryWin32HandlePropertiesKHR* pMemoryWin32HandleProperties) const noexcept {
 		return fp_vkGetMemoryWin32HandlePropertiesKHR(device, handleType, handle, pMemoryWin32HandleProperties);
 	}
 #endif
@@ -1611,7 +1590,7 @@ struct DispatchTable {
 	}
 #endif
 #if (defined(VK_KHR_external_memory_fd))
-	VkResult getMemoryFdPropertiesKHR(VkExternalMemoryHandleTypeFlagBits handleType, int fd, VkMemoryFdPropertiesKHR* pMemoryFdProperties) const noexcept {
+	VkResult getMemoryFdPropertiesKHR(VkExternalMemoryHandleTypeFlagBitsKHR handleType, int fd, VkMemoryFdPropertiesKHR* pMemoryFdProperties) const noexcept {
 		return fp_vkGetMemoryFdPropertiesKHR(device, handleType, fd, pMemoryFdProperties);
 	}
 #endif
@@ -1621,7 +1600,7 @@ struct DispatchTable {
 	}
 #endif
 #if (defined(VK_FUCHSIA_external_memory))
-	VkResult getMemoryZirconHandlePropertiesFUCHSIA(VkExternalMemoryHandleTypeFlagBits handleType, zx_handle_t zirconHandle, VkMemoryZirconHandlePropertiesFUCHSIA* pMemoryZirconHandleProperties) const noexcept {
+	VkResult getMemoryZirconHandlePropertiesFUCHSIA(VkExternalMemoryHandleTypeFlagBitsKHR handleType, zx_handle_t zirconHandle, VkMemoryZirconHandlePropertiesFUCHSIA* pMemoryZirconHandleProperties) const noexcept {
 		return fp_vkGetMemoryZirconHandlePropertiesFUCHSIA(device, handleType, zirconHandle, pMemoryZirconHandleProperties);
 	}
 #endif
@@ -1700,22 +1679,22 @@ struct DispatchTable {
 		return fp_vkGetSwapchainCounterEXT(device, swapchain, counter, pCounterValue);
 	}
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_device_group))
-	void getDeviceGroupPeerMemoryFeatures(uint32_t heapIndex, uint32_t localDeviceIndex, uint32_t remoteDeviceIndex, VkPeerMemoryFeatureFlags* pPeerMemoryFeatures) const noexcept {
+#if (defined(VK_VERSION_1_1))
+	void getDeviceGroupPeerMemoryFeatures(uint32_t heapIndex, uint32_t localDeviceIndex, uint32_t remoteDeviceIndex, VkPeerMemoryFeatureFlagsKHR* pPeerMemoryFeatures) const noexcept {
 		fp_vkGetDeviceGroupPeerMemoryFeatures(device, heapIndex, localDeviceIndex, remoteDeviceIndex, pPeerMemoryFeatures);
 	}
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_bind_memory2))
-	VkResult bindBufferMemory2(uint32_t bindInfoCount, const VkBindBufferMemoryInfo* pBindInfos) const noexcept {
+#if (defined(VK_VERSION_1_1))
+	VkResult bindBufferMemory2(uint32_t bindInfoCount, const VkBindBufferMemoryInfoKHR* pBindInfos) const noexcept {
 		return fp_vkBindBufferMemory2(device, bindInfoCount, pBindInfos);
 	}
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_bind_memory2))
-	VkResult bindImageMemory2(uint32_t bindInfoCount, const VkBindImageMemoryInfo* pBindInfos) const noexcept {
+#if (defined(VK_VERSION_1_1))
+	VkResult bindImageMemory2(uint32_t bindInfoCount, const VkBindImageMemoryInfoKHR* pBindInfos) const noexcept {
 		return fp_vkBindImageMemory2(device, bindInfoCount, pBindInfos);
 	}
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_device_group))
+#if (defined(VK_VERSION_1_1))
 	void cmdSetDeviceMask(VkCommandBuffer commandBuffer, uint32_t deviceMask) const noexcept {
 		fp_vkCmdSetDeviceMask(commandBuffer, deviceMask);
 	}
@@ -1735,28 +1714,28 @@ struct DispatchTable {
 		return fp_vkAcquireNextImage2KHR(device, pAcquireInfo, pImageIndex);
 	}
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_device_group))
+#if (defined(VK_VERSION_1_1))
 	void cmdDispatchBase(VkCommandBuffer commandBuffer, uint32_t baseGroupX, uint32_t baseGroupY, uint32_t baseGroupZ, uint32_t groupCountX, uint32_t groupCountY, uint32_t groupCountZ) const noexcept {
 		fp_vkCmdDispatchBase(commandBuffer, baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ);
 	}
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_descriptor_update_template))
-	VkResult createDescriptorUpdateTemplate(const VkDescriptorUpdateTemplateCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDescriptorUpdateTemplate* pDescriptorUpdateTemplate) const noexcept {
+#if (defined(VK_VERSION_1_1))
+	VkResult createDescriptorUpdateTemplate(const VkDescriptorUpdateTemplateCreateInfoKHR* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDescriptorUpdateTemplateKHR* pDescriptorUpdateTemplate) const noexcept {
 		return fp_vkCreateDescriptorUpdateTemplate(device, pCreateInfo, pAllocator, pDescriptorUpdateTemplate);
 	}
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_descriptor_update_template))
-	void destroyDescriptorUpdateTemplate(VkDescriptorUpdateTemplate descriptorUpdateTemplate, const VkAllocationCallbacks* pAllocator) const noexcept {
+#if (defined(VK_VERSION_1_1))
+	void destroyDescriptorUpdateTemplate(VkDescriptorUpdateTemplateKHR descriptorUpdateTemplate, const VkAllocationCallbacks* pAllocator) const noexcept {
 		fp_vkDestroyDescriptorUpdateTemplate(device, descriptorUpdateTemplate, pAllocator);
 	}
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_descriptor_update_template))
-	void updateDescriptorSetWithTemplate(VkDescriptorSet descriptorSet, VkDescriptorUpdateTemplate descriptorUpdateTemplate, const void* pData) const noexcept {
+#if (defined(VK_VERSION_1_1))
+	void updateDescriptorSetWithTemplate(VkDescriptorSet descriptorSet, VkDescriptorUpdateTemplateKHR descriptorUpdateTemplate, const void* pData) const noexcept {
 		fp_vkUpdateDescriptorSetWithTemplate(device, descriptorSet, descriptorUpdateTemplate, pData);
 	}
 #endif
 #if (defined(VK_KHR_push_descriptor) && defined(VK_VERSION_1_1)) || (defined(VK_KHR_push_descriptor) && defined(VK_KHR_descriptor_update_template)) || (defined(VK_KHR_descriptor_update_template) && defined(VK_KHR_push_descriptor))
-	void cmdPushDescriptorSetWithTemplateKHR(VkCommandBuffer commandBuffer, VkDescriptorUpdateTemplate descriptorUpdateTemplate, VkPipelineLayout layout, uint32_t set, const void* pData) const noexcept {
+	void cmdPushDescriptorSetWithTemplateKHR(VkCommandBuffer commandBuffer, VkDescriptorUpdateTemplateKHR descriptorUpdateTemplate, VkPipelineLayout layout, uint32_t set, const void* pData) const noexcept {
 		fp_vkCmdPushDescriptorSetWithTemplateKHR(commandBuffer, descriptorUpdateTemplate, layout, set, pData);
 	}
 #endif
@@ -1795,43 +1774,43 @@ struct DispatchTable {
 		fp_vkCmdSetSampleLocationsEXT(commandBuffer, pSampleLocationsInfo);
 	}
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_get_memory_requirements2))
-	void getBufferMemoryRequirements2(const VkBufferMemoryRequirementsInfo2* pInfo, VkMemoryRequirements2* pMemoryRequirements) const noexcept {
+#if (defined(VK_VERSION_1_1))
+	void getBufferMemoryRequirements2(const VkBufferMemoryRequirementsInfo2KHR* pInfo, VkMemoryRequirements2KHR* pMemoryRequirements) const noexcept {
 		fp_vkGetBufferMemoryRequirements2(device, pInfo, pMemoryRequirements);
 	}
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_get_memory_requirements2))
-	void getImageMemoryRequirements2(const VkImageMemoryRequirementsInfo2* pInfo, VkMemoryRequirements2* pMemoryRequirements) const noexcept {
+#if (defined(VK_VERSION_1_1))
+	void getImageMemoryRequirements2(const VkImageMemoryRequirementsInfo2KHR* pInfo, VkMemoryRequirements2KHR* pMemoryRequirements) const noexcept {
 		fp_vkGetImageMemoryRequirements2(device, pInfo, pMemoryRequirements);
 	}
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_get_memory_requirements2))
-	void getImageSparseMemoryRequirements2(const VkImageSparseMemoryRequirementsInfo2* pInfo, uint32_t* pSparseMemoryRequirementCount, VkSparseImageMemoryRequirements2* pSparseMemoryRequirements) const noexcept {
+#if (defined(VK_VERSION_1_1))
+	void getImageSparseMemoryRequirements2(const VkImageSparseMemoryRequirementsInfo2KHR* pInfo, uint32_t* pSparseMemoryRequirementCount, VkSparseImageMemoryRequirements2KHR* pSparseMemoryRequirements) const noexcept {
 		fp_vkGetImageSparseMemoryRequirements2(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_maintenance4))
-	void getDeviceBufferMemoryRequirements(const VkDeviceBufferMemoryRequirements* pInfo, VkMemoryRequirements2* pMemoryRequirements) const noexcept {
+#if (defined(VK_VERSION_1_3))
+	void getDeviceBufferMemoryRequirements(const VkDeviceBufferMemoryRequirementsKHR* pInfo, VkMemoryRequirements2KHR* pMemoryRequirements) const noexcept {
 		fp_vkGetDeviceBufferMemoryRequirements(device, pInfo, pMemoryRequirements);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_maintenance4))
-	void getDeviceImageMemoryRequirements(const VkDeviceImageMemoryRequirements* pInfo, VkMemoryRequirements2* pMemoryRequirements) const noexcept {
+#if (defined(VK_VERSION_1_3))
+	void getDeviceImageMemoryRequirements(const VkDeviceImageMemoryRequirementsKHR* pInfo, VkMemoryRequirements2KHR* pMemoryRequirements) const noexcept {
 		fp_vkGetDeviceImageMemoryRequirements(device, pInfo, pMemoryRequirements);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_maintenance4))
-	void getDeviceImageSparseMemoryRequirements(const VkDeviceImageMemoryRequirements* pInfo, uint32_t* pSparseMemoryRequirementCount, VkSparseImageMemoryRequirements2* pSparseMemoryRequirements) const noexcept {
+#if (defined(VK_VERSION_1_3))
+	void getDeviceImageSparseMemoryRequirements(const VkDeviceImageMemoryRequirementsKHR* pInfo, uint32_t* pSparseMemoryRequirementCount, VkSparseImageMemoryRequirements2KHR* pSparseMemoryRequirements) const noexcept {
 		fp_vkGetDeviceImageSparseMemoryRequirements(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
 	}
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_sampler_ycbcr_conversion))
-	VkResult createSamplerYcbcrConversion(const VkSamplerYcbcrConversionCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkSamplerYcbcrConversion* pYcbcrConversion) const noexcept {
+#if (defined(VK_VERSION_1_1))
+	VkResult createSamplerYcbcrConversion(const VkSamplerYcbcrConversionCreateInfoKHR* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkSamplerYcbcrConversionKHR* pYcbcrConversion) const noexcept {
 		return fp_vkCreateSamplerYcbcrConversion(device, pCreateInfo, pAllocator, pYcbcrConversion);
 	}
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_sampler_ycbcr_conversion))
-	void destroySamplerYcbcrConversion(VkSamplerYcbcrConversion ycbcrConversion, const VkAllocationCallbacks* pAllocator) const noexcept {
+#if (defined(VK_VERSION_1_1))
+	void destroySamplerYcbcrConversion(VkSamplerYcbcrConversionKHR ycbcrConversion, const VkAllocationCallbacks* pAllocator) const noexcept {
 		fp_vkDestroySamplerYcbcrConversion(device, ycbcrConversion, pAllocator);
 	}
 #endif
@@ -1860,8 +1839,8 @@ struct DispatchTable {
 		return fp_vkMergeValidationCachesEXT(device, dstCache, srcCacheCount, pSrcCaches);
 	}
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_maintenance3))
-	void getDescriptorSetLayoutSupport(const VkDescriptorSetLayoutCreateInfo* pCreateInfo, VkDescriptorSetLayoutSupport* pSupport) const noexcept {
+#if (defined(VK_VERSION_1_1))
+	void getDescriptorSetLayoutSupport(const VkDescriptorSetLayoutCreateInfo* pCreateInfo, VkDescriptorSetLayoutSupportKHR* pSupport) const noexcept {
 		fp_vkGetDescriptorSetLayoutSupport(device, pCreateInfo, pSupport);
 	}
 #endif
@@ -1941,7 +1920,7 @@ struct DispatchTable {
 	}
 #endif
 #if (defined(VK_EXT_external_memory_host))
-	VkResult getMemoryHostPointerPropertiesEXT(VkExternalMemoryHandleTypeFlagBits handleType, const void* pHostPointer, VkMemoryHostPointerPropertiesEXT* pMemoryHostPointerProperties) const noexcept {
+	VkResult getMemoryHostPointerPropertiesEXT(VkExternalMemoryHandleTypeFlagBitsKHR handleType, const void* pHostPointer, VkMemoryHostPointerPropertiesEXT* pMemoryHostPointerProperties) const noexcept {
 		return fp_vkGetMemoryHostPointerPropertiesEXT(device, handleType, pHostPointer, pMemoryHostPointerProperties);
 	}
 #endif
@@ -1950,38 +1929,38 @@ struct DispatchTable {
 		fp_vkCmdWriteBufferMarkerAMD(commandBuffer, pipelineStage, dstBuffer, dstOffset, marker);
 	}
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_create_renderpass2))
-	VkResult createRenderPass2(const VkRenderPassCreateInfo2* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkRenderPass* pRenderPass) const noexcept {
+#if (defined(VK_VERSION_1_2))
+	VkResult createRenderPass2(const VkRenderPassCreateInfo2KHR* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkRenderPass* pRenderPass) const noexcept {
 		return fp_vkCreateRenderPass2(device, pCreateInfo, pAllocator, pRenderPass);
 	}
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_create_renderpass2))
-	void cmdBeginRenderPass2(VkCommandBuffer commandBuffer, const VkRenderPassBeginInfo* pRenderPassBegin, const VkSubpassBeginInfo* pSubpassBeginInfo) const noexcept {
+#if (defined(VK_VERSION_1_2))
+	void cmdBeginRenderPass2(VkCommandBuffer commandBuffer, const VkRenderPassBeginInfo* pRenderPassBegin, const VkSubpassBeginInfoKHR* pSubpassBeginInfo) const noexcept {
 		fp_vkCmdBeginRenderPass2(commandBuffer, pRenderPassBegin, pSubpassBeginInfo);
 	}
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_create_renderpass2))
-	void cmdNextSubpass2(VkCommandBuffer commandBuffer, const VkSubpassBeginInfo* pSubpassBeginInfo, const VkSubpassEndInfo* pSubpassEndInfo) const noexcept {
+#if (defined(VK_VERSION_1_2))
+	void cmdNextSubpass2(VkCommandBuffer commandBuffer, const VkSubpassBeginInfoKHR* pSubpassBeginInfo, const VkSubpassEndInfoKHR* pSubpassEndInfo) const noexcept {
 		fp_vkCmdNextSubpass2(commandBuffer, pSubpassBeginInfo, pSubpassEndInfo);
 	}
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_create_renderpass2))
-	void cmdEndRenderPass2(VkCommandBuffer commandBuffer, const VkSubpassEndInfo* pSubpassEndInfo) const noexcept {
+#if (defined(VK_VERSION_1_2))
+	void cmdEndRenderPass2(VkCommandBuffer commandBuffer, const VkSubpassEndInfoKHR* pSubpassEndInfo) const noexcept {
 		fp_vkCmdEndRenderPass2(commandBuffer, pSubpassEndInfo);
 	}
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_timeline_semaphore))
+#if (defined(VK_VERSION_1_2))
 	VkResult getSemaphoreCounterValue(VkSemaphore semaphore, uint64_t* pValue) const noexcept {
 		return fp_vkGetSemaphoreCounterValue(device, semaphore, pValue);
 	}
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_timeline_semaphore))
-	VkResult waitSemaphores(const VkSemaphoreWaitInfo* pWaitInfo, uint64_t timeout) const noexcept {
+#if (defined(VK_VERSION_1_2))
+	VkResult waitSemaphores(const VkSemaphoreWaitInfoKHR* pWaitInfo, uint64_t timeout) const noexcept {
 		return fp_vkWaitSemaphores(device, pWaitInfo, timeout);
 	}
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_timeline_semaphore))
-	VkResult signalSemaphore(const VkSemaphoreSignalInfo* pSignalInfo) const noexcept {
+#if (defined(VK_VERSION_1_2))
+	VkResult signalSemaphore(const VkSemaphoreSignalInfoKHR* pSignalInfo) const noexcept {
 		return fp_vkSignalSemaphore(device, pSignalInfo);
 	}
 #endif
@@ -1995,12 +1974,12 @@ struct DispatchTable {
 		return fp_vkGetMemoryAndroidHardwareBufferANDROID(device, pInfo, pBuffer);
 	}
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_AMD_draw_indirect_count))
+#if (defined(VK_VERSION_1_2))
 	void cmdDrawIndirectCount(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint32_t maxDrawCount, uint32_t stride) const noexcept {
 		fp_vkCmdDrawIndirectCount(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
 	}
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_AMD_draw_indirect_count))
+#if (defined(VK_VERSION_1_2))
 	void cmdDrawIndexedIndirectCount(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint32_t maxDrawCount, uint32_t stride) const noexcept {
 		fp_vkCmdDrawIndexedIndirectCount(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
 	}
@@ -2116,7 +2095,7 @@ struct DispatchTable {
 	}
 #endif
 #if (defined(VK_NV_ray_tracing))
-	void cmdCopyAccelerationStructureNV(VkCommandBuffer commandBuffer, VkAccelerationStructureNV dst, VkAccelerationStructureNV src, VkCopyAccelerationStructureModeKHR mode) const noexcept {
+	void cmdCopyAccelerationStructureNV(VkCommandBuffer commandBuffer, VkAccelerationStructureNV dst, VkAccelerationStructureNV src, VkCopyAccelerationStructureModeNV mode) const noexcept {
 		fp_vkCmdCopyAccelerationStructureNV(commandBuffer, dst, src, mode);
 	}
 #endif
@@ -2180,7 +2159,7 @@ struct DispatchTable {
 		fp_vkCmdTraceRaysNV(commandBuffer, raygenShaderBindingTableBuffer, raygenShaderBindingOffset, missShaderBindingTableBuffer, missShaderBindingOffset, missShaderBindingStride, hitShaderBindingTableBuffer, hitShaderBindingOffset, hitShaderBindingStride, callableShaderBindingTableBuffer, callableShaderBindingOffset, callableShaderBindingStride, width, height, depth);
 	}
 #endif
-#if (defined(VK_KHR_ray_tracing_pipeline)) || (defined(VK_NV_ray_tracing))
+#if (defined(VK_KHR_ray_tracing_pipeline))
 	VkResult getRayTracingShaderGroupHandlesKHR(VkPipeline pipeline, uint32_t firstGroup, uint32_t groupCount, size_t dataSize, void* pData) const noexcept {
 		return fp_vkGetRayTracingShaderGroupHandlesKHR(device, pipeline, firstGroup, groupCount, dataSize, pData);
 	}
@@ -2225,16 +2204,6 @@ struct DispatchTable {
 		fp_vkCmdSetRayTracingPipelineStackSizeKHR(commandBuffer, pipelineStackSize);
 	}
 #endif
-#if (defined(VK_NVX_image_view_handle))
-	uint32_t getImageViewHandleNVX(const VkImageViewHandleInfoNVX* pInfo) const noexcept {
-		return fp_vkGetImageViewHandleNVX(device, pInfo);
-	}
-#endif
-#if (defined(VK_NVX_image_view_handle))
-	VkResult getImageViewAddressNVX(VkImageView imageView, VkImageViewAddressPropertiesNVX* pProperties) const noexcept {
-		return fp_vkGetImageViewAddressNVX(device, imageView, pProperties);
-	}
-#endif
 #if (defined(VK_EXT_full_screen_exclusive) && defined(VK_KHR_device_group)) || (defined(VK_EXT_full_screen_exclusive) && defined(VK_VERSION_1_1))
 	VkResult getDeviceGroupSurfacePresentModes2EXT(const VkPhysicalDeviceSurfaceInfo2KHR* pSurfaceInfo, VkDeviceGroupPresentModeFlagsKHR* pModes) const noexcept {
 		return fp_vkGetDeviceGroupSurfacePresentModes2EXT(device, pSurfaceInfo, pModes);
@@ -2265,13 +2234,13 @@ struct DispatchTable {
 		return fp_vkGetImageDrmFormatModifierPropertiesEXT(device, image, pProperties);
 	}
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_buffer_device_address))
-	uint64_t getBufferOpaqueCaptureAddress(const VkBufferDeviceAddressInfo* pInfo) const noexcept {
+#if (defined(VK_VERSION_1_2))
+	uint64_t getBufferOpaqueCaptureAddress(const VkBufferDeviceAddressInfoEXT* pInfo) const noexcept {
 		return fp_vkGetBufferOpaqueCaptureAddress(device, pInfo);
 	}
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_EXT_buffer_device_address))
-	VkDeviceAddress getBufferDeviceAddress(const VkBufferDeviceAddressInfo* pInfo) const noexcept {
+#if (defined(VK_VERSION_1_2))
+	VkDeviceAddress getBufferDeviceAddress(const VkBufferDeviceAddressInfoEXT* pInfo) const noexcept {
 		return fp_vkGetBufferDeviceAddress(device, pInfo);
 	}
 #endif
@@ -2320,8 +2289,8 @@ struct DispatchTable {
 		return fp_vkGetPerformanceParameterINTEL(device, parameter, pValue);
 	}
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_buffer_device_address))
-	uint64_t getDeviceMemoryOpaqueCaptureAddress(const VkDeviceMemoryOpaqueCaptureAddressInfo* pInfo) const noexcept {
+#if (defined(VK_VERSION_1_2))
+	uint64_t getDeviceMemoryOpaqueCaptureAddress(const VkDeviceMemoryOpaqueCaptureAddressInfoKHR* pInfo) const noexcept {
 		return fp_vkGetDeviceMemoryOpaqueCaptureAddress(device, pInfo);
 	}
 #endif
@@ -2395,62 +2364,62 @@ struct DispatchTable {
 		return fp_vkDeferredOperationJoinKHR(device, operation);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_VERSION_1_3))
 	void cmdSetCullMode(VkCommandBuffer commandBuffer, VkCullModeFlags cullMode) const noexcept {
 		fp_vkCmdSetCullMode(commandBuffer, cullMode);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_VERSION_1_3))
 	void cmdSetFrontFace(VkCommandBuffer commandBuffer, VkFrontFace frontFace) const noexcept {
 		fp_vkCmdSetFrontFace(commandBuffer, frontFace);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_VERSION_1_3))
 	void cmdSetPrimitiveTopology(VkCommandBuffer commandBuffer, VkPrimitiveTopology primitiveTopology) const noexcept {
 		fp_vkCmdSetPrimitiveTopology(commandBuffer, primitiveTopology);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_VERSION_1_3))
 	void cmdSetViewportWithCount(VkCommandBuffer commandBuffer, uint32_t viewportCount, const VkViewport* pViewports) const noexcept {
 		fp_vkCmdSetViewportWithCount(commandBuffer, viewportCount, pViewports);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_VERSION_1_3))
 	void cmdSetScissorWithCount(VkCommandBuffer commandBuffer, uint32_t scissorCount, const VkRect2D* pScissors) const noexcept {
 		fp_vkCmdSetScissorWithCount(commandBuffer, scissorCount, pScissors);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_VERSION_1_3))
 	void cmdBindVertexBuffers2(VkCommandBuffer commandBuffer, uint32_t firstBinding, uint32_t bindingCount, const VkBuffer* pBuffers, const VkDeviceSize* pOffsets, const VkDeviceSize* pSizes, const VkDeviceSize* pStrides) const noexcept {
 		fp_vkCmdBindVertexBuffers2(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets, pSizes, pStrides);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_VERSION_1_3))
 	void cmdSetDepthTestEnable(VkCommandBuffer commandBuffer, VkBool32 depthTestEnable) const noexcept {
 		fp_vkCmdSetDepthTestEnable(commandBuffer, depthTestEnable);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_VERSION_1_3))
 	void cmdSetDepthWriteEnable(VkCommandBuffer commandBuffer, VkBool32 depthWriteEnable) const noexcept {
 		fp_vkCmdSetDepthWriteEnable(commandBuffer, depthWriteEnable);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_VERSION_1_3))
 	void cmdSetDepthCompareOp(VkCommandBuffer commandBuffer, VkCompareOp depthCompareOp) const noexcept {
 		fp_vkCmdSetDepthCompareOp(commandBuffer, depthCompareOp);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_VERSION_1_3))
 	void cmdSetDepthBoundsTestEnable(VkCommandBuffer commandBuffer, VkBool32 depthBoundsTestEnable) const noexcept {
 		fp_vkCmdSetDepthBoundsTestEnable(commandBuffer, depthBoundsTestEnable);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_VERSION_1_3))
 	void cmdSetStencilTestEnable(VkCommandBuffer commandBuffer, VkBool32 stencilTestEnable) const noexcept {
 		fp_vkCmdSetStencilTestEnable(commandBuffer, stencilTestEnable);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_VERSION_1_3))
 	void cmdSetStencilOp(VkCommandBuffer commandBuffer, VkStencilFaceFlags faceMask, VkStencilOp failOp, VkStencilOp passOp, VkStencilOp depthFailOp, VkCompareOp compareOp) const noexcept {
 		fp_vkCmdSetStencilOp(commandBuffer, faceMask, failOp, passOp, depthFailOp, compareOp);
 	}
@@ -2460,12 +2429,12 @@ struct DispatchTable {
 		fp_vkCmdSetPatchControlPointsEXT(commandBuffer, patchControlPoints);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state2))
+#if (defined(VK_VERSION_1_3))
 	void cmdSetRasterizerDiscardEnable(VkCommandBuffer commandBuffer, VkBool32 rasterizerDiscardEnable) const noexcept {
 		fp_vkCmdSetRasterizerDiscardEnable(commandBuffer, rasterizerDiscardEnable);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state2))
+#if (defined(VK_VERSION_1_3))
 	void cmdSetDepthBiasEnable(VkCommandBuffer commandBuffer, VkBool32 depthBiasEnable) const noexcept {
 		fp_vkCmdSetDepthBiasEnable(commandBuffer, depthBiasEnable);
 	}
@@ -2475,58 +2444,58 @@ struct DispatchTable {
 		fp_vkCmdSetLogicOpEXT(commandBuffer, logicOp);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state2))
+#if (defined(VK_VERSION_1_3))
 	void cmdSetPrimitiveRestartEnable(VkCommandBuffer commandBuffer, VkBool32 primitiveRestartEnable) const noexcept {
 		fp_vkCmdSetPrimitiveRestartEnable(commandBuffer, primitiveRestartEnable);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_private_data))
-	VkResult createPrivateDataSlot(const VkPrivateDataSlotCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkPrivateDataSlot* pPrivateDataSlot) const noexcept {
+#if (defined(VK_VERSION_1_3))
+	VkResult createPrivateDataSlot(const VkPrivateDataSlotCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkPrivateDataSlotEXT* pPrivateDataSlot) const noexcept {
 		return fp_vkCreatePrivateDataSlot(device, pCreateInfo, pAllocator, pPrivateDataSlot);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_private_data))
-	void destroyPrivateDataSlot(VkPrivateDataSlot privateDataSlot, const VkAllocationCallbacks* pAllocator) const noexcept {
+#if (defined(VK_VERSION_1_3))
+	void destroyPrivateDataSlot(VkPrivateDataSlotEXT privateDataSlot, const VkAllocationCallbacks* pAllocator) const noexcept {
 		fp_vkDestroyPrivateDataSlot(device, privateDataSlot, pAllocator);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_private_data))
-	VkResult setPrivateData(VkObjectType objectType, uint64_t objectHandle, VkPrivateDataSlot privateDataSlot, uint64_t data) const noexcept {
+#if (defined(VK_VERSION_1_3))
+	VkResult setPrivateData(VkObjectType objectType, uint64_t objectHandle, VkPrivateDataSlotEXT privateDataSlot, uint64_t data) const noexcept {
 		return fp_vkSetPrivateData(device, objectType, objectHandle, privateDataSlot, data);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_private_data))
-	void getPrivateData(VkObjectType objectType, uint64_t objectHandle, VkPrivateDataSlot privateDataSlot, uint64_t* pData) const noexcept {
+#if (defined(VK_VERSION_1_3))
+	void getPrivateData(VkObjectType objectType, uint64_t objectHandle, VkPrivateDataSlotEXT privateDataSlot, uint64_t* pData) const noexcept {
 		fp_vkGetPrivateData(device, objectType, objectHandle, privateDataSlot, pData);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_copy_commands2))
-	void cmdCopyBuffer2(VkCommandBuffer commandBuffer, const VkCopyBufferInfo2* pCopyBufferInfo) const noexcept {
+#if (defined(VK_VERSION_1_3))
+	void cmdCopyBuffer2(VkCommandBuffer commandBuffer, const VkCopyBufferInfo2KHR* pCopyBufferInfo) const noexcept {
 		fp_vkCmdCopyBuffer2(commandBuffer, pCopyBufferInfo);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_copy_commands2))
-	void cmdCopyImage2(VkCommandBuffer commandBuffer, const VkCopyImageInfo2* pCopyImageInfo) const noexcept {
+#if (defined(VK_VERSION_1_3))
+	void cmdCopyImage2(VkCommandBuffer commandBuffer, const VkCopyImageInfo2KHR* pCopyImageInfo) const noexcept {
 		fp_vkCmdCopyImage2(commandBuffer, pCopyImageInfo);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_copy_commands2))
-	void cmdBlitImage2(VkCommandBuffer commandBuffer, const VkBlitImageInfo2* pBlitImageInfo) const noexcept {
+#if (defined(VK_VERSION_1_3))
+	void cmdBlitImage2(VkCommandBuffer commandBuffer, const VkBlitImageInfo2KHR* pBlitImageInfo) const noexcept {
 		fp_vkCmdBlitImage2(commandBuffer, pBlitImageInfo);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_copy_commands2))
-	void cmdCopyBufferToImage2(VkCommandBuffer commandBuffer, const VkCopyBufferToImageInfo2* pCopyBufferToImageInfo) const noexcept {
+#if (defined(VK_VERSION_1_3))
+	void cmdCopyBufferToImage2(VkCommandBuffer commandBuffer, const VkCopyBufferToImageInfo2KHR* pCopyBufferToImageInfo) const noexcept {
 		fp_vkCmdCopyBufferToImage2(commandBuffer, pCopyBufferToImageInfo);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_copy_commands2))
-	void cmdCopyImageToBuffer2(VkCommandBuffer commandBuffer, const VkCopyImageToBufferInfo2* pCopyImageToBufferInfo) const noexcept {
+#if (defined(VK_VERSION_1_3))
+	void cmdCopyImageToBuffer2(VkCommandBuffer commandBuffer, const VkCopyImageToBufferInfo2KHR* pCopyImageToBufferInfo) const noexcept {
 		fp_vkCmdCopyImageToBuffer2(commandBuffer, pCopyImageToBufferInfo);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_copy_commands2))
-	void cmdResolveImage2(VkCommandBuffer commandBuffer, const VkResolveImageInfo2* pResolveImageInfo) const noexcept {
+#if (defined(VK_VERSION_1_3))
+	void cmdResolveImage2(VkCommandBuffer commandBuffer, const VkResolveImageInfo2KHR* pResolveImageInfo) const noexcept {
 		fp_vkCmdResolveImage2(commandBuffer, pResolveImageInfo);
 	}
 #endif
@@ -2555,38 +2524,38 @@ struct DispatchTable {
 		fp_vkCmdSetColorWriteEnableEXT(commandBuffer, attachmentCount, pColorWriteEnables);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_synchronization2))
-	void cmdSetEvent2(VkCommandBuffer commandBuffer, VkEvent event, const VkDependencyInfo* pDependencyInfo) const noexcept {
+#if (defined(VK_VERSION_1_3))
+	void cmdSetEvent2(VkCommandBuffer commandBuffer, VkEvent event, const VkDependencyInfoKHR* pDependencyInfo) const noexcept {
 		fp_vkCmdSetEvent2(commandBuffer, event, pDependencyInfo);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_synchronization2))
-	void cmdResetEvent2(VkCommandBuffer commandBuffer, VkEvent event, VkPipelineStageFlags2 stageMask) const noexcept {
+#if (defined(VK_VERSION_1_3))
+	void cmdResetEvent2(VkCommandBuffer commandBuffer, VkEvent event, VkPipelineStageFlags2KHR stageMask) const noexcept {
 		fp_vkCmdResetEvent2(commandBuffer, event, stageMask);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_synchronization2))
-	void cmdWaitEvents2(VkCommandBuffer commandBuffer, uint32_t eventCount, const VkEvent* pEvents, const VkDependencyInfo* pDependencyInfos) const noexcept {
+#if (defined(VK_VERSION_1_3))
+	void cmdWaitEvents2(VkCommandBuffer commandBuffer, uint32_t eventCount, const VkEvent* pEvents, const VkDependencyInfoKHR* pDependencyInfos) const noexcept {
 		fp_vkCmdWaitEvents2(commandBuffer, eventCount, pEvents, pDependencyInfos);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_synchronization2))
-	void cmdPipelineBarrier2(VkCommandBuffer commandBuffer, const VkDependencyInfo* pDependencyInfo) const noexcept {
+#if (defined(VK_VERSION_1_3))
+	void cmdPipelineBarrier2(VkCommandBuffer commandBuffer, const VkDependencyInfoKHR* pDependencyInfo) const noexcept {
 		fp_vkCmdPipelineBarrier2(commandBuffer, pDependencyInfo);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_synchronization2))
-	VkResult queueSubmit2(VkQueue queue, uint32_t submitCount, const VkSubmitInfo2* pSubmits, VkFence fence) const noexcept {
+#if (defined(VK_VERSION_1_3))
+	VkResult queueSubmit2(VkQueue queue, uint32_t submitCount, const VkSubmitInfo2KHR* pSubmits, VkFence fence) const noexcept {
 		return fp_vkQueueSubmit2(queue, submitCount, pSubmits, fence);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_synchronization2))
-	void cmdWriteTimestamp2(VkCommandBuffer commandBuffer, VkPipelineStageFlags2 stage, VkQueryPool queryPool, uint32_t query) const noexcept {
+#if (defined(VK_VERSION_1_3))
+	void cmdWriteTimestamp2(VkCommandBuffer commandBuffer, VkPipelineStageFlags2KHR stage, VkQueryPool queryPool, uint32_t query) const noexcept {
 		fp_vkCmdWriteTimestamp2(commandBuffer, stage, queryPool, query);
 	}
 #endif
 #if (defined(VK_KHR_synchronization2) && defined(VK_AMD_buffer_marker))
-	void cmdWriteBufferMarker2AMD(VkCommandBuffer commandBuffer, VkPipelineStageFlags2 stage, VkBuffer dstBuffer, VkDeviceSize dstOffset, uint32_t marker) const noexcept {
+	void cmdWriteBufferMarker2AMD(VkCommandBuffer commandBuffer, VkPipelineStageFlags2KHR stage, VkBuffer dstBuffer, VkDeviceSize dstOffset, uint32_t marker) const noexcept {
 		fp_vkCmdWriteBufferMarker2AMD(commandBuffer, stage, dstBuffer, dstOffset, marker);
 	}
 #endif
@@ -2655,31 +2624,6 @@ struct DispatchTable {
 		fp_vkCmdEncodeVideoKHR(commandBuffer, pEncodeInfo);
 	}
 #endif
-#if (defined(VK_NVX_binary_import))
-	VkResult createCuModuleNVX(const VkCuModuleCreateInfoNVX* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkCuModuleNVX* pModule) const noexcept {
-		return fp_vkCreateCuModuleNVX(device, pCreateInfo, pAllocator, pModule);
-	}
-#endif
-#if (defined(VK_NVX_binary_import))
-	VkResult createCuFunctionNVX(const VkCuFunctionCreateInfoNVX* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkCuFunctionNVX* pFunction) const noexcept {
-		return fp_vkCreateCuFunctionNVX(device, pCreateInfo, pAllocator, pFunction);
-	}
-#endif
-#if (defined(VK_NVX_binary_import))
-	void destroyCuModuleNVX(VkCuModuleNVX module, const VkAllocationCallbacks* pAllocator) const noexcept {
-		fp_vkDestroyCuModuleNVX(device, module, pAllocator);
-	}
-#endif
-#if (defined(VK_NVX_binary_import))
-	void destroyCuFunctionNVX(VkCuFunctionNVX function, const VkAllocationCallbacks* pAllocator) const noexcept {
-		fp_vkDestroyCuFunctionNVX(device, function, pAllocator);
-	}
-#endif
-#if (defined(VK_NVX_binary_import))
-	void cmdCuLaunchKernelNVX(VkCommandBuffer commandBuffer, const VkCuLaunchInfoNVX* pLaunchInfo) const noexcept {
-		fp_vkCmdCuLaunchKernelNVX(commandBuffer, pLaunchInfo);
-	}
-#endif
 #if (defined(VK_EXT_pageable_device_local_memory))
 	void setDeviceMemoryPriorityEXT(VkDeviceMemory memory, float priority) const noexcept {
 		fp_vkSetDeviceMemoryPriorityEXT(device, memory, priority);
@@ -2715,337 +2659,337 @@ struct DispatchTable {
 		return fp_vkGetBufferCollectionPropertiesFUCHSIA(device, collection, pProperties);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_dynamic_rendering))
-	void cmdBeginRendering(VkCommandBuffer commandBuffer, const VkRenderingInfo* pRenderingInfo) const noexcept {
+#if (defined(VK_VERSION_1_3))
+	void cmdBeginRendering(VkCommandBuffer commandBuffer, const VkRenderingInfoKHR* pRenderingInfo) const noexcept {
 		fp_vkCmdBeginRendering(commandBuffer, pRenderingInfo);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_dynamic_rendering))
+#if (defined(VK_VERSION_1_3))
 	void cmdEndRendering(VkCommandBuffer commandBuffer) const noexcept {
 		fp_vkCmdEndRendering(commandBuffer);
 	}
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_EXT_host_query_reset))
+#if (defined(VK_EXT_host_query_reset))
 	void resetQueryPoolEXT(VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount) const noexcept {
 		fp_vkResetQueryPoolEXT(device, queryPool, firstQuery, queryCount);
 	}
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_maintenance1))
-	void trimCommandPoolKHR(VkCommandPool commandPool, VkCommandPoolTrimFlags flags) const noexcept {
+#if (defined(VK_KHR_maintenance1))
+	void trimCommandPoolKHR(VkCommandPool commandPool, VkCommandPoolTrimFlagsKHR flags) const noexcept {
 		fp_vkTrimCommandPoolKHR(device, commandPool, flags);
 	}
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_device_group))
-	void getDeviceGroupPeerMemoryFeaturesKHR(uint32_t heapIndex, uint32_t localDeviceIndex, uint32_t remoteDeviceIndex, VkPeerMemoryFeatureFlags* pPeerMemoryFeatures) const noexcept {
+#if (defined(VK_KHR_device_group))
+	void getDeviceGroupPeerMemoryFeaturesKHR(uint32_t heapIndex, uint32_t localDeviceIndex, uint32_t remoteDeviceIndex, VkPeerMemoryFeatureFlagsKHR* pPeerMemoryFeatures) const noexcept {
 		fp_vkGetDeviceGroupPeerMemoryFeaturesKHR(device, heapIndex, localDeviceIndex, remoteDeviceIndex, pPeerMemoryFeatures);
 	}
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_bind_memory2))
-	VkResult bindBufferMemory2KHR(uint32_t bindInfoCount, const VkBindBufferMemoryInfo* pBindInfos) const noexcept {
+#if (defined(VK_KHR_bind_memory2))
+	VkResult bindBufferMemory2KHR(uint32_t bindInfoCount, const VkBindBufferMemoryInfoKHR* pBindInfos) const noexcept {
 		return fp_vkBindBufferMemory2KHR(device, bindInfoCount, pBindInfos);
 	}
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_bind_memory2))
-	VkResult bindImageMemory2KHR(uint32_t bindInfoCount, const VkBindImageMemoryInfo* pBindInfos) const noexcept {
+#if (defined(VK_KHR_bind_memory2))
+	VkResult bindImageMemory2KHR(uint32_t bindInfoCount, const VkBindImageMemoryInfoKHR* pBindInfos) const noexcept {
 		return fp_vkBindImageMemory2KHR(device, bindInfoCount, pBindInfos);
 	}
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_device_group))
+#if (defined(VK_KHR_device_group))
 	void cmdSetDeviceMaskKHR(VkCommandBuffer commandBuffer, uint32_t deviceMask) const noexcept {
 		fp_vkCmdSetDeviceMaskKHR(commandBuffer, deviceMask);
 	}
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_device_group))
+#if (defined(VK_KHR_device_group))
 	void cmdDispatchBaseKHR(VkCommandBuffer commandBuffer, uint32_t baseGroupX, uint32_t baseGroupY, uint32_t baseGroupZ, uint32_t groupCountX, uint32_t groupCountY, uint32_t groupCountZ) const noexcept {
 		fp_vkCmdDispatchBaseKHR(commandBuffer, baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ);
 	}
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_descriptor_update_template))
-	VkResult createDescriptorUpdateTemplateKHR(const VkDescriptorUpdateTemplateCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDescriptorUpdateTemplate* pDescriptorUpdateTemplate) const noexcept {
+#if (defined(VK_KHR_descriptor_update_template))
+	VkResult createDescriptorUpdateTemplateKHR(const VkDescriptorUpdateTemplateCreateInfoKHR* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDescriptorUpdateTemplateKHR* pDescriptorUpdateTemplate) const noexcept {
 		return fp_vkCreateDescriptorUpdateTemplateKHR(device, pCreateInfo, pAllocator, pDescriptorUpdateTemplate);
 	}
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_descriptor_update_template))
-	void destroyDescriptorUpdateTemplateKHR(VkDescriptorUpdateTemplate descriptorUpdateTemplate, const VkAllocationCallbacks* pAllocator) const noexcept {
+#if (defined(VK_KHR_descriptor_update_template))
+	void destroyDescriptorUpdateTemplateKHR(VkDescriptorUpdateTemplateKHR descriptorUpdateTemplate, const VkAllocationCallbacks* pAllocator) const noexcept {
 		fp_vkDestroyDescriptorUpdateTemplateKHR(device, descriptorUpdateTemplate, pAllocator);
 	}
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_descriptor_update_template))
-	void updateDescriptorSetWithTemplateKHR(VkDescriptorSet descriptorSet, VkDescriptorUpdateTemplate descriptorUpdateTemplate, const void* pData) const noexcept {
+#if (defined(VK_KHR_descriptor_update_template))
+	void updateDescriptorSetWithTemplateKHR(VkDescriptorSet descriptorSet, VkDescriptorUpdateTemplateKHR descriptorUpdateTemplate, const void* pData) const noexcept {
 		fp_vkUpdateDescriptorSetWithTemplateKHR(device, descriptorSet, descriptorUpdateTemplate, pData);
 	}
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_get_memory_requirements2))
-	void getBufferMemoryRequirements2KHR(const VkBufferMemoryRequirementsInfo2* pInfo, VkMemoryRequirements2* pMemoryRequirements) const noexcept {
+#if (defined(VK_KHR_get_memory_requirements2))
+	void getBufferMemoryRequirements2KHR(const VkBufferMemoryRequirementsInfo2KHR* pInfo, VkMemoryRequirements2KHR* pMemoryRequirements) const noexcept {
 		fp_vkGetBufferMemoryRequirements2KHR(device, pInfo, pMemoryRequirements);
 	}
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_get_memory_requirements2))
-	void getImageMemoryRequirements2KHR(const VkImageMemoryRequirementsInfo2* pInfo, VkMemoryRequirements2* pMemoryRequirements) const noexcept {
+#if (defined(VK_KHR_get_memory_requirements2))
+	void getImageMemoryRequirements2KHR(const VkImageMemoryRequirementsInfo2KHR* pInfo, VkMemoryRequirements2KHR* pMemoryRequirements) const noexcept {
 		fp_vkGetImageMemoryRequirements2KHR(device, pInfo, pMemoryRequirements);
 	}
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_get_memory_requirements2))
-	void getImageSparseMemoryRequirements2KHR(const VkImageSparseMemoryRequirementsInfo2* pInfo, uint32_t* pSparseMemoryRequirementCount, VkSparseImageMemoryRequirements2* pSparseMemoryRequirements) const noexcept {
+#if (defined(VK_KHR_get_memory_requirements2))
+	void getImageSparseMemoryRequirements2KHR(const VkImageSparseMemoryRequirementsInfo2KHR* pInfo, uint32_t* pSparseMemoryRequirementCount, VkSparseImageMemoryRequirements2KHR* pSparseMemoryRequirements) const noexcept {
 		fp_vkGetImageSparseMemoryRequirements2KHR(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_maintenance4))
-	void getDeviceBufferMemoryRequirementsKHR(const VkDeviceBufferMemoryRequirements* pInfo, VkMemoryRequirements2* pMemoryRequirements) const noexcept {
+#if (defined(VK_KHR_maintenance4))
+	void getDeviceBufferMemoryRequirementsKHR(const VkDeviceBufferMemoryRequirementsKHR* pInfo, VkMemoryRequirements2KHR* pMemoryRequirements) const noexcept {
 		fp_vkGetDeviceBufferMemoryRequirementsKHR(device, pInfo, pMemoryRequirements);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_maintenance4))
-	void getDeviceImageMemoryRequirementsKHR(const VkDeviceImageMemoryRequirements* pInfo, VkMemoryRequirements2* pMemoryRequirements) const noexcept {
+#if (defined(VK_KHR_maintenance4))
+	void getDeviceImageMemoryRequirementsKHR(const VkDeviceImageMemoryRequirementsKHR* pInfo, VkMemoryRequirements2KHR* pMemoryRequirements) const noexcept {
 		fp_vkGetDeviceImageMemoryRequirementsKHR(device, pInfo, pMemoryRequirements);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_maintenance4))
-	void getDeviceImageSparseMemoryRequirementsKHR(const VkDeviceImageMemoryRequirements* pInfo, uint32_t* pSparseMemoryRequirementCount, VkSparseImageMemoryRequirements2* pSparseMemoryRequirements) const noexcept {
+#if (defined(VK_KHR_maintenance4))
+	void getDeviceImageSparseMemoryRequirementsKHR(const VkDeviceImageMemoryRequirementsKHR* pInfo, uint32_t* pSparseMemoryRequirementCount, VkSparseImageMemoryRequirements2KHR* pSparseMemoryRequirements) const noexcept {
 		fp_vkGetDeviceImageSparseMemoryRequirementsKHR(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
 	}
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_sampler_ycbcr_conversion))
-	VkResult createSamplerYcbcrConversionKHR(const VkSamplerYcbcrConversionCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkSamplerYcbcrConversion* pYcbcrConversion) const noexcept {
+#if (defined(VK_KHR_sampler_ycbcr_conversion))
+	VkResult createSamplerYcbcrConversionKHR(const VkSamplerYcbcrConversionCreateInfoKHR* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkSamplerYcbcrConversionKHR* pYcbcrConversion) const noexcept {
 		return fp_vkCreateSamplerYcbcrConversionKHR(device, pCreateInfo, pAllocator, pYcbcrConversion);
 	}
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_sampler_ycbcr_conversion))
-	void destroySamplerYcbcrConversionKHR(VkSamplerYcbcrConversion ycbcrConversion, const VkAllocationCallbacks* pAllocator) const noexcept {
+#if (defined(VK_KHR_sampler_ycbcr_conversion))
+	void destroySamplerYcbcrConversionKHR(VkSamplerYcbcrConversionKHR ycbcrConversion, const VkAllocationCallbacks* pAllocator) const noexcept {
 		fp_vkDestroySamplerYcbcrConversionKHR(device, ycbcrConversion, pAllocator);
 	}
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_maintenance3))
-	void getDescriptorSetLayoutSupportKHR(const VkDescriptorSetLayoutCreateInfo* pCreateInfo, VkDescriptorSetLayoutSupport* pSupport) const noexcept {
+#if (defined(VK_KHR_maintenance3))
+	void getDescriptorSetLayoutSupportKHR(const VkDescriptorSetLayoutCreateInfo* pCreateInfo, VkDescriptorSetLayoutSupportKHR* pSupport) const noexcept {
 		fp_vkGetDescriptorSetLayoutSupportKHR(device, pCreateInfo, pSupport);
 	}
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_create_renderpass2))
-	VkResult createRenderPass2KHR(const VkRenderPassCreateInfo2* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkRenderPass* pRenderPass) const noexcept {
+#if (defined(VK_KHR_create_renderpass2))
+	VkResult createRenderPass2KHR(const VkRenderPassCreateInfo2KHR* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkRenderPass* pRenderPass) const noexcept {
 		return fp_vkCreateRenderPass2KHR(device, pCreateInfo, pAllocator, pRenderPass);
 	}
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_create_renderpass2))
-	void cmdBeginRenderPass2KHR(VkCommandBuffer commandBuffer, const VkRenderPassBeginInfo* pRenderPassBegin, const VkSubpassBeginInfo* pSubpassBeginInfo) const noexcept {
+#if (defined(VK_KHR_create_renderpass2))
+	void cmdBeginRenderPass2KHR(VkCommandBuffer commandBuffer, const VkRenderPassBeginInfo* pRenderPassBegin, const VkSubpassBeginInfoKHR* pSubpassBeginInfo) const noexcept {
 		fp_vkCmdBeginRenderPass2KHR(commandBuffer, pRenderPassBegin, pSubpassBeginInfo);
 	}
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_create_renderpass2))
-	void cmdNextSubpass2KHR(VkCommandBuffer commandBuffer, const VkSubpassBeginInfo* pSubpassBeginInfo, const VkSubpassEndInfo* pSubpassEndInfo) const noexcept {
+#if (defined(VK_KHR_create_renderpass2))
+	void cmdNextSubpass2KHR(VkCommandBuffer commandBuffer, const VkSubpassBeginInfoKHR* pSubpassBeginInfo, const VkSubpassEndInfoKHR* pSubpassEndInfo) const noexcept {
 		fp_vkCmdNextSubpass2KHR(commandBuffer, pSubpassBeginInfo, pSubpassEndInfo);
 	}
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_create_renderpass2))
-	void cmdEndRenderPass2KHR(VkCommandBuffer commandBuffer, const VkSubpassEndInfo* pSubpassEndInfo) const noexcept {
+#if (defined(VK_KHR_create_renderpass2))
+	void cmdEndRenderPass2KHR(VkCommandBuffer commandBuffer, const VkSubpassEndInfoKHR* pSubpassEndInfo) const noexcept {
 		fp_vkCmdEndRenderPass2KHR(commandBuffer, pSubpassEndInfo);
 	}
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_timeline_semaphore))
+#if (defined(VK_KHR_timeline_semaphore))
 	VkResult getSemaphoreCounterValueKHR(VkSemaphore semaphore, uint64_t* pValue) const noexcept {
 		return fp_vkGetSemaphoreCounterValueKHR(device, semaphore, pValue);
 	}
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_timeline_semaphore))
-	VkResult waitSemaphoresKHR(const VkSemaphoreWaitInfo* pWaitInfo, uint64_t timeout) const noexcept {
+#if (defined(VK_KHR_timeline_semaphore))
+	VkResult waitSemaphoresKHR(const VkSemaphoreWaitInfoKHR* pWaitInfo, uint64_t timeout) const noexcept {
 		return fp_vkWaitSemaphoresKHR(device, pWaitInfo, timeout);
 	}
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_timeline_semaphore))
-	VkResult signalSemaphoreKHR(const VkSemaphoreSignalInfo* pSignalInfo) const noexcept {
+#if (defined(VK_KHR_timeline_semaphore))
+	VkResult signalSemaphoreKHR(const VkSemaphoreSignalInfoKHR* pSignalInfo) const noexcept {
 		return fp_vkSignalSemaphoreKHR(device, pSignalInfo);
 	}
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_AMD_draw_indirect_count))
+#if (defined(VK_AMD_draw_indirect_count))
 	void cmdDrawIndirectCountAMD(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint32_t maxDrawCount, uint32_t stride) const noexcept {
 		fp_vkCmdDrawIndirectCountAMD(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
 	}
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_AMD_draw_indirect_count))
+#if (defined(VK_AMD_draw_indirect_count))
 	void cmdDrawIndexedIndirectCountAMD(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint32_t maxDrawCount, uint32_t stride) const noexcept {
 		fp_vkCmdDrawIndexedIndirectCountAMD(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
 	}
 #endif
-#if (defined(VK_KHR_ray_tracing_pipeline)) || (defined(VK_NV_ray_tracing))
+#if (defined(VK_NV_ray_tracing))
 	VkResult getRayTracingShaderGroupHandlesNV(VkPipeline pipeline, uint32_t firstGroup, uint32_t groupCount, size_t dataSize, void* pData) const noexcept {
 		return fp_vkGetRayTracingShaderGroupHandlesNV(device, pipeline, firstGroup, groupCount, dataSize, pData);
 	}
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_buffer_device_address))
-	uint64_t getBufferOpaqueCaptureAddressKHR(const VkBufferDeviceAddressInfo* pInfo) const noexcept {
+#if (defined(VK_KHR_buffer_device_address))
+	uint64_t getBufferOpaqueCaptureAddressKHR(const VkBufferDeviceAddressInfoEXT* pInfo) const noexcept {
 		return fp_vkGetBufferOpaqueCaptureAddressKHR(device, pInfo);
 	}
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_EXT_buffer_device_address))
-	VkDeviceAddress getBufferDeviceAddressEXT(const VkBufferDeviceAddressInfo* pInfo) const noexcept {
+#if (defined(VK_EXT_buffer_device_address))
+	VkDeviceAddress getBufferDeviceAddressEXT(const VkBufferDeviceAddressInfoEXT* pInfo) const noexcept {
 		return fp_vkGetBufferDeviceAddressEXT(device, pInfo);
 	}
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_buffer_device_address))
-	uint64_t getDeviceMemoryOpaqueCaptureAddressKHR(const VkDeviceMemoryOpaqueCaptureAddressInfo* pInfo) const noexcept {
+#if (defined(VK_KHR_buffer_device_address))
+	uint64_t getDeviceMemoryOpaqueCaptureAddressKHR(const VkDeviceMemoryOpaqueCaptureAddressInfoKHR* pInfo) const noexcept {
 		return fp_vkGetDeviceMemoryOpaqueCaptureAddressKHR(device, pInfo);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_EXT_extended_dynamic_state))
 	void cmdSetCullModeEXT(VkCommandBuffer commandBuffer, VkCullModeFlags cullMode) const noexcept {
 		fp_vkCmdSetCullModeEXT(commandBuffer, cullMode);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_EXT_extended_dynamic_state))
 	void cmdSetFrontFaceEXT(VkCommandBuffer commandBuffer, VkFrontFace frontFace) const noexcept {
 		fp_vkCmdSetFrontFaceEXT(commandBuffer, frontFace);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_EXT_extended_dynamic_state))
 	void cmdSetPrimitiveTopologyEXT(VkCommandBuffer commandBuffer, VkPrimitiveTopology primitiveTopology) const noexcept {
 		fp_vkCmdSetPrimitiveTopologyEXT(commandBuffer, primitiveTopology);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_EXT_extended_dynamic_state))
 	void cmdSetViewportWithCountEXT(VkCommandBuffer commandBuffer, uint32_t viewportCount, const VkViewport* pViewports) const noexcept {
 		fp_vkCmdSetViewportWithCountEXT(commandBuffer, viewportCount, pViewports);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_EXT_extended_dynamic_state))
 	void cmdSetScissorWithCountEXT(VkCommandBuffer commandBuffer, uint32_t scissorCount, const VkRect2D* pScissors) const noexcept {
 		fp_vkCmdSetScissorWithCountEXT(commandBuffer, scissorCount, pScissors);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_EXT_extended_dynamic_state))
 	void cmdBindVertexBuffers2EXT(VkCommandBuffer commandBuffer, uint32_t firstBinding, uint32_t bindingCount, const VkBuffer* pBuffers, const VkDeviceSize* pOffsets, const VkDeviceSize* pSizes, const VkDeviceSize* pStrides) const noexcept {
 		fp_vkCmdBindVertexBuffers2EXT(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets, pSizes, pStrides);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_EXT_extended_dynamic_state))
 	void cmdSetDepthTestEnableEXT(VkCommandBuffer commandBuffer, VkBool32 depthTestEnable) const noexcept {
 		fp_vkCmdSetDepthTestEnableEXT(commandBuffer, depthTestEnable);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_EXT_extended_dynamic_state))
 	void cmdSetDepthWriteEnableEXT(VkCommandBuffer commandBuffer, VkBool32 depthWriteEnable) const noexcept {
 		fp_vkCmdSetDepthWriteEnableEXT(commandBuffer, depthWriteEnable);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_EXT_extended_dynamic_state))
 	void cmdSetDepthCompareOpEXT(VkCommandBuffer commandBuffer, VkCompareOp depthCompareOp) const noexcept {
 		fp_vkCmdSetDepthCompareOpEXT(commandBuffer, depthCompareOp);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_EXT_extended_dynamic_state))
 	void cmdSetDepthBoundsTestEnableEXT(VkCommandBuffer commandBuffer, VkBool32 depthBoundsTestEnable) const noexcept {
 		fp_vkCmdSetDepthBoundsTestEnableEXT(commandBuffer, depthBoundsTestEnable);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_EXT_extended_dynamic_state))
 	void cmdSetStencilTestEnableEXT(VkCommandBuffer commandBuffer, VkBool32 stencilTestEnable) const noexcept {
 		fp_vkCmdSetStencilTestEnableEXT(commandBuffer, stencilTestEnable);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_EXT_extended_dynamic_state))
 	void cmdSetStencilOpEXT(VkCommandBuffer commandBuffer, VkStencilFaceFlags faceMask, VkStencilOp failOp, VkStencilOp passOp, VkStencilOp depthFailOp, VkCompareOp compareOp) const noexcept {
 		fp_vkCmdSetStencilOpEXT(commandBuffer, faceMask, failOp, passOp, depthFailOp, compareOp);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state2))
+#if (defined(VK_EXT_extended_dynamic_state2))
 	void cmdSetRasterizerDiscardEnableEXT(VkCommandBuffer commandBuffer, VkBool32 rasterizerDiscardEnable) const noexcept {
 		fp_vkCmdSetRasterizerDiscardEnableEXT(commandBuffer, rasterizerDiscardEnable);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state2))
+#if (defined(VK_EXT_extended_dynamic_state2))
 	void cmdSetDepthBiasEnableEXT(VkCommandBuffer commandBuffer, VkBool32 depthBiasEnable) const noexcept {
 		fp_vkCmdSetDepthBiasEnableEXT(commandBuffer, depthBiasEnable);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state2))
+#if (defined(VK_EXT_extended_dynamic_state2))
 	void cmdSetPrimitiveRestartEnableEXT(VkCommandBuffer commandBuffer, VkBool32 primitiveRestartEnable) const noexcept {
 		fp_vkCmdSetPrimitiveRestartEnableEXT(commandBuffer, primitiveRestartEnable);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_private_data))
-	VkResult createPrivateDataSlotEXT(const VkPrivateDataSlotCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkPrivateDataSlot* pPrivateDataSlot) const noexcept {
+#if (defined(VK_EXT_private_data))
+	VkResult createPrivateDataSlotEXT(const VkPrivateDataSlotCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkPrivateDataSlotEXT* pPrivateDataSlot) const noexcept {
 		return fp_vkCreatePrivateDataSlotEXT(device, pCreateInfo, pAllocator, pPrivateDataSlot);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_private_data))
-	void destroyPrivateDataSlotEXT(VkPrivateDataSlot privateDataSlot, const VkAllocationCallbacks* pAllocator) const noexcept {
+#if (defined(VK_EXT_private_data))
+	void destroyPrivateDataSlotEXT(VkPrivateDataSlotEXT privateDataSlot, const VkAllocationCallbacks* pAllocator) const noexcept {
 		fp_vkDestroyPrivateDataSlotEXT(device, privateDataSlot, pAllocator);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_private_data))
-	VkResult setPrivateDataEXT(VkObjectType objectType, uint64_t objectHandle, VkPrivateDataSlot privateDataSlot, uint64_t data) const noexcept {
+#if (defined(VK_EXT_private_data))
+	VkResult setPrivateDataEXT(VkObjectType objectType, uint64_t objectHandle, VkPrivateDataSlotEXT privateDataSlot, uint64_t data) const noexcept {
 		return fp_vkSetPrivateDataEXT(device, objectType, objectHandle, privateDataSlot, data);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_private_data))
-	void getPrivateDataEXT(VkObjectType objectType, uint64_t objectHandle, VkPrivateDataSlot privateDataSlot, uint64_t* pData) const noexcept {
+#if (defined(VK_EXT_private_data))
+	void getPrivateDataEXT(VkObjectType objectType, uint64_t objectHandle, VkPrivateDataSlotEXT privateDataSlot, uint64_t* pData) const noexcept {
 		fp_vkGetPrivateDataEXT(device, objectType, objectHandle, privateDataSlot, pData);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_copy_commands2))
-	void cmdCopyBuffer2KHR(VkCommandBuffer commandBuffer, const VkCopyBufferInfo2* pCopyBufferInfo) const noexcept {
+#if (defined(VK_KHR_copy_commands2))
+	void cmdCopyBuffer2KHR(VkCommandBuffer commandBuffer, const VkCopyBufferInfo2KHR* pCopyBufferInfo) const noexcept {
 		fp_vkCmdCopyBuffer2KHR(commandBuffer, pCopyBufferInfo);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_copy_commands2))
-	void cmdCopyImage2KHR(VkCommandBuffer commandBuffer, const VkCopyImageInfo2* pCopyImageInfo) const noexcept {
+#if (defined(VK_KHR_copy_commands2))
+	void cmdCopyImage2KHR(VkCommandBuffer commandBuffer, const VkCopyImageInfo2KHR* pCopyImageInfo) const noexcept {
 		fp_vkCmdCopyImage2KHR(commandBuffer, pCopyImageInfo);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_copy_commands2))
-	void cmdBlitImage2KHR(VkCommandBuffer commandBuffer, const VkBlitImageInfo2* pBlitImageInfo) const noexcept {
+#if (defined(VK_KHR_copy_commands2))
+	void cmdBlitImage2KHR(VkCommandBuffer commandBuffer, const VkBlitImageInfo2KHR* pBlitImageInfo) const noexcept {
 		fp_vkCmdBlitImage2KHR(commandBuffer, pBlitImageInfo);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_copy_commands2))
-	void cmdCopyBufferToImage2KHR(VkCommandBuffer commandBuffer, const VkCopyBufferToImageInfo2* pCopyBufferToImageInfo) const noexcept {
+#if (defined(VK_KHR_copy_commands2))
+	void cmdCopyBufferToImage2KHR(VkCommandBuffer commandBuffer, const VkCopyBufferToImageInfo2KHR* pCopyBufferToImageInfo) const noexcept {
 		fp_vkCmdCopyBufferToImage2KHR(commandBuffer, pCopyBufferToImageInfo);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_copy_commands2))
-	void cmdCopyImageToBuffer2KHR(VkCommandBuffer commandBuffer, const VkCopyImageToBufferInfo2* pCopyImageToBufferInfo) const noexcept {
+#if (defined(VK_KHR_copy_commands2))
+	void cmdCopyImageToBuffer2KHR(VkCommandBuffer commandBuffer, const VkCopyImageToBufferInfo2KHR* pCopyImageToBufferInfo) const noexcept {
 		fp_vkCmdCopyImageToBuffer2KHR(commandBuffer, pCopyImageToBufferInfo);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_copy_commands2))
-	void cmdResolveImage2KHR(VkCommandBuffer commandBuffer, const VkResolveImageInfo2* pResolveImageInfo) const noexcept {
+#if (defined(VK_KHR_copy_commands2))
+	void cmdResolveImage2KHR(VkCommandBuffer commandBuffer, const VkResolveImageInfo2KHR* pResolveImageInfo) const noexcept {
 		fp_vkCmdResolveImage2KHR(commandBuffer, pResolveImageInfo);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_synchronization2))
-	void cmdSetEvent2KHR(VkCommandBuffer commandBuffer, VkEvent event, const VkDependencyInfo* pDependencyInfo) const noexcept {
+#if (defined(VK_KHR_synchronization2))
+	void cmdSetEvent2KHR(VkCommandBuffer commandBuffer, VkEvent event, const VkDependencyInfoKHR* pDependencyInfo) const noexcept {
 		fp_vkCmdSetEvent2KHR(commandBuffer, event, pDependencyInfo);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_synchronization2))
-	void cmdResetEvent2KHR(VkCommandBuffer commandBuffer, VkEvent event, VkPipelineStageFlags2 stageMask) const noexcept {
+#if (defined(VK_KHR_synchronization2))
+	void cmdResetEvent2KHR(VkCommandBuffer commandBuffer, VkEvent event, VkPipelineStageFlags2KHR stageMask) const noexcept {
 		fp_vkCmdResetEvent2KHR(commandBuffer, event, stageMask);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_synchronization2))
-	void cmdWaitEvents2KHR(VkCommandBuffer commandBuffer, uint32_t eventCount, const VkEvent* pEvents, const VkDependencyInfo* pDependencyInfos) const noexcept {
+#if (defined(VK_KHR_synchronization2))
+	void cmdWaitEvents2KHR(VkCommandBuffer commandBuffer, uint32_t eventCount, const VkEvent* pEvents, const VkDependencyInfoKHR* pDependencyInfos) const noexcept {
 		fp_vkCmdWaitEvents2KHR(commandBuffer, eventCount, pEvents, pDependencyInfos);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_synchronization2))
-	void cmdPipelineBarrier2KHR(VkCommandBuffer commandBuffer, const VkDependencyInfo* pDependencyInfo) const noexcept {
+#if (defined(VK_KHR_synchronization2))
+	void cmdPipelineBarrier2KHR(VkCommandBuffer commandBuffer, const VkDependencyInfoKHR* pDependencyInfo) const noexcept {
 		fp_vkCmdPipelineBarrier2KHR(commandBuffer, pDependencyInfo);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_synchronization2))
-	VkResult queueSubmit2KHR(VkQueue queue, uint32_t submitCount, const VkSubmitInfo2* pSubmits, VkFence fence) const noexcept {
+#if (defined(VK_KHR_synchronization2))
+	VkResult queueSubmit2KHR(VkQueue queue, uint32_t submitCount, const VkSubmitInfo2KHR* pSubmits, VkFence fence) const noexcept {
 		return fp_vkQueueSubmit2KHR(queue, submitCount, pSubmits, fence);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_synchronization2))
-	void cmdWriteTimestamp2KHR(VkCommandBuffer commandBuffer, VkPipelineStageFlags2 stage, VkQueryPool queryPool, uint32_t query) const noexcept {
+#if (defined(VK_KHR_synchronization2))
+	void cmdWriteTimestamp2KHR(VkCommandBuffer commandBuffer, VkPipelineStageFlags2KHR stage, VkQueryPool queryPool, uint32_t query) const noexcept {
 		fp_vkCmdWriteTimestamp2KHR(commandBuffer, stage, queryPool, query);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_dynamic_rendering))
-	void cmdBeginRenderingKHR(VkCommandBuffer commandBuffer, const VkRenderingInfo* pRenderingInfo) const noexcept {
+#if (defined(VK_KHR_dynamic_rendering))
+	void cmdBeginRenderingKHR(VkCommandBuffer commandBuffer, const VkRenderingInfoKHR* pRenderingInfo) const noexcept {
 		fp_vkCmdBeginRenderingKHR(commandBuffer, pRenderingInfo);
 	}
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_dynamic_rendering))
+#if (defined(VK_KHR_dynamic_rendering))
 	void cmdEndRenderingKHR(VkCommandBuffer commandBuffer) const noexcept {
 		fp_vkCmdEndRenderingKHR(commandBuffer);
 	}
@@ -3082,7 +3026,7 @@ struct DispatchTable {
 	PFN_vkCreateQueryPool fp_vkCreateQueryPool = nullptr;
 	PFN_vkDestroyQueryPool fp_vkDestroyQueryPool = nullptr;
 	PFN_vkGetQueryPoolResults fp_vkGetQueryPoolResults = nullptr;
-#if (defined(VK_VERSION_1_2)) || (defined(VK_EXT_host_query_reset))
+#if (defined(VK_VERSION_1_2))
 	PFN_vkResetQueryPool fp_vkResetQueryPool = nullptr;
 #endif
 	PFN_vkCreateBuffer fp_vkCreateBuffer = nullptr;
@@ -3247,7 +3191,7 @@ struct DispatchTable {
 #if (defined(VK_KHR_push_descriptor))
 	PFN_vkCmdPushDescriptorSetKHR fp_vkCmdPushDescriptorSetKHR = nullptr;
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_maintenance1))
+#if (defined(VK_VERSION_1_1))
 	PFN_vkTrimCommandPool fp_vkTrimCommandPool = nullptr;
 #endif
 #if (defined(VK_KHR_external_memory_win32))
@@ -3313,16 +3257,16 @@ struct DispatchTable {
 #if (defined(VK_EXT_display_control))
 	PFN_vkGetSwapchainCounterEXT fp_vkGetSwapchainCounterEXT = nullptr;
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_device_group))
+#if (defined(VK_VERSION_1_1))
 	PFN_vkGetDeviceGroupPeerMemoryFeatures fp_vkGetDeviceGroupPeerMemoryFeatures = nullptr;
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_bind_memory2))
+#if (defined(VK_VERSION_1_1))
 	PFN_vkBindBufferMemory2 fp_vkBindBufferMemory2 = nullptr;
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_bind_memory2))
+#if (defined(VK_VERSION_1_1))
 	PFN_vkBindImageMemory2 fp_vkBindImageMemory2 = nullptr;
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_device_group))
+#if (defined(VK_VERSION_1_1))
 	PFN_vkCmdSetDeviceMask fp_vkCmdSetDeviceMask = nullptr;
 #endif
 #if (defined(VK_KHR_swapchain) && defined(VK_VERSION_1_1)) || (defined(VK_KHR_device_group) && defined(VK_KHR_surface))
@@ -3334,16 +3278,16 @@ struct DispatchTable {
 #if (defined(VK_KHR_swapchain) && defined(VK_VERSION_1_1)) || (defined(VK_KHR_device_group) && defined(VK_KHR_swapchain))
 	PFN_vkAcquireNextImage2KHR fp_vkAcquireNextImage2KHR = nullptr;
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_device_group))
+#if (defined(VK_VERSION_1_1))
 	PFN_vkCmdDispatchBase fp_vkCmdDispatchBase = nullptr;
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_descriptor_update_template))
+#if (defined(VK_VERSION_1_1))
 	PFN_vkCreateDescriptorUpdateTemplate fp_vkCreateDescriptorUpdateTemplate = nullptr;
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_descriptor_update_template))
+#if (defined(VK_VERSION_1_1))
 	PFN_vkDestroyDescriptorUpdateTemplate fp_vkDestroyDescriptorUpdateTemplate = nullptr;
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_descriptor_update_template))
+#if (defined(VK_VERSION_1_1))
 	PFN_vkUpdateDescriptorSetWithTemplate fp_vkUpdateDescriptorSetWithTemplate = nullptr;
 #endif
 #if (defined(VK_KHR_push_descriptor) && defined(VK_VERSION_1_1)) || (defined(VK_KHR_push_descriptor) && defined(VK_KHR_descriptor_update_template)) || (defined(VK_KHR_descriptor_update_template) && defined(VK_KHR_push_descriptor))
@@ -3370,28 +3314,28 @@ struct DispatchTable {
 #if (defined(VK_EXT_sample_locations))
 	PFN_vkCmdSetSampleLocationsEXT fp_vkCmdSetSampleLocationsEXT = nullptr;
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_get_memory_requirements2))
+#if (defined(VK_VERSION_1_1))
 	PFN_vkGetBufferMemoryRequirements2 fp_vkGetBufferMemoryRequirements2 = nullptr;
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_get_memory_requirements2))
+#if (defined(VK_VERSION_1_1))
 	PFN_vkGetImageMemoryRequirements2 fp_vkGetImageMemoryRequirements2 = nullptr;
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_get_memory_requirements2))
+#if (defined(VK_VERSION_1_1))
 	PFN_vkGetImageSparseMemoryRequirements2 fp_vkGetImageSparseMemoryRequirements2 = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_maintenance4))
+#if (defined(VK_VERSION_1_3))
 	PFN_vkGetDeviceBufferMemoryRequirements fp_vkGetDeviceBufferMemoryRequirements = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_maintenance4))
+#if (defined(VK_VERSION_1_3))
 	PFN_vkGetDeviceImageMemoryRequirements fp_vkGetDeviceImageMemoryRequirements = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_maintenance4))
+#if (defined(VK_VERSION_1_3))
 	PFN_vkGetDeviceImageSparseMemoryRequirements fp_vkGetDeviceImageSparseMemoryRequirements = nullptr;
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_sampler_ycbcr_conversion))
+#if (defined(VK_VERSION_1_1))
 	PFN_vkCreateSamplerYcbcrConversion fp_vkCreateSamplerYcbcrConversion = nullptr;
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_sampler_ycbcr_conversion))
+#if (defined(VK_VERSION_1_1))
 	PFN_vkDestroySamplerYcbcrConversion fp_vkDestroySamplerYcbcrConversion = nullptr;
 #endif
 #if (defined(VK_VERSION_1_1))
@@ -3409,7 +3353,7 @@ struct DispatchTable {
 #if (defined(VK_EXT_validation_cache))
 	PFN_vkMergeValidationCachesEXT fp_vkMergeValidationCachesEXT = nullptr;
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_maintenance3))
+#if (defined(VK_VERSION_1_1))
 	PFN_vkGetDescriptorSetLayoutSupport fp_vkGetDescriptorSetLayoutSupport = nullptr;
 #endif
 #if (defined(VK_ANDROID_native_buffer))
@@ -3463,25 +3407,25 @@ struct DispatchTable {
 #if (defined(VK_AMD_buffer_marker))
 	PFN_vkCmdWriteBufferMarkerAMD fp_vkCmdWriteBufferMarkerAMD = nullptr;
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_create_renderpass2))
+#if (defined(VK_VERSION_1_2))
 	PFN_vkCreateRenderPass2 fp_vkCreateRenderPass2 = nullptr;
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_create_renderpass2))
+#if (defined(VK_VERSION_1_2))
 	PFN_vkCmdBeginRenderPass2 fp_vkCmdBeginRenderPass2 = nullptr;
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_create_renderpass2))
+#if (defined(VK_VERSION_1_2))
 	PFN_vkCmdNextSubpass2 fp_vkCmdNextSubpass2 = nullptr;
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_create_renderpass2))
+#if (defined(VK_VERSION_1_2))
 	PFN_vkCmdEndRenderPass2 fp_vkCmdEndRenderPass2 = nullptr;
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_timeline_semaphore))
+#if (defined(VK_VERSION_1_2))
 	PFN_vkGetSemaphoreCounterValue fp_vkGetSemaphoreCounterValue = nullptr;
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_timeline_semaphore))
+#if (defined(VK_VERSION_1_2))
 	PFN_vkWaitSemaphores fp_vkWaitSemaphores = nullptr;
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_timeline_semaphore))
+#if (defined(VK_VERSION_1_2))
 	PFN_vkSignalSemaphore fp_vkSignalSemaphore = nullptr;
 #endif
 #if (defined(VK_ANDROID_external_memory_android_hardware_buffer))
@@ -3490,10 +3434,10 @@ struct DispatchTable {
 #if (defined(VK_ANDROID_external_memory_android_hardware_buffer))
 	PFN_vkGetMemoryAndroidHardwareBufferANDROID fp_vkGetMemoryAndroidHardwareBufferANDROID = nullptr;
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_AMD_draw_indirect_count))
+#if (defined(VK_VERSION_1_2))
 	PFN_vkCmdDrawIndirectCount fp_vkCmdDrawIndirectCount = nullptr;
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_AMD_draw_indirect_count))
+#if (defined(VK_VERSION_1_2))
 	PFN_vkCmdDrawIndexedIndirectCount fp_vkCmdDrawIndexedIndirectCount = nullptr;
 #endif
 #if (defined(VK_NV_device_diagnostic_checkpoints))
@@ -3601,7 +3545,7 @@ struct DispatchTable {
 #if (defined(VK_NV_ray_tracing))
 	PFN_vkCmdTraceRaysNV fp_vkCmdTraceRaysNV = nullptr;
 #endif
-#if (defined(VK_KHR_ray_tracing_pipeline)) || (defined(VK_NV_ray_tracing))
+#if (defined(VK_KHR_ray_tracing_pipeline))
 	PFN_vkGetRayTracingShaderGroupHandlesKHR fp_vkGetRayTracingShaderGroupHandlesKHR = nullptr;
 #endif
 #if (defined(VK_KHR_ray_tracing_pipeline))
@@ -3628,12 +3572,6 @@ struct DispatchTable {
 #if (defined(VK_KHR_ray_tracing_pipeline))
 	PFN_vkCmdSetRayTracingPipelineStackSizeKHR fp_vkCmdSetRayTracingPipelineStackSizeKHR = nullptr;
 #endif
-#if (defined(VK_NVX_image_view_handle))
-	PFN_vkGetImageViewHandleNVX fp_vkGetImageViewHandleNVX = nullptr;
-#endif
-#if (defined(VK_NVX_image_view_handle))
-	PFN_vkGetImageViewAddressNVX fp_vkGetImageViewAddressNVX = nullptr;
-#endif
 #if (defined(VK_EXT_full_screen_exclusive) && defined(VK_KHR_device_group)) || (defined(VK_EXT_full_screen_exclusive) && defined(VK_VERSION_1_1))
 	PFN_vkGetDeviceGroupSurfacePresentModes2EXT fp_vkGetDeviceGroupSurfacePresentModes2EXT = nullptr;
 #endif
@@ -3652,10 +3590,10 @@ struct DispatchTable {
 #if (defined(VK_EXT_image_drm_format_modifier))
 	PFN_vkGetImageDrmFormatModifierPropertiesEXT fp_vkGetImageDrmFormatModifierPropertiesEXT = nullptr;
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_buffer_device_address))
+#if (defined(VK_VERSION_1_2))
 	PFN_vkGetBufferOpaqueCaptureAddress fp_vkGetBufferOpaqueCaptureAddress = nullptr;
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_EXT_buffer_device_address))
+#if (defined(VK_VERSION_1_2))
 	PFN_vkGetBufferDeviceAddress fp_vkGetBufferDeviceAddress = nullptr;
 #endif
 #if (defined(VK_INTEL_performance_query))
@@ -3685,7 +3623,7 @@ struct DispatchTable {
 #if (defined(VK_INTEL_performance_query))
 	PFN_vkGetPerformanceParameterINTEL fp_vkGetPerformanceParameterINTEL = nullptr;
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_buffer_device_address))
+#if (defined(VK_VERSION_1_2))
 	PFN_vkGetDeviceMemoryOpaqueCaptureAddress fp_vkGetDeviceMemoryOpaqueCaptureAddress = nullptr;
 #endif
 #if (defined(VK_KHR_pipeline_executable_properties))
@@ -3730,85 +3668,85 @@ struct DispatchTable {
 #if (defined(VK_KHR_deferred_host_operations))
 	PFN_vkDeferredOperationJoinKHR fp_vkDeferredOperationJoinKHR = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_VERSION_1_3))
 	PFN_vkCmdSetCullMode fp_vkCmdSetCullMode = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_VERSION_1_3))
 	PFN_vkCmdSetFrontFace fp_vkCmdSetFrontFace = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_VERSION_1_3))
 	PFN_vkCmdSetPrimitiveTopology fp_vkCmdSetPrimitiveTopology = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_VERSION_1_3))
 	PFN_vkCmdSetViewportWithCount fp_vkCmdSetViewportWithCount = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_VERSION_1_3))
 	PFN_vkCmdSetScissorWithCount fp_vkCmdSetScissorWithCount = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_VERSION_1_3))
 	PFN_vkCmdBindVertexBuffers2 fp_vkCmdBindVertexBuffers2 = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_VERSION_1_3))
 	PFN_vkCmdSetDepthTestEnable fp_vkCmdSetDepthTestEnable = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_VERSION_1_3))
 	PFN_vkCmdSetDepthWriteEnable fp_vkCmdSetDepthWriteEnable = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_VERSION_1_3))
 	PFN_vkCmdSetDepthCompareOp fp_vkCmdSetDepthCompareOp = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_VERSION_1_3))
 	PFN_vkCmdSetDepthBoundsTestEnable fp_vkCmdSetDepthBoundsTestEnable = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_VERSION_1_3))
 	PFN_vkCmdSetStencilTestEnable fp_vkCmdSetStencilTestEnable = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_VERSION_1_3))
 	PFN_vkCmdSetStencilOp fp_vkCmdSetStencilOp = nullptr;
 #endif
 #if (defined(VK_EXT_extended_dynamic_state2))
 	PFN_vkCmdSetPatchControlPointsEXT fp_vkCmdSetPatchControlPointsEXT = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state2))
+#if (defined(VK_VERSION_1_3))
 	PFN_vkCmdSetRasterizerDiscardEnable fp_vkCmdSetRasterizerDiscardEnable = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state2))
+#if (defined(VK_VERSION_1_3))
 	PFN_vkCmdSetDepthBiasEnable fp_vkCmdSetDepthBiasEnable = nullptr;
 #endif
 #if (defined(VK_EXT_extended_dynamic_state2))
 	PFN_vkCmdSetLogicOpEXT fp_vkCmdSetLogicOpEXT = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state2))
+#if (defined(VK_VERSION_1_3))
 	PFN_vkCmdSetPrimitiveRestartEnable fp_vkCmdSetPrimitiveRestartEnable = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_private_data))
+#if (defined(VK_VERSION_1_3))
 	PFN_vkCreatePrivateDataSlot fp_vkCreatePrivateDataSlot = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_private_data))
+#if (defined(VK_VERSION_1_3))
 	PFN_vkDestroyPrivateDataSlot fp_vkDestroyPrivateDataSlot = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_private_data))
+#if (defined(VK_VERSION_1_3))
 	PFN_vkSetPrivateData fp_vkSetPrivateData = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_private_data))
+#if (defined(VK_VERSION_1_3))
 	PFN_vkGetPrivateData fp_vkGetPrivateData = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_copy_commands2))
+#if (defined(VK_VERSION_1_3))
 	PFN_vkCmdCopyBuffer2 fp_vkCmdCopyBuffer2 = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_copy_commands2))
+#if (defined(VK_VERSION_1_3))
 	PFN_vkCmdCopyImage2 fp_vkCmdCopyImage2 = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_copy_commands2))
+#if (defined(VK_VERSION_1_3))
 	PFN_vkCmdBlitImage2 fp_vkCmdBlitImage2 = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_copy_commands2))
+#if (defined(VK_VERSION_1_3))
 	PFN_vkCmdCopyBufferToImage2 fp_vkCmdCopyBufferToImage2 = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_copy_commands2))
+#if (defined(VK_VERSION_1_3))
 	PFN_vkCmdCopyImageToBuffer2 fp_vkCmdCopyImageToBuffer2 = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_copy_commands2))
+#if (defined(VK_VERSION_1_3))
 	PFN_vkCmdResolveImage2 fp_vkCmdResolveImage2 = nullptr;
 #endif
 #if (defined(VK_KHR_fragment_shading_rate))
@@ -3826,22 +3764,22 @@ struct DispatchTable {
 #if (defined(VK_EXT_color_write_enable))
 	PFN_vkCmdSetColorWriteEnableEXT fp_vkCmdSetColorWriteEnableEXT = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_synchronization2))
+#if (defined(VK_VERSION_1_3))
 	PFN_vkCmdSetEvent2 fp_vkCmdSetEvent2 = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_synchronization2))
+#if (defined(VK_VERSION_1_3))
 	PFN_vkCmdResetEvent2 fp_vkCmdResetEvent2 = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_synchronization2))
+#if (defined(VK_VERSION_1_3))
 	PFN_vkCmdWaitEvents2 fp_vkCmdWaitEvents2 = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_synchronization2))
+#if (defined(VK_VERSION_1_3))
 	PFN_vkCmdPipelineBarrier2 fp_vkCmdPipelineBarrier2 = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_synchronization2))
+#if (defined(VK_VERSION_1_3))
 	PFN_vkQueueSubmit2 fp_vkQueueSubmit2 = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_synchronization2))
+#if (defined(VK_VERSION_1_3))
 	PFN_vkCmdWriteTimestamp2 fp_vkCmdWriteTimestamp2 = nullptr;
 #endif
 #if (defined(VK_KHR_synchronization2) && defined(VK_AMD_buffer_marker))
@@ -3886,21 +3824,6 @@ struct DispatchTable {
 #if (defined(VK_KHR_video_encode_queue))
 	PFN_vkCmdEncodeVideoKHR fp_vkCmdEncodeVideoKHR = nullptr;
 #endif
-#if (defined(VK_NVX_binary_import))
-	PFN_vkCreateCuModuleNVX fp_vkCreateCuModuleNVX = nullptr;
-#endif
-#if (defined(VK_NVX_binary_import))
-	PFN_vkCreateCuFunctionNVX fp_vkCreateCuFunctionNVX = nullptr;
-#endif
-#if (defined(VK_NVX_binary_import))
-	PFN_vkDestroyCuModuleNVX fp_vkDestroyCuModuleNVX = nullptr;
-#endif
-#if (defined(VK_NVX_binary_import))
-	PFN_vkDestroyCuFunctionNVX fp_vkDestroyCuFunctionNVX = nullptr;
-#endif
-#if (defined(VK_NVX_binary_import))
-	PFN_vkCmdCuLaunchKernelNVX fp_vkCmdCuLaunchKernelNVX = nullptr;
-#endif
 #if (defined(VK_EXT_pageable_device_local_memory))
 	PFN_vkSetDeviceMemoryPriorityEXT fp_vkSetDeviceMemoryPriorityEXT = nullptr;
 #endif
@@ -3922,205 +3845,205 @@ struct DispatchTable {
 #if (defined(VK_FUCHSIA_buffer_collection))
 	PFN_vkGetBufferCollectionPropertiesFUCHSIA fp_vkGetBufferCollectionPropertiesFUCHSIA = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_dynamic_rendering))
+#if (defined(VK_VERSION_1_3))
 	PFN_vkCmdBeginRendering fp_vkCmdBeginRendering = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_dynamic_rendering))
+#if (defined(VK_VERSION_1_3))
 	PFN_vkCmdEndRendering fp_vkCmdEndRendering = nullptr;
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_EXT_host_query_reset))
+#if (defined(VK_EXT_host_query_reset))
 	PFN_vkResetQueryPoolEXT fp_vkResetQueryPoolEXT = nullptr;
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_maintenance1))
+#if (defined(VK_KHR_maintenance1))
 	PFN_vkTrimCommandPoolKHR fp_vkTrimCommandPoolKHR = nullptr;
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_device_group))
+#if (defined(VK_KHR_device_group))
 	PFN_vkGetDeviceGroupPeerMemoryFeaturesKHR fp_vkGetDeviceGroupPeerMemoryFeaturesKHR = nullptr;
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_bind_memory2))
+#if (defined(VK_KHR_bind_memory2))
 	PFN_vkBindBufferMemory2KHR fp_vkBindBufferMemory2KHR = nullptr;
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_bind_memory2))
+#if (defined(VK_KHR_bind_memory2))
 	PFN_vkBindImageMemory2KHR fp_vkBindImageMemory2KHR = nullptr;
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_device_group))
+#if (defined(VK_KHR_device_group))
 	PFN_vkCmdSetDeviceMaskKHR fp_vkCmdSetDeviceMaskKHR = nullptr;
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_device_group))
+#if (defined(VK_KHR_device_group))
 	PFN_vkCmdDispatchBaseKHR fp_vkCmdDispatchBaseKHR = nullptr;
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_descriptor_update_template))
+#if (defined(VK_KHR_descriptor_update_template))
 	PFN_vkCreateDescriptorUpdateTemplateKHR fp_vkCreateDescriptorUpdateTemplateKHR = nullptr;
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_descriptor_update_template))
+#if (defined(VK_KHR_descriptor_update_template))
 	PFN_vkDestroyDescriptorUpdateTemplateKHR fp_vkDestroyDescriptorUpdateTemplateKHR = nullptr;
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_descriptor_update_template))
+#if (defined(VK_KHR_descriptor_update_template))
 	PFN_vkUpdateDescriptorSetWithTemplateKHR fp_vkUpdateDescriptorSetWithTemplateKHR = nullptr;
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_get_memory_requirements2))
+#if (defined(VK_KHR_get_memory_requirements2))
 	PFN_vkGetBufferMemoryRequirements2KHR fp_vkGetBufferMemoryRequirements2KHR = nullptr;
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_get_memory_requirements2))
+#if (defined(VK_KHR_get_memory_requirements2))
 	PFN_vkGetImageMemoryRequirements2KHR fp_vkGetImageMemoryRequirements2KHR = nullptr;
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_get_memory_requirements2))
+#if (defined(VK_KHR_get_memory_requirements2))
 	PFN_vkGetImageSparseMemoryRequirements2KHR fp_vkGetImageSparseMemoryRequirements2KHR = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_maintenance4))
+#if (defined(VK_KHR_maintenance4))
 	PFN_vkGetDeviceBufferMemoryRequirementsKHR fp_vkGetDeviceBufferMemoryRequirementsKHR = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_maintenance4))
+#if (defined(VK_KHR_maintenance4))
 	PFN_vkGetDeviceImageMemoryRequirementsKHR fp_vkGetDeviceImageMemoryRequirementsKHR = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_maintenance4))
+#if (defined(VK_KHR_maintenance4))
 	PFN_vkGetDeviceImageSparseMemoryRequirementsKHR fp_vkGetDeviceImageSparseMemoryRequirementsKHR = nullptr;
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_sampler_ycbcr_conversion))
+#if (defined(VK_KHR_sampler_ycbcr_conversion))
 	PFN_vkCreateSamplerYcbcrConversionKHR fp_vkCreateSamplerYcbcrConversionKHR = nullptr;
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_sampler_ycbcr_conversion))
+#if (defined(VK_KHR_sampler_ycbcr_conversion))
 	PFN_vkDestroySamplerYcbcrConversionKHR fp_vkDestroySamplerYcbcrConversionKHR = nullptr;
 #endif
-#if (defined(VK_VERSION_1_1)) || (defined(VK_KHR_maintenance3))
+#if (defined(VK_KHR_maintenance3))
 	PFN_vkGetDescriptorSetLayoutSupportKHR fp_vkGetDescriptorSetLayoutSupportKHR = nullptr;
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_create_renderpass2))
+#if (defined(VK_KHR_create_renderpass2))
 	PFN_vkCreateRenderPass2KHR fp_vkCreateRenderPass2KHR = nullptr;
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_create_renderpass2))
+#if (defined(VK_KHR_create_renderpass2))
 	PFN_vkCmdBeginRenderPass2KHR fp_vkCmdBeginRenderPass2KHR = nullptr;
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_create_renderpass2))
+#if (defined(VK_KHR_create_renderpass2))
 	PFN_vkCmdNextSubpass2KHR fp_vkCmdNextSubpass2KHR = nullptr;
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_create_renderpass2))
+#if (defined(VK_KHR_create_renderpass2))
 	PFN_vkCmdEndRenderPass2KHR fp_vkCmdEndRenderPass2KHR = nullptr;
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_timeline_semaphore))
+#if (defined(VK_KHR_timeline_semaphore))
 	PFN_vkGetSemaphoreCounterValueKHR fp_vkGetSemaphoreCounterValueKHR = nullptr;
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_timeline_semaphore))
+#if (defined(VK_KHR_timeline_semaphore))
 	PFN_vkWaitSemaphoresKHR fp_vkWaitSemaphoresKHR = nullptr;
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_timeline_semaphore))
+#if (defined(VK_KHR_timeline_semaphore))
 	PFN_vkSignalSemaphoreKHR fp_vkSignalSemaphoreKHR = nullptr;
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_AMD_draw_indirect_count))
+#if (defined(VK_AMD_draw_indirect_count))
 	PFN_vkCmdDrawIndirectCountAMD fp_vkCmdDrawIndirectCountAMD = nullptr;
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_AMD_draw_indirect_count))
+#if (defined(VK_AMD_draw_indirect_count))
 	PFN_vkCmdDrawIndexedIndirectCountAMD fp_vkCmdDrawIndexedIndirectCountAMD = nullptr;
 #endif
-#if (defined(VK_KHR_ray_tracing_pipeline)) || (defined(VK_NV_ray_tracing))
+#if (defined(VK_NV_ray_tracing))
 	PFN_vkGetRayTracingShaderGroupHandlesNV fp_vkGetRayTracingShaderGroupHandlesNV = nullptr;
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_buffer_device_address))
+#if (defined(VK_KHR_buffer_device_address))
 	PFN_vkGetBufferOpaqueCaptureAddressKHR fp_vkGetBufferOpaqueCaptureAddressKHR = nullptr;
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_EXT_buffer_device_address))
+#if (defined(VK_EXT_buffer_device_address))
 	PFN_vkGetBufferDeviceAddressEXT fp_vkGetBufferDeviceAddressEXT = nullptr;
 #endif
-#if (defined(VK_VERSION_1_2)) || (defined(VK_KHR_buffer_device_address))
+#if (defined(VK_KHR_buffer_device_address))
 	PFN_vkGetDeviceMemoryOpaqueCaptureAddressKHR fp_vkGetDeviceMemoryOpaqueCaptureAddressKHR = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_EXT_extended_dynamic_state))
 	PFN_vkCmdSetCullModeEXT fp_vkCmdSetCullModeEXT = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_EXT_extended_dynamic_state))
 	PFN_vkCmdSetFrontFaceEXT fp_vkCmdSetFrontFaceEXT = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_EXT_extended_dynamic_state))
 	PFN_vkCmdSetPrimitiveTopologyEXT fp_vkCmdSetPrimitiveTopologyEXT = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_EXT_extended_dynamic_state))
 	PFN_vkCmdSetViewportWithCountEXT fp_vkCmdSetViewportWithCountEXT = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_EXT_extended_dynamic_state))
 	PFN_vkCmdSetScissorWithCountEXT fp_vkCmdSetScissorWithCountEXT = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_EXT_extended_dynamic_state))
 	PFN_vkCmdBindVertexBuffers2EXT fp_vkCmdBindVertexBuffers2EXT = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_EXT_extended_dynamic_state))
 	PFN_vkCmdSetDepthTestEnableEXT fp_vkCmdSetDepthTestEnableEXT = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_EXT_extended_dynamic_state))
 	PFN_vkCmdSetDepthWriteEnableEXT fp_vkCmdSetDepthWriteEnableEXT = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_EXT_extended_dynamic_state))
 	PFN_vkCmdSetDepthCompareOpEXT fp_vkCmdSetDepthCompareOpEXT = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_EXT_extended_dynamic_state))
 	PFN_vkCmdSetDepthBoundsTestEnableEXT fp_vkCmdSetDepthBoundsTestEnableEXT = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_EXT_extended_dynamic_state))
 	PFN_vkCmdSetStencilTestEnableEXT fp_vkCmdSetStencilTestEnableEXT = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state))
+#if (defined(VK_EXT_extended_dynamic_state))
 	PFN_vkCmdSetStencilOpEXT fp_vkCmdSetStencilOpEXT = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state2))
+#if (defined(VK_EXT_extended_dynamic_state2))
 	PFN_vkCmdSetRasterizerDiscardEnableEXT fp_vkCmdSetRasterizerDiscardEnableEXT = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state2))
+#if (defined(VK_EXT_extended_dynamic_state2))
 	PFN_vkCmdSetDepthBiasEnableEXT fp_vkCmdSetDepthBiasEnableEXT = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_extended_dynamic_state2))
+#if (defined(VK_EXT_extended_dynamic_state2))
 	PFN_vkCmdSetPrimitiveRestartEnableEXT fp_vkCmdSetPrimitiveRestartEnableEXT = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_private_data))
+#if (defined(VK_EXT_private_data))
 	PFN_vkCreatePrivateDataSlotEXT fp_vkCreatePrivateDataSlotEXT = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_private_data))
+#if (defined(VK_EXT_private_data))
 	PFN_vkDestroyPrivateDataSlotEXT fp_vkDestroyPrivateDataSlotEXT = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_private_data))
+#if (defined(VK_EXT_private_data))
 	PFN_vkSetPrivateDataEXT fp_vkSetPrivateDataEXT = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_EXT_private_data))
+#if (defined(VK_EXT_private_data))
 	PFN_vkGetPrivateDataEXT fp_vkGetPrivateDataEXT = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_copy_commands2))
+#if (defined(VK_KHR_copy_commands2))
 	PFN_vkCmdCopyBuffer2KHR fp_vkCmdCopyBuffer2KHR = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_copy_commands2))
+#if (defined(VK_KHR_copy_commands2))
 	PFN_vkCmdCopyImage2KHR fp_vkCmdCopyImage2KHR = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_copy_commands2))
+#if (defined(VK_KHR_copy_commands2))
 	PFN_vkCmdBlitImage2KHR fp_vkCmdBlitImage2KHR = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_copy_commands2))
+#if (defined(VK_KHR_copy_commands2))
 	PFN_vkCmdCopyBufferToImage2KHR fp_vkCmdCopyBufferToImage2KHR = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_copy_commands2))
+#if (defined(VK_KHR_copy_commands2))
 	PFN_vkCmdCopyImageToBuffer2KHR fp_vkCmdCopyImageToBuffer2KHR = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_copy_commands2))
+#if (defined(VK_KHR_copy_commands2))
 	PFN_vkCmdResolveImage2KHR fp_vkCmdResolveImage2KHR = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_synchronization2))
+#if (defined(VK_KHR_synchronization2))
 	PFN_vkCmdSetEvent2KHR fp_vkCmdSetEvent2KHR = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_synchronization2))
+#if (defined(VK_KHR_synchronization2))
 	PFN_vkCmdResetEvent2KHR fp_vkCmdResetEvent2KHR = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_synchronization2))
+#if (defined(VK_KHR_synchronization2))
 	PFN_vkCmdWaitEvents2KHR fp_vkCmdWaitEvents2KHR = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_synchronization2))
+#if (defined(VK_KHR_synchronization2))
 	PFN_vkCmdPipelineBarrier2KHR fp_vkCmdPipelineBarrier2KHR = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_synchronization2))
+#if (defined(VK_KHR_synchronization2))
 	PFN_vkQueueSubmit2KHR fp_vkQueueSubmit2KHR = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_synchronization2))
+#if (defined(VK_KHR_synchronization2))
 	PFN_vkCmdWriteTimestamp2KHR fp_vkCmdWriteTimestamp2KHR = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_dynamic_rendering))
+#if (defined(VK_KHR_dynamic_rendering))
 	PFN_vkCmdBeginRenderingKHR fp_vkCmdBeginRenderingKHR = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3)) || (defined(VK_KHR_dynamic_rendering))
+#if (defined(VK_KHR_dynamic_rendering))
 	PFN_vkCmdEndRenderingKHR fp_vkCmdEndRenderingKHR = nullptr;
 #endif
 	bool is_populated() const { return populated; }

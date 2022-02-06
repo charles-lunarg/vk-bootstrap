@@ -35,6 +35,11 @@ exclusions = [
 	'vkDestroyDevice'
 ]
 
+# Excluded extension authors - don't generate anything for these types of extensions
+excluded_extension_authors = [
+	'NVX'
+]
+
 # Check for/install xmltodict
 import sys
 import subprocess
@@ -48,17 +53,17 @@ xmltodict_missing = {'xmltodict'} - installed
 
 # Install xmltodict
 if xmltodict_missing:
-	val = input("xmltodict is required to run this script. Would you like to install? (y/n): ");
+	val = input("xmltodict is required to run this script. Would you like to install? (y/n): ")
 	if(val.lower() == "y"):
 		try:
 			subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'xmltodict'])
 		except subprocess.CalledProcessError as error:
-			print("Failed to install xmltodict due to error:");
-			print(error);
-			input("Press Enter to continue...");
-			sys.exit();
+			print("Failed to install xmltodict due to error:")
+			print(error)
+			input("Press Enter to continue...")
+			sys.exit()
 	else:
-		sys.exit();
+		sys.exit()
 
 # Fetch fresh vk.xml from Khronos repo
 import urllib.request
@@ -67,10 +72,10 @@ import xmltodict
 try:
 	response = urllib.request.urlopen('https://raw.githubusercontent.com/KhronosGroup/Vulkan-Headers/main/registry/vk.xml')
 except urllib.error.URLError as error:
-	print("Failed to download vk.xml due to error:");
+	print("Failed to download vk.xml due to error:")
 	print(error.reason)
-	input("Press Enter to continue...");
-	sys.exit();
+	input("Press Enter to continue...")
+	sys.exit()
 vk_xml_raw = response.read()
 
 vk_xml = xmltodict.parse(vk_xml_raw,process_namespaces=True)
@@ -78,6 +83,12 @@ vk_xml = xmltodict.parse(vk_xml_raw,process_namespaces=True)
 command_params = {'return_type': '', 'args': [], 'requirements': [], 'macro_template': Template('')}
 
 device_commands = {}
+
+aliased_types = {}
+types_node = vk_xml['registry']['types']['type']
+for type_node in  types_node:
+	if '@alias' in type_node:
+		aliased_types[type_node['@alias']] = type_node['@name']
 
 # Gather all device functions/aliases for filtering core/extension function fetching
 commands_node = vk_xml['registry']['commands']['command']
@@ -92,16 +103,17 @@ for command_node in commands_node:
 		else:
 			new_command_params['args'] = [command_node['param']]
 		if not command_name in exclusions:
-			if new_command_params['args'][0]['type'] == 'VkDevice' or new_command_params['args'][0]['type'] == 'VkCommandBuffer' or new_command_params['args'][0]['type'] == 'VkQueue':
+			if new_command_params['args'][0]['type'] in ['VkDevice', 'VkCommandBuffer', 'VkQueue']:
 				device_commands[command_name] = new_command_params
+				device_commands[command_name]['is_alias'] = False
 	elif '@alias' in command_node:
-		aliases[command_node['@alias']] = command_node['@name'];
+		aliases[command_node['@alias']] = command_node['@name']
 
 # Push the alias name as a device function if the alias exists in device commands
 for alias in aliases:
 	if alias in device_commands:
-		aliased_command_params = device_commands[alias].copy()
-		device_commands[aliases[alias]] = aliased_command_params;
+		device_commands[aliases[alias]] = copy.deepcopy(device_commands[alias])
+		device_commands[aliases[alias]]['is_alias'] = True
 
 # Add requirements for core PFN's
 features_node = vk_xml['registry']['feature']
@@ -124,7 +136,7 @@ for extension_node in extensions_node:
 	if 'require' in extension_node.keys():
 		require_nodes = extension_node['require']
 		for require_node in require_nodes:
-			requirements = [extension_name];
+			requirements = [extension_name]
 			if type(require_node) is not str:
 				if 'command' in require_node.keys():
 					if '@feature' in require_node.keys():
@@ -135,13 +147,19 @@ for extension_node in extensions_node:
 						require_node['command'] = [require_node['command']]
 					for command_node in require_node['command']:
 						if command_node['@name'] in device_commands:
-							device_commands[command_node['@name']]['requirements'] += [requirements]
+							if '@author' in extension_node and extension_node['@author'] in excluded_extension_authors:
+								device_commands.pop(command_node['@name'])
+							else:
+								device_commands[command_node['@name']]['requirements'] += [requirements]
 			elif require_node == 'command':
 				if type(require_nodes['command']) is not list:
 					require_nodes['command'] = [require_nodes['command']]
 				for command_node in require_nodes['command']:
 					if command_node['@name'] in device_commands:
-						device_commands[command_node['@name']]['requirements'] += [requirements]
+						if '@author' in extension_node and extension_node['@author'] in excluded_extension_authors:
+							device_commands.pop(command_node['@name'])
+						else:
+							device_commands[command_node['@name']]['requirements'] += [requirements]
 
 # Generate macro templates
 for command in device_commands:
@@ -226,9 +244,9 @@ for command in device_commands:
 	args_count = len(params['args'])
 	i = args_count
 	for arg in params['args']:
-		front_mods = '';
-		back_mods = ' ';
-		array = '';
+		front_mods = ''
+		back_mods = ' '
+		array = ''
 		arg_type = arg['type']
 		arg_name = arg['name']
 		if '#text' in arg:
@@ -260,6 +278,8 @@ for command in device_commands:
 				if i > 0:
 			 		args_names += ', '
 		else:
+			if arg_type in aliased_types:
+				arg_type = aliased_types[arg_type]
 			args_full += arg_template.substitute(front_mods = front_mods, arg_type = arg_type, back_mods = back_mods, arg_name = arg_name, array = array)
 			args_names += arg_name
 			if i > 0:

@@ -53,6 +53,13 @@ template <typename T> class Result {
 		else
 			m_error = expected.m_error;
 	}
+	Result& operator=(Result const& result) {
+		m_init = result.m_init;
+		if (m_init)
+			new (&m_value) T{ result.m_value };
+		else
+			m_error = result.m_error;
+	}
 	Result(Result&& expected) : m_init(expected.m_init) {
 		if (m_init)
 			new (&m_value) T{ std::move(expected.m_value) };
@@ -60,7 +67,13 @@ template <typename T> class Result {
 			m_error = std::move(expected.m_error);
 		expected.destroy();
 	}
-
+	Result& operator=(Result&& result) {
+		m_init = result.m_init;
+		if (m_init)
+			new (&m_value) T{ std::move(result.m_value) };
+		else
+			m_error = std::move(result.m_error);
+	}
 	Result& operator=(const T& expect) {
 		destroy();
 		m_init = true;
@@ -309,8 +322,8 @@ class InstanceBuilder {
 	// Require a vulkan instance API version. Will fail to create if this version isn't available.
 	InstanceBuilder& require_api_version(uint32_t major, uint32_t minor, uint32_t patch = 0);
 
-	// Prefer a vulkan instance API version. If the desired version isn't available, it will use the highest version available.
-	// Should be constructed with VK_MAKE_VERSION or VK_MAKE_API_VERSION.
+	// Prefer a vulkan instance API version. If the desired version isn't available, it will use the
+	// highest version available. Should be constructed with VK_MAKE_VERSION or VK_MAKE_API_VERSION.
 	InstanceBuilder& desire_api_version(uint32_t preferred_vulkan_version);
 	// Prefer a vulkan instance API version. If the desired version isn't available, it will use the highest version available.
 	InstanceBuilder& desire_api_version(uint32_t major, uint32_t minor, uint32_t patch = 0);

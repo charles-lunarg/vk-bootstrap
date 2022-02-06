@@ -42,19 +42,30 @@ jobs:
             build_dir: "build",
             cc: "clang", cxx: "clang++"
           }
+        - {
+            name: "Ubuntu GCC Release",
+            os: ubuntu-latest,
+            type: "release",
+            build_dir: "build",
+            cc: "gcc", cxx: "g++"
+          }
+        - {
+            name: "Ubuntu Clang Release",
+            os: ubuntu-latest,
+            type: "release",
+            build_dir: "build",
+            cc: "clang", cxx: "clang++"
+          }
     steps:
     - name: Checkout
       uses: actions/checkout@v2.0.0
 
     - name: Install build dependencies
       run: |
-        wget -qO - https://packages.lunarg.com/lunarg-signing-key-pub.asc | sudo apt-key add -
-        sudo wget -qO /etc/apt/sources.list.d/lunarg-vulkan-bionic.list https://packages.lunarg.com/vulkan/lunarg-vulkan-bionic.list
-        sudo apt-get -qq update
-        sudo apt-get install -y vulkan-headers libvulkan-dev xorg-dev
+        sudo apt-get install -y xorg-dev
 
     - name: CMake Configure
-      run: cmake -Bbuild -DVK_BOOTSTRAP_WERROR=ON -DVK_BOOTSTRAP_TEST=ON -DCMAKE_BUILD_TYPE=Debug
+      run: cmake -Bbuild -DVK_BOOTSTRAP_WERROR=ON -DVK_BOOTSTRAP_TEST=ON -DCMAKE_BUILD_TYPE=${{matrix.config.type}}
 
     - name: CMake Build
       run: cmake --build build
@@ -67,19 +78,14 @@ jobs:
       matrix:
           arch: [ Win32, x64 ]
           config: [ Debug, Release ]
-          os: [ windows-2016, windows-2019 ]
+          os: [windows-latest ]
 
     steps:
     - name: Checkout
       uses: actions/checkout@v2.0.0
 
-    - name: Download and setup Vulkan-Headers
-      run: |
-        git clone https://github.com/KhronosGroup/Vulkan-Headers
-        echo "VULKAN_SDK=./Vulkan-Headers" >> $GITHUB_ENV
-
     - name: CMake Configure
-      run: cmake -Bbuild -DVK_BOOTSTRAP_WERROR=ON -DVK_BOOTSTRAP_TEST=ON -DCMAKE_BUILD_TYPE=Debug
+      run: cmake -Bbuild -DVK_BOOTSTRAP_WERROR=ON -DVK_BOOTSTRAP_TEST=ON -DCMAKE_BUILD_TYPE=${{matrix.config}}
 
     - name: CMake Build
       run: cmake --build build

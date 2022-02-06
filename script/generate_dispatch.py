@@ -223,7 +223,7 @@ pfn_load_section = ''
 
 proxy_template = Template('\t$return_type $proxy_name($args_full) const noexcept {\n\t\t$opt_return$fp_name($args_names);\n\t}\n')
 fp_decl_template = Template('\t$pfn_name $fp_name = nullptr;\n')
-pfn_load_template = Template('\t\t$fp_name = ($pfn_name)procAddr(device, "$command_name");\n')
+pfn_load_template = Template('\t\t$fp_name = reinterpret_cast<$pfn_name>(procAddr(device, "$command_name"));\n')
 
 for command in device_commands:
 	params = device_commands[command]

@@ -21,6 +21,7 @@
 #include <cstring>
 
 #include <vector>
+#include <string>
 #include <system_error>
 
 #include <vulkan/vulkan.h>
@@ -28,25 +29,25 @@
 #include "VkBootstrapDispatch.h"
 
 #ifdef VK_MAKE_API_VERSION
-	#define VKB_MAKE_VK_VERSION(variant, major, minor, patch) VK_MAKE_API_VERSION(variant, major, minor, patch)
+#define VKB_MAKE_VK_VERSION(variant, major, minor, patch) VK_MAKE_API_VERSION(variant, major, minor, patch)
 #elif defined(VK_MAKE_VERSION)
-	#define VKB_MAKE_VK_VERSION(variant, major, minor, patch) VK_MAKE_VERSION(major, minor, patch)
+#define VKB_MAKE_VK_VERSION(variant, major, minor, patch) VK_MAKE_VERSION(major, minor, patch)
 #endif
 
 #if defined(VK_API_VERSION_1_3) || defined(VK_VERSION_1_3)
-	#define VKB_VK_API_VERSION_1_3 VKB_MAKE_VK_VERSION(0, 1, 3, 0)
+#define VKB_VK_API_VERSION_1_3 VKB_MAKE_VK_VERSION(0, 1, 3, 0)
 #endif
 
 #if defined(VK_API_VERSION_1_2) || defined(VK_VERSION_1_2)
-	#define VKB_VK_API_VERSION_1_2 VKB_MAKE_VK_VERSION(0, 1, 2, 0)
+#define VKB_VK_API_VERSION_1_2 VKB_MAKE_VK_VERSION(0, 1, 2, 0)
 #endif
 
 #if defined(VK_API_VERSION_1_1) || defined(VK_VERSION_1_1)
-	#define VKB_VK_API_VERSION_1_1 VKB_MAKE_VK_VERSION(0, 1, 1, 0)
+#define VKB_VK_API_VERSION_1_1 VKB_MAKE_VK_VERSION(0, 1, 1, 0)
 #endif
 
 #if defined(VK_API_VERSION_1_0) || defined(VK_VERSION_1_0)
-	#define VKB_VK_API_VERSION_1_0 VKB_MAKE_VK_VERSION(0, 1, 0, 0)
+#define VKB_VK_API_VERSION_1_0 VKB_MAKE_VK_VERSION(0, 1, 0, 0)
 #endif
 
 namespace vkb {
@@ -65,8 +66,7 @@ template <typename T> class Result {
 
 	Result(Error error) : m_error{ error }, m_init{ false } {}
 
-	Result(std::error_code error_code, VkResult result = VK_SUCCESS)
-	: m_error{ error_code, result }, m_init{ false } {}
+	Result(std::error_code error_code, VkResult result = VK_SUCCESS) : m_error{ error_code, result }, m_init{ false } {}
 
 	~Result() { destroy(); }
 	Result(Result const& expected) : m_init(expected.m_init) {
@@ -423,9 +423,9 @@ class InstanceBuilder {
 		PFN_vkDebugUtilsMessengerCallbackEXT debug_callback = default_debug_callback;
 		VkDebugUtilsMessageSeverityFlagsEXT debug_message_severity =
 		    VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
-		VkDebugUtilsMessageTypeFlagsEXT debug_message_type =
-		    VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT |
-		    VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
+		VkDebugUtilsMessageTypeFlagsEXT debug_message_type = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT |
+		                                                     VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT |
+		                                                     VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
 		void* debug_user_data_pointer = nullptr;
 
 		// validation features
@@ -450,15 +450,15 @@ VKAPI_ATTR VkBool32 VKAPI_CALL default_debug_callback(VkDebugUtilsMessageSeverit
     const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
     void* pUserData);
 
-void destroy_debug_utils_messenger(VkInstance const instance,
-    VkDebugUtilsMessengerEXT const messenger,
-    VkAllocationCallbacks* allocation_callbacks = nullptr);
+void destroy_debug_utils_messenger(
+    VkInstance const instance, VkDebugUtilsMessengerEXT const messenger, VkAllocationCallbacks* allocation_callbacks = nullptr);
 
 // ---- Physical Device ---- //
 class PhysicalDeviceSelector;
 class DeviceBuilder;
 
 struct PhysicalDevice {
+	std::string name;
 	VkPhysicalDevice physical_device = VK_NULL_HANDLE;
 	VkSurfaceKHR surface = VK_NULL_HANDLE;
 
@@ -492,28 +492,55 @@ struct PhysicalDevice {
 	std::vector<const char*> extensions_to_enable;
 	std::vector<VkQueueFamilyProperties> queue_families;
 	std::vector<detail::GenericFeaturesPNextNode> extended_features_chain;
+#if defined(VKB_VK_API_VERSION_1_1)
+	VkPhysicalDeviceFeatures2 features2{};
+#else
+	VkPhysicalDeviceFeatures2KHR features2{};
+#endif
 	bool defer_surface_initialization = false;
+	enum class Suitable { yes, partial, no };
+	Suitable suitable = Suitable::yes;
 	friend class PhysicalDeviceSelector;
 	friend class DeviceBuilder;
 };
 
-enum class PreferredDeviceType {
-	other = 0,
-	integrated = 1,
-	discrete = 2,
-	virtual_gpu = 3,
-	cpu = 4
+enum class PreferredDeviceType { other = 0, integrated = 1, discrete = 2, virtual_gpu = 3, cpu = 4 };
+
+enum class DeviceSelectionMode {
+	// return all suitable and partially suitable devices
+	partially_and_fully_suitable,
+	// return only physical devices which are fully suitable
+	only_fully_suitable
 };
 
+// Enumerates the physical devices on the system, and based on the added criteria, returns a physical device or list of physical devies
+// A device is considered suitable if it meets all the 'required' and 'desired' criteria.
+// A device is considered partially suitable if it meets only the 'required' criteria.
 class PhysicalDeviceSelector {
 	public:
 	// Requires a vkb::Instance to construct, needed to pass instance creation info.
 	explicit PhysicalDeviceSelector(Instance const& instance);
+	// Requires a vkb::Instance to construct, needed to pass instance creation info, optionally specify the surface here
+	explicit PhysicalDeviceSelector(Instance const& instance, VkSurfaceKHR surface);
 
-	detail::Result<PhysicalDevice> select() const;
+	// Return the first device which is suitable
+	// use the `selection` parameter to configure if partially
+	detail::Result<PhysicalDevice> select(DeviceSelectionMode selection = DeviceSelectionMode::partially_and_fully_suitable) const;
+
+	// Return all devices which are considered suitable - intended for applications which want to let the user pick the physical device
+	detail::Result<std::vector<PhysicalDevice>> select_devices(
+	    DeviceSelectionMode selection = DeviceSelectionMode::partially_and_fully_suitable) const;
+
+	// Return the names of all devices which are considered suitable - intended for applications which want to let the user pick the physical device
+	detail::Result<std::vector<std::string>> select_device_names(
+	    DeviceSelectionMode selection = DeviceSelectionMode::partially_and_fully_suitable) const;
 
 	// Set the surface in which the physical device should render to.
+	// Be sure to set it if swapchain functionality is to be used.
 	PhysicalDeviceSelector& set_surface(VkSurfaceKHR surface);
+
+	// Set the name of the device to select.
+	PhysicalDeviceSelector& set_name(std::string const& name);
 	// Set the desired physical device type to select. Defaults to PreferredDeviceType::discrete.
 	PhysicalDeviceSelector& prefer_gpu_device_type(PreferredDeviceType type = PreferredDeviceType::discrete);
 	// Allow selection of a gpu device type that isn't the preferred physical device type. Defaults to true.
@@ -555,8 +582,7 @@ class PhysicalDeviceSelector {
 
 	// Require a physical device which supports a specific set of general/extension features.
 #if defined(VKB_VK_API_VERSION_1_1)
-	template <typename T>
-	PhysicalDeviceSelector& add_required_extension_features(T const& features) {
+	template <typename T> PhysicalDeviceSelector& add_required_extension_features(T const& features) {
 		criteria.extended_features_chain.push_back(features);
 		return *this;
 	}
@@ -614,10 +640,8 @@ class PhysicalDeviceSelector {
 	// We copy the extension features stored in the selector criteria under the prose of a
 	// "template" to ensure that after fetching everything is compared 1:1 during a match.
 
-	PhysicalDeviceDesc populate_device_details(VkPhysicalDevice phys_device,
-	    std::vector<detail::GenericFeaturesPNextNode> const& src_extended_features_chain) const;
-
 	struct SelectionCriteria {
+		std::string name;
 		PreferredDeviceType preferred_type = PreferredDeviceType::discrete;
 		bool allow_any_type = true;
 		bool require_present = true;
@@ -643,9 +667,12 @@ class PhysicalDeviceSelector {
 		bool use_first_gpu_unconditionally = false;
 	} criteria;
 
-	enum class Suitable { yes, partial, no };
+	PhysicalDevice populate_device_details(VkPhysicalDevice phys_device,
+	    std::vector<detail::GenericFeaturesPNextNode> const& src_extended_features_chain) const;
 
-	Suitable is_device_suitable(PhysicalDeviceDesc phys_device) const;
+	PhysicalDevice::Suitable is_device_suitable(PhysicalDevice const& phys_device) const;
+
+	detail::Result<std::vector<PhysicalDevice>> select_impl(DeviceSelectionMode selection) const;
 };
 
 // ---- Queue ---- //

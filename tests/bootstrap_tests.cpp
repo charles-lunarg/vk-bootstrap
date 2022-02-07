@@ -204,6 +204,31 @@ TEST_CASE("Device Configuration", "[VkBootstrap.bootstrap]") {
 	vkb::destroy_instance(instance);
 }
 
+
+TEST_CASE("Select all Physical Devices", "[VkBootstrap.bootstrap]") {
+
+	auto window = create_window_glfw("Select all Physical Devices");
+	auto instance = get_instance(1);
+	auto surface = create_surface_glfw(instance.instance, window);
+
+	vkb::PhysicalDeviceSelector phys_device_selector(instance, surface);
+
+	auto phys_device_ret = phys_device_selector.select_devices();
+	REQUIRE(phys_device_ret.has_value());
+	auto phys_devices = phys_device_ret.value();
+
+	REQUIRE(phys_devices.at(0).name.size() > 0);
+
+	auto phys_device_names_ret = phys_device_selector.select_device_names();
+	REQUIRE(phys_device_names_ret.has_value());
+	REQUIRE(phys_device_names_ret.value().at(0).size() > 0);
+
+	vkb::DeviceBuilder device_builder(phys_devices.at(0));
+	auto device_ret = device_builder.build();
+	REQUIRE(device_ret.has_value());
+	auto dispatch_table = device_ret.value().make_table();
+}
+
 TEST_CASE("Loading Dispatch Table", "[VkBootstrap.bootstrap]") {
 	auto instance = get_headless_instance(0);
 	{

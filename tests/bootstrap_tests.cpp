@@ -531,7 +531,7 @@ TEST_CASE("Passing vkb classes to Vulkan handles", "[VkBootstrap.pass_class_to_h
 	}
 }
 
-#if defined(VK_API_VERSION_1_1)
+#if defined(VKB_VK_API_VERSION_1_1)
 TEST_CASE("Querying Required Extension Features in 1.1", "[VkBootstrap.version]") {
 	GIVEN("A working instance") {
 		auto instance = get_headless_instance();
@@ -559,7 +559,7 @@ TEST_CASE("Querying Required Extension Features in 1.1", "[VkBootstrap.version]"
 }
 #endif
 
-#if defined(VK_API_VERSION_1_2)
+#if defined(VKB_VK_API_VERSION_1_2)
 TEST_CASE("Querying Vulkan 1.1 and 1.2 features", "[VkBootstrap.version]") {
 	GIVEN("A working instance") {
 		vkb::InstanceBuilder builder;

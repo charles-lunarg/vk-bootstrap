@@ -576,14 +576,14 @@ detail::Result<Instance> InstanceBuilder::build() const {
 	if (!sys_info_ret) return sys_info_ret.error();
 	auto system = sys_info_ret.value();
 
-	uint32_t api_version = VK_MAKE_VERSION(1, 0, 0);
+	uint32_t api_version = VKB_VK_API_VERSION_1_0;
 
-	if (info.required_api_version > VK_MAKE_VERSION(1, 0, 0) ||
-	    info.desired_api_version > VK_MAKE_VERSION(1, 0, 0)) {
+	if (info.required_api_version > VKB_VK_API_VERSION_1_0 ||
+	    info.desired_api_version > VKB_VK_API_VERSION_1_0) {
 		PFN_vkEnumerateInstanceVersion pfn_vkEnumerateInstanceVersion =
 		    detail::vulkan_functions().fp_vkEnumerateInstanceVersion;
 
-		uint32_t queried_api_version = VK_MAKE_VERSION(1, 0, 0);
+		uint32_t queried_api_version = VKB_VK_API_VERSION_1_0;
 		if (pfn_vkEnumerateInstanceVersion != nullptr) {
 			VkResult res = pfn_vkEnumerateInstanceVersion(&queried_api_version);
 			// Should always return VK_SUCCESS
@@ -598,9 +598,9 @@ detail::Result<Instance> InstanceBuilder::build() const {
 			else
 				return make_error_code(InstanceError::vulkan_version_unavailable);
 		}
-		if (info.required_api_version > VK_MAKE_VERSION(1, 0, 0)) {
+		if (info.required_api_version > VKB_VK_API_VERSION_1_0) {
 			api_version = info.required_api_version;
-		} else if (info.desired_api_version > VK_MAKE_VERSION(1, 0, 0)) {
+		} else if (info.desired_api_version > VKB_VK_API_VERSION_1_0) {
 			if (queried_api_version >= info.desired_api_version)
 				api_version = info.desired_api_version;
 			else
@@ -767,7 +767,7 @@ InstanceBuilder& InstanceBuilder::set_app_version(uint32_t app_version) {
 	return *this;
 }
 InstanceBuilder& InstanceBuilder::set_app_version(uint32_t major, uint32_t minor, uint32_t patch) {
-	info.application_version = VK_MAKE_VERSION(major, minor, patch);
+	info.application_version = VKB_MAKE_VK_VERSION(0, major, minor, patch);
 	return *this;
 }
 InstanceBuilder& InstanceBuilder::set_engine_version(uint32_t engine_version) {
@@ -775,7 +775,7 @@ InstanceBuilder& InstanceBuilder::set_engine_version(uint32_t engine_version) {
 	return *this;
 }
 InstanceBuilder& InstanceBuilder::set_engine_version(uint32_t major, uint32_t minor, uint32_t patch) {
-	info.engine_version = VK_MAKE_VERSION(major, minor, patch);
+	info.engine_version = VKB_MAKE_VK_VERSION(0, major, minor, patch);
 	return *this;
 }
 InstanceBuilder& InstanceBuilder::require_api_version(uint32_t required_api_version) {
@@ -783,7 +783,7 @@ InstanceBuilder& InstanceBuilder::require_api_version(uint32_t required_api_vers
 	return *this;
 }
 InstanceBuilder& InstanceBuilder::require_api_version(uint32_t major, uint32_t minor, uint32_t patch) {
-	info.required_api_version = VK_MAKE_VERSION(major, minor, patch);
+	info.required_api_version = VKB_MAKE_VK_VERSION(0, major, minor, patch);
 	return *this;
 }
 InstanceBuilder& InstanceBuilder::desire_api_version(uint32_t preferred_vulkan_version) {
@@ -791,7 +791,7 @@ InstanceBuilder& InstanceBuilder::desire_api_version(uint32_t preferred_vulkan_v
 	return *this;
 }
 InstanceBuilder& InstanceBuilder::desire_api_version(uint32_t major, uint32_t minor, uint32_t patch) {
-	info.desired_api_version = VK_MAKE_VERSION(major, minor, patch);
+	info.desired_api_version = VKB_MAKE_VK_VERSION(0, major, minor, patch);
 	return *this;
 }
 InstanceBuilder& InstanceBuilder::enable_layer(const char* layer_name) {
@@ -1028,7 +1028,7 @@ PhysicalDeviceSelector::PhysicalDeviceDesc PhysicalDeviceSelector::populate_devi
 	detail::vulkan_functions().fp_vkGetPhysicalDeviceFeatures(phys_device, &desc.device_features);
 	detail::vulkan_functions().fp_vkGetPhysicalDeviceMemoryProperties(phys_device, &desc.mem_properties);
 
-#if defined(VK_API_VERSION_1_1)
+#if defined(VKB_VK_API_VERSION_1_1)
 	desc.device_features2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
 #else
 	desc.device_features2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2_KHR;
@@ -1037,7 +1037,7 @@ PhysicalDeviceSelector::PhysicalDeviceDesc PhysicalDeviceSelector::populate_devi
 	auto fill_chain = src_extended_features_chain;
 
 	if (!fill_chain.empty() &&
-	    (instance_info.version >= VK_API_VERSION_1_1 || instance_info.supports_properties2_ext)) {
+	    (instance_info.version >= VKB_VK_API_VERSION_1_1 || instance_info.supports_properties2_ext)) {
 
 		detail::GenericFeaturesPNextNode* prev = nullptr;
 		for (auto& extension : fill_chain) {
@@ -1047,8 +1047,8 @@ PhysicalDeviceSelector::PhysicalDeviceDesc PhysicalDeviceSelector::populate_devi
 			prev = &extension;
 		}
 
-#if defined(VK_API_VERSION_1_1)
-		if (instance_info.version >= VK_API_VERSION_1_1 && desc.device_properties.apiVersion >= VK_API_VERSION_1_1) {
+#if defined(VKB_VK_API_VERSION_1_1)
+		if (instance_info.version >= VKB_VK_API_VERSION_1_1 && desc.device_properties.apiVersion >= VKB_VK_API_VERSION_1_1) {
 			VkPhysicalDeviceFeatures2 local_features{};
 			local_features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
 			local_features.pNext = &fill_chain.front();
@@ -1312,18 +1312,18 @@ PhysicalDeviceSelector& PhysicalDeviceSelector::add_desired_extensions(std::vect
 	return *this;
 }
 PhysicalDeviceSelector& PhysicalDeviceSelector::set_minimum_version(uint32_t major, uint32_t minor) {
-	criteria.required_version = VK_MAKE_VERSION(major, minor, 0);
+	criteria.required_version = VKB_MAKE_VK_VERSION(0, major, minor, 0);
 	return *this;
 }
 PhysicalDeviceSelector& PhysicalDeviceSelector::set_desired_version(uint32_t major, uint32_t minor) {
-	criteria.desired_version = VK_MAKE_VERSION(major, minor, 0);
+	criteria.desired_version = VKB_MAKE_VK_VERSION(0, major, minor, 0);
 	return *this;
 }
 PhysicalDeviceSelector& PhysicalDeviceSelector::set_required_features(VkPhysicalDeviceFeatures const& features) {
 	criteria.required_features = features;
 	return *this;
 }
-#if defined(VK_API_VERSION_1_2)
+#if defined(VKB_VK_API_VERSION_1_2)
 // Just calls add_required_features
 PhysicalDeviceSelector& PhysicalDeviceSelector::set_required_features_11(
     VkPhysicalDeviceVulkan11Features features_11) {
@@ -1338,7 +1338,7 @@ PhysicalDeviceSelector& PhysicalDeviceSelector::set_required_features_12(
 	return *this;
 }
 #endif
-#if defined(VK_API_VERSION_1_3)
+#if defined(VKB_VK_API_VERSION_1_3)
 PhysicalDeviceSelector& PhysicalDeviceSelector::set_required_features_13(
     VkPhysicalDeviceVulkan13Features features_13) {
 	features_13.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_FEATURES;
@@ -1491,7 +1491,7 @@ detail::Result<Device> DeviceBuilder::build() const {
 	std::vector<VkBaseOutStructure*> final_pnext_chain;
 	VkDeviceCreateInfo device_create_info = {};
 
-#if defined(VK_API_VERSION_1_1)
+#if defined(VKB_VK_API_VERSION_1_1)
 	for (auto& pnext : info.pNext_chain) {
 		if (pnext->sType == VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2) {
 			user_defined_phys_dev_features_2 = true;
@@ -1504,7 +1504,7 @@ detail::Result<Device> DeviceBuilder::build() const {
 	local_features2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
 
 	if (!user_defined_phys_dev_features_2) {
-		if (physical_device.instance_version >= VK_MAKE_VERSION(1, 1, 0)) {
+		if (physical_device.instance_version >= VKB_VK_API_VERSION_1_1) {
 			local_features2.features = physical_device.features;
 			final_pnext_chain.push_back(reinterpret_cast<VkBaseOutStructure*>(&local_features2));
 			has_phys_dev_features_2 = true;

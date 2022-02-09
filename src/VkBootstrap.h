@@ -27,6 +27,28 @@
 
 #include "VkBootstrapDispatch.h"
 
+#ifdef VK_MAKE_API_VERSION
+	#define VKB_MAKE_VK_VERSION(variant, major, minor, patch) VK_MAKE_API_VERSION(variant, major, minor, patch)
+#elif VK_API_VERSION
+	#define VKB_MAKE_VK_VERSION(variant, major, minor, patch) VK_API_VERSION(major, minor, patch)
+#endif
+
+#if defined(VK_API_VERSION_1_3) || defined(VK_VERSION_1_3)
+	#define VKB_VK_API_VERSION_1_3 VKB_MAKE_VK_VERSION(0, 1, 3, 0)
+#endif
+
+#if defined(VK_API_VERSION_1_2) || defined(VK_VERSION_1_2)
+	#define VKB_VK_API_VERSION_1_2 VKB_MAKE_VK_VERSION(0, 1, 2, 0)
+#endif
+
+#if defined(VK_API_VERSION_1_1) || defined(VK_VERSION_1_1)
+	#define VKB_VK_API_VERSION_1_1 VKB_MAKE_VK_VERSION(0, 1, 1, 0)
+#endif
+
+#if defined(VK_API_VERSION_1_0) || defined(VK_VERSION_1_0)
+	#define VKB_VK_API_VERSION_1_0 VKB_MAKE_VK_VERSION(0, 1, 0, 0)
+#endif
+
 namespace vkb {
 
 namespace detail {
@@ -259,7 +281,7 @@ struct Instance {
 	private:
 	bool headless = false;
 	bool supports_properties2_ext = false;
-	uint32_t instance_version = VK_MAKE_VERSION(1, 0, 0);
+	uint32_t instance_version = VKB_VK_API_VERSION_1_0;
 
 	friend class InstanceBuilder;
 	friend class PhysicalDeviceSelector;
@@ -378,8 +400,8 @@ class InstanceBuilder {
 		const char* engine_name = nullptr;
 		uint32_t application_version = 0;
 		uint32_t engine_version = 0;
-		uint32_t required_api_version = VK_MAKE_VERSION(1, 0, 0);
-		uint32_t desired_api_version = VK_MAKE_VERSION(1, 0, 0);
+		uint32_t required_api_version = VKB_VK_API_VERSION_1_0;
+		uint32_t desired_api_version = VKB_VK_API_VERSION_1_0;
 
 		// VkInstanceCreateInfo
 		std::vector<const char*> layers;
@@ -456,7 +478,7 @@ struct PhysicalDevice {
 	operator VkPhysicalDevice() const;
 
 	private:
-	uint32_t instance_version = VK_MAKE_VERSION(1, 0, 0);
+	uint32_t instance_version = VKB_VK_API_VERSION_1_0;
 	std::vector<const char*> extensions_to_enable;
 	std::vector<VkQueueFamilyProperties> queue_families;
 	std::vector<detail::GenericFeaturesPNextNode> extended_features_chain;
@@ -521,7 +543,7 @@ class PhysicalDeviceSelector {
 	PhysicalDeviceSelector& set_minimum_version(uint32_t major, uint32_t minor);
 
 	// Require a physical device which supports a specific set of general/extension features.
-#if defined(VK_API_VERSION_1_1)
+#if defined(VKB_VK_API_VERSION_1_1)
 	template <typename T>
 	PhysicalDeviceSelector& add_required_extension_features(T const& features) {
 		criteria.extended_features_chain.push_back(features);
@@ -530,7 +552,7 @@ class PhysicalDeviceSelector {
 #endif
 	// Require a physical device which supports the features in VkPhysicalDeviceFeatures.
 	PhysicalDeviceSelector& set_required_features(VkPhysicalDeviceFeatures const& features);
-#if defined(VK_API_VERSION_1_2)
+#if defined(VKB_VK_API_VERSION_1_2)
 	// Require a physical device which supports the features in VkPhysicalDeviceVulkan11Features.
 	// Must have vulkan version 1.2 - This is due to the VkPhysicalDeviceVulkan11Features struct being added in 1.2, not 1.1
 	PhysicalDeviceSelector& set_required_features_11(VkPhysicalDeviceVulkan11Features features_11);
@@ -538,7 +560,7 @@ class PhysicalDeviceSelector {
 	// Must have vulkan version 1.2
 	PhysicalDeviceSelector& set_required_features_12(VkPhysicalDeviceVulkan12Features features_12);
 #endif
-#if defined(VK_API_VERSION_1_3)
+#if defined(VKB_VK_API_VERSION_1_3)
 	// Require a physical device which supports the features in VkPhysicalDeviceVulkan13Features.
 	// Must have vulkan version 1.3
 	PhysicalDeviceSelector& set_required_features_13(VkPhysicalDeviceVulkan13Features features_13);
@@ -556,7 +578,7 @@ class PhysicalDeviceSelector {
 	struct InstanceInfo {
 		VkInstance instance = VK_NULL_HANDLE;
 		VkSurfaceKHR surface = VK_NULL_HANDLE;
-		uint32_t version = VK_MAKE_VERSION(1, 0, 0);
+		uint32_t version = VKB_VK_API_VERSION_1_0;
 		bool headless = false;
 		bool supports_properties2_ext = false;
 	} instance_info;
@@ -570,7 +592,7 @@ class PhysicalDeviceSelector {
 		VkPhysicalDeviceMemoryProperties mem_properties{};
 
 // Because the KHR version is a typedef in Vulkan 1.1, it is safe to define one or the other.
-#if defined(VK_API_VERSION_1_1)
+#if defined(VKB_VK_API_VERSION_1_1)
 		VkPhysicalDeviceFeatures2 device_features2{};
 #else
 		VkPhysicalDeviceFeatures2KHR device_features2{};
@@ -598,11 +620,11 @@ class PhysicalDeviceSelector {
 		std::vector<const char*> required_extensions;
 		std::vector<const char*> desired_extensions;
 
-		uint32_t required_version = VK_MAKE_VERSION(1, 0, 0);
-		uint32_t desired_version = VK_MAKE_VERSION(1, 0, 0);
+		uint32_t required_version = VKB_VK_API_VERSION_1_0;
+		uint32_t desired_version = VKB_VK_API_VERSION_1_0;
 
 		VkPhysicalDeviceFeatures required_features{};
-#if defined(VK_API_VERSION_1_1)
+#if defined(VKB_VK_API_VERSION_1_1)
 		VkPhysicalDeviceFeatures2 required_features2{};
 		std::vector<detail::GenericFeaturesPNextNode> extended_features_chain;
 #endif

@@ -62,6 +62,7 @@ jobs:
 
     - name: Install build dependencies
       run: |
+        sudo apt-get update
         sudo apt-get install -y xorg-dev
 
     - name: CMake Configure

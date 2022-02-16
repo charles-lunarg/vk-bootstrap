@@ -309,8 +309,8 @@ class InstanceBuilder {
 	// Require a vulkan instance API version. Will fail to create if this version isn't available.
 	InstanceBuilder& require_api_version(uint32_t major, uint32_t minor, uint32_t patch = 0);
 
-	// Prefer a vulkan instance API version. If the desired version isn't available, it will use the highest version available.
-	// Should be constructed with VK_MAKE_VERSION or VK_MAKE_API_VERSION.
+	// Prefer a vulkan instance API version. If the desired version isn't available, it will use the
+	// highest version available. Should be constructed with VK_MAKE_VERSION or VK_MAKE_API_VERSION.
 	InstanceBuilder& desire_api_version(uint32_t preferred_vulkan_version);
 	// Prefer a vulkan instance API version. If the desired version isn't available, it will use the highest version available.
 	InstanceBuilder& desire_api_version(uint32_t major, uint32_t minor, uint32_t patch = 0);

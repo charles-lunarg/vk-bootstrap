@@ -515,9 +515,11 @@ SystemInfo::SystemInfo() {
 		this->available_extensions.clear();
 	}
 
-	for (auto& ext : this->available_extensions)
-		if (strcmp(ext.extensionName, VK_EXT_DEBUG_UTILS_EXTENSION_NAME) == 0)
+	for (auto& ext : this->available_extensions) {
+		if (strcmp(ext.extensionName, VK_EXT_DEBUG_UTILS_EXTENSION_NAME) == 0) {
 			debug_utils_available = true;
+		}
+	}
 
 	for (auto& layer : this->available_layers) {
 		std::vector<VkExtensionProperties> layer_extensions;
@@ -525,9 +527,13 @@ SystemInfo::SystemInfo() {
 		    detail::vulkan_functions().fp_vkEnumerateInstanceExtensionProperties,
 		    layer.layerName);
 		if (layer_extensions_ret == VK_SUCCESS) {
-			for (auto& ext : layer_extensions)
-				if (strcmp(ext.extensionName, VK_EXT_DEBUG_UTILS_EXTENSION_NAME) == 0)
+			this->available_extensions.insert(
+			    this->available_extensions.end(), layer_extensions.begin(), layer_extensions.end());
+			for (auto& ext : layer_extensions) {
+				if (strcmp(ext.extensionName, VK_EXT_DEBUG_UTILS_EXTENSION_NAME) == 0) {
 					debug_utils_available = true;
+				}
+			}
 		}
 	}
 }
@@ -612,6 +618,8 @@ detail::Result<Instance> InstanceBuilder::build() const {
 	app_info.apiVersion = api_version;
 
 	std::vector<const char*> extensions;
+	std::vector<const char*> layers;
+
 	for (auto& ext : info.extensions)
 		extensions.push_back(ext);
 	if (info.debug_callback != nullptr && system.debug_utils_available) {
@@ -653,7 +661,6 @@ detail::Result<Instance> InstanceBuilder::build() const {
 		return make_error_code(InstanceError::requested_extensions_not_present);
 	}
 
-	std::vector<const char*> layers;
 	for (auto& layer : info.layers)
 		layers.push_back(layer);
 

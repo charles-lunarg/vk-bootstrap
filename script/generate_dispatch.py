@@ -28,6 +28,9 @@
 # https://github.com/martinblech/xmltodict
 # User will be prompted to install if not detected
 
+# Command Line Arguments
+# [--auto] Don't ask for input from the command line 
+
 # Exclusions
 exclusions = [
 	'vkGetDeviceProcAddr',
@@ -42,10 +45,12 @@ excluded_extension_authors = [
 
 # Check for/install xmltodict
 import sys
+import os
 import subprocess
 import pkg_resources
 import copy
 import codecs
+import re
 from string import Template
 
 installed = {pkg.key for pkg in pkg_resources.working_set}
@@ -53,14 +58,18 @@ xmltodict_missing = {'xmltodict'} - installed
 
 # Install xmltodict
 if xmltodict_missing:
-	val = input("xmltodict is required to run this script. Would you like to install? (y/n): ")
+	if '--auto' not in sys.argv:
+		val = input("xmltodict is required to run this script. Would you like to install? (y/n): ")
+	else:
+		val = "y"
 	if(val.lower() == "y"):
 		try:
 			subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'xmltodict'])
 		except subprocess.CalledProcessError as error:
 			print("Failed to install xmltodict due to error:")
 			print(error)
-			input("Press Enter to continue...")
+			if '--auto' not in sys.argv:
+				input("Press Enter to continue...")
 			sys.exit()
 	else:
 		sys.exit()
@@ -74,7 +83,8 @@ try:
 except urllib.error.URLError as error:
 	print("Failed to download vk.xml due to error:")
 	print(error.reason)
-	input("Press Enter to continue...")
+	if '-q' not in sys.argv:
+		input("Press Enter to continue...")
 	sys.exit()
 vk_xml_raw = response.read()
 
@@ -308,10 +318,41 @@ body += '\t bool populated = false;\n'
 body += '};\n\n'
 body += '} // namespace vkb'
 
+# find the version used to generate the code
+for type_node in  types_node:
+	if 'name' in type_node and type_node['name'] == 'VK_HEADER_VERSION_COMPLETE':
+		complete_header_version = type_node["#text"]
+	if 'name' in type_node and type_node['name'] == 'VK_HEADER_VERSION':
+		vk_header_version = type_node['#text']
+find_number_fields = re.compile('[0-9]+')
+version_fields = find_number_fields.findall(complete_header_version)
+header_version_field = find_number_fields.findall(vk_header_version)[0]
+version_tag = f'{version_fields[1]}.{version_fields[2]}.{header_version_field}'
+
 header = license + info + body
 
-header_file = codecs.open("../src/VkBootstrapDispatch.h", "w", "utf-8")
+path_to_src = os.path.join('src')
+if not os.path.exists(path_to_src):
+	path_to_src = os.path.join('..', 'src')
+if not os.path.exists(path_to_src):
+	print("Couldn't find source folder. Is the current directory wrong?")
+	sys.exit()
+
+header_file = codecs.open(os.path.join(path_to_src,"VkBootstrapDispatch.h"), "w", "utf-8")
 header_file.write(header)
 header_file.close()
+
+path_to_gen = os.path.join('gen')
+if not os.path.exists(path_to_gen):
+	path_to_gen = os.path.join('..', 'gen')
+if not os.path.exists(path_to_gen):
+	print("Couldn't find gen folder. Is the current directory wrong?")
+	sys.exit()
+
+# Generate a CMake file that contains the header version used.
+cmake_version_file = codecs.open(os.path.join(path_to_gen,"CurrentBuildVulkanVersion.cmake"), "w", "utf-8")
+cmake_version_file.write(f'set(VK_BOOTSTRAP_SOURCE_HEADER_VERSION {version_tag})\n')
+cmake_version_file.write(f'set(VK_BOOTSTRAP_SOURCE_HEADER_VERSION_GIT_TAG v{version_tag})\n')
+cmake_version_file.close()
 
 print("Generation finished.")

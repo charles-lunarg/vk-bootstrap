@@ -8,6 +8,8 @@ add_library(vk-bootstrap-vulkan-headers INTERFACE)
 set(VK_BOOTSTRAP_VULKAN_HEADER_DIR "" CACHE STRING "Specify the location of the Vulkan-Headers include directory.")
 mark_as_advanced(VK_BOOTSTRAP_VULKAN_HEADER_DIR)
 
+include(gen/CurrentBuildVulkanVersion.cmake)
+
 if(NOT "${VK_BOOTSTRAP_VULKAN_HEADER_DIR}" STREQUAL "")
   target_include_directories(vk-bootstrap-vulkan-headers INTERFACE $<BUILD_INTERFACE:${VK_BOOTSTRAP_VULKAN_HEADER_DIR}>)
 else ()
@@ -18,7 +20,7 @@ else ()
       FetchContent_Declare(
           VulkanHeaders
           GIT_REPOSITORY https://github.com/KhronosGroup/Vulkan-Headers
-          GIT_TAG        v1.3.204
+          GIT_TAG        ${VK_BOOTSTRAP_SOURCE_HEADER_VERSION_GIT_TAG}
       )
       FetchContent_MakeAvailable(VulkanHeaders)
       target_link_libraries(vk-bootstrap-vulkan-headers INTERFACE Vulkan::Headers)

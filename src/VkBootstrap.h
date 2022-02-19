@@ -29,8 +29,8 @@
 
 #ifdef VK_MAKE_API_VERSION
 	#define VKB_MAKE_VK_VERSION(variant, major, minor, patch) VK_MAKE_API_VERSION(variant, major, minor, patch)
-#elif VK_API_VERSION
-	#define VKB_MAKE_VK_VERSION(variant, major, minor, patch) VK_API_VERSION(major, minor, patch)
+#elif defined(VK_MAKE_VERSION)
+	#define VKB_MAKE_VK_VERSION(variant, major, minor, patch) VK_MAKE_VERSION(major, minor, patch)
 #endif
 
 #if defined(VK_API_VERSION_1_3) || defined(VK_VERSION_1_3)

@@ -481,7 +481,7 @@ struct PhysicalDevice {
 	std::vector<VkQueueFamilyProperties> get_queue_families() const;
 
 	// Query the list of extensions which should be enabled
-	std::vector<const char*> get_extensions() const;
+	std::vector<std::string> get_extensions() const;
 
 	// A conversion function which allows this PhysicalDevice to be used
 	// in places where VkPhysicalDevice would have been used.
@@ -489,7 +489,7 @@ struct PhysicalDevice {
 
 	private:
 	uint32_t instance_version = VKB_VK_API_VERSION_1_0;
-	std::vector<const char*> extensions_to_enable;
+	std::vector<std::string> extensions;
 	std::vector<VkQueueFamilyProperties> queue_families;
 	std::vector<detail::GenericFeaturesPNextNode> extended_features_chain;
 #if defined(VKB_VK_API_VERSION_1_1)
@@ -620,23 +620,6 @@ class PhysicalDeviceSelector {
 		bool supports_properties2_ext = false;
 	} instance_info;
 
-	struct PhysicalDeviceDesc {
-		VkPhysicalDevice phys_device = VK_NULL_HANDLE;
-		std::vector<VkQueueFamilyProperties> queue_families;
-
-		VkPhysicalDeviceFeatures device_features{};
-		VkPhysicalDeviceProperties device_properties{};
-		VkPhysicalDeviceMemoryProperties mem_properties{};
-
-// Because the KHR version is a typedef in Vulkan 1.1, it is safe to define one or the other.
-#if defined(VKB_VK_API_VERSION_1_1)
-		VkPhysicalDeviceFeatures2 device_features2{};
-#else
-		VkPhysicalDeviceFeatures2KHR device_features2{};
-#endif
-		std::vector<detail::GenericFeaturesPNextNode> extended_features_chain;
-	};
-
 	// We copy the extension features stored in the selector criteria under the prose of a
 	// "template" to ensure that after fetching everything is compared 1:1 during a match.
 
@@ -652,8 +635,8 @@ class PhysicalDeviceSelector {
 		VkDeviceSize required_mem_size = 0;
 		VkDeviceSize desired_mem_size = 0;
 
-		std::vector<const char*> required_extensions;
-		std::vector<const char*> desired_extensions;
+		std::vector<std::string> required_extensions;
+		std::vector<std::string> desired_extensions;
 
 		uint32_t required_version = VKB_VK_API_VERSION_1_0;
 		uint32_t desired_version = VKB_VK_API_VERSION_1_0;

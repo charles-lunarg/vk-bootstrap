@@ -1182,11 +1182,20 @@ detail::Result<std::vector<PhysicalDevice>> PhysicalDeviceSelector::select_impl(
 	auto fill_out_phys_dev_with_criteria = [&](PhysicalDevice& phys_dev) {
 		phys_dev.features = criteria.required_features;
 		phys_dev.extended_features_chain = criteria.extended_features_chain;
+		bool portability_ext_available = false;
+		for (const auto& ext : phys_dev.extensions)
+			if (criteria.enable_portability_subset && ext == "VK_KHR_portability_subset")
+				portability_ext_available = true;
+
+		phys_dev.extensions.clear();
 		phys_dev.extensions.insert(
 		    phys_dev.extensions.end(), criteria.required_extensions.begin(), criteria.required_extensions.end());
 		auto desired_extensions_supported = detail::check_device_extension_support(phys_dev.extensions, criteria.desired_extensions);
 		phys_dev.extensions.insert(
 		    phys_dev.extensions.end(), desired_extensions_supported.begin(), desired_extensions_supported.end());
+		if (portability_ext_available) {
+			phys_dev.extensions.push_back("VK_KHR_portability_subset");
+		}
 	};
 
 	// if this option is set, always return only the first physical device found
@@ -1214,6 +1223,11 @@ detail::Result<std::vector<PhysicalDevice>> PhysicalDeviceSelector::select_impl(
 	// Remove the partially suitable elements if they aren't desired
 	if (selection == DeviceSelectionMode::only_fully_suitable) {
 		physical_devices.erase(partition_index, physical_devices.end() - 1);
+	}
+
+	// Make the physical device ready to be used to create a Device from it
+	for (auto& physical_device : physical_devices) {
+		fill_out_phys_dev_with_criteria(physical_device);
 	}
 
 	return physical_devices;
@@ -1324,6 +1338,11 @@ PhysicalDeviceSelector& PhysicalDeviceSelector::set_desired_version(uint32_t maj
 	criteria.desired_version = VKB_MAKE_VK_VERSION(0, major, minor, 0);
 	return *this;
 }
+PhysicalDeviceSelector& PhysicalDeviceSelector::disable_portability_subset() {
+	criteria.enable_portability_subset = false;
+	return *this;
+}
+
 PhysicalDeviceSelector& PhysicalDeviceSelector::set_required_features(VkPhysicalDeviceFeatures const& features) {
 	criteria.required_features = features;
 	return *this;

@@ -580,6 +580,10 @@ class PhysicalDeviceSelector {
 	// Require a physical device that supports a (major, minor) version of vulkan.
 	PhysicalDeviceSelector& set_minimum_version(uint32_t major, uint32_t minor);
 
+	// By default PhysicalDeviceSelector enables the portability subset if available
+	// This function disables that behavior
+	PhysicalDeviceSelector& disable_portability_subset();
+
 	// Require a physical device which supports a specific set of general/extension features.
 #if defined(VKB_VK_API_VERSION_1_1)
 	template <typename T> PhysicalDeviceSelector& add_required_extension_features(T const& features) {
@@ -648,6 +652,7 @@ class PhysicalDeviceSelector {
 #endif
 		bool defer_surface_initialization = false;
 		bool use_first_gpu_unconditionally = false;
+		bool enable_portability_subset = true;
 	} criteria;
 
 	PhysicalDevice populate_device_details(VkPhysicalDevice phys_device,

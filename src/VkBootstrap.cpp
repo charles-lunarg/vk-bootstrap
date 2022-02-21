@@ -577,20 +577,20 @@ detail::Result<Instance> InstanceBuilder::build() const {
 	auto system = sys_info_ret.value();
 
 	uint32_t api_version = VKB_VK_API_VERSION_1_0;
+	uint32_t instance_version = VKB_VK_API_VERSION_1_0;
 
 	if (info.required_api_version > VKB_VK_API_VERSION_1_0 ||
 	    info.desired_api_version > VKB_VK_API_VERSION_1_0) {
 		PFN_vkEnumerateInstanceVersion pfn_vkEnumerateInstanceVersion =
 		    detail::vulkan_functions().fp_vkEnumerateInstanceVersion;
 
-		uint32_t queried_api_version = VKB_VK_API_VERSION_1_0;
 		if (pfn_vkEnumerateInstanceVersion != nullptr) {
-			VkResult res = pfn_vkEnumerateInstanceVersion(&queried_api_version);
+			VkResult res = pfn_vkEnumerateInstanceVersion(&instance_version);
 			// Should always return VK_SUCCESS
 			if (res != VK_SUCCESS && info.required_api_version > 0)
 				return make_error_code(InstanceError::vulkan_version_unavailable);
 		}
-		if (pfn_vkEnumerateInstanceVersion == nullptr || queried_api_version < info.required_api_version) {
+		if (pfn_vkEnumerateInstanceVersion == nullptr || instance_version < info.required_api_version) {
 			if (VK_VERSION_MINOR(info.required_api_version) == 2)
 				return make_error_code(InstanceError::vulkan_version_1_2_unavailable);
 			else if (VK_VERSION_MINOR(info.required_api_version))
@@ -600,11 +600,9 @@ detail::Result<Instance> InstanceBuilder::build() const {
 		}
 		if (info.required_api_version > VKB_VK_API_VERSION_1_0) {
 			api_version = info.required_api_version;
-		} else if (info.desired_api_version > VKB_VK_API_VERSION_1_0) {
-			if (queried_api_version >= info.desired_api_version)
-				api_version = info.desired_api_version;
-			else
-				api_version = queried_api_version;
+		}
+        if (info.desired_api_version > api_version && instance_version >= VKB_VK_API_VERSION_1_1){
+			api_version = info.desired_api_version;
 		}
 	}
 
@@ -746,7 +744,7 @@ detail::Result<Instance> InstanceBuilder::build() const {
 	instance.headless = info.headless_context;
 	instance.supports_properties2_ext = supports_properties2_ext;
 	instance.allocation_callbacks = info.allocation_callbacks;
-	instance.instance_version = api_version;
+	instance.instance_version = instance_version;
 	instance.fp_vkGetInstanceProcAddr = detail::vulkan_functions().ptr_vkGetInstanceProcAddr;
 	instance.fp_vkGetDeviceProcAddr = detail::vulkan_functions().fp_vkGetDeviceProcAddr;
 	return instance;

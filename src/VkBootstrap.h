@@ -282,6 +282,8 @@ struct Instance {
 	bool headless = false;
 	bool supports_properties2_ext = false;
 	uint32_t instance_version = VKB_VK_API_VERSION_1_0;
+	uint32_t required_version = VKB_VK_API_VERSION_1_0;
+	uint32_t max_api_version = VKB_VK_API_VERSION_1_0;
 
 	friend class InstanceBuilder;
 	friend class PhysicalDeviceSelector;

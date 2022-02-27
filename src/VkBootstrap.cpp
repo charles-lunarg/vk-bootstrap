@@ -602,13 +602,9 @@ detail::Result<Instance> InstanceBuilder::build() const {
 
 	uint32_t api_version = instance_version < VKB_VK_API_VERSION_1_1 ? instance_version : info.required_api_version;
 
-	if (info.desired_api_version > VKB_VK_API_VERSION_1_0) {
-		if (instance_version > info.desired_api_version) {
-			instance_version = info.desired_api_version;
-		}
-		if (api_version > info.desired_api_version) {
-			api_version = info.desired_api_version;
-		}
+	if (info.desired_api_version > VKB_VK_API_VERSION_1_0 && instance_version >= info.desired_api_version) {
+		instance_version = info.desired_api_version;
+		api_version = info.desired_api_version;
 	}
 
 	VkApplicationInfo app_info = {};

@@ -282,8 +282,7 @@ struct Instance {
 	bool headless = false;
 	bool supports_properties2_ext = false;
 	uint32_t instance_version = VKB_VK_API_VERSION_1_0;
-	uint32_t required_version = VKB_VK_API_VERSION_1_0;
-	uint32_t max_api_version = VKB_VK_API_VERSION_1_0;
+	uint32_t api_version = VKB_VK_API_VERSION_1_0;
 
 	friend class InstanceBuilder;
 	friend class PhysicalDeviceSelector;
@@ -340,16 +339,24 @@ class InstanceBuilder {
 	// Sets the (major, minor, patch) version of the engine.
 	InstanceBuilder& set_engine_version(uint32_t major, uint32_t minor, uint32_t patch = 0);
 
-	// Require a vulkan instance API version. Will fail to create if this version isn't available.
+	// Require a vulkan API version. Will fail to create if this version isn't available.
 	// Should be constructed with VK_MAKE_VERSION or VK_MAKE_API_VERSION.
 	InstanceBuilder& require_api_version(uint32_t required_api_version);
-	// Require a vulkan instance API version. Will fail to create if this version isn't available.
+	// Require a vulkan API version. Will fail to create if this version isn't available.
 	InstanceBuilder& require_api_version(uint32_t major, uint32_t minor, uint32_t patch = 0);
+
+	// Overrides required API version for instance creation. Will fail to create if this version isn't available.
+	// Should be constructed with VK_MAKE_VERSION or VK_MAKE_API_VERSION.
+	InstanceBuilder& set_minimum_instance_version(uint32_t minimum_instance_version);
+	// Overrides required API version for instance creation. Will fail to create if this version isn't available.
+	InstanceBuilder& set_minimum_instance_version(uint32_t major, uint32_t minor, uint32_t patch = 0);
 
 	// Prefer a vulkan instance API version. If the desired version isn't available, it will use the
 	// highest version available. Should be constructed with VK_MAKE_VERSION or VK_MAKE_API_VERSION.
+	[[deprecated("Use require_api_version + set_minimum_instance_version instead.")]]
 	InstanceBuilder& desire_api_version(uint32_t preferred_vulkan_version);
 	// Prefer a vulkan instance API version. If the desired version isn't available, it will use the highest version available.
+	[[deprecated("Use require_api_version + set_minimum_instance_version instead.")]]
 	InstanceBuilder& desire_api_version(uint32_t major, uint32_t minor, uint32_t patch = 0);
 
 	// Adds a layer to be enabled. Will fail to create an instance if the layer isn't available.
@@ -402,6 +409,7 @@ class InstanceBuilder {
 		const char* engine_name = nullptr;
 		uint32_t application_version = 0;
 		uint32_t engine_version = 0;
+		uint32_t minimum_instance_version = 0;
 		uint32_t required_api_version = VKB_VK_API_VERSION_1_0;
 		uint32_t desired_api_version = VKB_VK_API_VERSION_1_0;
 
@@ -540,6 +548,7 @@ class PhysicalDeviceSelector {
 	PhysicalDeviceSelector& add_desired_extensions(std::vector<const char*> extensions);
 
 	// Prefer a physical device that supports a (major, minor) version of vulkan.
+	[[deprecated("Use set_minimum_version + InstanceBuilder::require_api_version.")]]
 	PhysicalDeviceSelector& set_desired_version(uint32_t major, uint32_t minor);
 	// Require a physical device that supports a (major, minor) version of vulkan.
 	PhysicalDeviceSelector& set_minimum_version(uint32_t major, uint32_t minor);

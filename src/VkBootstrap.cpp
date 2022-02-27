@@ -576,10 +576,9 @@ detail::Result<Instance> InstanceBuilder::build() const {
 	if (!sys_info_ret) return sys_info_ret.error();
 	auto system = sys_info_ret.value();
 
-	uint32_t api_version = VKB_VK_API_VERSION_1_0;
 	uint32_t instance_version = VKB_VK_API_VERSION_1_0;
 
-	if (info.required_api_version > VKB_VK_API_VERSION_1_0 ||
+	if (info.minimum_instance_version > VKB_VK_API_VERSION_1_0 || info.required_api_version > VKB_VK_API_VERSION_1_0 ||
 	    info.desired_api_version > VKB_VK_API_VERSION_1_0) {
 		PFN_vkEnumerateInstanceVersion pfn_vkEnumerateInstanceVersion =
 		    detail::vulkan_functions().fp_vkEnumerateInstanceVersion;
@@ -590,7 +589,8 @@ detail::Result<Instance> InstanceBuilder::build() const {
 			if (res != VK_SUCCESS && info.required_api_version > 0)
 				return make_error_code(InstanceError::vulkan_version_unavailable);
 		}
-		if (pfn_vkEnumerateInstanceVersion == nullptr || instance_version < info.required_api_version) {
+		if (pfn_vkEnumerateInstanceVersion == nullptr || instance_version < info.minimum_instance_version ||
+		    (info.minimum_instance_version == 0 && instance_version < info.required_api_version)) {
 			if (VK_VERSION_MINOR(info.required_api_version) == 2)
 				return make_error_code(InstanceError::vulkan_version_1_2_unavailable);
 			else if (VK_VERSION_MINOR(info.required_api_version))
@@ -598,13 +598,15 @@ detail::Result<Instance> InstanceBuilder::build() const {
 			else
 				return make_error_code(InstanceError::vulkan_version_unavailable);
 		}
-		if (info.required_api_version > VKB_VK_API_VERSION_1_0) {
-			api_version = info.required_api_version;
-		}
+	}
+
+	uint32_t api_version = instance_version < VKB_VK_API_VERSION_1_1 ? instance_version : info.required_api_version;
+
+	if (info.desired_api_version > VKB_VK_API_VERSION_1_0) {
 		if (instance_version > info.desired_api_version) {
 			instance_version = info.desired_api_version;
 		}
-		if (info.desired_api_version > api_version && instance_version >= VKB_VK_API_VERSION_1_1){
+		if (api_version > info.desired_api_version) {
 			api_version = info.desired_api_version;
 		}
 	}
@@ -748,8 +750,7 @@ detail::Result<Instance> InstanceBuilder::build() const {
 	instance.supports_properties2_ext = supports_properties2_ext;
 	instance.allocation_callbacks = info.allocation_callbacks;
 	instance.instance_version = instance_version;
-	instance.required_version = info.required_api_version;
-	instance.max_api_version = api_version;
+	instance.api_version = api_version;
 	instance.fp_vkGetInstanceProcAddr = detail::vulkan_functions().ptr_vkGetInstanceProcAddr;
 	instance.fp_vkGetDeviceProcAddr = detail::vulkan_functions().fp_vkGetDeviceProcAddr;
 	return instance;
@@ -787,6 +788,14 @@ InstanceBuilder& InstanceBuilder::require_api_version(uint32_t required_api_vers
 }
 InstanceBuilder& InstanceBuilder::require_api_version(uint32_t major, uint32_t minor, uint32_t patch) {
 	info.required_api_version = VKB_MAKE_VK_VERSION(0, major, minor, patch);
+	return *this;
+}
+InstanceBuilder& InstanceBuilder::set_minimum_instance_version(uint32_t minimum_instance_version) {
+	info.minimum_instance_version = minimum_instance_version;
+	return *this;
+}
+InstanceBuilder& InstanceBuilder::set_minimum_instance_version(uint32_t major, uint32_t minor, uint32_t patch) {
+	info.minimum_instance_version = VKB_MAKE_VK_VERSION(0, major, minor, patch);
 	return *this;
 }
 InstanceBuilder& InstanceBuilder::desire_api_version(uint32_t preferred_vulkan_version) {
@@ -1173,8 +1182,8 @@ PhysicalDeviceSelector::PhysicalDeviceSelector(Instance const& instance) {
 	instance_info.version = instance.instance_version;
 	instance_info.supports_properties2_ext = instance.supports_properties2_ext;
 	criteria.require_present = !instance.headless;
-	criteria.required_version = instance.required_version;
-	criteria.desired_version = instance.max_api_version;
+	criteria.required_version = instance.api_version;
+	criteria.desired_version = instance.api_version;
 }
 
 detail::Result<PhysicalDevice> PhysicalDeviceSelector::select() const {

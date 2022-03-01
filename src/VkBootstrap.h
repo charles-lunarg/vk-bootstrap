@@ -353,11 +353,11 @@ class InstanceBuilder {
 
 	// Prefer a vulkan instance API version. If the desired version isn't available, it will use the
 	// highest version available. Should be constructed with VK_MAKE_VERSION or VK_MAKE_API_VERSION.
-	[[deprecated("Use require_api_version + set_minimum_instance_version instead.")]]
-	InstanceBuilder& desire_api_version(uint32_t preferred_vulkan_version);
+	[[deprecated("Use require_api_version + set_minimum_instance_version instead.")]] InstanceBuilder&
+	desire_api_version(uint32_t preferred_vulkan_version);
 	// Prefer a vulkan instance API version. If the desired version isn't available, it will use the highest version available.
-	[[deprecated("Use require_api_version + set_minimum_instance_version instead.")]]
-	InstanceBuilder& desire_api_version(uint32_t major, uint32_t minor, uint32_t patch = 0);
+	[[deprecated("Use require_api_version + set_minimum_instance_version instead.")]] InstanceBuilder&
+	desire_api_version(uint32_t major, uint32_t minor, uint32_t patch = 0);
 
 	// Adds a layer to be enabled. Will fail to create an instance if the layer isn't available.
 	InstanceBuilder& enable_layer(const char* layer_name);
@@ -498,20 +498,11 @@ struct PhysicalDevice {
 	VkPhysicalDeviceFeatures2KHR features2{};
 #endif
 	bool defer_surface_initialization = false;
-	enum class Suitable { yes, partial, no };
-	Suitable suitable = Suitable::yes;
 	friend class PhysicalDeviceSelector;
 	friend class DeviceBuilder;
 };
 
 enum class PreferredDeviceType { other = 0, integrated = 1, discrete = 2, virtual_gpu = 3, cpu = 4 };
-
-enum class DeviceSelectionMode {
-	// return all suitable and partially suitable devices
-	partially_and_fully_suitable,
-	// return only physical devices which are fully suitable
-	only_fully_suitable
-};
 
 // Enumerates the physical devices on the system, and based on the added criteria, returns a physical device or list of physical devies
 // A device is considered suitable if it meets all the 'required' and 'desired' criteria.
@@ -525,15 +516,13 @@ class PhysicalDeviceSelector {
 
 	// Return the first device which is suitable
 	// use the `selection` parameter to configure if partially
-	detail::Result<PhysicalDevice> select(DeviceSelectionMode selection = DeviceSelectionMode::partially_and_fully_suitable) const;
+	detail::Result<PhysicalDevice> select() const;
 
 	// Return all devices which are considered suitable - intended for applications which want to let the user pick the physical device
-	detail::Result<std::vector<PhysicalDevice>> select_devices(
-	    DeviceSelectionMode selection = DeviceSelectionMode::partially_and_fully_suitable) const;
+	detail::Result<std::vector<PhysicalDevice>> select_devices() const;
 
 	// Return the names of all devices which are considered suitable - intended for applications which want to let the user pick the physical device
-	detail::Result<std::vector<std::string>> select_device_names(
-	    DeviceSelectionMode selection = DeviceSelectionMode::partially_and_fully_suitable) const;
+	detail::Result<std::vector<std::string>> select_device_names() const;
 
 	// Set the surface in which the physical device should render to.
 	// Be sure to set it if swapchain functionality is to be used.
@@ -562,21 +551,13 @@ class PhysicalDeviceSelector {
 	// Require a memory heap from VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT with `size` memory available.
 	PhysicalDeviceSelector& required_device_memory_size(VkDeviceSize size);
 	// Prefer a memory heap from VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT with `size` memory available.
-	PhysicalDeviceSelector& desired_device_memory_size(VkDeviceSize size);
 
 	// Require a physical device which supports a specific extension.
 	PhysicalDeviceSelector& add_required_extension(const char* extension);
 	// Require a physical device which supports a set of extensions.
 	PhysicalDeviceSelector& add_required_extensions(std::vector<const char*> extensions);
 
-	// Prefer a physical device which supports a specific extension.
-	PhysicalDeviceSelector& add_desired_extension(const char* extension);
-	// Prefer a physical device which supports a set of extensions.
-	PhysicalDeviceSelector& add_desired_extensions(std::vector<const char*> extensions);
 
-	// Prefer a physical device that supports a (major, minor) version of vulkan.
-	[[deprecated("Use set_minimum_version + InstanceBuilder::require_api_version.")]]
-	PhysicalDeviceSelector& set_desired_version(uint32_t major, uint32_t minor);
 	// Require a physical device that supports a (major, minor) version of vulkan.
 	PhysicalDeviceSelector& set_minimum_version(uint32_t major, uint32_t minor);
 
@@ -637,13 +618,10 @@ class PhysicalDeviceSelector {
 		bool require_separate_transfer_queue = false;
 		bool require_separate_compute_queue = false;
 		VkDeviceSize required_mem_size = 0;
-		VkDeviceSize desired_mem_size = 0;
 
 		std::vector<std::string> required_extensions;
-		std::vector<std::string> desired_extensions;
 
 		uint32_t required_version = VKB_VK_API_VERSION_1_0;
-		uint32_t desired_version = VKB_VK_API_VERSION_1_0;
 
 		VkPhysicalDeviceFeatures required_features{};
 #if defined(VKB_VK_API_VERSION_1_1)
@@ -658,9 +636,9 @@ class PhysicalDeviceSelector {
 	PhysicalDevice populate_device_details(VkPhysicalDevice phys_device,
 	    std::vector<detail::GenericFeaturesPNextNode> const& src_extended_features_chain) const;
 
-	PhysicalDevice::Suitable is_device_suitable(PhysicalDevice const& phys_device) const;
+	bool is_device_suitable(PhysicalDevice const& phys_device) const;
 
-	detail::Result<std::vector<PhysicalDevice>> select_impl(DeviceSelectionMode selection) const;
+	detail::Result<std::vector<PhysicalDevice>> select_impl() const;
 };
 
 // ---- Queue ---- //

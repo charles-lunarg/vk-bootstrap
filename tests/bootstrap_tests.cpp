@@ -290,6 +290,23 @@ TEST_CASE("Swapchain", "[VkBootstrap.bootstrap]") {
 				REQUIRE(image_views.value().size() > 0);
 				swapchain.destroy_image_views(image_views.value());
 			}
+			AND_THEN("Acquire swapchain images views with nullptr pNext chain") {
+				auto image_views = swapchain.get_image_views(nullptr);
+				REQUIRE(image_views.has_value());
+				REQUIRE(image_views.value().size() > 0);
+				swapchain.destroy_image_views(image_views.value());
+			}
+			AND_THEN("Acquire swapchain image views with valid pNext chain") {
+				VkImageViewUsageCreateInfo usage = {
+					VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO,
+					nullptr,
+					VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT
+				};
+				auto image_views = swapchain.get_image_views(&usage);
+				REQUIRE(image_views.has_value());
+				REQUIRE(image_views.value().size() > 0);
+				swapchain.destroy_image_views(image_views.value());
+			}
 
 			vkb::destroy_swapchain(swapchain_ret.value());
 		}

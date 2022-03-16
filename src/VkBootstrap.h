@@ -759,8 +759,10 @@ struct Swapchain {
 	detail::Result<std::vector<VkImage>> get_images();
 
 	// Returns a vector of VkImageView's to the VkImage's of the swapchain.
-	// VkImageViews must be destroyed.
+	// VkImageViews must be destroyed.  The pNext chain must be a nullptr or a valid
+	// structure.
 	detail::Result<std::vector<VkImageView>> get_image_views();
+	detail::Result<std::vector<VkImageView>> get_image_views(const void* pNext);
 	void destroy_image_views(std::vector<VkImageView> const& image_views);
 
 	// A conversion function which allows this Swapchain to be used

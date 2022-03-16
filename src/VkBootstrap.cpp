@@ -1849,16 +1849,19 @@ detail::Result<std::vector<VkImage>> Swapchain::get_images() {
 	return swapchain_images;
 }
 detail::Result<std::vector<VkImageView>> Swapchain::get_image_views() {
-
-	auto swapchain_images_ret = get_images();
+	return get_image_views(nullptr);
+}
+detail::Result<std::vector<VkImageView>> Swapchain::get_image_views(const void* pNext) {
+	const auto swapchain_images_ret = get_images();
 	if (!swapchain_images_ret) return swapchain_images_ret.error();
-	auto swapchain_images = swapchain_images_ret.value();
+	const auto swapchain_images = swapchain_images_ret.value();
 
 	std::vector<VkImageView> views(swapchain_images.size());
 
 	for (size_t i = 0; i < swapchain_images.size(); i++) {
 		VkImageViewCreateInfo createInfo = {};
 		createInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+		createInfo.pNext = pNext;
 		createInfo.image = swapchain_images[i];
 		createInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
 		createInfo.format = image_format;

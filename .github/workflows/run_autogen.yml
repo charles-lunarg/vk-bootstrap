@@ -15,32 +15,44 @@
 
 # The purpose of this script is to automatically run the autogen code every week and submit a PR to include the changes
 
+name: Run autogen
+
 on:
   schedule:
     - cron: '0 0 * * 2'
   workflow_dispatch:
 
 jobs:
-  test_schedule:
-    name: Test schedule
+  run_autogen:
+    name: Run autogen
     runs-on: ubuntu-latest
     steps:
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+            python-version: '3.9'
+
+      - name: Install python package 'xmltodict'
+        run: pip install xmltodict
+
       - name: Check out repository code
         uses: actions/checkout@v2
         with:
           fetch-depth: 2
 
       - name: Run dispatch generator
-        run: echo "python script/generate_dispatch.py --auto"
+        run: python script/generate_dispatch.py --auto
 
       - name: Diff source to see if anything changed
         id: git-diff
         run: echo "::set-output name=git-diff::$(git diff --quiet HEAD~0 || echo true)"
 
       - name: pull-request
-        uses: repo-sync/pull-request@v2
+        uses: peter-evans/create-pull-request@v4
         if: ${{ steps.git-diff.outputs.git-diff == 'true' }}
         with:
-          destination_branch: "develop"
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          pr_title: "[auto] Update repo to latest Vulkan-Headers"
+          commit-message: Update to latest Vulkan-Headers
+          title: Update to latest Vulkan-Headers
+          branch: run-autogen
+          base: master
+          delete-branch: true

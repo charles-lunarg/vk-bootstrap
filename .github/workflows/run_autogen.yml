@@ -32,11 +32,10 @@ jobs:
 
       - name: Run dispatch generator
         run: echo "python script/generate_dispatch.py --auto"
-          python script/generate_dispatch.py --auto
 
       - name: Diff source to see if anything changed
         id: git-diff
-        run: echo "::set-output name=git-diff::$(git diff --quiet HEAD~1 HEAD -- apps/api/src || echo true)"
+        run: echo "::set-output name=git-diff::$(git diff --quiet HEAD~0 || echo true)"
 
       - name: pull-request
         uses: repo-sync/pull-request@v2

@@ -886,6 +886,12 @@ struct DispatchTable {
 #if (defined(VK_VERSION_1_3))
 		fp_vkCmdEndRendering = reinterpret_cast<PFN_vkCmdEndRendering>(procAddr(device, "vkCmdEndRendering"));
 #endif
+#if (defined(VK_VALVE_descriptor_set_host_mapping))
+		fp_vkGetDescriptorSetLayoutHostMappingInfoVALVE = reinterpret_cast<PFN_vkGetDescriptorSetLayoutHostMappingInfoVALVE>(procAddr(device, "vkGetDescriptorSetLayoutHostMappingInfoVALVE"));
+#endif
+#if (defined(VK_VALVE_descriptor_set_host_mapping))
+		fp_vkGetDescriptorSetHostMappingVALVE = reinterpret_cast<PFN_vkGetDescriptorSetHostMappingVALVE>(procAddr(device, "vkGetDescriptorSetHostMappingVALVE"));
+#endif
 #if (defined(VK_EXT_host_query_reset))
 		fp_vkResetQueryPoolEXT = reinterpret_cast<PFN_vkResetQueryPoolEXT>(procAddr(device, "vkResetQueryPoolEXT"));
 #endif
@@ -2669,6 +2675,16 @@ struct DispatchTable {
 		fp_vkCmdEndRendering(commandBuffer);
 	}
 #endif
+#if (defined(VK_VALVE_descriptor_set_host_mapping))
+	void getDescriptorSetLayoutHostMappingInfoVALVE(const VkDescriptorSetBindingReferenceVALVE* pBindingReference, VkDescriptorSetLayoutHostMappingInfoVALVE* pHostMapping) const noexcept {
+		fp_vkGetDescriptorSetLayoutHostMappingInfoVALVE(device, pBindingReference, pHostMapping);
+	}
+#endif
+#if (defined(VK_VALVE_descriptor_set_host_mapping))
+	void getDescriptorSetHostMappingVALVE(VkDescriptorSet descriptorSet, void** ppData) const noexcept {
+		fp_vkGetDescriptorSetHostMappingVALVE(device, descriptorSet, ppData);
+	}
+#endif
 #if (defined(VK_EXT_host_query_reset))
 	void resetQueryPoolEXT(VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount) const noexcept {
 		fp_vkResetQueryPoolEXT(device, queryPool, firstQuery, queryCount);
@@ -3850,6 +3866,12 @@ struct DispatchTable {
 #endif
 #if (defined(VK_VERSION_1_3))
 	PFN_vkCmdEndRendering fp_vkCmdEndRendering = nullptr;
+#endif
+#if (defined(VK_VALVE_descriptor_set_host_mapping))
+	PFN_vkGetDescriptorSetLayoutHostMappingInfoVALVE fp_vkGetDescriptorSetLayoutHostMappingInfoVALVE = nullptr;
+#endif
+#if (defined(VK_VALVE_descriptor_set_host_mapping))
+	PFN_vkGetDescriptorSetHostMappingVALVE fp_vkGetDescriptorSetHostMappingVALVE = nullptr;
 #endif
 #if (defined(VK_EXT_host_query_reset))
 	PFN_vkResetQueryPoolEXT fp_vkResetQueryPoolEXT = nullptr;

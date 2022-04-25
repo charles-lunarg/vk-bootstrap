@@ -3,17 +3,13 @@
 #include <catch2/catch.hpp>
 
 vkb::Instance get_instance(uint32_t minor_version = 0) {
-	auto instance_ret =
-	    vkb::InstanceBuilder().request_validation_layers().require_api_version(1, minor_version).build();
+	auto instance_ret = vkb::InstanceBuilder().request_validation_layers().require_api_version(1, minor_version).build();
 	REQUIRE(instance_ret.has_value());
 	return instance_ret.value();
 }
 vkb::Instance get_headless_instance(uint32_t minor_version = 0) {
-	auto instance_ret = vkb::InstanceBuilder()
-	                        .request_validation_layers()
-	                        .require_api_version(1, minor_version)
-	                        .set_headless()
-	                        .build();
+	auto instance_ret =
+	    vkb::InstanceBuilder().request_validation_layers().require_api_version(1, minor_version).set_headless().build();
 	REQUIRE(instance_ret.has_value());
 	return instance_ret.value();
 }
@@ -87,23 +83,22 @@ TEST_CASE("instance configuration", "[VkBootstrap.bootstrap]") {
 	SECTION("custom debug callback") {
 		vkb::InstanceBuilder builder;
 
-		auto instance_ret =
-		    builder.request_validation_layers()
-		        .set_app_name("test app")
-		        .set_app_version(1, 0, 0)
-		        .set_engine_name("engine_name")
-		        .set_engine_version(9, 9, 9)
-		        .set_debug_callback([](VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
-		                                VkDebugUtilsMessageTypeFlagsEXT messageType,
-		                                const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
-		                                void*
-		                                /*pUserData*/) -> VkBool32 {
-			        auto ms = vkb::to_string_message_severity(messageSeverity);
-			        auto mt = vkb::to_string_message_type(messageType);
-			        printf("[%s: %s](user defined)\n%s\n", ms, mt, pCallbackData->pMessage);
-			        return VK_FALSE;
-		        })
-		        .build();
+		auto instance_ret = builder.request_validation_layers()
+		                        .set_app_name("test app")
+		                        .set_app_version(1, 0, 0)
+		                        .set_engine_name("engine_name")
+		                        .set_engine_version(9, 9, 9)
+		                        .set_debug_callback([](VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
+		                                                VkDebugUtilsMessageTypeFlagsEXT messageType,
+		                                                const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
+		                                                void*
+		                                                /*pUserData*/) -> VkBool32 {
+			                        auto ms = vkb::to_string_message_severity(messageSeverity);
+			                        auto mt = vkb::to_string_message_type(messageType);
+			                        printf("[%s: %s](user defined)\n%s\n", ms, mt, pCallbackData->pMessage);
+			                        return VK_FALSE;
+		                        })
+		                        .build();
 
 		REQUIRE(instance_ret.has_value());
 
@@ -117,8 +112,7 @@ TEST_CASE("instance configuration", "[VkBootstrap.bootstrap]") {
 		        .require_api_version(1, 0, 34)
 		        .use_default_debug_messenger()
 		        .add_validation_feature_enable(VkValidationFeatureEnableEXT::VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT)
-		        .add_validation_feature_disable(
-		            VkValidationFeatureDisableEXT::VK_VALIDATION_FEATURE_DISABLE_OBJECT_LIFETIMES_EXT)
+		        .add_validation_feature_disable(VkValidationFeatureDisableEXT::VK_VALIDATION_FEATURE_DISABLE_OBJECT_LIFETIMES_EXT)
 		        .add_validation_disable(VkValidationCheckEXT::VK_VALIDATION_CHECK_SHADERS_EXT)
 		        .build();
 		REQUIRE(instance_ret.has_value());
@@ -169,17 +163,15 @@ TEST_CASE("Device Configuration", "[VkBootstrap.bootstrap]") {
 				if ((queue_families[i].queueFlags & VK_QUEUE_COMPUTE_BIT) &&
 				    (queue_families[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) == 0 &&
 				    (queue_families[i].queueFlags & VK_QUEUE_TRANSFER_BIT) == 0)
-					queue_descriptions.push_back(vkb::CustomQueueDescription(i,
-					    queue_families[i].queueCount,
-					    std::vector<float>(queue_families[i].queueCount, 1.0f)));
+					queue_descriptions.push_back(vkb::CustomQueueDescription(
+					    i, queue_families[i].queueCount, std::vector<float>(queue_families[i].queueCount, 1.0f)));
 			}
 		} else if (phys_device.has_separate_compute_queue()) {
 			for (uint32_t i = 0; i < (uint32_t)queue_families.size(); i++) {
 				if ((queue_families[i].queueFlags & VK_QUEUE_COMPUTE_BIT) &&
 				    ((queue_families[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) == 0)) {
-					queue_descriptions.push_back(vkb::CustomQueueDescription(i,
-					    queue_families[i].queueCount,
-					    std::vector<float>(queue_families[i].queueCount, 1.0f)));
+					queue_descriptions.push_back(vkb::CustomQueueDescription(
+					    i, queue_families[i].queueCount, std::vector<float>(queue_families[i].queueCount, 1.0f)));
 				}
 			}
 		}
@@ -227,6 +219,8 @@ TEST_CASE("Select all Physical Devices", "[VkBootstrap.bootstrap]") {
 	auto device_ret = device_builder.build();
 	REQUIRE(device_ret.has_value());
 	auto dispatch_table = device_ret.value().make_table();
+	// needs to successfully create a dispatch table
+	REQUIRE(dispatch_table.fp_vkCreateCommandPool);
 }
 
 TEST_CASE("Loading Dispatch Table", "[VkBootstrap.bootstrap]") {
@@ -297,11 +291,7 @@ TEST_CASE("Swapchain", "[VkBootstrap.bootstrap]") {
 				swapchain.destroy_image_views(image_views.value());
 			}
 			AND_THEN("Acquire swapchain image views with valid pNext chain") {
-				VkImageViewUsageCreateInfo usage = {
-					VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO,
-					nullptr,
-					VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT
-				};
+				VkImageViewUsageCreateInfo usage = { VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO, nullptr, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT };
 				auto image_views = swapchain.get_image_views(&usage);
 				REQUIRE(image_views.has_value());
 				REQUIRE(image_views.value().size() > 0);
@@ -313,15 +303,14 @@ TEST_CASE("Swapchain", "[VkBootstrap.bootstrap]") {
 
 		AND_THEN("Swapchain configuration") {
 			vkb::SwapchainBuilder swapchain_builder(device);
-			auto swapchain_ret =
-			    swapchain_builder.set_desired_extent(256, 256)
-			        .set_desired_format({ VK_FORMAT_R8G8B8A8_UNORM, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR })
-			        .set_desired_present_mode(VK_PRESENT_MODE_IMMEDIATE_KHR)
-			        .set_pre_transform_flags(VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR)
-			        .set_composite_alpha_flags(VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR)
-			        .set_clipped(false)
-			        .set_image_array_layer_count(1)
-			        .build();
+			auto swapchain_ret = swapchain_builder.set_desired_extent(256, 256)
+			                         .set_desired_format({ VK_FORMAT_R8G8B8A8_UNORM, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR })
+			                         .set_desired_present_mode(VK_PRESENT_MODE_IMMEDIATE_KHR)
+			                         .set_pre_transform_flags(VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR)
+			                         .set_composite_alpha_flags(VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR)
+			                         .set_clipped(false)
+			                         .set_image_array_layer_count(1)
+			                         .build();
 			REQUIRE(swapchain_ret.has_value());
 
 			vkb::destroy_swapchain(swapchain_ret.value());
@@ -362,8 +351,7 @@ TEST_CASE("Swapchain", "[VkBootstrap.bootstrap]") {
 			vkb::destroy_swapchain(recreated_swapchain_ret.value());
 		}
 		AND_THEN("Swapchain can be create with default gotten handles") {
-			vkb::SwapchainBuilder swapchain_builder(
-			    device.physical_device.physical_device, device.device, surface);
+			vkb::SwapchainBuilder swapchain_builder(device.physical_device.physical_device, device.device, surface);
 			auto swapchain_ret = swapchain_builder.build();
 			REQUIRE(swapchain_ret.has_value());
 
@@ -505,10 +493,10 @@ TEST_CASE("Querying Required Extension Features but with 1.0", "[VkBootstrap.sel
 			descriptor_indexing_features.runtimeDescriptorArray = true;
 
 			vkb::PhysicalDeviceSelector selector(instance);
-			auto phys_dev_ret =
-			    selector.add_required_extension(VK_EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME)
-			        .add_required_extension_features(descriptor_indexing_features)
-			        .select();
+			auto phys_dev_ret = selector.add_required_extension(VK_EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME)
+			                        .add_required_extension(VK_KHR_MAINTENANCE3_EXTENSION_NAME)
+			                        .add_required_extension_features(descriptor_indexing_features)
+			                        .select();
 			// Ignore if hardware support isn't true
 			REQUIRE(phys_dev_ret.has_value());
 
@@ -530,10 +518,10 @@ TEST_CASE("Querying Required Extension Features", "[VkBootstrap.select_features]
 			descriptor_indexing_features.runtimeDescriptorArray = true;
 
 			vkb::PhysicalDeviceSelector selector(instance);
-			auto phys_dev_ret =
-			    selector.add_required_extension(VK_EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME)
-			        .add_required_extension_features(descriptor_indexing_features)
-			        .select();
+			auto phys_dev_ret = selector.add_required_extension(VK_EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME)
+			                        .add_required_extension(VK_KHR_MAINTENANCE3_EXTENSION_NAME)
+			                        .add_required_extension_features(descriptor_indexing_features)
+			                        .select();
 			// Ignore if hardware support isn't true
 			REQUIRE(phys_dev_ret.has_value());
 
@@ -551,8 +539,7 @@ TEST_CASE("Passing vkb classes to Vulkan handles", "[VkBootstrap.pass_class_to_h
 		auto instance = get_instance();
 
 		// Check if we can get instance functions.
-		PFN_vkVoidFunction instanceFunction = instance.fp_vkGetInstanceProcAddr(
-		    instance, "vkSetDebugUtilsObjectNameEXT"); // validation layers should be provided.
+		PFN_vkVoidFunction instanceFunction = instance.fp_vkGetInstanceProcAddr(instance, "vkSetDebugUtilsObjectNameEXT"); // validation layers should be provided.
 		REQUIRE(instanceFunction != NULL);
 
 		auto window = create_window_glfw("Conversion operators");
@@ -560,17 +547,14 @@ TEST_CASE("Passing vkb classes to Vulkan handles", "[VkBootstrap.pass_class_to_h
 
 		vkb::PhysicalDeviceSelector physicalDeviceSelector(instance);
 		auto physicalDevice =
-		    physicalDeviceSelector.add_required_extension(VK_KHR_SWAPCHAIN_EXTENSION_NAME)
-		        .set_surface(surface)
-		        .select();
+		    physicalDeviceSelector.add_required_extension(VK_KHR_SWAPCHAIN_EXTENSION_NAME).set_surface(surface).select();
 		REQUIRE(physicalDevice.has_value());
 		vkb::DeviceBuilder deviceBuilder(physicalDevice.value());
 		auto device = deviceBuilder.build();
 		REQUIRE(device.has_value());
 
 		// Check if we can get a device function address, passing vkb::Device to the function.
-		PFN_vkVoidFunction deviceFunction =
-		    instance.fp_vkGetDeviceProcAddr(device.value(), "vkAcquireNextImageKHR");
+		PFN_vkVoidFunction deviceFunction = instance.fp_vkGetDeviceProcAddr(device.value(), "vkAcquireNextImageKHR");
 		REQUIRE(deviceFunction != NULL);
 	}
 }
@@ -586,10 +570,10 @@ TEST_CASE("Querying Required Extension Features in 1.1", "[VkBootstrap.version]"
 			descriptor_indexing_features.runtimeDescriptorArray = true;
 
 			vkb::PhysicalDeviceSelector selector(instance);
-			auto phys_dev_ret =
-			    selector.add_required_extension(VK_EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME)
-			        .add_required_extension_features(descriptor_indexing_features)
-			        .select();
+			auto phys_dev_ret = selector.add_required_extension(VK_EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME)
+			                        .add_required_extension(VK_KHR_MAINTENANCE3_EXTENSION_NAME)
+			                        .add_required_extension_features(descriptor_indexing_features)
+			                        .select();
 			// Ignore if hardware support isn't true
 			REQUIRE(phys_dev_ret.has_value());
 
@@ -618,8 +602,7 @@ TEST_CASE("Querying Vulkan 1.1 and 1.2 features", "[VkBootstrap.version]") {
 			features_12.bufferDeviceAddress = true;
 
 			vkb::PhysicalDeviceSelector selector(instance);
-			auto phys_dev_ret =
-			    selector.set_required_features_11(features_11).set_required_features_12(features_12).select();
+			auto phys_dev_ret = selector.set_required_features_11(features_11).set_required_features_12(features_12).select();
 			// Ignore if hardware support isn't true
 			REQUIRE(phys_dev_ret.has_value());
 

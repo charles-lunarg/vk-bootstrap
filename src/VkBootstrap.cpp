@@ -614,6 +614,15 @@ detail::Result<Instance> InstanceBuilder::build() const {
 		extensions.push_back(VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME);
 	}
 
+#if defined(VK_KHR_portability_enumeration)
+	bool portability_enumeration_support =
+	    detail::check_extension_supported(system.available_extensions, VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME);
+	if (portability_enumeration_support) {
+		extensions.push_back(VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME);
+	}
+#else
+	bool portability_enumeration_support = false;
+#endif
 	if (!info.headless_context) {
 		auto check_add_window_ext = [&](const char* name) -> bool {
 			if (!detail::check_extension_supported(system.available_extensions, name)) return false;
@@ -701,6 +710,9 @@ detail::Result<Instance> InstanceBuilder::build() const {
 	instance_create_info.ppEnabledExtensionNames = extensions.data();
 	instance_create_info.enabledLayerCount = static_cast<uint32_t>(layers.size());
 	instance_create_info.ppEnabledLayerNames = layers.data();
+	if (portability_enumeration_support) {
+		instance_create_info.flags |= VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
+	}
 
 	Instance instance;
 	VkResult res =
@@ -1848,9 +1860,7 @@ detail::Result<std::vector<VkImage>> Swapchain::get_images() {
 	}
 	return swapchain_images;
 }
-detail::Result<std::vector<VkImageView>> Swapchain::get_image_views() {
-	return get_image_views(nullptr);
-}
+detail::Result<std::vector<VkImageView>> Swapchain::get_image_views() { return get_image_views(nullptr); }
 detail::Result<std::vector<VkImageView>> Swapchain::get_image_views(const void* pNext) {
 	const auto swapchain_images_ret = get_images();
 	if (!swapchain_images_ret) return swapchain_images_ret.error();

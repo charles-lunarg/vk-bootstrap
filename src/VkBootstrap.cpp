@@ -710,9 +710,11 @@ detail::Result<Instance> InstanceBuilder::build() const {
 	instance_create_info.ppEnabledExtensionNames = extensions.data();
 	instance_create_info.enabledLayerCount = static_cast<uint32_t>(layers.size());
 	instance_create_info.ppEnabledLayerNames = layers.data();
+#if defined(VK_KHR_portability_enumeration)
 	if (portability_enumeration_support) {
 		instance_create_info.flags |= VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
 	}
+#endif
 
 	Instance instance;
 	VkResult res =

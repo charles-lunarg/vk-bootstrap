@@ -1848,6 +1848,8 @@ detail::Result<Swapchain> SwapchainBuilder::build() const {
 	if (!images) {
 		return detail::Error{ SwapchainError::failed_get_swapchain_images };
 	}
+	swapchain.requested_min_image_count = image_count;
+	swapchain.present_mode = present_mode;
 	swapchain.image_count = static_cast<uint32_t>(images.value().size());
 	swapchain.allocation_callbacks = info.allocation_callbacks;
 	return swapchain;

@@ -1983,7 +1983,7 @@ SwapchainBuilder& SwapchainBuilder::set_desired_min_image_count(uint32_t min_ima
 	info.add_to_min_image_count = 0; // Unnecessary, but let's do it for clarity
 	return *this;
 }
-SwapchainBuilder& SwapchainBuilder::use_default_min_image_count(uint32_t add_to_min_image_count = 1) {
+SwapchainBuilder& SwapchainBuilder::use_default_min_image_count(uint32_t add_to_min_image_count) {
 	info.min_image_count = 0;
 	info.add_to_min_image_count = add_to_min_image_count;
 	return *this;

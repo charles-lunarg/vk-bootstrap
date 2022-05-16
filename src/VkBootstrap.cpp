@@ -1774,10 +1774,18 @@ detail::Result<Swapchain> SwapchainBuilder::build() const {
 		return detail::Error{ SwapchainError::failed_query_surface_support_details, surface_support_ret.vk_result() };
 	auto surface_support = surface_support_ret.value();
 
-	uint32_t image_count = surface_support.capabilities.minImageCount + 1;
+	uint32_t image_count;
+	if (info.min_image_count == 0) {
+		image_count = surface_support.capabilities.minImageCount + info.add_to_min_image_count;
+	} else {
+		image_count = info.min_image_count;
+		if (image_count < surface_support.capabilities.minImageCount)
+			image_count = surface_support.capabilities.minImageCount;
+	}
 	if (surface_support.capabilities.maxImageCount > 0 && image_count > surface_support.capabilities.maxImageCount) {
 		image_count = surface_support.capabilities.maxImageCount;
 	}
+
 	VkSurfaceFormatKHR surface_format =
 	    detail::find_surface_format(info.physical_device, surface_support.formats, desired_formats, info.format_feature_flags);
 
@@ -1968,6 +1976,16 @@ SwapchainBuilder& SwapchainBuilder::use_default_format_feature_flags() {
 }
 SwapchainBuilder& SwapchainBuilder::set_image_array_layer_count(uint32_t array_layer_count) {
 	info.array_layer_count = array_layer_count;
+	return *this;
+}
+SwapchainBuilder& SwapchainBuilder::set_desired_min_image_count(uint32_t min_image_count) {
+	info.min_image_count = min_image_count;
+	info.add_to_min_image_count = 0; // Unnecessary, but let's do it for clarity
+	return *this;
+}
+SwapchainBuilder& SwapchainBuilder::use_default_min_image_count(uint32_t add_to_min_image_count = 1) {
+	info.min_image_count = 0;
+	info.add_to_min_image_count = add_to_min_image_count;
 	return *this;
 }
 SwapchainBuilder& SwapchainBuilder::set_clipped(bool clipped) {

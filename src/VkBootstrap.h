@@ -753,6 +753,8 @@ struct Swapchain {
 	uint32_t image_count = 0;
 	VkFormat image_format = VK_FORMAT_UNDEFINED;
 	VkExtent2D extent = { 0, 0 };
+	uint32_t requested_min_image_count = 0; // The value of minImageCount actually used when creating the swapchain; note that the presentation engine is always free to create more images than that.
+	VkPresentModeKHR present_mode = VK_PRESENT_MODE_IMMEDIATE_KHR; // The present mode actually used when creating the swapchain.
 	VkAllocationCallbacks* allocation_callbacks = VK_NULL_HANDLE;
 
 	// Returns a vector of VkImage handles to the swapchain.

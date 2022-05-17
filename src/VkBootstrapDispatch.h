@@ -598,6 +598,9 @@ struct DispatchTable {
 #if (defined(VK_KHR_ray_tracing_pipeline))
 		fp_vkCmdTraceRaysIndirectKHR = reinterpret_cast<PFN_vkCmdTraceRaysIndirectKHR>(procAddr(device, "vkCmdTraceRaysIndirectKHR"));
 #endif
+#if (defined(VK_KHR_ray_tracing_maintenance1) && defined(VK_KHR_ray_tracing_pipeline))
+		fp_vkCmdTraceRaysIndirect2KHR = reinterpret_cast<PFN_vkCmdTraceRaysIndirect2KHR>(procAddr(device, "vkCmdTraceRaysIndirect2KHR"));
+#endif
 #if (defined(VK_KHR_acceleration_structure))
 		fp_vkGetDeviceAccelerationStructureCompatibilityKHR = reinterpret_cast<PFN_vkGetDeviceAccelerationStructureCompatibilityKHR>(procAddr(device, "vkGetDeviceAccelerationStructureCompatibilityKHR"));
 #endif
@@ -891,6 +894,12 @@ struct DispatchTable {
 #endif
 #if (defined(VK_VALVE_descriptor_set_host_mapping))
 		fp_vkGetDescriptorSetHostMappingVALVE = reinterpret_cast<PFN_vkGetDescriptorSetHostMappingVALVE>(procAddr(device, "vkGetDescriptorSetHostMappingVALVE"));
+#endif
+#if (defined(VK_EXT_image_compression_control))
+		fp_vkGetImageSubresourceLayout2EXT = reinterpret_cast<PFN_vkGetImageSubresourceLayout2EXT>(procAddr(device, "vkGetImageSubresourceLayout2EXT"));
+#endif
+#if (defined(VK_EXT_pipeline_properties))
+		fp_vkGetPipelinePropertiesEXT = reinterpret_cast<PFN_vkGetPipelinePropertiesEXT>(procAddr(device, "vkGetPipelinePropertiesEXT"));
 #endif
 #if (defined(VK_EXT_host_query_reset))
 		fp_vkResetQueryPoolEXT = reinterpret_cast<PFN_vkResetQueryPoolEXT>(procAddr(device, "vkResetQueryPoolEXT"));
@@ -2195,6 +2204,11 @@ struct DispatchTable {
 		fp_vkCmdTraceRaysIndirectKHR(commandBuffer, pRaygenShaderBindingTable, pMissShaderBindingTable, pHitShaderBindingTable, pCallableShaderBindingTable, indirectDeviceAddress);
 	}
 #endif
+#if (defined(VK_KHR_ray_tracing_maintenance1) && defined(VK_KHR_ray_tracing_pipeline))
+	void cmdTraceRaysIndirect2KHR(VkCommandBuffer commandBuffer, VkDeviceAddress indirectDeviceAddress) const noexcept {
+		fp_vkCmdTraceRaysIndirect2KHR(commandBuffer, indirectDeviceAddress);
+	}
+#endif
 #if (defined(VK_KHR_acceleration_structure))
 	void getDeviceAccelerationStructureCompatibilityKHR(const VkAccelerationStructureVersionInfoKHR* pVersionInfo, VkAccelerationStructureCompatibilityKHR* pCompatibility) const noexcept {
 		fp_vkGetDeviceAccelerationStructureCompatibilityKHR(device, pVersionInfo, pCompatibility);
@@ -2301,7 +2315,7 @@ struct DispatchTable {
 	}
 #endif
 #if (defined(VK_KHR_pipeline_executable_properties))
-	VkResult getPipelineExecutablePropertiesKHR(const VkPipelineInfoKHR* pPipelineInfo, uint32_t* pExecutableCount, VkPipelineExecutablePropertiesKHR* pProperties) const noexcept {
+	VkResult getPipelineExecutablePropertiesKHR(const VkPipelineInfoEXT* pPipelineInfo, uint32_t* pExecutableCount, VkPipelineExecutablePropertiesKHR* pProperties) const noexcept {
 		return fp_vkGetPipelineExecutablePropertiesKHR(device, pPipelineInfo, pExecutableCount, pProperties);
 	}
 #endif
@@ -2683,6 +2697,16 @@ struct DispatchTable {
 #if (defined(VK_VALVE_descriptor_set_host_mapping))
 	void getDescriptorSetHostMappingVALVE(VkDescriptorSet descriptorSet, void** ppData) const noexcept {
 		fp_vkGetDescriptorSetHostMappingVALVE(device, descriptorSet, ppData);
+	}
+#endif
+#if (defined(VK_EXT_image_compression_control))
+	void getImageSubresourceLayout2EXT(VkImage image, const VkImageSubresource2EXT* pSubresource, VkSubresourceLayout2EXT* pLayout) const noexcept {
+		fp_vkGetImageSubresourceLayout2EXT(device, image, pSubresource, pLayout);
+	}
+#endif
+#if (defined(VK_EXT_pipeline_properties))
+	VkResult getPipelinePropertiesEXT(const VkPipelineInfoEXT* pPipelineInfo, VkBaseOutStructure* pPipelineProperties) const noexcept {
+		return fp_vkGetPipelinePropertiesEXT(device, pPipelineInfo, pPipelineProperties);
 	}
 #endif
 #if (defined(VK_EXT_host_query_reset))
@@ -3579,6 +3603,9 @@ struct DispatchTable {
 #if (defined(VK_KHR_ray_tracing_pipeline))
 	PFN_vkCmdTraceRaysIndirectKHR fp_vkCmdTraceRaysIndirectKHR = nullptr;
 #endif
+#if (defined(VK_KHR_ray_tracing_maintenance1) && defined(VK_KHR_ray_tracing_pipeline))
+	PFN_vkCmdTraceRaysIndirect2KHR fp_vkCmdTraceRaysIndirect2KHR = nullptr;
+#endif
 #if (defined(VK_KHR_acceleration_structure))
 	PFN_vkGetDeviceAccelerationStructureCompatibilityKHR fp_vkGetDeviceAccelerationStructureCompatibilityKHR = nullptr;
 #endif
@@ -3872,6 +3899,12 @@ struct DispatchTable {
 #endif
 #if (defined(VK_VALVE_descriptor_set_host_mapping))
 	PFN_vkGetDescriptorSetHostMappingVALVE fp_vkGetDescriptorSetHostMappingVALVE = nullptr;
+#endif
+#if (defined(VK_EXT_image_compression_control))
+	PFN_vkGetImageSubresourceLayout2EXT fp_vkGetImageSubresourceLayout2EXT = nullptr;
+#endif
+#if (defined(VK_EXT_pipeline_properties))
+	PFN_vkGetPipelinePropertiesEXT fp_vkGetPipelinePropertiesEXT = nullptr;
 #endif
 #if (defined(VK_EXT_host_query_reset))
 	PFN_vkResetQueryPoolEXT fp_vkResetQueryPoolEXT = nullptr;

@@ -207,6 +207,7 @@ enum class SwapchainError {
 	failed_create_swapchain,
 	failed_get_swapchain_images,
 	failed_create_swapchain_image_views,
+	required_min_image_count_too_low,
 };
 
 std::error_code make_error_code(InstanceError instance_error);
@@ -845,16 +846,25 @@ class SwapchainBuilder {
 	SwapchainBuilder& set_image_array_layer_count(uint32_t array_layer_count);
 
 	// Convenient named constants for passing to set_desired_min_image_count().
-	// Note that it is not an `enum class`, so its constants can be passed as an integer value without casting (in other words, these might as well be `static const int`, but they benefit from being grouped together this way).
+	// Note that it is not an `enum class`, so its constants can be passed as an integer value without casting
+	// In other words, these might as well be `static const int`, but they benefit from being grouped together this way.
 	enum BufferMode {
 		SINGLE_BUFFERING = 1,
 		DOUBLE_BUFFERING = 2,
 		TRIPLE_BUFFERING = 3,
 	};
 
-	// Sets the desired minimum image count for the swapchain. Note that the presentation engine is always free to create more images than requested.
+	// Sets the desired minimum image count for the swapchain.
+	// Note that the presentation engine is always free to create more images than requested.
 	// You may pass one of the values specified in the BufferMode enum, or any integer value.
+	// For instance, if you pass DOUBLE_BUFFERING, the presentation engine is allowed to give you a double buffering setup, triple buffering, or more. This is up to the drivers.
 	SwapchainBuilder& set_desired_min_image_count(uint32_t min_image_count);
+
+	// Sets a required minimum image count for the swapchain.
+	// If the surface capabilities cannot allow it, building the swapchain will result in the `SwapchainError::required_min_image_count_too_low` error.
+	// Otherwise, the same observations from set_desired_min_image_count() apply.
+	// A value of 0 is specially interpreted as meaning "no requirement", and is the behavior by default.
+	SwapchainBuilder& set_required_min_image_count(uint32_t required_min_image_count);
 
 	// Set whether the Vulkan implementation is allowed to discard rendering operations that
 	// affect regions of the surface that are not visible. Default is true.
@@ -895,6 +905,7 @@ class SwapchainBuilder {
 		uint32_t desired_height = 256;
 		uint32_t array_layer_count = 1;
 		uint32_t min_image_count = 0;
+		uint32_t required_min_image_count = 0;
 		VkImageUsageFlags image_usage_flags = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 		VkFormatFeatureFlags format_feature_flags = VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT;
 		uint32_t graphics_queue_index = 0;

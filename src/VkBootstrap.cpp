@@ -1775,7 +1775,12 @@ detail::Result<Swapchain> SwapchainBuilder::build() const {
 	auto surface_support = surface_support_ret.value();
 
 	uint32_t image_count;
-	if (info.min_image_count == 0) {
+	if (info.required_min_image_count >= 1) {
+		if (info.required_min_image_count < surface_support.capabilities.minImageCount)
+			return make_error_code(SwapchainError::required_min_image_count_too_low);
+		
+		image_count = info.required_min_image_count;
+	} else if (info.min_image_count == 0) {
 		image_count = surface_support.capabilities.minImageCount + 1; // This has been the default behavior so far.
 	} else {
 		image_count = info.min_image_count;
@@ -1980,6 +1985,10 @@ SwapchainBuilder& SwapchainBuilder::set_image_array_layer_count(uint32_t array_l
 }
 SwapchainBuilder& SwapchainBuilder::set_desired_min_image_count(uint32_t min_image_count) {
 	info.min_image_count = min_image_count;
+	return *this;
+}
+SwapchainBuilder& SwapchainBuilder::set_required_min_image_count(uint32_t required_min_image_count) {
+	info.required_min_image_count = required_min_image_count;
 	return *this;
 }
 SwapchainBuilder& SwapchainBuilder::set_clipped(bool clipped) {

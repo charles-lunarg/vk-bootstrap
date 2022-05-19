@@ -844,12 +844,17 @@ class SwapchainBuilder {
 	// Set the number of views in for multiview/stereo surface
 	SwapchainBuilder& set_image_array_layer_count(uint32_t array_layer_count);
 
+	// Convenient named constants for passing to set_desired_min_image_count().
+	// Note that it is not an `enum class`, so its constants can be passed as an integer value without casting (in other words, these might as well be `static const int`, but they benefit from being grouped together this way).
+	enum BufferMode {
+		SINGLE_BUFFERING = 1,
+		DOUBLE_BUFFERING = 2,
+		TRIPLE_BUFFERING = 3,
+	};
+
 	// Sets the desired minimum image count for the swapchain. Note that the presentation engine is always free to create more images than requested.
+	// You may pass one of the values specified in the BufferMode enum, or any integer value.
 	SwapchainBuilder& set_desired_min_image_count(uint32_t min_image_count);
-	// Use the default desired minimum image count for the swapchain. The chosen value is calculated as `capabilitites.minImageCount + add_to_min_image_count`.
-	// The default behavior so far was equivalent to setting `add_to_min_image_count` to 1, and generally led to a triple buffering setup.
-	// A discussion of the trade-offs involved between double buffering and triple buffering is available as https://en.wikipedia.org/wiki/Multiple_buffering
-	SwapchainBuilder& use_default_min_image_count(uint32_t add_to_min_image_count = 1);
 
 	// Set whether the Vulkan implementation is allowed to discard rendering operations that
 	// affect regions of the surface that are not visible. Default is true.
@@ -890,7 +895,6 @@ class SwapchainBuilder {
 		uint32_t desired_height = 256;
 		uint32_t array_layer_count = 1;
 		uint32_t min_image_count = 0;
-		uint32_t add_to_min_image_count = 1; // Keep in sync with default parameter value in use_default_min_image_count()
 		VkImageUsageFlags image_usage_flags = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 		VkFormatFeatureFlags format_feature_flags = VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT;
 		uint32_t graphics_queue_index = 0;

@@ -1776,7 +1776,7 @@ detail::Result<Swapchain> SwapchainBuilder::build() const {
 
 	uint32_t image_count;
 	if (info.min_image_count == 0) {
-		image_count = surface_support.capabilities.minImageCount + info.add_to_min_image_count;
+		image_count = surface_support.capabilities.minImageCount + 1; // This has been the default behavior so far.
 	} else {
 		image_count = info.min_image_count;
 		if (image_count < surface_support.capabilities.minImageCount)
@@ -1980,12 +1980,6 @@ SwapchainBuilder& SwapchainBuilder::set_image_array_layer_count(uint32_t array_l
 }
 SwapchainBuilder& SwapchainBuilder::set_desired_min_image_count(uint32_t min_image_count) {
 	info.min_image_count = min_image_count;
-	info.add_to_min_image_count = 0; // Unnecessary, but let's do it for clarity
-	return *this;
-}
-SwapchainBuilder& SwapchainBuilder::use_default_min_image_count(uint32_t add_to_min_image_count) {
-	info.min_image_count = 0;
-	info.add_to_min_image_count = add_to_min_image_count;
 	return *this;
 }
 SwapchainBuilder& SwapchainBuilder::set_clipped(bool clipped) {

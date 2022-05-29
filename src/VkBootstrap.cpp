@@ -958,7 +958,7 @@ bool supports_features(VkPhysicalDeviceFeatures supported,
 // Finds the first queue which supports the desired operations. Returns QUEUE_INDEX_MAX_VALUE if none is found
 uint32_t get_first_queue_index(std::vector<VkQueueFamilyProperties> const& families, VkQueueFlags desired_flags) {
 	for (uint32_t i = 0; i < static_cast<uint32_t>(families.size()); i++) {
-		if (families[i].queueFlags & desired_flags) return i;
+		if ((families[i].queueFlags & desired_flags) == desired_flags) return i;
 	}
 	return QUEUE_INDEX_MAX_VALUE;
 }
@@ -969,7 +969,7 @@ uint32_t get_separate_queue_index(
     std::vector<VkQueueFamilyProperties> const& families, VkQueueFlags desired_flags, VkQueueFlags undesired_flags) {
 	uint32_t index = QUEUE_INDEX_MAX_VALUE;
 	for (uint32_t i = 0; i < static_cast<uint32_t>(families.size()); i++) {
-		if ((families[i].queueFlags & desired_flags) && ((families[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) == 0)) {
+		if ((families[i].queueFlags & desired_flags) == desired_flags && ((families[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) == 0)) {
 			if ((families[i].queueFlags & undesired_flags) == 0) {
 				return i;
 			} else {
@@ -984,7 +984,7 @@ uint32_t get_separate_queue_index(
 uint32_t get_dedicated_queue_index(
     std::vector<VkQueueFamilyProperties> const& families, VkQueueFlags desired_flags, VkQueueFlags undesired_flags) {
 	for (uint32_t i = 0; i < static_cast<uint32_t>(families.size()); i++) {
-		if ((families[i].queueFlags & desired_flags) && (families[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) == 0 &&
+		if ((families[i].queueFlags & desired_flags) == desired_flags && (families[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) == 0 &&
 		    (families[i].queueFlags & undesired_flags) == 0)
 			return i;
 	}

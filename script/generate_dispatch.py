@@ -98,7 +98,7 @@ aliased_types = {}
 types_node = vk_xml['registry']['types']['type']
 for type_node in  types_node:
 	if '@alias' in type_node:
-		aliased_types[type_node['@alias']] = type_node['@name']
+		aliased_types[type_node['@name']] = type_node['@alias']
 
 # Gather all device functions/aliases for filtering core/extension function fetching
 commands_node = vk_xml['registry']['commands']['command']

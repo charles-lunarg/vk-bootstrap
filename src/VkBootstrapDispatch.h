@@ -2315,7 +2315,7 @@ struct DispatchTable {
 	}
 #endif
 #if (defined(VK_KHR_pipeline_executable_properties))
-	VkResult getPipelineExecutablePropertiesKHR(const VkPipelineInfoEXT* pPipelineInfo, uint32_t* pExecutableCount, VkPipelineExecutablePropertiesKHR* pProperties) const noexcept {
+	VkResult getPipelineExecutablePropertiesKHR(const VkPipelineInfoKHR* pPipelineInfo, uint32_t* pExecutableCount, VkPipelineExecutablePropertiesKHR* pProperties) const noexcept {
 		return fp_vkGetPipelineExecutablePropertiesKHR(device, pPipelineInfo, pExecutableCount, pProperties);
 	}
 #endif

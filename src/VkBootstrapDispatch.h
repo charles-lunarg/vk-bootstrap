@@ -901,6 +901,9 @@ struct DispatchTable {
 #if (defined(VK_EXT_pipeline_properties))
 		fp_vkGetPipelinePropertiesEXT = reinterpret_cast<PFN_vkGetPipelinePropertiesEXT>(procAddr(device, "vkGetPipelinePropertiesEXT"));
 #endif
+#if (defined(VK_EXT_metal_objects))
+		fp_vkExportMetalObjectsEXT = reinterpret_cast<PFN_vkExportMetalObjectsEXT>(procAddr(device, "vkExportMetalObjectsEXT"));
+#endif
 #if (defined(VK_EXT_host_query_reset))
 		fp_vkResetQueryPoolEXT = reinterpret_cast<PFN_vkResetQueryPoolEXT>(procAddr(device, "vkResetQueryPoolEXT"));
 #endif
@@ -2709,6 +2712,11 @@ struct DispatchTable {
 		return fp_vkGetPipelinePropertiesEXT(device, pPipelineInfo, pPipelineProperties);
 	}
 #endif
+#if (defined(VK_EXT_metal_objects))
+	void exportMetalObjectsEXT(VkExportMetalObjectsInfoEXT* pMetalObjectsInfo) const noexcept {
+		fp_vkExportMetalObjectsEXT(device, pMetalObjectsInfo);
+	}
+#endif
 #if (defined(VK_EXT_host_query_reset))
 	void resetQueryPoolEXT(VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount) const noexcept {
 		fp_vkResetQueryPoolEXT(device, queryPool, firstQuery, queryCount);
@@ -3905,6 +3913,9 @@ struct DispatchTable {
 #endif
 #if (defined(VK_EXT_pipeline_properties))
 	PFN_vkGetPipelinePropertiesEXT fp_vkGetPipelinePropertiesEXT = nullptr;
+#endif
+#if (defined(VK_EXT_metal_objects))
+	PFN_vkExportMetalObjectsEXT fp_vkExportMetalObjectsEXT = nullptr;
 #endif
 #if (defined(VK_EXT_host_query_reset))
 	PFN_vkResetQueryPoolEXT fp_vkResetQueryPoolEXT = nullptr;

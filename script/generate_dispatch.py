@@ -29,7 +29,7 @@
 # User will be prompted to install if not detected
 
 # Command Line Arguments
-# [--auto] Don't ask for input from the command line 
+# [--auto] Don't ask for input from the command line
 
 # Exclusions
 exclusions = [
@@ -41,6 +41,10 @@ exclusions = [
 # Excluded extension authors - don't generate anything for these types of extensions
 excluded_extension_authors = [
 	'NVX'
+]
+
+excluded_alias_types = [
+    'VkPipelineInfoKHR'
 ]
 
 # Check for/install xmltodict
@@ -288,7 +292,7 @@ for command in device_commands:
 				if i > 0:
 			 		args_names += ', '
 		else:
-			if arg_type in aliased_types:
+			if arg_type in aliased_types and  arg_type not in excluded_alias_types:
 				arg_type = aliased_types[arg_type]
 			args_full += arg_template.substitute(front_mods = front_mods, arg_type = arg_type, back_mods = back_mods, arg_name = arg_name, array = array)
 			args_names += arg_name

@@ -1774,14 +1774,15 @@ detail::Result<Swapchain> SwapchainBuilder::build() const {
 		return detail::Error{ SwapchainError::failed_query_surface_support_details, surface_support_ret.vk_result() };
 	auto surface_support = surface_support_ret.value();
 
-	uint32_t image_count;
+	uint32_t image_count = info.min_image_count;
 	if (info.required_min_image_count >= 1) {
 		if (info.required_min_image_count < surface_support.capabilities.minImageCount)
 			return make_error_code(SwapchainError::required_min_image_count_too_low);
 		
 		image_count = info.required_min_image_count;
 	} else if (info.min_image_count == 0) {
-		image_count = surface_support.capabilities.minImageCount + 1; // This has been the default behavior so far.
+		// We intentionally use minImageCount + 1 to maintain existing behavior, even if it typically results in triple buffering on most systems. 
+		image_count = surface_support.capabilities.minImageCount + 1;
 	} else {
 		image_count = info.min_image_count;
 		if (image_count < surface_support.capabilities.minImageCount)

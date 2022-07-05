@@ -895,6 +895,12 @@ struct DispatchTable {
 #if (defined(VK_VALVE_descriptor_set_host_mapping))
 		fp_vkGetDescriptorSetHostMappingVALVE = reinterpret_cast<PFN_vkGetDescriptorSetHostMappingVALVE>(procAddr(device, "vkGetDescriptorSetHostMappingVALVE"));
 #endif
+#if (defined(VK_EXT_shader_module_identifier))
+		fp_vkGetShaderModuleIdentifierEXT = reinterpret_cast<PFN_vkGetShaderModuleIdentifierEXT>(procAddr(device, "vkGetShaderModuleIdentifierEXT"));
+#endif
+#if (defined(VK_EXT_shader_module_identifier))
+		fp_vkGetShaderModuleCreateInfoIdentifierEXT = reinterpret_cast<PFN_vkGetShaderModuleCreateInfoIdentifierEXT>(procAddr(device, "vkGetShaderModuleCreateInfoIdentifierEXT"));
+#endif
 #if (defined(VK_EXT_image_compression_control))
 		fp_vkGetImageSubresourceLayout2EXT = reinterpret_cast<PFN_vkGetImageSubresourceLayout2EXT>(procAddr(device, "vkGetImageSubresourceLayout2EXT"));
 #endif
@@ -2702,6 +2708,16 @@ struct DispatchTable {
 		fp_vkGetDescriptorSetHostMappingVALVE(device, descriptorSet, ppData);
 	}
 #endif
+#if (defined(VK_EXT_shader_module_identifier))
+	void getShaderModuleIdentifierEXT(VkShaderModule shaderModule, VkShaderModuleIdentifierEXT* pIdentifier) const noexcept {
+		fp_vkGetShaderModuleIdentifierEXT(device, shaderModule, pIdentifier);
+	}
+#endif
+#if (defined(VK_EXT_shader_module_identifier))
+	void getShaderModuleCreateInfoIdentifierEXT(const VkShaderModuleCreateInfo* pCreateInfo, VkShaderModuleIdentifierEXT* pIdentifier) const noexcept {
+		fp_vkGetShaderModuleCreateInfoIdentifierEXT(device, pCreateInfo, pIdentifier);
+	}
+#endif
 #if (defined(VK_EXT_image_compression_control))
 	void getImageSubresourceLayout2EXT(VkImage image, const VkImageSubresource2EXT* pSubresource, VkSubresourceLayout2EXT* pLayout) const noexcept {
 		fp_vkGetImageSubresourceLayout2EXT(device, image, pSubresource, pLayout);
@@ -3907,6 +3923,12 @@ struct DispatchTable {
 #endif
 #if (defined(VK_VALVE_descriptor_set_host_mapping))
 	PFN_vkGetDescriptorSetHostMappingVALVE fp_vkGetDescriptorSetHostMappingVALVE = nullptr;
+#endif
+#if (defined(VK_EXT_shader_module_identifier))
+	PFN_vkGetShaderModuleIdentifierEXT fp_vkGetShaderModuleIdentifierEXT = nullptr;
+#endif
+#if (defined(VK_EXT_shader_module_identifier))
+	PFN_vkGetShaderModuleCreateInfoIdentifierEXT fp_vkGetShaderModuleCreateInfoIdentifierEXT = nullptr;
 #endif
 #if (defined(VK_EXT_image_compression_control))
 	PFN_vkGetImageSubresourceLayout2EXT fp_vkGetImageSubresourceLayout2EXT = nullptr;

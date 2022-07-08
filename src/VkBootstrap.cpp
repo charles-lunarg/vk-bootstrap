@@ -1235,8 +1235,8 @@ detail::Result<std::vector<PhysicalDevice>> PhysicalDeviceSelector::select_impl(
 	});
 
 	// Remove the partially suitable elements if they aren't desired
-	if (selection == DeviceSelectionMode::only_fully_suitable) {
-		physical_devices.erase(partition_index, physical_devices.end() - 1);
+	if (selection == DeviceSelectionMode::only_fully_suitable && partition_index != physical_devices.end()) {
+		physical_devices.erase(partition_index, physical_devices.end());
 	}
 
 	// Make the physical device ready to be used to create a Device from it

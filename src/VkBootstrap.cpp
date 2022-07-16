@@ -984,8 +984,8 @@ uint32_t get_separate_queue_index(
 uint32_t get_dedicated_queue_index(
     std::vector<VkQueueFamilyProperties> const& families, VkQueueFlags desired_flags, VkQueueFlags undesired_flags) {
 	for (uint32_t i = 0; i < static_cast<uint32_t>(families.size()); i++) {
-		if ((families[i].queueFlags & desired_flags) == desired_flags && (families[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) == 0 &&
-		    (families[i].queueFlags & undesired_flags) == 0)
+		if ((families[i].queueFlags & desired_flags) == desired_flags &&
+		    (families[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) == 0 && (families[i].queueFlags & undesired_flags) == 0)
 			return i;
 	}
 	return QUEUE_INDEX_MAX_VALUE;
@@ -1201,10 +1201,11 @@ detail::Result<std::vector<PhysicalDevice>> PhysicalDeviceSelector::select_impl(
 			if (criteria.enable_portability_subset && ext == "VK_KHR_portability_subset")
 				portability_ext_available = true;
 
+		auto desired_extensions_supported = detail::check_device_extension_support(phys_dev.extensions, criteria.desired_extensions);
+
 		phys_dev.extensions.clear();
 		phys_dev.extensions.insert(
 		    phys_dev.extensions.end(), criteria.required_extensions.begin(), criteria.required_extensions.end());
-		auto desired_extensions_supported = detail::check_device_extension_support(phys_dev.extensions, criteria.desired_extensions);
 		phys_dev.extensions.insert(
 		    phys_dev.extensions.end(), desired_extensions_supported.begin(), desired_extensions_supported.end());
 		if (portability_ext_available) {
@@ -1778,10 +1779,10 @@ detail::Result<Swapchain> SwapchainBuilder::build() const {
 	if (info.required_min_image_count >= 1) {
 		if (info.required_min_image_count < surface_support.capabilities.minImageCount)
 			return make_error_code(SwapchainError::required_min_image_count_too_low);
-		
+
 		image_count = info.required_min_image_count;
 	} else if (info.min_image_count == 0) {
-		// We intentionally use minImageCount + 1 to maintain existing behavior, even if it typically results in triple buffering on most systems. 
+		// We intentionally use minImageCount + 1 to maintain existing behavior, even if it typically results in triple buffering on most systems.
 		image_count = surface_support.capabilities.minImageCount + 1;
 	} else {
 		image_count = info.min_image_count;

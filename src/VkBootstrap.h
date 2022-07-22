@@ -752,7 +752,7 @@ struct Swapchain {
 	VkDevice device = VK_NULL_HANDLE;
 	VkSwapchainKHR swapchain = VK_NULL_HANDLE;
 	uint32_t image_count = 0;
-	VkFormat image_format = VK_FORMAT_UNDEFINED; // THe image format actually used when creating the swapchain.
+	VkFormat image_format = VK_FORMAT_UNDEFINED; // The image format actually used when creating the swapchain.
 	VkColorSpaceKHR color_space = VK_COLOR_SPACE_SRGB_NONLINEAR_KHR; // The color space actually used when creating the swapchain.
 	VkExtent2D extent = { 0, 0 };
 	uint32_t requested_min_image_count = 0; // The value of minImageCount actually used when creating the swapchain; note that the presentation engine is always free to create more images than that.

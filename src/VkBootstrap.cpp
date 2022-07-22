@@ -1852,6 +1852,7 @@ detail::Result<Swapchain> SwapchainBuilder::build() const {
 	}
 	swapchain.device = info.device;
 	swapchain.image_format = surface_format.format;
+	swapchain.color_space = surface_format.colorSpace;
 	swapchain.extent = extent;
 	detail::vulkan_functions().get_device_proc_addr(
 	    info.device, swapchain.internal_table.fp_vkGetSwapchainImagesKHR, "vkGetSwapchainImagesKHR");

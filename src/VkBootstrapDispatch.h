@@ -910,6 +910,12 @@ struct DispatchTable {
 #if (defined(VK_EXT_metal_objects))
 		fp_vkExportMetalObjectsEXT = reinterpret_cast<PFN_vkExportMetalObjectsEXT>(procAddr(device, "vkExportMetalObjectsEXT"));
 #endif
+#if (defined(VK_QCOM_tile_properties))
+		fp_vkGetFramebufferTilePropertiesQCOM = reinterpret_cast<PFN_vkGetFramebufferTilePropertiesQCOM>(procAddr(device, "vkGetFramebufferTilePropertiesQCOM"));
+#endif
+#if (defined(VK_QCOM_tile_properties))
+		fp_vkGetDynamicRenderingTilePropertiesQCOM = reinterpret_cast<PFN_vkGetDynamicRenderingTilePropertiesQCOM>(procAddr(device, "vkGetDynamicRenderingTilePropertiesQCOM"));
+#endif
 #if (defined(VK_EXT_host_query_reset))
 		fp_vkResetQueryPoolEXT = reinterpret_cast<PFN_vkResetQueryPoolEXT>(procAddr(device, "vkResetQueryPoolEXT"));
 #endif
@@ -2733,6 +2739,16 @@ struct DispatchTable {
 		fp_vkExportMetalObjectsEXT(device, pMetalObjectsInfo);
 	}
 #endif
+#if (defined(VK_QCOM_tile_properties))
+	VkResult getFramebufferTilePropertiesQCOM(VkFramebuffer framebuffer, uint32_t* pPropertiesCount, VkTilePropertiesQCOM* pProperties) const noexcept {
+		return fp_vkGetFramebufferTilePropertiesQCOM(device, framebuffer, pPropertiesCount, pProperties);
+	}
+#endif
+#if (defined(VK_QCOM_tile_properties))
+	VkResult getDynamicRenderingTilePropertiesQCOM(const VkRenderingInfoKHR* pRenderingInfo, VkTilePropertiesQCOM* pProperties) const noexcept {
+		return fp_vkGetDynamicRenderingTilePropertiesQCOM(device, pRenderingInfo, pProperties);
+	}
+#endif
 #if (defined(VK_EXT_host_query_reset))
 	void resetQueryPoolEXT(VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount) const noexcept {
 		fp_vkResetQueryPoolEXT(device, queryPool, firstQuery, queryCount);
@@ -3938,6 +3954,12 @@ struct DispatchTable {
 #endif
 #if (defined(VK_EXT_metal_objects))
 	PFN_vkExportMetalObjectsEXT fp_vkExportMetalObjectsEXT = nullptr;
+#endif
+#if (defined(VK_QCOM_tile_properties))
+	PFN_vkGetFramebufferTilePropertiesQCOM fp_vkGetFramebufferTilePropertiesQCOM = nullptr;
+#endif
+#if (defined(VK_QCOM_tile_properties))
+	PFN_vkGetDynamicRenderingTilePropertiesQCOM fp_vkGetDynamicRenderingTilePropertiesQCOM = nullptr;
 #endif
 #if (defined(VK_EXT_host_query_reset))
 	PFN_vkResetQueryPoolEXT fp_vkResetQueryPoolEXT = nullptr;

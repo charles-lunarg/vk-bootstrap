@@ -1995,12 +1995,12 @@ struct DispatchTable {
 	}
 #endif
 #if (defined(VK_ANDROID_external_memory_android_hardware_buffer))
-	VkResult getAndroidHardwareBufferPropertiesANDROID(AHardwareBuffer buffer, VkAndroidHardwareBufferPropertiesANDROID* pProperties) const noexcept {
+	VkResult getAndroidHardwareBufferPropertiesANDROID(const struct AHardwareBuffer* buffer, VkAndroidHardwareBufferPropertiesANDROID* pProperties) const noexcept {
 		return fp_vkGetAndroidHardwareBufferPropertiesANDROID(device, buffer, pProperties);
 	}
 #endif
 #if (defined(VK_ANDROID_external_memory_android_hardware_buffer))
-	VkResult getMemoryAndroidHardwareBufferANDROID(const VkMemoryGetAndroidHardwareBufferInfoANDROID* pInfo, AHardwareBuffer pBuffer) const noexcept {
+	VkResult getMemoryAndroidHardwareBufferANDROID(const VkMemoryGetAndroidHardwareBufferInfoANDROID* pInfo, struct AHardwareBuffer** pBuffer) const noexcept {
 		return fp_vkGetMemoryAndroidHardwareBufferANDROID(device, pInfo, pBuffer);
 	}
 #endif
@@ -2625,13 +2625,13 @@ struct DispatchTable {
 	}
 #endif
 #if (defined(VK_KHR_video_queue))
-	VkResult getVideoSessionMemoryRequirementsKHR(VkVideoSessionKHR videoSession, uint32_t* pVideoSessionMemoryRequirementsCount, VkVideoGetMemoryPropertiesKHR* pVideoSessionMemoryRequirements) const noexcept {
-		return fp_vkGetVideoSessionMemoryRequirementsKHR(device, videoSession, pVideoSessionMemoryRequirementsCount, pVideoSessionMemoryRequirements);
+	VkResult getVideoSessionMemoryRequirementsKHR(VkVideoSessionKHR videoSession, uint32_t* pMemoryRequirementsCount, VkVideoSessionMemoryRequirementsKHR* pMemoryRequirements) const noexcept {
+		return fp_vkGetVideoSessionMemoryRequirementsKHR(device, videoSession, pMemoryRequirementsCount, pMemoryRequirements);
 	}
 #endif
 #if (defined(VK_KHR_video_queue))
-	VkResult bindVideoSessionMemoryKHR(VkVideoSessionKHR videoSession, uint32_t videoSessionBindMemoryCount, const VkVideoBindMemoryKHR* pVideoSessionBindMemories) const noexcept {
-		return fp_vkBindVideoSessionMemoryKHR(device, videoSession, videoSessionBindMemoryCount, pVideoSessionBindMemories);
+	VkResult bindVideoSessionMemoryKHR(VkVideoSessionKHR videoSession, uint32_t bindSessionMemoryInfoCount, const VkBindVideoSessionMemoryInfoKHR* pBindSessionMemoryInfos) const noexcept {
+		return fp_vkBindVideoSessionMemoryKHR(device, videoSession, bindSessionMemoryInfoCount, pBindSessionMemoryInfos);
 	}
 #endif
 #if (defined(VK_KHR_video_decode_queue))

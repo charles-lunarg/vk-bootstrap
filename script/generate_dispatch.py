@@ -195,7 +195,7 @@ for command in device_commands:
 				if collection_count > 0:
 					collection_count -= 1
 					if collection_count > 0:
-				 		macro += ' || '
+						macro += ' || '
 		macro += '\n$body#endif\n'
 	else:
 		macro = '$body'
@@ -276,6 +276,9 @@ for command in device_commands:
 			elif text == '**':
 				front_mods = ''
 				back_mods = '** '
+			elif text == 'struct**':
+				front_mods = 'struct '
+				back_mods = '** '
 			elif text == 'const*':
 				front_mods = 'const '
 				back_mods = '* '
@@ -285,12 +288,15 @@ for command in device_commands:
 			elif text == 'const*const*':
 				front_mods = 'const '
 				back_mods = '* const* '
+			elif text == 'conststruct*':
+				front_mods = 'const struct '
+				back_mods = '* '
 		if i == args_count and arg_type == 'VkDevice':
 			args_names += arg_name
 			if i > 0:
 				i -= 1
 				if i > 0:
-			 		args_names += ', '
+					args_names += ', '
 		else:
 			if arg_type in aliased_types and  arg_type not in excluded_alias_types:
 				arg_type = aliased_types[arg_type]
@@ -299,8 +305,8 @@ for command in device_commands:
 			if i > 0:
 				i -= 1
 				if i > 0:
-			 		args_full += ', '
-			 		args_names += ', '
+					args_full += ', '
+					args_names += ', '
 
 	proxy_body = proxy_template.substitute(return_type = return_type, proxy_name = proxy_name, args_full = args_full, opt_return = opt_return, fp_name = fp_name, args_names = args_names)
 	fp_decl_body = fp_decl_template.substitute(pfn_name = pfn_name, fp_name = fp_name)

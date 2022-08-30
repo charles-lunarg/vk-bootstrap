@@ -81,10 +81,15 @@ install(TARGETS vk-bootstrap vk-bootstrap-compiler-warnings vk-bootstrap-vulkan-
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
-option(VK_BOOTSTRAP_TEST "Test Vk-Bootstrap with glfw and Catch2" OFF)
+# By default, we want to only build tests if this repo is built standalone, but still should be configurable by the user
+if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+    set(VK_BOOTSTRAP_TEST_DEFAULT_VALUE ON)
+else()
+    set(VK_BOOTSTRAP_TEST_DEFAULT_VALUE OFF)
+endif()
+option(VK_BOOTSTRAP_TEST "Test Vk-Bootstrap with glfw and Catch2" ${VK_BOOTSTRAP_TEST_DEFAULT_VALUE})
 
-if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME OR VK_BOOTSTRAP_TEST)
-
+if(VK_BOOTSTRAP_TEST)
     add_subdirectory(ext)
     add_subdirectory(tests)
     add_subdirectory(example)

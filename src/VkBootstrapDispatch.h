@@ -520,6 +520,15 @@ struct DispatchTable {
 #if (defined(VK_NV_mesh_shader))
 		fp_vkCmdDrawMeshTasksIndirectCountNV = reinterpret_cast<PFN_vkCmdDrawMeshTasksIndirectCountNV>(procAddr(device, "vkCmdDrawMeshTasksIndirectCountNV"));
 #endif
+#if (defined(VK_EXT_mesh_shader))
+		fp_vkCmdDrawMeshTasksEXT = reinterpret_cast<PFN_vkCmdDrawMeshTasksEXT>(procAddr(device, "vkCmdDrawMeshTasksEXT"));
+#endif
+#if (defined(VK_EXT_mesh_shader))
+		fp_vkCmdDrawMeshTasksIndirectEXT = reinterpret_cast<PFN_vkCmdDrawMeshTasksIndirectEXT>(procAddr(device, "vkCmdDrawMeshTasksIndirectEXT"));
+#endif
+#if (defined(VK_EXT_mesh_shader))
+		fp_vkCmdDrawMeshTasksIndirectCountEXT = reinterpret_cast<PFN_vkCmdDrawMeshTasksIndirectCountEXT>(procAddr(device, "vkCmdDrawMeshTasksIndirectCountEXT"));
+#endif
 #if (defined(VK_NV_ray_tracing))
 		fp_vkCompileDeferredNV = reinterpret_cast<PFN_vkCompileDeferredNV>(procAddr(device, "vkCompileDeferredNV"));
 #endif
@@ -2089,6 +2098,21 @@ struct DispatchTable {
 		fp_vkCmdDrawMeshTasksIndirectCountNV(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
 	}
 #endif
+#if (defined(VK_EXT_mesh_shader))
+	void cmdDrawMeshTasksEXT(VkCommandBuffer commandBuffer, uint32_t groupCountX, uint32_t groupCountY, uint32_t groupCountZ) const noexcept {
+		fp_vkCmdDrawMeshTasksEXT(commandBuffer, groupCountX, groupCountY, groupCountZ);
+	}
+#endif
+#if (defined(VK_EXT_mesh_shader))
+	void cmdDrawMeshTasksIndirectEXT(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, uint32_t drawCount, uint32_t stride) const noexcept {
+		fp_vkCmdDrawMeshTasksIndirectEXT(commandBuffer, buffer, offset, drawCount, stride);
+	}
+#endif
+#if (defined(VK_EXT_mesh_shader))
+	void cmdDrawMeshTasksIndirectCountEXT(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint32_t maxDrawCount, uint32_t stride) const noexcept {
+		fp_vkCmdDrawMeshTasksIndirectCountEXT(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
+	}
+#endif
 #if (defined(VK_NV_ray_tracing))
 	VkResult compileDeferredNV(VkPipeline pipeline, uint32_t shader) const noexcept {
 		return fp_vkCompileDeferredNV(device, pipeline, shader);
@@ -3564,6 +3588,15 @@ struct DispatchTable {
 #endif
 #if (defined(VK_NV_mesh_shader))
 	PFN_vkCmdDrawMeshTasksIndirectCountNV fp_vkCmdDrawMeshTasksIndirectCountNV = nullptr;
+#endif
+#if (defined(VK_EXT_mesh_shader))
+	PFN_vkCmdDrawMeshTasksEXT fp_vkCmdDrawMeshTasksEXT = nullptr;
+#endif
+#if (defined(VK_EXT_mesh_shader))
+	PFN_vkCmdDrawMeshTasksIndirectEXT fp_vkCmdDrawMeshTasksIndirectEXT = nullptr;
+#endif
+#if (defined(VK_EXT_mesh_shader))
+	PFN_vkCmdDrawMeshTasksIndirectCountEXT fp_vkCmdDrawMeshTasksIndirectCountEXT = nullptr;
 #endif
 #if (defined(VK_NV_ray_tracing))
 	PFN_vkCompileDeferredNV fp_vkCompileDeferredNV = nullptr;

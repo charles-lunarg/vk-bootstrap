@@ -15,6 +15,7 @@
  */
 
 #include "VkBootstrap.h"
+#include "VkPipelineBuilder.h"
 
 #include <cstring>
 
@@ -365,10 +366,22 @@ struct DeviceErrorCategory : std::error_category {
 const DeviceErrorCategory device_error_category;
 
 struct SwapchainErrorCategory : std::error_category {
-	const char* name() const noexcept override { return "vbk_swapchain"; }
+	const char* name() const noexcept override { return "vkb_swapchain"; }
 	std::string message(int err) const override { return to_string(static_cast<SwapchainError>(err)); }
 };
 const SwapchainErrorCategory swapchain_error_category;
+
+struct PipelineLayoutErrorCategory : std::error_category {
+	const char* name() const noexcept override { return "vkb_pipeline_layout"; }
+	std::string message(int err) const override { return to_string(static_cast<PipelineLayoutError>(err)); }
+};
+const PipelineLayoutErrorCategory pipeline_layout_error_category;
+
+struct GraphicsPipelineErrorCategory : std::error_category {
+	const char* name() const noexcept override { return "vkb_graphics_pipeline"; }
+	std::string message(int err) const override { return to_string(static_cast<GraphicsPipelineError>(err)); }
+};
+const GraphicsPipelineErrorCategory graphics_pipeline_error_category;
 
 } // namespace detail
 
@@ -387,6 +400,13 @@ std::error_code make_error_code(DeviceError device_error) {
 std::error_code make_error_code(SwapchainError swapchain_error) {
 	return { static_cast<int>(swapchain_error), detail::swapchain_error_category };
 }
+std::error_code make_error_code(PipelineLayoutError pipeline_layout_error) {
+	return { static_cast<int>(pipeline_layout_error), detail::pipeline_layout_error_category };
+}
+std::error_code make_error_code(GraphicsPipelineError graphics_pipeline_error) {
+	return { static_cast<int>(graphics_pipeline_error), detail::graphics_pipeline_error_category };
+}
+
 #define CASE_TO_STRING(CATEGORY, TYPE)                                                                                 \
 	case CATEGORY::TYPE:                                                                                               \
 		return #TYPE;
@@ -442,6 +462,26 @@ const char* to_string(SwapchainError err) {
 		CASE_TO_STRING(SwapchainError, failed_create_swapchain)
 		CASE_TO_STRING(SwapchainError, failed_get_swapchain_images)
 		CASE_TO_STRING(SwapchainError, failed_create_swapchain_image_views)
+		default:
+			return "";
+	}
+}
+const char* to_string(PipelineLayoutError err) {
+	switch (err) {
+		case PipelineLayoutError::device_handle_not_provided:
+			return "device_handle_not_provided";
+		case PipelineLayoutError::failed_to_create_pipeline_layout:
+			return "failed_to_create_pipeline_layout";
+		default:
+			return "";
+	}
+}
+const char* to_string(GraphicsPipelineError err) {
+	switch (err) {
+		case GraphicsPipelineError::device_handle_not_provided:
+			return "device_handle_not_provided";
+		case GraphicsPipelineError::failed_to_create_graphics_pipeline:
+			return "failed_to_create_graphics_pipeline";
 		default:
 			return "";
 	}
@@ -2017,4 +2057,741 @@ void SwapchainBuilder::add_desired_present_modes(std::vector<VkPresentModeKHR>& 
 	modes.push_back(VK_PRESENT_MODE_MAILBOX_KHR);
 	modes.push_back(VK_PRESENT_MODE_FIFO_KHR);
 }
+
+// ---- PipelineLayout ---- //
+PipelineLayoutBuilder& PipelineLayoutBuilder::set_pipeline_layout_flags(VkPipelineLayoutCreateFlags layout_flags) {
+	info.flags = layout_flags;
+	return *this;
+}
+PipelineLayoutBuilder::PipelineLayoutBuilder(Device const& device) {
+	info.device = device.device;
+	detail::vulkan_functions().get_device_proc_addr(info.device, info.pipeline_layout_create_proc, "vkCreatePipelineLayout");
+}
+PipelineLayoutBuilder::PipelineLayoutBuilder(VkDevice const device) {
+	info.device = device;
+	detail::vulkan_functions().get_device_proc_addr(info.device, info.pipeline_layout_create_proc, "vkCreatePipelineLayout");
+}
+PipelineLayoutBuilder& PipelineLayoutBuilder::add_descriptor_layout(VkDescriptorSetLayout descriptor_set_layout) {
+	info.descriptor_layouts.push_back(descriptor_set_layout);
+	return *this;
+}
+PipelineLayoutBuilder& PipelineLayoutBuilder::add_descriptor_layouts(std::vector<VkDescriptorSetLayout> descriptor_set_layouts) {
+	for (const auto& layout : descriptor_set_layouts)
+		info.descriptor_layouts.push_back(layout);
+	return *this;
+}
+PipelineLayoutBuilder& PipelineLayoutBuilder::clear_descriptor_layouts() {
+	info.descriptor_layouts.clear();
+	return *this;
+}
+PipelineLayoutBuilder& PipelineLayoutBuilder::add_push_constant_range(VkPushConstantRange push_constant_range) {
+	info.push_constant_ranges.push_back(push_constant_range);
+	return *this;
+}
+PipelineLayoutBuilder& PipelineLayoutBuilder::add_push_constant_ranges(std::vector<VkPushConstantRange> push_constant_ranges) {
+	for (const auto& range : push_constant_ranges)
+		info.push_constant_ranges.push_back(range);
+	return *this;
+}
+PipelineLayoutBuilder& PipelineLayoutBuilder::clear_push_constant_ranges() {
+	info.push_constant_ranges.clear();
+	return *this;
+}
+PipelineLayoutBuilder& PipelineLayoutBuilder::clear_pNext_chain() {
+	info.pNext_chain.clear();
+	return *this;
+}
+PipelineLayoutBuilder& PipelineLayoutBuilder::set_allocation_callbacks(VkAllocationCallbacks* callbacks) {
+	info.allocation_callbacks = callbacks;
+	return *this;
+}
+Result<VkPipelineLayout> PipelineLayoutBuilder::build() const {
+	if (info.device == VK_NULL_HANDLE) return Error{ PipelineLayoutError::device_handle_not_provided };
+
+	VkPipelineLayoutCreateInfo pipeline_layout_create_info = {};
+	pipeline_layout_create_info.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+	detail::setup_pNext_chain(pipeline_layout_create_info, info.pNext_chain);
+#if !defined(NDEBUG)
+	for (auto& node : info.pNext_chain)
+		assert(node->sType != VK_STRUCTURE_TYPE_APPLICATION_INFO);
+#endif
+	pipeline_layout_create_info.flags = info.flags;
+	pipeline_layout_create_info.setLayoutCount = static_cast<uint32_t>(info.descriptor_layouts.size());
+	pipeline_layout_create_info.pSetLayouts = info.descriptor_layouts.data();
+	pipeline_layout_create_info.pushConstantRangeCount = static_cast<uint32_t>(info.push_constant_ranges.size());
+	pipeline_layout_create_info.pPushConstantRanges = info.push_constant_ranges.data();
+
+	VkPipelineLayout pipeline_layout{};
+	VkResult res = info.pipeline_layout_create_proc(
+	    info.device, &pipeline_layout_create_info, info.allocation_callbacks, &pipeline_layout);
+
+	if (res != VK_SUCCESS) return Error{ PipelineLayoutError::failed_to_create_pipeline_layout, res };
+
+	return pipeline_layout;
+}
+
+// ---- Graphics Pipeline ---- //
+
+GraphicsPipelineBuilder::GraphicsPipelineBuilder(Device const& device, VkPipelineCache pipeline_cache) {
+	info.device = device.device;
+	info.pipeline_cache = pipeline_cache;
+	detail::vulkan_functions().get_device_proc_addr(info.device, info.graphics_pipeline_create_proc, "vkCreateGraphicsPipelines");
+}
+GraphicsPipelineBuilder::GraphicsPipelineBuilder(VkDevice const device, VkPipelineCache pipeline_cache) {
+	info.device = device;
+	info.pipeline_cache = pipeline_cache;
+	detail::vulkan_functions().get_device_proc_addr(info.device, info.graphics_pipeline_create_proc, "vkCreateGraphicsPipelines");
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::set_allocation_callbacks(VkAllocationCallbacks* callbacks) {
+	info.allocation_callbacks = callbacks;
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::clear_pNext() {
+	info.pNext_chain.clear();
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::set_pipeline_create_flags(VkPipelineCreateFlags pipeline_create_flags) {
+	info.flags = pipeline_create_flags;
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::set_pipeline_layout(VkPipelineLayout pipeline_layout) {
+	info.pipeline_layout = pipeline_layout;
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::set_renderpass(VkRenderPass renderpass, uint32_t subpass_index) {
+	info.renderpass = renderpass;
+	info.subpass = subpass_index;
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::set_base_pipeline(VkPipeline base_pipeline, uint32_t base_pipeline_index) {
+	info.base_pipeline = base_pipeline;
+	info.base_pipeline_index = base_pipeline_index;
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::add_additional_shader_stage(VkPipelineShaderStageCreateInfo& shader_stage_info) {
+	info.additional_shader_stages.push_back(shader_stage_info);
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::add_additional_shader_stages(
+    std::vector<VkPipelineShaderStageCreateInfo> shader_stage_infos) {
+	for (auto shader_stage_info : shader_stage_infos)
+		info.additional_shader_stages.push_back(shader_stage_info);
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::clear_additional_shader_stages() {
+	info.additional_shader_stages.clear();
+	return *this;
+}
+
+// Vertex input state
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::clear_vertex_input_pNext() {
+	info.vertex_input.pNext_chain.clear();
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::add_vertex_input_binding_desc(VkVertexInputBindingDescription vertex_input_binding_desc) {
+	info.vertex_input.binding_descs.push_back(vertex_input_binding_desc);
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::add_vertex_input_binding_descs(
+    std::vector<VkVertexInputBindingDescription> vertex_input_binding_descs) {
+	for (auto binding_desc : vertex_input_binding_descs)
+		info.vertex_input.binding_descs.push_back(binding_desc);
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::clear_vertex_input_binding_descs() {
+	info.vertex_input.binding_descs.clear();
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::add_vertex_input_attrib_desc(VkVertexInputAttributeDescription vertex_input_attrib_desc) {
+	info.vertex_input.attrib_descs.push_back(vertex_input_attrib_desc);
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::add_vertex_input_attrib_descs(
+    std::vector<VkVertexInputAttributeDescription> vertex_input_attrib_descs) {
+	for (auto attrib_desc : vertex_input_attrib_descs)
+		info.vertex_input.attrib_descs.push_back(attrib_desc);
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::clear_vertex_input_attrib_descs() {
+	info.vertex_input.attrib_descs.clear();
+	return *this;
+}
+
+// Input assembly state
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::set_input_assembly_primitive_topology(VkPrimitiveTopology topology) {
+	info.input_assembly.topology = topology;
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::set_input_assembly_primitive_restart(bool enable_primitive_restart) {
+	info.input_assembly.primitiveRestartEnable = enable_primitive_restart ? VK_TRUE : VK_FALSE;
+	return *this;
+}
+
+// Vertex shader
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::clear_vertex_shader_pNext() {
+	info.vertex_shader.pNext_chain.clear();
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::set_vertex_shader_flags(VkPipelineShaderStageCreateFlags flags) {
+	info.vertex_shader.flags = flags;
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::set_vertex_shader_module(VkShaderModule shader_module) {
+	info.vertex_shader.shader_module = shader_module;
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::set_vertex_shader_name(const char* name) {
+	info.vertex_shader.name = name;
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::set_vertex_shader_specialization_info(VkSpecializationInfo& specialization_info) {
+	info.vertex_shader.specialization_info = specialization_info;
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::clear_vertex_shader() {
+	info.vertex_shader.pNext_chain.clear();
+	info.vertex_shader.flags = 0;
+	info.vertex_shader.shader_module = VK_NULL_HANDLE;
+	info.vertex_shader.name = "";
+	info.vertex_shader.specialization_info = {};
+	return *this;
+}
+
+// Tessellation control shader
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::clear_tessellation_control_shader_pNext() {
+	info.tessellation_control_shader.pNext_chain.clear();
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::set_tessellation_control_shader_flags(VkPipelineShaderStageCreateFlags flags) {
+	info.tessellation_control_shader.flags = flags;
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::set_tessellation_control_shader_module(VkShaderModule shader_module) {
+	info.tessellation_control_shader.shader_module = shader_module;
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::set_tessellation_control_shader_name(const char* name) {
+	info.tessellation_control_shader.name = name;
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::set_tessellation_control_shader_specialization_info(
+    VkSpecializationInfo& specialization_info) {
+	info.tessellation_control_shader.specialization_info = specialization_info;
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::clear_tessellation_control_shader() {
+	info.tessellation_control_shader.pNext_chain.clear();
+	info.tessellation_control_shader.flags = 0;
+	info.tessellation_control_shader.shader_module = VK_NULL_HANDLE;
+	info.tessellation_control_shader.name = "";
+	info.tessellation_control_shader.specialization_info = {};
+	return *this;
+}
+
+// Tessellation evaluation shader
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::clear_tessellation_eval_shader_pNext() {
+	info.tessellation_eval_shader.pNext_chain.clear();
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::set_tessellation_eval_shader_flags(VkPipelineShaderStageCreateFlags flags) {
+	info.tessellation_eval_shader.flags = flags;
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::set_tessellation_eval_shader_module(VkShaderModule shader_module) {
+	info.tessellation_eval_shader.shader_module = shader_module;
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::set_tessellation_eval_shader_name(const char* name) {
+	info.tessellation_eval_shader.name = name;
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::set_tessellation_eval_shader_specialization_info(
+    VkSpecializationInfo& specialization_info) {
+	info.tessellation_eval_shader.specialization_info = specialization_info;
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::clear_tessellation_eval_shader() {
+	info.tessellation_eval_shader.pNext_chain.clear();
+	info.tessellation_eval_shader.flags = 0;
+	info.tessellation_eval_shader.shader_module = VK_NULL_HANDLE;
+	info.tessellation_eval_shader.name = "";
+	info.tessellation_eval_shader.specialization_info = {};
+	return *this;
+}
+
+// Tessellation state
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::clear_tessellation_state_pNext() {
+	info.tessellation_state.pNext_chain.clear();
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::set_tessellation_state_patch_control_points(uint32_t patch_control_points) {
+	info.tessellation_state.patch_control_points = patch_control_points;
+	return *this;
+}
+
+// Geometry shader
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::clear_geometry_shader_pNext() {
+	info.geometry_shader.pNext_chain.clear();
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::set_geometry_shader_flags(VkPipelineShaderStageCreateFlags flags) {
+	info.geometry_shader.flags = flags;
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::set_geometry_shader_module(VkShaderModule shader_module) {
+	info.geometry_shader.shader_module = shader_module;
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::set_geometry_shader_name(const char* name) {
+	info.geometry_shader.name = name;
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::set_geometry_shader_specialization_info(VkSpecializationInfo& specialization_info) {
+	info.geometry_shader.specialization_info = specialization_info;
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::clear_geometry_shader() {
+	info.geometry_shader.pNext_chain.clear();
+	info.geometry_shader.flags = 0;
+	info.geometry_shader.shader_module = VK_NULL_HANDLE;
+	info.geometry_shader.name = "";
+	info.geometry_shader.specialization_info = {};
+	return *this;
+}
+
+// Viewport state
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::clear_viewport_state_pNext() {
+	info.viewport_state.pNext_chain.clear();
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::add_viewport_state_viewport(VkViewport viewport) {
+	info.viewport_state.viewports.push_back(viewport);
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::add_viewport_state_viewports(std::vector<VkViewport> viewports) {
+	for (auto viewport : viewports)
+		info.viewport_state.viewports.push_back(viewport);
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::clear_viewport_state_viewports() {
+	info.viewport_state.viewports.clear();
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::add_viewport_state_scissor(VkRect2D scissor) {
+	info.viewport_state.scissors.push_back(scissor);
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::add_viewport_state_scissors(std::vector<VkRect2D> scissors) {
+	for (auto scissor : scissors)
+		info.viewport_state.scissors.push_back(scissor);
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::clear_viewport_state_scissors() {
+	info.viewport_state.scissors.clear();
+	return *this;
+}
+
+// Fragment shader
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::clear_fragment_shader_pNext() {
+	info.fragment_shader.pNext_chain.clear();
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::set_fragment_shader_flags(VkPipelineShaderStageCreateFlags flags) {
+	info.fragment_shader.flags = flags;
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::set_fragment_shader_module(VkShaderModule shader_module) {
+	info.fragment_shader.shader_module = shader_module;
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::set_fragment_shader_name(const char* name) {
+	info.fragment_shader.name = name;
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::set_fragment_shader_specialization_info(VkSpecializationInfo& specialization_info) {
+	info.fragment_shader.specialization_info = specialization_info;
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::clear_fragment_shader() {
+	info.fragment_shader.pNext_chain.clear();
+	info.fragment_shader.flags = 0;
+	info.fragment_shader.shader_module = VK_NULL_HANDLE;
+	info.fragment_shader.name = "";
+	info.fragment_shader.specialization_info = {};
+	return *this;
+}
+
+// Rasterization state
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::clear_rasterization_state_pNext() {
+	info.rasterization_state.pNext_chain.clear();
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::enable_rasterization_state_depth_clamp(bool enable_depth_clamp) {
+	info.rasterization_state.depth_clamp_enable = enable_depth_clamp ? VK_TRUE : VK_FALSE;
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::enable_rasterization_state_discard(bool enable_rasterizer_discard) {
+	info.rasterization_state.rasterizer_discard_enable = enable_rasterizer_discard ? VK_TRUE : VK_FALSE;
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::set_rasterization_state_polygon_mode(VkPolygonMode polygon_mode) {
+	info.rasterization_state.polygon_mode = polygon_mode;
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::set_rasterization_state_cull_mode_flags(VkCullModeFlags cull_mode_flags) {
+	info.rasterization_state.cull_mode_flags = cull_mode_flags;
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::set_rasterization_state_front_face(VkFrontFace front_face) {
+	info.rasterization_state.front_face = front_face;
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::enable_rasterization_state_depth_bias(bool enable_depth_bias) {
+	info.rasterization_state.depth_bias_enable = enable_depth_bias ? VK_TRUE : VK_FALSE;
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::set_rasterization_state_depth_bias_constant_factor(float depth_bias_constant_factor) {
+	info.rasterization_state.depth_bias_constant_factor = depth_bias_constant_factor;
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::set_rasterization_state_depth_bias_clamp(float depth_bias_clamp) {
+	info.rasterization_state.depth_bias_clamp = depth_bias_clamp;
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::set_rasterization_state_depth_bias_slope_factor(float depth_bias_slope_factor) {
+	info.rasterization_state.depth_bias_slope_factor = depth_bias_slope_factor;
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::set_rasterization_state_line_width(float line_width) {
+	info.rasterization_state.line_width = line_width;
+	return *this;
+}
+
+// Multisample state
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::clear_multisample_state_pNext() {
+	info.multisample_state.pNext_chain.clear();
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::set_multisample_state_sample_count(VkSampleCountFlagBits sample_count) {
+	info.multisample_state.sample_count = sample_count;
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::enable_multisample_state_sample_shading(bool enable_sample_shading) {
+	info.multisample_state.sample_shading = enable_sample_shading ? VK_TRUE : VK_FALSE;
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::set_multisample_state_min_sample_shading(float min_sample_shading) {
+	info.multisample_state.min_sample_shading = min_sample_shading;
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::set_multisample_state_sample_mask(VkSampleMask sample_mask) {
+	info.multisample_state.sample_mask = sample_mask;
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::enable_multisample_state_alpha_to_coverage(bool enable_alpha_to_coverage) {
+	info.multisample_state.alpha_to_coverage = enable_alpha_to_coverage ? VK_TRUE : VK_FALSE;
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::enable_multisample_state_alpha_to_one(bool enable_alpha_to_one) {
+	info.multisample_state.alpha_to_one = enable_alpha_to_one ? VK_TRUE : VK_FALSE;
+	return *this;
+}
+
+// Depth stencil state
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::clear_depth_stencil_state_pNext() {
+	info.depth_stencil_state.pNext_chain.clear();
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::set_depth_stencil_state_flags(VkPipelineDepthStencilStateCreateFlags flags) {
+	info.depth_stencil_state.flags = flags;
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::enable_depth_stencil_depth_testing(bool enable_depth_testing) {
+	info.depth_stencil_state.depth_test = enable_depth_testing ? VK_TRUE : VK_FALSE;
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::enable_depth_stencil_depth_write(bool enable_depth_write) {
+	info.depth_stencil_state.depth_write = enable_depth_write ? VK_TRUE : VK_FALSE;
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::set_depth_stencil_compare_op(VkCompareOp compare_op) {
+	info.depth_stencil_state.depth_compare_operation = compare_op;
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::enable_depth_stencil_depth_bounds_test(bool enable_depth_bounds_test) {
+	info.depth_stencil_state.depth_bounds_test = enable_depth_bounds_test ? VK_TRUE : VK_FALSE;
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::enable_depth_stencil_stencil_test(bool enable_stencil_test) {
+	info.depth_stencil_state.stencil_test = enable_stencil_test ? VK_TRUE : VK_FALSE;
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::set_depth_stencil_front_stencil_op_state(VkStencilOpState front) {
+	info.depth_stencil_state.front_stencil_op_state = front;
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::set_depth_stencil_back_stencil_op_state(VkStencilOpState back) {
+	info.depth_stencil_state.back_stencil_op_state = back;
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::set_depth_stencil_min_depth_bounds(float min_depth_bounds) {
+	info.depth_stencil_state.min_depth_bounds = min_depth_bounds;
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::set_depth_stencil_max_depth_bounds(float max_depth_bounds) {
+	info.depth_stencil_state.max_depth_bounds = max_depth_bounds;
+	return *this;
+}
+
+// Color blend state
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::clear_color_blend_state_pNext() {
+	info.color_blend_state.pNext_chain.clear();
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::set_color_blend_state_flags(VkPipelineColorBlendStateCreateFlags flags) {
+	info.color_blend_state.flags = flags;
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::enable_color_blend_state_logic_op(bool enable_logic_op) {
+	info.color_blend_state.logic_op_enable = enable_logic_op ? VK_TRUE : VK_FALSE;
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::set_color_blend_state_logic_op(VkLogicOp logic_op) {
+	info.color_blend_state.logic_op = logic_op;
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::add_color_blend_state_color_blend_attachment(
+    VkPipelineColorBlendAttachmentState attachment) {
+	info.color_blend_state.attachments.push_back(attachment);
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::add_color_blend_state_color_blend_attachments(
+    std::vector<VkPipelineColorBlendAttachmentState> attachments) {
+	for (auto attachment : attachments)
+		info.color_blend_state.attachments.push_back(attachment);
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::clear_color_blend_state_color_blend_attachments() {
+	info.color_blend_state.attachments.clear();
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::set_color_blend_state_blend_constants(
+    float red, float green, float blue, float alpha) {
+	info.color_blend_state.blend_constants[0] = red;
+	info.color_blend_state.blend_constants[1] = green;
+	info.color_blend_state.blend_constants[2] = blue;
+	info.color_blend_state.blend_constants[3] = alpha;
+	return *this;
+}
+
+// Dynamic state
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::add_dynamic_state(VkDynamicState& dynamic_state) {
+	info.dynamic_state.dynamic_states.push_back(dynamic_state);
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::add_dynamic_states(std::vector<VkDynamicState> dynamic_states) {
+	for (auto& dynamic_state : dynamic_states)
+		info.dynamic_state.dynamic_states.push_back(dynamic_state);
+	return *this;
+}
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::clear_dynamic_states() {
+	info.dynamic_state.dynamic_states.clear();
+	return *this;
+}
+
+// Build
+Result<VkPipeline> GraphicsPipelineBuilder::build() const {
+	if (info.device == VK_NULL_HANDLE) return Error{ GraphicsPipelineError::device_handle_not_provided };
+
+	// Define everything that is not defined within another struct.
+	VkGraphicsPipelineCreateInfo graphics_pipeline_create_info = {};
+	graphics_pipeline_create_info.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
+	detail::setup_pNext_chain(graphics_pipeline_create_info, info.pNext_chain);
+	graphics_pipeline_create_info.flags = info.flags;
+	graphics_pipeline_create_info.layout = info.pipeline_layout;
+	graphics_pipeline_create_info.renderPass = info.renderpass;
+	graphics_pipeline_create_info.subpass = info.subpass;
+	graphics_pipeline_create_info.basePipelineHandle = info.base_pipeline;
+	graphics_pipeline_create_info.basePipelineIndex = static_cast<int32_t>(info.base_pipeline_index);
+
+	// Begin preparing the shader stages to be added to creation struct.
+	std::vector<VkPipelineShaderStageCreateInfo> shader_stages;
+
+	// The inclusion of a stage is determined by the shader module being set.
+	if (info.vertex_shader.shader_module != VK_NULL_HANDLE) {
+		VkPipelineShaderStageCreateInfo vertex_shader = {};
+		vertex_shader.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+		detail::setup_pNext_chain(vertex_shader, info.vertex_shader.pNext_chain);
+		vertex_shader.flags = info.vertex_shader.flags;
+		vertex_shader.stage = VK_SHADER_STAGE_VERTEX_BIT;
+		vertex_shader.module = info.vertex_shader.shader_module;
+		vertex_shader.pName = info.vertex_shader.name;
+		vertex_shader.pSpecializationInfo = &info.vertex_shader.specialization_info;
+
+		shader_stages.push_back(vertex_shader);
+	}
+	if (info.tessellation_control_shader.shader_module != VK_NULL_HANDLE) {
+		VkPipelineShaderStageCreateInfo tessellation_control_shader = {};
+		tessellation_control_shader.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+		detail::setup_pNext_chain(tessellation_control_shader, info.tessellation_control_shader.pNext_chain);
+		tessellation_control_shader.flags = info.tessellation_control_shader.flags;
+		tessellation_control_shader.stage = VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT;
+		tessellation_control_shader.module = info.tessellation_control_shader.shader_module;
+		tessellation_control_shader.pName = info.tessellation_control_shader.name;
+		tessellation_control_shader.pSpecializationInfo = &info.tessellation_control_shader.specialization_info;
+
+		shader_stages.push_back(tessellation_control_shader);
+	}
+	if (info.tessellation_eval_shader.shader_module != VK_NULL_HANDLE) {
+		VkPipelineShaderStageCreateInfo tessellation_eval_shader = {};
+		tessellation_eval_shader.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+		detail::setup_pNext_chain(tessellation_eval_shader, info.tessellation_eval_shader.pNext_chain);
+		tessellation_eval_shader.flags = info.tessellation_eval_shader.flags;
+		tessellation_eval_shader.stage = VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT;
+		tessellation_eval_shader.module = info.tessellation_eval_shader.shader_module;
+		tessellation_eval_shader.pName = info.tessellation_eval_shader.name;
+		tessellation_eval_shader.pSpecializationInfo = &info.tessellation_eval_shader.specialization_info;
+
+		shader_stages.push_back(tessellation_eval_shader);
+	}
+	if (info.geometry_shader.shader_module != VK_NULL_HANDLE) {
+		VkPipelineShaderStageCreateInfo geometry_shader = {};
+		geometry_shader.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+		detail::setup_pNext_chain(geometry_shader, info.geometry_shader.pNext_chain);
+		geometry_shader.flags = info.geometry_shader.flags;
+		geometry_shader.stage = VK_SHADER_STAGE_GEOMETRY_BIT;
+		geometry_shader.module = info.geometry_shader.shader_module;
+		geometry_shader.pName = info.geometry_shader.name;
+		geometry_shader.pSpecializationInfo = &info.geometry_shader.specialization_info;
+
+		shader_stages.push_back(geometry_shader);
+	}
+	if (info.fragment_shader.shader_module != VK_NULL_HANDLE) {
+		VkPipelineShaderStageCreateInfo fragment_shader = {};
+		fragment_shader.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+		detail::setup_pNext_chain(fragment_shader, info.fragment_shader.pNext_chain);
+		fragment_shader.flags = info.fragment_shader.flags;
+		fragment_shader.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
+		fragment_shader.module = info.fragment_shader.shader_module;
+		fragment_shader.pName = info.fragment_shader.name;
+		fragment_shader.pSpecializationInfo = &info.fragment_shader.specialization_info;
+
+		shader_stages.push_back(fragment_shader);
+	}
+
+	// Append any additional shader stages that were defined externally
+	for (auto shader_stage : info.additional_shader_stages)
+		shader_stages.push_back(shader_stage);
+
+	// Append shader stages to the creation struct.
+	graphics_pipeline_create_info.stageCount = static_cast<uint32_t>(shader_stages.size());
+	graphics_pipeline_create_info.pStages = shader_stages.data();
+
+	// Prepare the state structs.
+	// Vertex input
+	VkPipelineVertexInputStateCreateInfo vertex_input = {};
+	vertex_input.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
+	detail::setup_pNext_chain(vertex_input, info.vertex_input.pNext_chain);
+	vertex_input.vertexBindingDescriptionCount = static_cast<uint32_t>(info.vertex_input.binding_descs.size());
+	vertex_input.pVertexBindingDescriptions = info.vertex_input.binding_descs.data();
+	vertex_input.vertexAttributeDescriptionCount = static_cast<uint32_t>(info.vertex_input.attrib_descs.size());
+	vertex_input.pVertexAttributeDescriptions = info.vertex_input.attrib_descs.data();
+
+	// Input Assembly
+	VkPipelineInputAssemblyStateCreateInfo input_assembly = {};
+	input_assembly.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
+	input_assembly.topology = info.input_assembly.topology;
+	input_assembly.primitiveRestartEnable = info.input_assembly.primitiveRestartEnable;
+
+	// Tessellation state
+	VkPipelineTessellationStateCreateInfo tessellation_state = {};
+	tessellation_state.sType = VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_STATE_CREATE_INFO;
+	detail::setup_pNext_chain(tessellation_state, info.tessellation_state.pNext_chain);
+	tessellation_state.patchControlPoints = info.tessellation_state.patch_control_points;
+
+	// Viewport state
+	VkPipelineViewportStateCreateInfo viewport_state = {};
+	viewport_state.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
+	detail::setup_pNext_chain(viewport_state, info.viewport_state.pNext_chain);
+	viewport_state.viewportCount = static_cast<uint32_t>(info.viewport_state.viewports.size());
+	viewport_state.pViewports = info.viewport_state.viewports.data();
+	viewport_state.scissorCount = static_cast<uint32_t>(info.viewport_state.scissors.size());
+	viewport_state.pScissors = info.viewport_state.scissors.data();
+
+	// Rasterization state
+	VkPipelineRasterizationStateCreateInfo rasterization_state = {};
+	rasterization_state.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
+	detail::setup_pNext_chain(rasterization_state, info.rasterization_state.pNext_chain);
+	rasterization_state.depthClampEnable = info.rasterization_state.depth_clamp_enable;
+	rasterization_state.rasterizerDiscardEnable = info.rasterization_state.rasterizer_discard_enable;
+	rasterization_state.polygonMode = info.rasterization_state.polygon_mode;
+	rasterization_state.cullMode = info.rasterization_state.cull_mode_flags;
+	rasterization_state.frontFace = info.rasterization_state.front_face;
+	rasterization_state.depthBiasEnable = info.rasterization_state.depth_bias_enable;
+	rasterization_state.depthBiasConstantFactor = info.rasterization_state.depth_bias_constant_factor;
+	rasterization_state.depthBiasClamp = info.rasterization_state.depth_bias_clamp;
+	rasterization_state.depthBiasSlopeFactor = info.rasterization_state.depth_bias_slope_factor;
+	rasterization_state.lineWidth = info.rasterization_state.line_width;
+
+	// Multisample state
+	VkPipelineMultisampleStateCreateInfo multisample_state = {};
+	multisample_state.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
+	detail::setup_pNext_chain(multisample_state, info.multisample_state.pNext_chain);
+	multisample_state.rasterizationSamples = info.multisample_state.sample_count;
+	multisample_state.sampleShadingEnable = info.multisample_state.sample_shading;
+	multisample_state.minSampleShading = info.multisample_state.min_sample_shading;
+	multisample_state.pSampleMask = &info.multisample_state.sample_mask;
+	multisample_state.alphaToCoverageEnable = info.multisample_state.alpha_to_coverage;
+	multisample_state.alphaToOneEnable = info.multisample_state.alpha_to_one;
+
+	// Depth stencil state
+	VkPipelineDepthStencilStateCreateInfo depth_stencil_state = {};
+	depth_stencil_state.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
+	detail::setup_pNext_chain(depth_stencil_state, info.depth_stencil_state.pNext_chain);
+	depth_stencil_state.flags = info.depth_stencil_state.flags;
+	depth_stencil_state.depthTestEnable = info.depth_stencil_state.depth_test;
+	depth_stencil_state.depthWriteEnable = info.depth_stencil_state.depth_write;
+	depth_stencil_state.depthCompareOp = info.depth_stencil_state.depth_compare_operation;
+	depth_stencil_state.stencilTestEnable = info.depth_stencil_state.stencil_test;
+	depth_stencil_state.front = info.depth_stencil_state.front_stencil_op_state;
+	depth_stencil_state.back = info.depth_stencil_state.back_stencil_op_state;
+	depth_stencil_state.minDepthBounds = info.depth_stencil_state.min_depth_bounds;
+	depth_stencil_state.maxDepthBounds = info.depth_stencil_state.max_depth_bounds;
+
+	// Color blend state
+	VkPipelineColorBlendStateCreateInfo color_blend_state = {};
+	color_blend_state.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
+	detail::setup_pNext_chain(color_blend_state, info.color_blend_state.pNext_chain);
+	color_blend_state.flags = info.color_blend_state.flags;
+	color_blend_state.logicOpEnable = info.color_blend_state.logic_op_enable;
+	color_blend_state.logicOp = info.color_blend_state.logic_op;
+	color_blend_state.attachmentCount = static_cast<uint32_t>(info.color_blend_state.attachments.size());
+	color_blend_state.pAttachments = info.color_blend_state.attachments.data();
+	memcpy(color_blend_state.blendConstants, info.color_blend_state.blend_constants, (sizeof(float) * 4));
+
+	// Dynamic state
+	VkPipelineDynamicStateCreateInfo dynamic_state = {};
+	dynamic_state.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
+	dynamic_state.dynamicStateCount = static_cast<uint32_t>(info.dynamic_state.dynamic_states.size());
+	dynamic_state.pDynamicStates = info.dynamic_state.dynamic_states.data();
+
+	// Append all the state structs to the creation struct.
+	graphics_pipeline_create_info.pVertexInputState = &vertex_input;
+	graphics_pipeline_create_info.pInputAssemblyState = &input_assembly;
+	graphics_pipeline_create_info.pTessellationState = &tessellation_state;
+	graphics_pipeline_create_info.pViewportState = &viewport_state;
+	graphics_pipeline_create_info.pRasterizationState = &rasterization_state;
+	graphics_pipeline_create_info.pMultisampleState = &multisample_state;
+	graphics_pipeline_create_info.pColorBlendState = &color_blend_state;
+	graphics_pipeline_create_info.pDynamicState = &dynamic_state;
+
+	VkPipeline pipeline = VK_NULL_HANDLE;
+	VkResult res = info.graphics_pipeline_create_proc(
+	    info.device, info.pipeline_cache, 1, &graphics_pipeline_create_info, info.allocation_callbacks, &pipeline);
+
+	if (res != VK_SUCCESS) return Error{ GraphicsPipelineError::failed_to_create_graphics_pipeline };
+
+	return pipeline;
+}
+
 } // namespace vkb

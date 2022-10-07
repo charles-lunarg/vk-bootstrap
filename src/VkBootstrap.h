@@ -214,12 +214,22 @@ enum class SwapchainError {
 	failed_create_swapchain_image_views,
 	required_min_image_count_too_low,
 };
+enum class PipelineLayoutError {
+	device_handle_not_provided,
+	failed_to_create_pipeline_layout,
+};
+enum class GraphicsPipelineError {
+	device_handle_not_provided,
+	failed_to_create_graphics_pipeline,
+};
 
 std::error_code make_error_code(InstanceError instance_error);
 std::error_code make_error_code(PhysicalDeviceError physical_device_error);
 std::error_code make_error_code(QueueError queue_error);
 std::error_code make_error_code(DeviceError device_error);
 std::error_code make_error_code(SwapchainError swapchain_error);
+std::error_code make_error_code(PipelineLayoutError pipeline_layout_error);
+std::error_code make_error_code(GraphicsPipelineError graphics_pipeline_error);
 
 const char* to_string_message_severity(VkDebugUtilsMessageSeverityFlagBitsEXT s);
 const char* to_string_message_type(VkDebugUtilsMessageTypeFlagsEXT s);
@@ -229,6 +239,8 @@ const char* to_string(PhysicalDeviceError err);
 const char* to_string(QueueError err);
 const char* to_string(DeviceError err);
 const char* to_string(SwapchainError err);
+const char* to_string(PipelineLayoutError err);
+const char* to_string(GraphicsPipelineError err);
 
 // Gathers useful information about the available vulkan capabilities, like layers and instance
 // extensions. Use this for enabling features conditionally, ie if you would like an extension but
@@ -938,8 +950,7 @@ class SwapchainBuilder {
 	} info;
 };
 
-} // namespace vkb
-
+}; // namespace vkb
 
 namespace std {
 template <> struct is_error_code_enum<vkb::InstanceError> : true_type {};
@@ -947,4 +958,6 @@ template <> struct is_error_code_enum<vkb::PhysicalDeviceError> : true_type {};
 template <> struct is_error_code_enum<vkb::QueueError> : true_type {};
 template <> struct is_error_code_enum<vkb::DeviceError> : true_type {};
 template <> struct is_error_code_enum<vkb::SwapchainError> : true_type {};
+template <> struct is_error_code_enum<vkb::PipelineLayoutError> : true_type {};
+template <> struct is_error_code_enum<vkb::GraphicsPipelineError> : true_type {};
 } // namespace std

@@ -6,6 +6,7 @@
 #include <string>
 
 #include "../tests/common.h"
+#include "VkPipelineBuilder.h"
 
 #include "example_config.h"
 
@@ -13,13 +14,13 @@ const int MAX_FRAMES_IN_FLIGHT = 2;
 
 struct Init {
 	GLFWwindow* window;
-    VulkanLibrary vk_lib;
+	VulkanLibrary vk_lib;
 	vkb::Instance instance;
 	VkSurfaceKHR surface;
 	vkb::Device device;
 	vkb::Swapchain swapchain;
-    //convenience
-    VulkanLibrary* operator->(){ return &vk_lib; }
+	// convenience
+	VulkanLibrary* operator->() { return &vk_lib; }
 };
 
 struct RenderData {
@@ -44,72 +45,72 @@ struct RenderData {
 	size_t current_frame = 0;
 };
 
-int device_initialization (Init& init) {
-	init.window = create_window_glfw ("Vulkan Triangle", true);
+int device_initialization(Init& init) {
+	init.window = create_window_glfw("Vulkan Triangle", true);
 
 	vkb::InstanceBuilder instance_builder;
-	auto instance_ret = instance_builder.use_default_debug_messenger ().request_validation_layers ().build ();
+	auto instance_ret = instance_builder.use_default_debug_messenger().request_validation_layers().build();
 	if (!instance_ret) {
-		std::cout << instance_ret.error ().message () << "\n";
+		std::cout << instance_ret.error().message() << "\n";
 		return -1;
 	}
-	init.instance = instance_ret.value ();
+	init.instance = instance_ret.value();
 
-    init.vk_lib.init(init.instance);
+	init.vk_lib.init(init.instance);
 
-	init.surface = create_surface_glfw (init.instance, init.window);
+	init.surface = create_surface_glfw(init.instance, init.window);
 
-	vkb::PhysicalDeviceSelector phys_device_selector (init.instance);
-	auto phys_device_ret = phys_device_selector.set_surface (init.surface).select ();
+	vkb::PhysicalDeviceSelector phys_device_selector(init.instance);
+	auto phys_device_ret = phys_device_selector.set_surface(init.surface).select();
 	if (!phys_device_ret) {
-		std::cout << phys_device_ret.error ().message () << "\n";
+		std::cout << phys_device_ret.error().message() << "\n";
 		return -1;
 	}
-	vkb::PhysicalDevice physical_device = phys_device_ret.value ();
+	vkb::PhysicalDevice physical_device = phys_device_ret.value();
 
 	vkb::DeviceBuilder device_builder{ physical_device };
-	auto device_ret = device_builder.build ();
+	auto device_ret = device_builder.build();
 	if (!device_ret) {
-		std::cout << device_ret.error ().message () << "\n";
+		std::cout << device_ret.error().message() << "\n";
 		return -1;
 	}
-	init.device = device_ret.value ();
-    init.vk_lib.init(init.device);
+	init.device = device_ret.value();
+	init.vk_lib.init(init.device);
 
 	return 0;
 }
 
-int create_swapchain (Init& init) {
+int create_swapchain(Init& init) {
 
 	vkb::SwapchainBuilder swapchain_builder{ init.device };
-	auto swap_ret = swapchain_builder.set_old_swapchain (init.swapchain).build ();
+	auto swap_ret = swapchain_builder.set_old_swapchain(init.swapchain).build();
 	if (!swap_ret) {
-		std::cout << swap_ret.error ().message () << " " << swap_ret.vk_result () << "\n";
-        return -1;
+		std::cout << swap_ret.error().message() << " " << swap_ret.vk_result() << "\n";
+		return -1;
 	}
-    vkb::destroy_swapchain(init.swapchain);
-	init.swapchain = swap_ret.value ();
+	vkb::destroy_swapchain(init.swapchain);
+	init.swapchain = swap_ret.value();
 	return 0;
 }
 
-int get_queues (Init& init, RenderData& data) {
-	auto gq = init.device.get_queue (vkb::QueueType::graphics);
-	if (!gq.has_value ()) {
-		std::cout << "failed to get graphics queue: " << gq.error ().message () << "\n";
+int get_queues(Init& init, RenderData& data) {
+	auto gq = init.device.get_queue(vkb::QueueType::graphics);
+	if (!gq.has_value()) {
+		std::cout << "failed to get graphics queue: " << gq.error().message() << "\n";
 		return -1;
 	}
-	data.graphics_queue = gq.value ();
+	data.graphics_queue = gq.value();
 
-	auto pq = init.device.get_queue (vkb::QueueType::present);
-	if (!pq.has_value ()) {
-		std::cout << "failed to get present queue: " << pq.error ().message () << "\n";
+	auto pq = init.device.get_queue(vkb::QueueType::present);
+	if (!pq.has_value()) {
+		std::cout << "failed to get present queue: " << pq.error().message() << "\n";
 		return -1;
 	}
-	data.present_queue = pq.value ();
+	data.present_queue = pq.value();
 	return 0;
 }
 
-int create_render_pass (Init& init, RenderData& data) {
+int create_render_pass(Init& init, RenderData& data) {
 	VkAttachmentDescription color_attachment = {};
 	color_attachment.format = init.swapchain.image_format;
 	color_attachment.samples = VK_SAMPLE_COUNT_1_BIT;
@@ -146,51 +147,69 @@ int create_render_pass (Init& init, RenderData& data) {
 	render_pass_info.dependencyCount = 1;
 	render_pass_info.pDependencies = &dependency;
 
-	if (init->vkCreateRenderPass (init.device, &render_pass_info, nullptr, &data.render_pass) != VK_SUCCESS) {
+	if (init->vkCreateRenderPass(init.device, &render_pass_info, nullptr, &data.render_pass) != VK_SUCCESS) {
 		std::cout << "failed to create render pass\n";
 		return -1; // failed to create render pass!
 	}
 	return 0;
 }
 
-std::vector<char> readFile (const std::string& filename) {
-	std::ifstream file (filename, std::ios::ate | std::ios::binary);
+std::vector<char> readFile(const std::string& filename) {
+	std::ifstream file(filename, std::ios::ate | std::ios::binary);
 
-	if (!file.is_open ()) {
-		throw std::runtime_error ("failed to open file!");
+	if (!file.is_open()) {
+		throw std::runtime_error("failed to open file!");
 	}
 
-	size_t file_size = (size_t)file.tellg ();
-	std::vector<char> buffer (file_size);
+	size_t file_size = (size_t)file.tellg();
+	std::vector<char> buffer(file_size);
 
-	file.seekg (0);
-	file.read (buffer.data (), static_cast<std::streamsize> (file_size));
+	file.seekg(0);
+	file.read(buffer.data(), static_cast<std::streamsize>(file_size));
 
-	file.close ();
+	file.close();
 
 	return buffer;
 }
 
-VkShaderModule createShaderModule (Init& init, const std::vector<char>& code) {
+VkShaderModule createShaderModule(Init& init, const std::vector<char>& code) {
 	VkShaderModuleCreateInfo create_info = {};
 	create_info.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
-	create_info.codeSize = code.size ();
-	create_info.pCode = reinterpret_cast<const uint32_t*> (code.data ());
+	create_info.codeSize = code.size();
+	create_info.pCode = reinterpret_cast<const uint32_t*>(code.data());
 
 	VkShaderModule shaderModule;
-	if (init->vkCreateShaderModule (init.device, &create_info, nullptr, &shaderModule) != VK_SUCCESS) {
+	if (init->vkCreateShaderModule(init.device, &create_info, nullptr, &shaderModule) != VK_SUCCESS) {
 		return VK_NULL_HANDLE; // failed to create shader module
 	}
 
 	return shaderModule;
 }
 
-int create_graphics_pipeline (Init& init, RenderData& data) {
+int create_graphics_pipeline_new(Init& init, RenderData& data) {
+	vkb::GraphicsPipelineBuilder gpb{ init.device };
+
 	auto vert_code = readFile(std::string(EXAMPLE_BUILD_DIRECTORY) + "/vert.spv");
 	auto frag_code = readFile(std::string(EXAMPLE_BUILD_DIRECTORY) + "/frag.spv");
 
-	VkShaderModule vert_module = createShaderModule (init, vert_code);
-	VkShaderModule frag_module = createShaderModule (init, frag_code);
+	VkShaderModule vert_module = createShaderModule(init, vert_code);
+	VkShaderModule frag_module = createShaderModule(init, frag_code);
+	if (vert_module == VK_NULL_HANDLE || frag_module == VK_NULL_HANDLE) {
+		std::cout << "failed to create shader module\n";
+		return -1; // failed to create shader modules
+	}
+
+	gpb.set_vertex_shader_entrypoint_name()
+
+	    return 0;
+}
+
+int create_graphics_pipeline(Init& init, RenderData& data) {
+	auto vert_code = readFile(std::string(EXAMPLE_BUILD_DIRECTORY) + "/vert.spv");
+	auto frag_code = readFile(std::string(EXAMPLE_BUILD_DIRECTORY) + "/frag.spv");
+
+	VkShaderModule vert_module = createShaderModule(init, vert_code);
+	VkShaderModule frag_module = createShaderModule(init, frag_code);
 	if (vert_module == VK_NULL_HANDLE || frag_module == VK_NULL_HANDLE) {
 		std::cout << "failed to create shader module\n";
 		return -1; // failed to create shader modules
@@ -255,8 +274,8 @@ int create_graphics_pipeline (Init& init, RenderData& data) {
 	multisampling.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;
 
 	VkPipelineColorBlendAttachmentState colorBlendAttachment = {};
-	colorBlendAttachment.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT |
-	                                      VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
+	colorBlendAttachment.colorWriteMask =
+	    VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
 	colorBlendAttachment.blendEnable = VK_FALSE;
 
 	VkPipelineColorBlendStateCreateInfo color_blending = {};
@@ -275,8 +294,7 @@ int create_graphics_pipeline (Init& init, RenderData& data) {
 	pipeline_layout_info.setLayoutCount = 0;
 	pipeline_layout_info.pushConstantRangeCount = 0;
 
-	if (init->vkCreatePipelineLayout (
-	        init.device, &pipeline_layout_info, nullptr, &data.pipeline_layout) != VK_SUCCESS) {
+	if (init->vkCreatePipelineLayout(init.device, &pipeline_layout_info, nullptr, &data.pipeline_layout) != VK_SUCCESS) {
 		std::cout << "failed to create pipeline layout\n";
 		return -1; // failed to create pipeline layout
 	}
@@ -285,8 +303,8 @@ int create_graphics_pipeline (Init& init, RenderData& data) {
 
 	VkPipelineDynamicStateCreateInfo dynamic_info = {};
 	dynamic_info.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
-	dynamic_info.dynamicStateCount = static_cast<uint32_t> (dynamic_states.size ());
-	dynamic_info.pDynamicStates = dynamic_states.data ();
+	dynamic_info.dynamicStateCount = static_cast<uint32_t>(dynamic_states.size());
+	dynamic_info.pDynamicStates = dynamic_states.data();
 
 	VkGraphicsPipelineCreateInfo pipeline_info = {};
 	pipeline_info.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
@@ -304,24 +322,23 @@ int create_graphics_pipeline (Init& init, RenderData& data) {
 	pipeline_info.subpass = 0;
 	pipeline_info.basePipelineHandle = VK_NULL_HANDLE;
 
-	if (init->vkCreateGraphicsPipelines (
-	        init.device, VK_NULL_HANDLE, 1, &pipeline_info, nullptr, &data.graphics_pipeline) != VK_SUCCESS) {
+	if (init->vkCreateGraphicsPipelines(init.device, VK_NULL_HANDLE, 1, &pipeline_info, nullptr, &data.graphics_pipeline) != VK_SUCCESS) {
 		std::cout << "failed to create pipline\n";
 		return -1; // failed to create graphics pipeline
 	}
 
-	init->vkDestroyShaderModule (init.device, frag_module, nullptr);
-	init->vkDestroyShaderModule (init.device, vert_module, nullptr);
+	init->vkDestroyShaderModule(init.device, frag_module, nullptr);
+	init->vkDestroyShaderModule(init.device, vert_module, nullptr);
 	return 0;
 }
 
-int create_framebuffers (Init& init, RenderData& data) {
-	data.swapchain_images = init.swapchain.get_images ().value ();
-	data.swapchain_image_views = init.swapchain.get_image_views ().value ();
+int create_framebuffers(Init& init, RenderData& data) {
+	data.swapchain_images = init.swapchain.get_images().value();
+	data.swapchain_image_views = init.swapchain.get_image_views().value();
 
-	data.framebuffers.resize (data.swapchain_image_views.size ());
+	data.framebuffers.resize(data.swapchain_image_views.size());
 
-	for (size_t i = 0; i < data.swapchain_image_views.size (); i++) {
+	for (size_t i = 0; i < data.swapchain_image_views.size(); i++) {
 		VkImageView attachments[] = { data.swapchain_image_views[i] };
 
 		VkFramebufferCreateInfo framebuffer_info = {};
@@ -333,43 +350,43 @@ int create_framebuffers (Init& init, RenderData& data) {
 		framebuffer_info.height = init.swapchain.extent.height;
 		framebuffer_info.layers = 1;
 
-		if (init->vkCreateFramebuffer (init.device, &framebuffer_info, nullptr, &data.framebuffers[i]) != VK_SUCCESS) {
+		if (init->vkCreateFramebuffer(init.device, &framebuffer_info, nullptr, &data.framebuffers[i]) != VK_SUCCESS) {
 			return -1; // failed to create framebuffer
 		}
 	}
 	return 0;
 }
 
-int create_command_pool (Init& init, RenderData& data) {
+int create_command_pool(Init& init, RenderData& data) {
 	VkCommandPoolCreateInfo pool_info = {};
 	pool_info.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
-	pool_info.queueFamilyIndex = init.device.get_queue_index (vkb::QueueType::graphics).value ();
+	pool_info.queueFamilyIndex = init.device.get_queue_index(vkb::QueueType::graphics).value();
 
-	if (init->vkCreateCommandPool (init.device, &pool_info, nullptr, &data.command_pool) != VK_SUCCESS) {
+	if (init->vkCreateCommandPool(init.device, &pool_info, nullptr, &data.command_pool) != VK_SUCCESS) {
 		std::cout << "failed to create command pool\n";
 		return -1; // failed to create command pool
 	}
 	return 0;
 }
 
-int create_command_buffers (Init& init, RenderData& data) {
-	data.command_buffers.resize (data.framebuffers.size ());
+int create_command_buffers(Init& init, RenderData& data) {
+	data.command_buffers.resize(data.framebuffers.size());
 
 	VkCommandBufferAllocateInfo allocInfo = {};
 	allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
 	allocInfo.commandPool = data.command_pool;
 	allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-	allocInfo.commandBufferCount = (uint32_t)data.command_buffers.size ();
+	allocInfo.commandBufferCount = (uint32_t)data.command_buffers.size();
 
-	if (init->vkAllocateCommandBuffers (init.device, &allocInfo, data.command_buffers.data ()) != VK_SUCCESS) {
+	if (init->vkAllocateCommandBuffers(init.device, &allocInfo, data.command_buffers.data()) != VK_SUCCESS) {
 		return -1; // failed to allocate command buffers;
 	}
 
-	for (size_t i = 0; i < data.command_buffers.size (); i++) {
+	for (size_t i = 0; i < data.command_buffers.size(); i++) {
 		VkCommandBufferBeginInfo begin_info = {};
 		begin_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 
-		if (init->vkBeginCommandBuffer (data.command_buffers[i], &begin_info) != VK_SUCCESS) {
+		if (init->vkBeginCommandBuffer(data.command_buffers[i], &begin_info) != VK_SUCCESS) {
 			return -1; // failed to begin recording command buffer
 		}
 
@@ -395,18 +412,18 @@ int create_command_buffers (Init& init, RenderData& data) {
 		scissor.offset = { 0, 0 };
 		scissor.extent = init.swapchain.extent;
 
-		init->vkCmdSetViewport (data.command_buffers[i], 0, 1, &viewport);
-		init->vkCmdSetScissor (data.command_buffers[i], 0, 1, &scissor);
+		init->vkCmdSetViewport(data.command_buffers[i], 0, 1, &viewport);
+		init->vkCmdSetScissor(data.command_buffers[i], 0, 1, &scissor);
 
-		init->vkCmdBeginRenderPass (data.command_buffers[i], &render_pass_info, VK_SUBPASS_CONTENTS_INLINE);
+		init->vkCmdBeginRenderPass(data.command_buffers[i], &render_pass_info, VK_SUBPASS_CONTENTS_INLINE);
 
-		init->vkCmdBindPipeline (data.command_buffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, data.graphics_pipeline);
+		init->vkCmdBindPipeline(data.command_buffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, data.graphics_pipeline);
 
-		init->vkCmdDraw (data.command_buffers[i], 3, 1, 0, 0);
+		init->vkCmdDraw(data.command_buffers[i], 3, 1, 0, 0);
 
-		init->vkCmdEndRenderPass (data.command_buffers[i]);
+		init->vkCmdEndRenderPass(data.command_buffers[i]);
 
-		if (init->vkEndCommandBuffer (data.command_buffers[i]) != VK_SUCCESS) {
+		if (init->vkEndCommandBuffer(data.command_buffers[i]) != VK_SUCCESS) {
 			std::cout << "failed to record command buffer\n";
 			return -1; // failed to record command buffer!
 		}
@@ -414,11 +431,11 @@ int create_command_buffers (Init& init, RenderData& data) {
 	return 0;
 }
 
-int create_sync_objects (Init& init, RenderData& data) {
-	data.available_semaphores.resize (MAX_FRAMES_IN_FLIGHT);
-	data.finished_semaphore.resize (MAX_FRAMES_IN_FLIGHT);
-	data.in_flight_fences.resize (MAX_FRAMES_IN_FLIGHT);
-	data.image_in_flight.resize (init.swapchain.image_count, VK_NULL_HANDLE);
+int create_sync_objects(Init& init, RenderData& data) {
+	data.available_semaphores.resize(MAX_FRAMES_IN_FLIGHT);
+	data.finished_semaphore.resize(MAX_FRAMES_IN_FLIGHT);
+	data.in_flight_fences.resize(MAX_FRAMES_IN_FLIGHT);
+	data.image_in_flight.resize(init.swapchain.image_count, VK_NULL_HANDLE);
 
 	VkSemaphoreCreateInfo semaphore_info = {};
 	semaphore_info.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
@@ -428,9 +445,9 @@ int create_sync_objects (Init& init, RenderData& data) {
 	fence_info.flags = VK_FENCE_CREATE_SIGNALED_BIT;
 
 	for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
-		if (init->vkCreateSemaphore (init.device, &semaphore_info, nullptr, &data.available_semaphores[i]) != VK_SUCCESS ||
-		    init->vkCreateSemaphore (init.device, &semaphore_info, nullptr, &data.finished_semaphore[i]) != VK_SUCCESS ||
-		    init->vkCreateFence (init.device, &fence_info, nullptr, &data.in_flight_fences[i]) != VK_SUCCESS) {
+		if (init->vkCreateSemaphore(init.device, &semaphore_info, nullptr, &data.available_semaphores[i]) != VK_SUCCESS ||
+		    init->vkCreateSemaphore(init.device, &semaphore_info, nullptr, &data.finished_semaphore[i]) != VK_SUCCESS ||
+		    init->vkCreateFence(init.device, &fence_info, nullptr, &data.in_flight_fences[i]) != VK_SUCCESS) {
 			std::cout << "failed to create sync objects\n";
 			return -1; // failed to create synchronization objects for a frame
 		}
@@ -438,44 +455,40 @@ int create_sync_objects (Init& init, RenderData& data) {
 	return 0;
 }
 
-int recreate_swapchain (Init& init, RenderData& data) {
-	init->vkDeviceWaitIdle (init.device);
+int recreate_swapchain(Init& init, RenderData& data) {
+	init->vkDeviceWaitIdle(init.device);
 
-	init->vkDestroyCommandPool (init.device, data.command_pool, nullptr);
+	init->vkDestroyCommandPool(init.device, data.command_pool, nullptr);
 
 	for (auto framebuffer : data.framebuffers) {
-		init->vkDestroyFramebuffer (init.device, framebuffer, nullptr);
+		init->vkDestroyFramebuffer(init.device, framebuffer, nullptr);
 	}
 
-	init.swapchain.destroy_image_views (data.swapchain_image_views);
+	init.swapchain.destroy_image_views(data.swapchain_image_views);
 
-    if (0 != create_swapchain (init)) return -1;
-	if (0 != create_framebuffers (init, data)) return -1;
-	if (0 != create_command_pool (init, data)) return -1;
-	if (0 != create_command_buffers (init, data)) return -1;
+	if (0 != create_swapchain(init)) return -1;
+	if (0 != create_framebuffers(init, data)) return -1;
+	if (0 != create_command_pool(init, data)) return -1;
+	if (0 != create_command_buffers(init, data)) return -1;
 	return 0;
 }
 
-int draw_frame (Init& init, RenderData& data) {
-	init->vkWaitForFences (init.device, 1, &data.in_flight_fences[data.current_frame], VK_TRUE, UINT64_MAX);
+int draw_frame(Init& init, RenderData& data) {
+	init->vkWaitForFences(init.device, 1, &data.in_flight_fences[data.current_frame], VK_TRUE, UINT64_MAX);
 
 	uint32_t image_index = 0;
-	VkResult result = init->vkAcquireNextImageKHR (init.device,
-	    init.swapchain,
-	    UINT64_MAX,
-	    data.available_semaphores[data.current_frame],
-	    VK_NULL_HANDLE,
-	    &image_index);
+	VkResult result = init->vkAcquireNextImageKHR(
+	    init.device, init.swapchain, UINT64_MAX, data.available_semaphores[data.current_frame], VK_NULL_HANDLE, &image_index);
 
 	if (result == VK_ERROR_OUT_OF_DATE_KHR) {
-		return recreate_swapchain (init, data);
+		return recreate_swapchain(init, data);
 	} else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
 		std::cout << "failed to acquire swapchain image. Error " << result << "\n";
 		return -1;
 	}
 
 	if (data.image_in_flight[image_index] != VK_NULL_HANDLE) {
-		init->vkWaitForFences (init.device, 1, &data.image_in_flight[image_index], VK_TRUE, UINT64_MAX);
+		init->vkWaitForFences(init.device, 1, &data.image_in_flight[image_index], VK_TRUE, UINT64_MAX);
 	}
 	data.image_in_flight[image_index] = data.in_flight_fences[data.current_frame];
 
@@ -495,9 +508,9 @@ int draw_frame (Init& init, RenderData& data) {
 	submitInfo.signalSemaphoreCount = 1;
 	submitInfo.pSignalSemaphores = signal_semaphores;
 
-	init->vkResetFences (init.device, 1, &data.in_flight_fences[data.current_frame]);
+	init->vkResetFences(init.device, 1, &data.in_flight_fences[data.current_frame]);
 
-	if (init->vkQueueSubmit (data.graphics_queue, 1, &submitInfo, data.in_flight_fences[data.current_frame]) != VK_SUCCESS) {
+	if (init->vkQueueSubmit(data.graphics_queue, 1, &submitInfo, data.in_flight_fences[data.current_frame]) != VK_SUCCESS) {
 		std::cout << "failed to submit draw command buffer\n";
 		return -1; //"failed to submit draw command buffer
 	}
@@ -514,9 +527,9 @@ int draw_frame (Init& init, RenderData& data) {
 
 	present_info.pImageIndices = &image_index;
 
-	result = init->vkQueuePresentKHR (data.present_queue, &present_info);
+	result = init->vkQueuePresentKHR(data.present_queue, &present_info);
 	if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR) {
-		return recreate_swapchain (init, data);
+		return recreate_swapchain(init, data);
 	} else if (result != VK_SUCCESS) {
 		std::cout << "failed to present swapchain image\n";
 		return -1;
@@ -526,56 +539,56 @@ int draw_frame (Init& init, RenderData& data) {
 	return 0;
 }
 
-void cleanup (Init& init, RenderData& data) {
+void cleanup(Init& init, RenderData& data) {
 	for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
-		init->vkDestroySemaphore (init.device, data.finished_semaphore[i], nullptr);
-		init->vkDestroySemaphore (init.device, data.available_semaphores[i], nullptr);
-		init->vkDestroyFence (init.device, data.in_flight_fences[i], nullptr);
+		init->vkDestroySemaphore(init.device, data.finished_semaphore[i], nullptr);
+		init->vkDestroySemaphore(init.device, data.available_semaphores[i], nullptr);
+		init->vkDestroyFence(init.device, data.in_flight_fences[i], nullptr);
 	}
 
-	init->vkDestroyCommandPool (init.device, data.command_pool, nullptr);
+	init->vkDestroyCommandPool(init.device, data.command_pool, nullptr);
 
 	for (auto framebuffer : data.framebuffers) {
-		init->vkDestroyFramebuffer (init.device, framebuffer, nullptr);
+		init->vkDestroyFramebuffer(init.device, framebuffer, nullptr);
 	}
 
-	init->vkDestroyPipeline (init.device, data.graphics_pipeline, nullptr);
-	init->vkDestroyPipelineLayout (init.device, data.pipeline_layout, nullptr);
-	init->vkDestroyRenderPass (init.device, data.render_pass, nullptr);
+	init->vkDestroyPipeline(init.device, data.graphics_pipeline, nullptr);
+	init->vkDestroyPipelineLayout(init.device, data.pipeline_layout, nullptr);
+	init->vkDestroyRenderPass(init.device, data.render_pass, nullptr);
 
-	init.swapchain.destroy_image_views (data.swapchain_image_views);
+	init.swapchain.destroy_image_views(data.swapchain_image_views);
 
-	vkb::destroy_swapchain (init.swapchain);
-	vkb::destroy_device (init.device);
-    vkb::destroy_surface(init.instance, init.surface);
-	vkb::destroy_instance (init.instance);
-	destroy_window_glfw (init.window);
+	vkb::destroy_swapchain(init.swapchain);
+	vkb::destroy_device(init.device);
+	vkb::destroy_surface(init.instance, init.surface);
+	vkb::destroy_instance(init.instance);
+	destroy_window_glfw(init.window);
 }
 
-int main () {
+int main() {
 	Init init;
 	RenderData render_data;
 
-	if (0 != device_initialization (init)) return -1;
-	if (0 != create_swapchain (init)) return -1;
-	if (0 != get_queues (init, render_data)) return -1;
-	if (0 != create_render_pass (init, render_data)) return -1;
-	if (0 != create_graphics_pipeline (init, render_data)) return -1;
-	if (0 != create_framebuffers (init, render_data)) return -1;
-	if (0 != create_command_pool (init, render_data)) return -1;
-	if (0 != create_command_buffers (init, render_data)) return -1;
-	if (0 != create_sync_objects (init, render_data)) return -1;
+	if (0 != device_initialization(init)) return -1;
+	if (0 != create_swapchain(init)) return -1;
+	if (0 != get_queues(init, render_data)) return -1;
+	if (0 != create_render_pass(init, render_data)) return -1;
+	if (0 != create_graphics_pipeline(init, render_data)) return -1;
+	if (0 != create_framebuffers(init, render_data)) return -1;
+	if (0 != create_command_pool(init, render_data)) return -1;
+	if (0 != create_command_buffers(init, render_data)) return -1;
+	if (0 != create_sync_objects(init, render_data)) return -1;
 
-	while (!glfwWindowShouldClose (init.window)) {
-		glfwPollEvents ();
-		int res = draw_frame (init, render_data);
+	while (!glfwWindowShouldClose(init.window)) {
+		glfwPollEvents();
+		int res = draw_frame(init, render_data);
 		if (res != 0) {
 			std::cout << "failed to draw frame \n";
 			return -1;
 		}
 	}
-	init->vkDeviceWaitIdle (init.device);
+	init->vkDeviceWaitIdle(init.device);
 
-	cleanup (init, render_data);
+	cleanup(init, render_data);
 	return 0;
 }

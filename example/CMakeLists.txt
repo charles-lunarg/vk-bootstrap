@@ -7,6 +7,8 @@ function(add_vulkan_example name)
             vk-bootstrap-compiler-warnings
             Vulkan::Headers)
     target_include_directories(vk-bootstrap-${name} PRIVATE ${CMAKE_CURRENT_BINARY_DIR}) # path to build directory for shaders
+    target_compile_features(vk-bootstrap-${name} PUBLIC cxx_std_17)
+
 endfunction()
 
 add_vulkan_example(basic_usage)

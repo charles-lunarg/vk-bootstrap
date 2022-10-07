@@ -3,15 +3,36 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <thread>
+#include <chrono>
+#include <mutex>
+#include <atomic>
+#include <condition_variable>
+
+#include <cmath>
 
 #include <vulkan/vulkan_core.h>
 #include <GLFW/glfw3.h>
 
 #include <VkBootstrap.h>
+#include <VkSwapchainManager.h>
 
 #include "example_config.h"
 
-const int MAX_FRAMES_IN_FLIGHT = 2;
+const size_t MAX_FRAMES_IN_FLIGHT = 2; // number of command buffers and fences
+std::atomic_bool is_running;
+std::atomic_bool should_resize;
+
+std::mutex main_mutex;
+
+std::mutex render_wait_mutex;
+std::condition_variable render_wait_condition_variable;
+
+const bool run_multithreaded = true;
+const bool use_refresh_callback = true; // should be true for WindowsOS
+const bool use_validation_layer = true; // enabling layers can cause some stuttering
+
+enum class DrawFrameRet { success, fail, out_of_date };
 
 struct Init {
     GLFWwindow* window;
@@ -20,25 +41,20 @@ struct Init {
     VkSurfaceKHR surface;
     vkb::Device device;
     vkb::DispatchTable disp;
-    vkb::Swapchain swapchain;
 };
 
 struct FrameData {
-    VkFence fence_inflight;
-    VkSemaphore semaphore_available;
-    VkCommandBuffer command_buffer;
-};
-
-struct SwapchainImageData {
-    VkSemaphore semaphore_finished;
-    VkImage swapchain_image;
-    VkImageView swapchain_image_view;
-    VkFramebuffer framebuffer;
+    VkFence fence_inflight{};
+    VkCommandBuffer command_buffer{};
 };
 
 struct RenderData {
+    Init* init; // Needed for the glfw callback
+
     VkQueue graphics_queue;
     VkQueue present_queue;
+
+    VkPresentModeKHR present_mode = VK_PRESENT_MODE_FIFO_RELAXED_KHR;
 
     VkRenderPass render_pass;
     VkPipelineLayout pipeline_layout;
@@ -47,11 +63,19 @@ struct RenderData {
     VkCommandPool command_pool;
     std::vector<FrameData> frame_data;
 
-    std::vector<SwapchainImageData> swapchain_image_data;
+
+    vkb::SwapchainManager swapchain_manager;
+    vkb::SwapchainInfo swapchain_info;
+    vkb::SwapchainResources swapchain_resources;
+    std::vector<VkFramebuffer> framebuffers;
 
     size_t current_frame = 0;
-    uint32_t current_swapchain_image = 0;
+    double current_time = 0;
 };
+
+// Forward declarations that we can give to GLFW
+void glfw_resize_callback(GLFWwindow* window, int width, int height);
+void glfw_refresh_callback(GLFWwindow* window);
 
 GLFWwindow* create_window_glfw(const char* window_name = "", bool resize = true) {
     glfwInit();
@@ -82,11 +106,34 @@ VkSurfaceKHR create_surface_glfw(VkInstance instance, GLFWwindow* window, VkAllo
     return surface;
 }
 
-int device_initialization(Init& init) {
+inline VKAPI_ATTR VkBool32 VKAPI_CALL debug_callback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
+    VkDebugUtilsMessageTypeFlagsEXT messageType,
+    const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
+    void*) {
+    auto ms = vkb::to_string_message_severity(messageSeverity);
+    auto mt = vkb::to_string_message_type(messageType);
+    std::cerr << "[" << ms << ": " << mt << "]\n" << pCallbackData->pMessage << "\n";
+
+    return VK_FALSE; // Applications must return false here
+}
+
+
+int device_initialization(Init& init, RenderData& data) {
     init.window = create_window_glfw("Vulkan Triangle", true);
 
+    if (!init.window) {
+
+        std::cout << "Failed to create glfw window" << "\n";
+        return -1;
+    }
+
+    glfwSetWindowUserPointer(init.window, &data);
+    glfwSetWindowSizeCallback(init.window, glfw_resize_callback);
+    if (use_refresh_callback) glfwSetWindowRefreshCallback(init.window, glfw_refresh_callback);
+
     vkb::InstanceBuilder instance_builder;
-    auto instance_ret = instance_builder.use_default_debug_messenger().request_validation_layers().build();
+    auto instance_ret =
+        instance_builder.set_debug_callback(debug_callback).request_validation_layers(use_validation_layer).build();
     if (!instance_ret) {
         std::cout << instance_ret.error().message() << "\n";
         return -1;
@@ -126,19 +173,16 @@ int device_initialization(Init& init) {
 
     init.disp = init.device.make_table();
 
-    return 0;
-}
-
-int create_swapchain(Init& init) {
-
-    vkb::SwapchainBuilder swapchain_builder{ init.device };
-    auto swap_ret = swapchain_builder.set_old_swapchain(init.swapchain).build();
-    if (!swap_ret) {
-        std::cout << swap_ret.error().message() << " " << swap_ret.vk_result() << "\n";
+    auto swapchain_manager_ret = vkb::SwapchainManager::create(
+        vkb::SwapchainBuilder{ init.device }.set_desired_present_mode(data.present_mode).set_desired_extent(512, 512));
+    if (!swapchain_manager_ret) {
+        std::cout << swapchain_manager_ret.error().message() << "\n";
         return -1;
     }
-    vkb::destroy_swapchain(init.swapchain);
-    init.swapchain = swap_ret.value();
+    data.swapchain_manager = std::move(swapchain_manager_ret.value());
+    data.swapchain_resources = data.swapchain_manager.get_swapchain_resources().value();
+    data.swapchain_info = data.swapchain_manager.get_info().value();
+
     return 0;
 }
 
@@ -161,7 +205,7 @@ int get_queues(Init& init, RenderData& data) {
 
 int create_render_pass(Init& init, RenderData& data) {
     VkAttachmentDescription color_attachment = {};
-    color_attachment.format = init.swapchain.image_format;
+    color_attachment.format = data.swapchain_info.image_format;
     color_attachment.samples = VK_SAMPLE_COUNT_1_BIT;
     color_attachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
     color_attachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
@@ -273,14 +317,14 @@ int create_graphics_pipeline(Init& init, RenderData& data) {
     VkViewport viewport = {};
     viewport.x = 0.0f;
     viewport.y = 0.0f;
-    viewport.width = (float)init.swapchain.extent.width;
-    viewport.height = (float)init.swapchain.extent.height;
+    viewport.width = (float)data.swapchain_info.extent.width;
+    viewport.height = (float)data.swapchain_info.extent.height;
     viewport.minDepth = 0.0f;
     viewport.maxDepth = 1.0f;
 
     VkRect2D scissor = {};
     scissor.offset = { 0, 0 };
-    scissor.extent = init.swapchain.extent;
+    scissor.extent = data.swapchain_info.extent;
 
     VkPipelineViewportStateCreateInfo viewport_state = {};
     viewport_state.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
@@ -392,16 +436,11 @@ int create_frame_data(Init& init, RenderData& data) {
             return -1; // failed to allocate command buffers;
         }
 
-        VkSemaphoreCreateInfo semaphore_info = {};
-        semaphore_info.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
-
         VkFenceCreateInfo fence_info = {};
         fence_info.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
         fence_info.flags = VK_FENCE_CREATE_SIGNALED_BIT;
 
-
-        if (init.disp.createSemaphore(&semaphore_info, nullptr, &frame.semaphore_available) != VK_SUCCESS ||
-            init.disp.createFence(&fence_info, nullptr, &frame.fence_inflight) != VK_SUCCESS) {
+        if (init.disp.createFence(&fence_info, nullptr, &frame.fence_inflight) != VK_SUCCESS) {
             std::cout << "failed to create sync objects\n";
             return -1; // failed to create synchronization objects for a frame
         }
@@ -410,44 +449,30 @@ int create_frame_data(Init& init, RenderData& data) {
     return 0;
 }
 
-int create_swapchain_image_data(Init& init, RenderData& data) {
-    data.swapchain_image_data.resize(init.swapchain.image_count);
+int create_framebuffers(Init& init, RenderData& data) {
 
-    auto image_and_views = init.swapchain.get_images_and_image_views();
+    data.framebuffers.resize(data.swapchain_info.image_count);
 
-    for (uint32_t i = 0; i < init.swapchain.image_count; i++) {
-        data.swapchain_image_data[i].swapchain_image = image_and_views->first[i];
-        data.swapchain_image_data[i].swapchain_image_view = image_and_views->second[i];
-    }
-
-    for (auto& swapchain_image_data : data.swapchain_image_data) {
-        VkImageView attachments[] = { swapchain_image_data.swapchain_image_view };
+    for (uint32_t i = 0; i < data.framebuffers.size(); i++) {
+        VkImageView attachments[] = { data.swapchain_resources.image_views[i] };
 
         VkFramebufferCreateInfo framebuffer_info = {};
         framebuffer_info.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
         framebuffer_info.renderPass = data.render_pass;
         framebuffer_info.attachmentCount = 1;
         framebuffer_info.pAttachments = attachments;
-        framebuffer_info.width = init.swapchain.extent.width;
-        framebuffer_info.height = init.swapchain.extent.height;
+        framebuffer_info.width = data.swapchain_info.extent.width;
+        framebuffer_info.height = data.swapchain_info.extent.height;
         framebuffer_info.layers = 1;
 
-        if (init.disp.createFramebuffer(&framebuffer_info, nullptr, &swapchain_image_data.framebuffer) != VK_SUCCESS) {
+        if (init.disp.createFramebuffer(&framebuffer_info, nullptr, &data.framebuffers[i]) != VK_SUCCESS) {
             return -1; // failed to create framebuffer
-        }
-
-        VkSemaphoreCreateInfo semaphore_info = {};
-        semaphore_info.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
-
-        if (init.disp.createSemaphore(&semaphore_info, nullptr, &swapchain_image_data.semaphore_finished) != VK_SUCCESS) {
-            std::cout << "failed to create sync objects\n";
-            return -1; // failed to create synchronization objects for a frame
         }
     }
     return 0;
 }
 
-int record_command_buffer(Init& init, RenderData& data) {
+int record_command_buffer(Init& init, RenderData& data, uint32_t image_index) {
     auto& current_frame_data = data.frame_data.at(data.current_frame);
 
     VkCommandBufferBeginInfo begin_info = {};
@@ -460,24 +485,28 @@ int record_command_buffer(Init& init, RenderData& data) {
     VkRenderPassBeginInfo render_pass_info = {};
     render_pass_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
     render_pass_info.renderPass = data.render_pass;
-    render_pass_info.framebuffer = data.swapchain_image_data.at(data.current_swapchain_image).framebuffer;
+    render_pass_info.framebuffer = data.framebuffers[image_index];
     render_pass_info.renderArea.offset = { 0, 0 };
-    render_pass_info.renderArea.extent = init.swapchain.extent;
-    VkClearValue clearColor{ { { 0.0f, 0.0f, 0.0f, 1.0f } } };
+    render_pass_info.renderArea.extent = data.swapchain_info.extent;
+
+    float x = static_cast<float>(std::sin(data.current_time * 1.5) * 0.5 + 0.5);
+    float z = static_cast<float>(std::cos(data.current_time * 1.5) * 0.5 + 0.5);
+
+    VkClearValue clearColor{ { { x, 0.0f, z, 1.0f } } };
     render_pass_info.clearValueCount = 1;
     render_pass_info.pClearValues = &clearColor;
 
     VkViewport viewport = {};
     viewport.x = 0.0f;
     viewport.y = 0.0f;
-    viewport.width = (float)init.swapchain.extent.width;
-    viewport.height = (float)init.swapchain.extent.height;
+    viewport.width = (float)data.swapchain_info.extent.width;
+    viewport.height = (float)data.swapchain_info.extent.height;
     viewport.minDepth = 0.0f;
     viewport.maxDepth = 1.0f;
 
     VkRect2D scissor = {};
     scissor.offset = { 0, 0 };
-    scissor.extent = init.swapchain.extent;
+    scissor.extent = data.swapchain_info.extent;
 
     init.disp.cmdSetViewport(current_frame_data.command_buffer, 0, 1, &viewport);
     init.disp.cmdSetScissor(current_frame_data.command_buffer, 0, 1, &scissor);
@@ -499,43 +528,46 @@ int record_command_buffer(Init& init, RenderData& data) {
 }
 
 int recreate_swapchain(Init& init, RenderData& data) {
-    init.disp.deviceWaitIdle();
-
-    for (auto swapchain_image_data : data.swapchain_image_data) {
-        init.disp.destroyFramebuffer(swapchain_image_data.framebuffer, nullptr);
-        init.disp.destroyImageView(swapchain_image_data.swapchain_image_view, nullptr);
-        init.disp.destroySemaphore(swapchain_image_data.semaphore_finished, nullptr);
+    data.swapchain_manager.destroy_framebuffers(data.framebuffers.size(), data.framebuffers.data());
+    auto ret = data.swapchain_manager.recreate();
+    if (!ret) {
+        std::cout << "failed to recreate swapchain\n";
+        return -1;
     }
-
-    if (0 != create_swapchain(init)) return -1;
-    if (0 != create_swapchain_image_data(init, data)) return -1;
+    data.swapchain_info = ret.value();
+    data.swapchain_resources = data.swapchain_manager.get_swapchain_resources().value();
+    if (0 != create_framebuffers(init, data)) return -1;
     return 0;
 }
 
-int draw_frame(Init& init, RenderData& data) {
+DrawFrameRet draw_frame(Init& init, RenderData& data) {
+    data.current_time = glfwGetTime();
+
     auto& current_frame = data.frame_data.at(data.current_frame);
 
     init.disp.waitForFences(1, &current_frame.fence_inflight, VK_TRUE, UINT64_MAX);
-    init.disp.resetFences(1, &current_frame.fence_inflight);
 
-    VkResult result = init.disp.acquireNextImageKHR(
-        init.swapchain, UINT64_MAX, current_frame.semaphore_available, VK_NULL_HANDLE, &data.current_swapchain_image);
+    auto acquire_ret = data.swapchain_manager.acquire_image();
 
-    if (result == VK_ERROR_OUT_OF_DATE_KHR) {
-        return recreate_swapchain(init, data);
-    } else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
-        std::cout << "failed to acquire swapchain image. Error " << result << "\n";
-        return -1;
+    if (acquire_ret.matches_error(vkb::SwapchainManagerError::swapchain_out_of_date)) {
+        return DrawFrameRet::out_of_date;
+    } else if (!acquire_ret.has_value()) {
+        std::cout << "failed to acquire swapchain image\n";
+        return DrawFrameRet::fail;
     }
 
-    auto& current_swapchain_image = data.swapchain_image_data.at(data.current_swapchain_image);
+    vkb::SwapchainAcquireInfo acquire_info = acquire_ret.value();
+    if (should_resize) {
+        // data.swapchain_manager.cancel_acquire_frame();
+        return DrawFrameRet::out_of_date;
+    }
 
-    if (0 != record_command_buffer(init, data)) return -1;
+    if (0 != record_command_buffer(init, data, acquire_info.image_index)) return DrawFrameRet::fail;
 
     VkSubmitInfo submitInfo = {};
     submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 
-    VkSemaphore wait_semaphores[] = { current_frame.semaphore_available };
+    VkSemaphore wait_semaphores[] = { acquire_info.wait_semaphore };
     VkPipelineStageFlags wait_stages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
     submitInfo.waitSemaphoreCount = 1;
     submitInfo.pWaitSemaphores = wait_semaphores;
@@ -544,47 +576,38 @@ int draw_frame(Init& init, RenderData& data) {
     submitInfo.commandBufferCount = 1;
     submitInfo.pCommandBuffers = &current_frame.command_buffer;
 
-    VkSemaphore signal_semaphores[] = { current_swapchain_image.semaphore_finished };
+    VkSemaphore signal_semaphores[] = { acquire_info.signal_semaphore };
     submitInfo.signalSemaphoreCount = 1;
     submitInfo.pSignalSemaphores = signal_semaphores;
 
+    init.disp.resetFences(1, &current_frame.fence_inflight);
+
     if (init.disp.queueSubmit(data.graphics_queue, 1, &submitInfo, current_frame.fence_inflight) != VK_SUCCESS) {
         std::cout << "failed to submit draw command buffer\n";
-        return -1; //"failed to submit draw command buffer
-    }
-
-    VkPresentInfoKHR present_info = {};
-    present_info.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
-
-    present_info.waitSemaphoreCount = 1;
-    present_info.pWaitSemaphores = signal_semaphores;
-
-    VkSwapchainKHR swapChains[] = { init.swapchain };
-    present_info.swapchainCount = 1;
-    present_info.pSwapchains = swapChains;
-
-    present_info.pImageIndices = &data.current_swapchain_image;
-
-    result = init.disp.queuePresentKHR(data.present_queue, &present_info);
-    if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR) {
-        return recreate_swapchain(init, data);
-    } else if (result != VK_SUCCESS) {
-        std::cout << "failed to present swapchain image\n";
-        return -1;
+        return DrawFrameRet::fail; //"failed to submit draw command buffer
     }
 
     data.current_frame = (data.current_frame + 1) % MAX_FRAMES_IN_FLIGHT;
-    return 0;
+
+    // No need to cancel, if a resize has started, then present will bail
+    auto present_ret = data.swapchain_manager.present();
+
+    if (present_ret.matches_error(vkb::SwapchainManagerError::swapchain_out_of_date)) {
+        return DrawFrameRet::out_of_date;
+    } else if (!present_ret) {
+        std::cout << "failed to present swapchain image\n";
+        return DrawFrameRet::fail;
+    }
+
+    return DrawFrameRet::success;
 }
 
 void cleanup(Init& init, RenderData& data) {
-    for (auto& swapchain_image_data : data.swapchain_image_data) {
-        init.disp.destroySemaphore(swapchain_image_data.semaphore_finished, nullptr);
-        init.disp.destroyImageView(swapchain_image_data.swapchain_image_view, nullptr);
-        init.disp.destroyFramebuffer(swapchain_image_data.framebuffer, nullptr);
+
+    for (auto& framebuffer : data.framebuffers) {
+        init.disp.destroyFramebuffer(framebuffer, nullptr);
     }
     for (auto& frame_data : data.frame_data) {
-        init.disp.destroySemaphore(frame_data.semaphore_available, nullptr);
         init.disp.destroyFence(frame_data.fence_inflight, nullptr);
     }
 
@@ -594,35 +617,147 @@ void cleanup(Init& init, RenderData& data) {
     init.disp.destroyPipelineLayout(data.pipeline_layout, nullptr);
     init.disp.destroyRenderPass(data.render_pass, nullptr);
 
-    vkb::destroy_swapchain(init.swapchain);
+    data.swapchain_manager.destroy();
+
     vkb::destroy_device(init.device);
     vkb::destroy_surface(init.instance, init.surface);
     vkb::destroy_instance(init.instance);
     destroy_window_glfw(init.window);
 }
+void render_loop(Init* init, RenderData* data) {
+    while (is_running) {
+        std::unique_lock<std::mutex> lg(main_mutex, std::try_to_lock);
+        if (lg.owns_lock()) {
+            switch (draw_frame(*init, *data)) {
+                case (DrawFrameRet::success):
+                    break;
+                case (DrawFrameRet::out_of_date): {
+                    lg.unlock();
+                    std::unique_lock<std::mutex> ulg(render_wait_mutex);
+                    render_wait_condition_variable.wait(ulg);
+                    break;
+                }
+                default:
+                case (DrawFrameRet::fail):
+                    is_running = false;
+                    break;
+            }
+        } else {
+            std::unique_lock<std::mutex> ulg(render_wait_mutex);
+            render_wait_condition_variable.wait(ulg);
+        }
+    }
+    init->disp.deviceWaitIdle();
+}
+
+
+void glfw_resize_callback(GLFWwindow* window, int width, int height) {
+    if (!is_running || width == 0 || height == 0) {
+        return;
+    }
+    should_resize = true;
+    bool should_notify = true;
+    std::unique_lock<std::mutex> lg(main_mutex);
+    RenderData* data = reinterpret_cast<RenderData*>(glfwGetWindowUserPointer(window));
+    auto res = recreate_swapchain(*(data->init), *data);
+    if (res == -1) {
+        is_running = false;
+        return;
+    }
+    should_resize = false; // makes draw_frame exit early instead of submitting.
+    if (!use_refresh_callback) {
+        switch (draw_frame(*(data->init), *data)) {
+            case (DrawFrameRet::success):
+                break;
+            case (DrawFrameRet::out_of_date): {
+                should_resize = true;
+                should_notify = false;
+                break;
+            }
+            default:
+            case (DrawFrameRet::fail):
+                is_running = false;
+                break;
+        }
+    }
+    lg.unlock();
+    if (!use_refresh_callback) {
+        if (should_notify) {
+            render_wait_condition_variable.notify_one();
+        }
+    }
+}
+void glfw_refresh_callback(GLFWwindow* window) {
+    bool should_notify = false;
+
+    std::unique_lock<std::mutex> lg(main_mutex, std::try_to_lock);
+    if (lg.owns_lock()) {
+        if (!should_resize) {
+            should_notify = true;
+            RenderData* data = reinterpret_cast<RenderData*>(glfwGetWindowUserPointer(window));
+            switch (draw_frame(*(data->init), *data)) {
+                case (DrawFrameRet::success):
+                    break;
+                case (DrawFrameRet::out_of_date): {
+                    should_resize = true;
+                    should_notify = false;
+                    break;
+                }
+                default:
+                case (DrawFrameRet::fail):
+                    is_running = false;
+                    should_notify = false;
+                    break;
+            }
+        }
+        lg.unlock();
+    }
+    if (should_notify) {
+        render_wait_condition_variable.notify_one();
+    }
+}
 
 int main() {
-    Init init;
+    is_running = false;
+    should_resize = false;
+    Init init{};
     RenderData render_data;
+    render_data.init = &init;
 
-    if (0 != device_initialization(init)) return -1;
-    if (0 != create_swapchain(init)) return -1;
+    if (0 != device_initialization(init, render_data)) return -1;
     if (0 != get_queues(init, render_data)) return -1;
     if (0 != create_render_pass(init, render_data)) return -1;
     if (0 != create_graphics_pipeline(init, render_data)) return -1;
     if (0 != create_command_pool(init, render_data)) return -1;
     if (0 != create_frame_data(init, render_data)) return -1;
-    if (0 != create_swapchain_image_data(init, render_data)) return -1;
+    if (0 != create_framebuffers(init, render_data)) return -1;
 
-    while (!glfwWindowShouldClose(init.window)) {
-        glfwPollEvents();
-        int res = draw_frame(init, render_data);
-        if (res != 0) {
-            std::cout << "failed to draw frame \n";
-            return -1;
+    is_running = true;
+
+    render_data.current_time = glfwGetTime();
+    if (run_multithreaded) {
+        std::thread render_thread{ render_loop, &init, &render_data };
+
+        while (!glfwWindowShouldClose(init.window) && is_running) {
+            glfwPollEvents();
+            glfwWaitEvents();
         }
+        is_running = false;
+        render_wait_condition_variable.notify_one();
+        render_thread.join();
+    } else {
+        while (!glfwWindowShouldClose(init.window) && is_running) {
+            glfwPollEvents();
+            DrawFrameRet res = draw_frame(init, render_data);
+            if (res == DrawFrameRet::fail) {
+                is_running = false;
+            } else if (res == DrawFrameRet::out_of_date) {
+                is_running = false;
+            }
+        }
+        init.disp.deviceWaitIdle();
     }
-    init.disp.deviceWaitIdle();
+
 
     cleanup(init, render_data);
     return 0;

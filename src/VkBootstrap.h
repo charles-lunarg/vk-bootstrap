@@ -33,6 +33,7 @@
 #include <span>
 #endif
 
+#include <array>
 #include <vector>
 #include <string>
 #include <system_error>
@@ -224,12 +225,38 @@ enum class SwapchainError {
     required_min_image_count_too_low,
     required_usage_not_supported
 };
+enum class SwapchainManagerError {
+    swapchain_suboptimal,
+    swapchain_out_of_date,
+    surface_lost,
+    queue_submit_failed,
+    must_call_acquire_image_first,
+    acquire_next_image_error,
+    queue_present_error,
+    surface_handle_not_provided,
+    failed_query_surface_support_details,
+    failed_create_swapchain,
+    failed_get_swapchain_images,
+    failed_create_swapchain_image_views,
+    failed_create_semaphore,
+    failed_create_fence,
+};
+enum class SurfaceSupportError {
+    surface_handle_null,
+    failed_get_surface_capabilities,
+    failed_enumerate_surface_formats,
+    failed_enumerate_present_modes,
+    no_suitable_desired_format
+};
 
 std::error_code make_error_code(InstanceError instance_error);
 std::error_code make_error_code(PhysicalDeviceError physical_device_error);
 std::error_code make_error_code(QueueError queue_error);
 std::error_code make_error_code(DeviceError device_error);
 std::error_code make_error_code(SwapchainError swapchain_error);
+std::error_code make_error_code(SwapchainManagerError swapchain_error);
+std::error_code make_error_code(SurfaceSupportError swapchain_error);
+
 
 const char* to_string_message_severity(VkDebugUtilsMessageSeverityFlagBitsEXT s);
 const char* to_string_message_type(VkDebugUtilsMessageTypeFlagsEXT s);
@@ -239,6 +266,9 @@ const char* to_string(PhysicalDeviceError err);
 const char* to_string(QueueError err);
 const char* to_string(DeviceError err);
 const char* to_string(SwapchainError err);
+const char* to_string(SwapchainManagerError err);
+const char* to_string(SurfaceSupportError err);
+
 
 // Gathers useful information about the available vulkan capabilities, like layers and instance
 // extensions. Use this for enabling features conditionally, ie if you would like an extension but
@@ -1023,6 +1053,7 @@ class SwapchainBuilder {
         uint32_t min_image_count = 0;
         uint32_t required_min_image_count = 0;
         VkImageUsageFlags image_usage_flags = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+        VkFormatFeatureFlags format_feature_flags = VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT;
         uint32_t graphics_queue_index = 0;
         uint32_t present_queue_index = 0;
         VkSurfaceTransformFlagBitsKHR pre_transform = static_cast<VkSurfaceTransformFlagBitsKHR>(0);
@@ -1036,6 +1067,10 @@ class SwapchainBuilder {
         VkSwapchainKHR old_swapchain = VK_NULL_HANDLE;
         VkAllocationCallbacks* allocation_callbacks = nullptr;
     } info;
+
+    friend class SwapchainManager;
+    // To allow SwapchainManager to construct it 'emptily'
+    explicit SwapchainBuilder() = default;
 };
 
 } // namespace vkb
@@ -1047,4 +1082,6 @@ template <> struct is_error_code_enum<vkb::PhysicalDeviceError> : true_type {};
 template <> struct is_error_code_enum<vkb::QueueError> : true_type {};
 template <> struct is_error_code_enum<vkb::DeviceError> : true_type {};
 template <> struct is_error_code_enum<vkb::SwapchainError> : true_type {};
+template <> struct is_error_code_enum<vkb::SwapchainManagerError> : true_type {};
+
 } // namespace std

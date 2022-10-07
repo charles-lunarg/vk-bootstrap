@@ -52,8 +52,6 @@
 
 namespace vkb {
 
-namespace detail {
-
 struct Error {
 	std::error_code type;
 	VkResult vk_result = VK_SUCCESS; // optional error value if a vulkan call failed
@@ -61,75 +59,76 @@ struct Error {
 
 template <typename T> class Result {
 	public:
-	Result(const T& value) : m_value{ value }, m_init{ true } {}
-	Result(T&& value) : m_value{ std::move(value) }, m_init{ true } {}
+	Result(const T& value) noexcept : m_value{ value }, m_init{ true } {}
+	Result(T&& value) noexcept : m_value{ std::move(value) }, m_init{ true } {}
 
-	Result(Error error) : m_error{ error }, m_init{ false } {}
+	Result(Error error) noexcept : m_error{ error }, m_init{ false } {}
 
-	Result(std::error_code error_code, VkResult result = VK_SUCCESS) : m_error{ error_code, result }, m_init{ false } {}
+	Result(std::error_code error_code, VkResult result = VK_SUCCESS) noexcept
+	: m_error{ error_code, result }, m_init{ false } {}
 
-	~Result() { destroy(); }
-	Result(Result const& expected) : m_init(expected.m_init) {
+	~Result() noexcept { destroy(); }
+	Result(Result const& expected) noexcept : m_init(expected.m_init) {
 		if (m_init)
 			new (&m_value) T{ expected.m_value };
 		else
 			m_error = expected.m_error;
 	}
-	Result& operator=(Result const& result) {
+	Result& operator=(Result const& result) noexcept {
 		m_init = result.m_init;
 		if (m_init)
 			new (&m_value) T{ result.m_value };
 		else
 			m_error = result.m_error;
 	}
-	Result(Result&& expected) : m_init(expected.m_init) {
+	Result(Result&& expected) noexcept : m_init(expected.m_init) {
 		if (m_init)
 			new (&m_value) T{ std::move(expected.m_value) };
 		else
 			m_error = std::move(expected.m_error);
 		expected.destroy();
 	}
-	Result& operator=(Result&& result) {
+	Result& operator=(Result&& result) noexcept {
 		m_init = result.m_init;
 		if (m_init)
 			new (&m_value) T{ std::move(result.m_value) };
 		else
 			m_error = std::move(result.m_error);
 	}
-	Result& operator=(const T& expect) {
+	Result& operator=(const T& expect) noexcept {
 		destroy();
 		m_init = true;
 		new (&m_value) T{ expect };
 		return *this;
 	}
-	Result& operator=(T&& expect) {
+	Result& operator=(T&& expect) noexcept {
 		destroy();
 		m_init = true;
 		new (&m_value) T{ std::move(expect) };
 		return *this;
 	}
-	Result& operator=(const Error& error) {
+	Result& operator=(const Error& error) noexcept {
 		destroy();
 		m_init = false;
 		m_error = error;
 		return *this;
 	}
-	Result& operator=(Error&& error) {
+	Result& operator=(Error&& error) noexcept {
 		destroy();
 		m_init = false;
 		m_error = error;
 		return *this;
 	}
 	// clang-format off
-	const T* operator-> () const { assert (m_init); return &m_value; }
-	T*       operator-> ()       { assert (m_init); return &m_value; }
-	const T& operator* () const& { assert (m_init);	return m_value; }
-	T&       operator* () &      { assert (m_init); return m_value; }
-	T&&      operator* () &&	 { assert (m_init); return std::move (m_value); }
-	const T&  value () const&    { assert (m_init); return m_value; }
-	T&        value () &         { assert (m_init); return m_value; }
-	const T&& value () const&&   { assert (m_init); return std::move (m_value); }
-	T&&       value () &&        { assert (m_init); return std::move (m_value); }
+	const T* operator-> () const noexcept { assert (m_init); return &m_value; }
+	T*       operator-> ()       noexcept { assert (m_init); return &m_value; }
+	const T& operator* () const& noexcept { assert (m_init);	return m_value; }
+	T&       operator* () &      noexcept { assert (m_init); return m_value; }
+	T&&      operator* () &&	 noexcept { assert (m_init); return std::move (m_value); }
+	const T&  value () const&    noexcept { assert (m_init); return m_value; }
+	T&        value () &         noexcept { assert (m_init); return m_value; }
+	const T&& value () const&&   noexcept { assert (m_init); return std::move (m_value); }
+	T&&       value () &&        noexcept { assert (m_init); return std::move (m_value); }
 
     // std::error_code associated with the error
     std::error_code error() const { assert (!m_init); return m_error.type; }
@@ -138,6 +137,11 @@ template <typename T> class Result {
     // Returns the struct that holds the std::error_code and VkResult
     Error full_error() const { assert (!m_init); return m_error; }
 	// clang-format on
+
+	// check if the result has an error that matches a specific error case
+	template <typename E> bool matches_error(E error_enum_value) const {
+		return !m_init && static_cast<E>(m_error.type.value()) == error_enum_value;
+	}
 
 	bool has_value() const { return m_init; }
 	explicit operator bool() const { return m_init; }
@@ -153,6 +157,7 @@ template <typename T> class Result {
 	bool m_init;
 };
 
+namespace detail {
 struct GenericFeaturesPNextNode {
 
 	static const uint32_t field_capacity = 256;
@@ -234,8 +239,8 @@ struct SystemInfo {
 
 	public:
 	// Use get_system_info to create a SystemInfo struct. This is because loading vulkan could fail.
-	static detail::Result<SystemInfo> get_system_info();
-	static detail::Result<SystemInfo> get_system_info(PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr);
+	static Result<SystemInfo> get_system_info();
+	static Result<SystemInfo> get_system_info(PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr);
 
 	// Returns true if a layer is available
 	bool is_layer_available(const char* layer_name) const;
@@ -321,7 +326,7 @@ class InstanceBuilder {
 	explicit InstanceBuilder(PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr);
 
 	// Create a VkInstance. Return an error if it failed.
-	detail::Result<Instance> build() const;
+	Result<Instance> build() const;
 
 	// Sets the name of the application. Defaults to "" if none is provided.
 	InstanceBuilder& set_app_name(const char* app_name);
@@ -526,14 +531,14 @@ class PhysicalDeviceSelector {
 
 	// Return the first device which is suitable
 	// use the `selection` parameter to configure if partially
-	detail::Result<PhysicalDevice> select(DeviceSelectionMode selection = DeviceSelectionMode::partially_and_fully_suitable) const;
+	Result<PhysicalDevice> select(DeviceSelectionMode selection = DeviceSelectionMode::partially_and_fully_suitable) const;
 
 	// Return all devices which are considered suitable - intended for applications which want to let the user pick the physical device
-	detail::Result<std::vector<PhysicalDevice>> select_devices(
+	Result<std::vector<PhysicalDevice>> select_devices(
 	    DeviceSelectionMode selection = DeviceSelectionMode::partially_and_fully_suitable) const;
 
 	// Return the names of all devices which are considered suitable - intended for applications which want to let the user pick the physical device
-	detail::Result<std::vector<std::string>> select_device_names(
+	Result<std::vector<std::string>> select_device_names(
 	    DeviceSelectionMode selection = DeviceSelectionMode::partially_and_fully_suitable) const;
 
 	// Set the surface in which the physical device should render to.
@@ -661,7 +666,7 @@ class PhysicalDeviceSelector {
 
 	PhysicalDevice::Suitable is_device_suitable(PhysicalDevice const& phys_device) const;
 
-	detail::Result<std::vector<PhysicalDevice>> select_impl(DeviceSelectionMode selection) const;
+	Result<std::vector<PhysicalDevice>> select_impl(DeviceSelectionMode selection) const;
 };
 
 // ---- Queue ---- //
@@ -682,13 +687,13 @@ struct Device {
 	VkAllocationCallbacks* allocation_callbacks = VK_NULL_HANDLE;
 	PFN_vkGetDeviceProcAddr fp_vkGetDeviceProcAddr = nullptr;
 
-	detail::Result<uint32_t> get_queue_index(QueueType type) const;
+	Result<uint32_t> get_queue_index(QueueType type) const;
 	// Only a compute or transfer queue type is valid. All other queue types do not support a 'dedicated' queue index
-	detail::Result<uint32_t> get_dedicated_queue_index(QueueType type) const;
+	Result<uint32_t> get_dedicated_queue_index(QueueType type) const;
 
-	detail::Result<VkQueue> get_queue(QueueType type) const;
+	Result<VkQueue> get_queue(QueueType type) const;
 	// Only a compute or transfer queue type is valid. All other queue types do not support a 'dedicated' queue
-	detail::Result<VkQueue> get_dedicated_queue(QueueType type) const;
+	Result<VkQueue> get_dedicated_queue(QueueType type) const;
 
 	// Return a loaded dispatch table
 	DispatchTable make_table() const;
@@ -721,7 +726,7 @@ class DeviceBuilder {
 	// Any features and extensions that are requested/required in PhysicalDeviceSelector are automatically enabled.
 	explicit DeviceBuilder(PhysicalDevice physical_device);
 
-	detail::Result<Device> build() const;
+	Result<Device> build() const;
 
 	// For Advanced Users: specify the exact list of VkDeviceQueueCreateInfo's needed for the application.
 	// If a custom queue setup is provided, getting the queues and queue indexes is up to the application.
@@ -760,13 +765,13 @@ struct Swapchain {
 	VkAllocationCallbacks* allocation_callbacks = VK_NULL_HANDLE;
 
 	// Returns a vector of VkImage handles to the swapchain.
-	detail::Result<std::vector<VkImage>> get_images();
+	Result<std::vector<VkImage>> get_images();
 
 	// Returns a vector of VkImageView's to the VkImage's of the swapchain.
 	// VkImageViews must be destroyed.  The pNext chain must be a nullptr or a valid
 	// structure.
-	detail::Result<std::vector<VkImageView>> get_image_views();
-	detail::Result<std::vector<VkImageView>> get_image_views(const void* pNext);
+	Result<std::vector<VkImageView>> get_image_views();
+	Result<std::vector<VkImageView>> get_image_views(const void* pNext);
 	void destroy_image_views(std::vector<VkImageView> const& image_views);
 
 	// A conversion function which allows this Swapchain to be used
@@ -801,7 +806,7 @@ class SwapchainBuilder {
 	    uint32_t graphics_queue_index = detail::QUEUE_INDEX_MAX_VALUE,
 	    uint32_t present_queue_index = detail::QUEUE_INDEX_MAX_VALUE);
 
-	detail::Result<Swapchain> build() const;
+	Result<Swapchain> build() const;
 
 	// Set the oldSwapchain member of VkSwapchainCreateInfoKHR.
 	// For use in rebuilding a swapchain.

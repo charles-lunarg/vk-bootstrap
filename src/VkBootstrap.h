@@ -20,6 +20,7 @@
 #include <cstdio>
 #include <cstring>
 
+#include <array>
 #include <vector>
 #include <string>
 #include <system_error>
@@ -214,12 +215,28 @@ enum class SwapchainError {
 	failed_create_swapchain_image_views,
 	required_min_image_count_too_low,
 };
+enum class SwapchainManagerError {
+	swapchain_suboptimal,
+	swapchain_out_of_date,
+	surface_lost,
+	queue_submit_failed,
+	must_call_acquire_image_first,
+	acquire_next_image_error,
+	queue_present_error,
+	surface_handle_not_provided,
+	failed_query_surface_support_details,
+	failed_create_swapchain,
+	failed_get_swapchain_images,
+	failed_create_swapchain_image_views,
+};
 
 std::error_code make_error_code(InstanceError instance_error);
 std::error_code make_error_code(PhysicalDeviceError physical_device_error);
 std::error_code make_error_code(QueueError queue_error);
 std::error_code make_error_code(DeviceError device_error);
 std::error_code make_error_code(SwapchainError swapchain_error);
+std::error_code make_error_code(SwapchainManagerError swapchain_error);
+
 
 const char* to_string_message_severity(VkDebugUtilsMessageSeverityFlagBitsEXT s);
 const char* to_string_message_type(VkDebugUtilsMessageTypeFlagsEXT s);
@@ -229,6 +246,8 @@ const char* to_string(PhysicalDeviceError err);
 const char* to_string(QueueError err);
 const char* to_string(DeviceError err);
 const char* to_string(SwapchainError err);
+const char* to_string(SwapchainManagerError err);
+
 
 // Gathers useful information about the available vulkan capabilities, like layers and instance
 // extensions. Use this for enabling features conditionally, ie if you would like an extension but
@@ -359,11 +378,11 @@ class InstanceBuilder {
 
 	// Prefer a vulkan instance API version. If the desired version isn't available, it will use the
 	// highest version available. Should be constructed with VK_MAKE_VERSION or VK_MAKE_API_VERSION.
-	[[deprecated("Use require_api_version + set_minimum_instance_version instead.")]]
-	InstanceBuilder& desire_api_version(uint32_t preferred_vulkan_version);
+	[[deprecated("Use require_api_version + set_minimum_instance_version instead.")]] InstanceBuilder&
+	desire_api_version(uint32_t preferred_vulkan_version);
 	// Prefer a vulkan instance API version. If the desired version isn't available, it will use the highest version available.
-	[[deprecated("Use require_api_version + set_minimum_instance_version instead.")]]
-	InstanceBuilder& desire_api_version(uint32_t major, uint32_t minor, uint32_t patch = 0);
+	[[deprecated("Use require_api_version + set_minimum_instance_version instead.")]] InstanceBuilder&
+	desire_api_version(uint32_t major, uint32_t minor, uint32_t patch = 0);
 
 	// Adds a layer to be enabled. Will fail to create an instance if the layer isn't available.
 	InstanceBuilder& enable_layer(const char* layer_name);
@@ -581,8 +600,8 @@ class PhysicalDeviceSelector {
 	PhysicalDeviceSelector& add_desired_extensions(std::vector<const char*> extensions);
 
 	// Prefer a physical device that supports a (major, minor) version of vulkan.
-	[[deprecated("Use set_minimum_version + InstanceBuilder::require_api_version.")]]
-	PhysicalDeviceSelector& set_desired_version(uint32_t major, uint32_t minor);
+	[[deprecated("Use set_minimum_version + InstanceBuilder::require_api_version.")]] PhysicalDeviceSelector&
+	set_desired_version(uint32_t major, uint32_t minor);
 	// Require a physical device that supports a (major, minor) version of vulkan.
 	PhysicalDeviceSelector& set_minimum_version(uint32_t major, uint32_t minor);
 
@@ -675,6 +694,8 @@ enum class QueueType { present, graphics, compute, transfer };
 namespace detail {
 // Sentinel value, used in implementation only
 const uint32_t QUEUE_INDEX_MAX_VALUE = 65536;
+const uint32_t INDEX_MAX_VALUE = 65536;
+
 } // namespace detail
 
 // ---- Device ---- //
@@ -930,6 +951,10 @@ class SwapchainBuilder {
 		VkSwapchainKHR old_swapchain = VK_NULL_HANDLE;
 		VkAllocationCallbacks* allocation_callbacks = VK_NULL_HANDLE;
 	} info;
+
+	friend class SwapchainManager;
+	// To allow SwapchainManager to construct it 'emptily'
+	explicit SwapchainBuilder() = default;
 };
 
 } // namespace vkb
@@ -941,4 +966,6 @@ template <> struct is_error_code_enum<vkb::PhysicalDeviceError> : true_type {};
 template <> struct is_error_code_enum<vkb::QueueError> : true_type {};
 template <> struct is_error_code_enum<vkb::DeviceError> : true_type {};
 template <> struct is_error_code_enum<vkb::SwapchainError> : true_type {};
+template <> struct is_error_code_enum<vkb::SwapchainManagerError> : true_type {};
+
 } // namespace std

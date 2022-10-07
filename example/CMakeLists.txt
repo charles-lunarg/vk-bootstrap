@@ -7,6 +7,8 @@ target_link_libraries(vk-bootstrap-triangle
         vk-bootstrap-vulkan-headers)
 target_include_directories(vk-bootstrap-triangle PRIVATE ${CMAKE_CURRENT_BINARY_DIR}) #path to build directory for shaders
 
+target_compile_features(vk-bootstrap-triangle PUBLIC cxx_std_17)
+
 add_custom_command(
         TARGET vk-bootstrap-triangle
         POST_BUILD

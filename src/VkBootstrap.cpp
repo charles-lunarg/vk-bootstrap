@@ -15,6 +15,7 @@
  */
 
 #include "VkBootstrap.h"
+#include "VkSwapchainManager.h"
 
 #include <cstring>
 
@@ -30,8 +31,10 @@
 #include <dlfcn.h>
 #endif
 
+#include <algorithm>
 #include <mutex>
 #include <algorithm>
+#include <iostream>
 
 #include "VkBootstrapFeatureChain.inl"
 
@@ -523,6 +526,18 @@ struct SwapchainErrorCategory : std::error_category {
 };
 const SwapchainErrorCategory swapchain_error_category;
 
+struct SwapchainManagerErrorCategory : std::error_category {
+    const char* name() const noexcept override { return "vkb_swapchain_manager"; }
+    std::string message(int err) const override { return to_string(static_cast<SwapchainManagerError>(err)); }
+};
+const SwapchainManagerErrorCategory swapchain_manager_error_category;
+
+struct SurfaceSupportErrorCategory : std::error_category {
+    const char* name() const noexcept override { return "vbk_surface_support"; }
+    std::string message(int err) const override { return to_string(static_cast<SurfaceSupportError>(err)); }
+};
+const SurfaceSupportErrorCategory surface_support_error_category;
+
 } // namespace detail
 
 std::error_code make_error_code(InstanceError instance_error) {
@@ -540,6 +555,14 @@ std::error_code make_error_code(DeviceError device_error) {
 std::error_code make_error_code(SwapchainError swapchain_error) {
     return { static_cast<int>(swapchain_error), detail::swapchain_error_category };
 }
+std::error_code make_error_code(SwapchainManagerError swapchain_manager_error) {
+    return { static_cast<int>(swapchain_manager_error), detail::swapchain_manager_error_category };
+}
+std::error_code make_error_code(SurfaceSupportError surface_support_error) {
+    return { static_cast<int>(surface_support_error), detail::surface_support_error_category };
+}
+
+
 #define CASE_TO_STRING(CATEGORY, TYPE)                                                                                 \
     case CATEGORY::TYPE:                                                                                               \
         return #TYPE;
@@ -603,6 +626,38 @@ const char* to_string(SwapchainError err) {
             return "";
     }
 }
+const char* to_string(SwapchainManagerError err) {
+    switch (err) {
+        CASE_TO_STRING(SwapchainManagerError, swapchain_suboptimal)
+        CASE_TO_STRING(SwapchainManagerError, swapchain_out_of_date)
+        CASE_TO_STRING(SwapchainManagerError, surface_lost)
+        CASE_TO_STRING(SwapchainManagerError, queue_submit_failed)
+        CASE_TO_STRING(SwapchainManagerError, must_call_acquire_image_first)
+        CASE_TO_STRING(SwapchainManagerError, acquire_next_image_error)
+        CASE_TO_STRING(SwapchainManagerError, queue_present_error)
+        CASE_TO_STRING(SwapchainManagerError, surface_handle_not_provided)
+        CASE_TO_STRING(SwapchainManagerError, failed_query_surface_support_details)
+        CASE_TO_STRING(SwapchainManagerError, failed_create_swapchain)
+        CASE_TO_STRING(SwapchainManagerError, failed_get_swapchain_images)
+        CASE_TO_STRING(SwapchainManagerError, failed_create_swapchain_image_views)
+        CASE_TO_STRING(SwapchainManagerError, failed_create_semaphore)
+        CASE_TO_STRING(SwapchainManagerError, invalid_image_extent)
+        default:
+            return "";
+    }
+}
+const char* to_string(SurfaceSupportError err) {
+    switch (err) {
+        CASE_TO_STRING(SurfaceSupportError, surface_handle_null)
+        CASE_TO_STRING(SurfaceSupportError, failed_get_surface_capabilities)
+        CASE_TO_STRING(SurfaceSupportError, failed_enumerate_surface_formats)
+        CASE_TO_STRING(SurfaceSupportError, failed_enumerate_present_modes)
+        CASE_TO_STRING(SurfaceSupportError, no_suitable_desired_format)
+        default:
+            return "";
+    }
+}
+#undef CASE_TO_STRING
 
 Result<SystemInfo> SystemInfo::get_system_info() {
     if (!detail::vulkan_functions().init_vulkan_funcs(nullptr)) {
@@ -1832,33 +1887,6 @@ struct SurfaceSupportDetails {
     std::vector<VkPresentModeKHR> present_modes;
 };
 
-enum class SurfaceSupportError {
-    surface_handle_null,
-    failed_get_surface_capabilities,
-    failed_enumerate_surface_formats,
-    failed_enumerate_present_modes,
-    no_suitable_desired_format
-};
-
-struct SurfaceSupportErrorCategory : std::error_category {
-    const char* name() const noexcept override { return "vbk_surface_support"; }
-    std::string message(int err) const override {
-        switch (static_cast<SurfaceSupportError>(err)) {
-            CASE_TO_STRING(SurfaceSupportError, surface_handle_null)
-            CASE_TO_STRING(SurfaceSupportError, failed_get_surface_capabilities)
-            CASE_TO_STRING(SurfaceSupportError, failed_enumerate_surface_formats)
-            CASE_TO_STRING(SurfaceSupportError, failed_enumerate_present_modes)
-            CASE_TO_STRING(SurfaceSupportError, no_suitable_desired_format)
-            default:
-                return "";
-        }
-    }
-};
-const SurfaceSupportErrorCategory surface_support_error_category;
-
-std::error_code make_error_code(SurfaceSupportError surface_support_error) {
-    return { static_cast<int>(surface_support_error), detail::surface_support_error_category };
-}
 
 Result<SurfaceSupportDetails> query_surface_support_details(VkPhysicalDevice phys_device, VkSurfaceKHR surface) {
     if (surface == VK_NULL_HANDLE) return make_error_code(SurfaceSupportError::surface_handle_null);
@@ -2289,4 +2317,334 @@ void SwapchainBuilder::add_desired_present_modes(std::vector<VkPresentModeKHR>& 
     modes.push_back(VK_PRESENT_MODE_MAILBOX_KHR);
     modes.push_back(VK_PRESENT_MODE_FIFO_KHR);
 }
+
+namespace detail {
+
+
+Result<vkb::Swapchain> convert(Result<vkb::Swapchain> err) {
+    switch (err.error().value()) {
+        case (static_cast<int>(SwapchainError::surface_handle_not_provided)):
+            return { make_error_code(SwapchainManagerError::surface_handle_not_provided), err.vk_result() };
+        case (static_cast<int>(SwapchainError::failed_query_surface_support_details)):
+            return { make_error_code(SwapchainManagerError::failed_query_surface_support_details), err.vk_result() };
+        case (static_cast<int>(SwapchainError::failed_create_swapchain)):
+            return { make_error_code(SwapchainManagerError::failed_create_swapchain), err.vk_result() };
+        case (static_cast<int>(SwapchainError::failed_get_swapchain_images)):
+            return { make_error_code(SwapchainManagerError::failed_get_swapchain_images), err.vk_result() };
+        case (static_cast<int>(SwapchainError::failed_create_swapchain_image_views)):
+            return { make_error_code(SwapchainManagerError::failed_create_swapchain_image_views), err.vk_result() };
+        default:
+            assert(false && "Should never reach this");
+            return { make_error_code(SwapchainManagerError::surface_handle_not_provided) };
+    }
+}
+
+} // namespace detail
+
+Result<vkb::Swapchain> SwapchainManager::create(SwapchainBuilder builder, VkQueue present_queue) noexcept {
+    if (VK_NULL_HANDLE == builder.info.surface) {
+        return { make_error_code(SwapchainManagerError::surface_handle_not_provided) };
+    }
+
+    detail.builder = std::move(builder);
+    device = detail.builder.info.device;
+
+    detail.present_queue = present_queue;
+
+    auto swapchain_ret = detail.builder.build();
+    if (!swapchain_ret.has_value()) {
+        return detail::convert(swapchain_ret);
+    }
+
+    detail.current_swapchain = swapchain_ret.value();
+
+    detail::vulkan_functions().get_device_proc_addr(device, detail.fp_vkAcquireNextImageKHR, "vkAcquireNextImageKHR");
+    detail::vulkan_functions().get_device_proc_addr(device, detail.fp_vkQueuePresentKHR, "vkQueuePresentKHR");
+    detail::vulkan_functions().get_device_proc_addr(device, detail.fp_vkCreateSemaphore, "vkCreateSemaphore");
+    detail::vulkan_functions().get_device_proc_addr(device, detail.fp_vkDestroyImage, "vkDestroyImage");
+    detail::vulkan_functions().get_device_proc_addr(device, detail.fp_vkDestroyImageView, "vkDestroyImageView");
+    detail::vulkan_functions().get_device_proc_addr(device, detail.fp_vkDestroyFramebuffer, "vkDestroyFramebuffer");
+    detail::vulkan_functions().get_device_proc_addr(device, detail.fp_vkDestroySwapchainKHR, "vkDestroySwapchainKHR");
+    detail::vulkan_functions().get_device_proc_addr(device, detail.fp_vkDestroySemaphore, "vkDestroySemaphore");
+
+    auto swapchain_images_and_views_ret = detail.current_swapchain.get_images_and_image_views();
+    if (!swapchain_images_and_views_ret) {
+        return swapchain_images_and_views_ret.error();
+    }
+    detail.swapchain_images = swapchain_images_and_views_ret.value().first;
+    detail.swapchain_image_views = swapchain_images_and_views_ret.value().second;
+
+    auto sync_resources_ret = create_sync_resources();
+    if (!sync_resources_ret.has_value()) {
+        return sync_resources_ret.error();
+    }
+
+    detail.delete_sets.resize(delay_delete_queue_depth);
+
+    for (auto& delete_set : detail.delete_sets) {
+        delete_set.images.reserve(10);
+        delete_set.views.reserve(10);
+        delete_set.framebuffers.reserve(10);
+        delete_set.swapchains.reserve(1);
+        delete_set.semaphores.reserve(10);
+    }
+
+    detail.current_status = Status::ready_to_acquire;
+    return detail.current_swapchain;
+}
+
+void SwapchainManager::destroy() noexcept {
+    if (device != VK_NULL_HANDLE) {
+        for (auto& semaphore : detail.acquire_semaphores) {
+            detail.fp_vkDestroySemaphore(device, semaphore, nullptr);
+        }
+        detail.fp_vkDestroySemaphore(device, detail.next_acquire_semaphore, nullptr);
+
+        for (auto& semaphore : detail.submit_semaphores) {
+            detail.fp_vkDestroySemaphore(device, semaphore, nullptr);
+        }
+        for (auto& image_view : detail.swapchain_image_views) {
+            detail.fp_vkDestroyImageView(device, image_view, nullptr);
+        }
+
+        detail.fp_vkDestroySwapchainKHR(device, detail.current_swapchain.swapchain, nullptr);
+
+        for (auto& set : detail.delete_sets) {
+            delete_queue_clear_set(set);
+        }
+        device = VK_NULL_HANDLE;
+    }
+}
+SwapchainManager::~SwapchainManager() noexcept { destroy(); }
+
+SwapchainManager::SwapchainManager(SwapchainManager&& other) noexcept
+: device(other.device), detail(std::move(other.detail)) {
+    other.device = VK_NULL_HANDLE;
+}
+SwapchainManager& SwapchainManager::operator=(SwapchainManager&& other) noexcept {
+    destroy();
+    device = other.device;
+    detail = std::move(other.detail);
+    other.device = VK_NULL_HANDLE;
+    return *this;
+}
+
+void SwapchainManager::destroy_framebuffer(VkFramebuffer framebuffer) noexcept {
+    detail.delete_sets[detail.current_delete_index].framebuffers.push_back(framebuffer);
+}
+void SwapchainManager::destroy_framebuffers(uint32_t framebuffer_count, const VkFramebuffer* framebuffers) noexcept {
+    detail.delete_sets[detail.current_delete_index].framebuffers.insert(
+        detail.delete_sets[detail.current_delete_index].framebuffers.end(), framebuffers, framebuffers + framebuffer_count);
+}
+void SwapchainManager::destroy_framebuffers(std::vector<VkFramebuffer> const& framebuffers) noexcept {
+    detail.delete_sets[detail.current_delete_index].framebuffers.insert(
+        detail.delete_sets[detail.current_delete_index].framebuffers.end(), framebuffers.begin(), framebuffers.end());
+}
+void SwapchainManager::destroy_framebuffers(std::vector<VkFramebuffer>&& framebuffers) noexcept {
+    detail.delete_sets[detail.current_delete_index].framebuffers.insert(
+        detail.delete_sets[detail.current_delete_index].framebuffers.end(), framebuffers.begin(), framebuffers.end());
+}
+
+SwapchainBuilder& SwapchainManager::get_swapchain_builder() noexcept {
+    assert(detail.current_status != Status::destroyed && "SwapchainManager was destroyed!");
+    return detail.builder;
+}
+Result<Swapchain> SwapchainManager::get_swapchain() noexcept {
+    assert(detail.current_status != Status::destroyed && "SwapchainManager was destroyed!");
+    if (detail.current_status == Status::expired) {
+        return make_error_code(SwapchainManagerError::swapchain_out_of_date);
+    }
+    return detail.current_swapchain;
+}
+
+std::vector<VkImage> SwapchainManager::get_swapchain_images() noexcept { return detail.swapchain_images; }
+std::vector<VkImageView> SwapchainManager::get_swapchain_image_views() noexcept { return detail.swapchain_image_views; }
+std::pair<std::vector<VkImage>, std::vector<VkImageView>> SwapchainManager::get_swapchain_images_and_views() noexcept {
+    return { detail.swapchain_images, detail.swapchain_image_views };
+}
+
+Result<SwapchainAcquireInfo> SwapchainManager::acquire_image() noexcept {
+    assert(detail.current_status != Status::destroyed && "SwapchainManager was destroyed!");
+    if (detail.current_status == Status::expired) {
+        return make_error_code(SwapchainManagerError::swapchain_out_of_date);
+    } else if (detail.current_status == Status::ready_to_present) {
+        // dont do anything
+        SwapchainAcquireInfo out{};
+        out.image_view = detail.swapchain_image_views[detail.current_image_index];
+        out.image_index = detail.current_image_index;
+        out.wait_semaphore = detail.acquire_semaphores[detail.current_image_index];
+        out.signal_semaphore = detail.submit_semaphores[detail.current_image_index];
+        return out;
+    }
+
+
+    // reset the current image index in case acquiring fails
+    detail.current_image_index = detail::NO_ACQUIRED_IMAGE_VALUE;
+    VkResult result = detail.fp_vkAcquireNextImageKHR(
+        device, detail.current_swapchain, UINT64_MAX, detail.next_acquire_semaphore, VK_NULL_HANDLE, &detail.current_image_index);
+
+    if (result == VK_ERROR_OUT_OF_DATE_KHR) {
+        detail.current_status = Status::expired;
+        return { make_error_code(SwapchainManagerError::swapchain_out_of_date) };
+    } else if (result == VK_SUBOPTIMAL_KHR) {
+    } else if (result == VK_ERROR_SURFACE_LOST_KHR) {
+        return { make_error_code(SwapchainManagerError::surface_lost) };
+    } else if (result != VK_SUCCESS) {
+        return { make_error_code(SwapchainManagerError::acquire_next_image_error), result };
+    }
+
+    // Because the image index we acquired must have been presented, we can be sure that it is safe to use in the next acquire.
+    // Swap it with next_acquire_semaphore as that was just used to acquire, so now the current acquire semaphore is at current_image_index
+    std::swap(detail.next_acquire_semaphore, detail.acquire_semaphores[detail.current_image_index]);
+
+    detail.current_status = Status::ready_to_present;
+    SwapchainAcquireInfo out{};
+    out.image_view = detail.swapchain_image_views[detail.current_image_index];
+    out.image_index = detail.current_image_index;
+    out.wait_semaphore = detail.acquire_semaphores[detail.current_image_index];
+    out.signal_semaphore = detail.submit_semaphores[detail.current_image_index];
+    return out;
+}
+
+Result<std::monostate> SwapchainManager::present() noexcept {
+    assert(detail.current_status != Status::destroyed && "SwapchainManager was destroyed!");
+    if (detail.current_status == Status::expired) {
+        return make_error_code(SwapchainManagerError::swapchain_out_of_date);
+    }
+    if (detail.current_status == Status::ready_to_acquire) {
+        return make_error_code(SwapchainManagerError::must_call_acquire_image_first);
+    }
+
+    VkSemaphore wait_semaphores[1] = { detail.submit_semaphores[detail.current_image_index] };
+
+    VkPresentInfoKHR present_info = {};
+    present_info.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+    present_info.waitSemaphoreCount = 1;
+    present_info.pWaitSemaphores = wait_semaphores;
+    present_info.swapchainCount = 1;
+    present_info.pSwapchains = &detail.current_swapchain.swapchain;
+    present_info.pImageIndices = &detail.current_image_index;
+
+    VkResult result = detail.fp_vkQueuePresentKHR(detail.present_queue, &present_info);
+    if (result == VK_ERROR_OUT_OF_DATE_KHR) {
+        detail.current_status = Status::expired;
+        return { make_error_code(SwapchainManagerError::swapchain_out_of_date) };
+    } else if (result == VK_SUBOPTIMAL_KHR) {
+        detail.current_status = Status::ready_to_acquire;
+    } else if (result == VK_ERROR_SURFACE_LOST_KHR) {
+        return { make_error_code(SwapchainManagerError::surface_lost) };
+    } else if (result != VK_SUCCESS) {
+        return { make_error_code(SwapchainManagerError::queue_present_error), result };
+    }
+    detail.current_status = Status::ready_to_acquire;
+
+    // clean up old swapchain resources
+    detail.current_delete_index = (detail.current_delete_index + 1) % delay_delete_queue_depth;
+    delete_queue_clear_set(detail.delete_sets.at(detail.current_delete_index));
+
+    return std::monostate{};
+}
+
+Result<Swapchain> SwapchainManager::recreate(uint32_t desired_width, uint32_t desired_height) noexcept {
+    assert(detail.current_status != Status::destroyed && "SwapchainManager was destroyed!");
+    detail.current_status = Status::expired;
+
+    if (desired_width == 0 || desired_height == 0) {
+        return { make_error_code(SwapchainManagerError::invalid_image_extent),
+            { "desired_width and desired_height must be greater than zero" } };
+    }
+    // push in-use resources onto the delete queue so they are deleted at a later time
+
+    detail.delete_sets.at(detail.current_delete_index).swapchains.push_back(detail.current_swapchain.swapchain);
+    detail.delete_sets.at(detail.current_delete_index)
+        .views.insert(detail.delete_sets.at(detail.current_delete_index).views.end(),
+            detail.swapchain_image_views.begin(),
+            detail.swapchain_image_views.end());
+    detail.swapchain_image_views.clear();
+
+    auto new_swapchain_ret = detail.builder.set_old_swapchain(detail.current_swapchain.swapchain)
+                                 .set_desired_extent(desired_width, desired_height)
+                                 .build();
+    if (!new_swapchain_ret) {
+        return new_swapchain_ret.error();
+    }
+    detail.current_swapchain = new_swapchain_ret.value();
+
+    auto swapchain_images_and_views_ret = detail.current_swapchain.get_images_and_image_views();
+    if (!swapchain_images_and_views_ret) {
+        return swapchain_images_and_views_ret.error();
+    }
+    detail.swapchain_images = swapchain_images_and_views_ret.value().first;
+    detail.swapchain_image_views = swapchain_images_and_views_ret.value().second;
+
+    // Can't reuse semaphores because we can't be sure when they would no longer be in use, so delay delete them.
+    detail.delete_sets.at(detail.current_delete_index)
+        .semaphores.insert(detail.delete_sets.at(detail.current_delete_index).semaphores.end(),
+            detail.acquire_semaphores.begin(),
+            detail.acquire_semaphores.end());
+
+    detail.delete_sets.at(detail.current_delete_index).semaphores.push_back(detail.next_acquire_semaphore);
+
+    detail.delete_sets.at(detail.current_delete_index)
+        .semaphores.insert(detail.delete_sets.at(detail.current_delete_index).semaphores.end(),
+            detail.submit_semaphores.begin(),
+            detail.submit_semaphores.end());
+
+    auto sync_resources_ret = create_sync_resources();
+    if (!sync_resources_ret.has_value()) {
+        return sync_resources_ret.error();
+    }
+
+    detail.current_status = Status::ready_to_acquire;
+    return detail.current_swapchain;
+}
+
+void SwapchainManager::delete_queue_clear_set(vkb::SwapchainManager::DelaySets& set) noexcept {
+    for (auto const& image : set.images)
+        detail.fp_vkDestroyImage(device, image, nullptr);
+    for (auto const& image_view : set.views)
+        detail.fp_vkDestroyImageView(device, image_view, nullptr);
+    for (auto const& framebuffer : set.framebuffers)
+        detail.fp_vkDestroyFramebuffer(device, framebuffer, nullptr);
+    for (auto const& swapchain : set.swapchains)
+        detail.fp_vkDestroySwapchainKHR(device, swapchain, nullptr);
+    for (auto const& semaphore : set.semaphores)
+        detail.fp_vkDestroySemaphore(device, semaphore, nullptr);
+    set.images.clear();
+    set.views.clear();
+    set.framebuffers.clear();
+    set.swapchains.clear();
+    set.semaphores.clear();
+}
+
+Result<std::monostate> SwapchainManager::create_sync_resources() noexcept {
+    VkSemaphoreCreateInfo info{};
+    info.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+
+    detail.acquire_semaphores.resize(detail.current_swapchain.image_count);
+    VkResult res{};
+    for (auto& semaphore : detail.acquire_semaphores) {
+        res = detail.fp_vkCreateSemaphore(device, &info, nullptr, &semaphore);
+        if (res != VK_SUCCESS) {
+            return { make_error_code(SwapchainManagerError::failed_create_semaphore), res };
+        }
+    }
+
+    res = detail.fp_vkCreateSemaphore(device, &info, nullptr, &detail.next_acquire_semaphore);
+    if (res != VK_SUCCESS) {
+        return { make_error_code(SwapchainManagerError::failed_create_semaphore), res };
+    }
+
+    detail.submit_semaphores.resize(detail.current_swapchain.image_count);
+
+    for (auto& semaphore : detail.submit_semaphores) {
+        res = detail.fp_vkCreateSemaphore(device, &info, nullptr, &semaphore);
+        if (res != VK_SUCCESS) {
+            return { make_error_code(SwapchainManagerError::failed_create_semaphore), res };
+        }
+    }
+
+    return std::monostate{};
+}
+
 } // namespace vkb

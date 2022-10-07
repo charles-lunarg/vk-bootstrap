@@ -1558,6 +1558,7 @@ Result<Device> DeviceBuilder::build() const {
 	device.fp_vkGetDeviceProcAddr = detail::vulkan_functions().fp_vkGetDeviceProcAddr;
 	detail::vulkan_functions().get_device_proc_addr(device.device, device.internal_table.fp_vkGetDeviceQueue, "vkGetDeviceQueue");
 	detail::vulkan_functions().get_device_proc_addr(device.device, device.internal_table.fp_vkDestroyDevice, "vkDestroyDevice");
+	device.instance_version = physical_device.instance_version;
 	return device;
 }
 DeviceBuilder& DeviceBuilder::custom_queue_setup(std::vector<CustomQueueDescription> queue_descriptions) {
@@ -1689,9 +1690,10 @@ void destroy_swapchain(Swapchain const& swapchain) {
 }
 
 SwapchainBuilder::SwapchainBuilder(Device const& device) {
-	info.device = device.device;
 	info.physical_device = device.physical_device.physical_device;
+	info.device = device.device;
 	info.surface = device.surface;
+	info.instance_version = device.instance_version;
 	auto present = device.get_queue_index(QueueType::present);
 	auto graphics = device.get_queue_index(QueueType::graphics);
 	assert(graphics.has_value() && present.has_value() && "Graphics and Present queue indexes must be valid");
@@ -1700,9 +1702,10 @@ SwapchainBuilder::SwapchainBuilder(Device const& device) {
 	info.allocation_callbacks = device.allocation_callbacks;
 }
 SwapchainBuilder::SwapchainBuilder(Device const& device, VkSurfaceKHR const surface) {
-	info.device = device.device;
 	info.physical_device = device.physical_device.physical_device;
+	info.device = device.device;
 	info.surface = surface;
+	info.instance_version = device.instance_version;
 	Device temp_device = device;
 	temp_device.surface = surface;
 	auto present = temp_device.get_queue_index(QueueType::present);
@@ -1824,6 +1827,7 @@ Result<Swapchain> SwapchainBuilder::build() const {
 	swapchain.device = info.device;
 	swapchain.image_format = surface_format.format;
 	swapchain.color_space = surface_format.colorSpace;
+	swapchain.image_usage_flags = info.image_usage_flags;
 	swapchain.extent = extent;
 	detail::vulkan_functions().get_device_proc_addr(
 	    info.device, swapchain.internal_table.fp_vkGetSwapchainImagesKHR, "vkGetSwapchainImagesKHR");
@@ -1838,6 +1842,7 @@ Result<Swapchain> SwapchainBuilder::build() const {
 	swapchain.requested_min_image_count = image_count;
 	swapchain.present_mode = present_mode;
 	swapchain.image_count = static_cast<uint32_t>(images.value().size());
+	swapchain.instance_version = info.instance_version;
 	swapchain.allocation_callbacks = info.allocation_callbacks;
 	return swapchain;
 }
@@ -1857,12 +1862,33 @@ Result<std::vector<VkImageView>> Swapchain::get_image_views(const void* pNext) {
 	if (!swapchain_images_ret) return swapchain_images_ret.error();
 	const auto swapchain_images = swapchain_images_ret.value();
 
+#if defined(VK_VERSION_1_1)
+	bool already_contains_image_view_usage = false;
+	while (pNext) {
+		if (reinterpret_cast<const VkBaseInStructure*>(pNext)->sType == VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO) {
+			already_contains_image_view_usage = true;
+			break;
+		}
+		pNext = reinterpret_cast<const VkBaseInStructure*>(pNext)->pNext;
+	}
+	VkImageViewUsageCreateInfo desired_flags{};
+	desired_flags.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO;
+	desired_flags.pNext = pNext;
+	desired_flags.usage = image_usage_flags;
+#endif
 	std::vector<VkImageView> views(swapchain_images.size());
-
 	for (size_t i = 0; i < swapchain_images.size(); i++) {
 		VkImageViewCreateInfo createInfo = {};
 		createInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+#if defined(VK_VERSION_1_1)
+		if (instance_version >= VKB_VK_API_VERSION_1_1 && !already_contains_image_view_usage) {
+			createInfo.pNext = &desired_flags;
+		} else {
+			createInfo.pNext = pNext;
+		}
+#else
 		createInfo.pNext = pNext;
+#endif
 		createInfo.image = swapchain_images[i];
 		createInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
 		createInfo.format = image_format;

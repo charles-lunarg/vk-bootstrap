@@ -686,6 +686,7 @@ struct Device {
 	std::vector<VkQueueFamilyProperties> queue_families;
 	VkAllocationCallbacks* allocation_callbacks = VK_NULL_HANDLE;
 	PFN_vkGetDeviceProcAddr fp_vkGetDeviceProcAddr = nullptr;
+	uint32_t instance_version = VKB_VK_API_VERSION_1_0;
 
 	Result<uint32_t> get_queue_index(QueueType type) const;
 	// Only a compute or transfer queue type is valid. All other queue types do not support a 'dedicated' queue index
@@ -759,9 +760,12 @@ struct Swapchain {
 	uint32_t image_count = 0;
 	VkFormat image_format = VK_FORMAT_UNDEFINED; // The image format actually used when creating the swapchain.
 	VkColorSpaceKHR color_space = VK_COLOR_SPACE_SRGB_NONLINEAR_KHR; // The color space actually used when creating the swapchain.
+	VkImageUsageFlags image_usage_flags = 0;
 	VkExtent2D extent = { 0, 0 };
-	uint32_t requested_min_image_count = 0; // The value of minImageCount actually used when creating the swapchain; note that the presentation engine is always free to create more images than that.
+	// The value of minImageCount actually used when creating the swapchain; note that the presentation engine is always free to create more images than that.
+	uint32_t requested_min_image_count = 0;
 	VkPresentModeKHR present_mode = VK_PRESENT_MODE_IMMEDIATE_KHR; // The present mode actually used when creating the swapchain.
+	uint32_t instance_version = VKB_VK_API_VERSION_1_0;
 	VkAllocationCallbacks* allocation_callbacks = VK_NULL_HANDLE;
 
 	// Returns a vector of VkImage handles to the swapchain.
@@ -909,6 +913,7 @@ class SwapchainBuilder {
 		VkSwapchainCreateFlagBitsKHR create_flags = static_cast<VkSwapchainCreateFlagBitsKHR>(0);
 		VkSurfaceKHR surface = VK_NULL_HANDLE;
 		std::vector<VkSurfaceFormatKHR> desired_formats;
+		uint32_t instance_version = VKB_VK_API_VERSION_1_0;
 		uint32_t desired_width = 256;
 		uint32_t desired_height = 256;
 		uint32_t array_layer_count = 1;

@@ -387,83 +387,61 @@ std::error_code make_error_code(DeviceError device_error) {
 std::error_code make_error_code(SwapchainError swapchain_error) {
 	return { static_cast<int>(swapchain_error), detail::swapchain_error_category };
 }
+#define CASE_TO_STRING(CATEGORY, TYPE)                                                                                 \
+	case CATEGORY::TYPE:                                                                                               \
+		return #TYPE;
 
 const char* to_string(InstanceError err) {
 	switch (err) {
-		case InstanceError::vulkan_unavailable:
-			return "vulkan_unavailable";
-		case InstanceError::vulkan_version_unavailable:
-			return "vulkan_version_unavailable";
-		case InstanceError::vulkan_version_1_1_unavailable:
-			return "vulkan_version_1_1_unavailable";
-		case InstanceError::vulkan_version_1_2_unavailable:
-			return "vulkan_version_1_2_unavailable";
-		case InstanceError::failed_create_debug_messenger:
-			return "failed_create_debug_messenger";
-		case InstanceError::failed_create_instance:
-			return "failed_create_instance";
-		case InstanceError::requested_layers_not_present:
-			return "requested_layers_not_present";
-		case InstanceError::requested_extensions_not_present:
-			return "requested_extensions_not_present";
-		case InstanceError::windowing_extensions_not_present:
-			return "windowing_extensions_not_present";
+		CASE_TO_STRING(InstanceError, vulkan_unavailable)
+		CASE_TO_STRING(InstanceError, vulkan_version_unavailable)
+		CASE_TO_STRING(InstanceError, vulkan_version_1_1_unavailable)
+		CASE_TO_STRING(InstanceError, vulkan_version_1_2_unavailable)
+		CASE_TO_STRING(InstanceError, failed_create_debug_messenger)
+		CASE_TO_STRING(InstanceError, failed_create_instance)
+		CASE_TO_STRING(InstanceError, requested_layers_not_present)
+		CASE_TO_STRING(InstanceError, requested_extensions_not_present)
+		CASE_TO_STRING(InstanceError, windowing_extensions_not_present)
 		default:
 			return "";
 	}
 }
 const char* to_string(PhysicalDeviceError err) {
 	switch (err) {
-		case PhysicalDeviceError::no_surface_provided:
-			return "no_surface_provided";
-		case PhysicalDeviceError::failed_enumerate_physical_devices:
-			return "failed_enumerate_physical_devices";
-		case PhysicalDeviceError::no_physical_devices_found:
-			return "no_physical_devices_found";
-		case PhysicalDeviceError::no_suitable_device:
-			return "no_suitable_device";
+		CASE_TO_STRING(PhysicalDeviceError, no_surface_provided)
+		CASE_TO_STRING(PhysicalDeviceError, failed_enumerate_physical_devices)
+		CASE_TO_STRING(PhysicalDeviceError, no_physical_devices_found)
+		CASE_TO_STRING(PhysicalDeviceError, no_suitable_device)
 		default:
 			return "";
 	}
 }
 const char* to_string(QueueError err) {
 	switch (err) {
-		case QueueError::present_unavailable:
-			return "present_unavailable";
-		case QueueError::graphics_unavailable:
-			return "graphics_unavailable";
-		case QueueError::compute_unavailable:
-			return "compute_unavailable";
-		case QueueError::transfer_unavailable:
-			return "transfer_unavailable";
-		case QueueError::queue_index_out_of_range:
-			return "queue_index_out_of_range";
-		case QueueError::invalid_queue_family_index:
-			return "invalid_queue_family_index";
+		CASE_TO_STRING(QueueError, present_unavailable)
+		CASE_TO_STRING(QueueError, graphics_unavailable)
+		CASE_TO_STRING(QueueError, compute_unavailable)
+		CASE_TO_STRING(QueueError, transfer_unavailable)
+		CASE_TO_STRING(QueueError, queue_index_out_of_range)
+		CASE_TO_STRING(QueueError, invalid_queue_family_index)
 		default:
 			return "";
 	}
 }
 const char* to_string(DeviceError err) {
 	switch (err) {
-		case DeviceError::failed_create_device:
-			return "failed_create_device";
+		CASE_TO_STRING(DeviceError, failed_create_device)
 		default:
 			return "";
 	}
 }
 const char* to_string(SwapchainError err) {
 	switch (err) {
-		case SwapchainError::surface_handle_not_provided:
-			return "surface_handle_not_provided";
-		case SwapchainError::failed_query_surface_support_details:
-			return "failed_query_surface_support_details";
-		case SwapchainError::failed_create_swapchain:
-			return "failed_create_swapchain";
-		case SwapchainError::failed_get_swapchain_images:
-			return "failed_get_swapchain_images";
-		case SwapchainError::failed_create_swapchain_image_views:
-			return "failed_create_swapchain_image_views";
+		CASE_TO_STRING(SwapchainError, surface_handle_not_provided)
+		CASE_TO_STRING(SwapchainError, failed_query_surface_support_details)
+		CASE_TO_STRING(SwapchainError, failed_create_swapchain)
+		CASE_TO_STRING(SwapchainError, failed_get_swapchain_images)
+		CASE_TO_STRING(SwapchainError, failed_create_swapchain_image_views)
 		default:
 			return "";
 	}

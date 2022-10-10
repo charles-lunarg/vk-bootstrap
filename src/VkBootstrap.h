@@ -213,6 +213,7 @@ enum class SwapchainError {
 	failed_get_swapchain_images,
 	failed_create_swapchain_image_views,
 	required_min_image_count_too_low,
+	required_usage_or_features_not_supported
 };
 
 std::error_code make_error_code(InstanceError instance_error);
@@ -841,6 +842,7 @@ class SwapchainBuilder {
 	SwapchainBuilder& use_default_present_mode_selection();
 
 	// Set the bitmask of the image usage for acquired swapchain images.
+	// If the surface capabilities cannot allow it, building the swapchain will result in the `SwapchainError::required_usage_or_features_not_supported` error.
 	SwapchainBuilder& set_image_usage_flags(VkImageUsageFlags usage_flags);
 	// Add a image usage to the bitmask for acquired swapchain images.
 	SwapchainBuilder& add_image_usage_flags(VkImageUsageFlags usage_flags);
@@ -849,11 +851,14 @@ class SwapchainBuilder {
 	SwapchainBuilder& use_default_image_usage_flags();
 
 	// Set the bitmask of the format feature flag for acquired swapchain images.
+	// If the desired formats cannot allow it, building the swapchain will result in the
+	// `SwapchainError::required_usage_or_features_not_supported` error. Use this functionnality only if you require
+	// formats to support a set of feature flags that are not already implied by set_image_usage_flags
 	SwapchainBuilder& set_format_feature_flags(VkFormatFeatureFlags feature_flags);
 	// Add a format feature to the bitmask for acquired swapchain images.
 	SwapchainBuilder& add_format_feature_flags(VkFormatFeatureFlags feature_flags);
 	// Use the default format feature bitmask values. This is the default if no format features
-	// are provided. The default is VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT
+	// are provided. The default is 0
 	SwapchainBuilder& use_default_format_feature_flags();
 
 	// Set the number of views in for multiview/stereo surface
@@ -922,7 +927,7 @@ class SwapchainBuilder {
 		uint32_t min_image_count = 0;
 		uint32_t required_min_image_count = 0;
 		VkImageUsageFlags image_usage_flags = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
-		VkFormatFeatureFlags format_feature_flags = VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT;
+		VkFormatFeatureFlags format_feature_flags = 0;
 		uint32_t graphics_queue_index = 0;
 		uint32_t present_queue_index = 0;
 		VkSurfaceTransformFlagBitsKHR pre_transform = static_cast<VkSurfaceTransformFlagBitsKHR>(0);

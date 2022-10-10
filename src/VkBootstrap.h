@@ -359,11 +359,12 @@ class InstanceBuilder {
 
 	// Prefer a vulkan instance API version. If the desired version isn't available, it will use the
 	// highest version available. Should be constructed with VK_MAKE_VERSION or VK_MAKE_API_VERSION.
-	[[deprecated("Use require_api_version + set_minimum_instance_version instead.")]]
-	InstanceBuilder& desire_api_version(uint32_t preferred_vulkan_version);
+	[[deprecated("Use require_api_version + set_minimum_instance_version instead.")]] InstanceBuilder&
+	desire_api_version(uint32_t preferred_vulkan_version);
+
 	// Prefer a vulkan instance API version. If the desired version isn't available, it will use the highest version available.
-	[[deprecated("Use require_api_version + set_minimum_instance_version instead.")]]
-	InstanceBuilder& desire_api_version(uint32_t major, uint32_t minor, uint32_t patch = 0);
+	[[deprecated("Use require_api_version + set_minimum_instance_version instead.")]] InstanceBuilder&
+	desire_api_version(uint32_t major, uint32_t minor, uint32_t patch = 0);
 
 	// Adds a layer to be enabled. Will fail to create an instance if the layer isn't available.
 	InstanceBuilder& enable_layer(const char* layer_name);
@@ -581,8 +582,9 @@ class PhysicalDeviceSelector {
 	PhysicalDeviceSelector& add_desired_extensions(std::vector<const char*> extensions);
 
 	// Prefer a physical device that supports a (major, minor) version of vulkan.
-	[[deprecated("Use set_minimum_version + InstanceBuilder::require_api_version.")]]
-	PhysicalDeviceSelector& set_desired_version(uint32_t major, uint32_t minor);
+	[[deprecated("Use set_minimum_version + InstanceBuilder::require_api_version.")]] PhysicalDeviceSelector&
+	set_desired_version(uint32_t major, uint32_t minor);
+
 	// Require a physical device that supports a (major, minor) version of vulkan.
 	PhysicalDeviceSelector& set_minimum_version(uint32_t major, uint32_t minor);
 
@@ -924,7 +926,11 @@ class SwapchainBuilder {
 		uint32_t graphics_queue_index = 0;
 		uint32_t present_queue_index = 0;
 		VkSurfaceTransformFlagBitsKHR pre_transform = static_cast<VkSurfaceTransformFlagBitsKHR>(0);
+#if defined(__ANDROID__)
+		VkCompositeAlphaFlagBitsKHR composite_alpha = VK_COMPOSITE_ALPHA_INHERIT_BIT_KHR;
+#else
 		VkCompositeAlphaFlagBitsKHR composite_alpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
+#endif
 		std::vector<VkPresentModeKHR> desired_present_modes;
 		bool clipped = true;
 		VkSwapchainKHR old_swapchain = VK_NULL_HANDLE;

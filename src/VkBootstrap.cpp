@@ -1633,7 +1633,7 @@ Result<SurfaceSupportDetails> query_surface_support_details(VkPhysicalDevice phy
 	return SurfaceSupportDetails{ capabilities, formats, present_modes };
 }
 
-Result<VkSurfaceFormatKHR> find_desired_surface_format(VkPhysicalDevice phys_device,
+Result<VkSurfaceFormatKHR> find_desired_surface_format(VkPhysicalDevice /* phys_device */,
     std::vector<VkSurfaceFormatKHR> const& available_formats,
     std::vector<VkSurfaceFormatKHR> const& desired_formats) {
 	for (auto const& desired_format : desired_formats) {
@@ -1669,11 +1669,6 @@ VkPresentModeKHR find_present_mode(std::vector<VkPresentModeKHR> const& availabl
 	}
 	// only present mode required, use as a fallback
 	return VK_PRESENT_MODE_FIFO_KHR;
-}
-
-bool is_unextended_present_mode(VkPresentModeKHR present_mode) {
-	return (present_mode == VK_PRESENT_MODE_IMMEDIATE_KHR) || (present_mode == VK_PRESENT_MODE_MAILBOX_KHR) ||
-	       (present_mode == VK_PRESENT_MODE_FIFO_KHR) || (present_mode == VK_PRESENT_MODE_FIFO_RELAXED_KHR);
 }
 
 template <typename T> T minimum(T a, T b) { return a < b ? a : b; }
@@ -1795,7 +1790,12 @@ Result<Swapchain> SwapchainBuilder::build() const {
 	VkPresentModeKHR present_mode = detail::find_present_mode(surface_support.present_modes, desired_present_modes);
 
 	// VkSurfaceCapabilitiesKHR::supportedUsageFlags is only only valid for some present modes. For shared present modes, we should also check VkSharedPresentSurfaceCapabilitiesKHR::sharedPresentSupportedUsageFlags.
-	if (detail::is_unextended_present_mode(present_mode) &&
+	auto is_unextended_present_mode = [](VkPresentModeKHR present_mode) {
+		return (present_mode == VK_PRESENT_MODE_IMMEDIATE_KHR) || (present_mode == VK_PRESENT_MODE_MAILBOX_KHR) ||
+		       (present_mode == VK_PRESENT_MODE_FIFO_KHR) || (present_mode == VK_PRESENT_MODE_FIFO_RELAXED_KHR);
+	};
+
+	if (is_unextended_present_mode(present_mode) &&
 	    (info.image_usage_flags & surface_support.capabilities.supportedUsageFlags) != info.image_usage_flags) {
 		return Error{ SwapchainError::required_usage_not_supported };
 	}

@@ -213,7 +213,7 @@ enum class SwapchainError {
 	failed_get_swapchain_images,
 	failed_create_swapchain_image_views,
 	required_min_image_count_too_low,
-	required_usage_or_features_not_supported
+	required_usage_not_supported
 };
 
 std::error_code make_error_code(InstanceError instance_error);
@@ -851,9 +851,8 @@ class SwapchainBuilder {
 	SwapchainBuilder& use_default_image_usage_flags();
 
 	// Set the bitmask of the format feature flag for acquired swapchain images.
-	// If the desired formats cannot allow it, building the swapchain will result in the
-	// `SwapchainError::required_usage_or_features_not_supported` error. Use this functionnality only if you require
-	// formats to support a set of feature flags that are not already implied by set_image_usage_flags
+	// Use this functionnality only if you require formats to support a set of feature flags 
+	// that are not already implied by set_image_usage_flags
 	SwapchainBuilder& set_format_feature_flags(VkFormatFeatureFlags feature_flags);
 	// Add a format feature to the bitmask for acquired swapchain images.
 	SwapchainBuilder& add_format_feature_flags(VkFormatFeatureFlags feature_flags);

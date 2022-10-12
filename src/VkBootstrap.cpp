@@ -443,7 +443,7 @@ const char* to_string(SwapchainError err) {
 		CASE_TO_STRING(SwapchainError, failed_get_swapchain_images)
 		CASE_TO_STRING(SwapchainError, failed_create_swapchain_image_views)
 		CASE_TO_STRING(SwapchainError, required_min_image_count_too_low)
-		CASE_TO_STRING(SwapchainError, required_usage_or_features_not_supported)
+		CASE_TO_STRING(SwapchainError, required_usage_not_supported)
 		default:
 			return "";
 	}
@@ -1585,8 +1585,7 @@ enum class SurfaceSupportError {
 	surface_handle_null,
 	failed_get_surface_capabilities,
 	failed_enumerate_surface_formats,
-	failed_enumerate_present_modes,
-	no_suitable_format
+	failed_enumerate_present_modes
 };
 
 struct SurfaceSupportErrorCategory : std::error_category {
@@ -1633,7 +1632,7 @@ Result<SurfaceSupportDetails> query_surface_support_details(VkPhysicalDevice phy
 	return SurfaceSupportDetails{ capabilities, formats, present_modes };
 }
 
-Result<VkSurfaceFormatKHR> find_surface_format(VkPhysicalDevice phys_device,
+VkSurfaceFormatKHR find_surface_format(VkPhysicalDevice phys_device,
     std::vector<VkSurfaceFormatKHR> const& available_formats,
     std::vector<VkSurfaceFormatKHR> const& desired_formats,
     VkFormatFeatureFlags feature_flags) {
@@ -1648,8 +1647,8 @@ Result<VkSurfaceFormatKHR> find_surface_format(VkPhysicalDevice phys_device,
 		}
 	}
 
-	// If no format supports the provided feature, we report that no format is suitable to the user request
-	return { make_error_code(SurfaceSupportError::no_suitable_format) };
+	// use the first available one if any desired formats aren't found
+	return available_formats[0];
 }
 
 VkPresentModeKHR find_present_mode(std::vector<VkPresentModeKHR> const& available_resent_modes,
@@ -1772,10 +1771,8 @@ Result<Swapchain> SwapchainBuilder::build() const {
 		image_count = surface_support.capabilities.maxImageCount;
 	}
 
-	auto surface_format_ret =
+	VkSurfaceFormatKHR surface_format =
 	    detail::find_surface_format(info.physical_device, surface_support.formats, desired_formats, info.format_feature_flags);
-	if (!surface_format_ret.has_value()) return Error{ SwapchainError::required_usage_or_features_not_supported };
-	auto surface_format = surface_format_ret.value();
 
 	VkExtent2D extent = detail::find_extent(surface_support.capabilities, info.desired_width, info.desired_height);
 
@@ -1791,7 +1788,7 @@ Result<Swapchain> SwapchainBuilder::build() const {
 
 	if (detail::is_unextended_present_mode(present_mode) &&
 	    (info.image_usage_flags & surface_support.capabilities.supportedUsageFlags) != info.image_usage_flags) {
-		return Error{ SwapchainError::required_usage_or_features_not_supported };
+		return Error{ SwapchainError::required_usage_not_supported };
 	}
 
 	VkSurfaceTransformFlagBitsKHR pre_transform = info.pre_transform;

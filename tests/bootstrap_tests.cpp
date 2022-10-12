@@ -305,7 +305,6 @@ TEST_CASE("Swapchain", "[VkBootstrap.bootstrap]") {
 			vkb::SwapchainBuilder swapchain_builder(device);
 			auto swapchain_ret = swapchain_builder.set_desired_extent(256, 256)
 			                         .set_desired_format({ VK_FORMAT_R8G8B8A8_UNORM, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR })
-			                         .add_fallback_format({ VK_FORMAT_B8G8R8A8_UNORM, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR })
 			                         .set_desired_present_mode(VK_PRESENT_MODE_IMMEDIATE_KHR)
 			                         .set_pre_transform_flags(VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR)
 			                         .set_composite_alpha_flags(VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR)

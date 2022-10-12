@@ -1585,7 +1585,8 @@ enum class SurfaceSupportError {
 	surface_handle_null,
 	failed_get_surface_capabilities,
 	failed_enumerate_surface_formats,
-	failed_enumerate_present_modes
+	failed_enumerate_present_modes,
+	no_suitable_desired_format
 };
 
 struct SurfaceSupportErrorCategory : std::error_category {
@@ -1596,7 +1597,7 @@ struct SurfaceSupportErrorCategory : std::error_category {
 			CASE_TO_STRING(SurfaceSupportError, failed_get_surface_capabilities)
 			CASE_TO_STRING(SurfaceSupportError, failed_enumerate_surface_formats)
 			CASE_TO_STRING(SurfaceSupportError, failed_enumerate_present_modes)
-			CASE_TO_STRING(SurfaceSupportError, no_suitable_format)
+			CASE_TO_STRING(SurfaceSupportError, no_suitable_desired_format)
 			default:
 				return "";
 		}
@@ -1632,22 +1633,29 @@ Result<SurfaceSupportDetails> query_surface_support_details(VkPhysicalDevice phy
 	return SurfaceSupportDetails{ capabilities, formats, present_modes };
 }
 
-VkSurfaceFormatKHR find_surface_format(VkPhysicalDevice phys_device,
+Result<VkSurfaceFormatKHR> find_desired_surface_format(VkPhysicalDevice phys_device,
     std::vector<VkSurfaceFormatKHR> const& available_formats,
-    std::vector<VkSurfaceFormatKHR> const& desired_formats,
-    VkFormatFeatureFlags feature_flags) {
+    std::vector<VkSurfaceFormatKHR> const& desired_formats) {
 	for (auto const& desired_format : desired_formats) {
 		for (auto const& available_format : available_formats) {
 			// finds the first format that is desired and available
 			if (desired_format.format == available_format.format && desired_format.colorSpace == available_format.colorSpace) {
-				VkFormatProperties properties;
-				detail::vulkan_functions().fp_vkGetPhysicalDeviceFormatProperties(phys_device, desired_format.format, &properties);
-				if ((properties.optimalTilingFeatures & feature_flags) == feature_flags) return desired_format;
+				return desired_format;
 			}
 		}
 	}
 
-	// use the first available one if any desired formats aren't found
+	// if no desired format is available, we report that no format is suitable to the user request
+	return { make_error_code(SurfaceSupportError::no_suitable_desired_format) };
+}
+
+VkSurfaceFormatKHR find_best_surface_format(VkPhysicalDevice phys_device,
+    std::vector<VkSurfaceFormatKHR> const& available_formats,
+    std::vector<VkSurfaceFormatKHR> const& desired_formats) {
+	auto surface_format_ret = detail::find_desired_surface_format(phys_device, available_formats, desired_formats);
+	if (surface_format_ret.has_value()) return surface_format_ret.value();
+
+	// use the first available format as a fallback if any desired formats aren't found
 	return available_formats[0];
 }
 
@@ -1772,7 +1780,7 @@ Result<Swapchain> SwapchainBuilder::build() const {
 	}
 
 	VkSurfaceFormatKHR surface_format =
-	    detail::find_surface_format(info.physical_device, surface_support.formats, desired_formats, info.format_feature_flags);
+	    detail::find_best_surface_format(info.physical_device, surface_support.formats, desired_formats);
 
 	VkExtent2D extent = detail::find_extent(surface_support.capabilities, info.desired_width, info.desired_height);
 
@@ -1786,6 +1794,7 @@ Result<Swapchain> SwapchainBuilder::build() const {
 
 	VkPresentModeKHR present_mode = detail::find_present_mode(surface_support.present_modes, desired_present_modes);
 
+	// VkSurfaceCapabilitiesKHR::supportedUsageFlags is only only valid for some present modes. For shared present modes, we should also check VkSharedPresentSurfaceCapabilitiesKHR::sharedPresentSupportedUsageFlags.
 	if (detail::is_unextended_present_mode(present_mode) &&
 	    (info.image_usage_flags & surface_support.capabilities.supportedUsageFlags) != info.image_usage_flags) {
 		return Error{ SwapchainError::required_usage_not_supported };
@@ -1975,18 +1984,6 @@ SwapchainBuilder& SwapchainBuilder::add_image_usage_flags(VkImageUsageFlags usag
 }
 SwapchainBuilder& SwapchainBuilder::use_default_image_usage_flags() {
 	info.image_usage_flags = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
-	return *this;
-}
-SwapchainBuilder& SwapchainBuilder::set_format_feature_flags(VkFormatFeatureFlags feature_flags) {
-	info.format_feature_flags = feature_flags;
-	return *this;
-}
-SwapchainBuilder& SwapchainBuilder::add_format_feature_flags(VkFormatFeatureFlags feature_flags) {
-	info.format_feature_flags = info.format_feature_flags | feature_flags;
-	return *this;
-}
-SwapchainBuilder& SwapchainBuilder::use_default_format_feature_flags() {
-	info.format_feature_flags = 0;
 	return *this;
 }
 SwapchainBuilder& SwapchainBuilder::set_image_array_layer_count(uint32_t array_layer_count) {

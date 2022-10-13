@@ -933,19 +933,11 @@ bool supports_features(VkPhysicalDeviceFeatures supported,
 	return true;
 }
 // clang-format on
-// Finds the first queue which supports the desired operations. Returns QUEUE_INDEX_MAX_VALUE if none is found
-uint32_t get_first_queue_index(std::vector<VkQueueFamilyProperties> const& families, VkQueueFlags desired_flags) {
-	for (uint32_t i = 0; i < static_cast<uint32_t>(families.size()); i++) {
-		if ((families[i].queueFlags & desired_flags) == desired_flags) return i;
-	}
-	return QUEUE_INDEX_MAX_VALUE;
-}
 
-// Finds the queue which is separate from the graphics queue and has the desired flag and not the
-// undesired flag, but will select it if no better options are available compute support. Returns
-// QUEUE_INDEX_MAX_VALUE if none is found.
+// Finds the first queue which has the desired flag and not the undesired flag (defaults to none),
+// but will select it if no better options are available. Returns QUEUE_INDEX_MAX_VALUE if none is found.
 uint32_t get_first_queue_index(
-    std::vector<VkQueueFamilyProperties> const& families, VkQueueFlags desired_flags, VkQueueFlags undesired_flags) {
+    std::vector<VkQueueFamilyProperties> const& families, VkQueueFlags desired_flags, VkQueueFlags undesired_flags = 0) {
 	uint32_t index = QUEUE_INDEX_MAX_VALUE;
 	for (uint32_t i = 0; i < static_cast<uint32_t>(families.size()); i++) {
 		if ((families[i].queueFlags & desired_flags) == desired_flags) {

@@ -940,6 +940,25 @@ uint32_t get_first_queue_index(std::vector<VkQueueFamilyProperties> const& famil
 	}
 	return QUEUE_INDEX_MAX_VALUE;
 }
+
+// Finds the queue which is separate from the graphics queue and has the desired flag and not the
+// undesired flag, but will select it if no better options are available compute support. Returns
+// QUEUE_INDEX_MAX_VALUE if none is found.
+uint32_t get_first_queue_index(
+    std::vector<VkQueueFamilyProperties> const& families, VkQueueFlags desired_flags, VkQueueFlags undesired_flags) {
+	uint32_t index = QUEUE_INDEX_MAX_VALUE;
+	for (uint32_t i = 0; i < static_cast<uint32_t>(families.size()); i++) {
+		if ((families[i].queueFlags & desired_flags) == desired_flags) {
+			if ((families[i].queueFlags & undesired_flags) == 0) {
+				return i;
+			} else {
+				index = i;
+			}
+		}
+	}
+	return index;
+}
+
 // Finds the queue which is separate from the graphics queue and has the desired flag and not the
 // undesired flag, but will select it if no better options are available compute support. Returns
 // QUEUE_INDEX_MAX_VALUE if none is found.
@@ -1399,11 +1418,13 @@ Result<uint32_t> Device::get_queue_index(QueueType type) const {
 			if (index == detail::QUEUE_INDEX_MAX_VALUE) return Result<uint32_t>{ QueueError::graphics_unavailable };
 			break;
 		case QueueType::compute:
-			index = detail::get_separate_queue_index(queue_families, VK_QUEUE_COMPUTE_BIT, VK_QUEUE_TRANSFER_BIT);
+			VkQueueFlags undesired_flags = VK_QUEUE_GRAPHICS_BIT | VK_QUEUE_TRANSFER_BIT;
+			index = detail::get_first_queue_index(queue_families, VK_QUEUE_COMPUTE_BIT, undesired_flags);
 			if (index == detail::QUEUE_INDEX_MAX_VALUE) return Result<uint32_t>{ QueueError::compute_unavailable };
 			break;
 		case QueueType::transfer:
-			index = detail::get_separate_queue_index(queue_families, VK_QUEUE_TRANSFER_BIT, VK_QUEUE_COMPUTE_BIT);
+			VkQueueFlags undesired_flags = VK_QUEUE_GRAPHICS_BIT | VK_QUEUE_COMPUTE_BIT;
+			index = detail::get_first_queue_index(queue_families, VK_QUEUE_TRANSFER_BIT, undesired_flags);
 			if (index == detail::QUEUE_INDEX_MAX_VALUE) return Result<uint32_t>{ QueueError::transfer_unavailable };
 			break;
 		default:

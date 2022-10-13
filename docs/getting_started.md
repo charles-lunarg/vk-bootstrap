@@ -234,7 +234,7 @@ Creating a swapchain follows the same form outlined by `vkb::InstanceBuilder` an
 ```cpp
 vkb::SwapchainBuilder swapchain_builder{ device };
 auto swap_ret = swapchain_builder.build ();
-if !(swap_ret){
+if (!swap_ret){
 
 }
 vkb::swapchain swapchain = swap_ret.value();

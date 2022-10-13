@@ -1410,13 +1410,11 @@ Result<uint32_t> Device::get_queue_index(QueueType type) const {
 			if (index == detail::QUEUE_INDEX_MAX_VALUE) return Result<uint32_t>{ QueueError::graphics_unavailable };
 			break;
 		case QueueType::compute:
-			VkQueueFlags undesired_flags = VK_QUEUE_GRAPHICS_BIT | VK_QUEUE_TRANSFER_BIT;
-			index = detail::get_first_queue_index(queue_families, VK_QUEUE_COMPUTE_BIT, undesired_flags);
+			index = detail::get_first_queue_index(queue_families, VK_QUEUE_COMPUTE_BIT, VK_QUEUE_GRAPHICS_BIT | VK_QUEUE_TRANSFER_BIT);
 			if (index == detail::QUEUE_INDEX_MAX_VALUE) return Result<uint32_t>{ QueueError::compute_unavailable };
 			break;
 		case QueueType::transfer:
-			VkQueueFlags undesired_flags = VK_QUEUE_GRAPHICS_BIT | VK_QUEUE_COMPUTE_BIT;
-			index = detail::get_first_queue_index(queue_families, VK_QUEUE_TRANSFER_BIT, undesired_flags);
+			index = detail::get_first_queue_index(queue_families, VK_QUEUE_TRANSFER_BIT, VK_QUEUE_GRAPHICS_BIT | VK_QUEUE_COMPUTE_BIT);
 			if (index == detail::QUEUE_INDEX_MAX_VALUE) return Result<uint32_t>{ QueueError::transfer_unavailable };
 			break;
 		default:

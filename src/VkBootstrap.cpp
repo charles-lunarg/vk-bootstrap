@@ -1633,9 +1633,8 @@ Result<SurfaceSupportDetails> query_surface_support_details(VkPhysicalDevice phy
 	return SurfaceSupportDetails{ capabilities, formats, present_modes };
 }
 
-Result<VkSurfaceFormatKHR> find_desired_surface_format(VkPhysicalDevice /* phys_device */,
-    std::vector<VkSurfaceFormatKHR> const& available_formats,
-    std::vector<VkSurfaceFormatKHR> const& desired_formats) {
+Result<VkSurfaceFormatKHR> find_desired_surface_format(
+    std::vector<VkSurfaceFormatKHR> const& available_formats, std::vector<VkSurfaceFormatKHR> const& desired_formats) {
 	for (auto const& desired_format : desired_formats) {
 		for (auto const& available_format : available_formats) {
 			// finds the first format that is desired and available
@@ -1649,10 +1648,9 @@ Result<VkSurfaceFormatKHR> find_desired_surface_format(VkPhysicalDevice /* phys_
 	return { make_error_code(SurfaceSupportError::no_suitable_desired_format) };
 }
 
-VkSurfaceFormatKHR find_best_surface_format(VkPhysicalDevice phys_device,
-    std::vector<VkSurfaceFormatKHR> const& available_formats,
-    std::vector<VkSurfaceFormatKHR> const& desired_formats) {
-	auto surface_format_ret = detail::find_desired_surface_format(phys_device, available_formats, desired_formats);
+VkSurfaceFormatKHR find_best_surface_format(
+    std::vector<VkSurfaceFormatKHR> const& available_formats, std::vector<VkSurfaceFormatKHR> const& desired_formats) {
+	auto surface_format_ret = detail::find_desired_surface_format(available_formats, desired_formats);
 	if (surface_format_ret.has_value()) return surface_format_ret.value();
 
 	// use the first available format as a fallback if any desired formats aren't found
@@ -1775,7 +1773,7 @@ Result<Swapchain> SwapchainBuilder::build() const {
 	}
 
 	VkSurfaceFormatKHR surface_format =
-	    detail::find_best_surface_format(info.physical_device, surface_support.formats, desired_formats);
+	    detail::find_best_surface_format(surface_support.formats, desired_formats);
 
 	VkExtent2D extent = detail::find_extent(surface_support.capabilities, info.desired_width, info.desired_height);
 

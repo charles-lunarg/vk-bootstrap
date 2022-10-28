@@ -59,7 +59,7 @@ auto inst_builder_ret = instance_builder
 To query the available layers and extensions, get a `SystemInfo` struct from `SystemInfo::get_system_info()`. It contains a `is_layer_available()` and `is_extension_available()` function to check for a layer or extensions before enabling it. It also has booleans for if the validation layers are present and if the VK_EXT_debug_utils extension is available.
 
 ```cpp
-auto system_info_ret = vkb::SystemInfo.get_system_info();
+auto system_info_ret = vkb::SystemInfo::get_system_info();
 if (!system_info_ret) {
     printf("%s\n", system_info_ret.error().message());
     return -1;

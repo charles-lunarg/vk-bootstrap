@@ -766,9 +766,6 @@ struct DispatchTable {
 #if (defined(VK_VERSION_1_3))
 		fp_vkCmdSetPrimitiveRestartEnable = reinterpret_cast<PFN_vkCmdSetPrimitiveRestartEnable>(procAddr(device, "vkCmdSetPrimitiveRestartEnable"));
 #endif
-#if (defined(VK_VERSION_1_3))
-		fp_vkCreatePrivateDataSlot = reinterpret_cast<PFN_vkCreatePrivateDataSlot>(procAddr(device, "vkCreatePrivateDataSlot"));
-#endif
 #if (defined(VK_EXT_extended_dynamic_state3))
 		fp_vkCmdSetTessellationDomainOriginEXT = reinterpret_cast<PFN_vkCmdSetTessellationDomainOriginEXT>(procAddr(device, "vkCmdSetTessellationDomainOriginEXT"));
 #endif
@@ -861,6 +858,9 @@ struct DispatchTable {
 #endif
 #if (defined(VK_EXT_extended_dynamic_state3))
 		fp_vkCmdSetRepresentativeFragmentTestEnableNV = reinterpret_cast<PFN_vkCmdSetRepresentativeFragmentTestEnableNV>(procAddr(device, "vkCmdSetRepresentativeFragmentTestEnableNV"));
+#endif
+#if (defined(VK_VERSION_1_3))
+		fp_vkCreatePrivateDataSlot = reinterpret_cast<PFN_vkCreatePrivateDataSlot>(procAddr(device, "vkCreatePrivateDataSlot"));
 #endif
 #if (defined(VK_VERSION_1_3))
 		fp_vkDestroyPrivateDataSlot = reinterpret_cast<PFN_vkDestroyPrivateDataSlot>(procAddr(device, "vkDestroyPrivateDataSlot"));
@@ -2658,11 +2658,6 @@ struct DispatchTable {
 		fp_vkCmdSetPrimitiveRestartEnable(commandBuffer, primitiveRestartEnable);
 	}
 #endif
-#if (defined(VK_VERSION_1_3))
-	VkResult createPrivateDataSlot(const VkPrivateDataSlotCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkPrivateDataSlotEXT* pPrivateDataSlot) const noexcept {
-		return fp_vkCreatePrivateDataSlot(device, pCreateInfo, pAllocator, pPrivateDataSlot);
-	}
-#endif
 #if (defined(VK_EXT_extended_dynamic_state3))
 	void cmdSetTessellationDomainOriginEXT(VkCommandBuffer commandBuffer, VkTessellationDomainOriginKHR domainOrigin) const noexcept {
 		fp_vkCmdSetTessellationDomainOriginEXT(commandBuffer, domainOrigin);
@@ -2816,6 +2811,11 @@ struct DispatchTable {
 #if (defined(VK_EXT_extended_dynamic_state3))
 	void cmdSetRepresentativeFragmentTestEnableNV(VkCommandBuffer commandBuffer, VkBool32 representativeFragmentTestEnable) const noexcept {
 		fp_vkCmdSetRepresentativeFragmentTestEnableNV(commandBuffer, representativeFragmentTestEnable);
+	}
+#endif
+#if (defined(VK_VERSION_1_3))
+	VkResult createPrivateDataSlot(const VkPrivateDataSlotCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkPrivateDataSlotEXT* pPrivateDataSlot) const noexcept {
+		return fp_vkCreatePrivateDataSlot(device, pCreateInfo, pAllocator, pPrivateDataSlot);
 	}
 #endif
 #if (defined(VK_VERSION_1_3))
@@ -4235,9 +4235,6 @@ struct DispatchTable {
 #if (defined(VK_VERSION_1_3))
 	PFN_vkCmdSetPrimitiveRestartEnable fp_vkCmdSetPrimitiveRestartEnable = nullptr;
 #endif
-#if (defined(VK_VERSION_1_3))
-	PFN_vkCreatePrivateDataSlot fp_vkCreatePrivateDataSlot = nullptr;
-#endif
 #if (defined(VK_EXT_extended_dynamic_state3))
 	PFN_vkCmdSetTessellationDomainOriginEXT fp_vkCmdSetTessellationDomainOriginEXT = nullptr;
 #endif
@@ -4330,6 +4327,9 @@ struct DispatchTable {
 #endif
 #if (defined(VK_EXT_extended_dynamic_state3))
 	PFN_vkCmdSetRepresentativeFragmentTestEnableNV fp_vkCmdSetRepresentativeFragmentTestEnableNV = nullptr;
+#endif
+#if (defined(VK_VERSION_1_3))
+	PFN_vkCreatePrivateDataSlot fp_vkCreatePrivateDataSlot = nullptr;
 #endif
 #if (defined(VK_VERSION_1_3))
 	PFN_vkDestroyPrivateDataSlot fp_vkDestroyPrivateDataSlot = nullptr;

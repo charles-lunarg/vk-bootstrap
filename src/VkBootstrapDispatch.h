@@ -143,6 +143,12 @@ struct DispatchTable {
 		fp_vkCmdBlitImage = reinterpret_cast<PFN_vkCmdBlitImage>(procAddr(device, "vkCmdBlitImage"));
 		fp_vkCmdCopyBufferToImage = reinterpret_cast<PFN_vkCmdCopyBufferToImage>(procAddr(device, "vkCmdCopyBufferToImage"));
 		fp_vkCmdCopyImageToBuffer = reinterpret_cast<PFN_vkCmdCopyImageToBuffer>(procAddr(device, "vkCmdCopyImageToBuffer"));
+#if (defined(VK_NV_copy_memory_indirect))
+		fp_vkCmdCopyMemoryIndirectNV = reinterpret_cast<PFN_vkCmdCopyMemoryIndirectNV>(procAddr(device, "vkCmdCopyMemoryIndirectNV"));
+#endif
+#if (defined(VK_NV_copy_memory_indirect))
+		fp_vkCmdCopyMemoryToImageIndirectNV = reinterpret_cast<PFN_vkCmdCopyMemoryToImageIndirectNV>(procAddr(device, "vkCmdCopyMemoryToImageIndirectNV"));
+#endif
 		fp_vkCmdUpdateBuffer = reinterpret_cast<PFN_vkCmdUpdateBuffer>(procAddr(device, "vkCmdUpdateBuffer"));
 		fp_vkCmdFillBuffer = reinterpret_cast<PFN_vkCmdFillBuffer>(procAddr(device, "vkCmdFillBuffer"));
 		fp_vkCmdClearColorImage = reinterpret_cast<PFN_vkCmdClearColorImage>(procAddr(device, "vkCmdClearColorImage"));
@@ -964,6 +970,12 @@ struct DispatchTable {
 #if (defined(VK_KHR_video_encode_queue))
 		fp_vkCmdEncodeVideoKHR = reinterpret_cast<PFN_vkCmdEncodeVideoKHR>(procAddr(device, "vkCmdEncodeVideoKHR"));
 #endif
+#if (defined(VK_NV_memory_decompression))
+		fp_vkCmdDecompressMemoryNV = reinterpret_cast<PFN_vkCmdDecompressMemoryNV>(procAddr(device, "vkCmdDecompressMemoryNV"));
+#endif
+#if (defined(VK_NV_memory_decompression))
+		fp_vkCmdDecompressMemoryIndirectCountNV = reinterpret_cast<PFN_vkCmdDecompressMemoryIndirectCountNV>(procAddr(device, "vkCmdDecompressMemoryIndirectCountNV"));
+#endif
 #if (defined(VK_EXT_pageable_device_local_memory))
 		fp_vkSetDeviceMemoryPriorityEXT = reinterpret_cast<PFN_vkSetDeviceMemoryPriorityEXT>(procAddr(device, "vkSetDeviceMemoryPriorityEXT"));
 #endif
@@ -1593,6 +1605,16 @@ struct DispatchTable {
 	void cmdCopyImageToBuffer(VkCommandBuffer commandBuffer, VkImage srcImage, VkImageLayout srcImageLayout, VkBuffer dstBuffer, uint32_t regionCount, const VkBufferImageCopy* pRegions) const noexcept {
 		fp_vkCmdCopyImageToBuffer(commandBuffer, srcImage, srcImageLayout, dstBuffer, regionCount, pRegions);
 	}
+#if (defined(VK_NV_copy_memory_indirect))
+	void cmdCopyMemoryIndirectNV(VkCommandBuffer commandBuffer, VkDeviceAddress copyBufferAddress, uint32_t copyCount, uint32_t stride) const noexcept {
+		fp_vkCmdCopyMemoryIndirectNV(commandBuffer, copyBufferAddress, copyCount, stride);
+	}
+#endif
+#if (defined(VK_NV_copy_memory_indirect))
+	void cmdCopyMemoryToImageIndirectNV(VkCommandBuffer commandBuffer, VkDeviceAddress copyBufferAddress, uint32_t copyCount, uint32_t stride, VkImage dstImage, VkImageLayout dstImageLayout, const VkImageSubresourceLayers* pImageSubresources) const noexcept {
+		fp_vkCmdCopyMemoryToImageIndirectNV(commandBuffer, copyBufferAddress, copyCount, stride, dstImage, dstImageLayout, pImageSubresources);
+	}
+#endif
 	void cmdUpdateBuffer(VkCommandBuffer commandBuffer, VkBuffer dstBuffer, VkDeviceSize dstOffset, VkDeviceSize dataSize, const void* pData) const noexcept {
 		fp_vkCmdUpdateBuffer(commandBuffer, dstBuffer, dstOffset, dataSize, pData);
 	}
@@ -2988,6 +3010,16 @@ struct DispatchTable {
 		fp_vkCmdEncodeVideoKHR(commandBuffer, pEncodeInfo);
 	}
 #endif
+#if (defined(VK_NV_memory_decompression))
+	void cmdDecompressMemoryNV(VkCommandBuffer commandBuffer, uint32_t decompressRegionCount, const VkDecompressMemoryRegionNV* pDecompressMemoryRegions) const noexcept {
+		fp_vkCmdDecompressMemoryNV(commandBuffer, decompressRegionCount, pDecompressMemoryRegions);
+	}
+#endif
+#if (defined(VK_NV_memory_decompression))
+	void cmdDecompressMemoryIndirectCountNV(VkCommandBuffer commandBuffer, VkDeviceAddress indirectCommandsAddress, VkDeviceAddress indirectCommandsCountAddress, uint32_t stride) const noexcept {
+		fp_vkCmdDecompressMemoryIndirectCountNV(commandBuffer, indirectCommandsAddress, indirectCommandsCountAddress, stride);
+	}
+#endif
 #if (defined(VK_EXT_pageable_device_local_memory))
 	void setDeviceMemoryPriorityEXT(VkDeviceMemory memory, float priority) const noexcept {
 		fp_vkSetDeviceMemoryPriorityEXT(device, memory, priority);
@@ -3612,6 +3644,12 @@ struct DispatchTable {
 	PFN_vkCmdBlitImage fp_vkCmdBlitImage = nullptr;
 	PFN_vkCmdCopyBufferToImage fp_vkCmdCopyBufferToImage = nullptr;
 	PFN_vkCmdCopyImageToBuffer fp_vkCmdCopyImageToBuffer = nullptr;
+#if (defined(VK_NV_copy_memory_indirect))
+	PFN_vkCmdCopyMemoryIndirectNV fp_vkCmdCopyMemoryIndirectNV = nullptr;
+#endif
+#if (defined(VK_NV_copy_memory_indirect))
+	PFN_vkCmdCopyMemoryToImageIndirectNV fp_vkCmdCopyMemoryToImageIndirectNV = nullptr;
+#endif
 	PFN_vkCmdUpdateBuffer fp_vkCmdUpdateBuffer = nullptr;
 	PFN_vkCmdFillBuffer fp_vkCmdFillBuffer = nullptr;
 	PFN_vkCmdClearColorImage fp_vkCmdClearColorImage = nullptr;
@@ -4432,6 +4470,12 @@ struct DispatchTable {
 #endif
 #if (defined(VK_KHR_video_encode_queue))
 	PFN_vkCmdEncodeVideoKHR fp_vkCmdEncodeVideoKHR = nullptr;
+#endif
+#if (defined(VK_NV_memory_decompression))
+	PFN_vkCmdDecompressMemoryNV fp_vkCmdDecompressMemoryNV = nullptr;
+#endif
+#if (defined(VK_NV_memory_decompression))
+	PFN_vkCmdDecompressMemoryIndirectCountNV fp_vkCmdDecompressMemoryIndirectCountNV = nullptr;
 #endif
 #if (defined(VK_EXT_pageable_device_local_memory))
 	PFN_vkSetDeviceMemoryPriorityEXT fp_vkSetDeviceMemoryPriorityEXT = nullptr;

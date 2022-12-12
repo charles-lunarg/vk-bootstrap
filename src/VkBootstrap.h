@@ -36,6 +36,7 @@
 
 #if defined(VK_API_VERSION_1_3) || defined(VK_VERSION_1_3)
 #define VKB_VK_API_VERSION_1_3 VKB_MAKE_VK_VERSION(0, 1, 3, 0)
+#define VKB_VK_API_VERSION_LATEST VKB_VK_API_VERSION_1_3
 #endif
 
 #if defined(VK_API_VERSION_1_2) || defined(VK_VERSION_1_2)

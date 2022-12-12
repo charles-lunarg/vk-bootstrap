@@ -146,6 +146,22 @@ template <typename T> class Result {
 	bool has_value() const { return m_init; }
 	explicit operator bool() const { return m_init; }
 
+	// return the value if exists, otherwise throw a runtime error with the default message
+	T unwrap() {
+		if(m_init) {
+			return m_value;
+		}
+		throw std::runtime_error(m_error.type.message());
+	}
+
+	// return the value if exists, otherwise throw a runtime error with the provided message
+	T expect(const std::string& message) {
+		if(m_init) {
+			return m_value;
+		}
+		throw std::runtime_error(message);
+	}
+
 	private:
 	void destroy() {
 		if (m_init) m_value.~T();

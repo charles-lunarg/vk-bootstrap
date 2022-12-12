@@ -7,13 +7,16 @@
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
  *
  * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT
- * LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT.
  * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
  * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * Copyright © 2020 Charles Giessen (charles@lunarg.com)
  */
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "OCUnusedGlobalDeclarationInspection"
+#pragma ide diagnostic ignored "OCUnusedMacroInspection"
 #pragma once
 
 #include <cassert>
@@ -60,12 +63,12 @@ struct Error {
 
 template <typename T> class Result {
 	public:
-	Result(const T& value) noexcept : m_value{ value }, m_init{ true } {}
-	Result(T&& value) noexcept : m_value{ std::move(value) }, m_init{ true } {}
+	explicit Result(const T& value) noexcept : m_value{ value }, m_init{ true } {}
+	explicit Result(T&& value) noexcept : m_value{ std::move(value) }, m_init{ true } {}
 
-	Result(Error error) noexcept : m_error{ error }, m_init{ false } {}
+	explicit Result(Error error) noexcept : m_error{ error }, m_init{ false } {}
 
-	Result(std::error_code error_code, VkResult result = VK_SUCCESS) noexcept
+	explicit Result(std::error_code error_code, VkResult result = VK_SUCCESS) noexcept
 	: m_error{ error_code, result }, m_init{ false } {}
 
 	~Result() noexcept { destroy(); }
@@ -132,11 +135,11 @@ template <typename T> class Result {
 	T&&       value () &&        noexcept { assert (m_init); return std::move (m_value); }
 
     // std::error_code associated with the error
-    std::error_code error() const { assert (!m_init); return m_error.type; }
-    // optional VkResult that could of been produced due to the error
-    VkResult vk_result() const { assert (!m_init); return m_error.vk_result; }
+    [[nodiscard]] std::error_code error() const { assert (!m_init); return m_error.type; }
+    // optional VkResult that could have been produced due to the error
+    [[nodiscard]] VkResult vk_result() const { assert (!m_init); return m_error.vk_result; }
     // Returns the struct that holds the std::error_code and VkResult
-    Error full_error() const { assert (!m_init); return m_error; }
+    [[nodiscard]] Error full_error() const { assert (!m_init); return m_error; }
 	// clang-format on
 
 	// check if the result has an error that matches a specific error case
@@ -144,7 +147,7 @@ template <typename T> class Result {
 		return !m_init && static_cast<E>(m_error.type.value()) == error_enum_value;
 	}
 
-	bool has_value() const { return m_init; }
+	[[nodiscard]] bool has_value() const { return m_init; }
 	explicit operator bool() const { return m_init; }
 
 	// return the value if exists, otherwise throw a runtime error with the default message
@@ -181,7 +184,7 @@ struct GenericFeaturesPNextNode {
 
 	GenericFeaturesPNextNode();
 
-	template <typename T> GenericFeaturesPNextNode(T const& features) noexcept {
+	template <typename T> explicit GenericFeaturesPNextNode(T const& features) noexcept {
 		memset(fields, UINT8_MAX, sizeof(VkBool32) * field_capacity);
 		memcpy(this, &features, sizeof(T));
 	}
@@ -190,7 +193,7 @@ struct GenericFeaturesPNextNode {
 
 	VkStructureType sType = static_cast<VkStructureType>(0);
 	void* pNext = nullptr;
-	VkBool32 fields[field_capacity];
+	VkBool32 fields[field_capacity]{};
 };
 
 } // namespace detail
@@ -271,10 +274,6 @@ struct SystemInfo {
 	bool debug_utils_available = false;
 };
 
-// Forward declared - check VkBoostrap.cpp for implementations
-const char* to_string_message_severity(VkDebugUtilsMessageSeverityFlagBitsEXT s);
-const char* to_string_message_type(VkDebugUtilsMessageTypeFlagsEXT s);
-
 // Default debug messenger
 // Feel free to copy-paste it into your own code, change it as needed, then call `set_debug_callback()` to use that instead
 inline VKAPI_ATTR VkBool32 VKAPI_CALL default_debug_callback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
@@ -300,7 +299,7 @@ struct Instance {
 
 	// A conversion function which allows this Instance to be used
 	// in places where VkInstance would have been used.
-	operator VkInstance() const;
+	explicit operator VkInstance() const;
 
 	private:
 	bool headless = false;
@@ -344,7 +343,7 @@ class InstanceBuilder {
 	explicit InstanceBuilder(PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr);
 
 	// Create a VkInstance. Return an error if it failed.
-	Result<Instance> build() const;
+	[[nodiscard]] Result<Instance> build() const;
 
 	// Sets the name of the application. Defaults to "" if none is provided.
 	InstanceBuilder& set_app_name(const char* app_name);
@@ -444,7 +443,7 @@ class InstanceBuilder {
 		VkInstanceCreateFlags flags = static_cast<VkInstanceCreateFlags>(0);
 		std::vector<VkBaseOutStructure*> pNext_elements;
 
-		// debug callback - use the default so it is not nullptr
+		// debug callback - use the default, so it is not nullptr
 		PFN_vkDebugUtilsMessengerCallbackEXT debug_callback = default_debug_callback;
 		VkDebugUtilsMessageSeverityFlagsEXT debug_message_severity =
 		    VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
@@ -470,13 +469,8 @@ class InstanceBuilder {
 	} info;
 };
 
-VKAPI_ATTR VkBool32 VKAPI_CALL default_debug_callback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
-    VkDebugUtilsMessageTypeFlagsEXT messageType,
-    const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
-    void* pUserData);
-
 void destroy_debug_utils_messenger(
-    VkInstance const instance, VkDebugUtilsMessengerEXT const messenger, VkAllocationCallbacks* allocation_callbacks = nullptr);
+    VkInstance instance, VkDebugUtilsMessengerEXT messenger, VkAllocationCallbacks* allocation_callbacks = nullptr);
 
 // ---- Physical Device ---- //
 class PhysicalDeviceSelector;
@@ -493,24 +487,24 @@ struct PhysicalDevice {
 	VkPhysicalDeviceMemoryProperties memory_properties{};
 
 	// Has a queue family that supports compute operations but not graphics nor transfer.
-	bool has_dedicated_compute_queue() const;
+	[[nodiscard]] bool has_dedicated_compute_queue() const;
 	// Has a queue family that supports transfer operations but not graphics nor compute.
-	bool has_dedicated_transfer_queue() const;
+	[[nodiscard]] bool has_dedicated_transfer_queue() const;
 
 	// Has a queue family that supports transfer operations but not graphics.
-	bool has_separate_compute_queue() const;
+	[[nodiscard]] bool has_separate_compute_queue() const;
 	// Has a queue family that supports transfer operations but not graphics.
-	bool has_separate_transfer_queue() const;
+	[[nodiscard]] bool has_separate_transfer_queue() const;
 
 	// Advanced: Get the VkQueueFamilyProperties of the device if special queue setup is needed
-	std::vector<VkQueueFamilyProperties> get_queue_families() const;
+	[[nodiscard]] std::vector<VkQueueFamilyProperties> get_queue_families() const;
 
 	// Query the list of extensions which should be enabled
-	std::vector<std::string> get_extensions() const;
+	[[nodiscard]] std::vector<std::string> get_extensions() const;
 
 	// A conversion function which allows this PhysicalDevice to be used
 	// in places where VkPhysicalDevice would have been used.
-	operator VkPhysicalDevice() const;
+	explicit operator VkPhysicalDevice() const;
 
 	private:
 	uint32_t instance_version = VKB_VK_API_VERSION_1_0;
@@ -538,7 +532,7 @@ enum class DeviceSelectionMode {
 	only_fully_suitable
 };
 
-// Enumerates the physical devices on the system, and based on the added criteria, returns a physical device or list of physical devies
+// Enumerates the physical devices on the system, and based on the added criteria, returns a physical device or list of physical devices
 // A device is considered suitable if it meets all the 'required' and 'desired' criteria.
 // A device is considered partially suitable if it meets only the 'required' criteria.
 class PhysicalDeviceSelector {
@@ -550,14 +544,14 @@ class PhysicalDeviceSelector {
 
 	// Return the first device which is suitable
 	// use the `selection` parameter to configure if partially
-	Result<PhysicalDevice> select(DeviceSelectionMode selection = DeviceSelectionMode::partially_and_fully_suitable) const;
+	[[nodiscard]] Result<PhysicalDevice> select(DeviceSelectionMode selection = DeviceSelectionMode::partially_and_fully_suitable) const;
 
 	// Return all devices which are considered suitable - intended for applications which want to let the user pick the physical device
-	Result<std::vector<PhysicalDevice>> select_devices(
+	[[nodiscard]] Result<std::vector<PhysicalDevice>> select_devices(
 	    DeviceSelectionMode selection = DeviceSelectionMode::partially_and_fully_suitable) const;
 
 	// Return the names of all devices which are considered suitable - intended for applications which want to let the user pick the physical device
-	Result<std::vector<std::string>> select_device_names(
+	[[nodiscard]] Result<std::vector<std::string>> select_device_names(
 	    DeviceSelectionMode selection = DeviceSelectionMode::partially_and_fully_suitable) const;
 
 	// Set the surface in which the physical device should render to.
@@ -606,7 +600,7 @@ class PhysicalDeviceSelector {
 	// Require a physical device that supports a (major, minor) version of vulkan.
 	PhysicalDeviceSelector& set_minimum_version(uint32_t major, uint32_t minor);
 
-	// By default PhysicalDeviceSelector enables the portability subset if available
+	// By default, PhysicalDeviceSelector enables the portability subset if available
 	// This function disables that behavior
 	PhysicalDeviceSelector& disable_portability_subset();
 
@@ -684,9 +678,9 @@ class PhysicalDeviceSelector {
 	PhysicalDevice populate_device_details(VkPhysicalDevice phys_device,
 	    std::vector<detail::GenericFeaturesPNextNode> const& src_extended_features_chain) const;
 
-	PhysicalDevice::Suitable is_device_suitable(PhysicalDevice const& phys_device) const;
+	[[nodiscard]] PhysicalDevice::Suitable is_device_suitable(PhysicalDevice const& phys_device) const;
 
-	Result<std::vector<PhysicalDevice>> select_impl(DeviceSelectionMode selection) const;
+	[[nodiscard]] Result<std::vector<PhysicalDevice>> select_impl(DeviceSelectionMode selection) const;
 };
 
 // ---- Queue ---- //
@@ -708,20 +702,20 @@ struct Device {
 	PFN_vkGetDeviceProcAddr fp_vkGetDeviceProcAddr = nullptr;
 	uint32_t instance_version = VKB_VK_API_VERSION_1_0;
 
-	Result<uint32_t> get_queue_index(QueueType type) const;
+	[[nodiscard]] Result<uint32_t> get_queue_index(QueueType type) const;
 	// Only a compute or transfer queue type is valid. All other queue types do not support a 'dedicated' queue index
-	Result<uint32_t> get_dedicated_queue_index(QueueType type) const;
+	[[nodiscard]] Result<uint32_t> get_dedicated_queue_index(QueueType type) const;
 
-	Result<VkQueue> get_queue(QueueType type) const;
+	[[nodiscard]] Result<VkQueue> get_queue(QueueType type) const;
 	// Only a compute or transfer queue type is valid. All other queue types do not support a 'dedicated' queue
-	Result<VkQueue> get_dedicated_queue(QueueType type) const;
+	[[nodiscard]] Result<VkQueue> get_dedicated_queue(QueueType type) const;
 
 	// Return a loaded dispatch table
-	DispatchTable make_table() const;
+	[[nodiscard]] DispatchTable make_table() const;
 
 	// A conversion function which allows this Device to be used
 	// in places where VkDevice would have been used.
-	operator VkDevice() const;
+	explicit operator VkDevice() const;
 
 	private:
 	struct {
@@ -747,7 +741,7 @@ class DeviceBuilder {
 	// Any features and extensions that are requested/required in PhysicalDeviceSelector are automatically enabled.
 	explicit DeviceBuilder(PhysicalDevice physical_device);
 
-	Result<Device> build() const;
+	[[nodiscard]] Result<Device> build() const;
 
 	// For Advanced Users: specify the exact list of VkDeviceQueueCreateInfo's needed for the application.
 	// If a custom queue setup is provided, getting the queues and queue indexes is up to the application.
@@ -800,7 +794,7 @@ struct Swapchain {
 
 	// A conversion function which allows this Swapchain to be used
 	// in places where VkSwapchainKHR would have been used.
-	operator VkSwapchainKHR() const;
+	explicit operator VkSwapchainKHR() const;
 
 	private:
 	struct {
@@ -820,17 +814,17 @@ class SwapchainBuilder {
 	// Construct a SwapchainBuilder with a `vkb::Device`
 	explicit SwapchainBuilder(Device const& device);
 	// Construct a SwapchainBuilder with a specific VkSurfaceKHR handle and `vkb::Device`
-	explicit SwapchainBuilder(Device const& device, VkSurfaceKHR const surface);
+	explicit SwapchainBuilder(Device const& device, VkSurfaceKHR surface);
 	// Construct a SwapchainBuilder with Vulkan handles for the physical device, device, and surface
 	// Optionally can provide the uint32_t indices for the graphics and present queue
 	// Note: The constructor will query the graphics & present queue if the indices are not provided
-	explicit SwapchainBuilder(VkPhysicalDevice const physical_device,
-	    VkDevice const device,
-	    VkSurfaceKHR const surface,
+	explicit SwapchainBuilder(VkPhysicalDevice physical_device,
+	    VkDevice device,
+	    VkSurfaceKHR surface,
 	    uint32_t graphics_queue_index = detail::QUEUE_INDEX_MAX_VALUE,
 	    uint32_t present_queue_index = detail::QUEUE_INDEX_MAX_VALUE);
 
-	Result<Swapchain> build() const;
+	[[nodiscard]] Result<Swapchain> build() const;
 
 	// Set the oldSwapchain member of VkSwapchainCreateInfoKHR.
 	// For use in rebuilding a swapchain.
@@ -861,7 +855,7 @@ class SwapchainBuilder {
 	// Set the bitmask of the image usage for acquired swapchain images.
 	// If the surface capabilities cannot allow it, building the swapchain will result in the `SwapchainError::required_usage_not_supported` error.
 	SwapchainBuilder& set_image_usage_flags(VkImageUsageFlags usage_flags);
-	// Add a image usage to the bitmask for acquired swapchain images.
+	// Add an image usage to the bitmask for acquired swapchain images.
 	SwapchainBuilder& add_image_usage_flags(VkImageUsageFlags usage_flags);
 	// Use the default image usage bitmask values. This is the default if no image usages
 	// are provided. The default is VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT
@@ -900,7 +894,7 @@ class SwapchainBuilder {
 
 	// Set the VkSwapchainCreateFlagBitsKHR.
 	SwapchainBuilder& set_create_flags(VkSwapchainCreateFlagBitsKHR create_flags);
-	// Set the transform to be applied, like a 90 degree rotation. Default is no transform.
+	// Set the transform to be applied, like a 90-degree rotation. Default is no transform.
 	SwapchainBuilder& set_pre_transform_flags(VkSurfaceTransformFlagBitsKHR pre_transform_flags);
 	// Set the alpha channel to be used with other windows in on the system. Default is VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR.
 	SwapchainBuilder& set_composite_alpha_flags(VkCompositeAlphaFlagBitsKHR composite_alpha_flags);
@@ -958,3 +952,5 @@ template <> struct is_error_code_enum<vkb::QueueError> : true_type {};
 template <> struct is_error_code_enum<vkb::DeviceError> : true_type {};
 template <> struct is_error_code_enum<vkb::SwapchainError> : true_type {};
 } // namespace std
+
+#pragma clang diagnostic pop

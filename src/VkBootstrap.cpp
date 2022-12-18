@@ -1716,8 +1716,8 @@ SwapchainBuilder::SwapchainBuilder(Device const& device, VkSurfaceKHR const surf
 	auto present = temp_device.get_queue_index(QueueType::present);
 	auto graphics = temp_device.get_queue_index(QueueType::graphics);
 	assert(graphics.has_value() && present.has_value() && "Graphics and Present queue indexes must be valid");
-	info.graphics_queue_index = present.value();
-	info.present_queue_index = graphics.value();
+	info.graphics_queue_index = graphics.value();
+	info.present_queue_index = present.value();
 	info.allocation_callbacks = device.allocation_callbacks;
 }
 SwapchainBuilder::SwapchainBuilder(VkPhysicalDevice const physical_device,

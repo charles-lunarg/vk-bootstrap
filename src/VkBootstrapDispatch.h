@@ -976,39 +976,6 @@ struct DispatchTable {
 #if (defined(VK_NV_memory_decompression))
 		fp_vkCmdDecompressMemoryIndirectCountNV = reinterpret_cast<PFN_vkCmdDecompressMemoryIndirectCountNV>(procAddr(device, "vkCmdDecompressMemoryIndirectCountNV"));
 #endif
-#if (defined(VK_EXT_descriptor_buffer))
-		fp_vkGetDescriptorSetLayoutSizeEXT = reinterpret_cast<PFN_vkGetDescriptorSetLayoutSizeEXT>(procAddr(device, "vkGetDescriptorSetLayoutSizeEXT"));
-#endif
-#if (defined(VK_EXT_descriptor_buffer))
-		fp_vkGetDescriptorSetLayoutBindingOffsetEXT = reinterpret_cast<PFN_vkGetDescriptorSetLayoutBindingOffsetEXT>(procAddr(device, "vkGetDescriptorSetLayoutBindingOffsetEXT"));
-#endif
-#if (defined(VK_EXT_descriptor_buffer))
-		fp_vkGetDescriptorEXT = reinterpret_cast<PFN_vkGetDescriptorEXT>(procAddr(device, "vkGetDescriptorEXT"));
-#endif
-#if (defined(VK_EXT_descriptor_buffer))
-		fp_vkCmdBindDescriptorBuffersEXT = reinterpret_cast<PFN_vkCmdBindDescriptorBuffersEXT>(procAddr(device, "vkCmdBindDescriptorBuffersEXT"));
-#endif
-#if (defined(VK_EXT_descriptor_buffer))
-		fp_vkCmdSetDescriptorBufferOffsetsEXT = reinterpret_cast<PFN_vkCmdSetDescriptorBufferOffsetsEXT>(procAddr(device, "vkCmdSetDescriptorBufferOffsetsEXT"));
-#endif
-#if (defined(VK_EXT_descriptor_buffer))
-		fp_vkCmdBindDescriptorBufferEmbeddedSamplersEXT = reinterpret_cast<PFN_vkCmdBindDescriptorBufferEmbeddedSamplersEXT>(procAddr(device, "vkCmdBindDescriptorBufferEmbeddedSamplersEXT"));
-#endif
-#if (defined(VK_EXT_descriptor_buffer))
-		fp_vkGetBufferOpaqueCaptureDescriptorDataEXT = reinterpret_cast<PFN_vkGetBufferOpaqueCaptureDescriptorDataEXT>(procAddr(device, "vkGetBufferOpaqueCaptureDescriptorDataEXT"));
-#endif
-#if (defined(VK_EXT_descriptor_buffer))
-		fp_vkGetImageOpaqueCaptureDescriptorDataEXT = reinterpret_cast<PFN_vkGetImageOpaqueCaptureDescriptorDataEXT>(procAddr(device, "vkGetImageOpaqueCaptureDescriptorDataEXT"));
-#endif
-#if (defined(VK_EXT_descriptor_buffer))
-		fp_vkGetImageViewOpaqueCaptureDescriptorDataEXT = reinterpret_cast<PFN_vkGetImageViewOpaqueCaptureDescriptorDataEXT>(procAddr(device, "vkGetImageViewOpaqueCaptureDescriptorDataEXT"));
-#endif
-#if (defined(VK_EXT_descriptor_buffer))
-		fp_vkGetSamplerOpaqueCaptureDescriptorDataEXT = reinterpret_cast<PFN_vkGetSamplerOpaqueCaptureDescriptorDataEXT>(procAddr(device, "vkGetSamplerOpaqueCaptureDescriptorDataEXT"));
-#endif
-#if (defined(VK_EXT_descriptor_buffer) && defined(VK_KHR_acceleration_structure,VK_NV_ray_tracing))
-		fp_vkGetAccelerationStructureOpaqueCaptureDescriptorDataEXT = reinterpret_cast<PFN_vkGetAccelerationStructureOpaqueCaptureDescriptorDataEXT>(procAddr(device, "vkGetAccelerationStructureOpaqueCaptureDescriptorDataEXT"));
-#endif
 #if (defined(VK_EXT_pageable_device_local_memory))
 		fp_vkSetDeviceMemoryPriorityEXT = reinterpret_cast<PFN_vkSetDeviceMemoryPriorityEXT>(procAddr(device, "vkSetDeviceMemoryPriorityEXT"));
 #endif
@@ -1119,9 +1086,6 @@ struct DispatchTable {
 #endif
 #if (defined(VK_EXT_device_fault))
 		fp_vkGetDeviceFaultInfoEXT = reinterpret_cast<PFN_vkGetDeviceFaultInfoEXT>(procAddr(device, "vkGetDeviceFaultInfoEXT"));
-#endif
-#if (defined(VK_EXT_swapchain_maintenance1))
-		fp_vkReleaseSwapchainImagesEXT = reinterpret_cast<PFN_vkReleaseSwapchainImagesEXT>(procAddr(device, "vkReleaseSwapchainImagesEXT"));
 #endif
 #if (defined(VK_EXT_host_query_reset))
 		fp_vkResetQueryPoolEXT = reinterpret_cast<PFN_vkResetQueryPoolEXT>(procAddr(device, "vkResetQueryPoolEXT"));
@@ -3056,61 +3020,6 @@ struct DispatchTable {
 		fp_vkCmdDecompressMemoryIndirectCountNV(commandBuffer, indirectCommandsAddress, indirectCommandsCountAddress, stride);
 	}
 #endif
-#if (defined(VK_EXT_descriptor_buffer))
-	void getDescriptorSetLayoutSizeEXT(VkDescriptorSetLayout layout, VkDeviceSize* pLayoutSizeInBytes) const noexcept {
-		fp_vkGetDescriptorSetLayoutSizeEXT(device, layout, pLayoutSizeInBytes);
-	}
-#endif
-#if (defined(VK_EXT_descriptor_buffer))
-	void getDescriptorSetLayoutBindingOffsetEXT(VkDescriptorSetLayout layout, uint32_t binding, VkDeviceSize* pOffset) const noexcept {
-		fp_vkGetDescriptorSetLayoutBindingOffsetEXT(device, layout, binding, pOffset);
-	}
-#endif
-#if (defined(VK_EXT_descriptor_buffer))
-	void getDescriptorEXT(const VkDescriptorGetInfoEXT* pDescriptorInfo, size_t dataSize, void* pDescriptor) const noexcept {
-		fp_vkGetDescriptorEXT(device, pDescriptorInfo, dataSize, pDescriptor);
-	}
-#endif
-#if (defined(VK_EXT_descriptor_buffer))
-	void cmdBindDescriptorBuffersEXT(VkCommandBuffer commandBuffer, uint32_t bufferCount, const VkDescriptorBufferBindingInfoEXT* pBindingInfos) const noexcept {
-		fp_vkCmdBindDescriptorBuffersEXT(commandBuffer, bufferCount, pBindingInfos);
-	}
-#endif
-#if (defined(VK_EXT_descriptor_buffer))
-	void cmdSetDescriptorBufferOffsetsEXT(VkCommandBuffer commandBuffer, VkPipelineBindPoint pipelineBindPoint, VkPipelineLayout layout, uint32_t firstSet, uint32_t setCount, const uint32_t* pBufferIndices, const VkDeviceSize* pOffsets) const noexcept {
-		fp_vkCmdSetDescriptorBufferOffsetsEXT(commandBuffer, pipelineBindPoint, layout, firstSet, setCount, pBufferIndices, pOffsets);
-	}
-#endif
-#if (defined(VK_EXT_descriptor_buffer))
-	void cmdBindDescriptorBufferEmbeddedSamplersEXT(VkCommandBuffer commandBuffer, VkPipelineBindPoint pipelineBindPoint, VkPipelineLayout layout, uint32_t set) const noexcept {
-		fp_vkCmdBindDescriptorBufferEmbeddedSamplersEXT(commandBuffer, pipelineBindPoint, layout, set);
-	}
-#endif
-#if (defined(VK_EXT_descriptor_buffer))
-	VkResult getBufferOpaqueCaptureDescriptorDataEXT(const VkBufferCaptureDescriptorDataInfoEXT* pInfo, void* pData) const noexcept {
-		return fp_vkGetBufferOpaqueCaptureDescriptorDataEXT(device, pInfo, pData);
-	}
-#endif
-#if (defined(VK_EXT_descriptor_buffer))
-	VkResult getImageOpaqueCaptureDescriptorDataEXT(const VkImageCaptureDescriptorDataInfoEXT* pInfo, void* pData) const noexcept {
-		return fp_vkGetImageOpaqueCaptureDescriptorDataEXT(device, pInfo, pData);
-	}
-#endif
-#if (defined(VK_EXT_descriptor_buffer))
-	VkResult getImageViewOpaqueCaptureDescriptorDataEXT(const VkImageViewCaptureDescriptorDataInfoEXT* pInfo, void* pData) const noexcept {
-		return fp_vkGetImageViewOpaqueCaptureDescriptorDataEXT(device, pInfo, pData);
-	}
-#endif
-#if (defined(VK_EXT_descriptor_buffer))
-	VkResult getSamplerOpaqueCaptureDescriptorDataEXT(const VkSamplerCaptureDescriptorDataInfoEXT* pInfo, void* pData) const noexcept {
-		return fp_vkGetSamplerOpaqueCaptureDescriptorDataEXT(device, pInfo, pData);
-	}
-#endif
-#if (defined(VK_EXT_descriptor_buffer) && defined(VK_KHR_acceleration_structure,VK_NV_ray_tracing))
-	VkResult getAccelerationStructureOpaqueCaptureDescriptorDataEXT(const VkAccelerationStructureCaptureDescriptorDataInfoEXT* pInfo, void* pData) const noexcept {
-		return fp_vkGetAccelerationStructureOpaqueCaptureDescriptorDataEXT(device, pInfo, pData);
-	}
-#endif
 #if (defined(VK_EXT_pageable_device_local_memory))
 	void setDeviceMemoryPriorityEXT(VkDeviceMemory memory, float priority) const noexcept {
 		fp_vkSetDeviceMemoryPriorityEXT(device, memory, priority);
@@ -3294,11 +3203,6 @@ struct DispatchTable {
 #if (defined(VK_EXT_device_fault))
 	VkResult getDeviceFaultInfoEXT(VkDeviceFaultCountsEXT* pFaultCounts, VkDeviceFaultInfoEXT* pFaultInfo) const noexcept {
 		return fp_vkGetDeviceFaultInfoEXT(device, pFaultCounts, pFaultInfo);
-	}
-#endif
-#if (defined(VK_EXT_swapchain_maintenance1))
-	VkResult releaseSwapchainImagesEXT(const VkReleaseSwapchainImagesInfoEXT* pReleaseInfo) const noexcept {
-		return fp_vkReleaseSwapchainImagesEXT(device, pReleaseInfo);
 	}
 #endif
 #if (defined(VK_EXT_host_query_reset))
@@ -4573,39 +4477,6 @@ struct DispatchTable {
 #if (defined(VK_NV_memory_decompression))
 	PFN_vkCmdDecompressMemoryIndirectCountNV fp_vkCmdDecompressMemoryIndirectCountNV = nullptr;
 #endif
-#if (defined(VK_EXT_descriptor_buffer))
-	PFN_vkGetDescriptorSetLayoutSizeEXT fp_vkGetDescriptorSetLayoutSizeEXT = nullptr;
-#endif
-#if (defined(VK_EXT_descriptor_buffer))
-	PFN_vkGetDescriptorSetLayoutBindingOffsetEXT fp_vkGetDescriptorSetLayoutBindingOffsetEXT = nullptr;
-#endif
-#if (defined(VK_EXT_descriptor_buffer))
-	PFN_vkGetDescriptorEXT fp_vkGetDescriptorEXT = nullptr;
-#endif
-#if (defined(VK_EXT_descriptor_buffer))
-	PFN_vkCmdBindDescriptorBuffersEXT fp_vkCmdBindDescriptorBuffersEXT = nullptr;
-#endif
-#if (defined(VK_EXT_descriptor_buffer))
-	PFN_vkCmdSetDescriptorBufferOffsetsEXT fp_vkCmdSetDescriptorBufferOffsetsEXT = nullptr;
-#endif
-#if (defined(VK_EXT_descriptor_buffer))
-	PFN_vkCmdBindDescriptorBufferEmbeddedSamplersEXT fp_vkCmdBindDescriptorBufferEmbeddedSamplersEXT = nullptr;
-#endif
-#if (defined(VK_EXT_descriptor_buffer))
-	PFN_vkGetBufferOpaqueCaptureDescriptorDataEXT fp_vkGetBufferOpaqueCaptureDescriptorDataEXT = nullptr;
-#endif
-#if (defined(VK_EXT_descriptor_buffer))
-	PFN_vkGetImageOpaqueCaptureDescriptorDataEXT fp_vkGetImageOpaqueCaptureDescriptorDataEXT = nullptr;
-#endif
-#if (defined(VK_EXT_descriptor_buffer))
-	PFN_vkGetImageViewOpaqueCaptureDescriptorDataEXT fp_vkGetImageViewOpaqueCaptureDescriptorDataEXT = nullptr;
-#endif
-#if (defined(VK_EXT_descriptor_buffer))
-	PFN_vkGetSamplerOpaqueCaptureDescriptorDataEXT fp_vkGetSamplerOpaqueCaptureDescriptorDataEXT = nullptr;
-#endif
-#if (defined(VK_EXT_descriptor_buffer) && defined(VK_KHR_acceleration_structure,VK_NV_ray_tracing))
-	PFN_vkGetAccelerationStructureOpaqueCaptureDescriptorDataEXT fp_vkGetAccelerationStructureOpaqueCaptureDescriptorDataEXT = nullptr;
-#endif
 #if (defined(VK_EXT_pageable_device_local_memory))
 	PFN_vkSetDeviceMemoryPriorityEXT fp_vkSetDeviceMemoryPriorityEXT = nullptr;
 #endif
@@ -4716,9 +4587,6 @@ struct DispatchTable {
 #endif
 #if (defined(VK_EXT_device_fault))
 	PFN_vkGetDeviceFaultInfoEXT fp_vkGetDeviceFaultInfoEXT = nullptr;
-#endif
-#if (defined(VK_EXT_swapchain_maintenance1))
-	PFN_vkReleaseSwapchainImagesEXT fp_vkReleaseSwapchainImagesEXT = nullptr;
 #endif
 #if (defined(VK_EXT_host_query_reset))
 	PFN_vkResetQueryPoolEXT fp_vkResetQueryPoolEXT = nullptr;

@@ -1006,7 +1006,7 @@ struct DispatchTable {
 #if (defined(VK_EXT_descriptor_buffer))
 		fp_vkGetSamplerOpaqueCaptureDescriptorDataEXT = reinterpret_cast<PFN_vkGetSamplerOpaqueCaptureDescriptorDataEXT>(procAddr(device, "vkGetSamplerOpaqueCaptureDescriptorDataEXT"));
 #endif
-#if (defined(VK_EXT_descriptor_buffer) && defined(VK_KHR_acceleration_structure,VK_NV_ray_tracing))
+#if (defined(VK_EXT_descriptor_buffer) && defined(VK_KHR_acceleration_structure) && defined(VK_NV_ray_tracing))
 		fp_vkGetAccelerationStructureOpaqueCaptureDescriptorDataEXT = reinterpret_cast<PFN_vkGetAccelerationStructureOpaqueCaptureDescriptorDataEXT>(procAddr(device, "vkGetAccelerationStructureOpaqueCaptureDescriptorDataEXT"));
 #endif
 #if (defined(VK_EXT_pageable_device_local_memory))
@@ -3106,7 +3106,7 @@ struct DispatchTable {
 		return fp_vkGetSamplerOpaqueCaptureDescriptorDataEXT(device, pInfo, pData);
 	}
 #endif
-#if (defined(VK_EXT_descriptor_buffer) && defined(VK_KHR_acceleration_structure,VK_NV_ray_tracing))
+#if (defined(VK_EXT_descriptor_buffer) && defined(VK_KHR_acceleration_structure) && defined(VK_NV_ray_tracing))
 	VkResult getAccelerationStructureOpaqueCaptureDescriptorDataEXT(const VkAccelerationStructureCaptureDescriptorDataInfoEXT* pInfo, void* pData) const noexcept {
 		return fp_vkGetAccelerationStructureOpaqueCaptureDescriptorDataEXT(device, pInfo, pData);
 	}
@@ -4603,7 +4603,7 @@ struct DispatchTable {
 #if (defined(VK_EXT_descriptor_buffer))
 	PFN_vkGetSamplerOpaqueCaptureDescriptorDataEXT fp_vkGetSamplerOpaqueCaptureDescriptorDataEXT = nullptr;
 #endif
-#if (defined(VK_EXT_descriptor_buffer) && defined(VK_KHR_acceleration_structure,VK_NV_ray_tracing))
+#if (defined(VK_EXT_descriptor_buffer) && defined(VK_KHR_acceleration_structure) && defined(VK_NV_ray_tracing))
 	PFN_vkGetAccelerationStructureOpaqueCaptureDescriptorDataEXT fp_vkGetAccelerationStructureOpaqueCaptureDescriptorDataEXT = nullptr;
 #endif
 #if (defined(VK_EXT_pageable_device_local_memory))

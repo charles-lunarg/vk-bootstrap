@@ -156,7 +156,7 @@ for extension_node in extensions_node:
 					if '@feature' in require_node.keys():
 						requirements.append(require_node['@feature'])
 					if '@extension' in require_node.keys():
-						requirements.append(require_node['@extension'])
+						requirements.extend(require_node['@extension'].split(','))
 					if type(require_node['command']) is not list:
 						require_node['command'] = [require_node['command']]
 					for command_node in require_node['command']:

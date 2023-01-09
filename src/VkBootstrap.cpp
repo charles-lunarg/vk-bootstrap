@@ -587,11 +587,11 @@ Result<Instance> InstanceBuilder::build() const {
 	if (info.debug_callback != nullptr && system.debug_utils_available) {
 		extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
 	}
-	bool supports_properties2_ext =
-	    detail::check_extension_supported(system.available_extensions, VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME);
-
-	if (supports_properties2_ext && api_version < VKB_VK_API_VERSION_1_1) {
+	bool properties2_ext_enabled = false;
+	if (detail::check_extension_supported(system.available_extensions, VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME) &&
+	    api_version < VKB_VK_API_VERSION_1_1) {
 		extensions.push_back(VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME);
+		properties2_ext_enabled = true;
 	}
 
 #if defined(VK_KHR_portability_enumeration)
@@ -717,7 +717,7 @@ Result<Instance> InstanceBuilder::build() const {
 	}
 
 	instance.headless = info.headless_context;
-	instance.supports_properties2_ext = supports_properties2_ext;
+	instance.properties2_ext_enabled = properties2_ext_enabled;
 	instance.allocation_callbacks = info.allocation_callbacks;
 	instance.instance_version = instance_version;
 	instance.api_version = api_version;
@@ -1010,16 +1010,14 @@ PhysicalDevice PhysicalDeviceSelector::populate_device_details(VkPhysicalDevice 
 	for (const auto& ext : available_extensions) {
 		physical_device.extensions.push_back(&ext.extensionName[0]);
 	}
-
-#if defined(VKB_VK_API_VERSION_1_1)
-	physical_device.features2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
-#else
-	physical_device.features2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2_KHR;
+#if defined(VK_KHR_get_physical_device_properties2)
+	physical_device.features2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2_KHR; // same value as the non-KHR version
 #endif
+	physical_device.properties2_ext_enabled = instance_info.properties2_ext_enabled;
 
 	auto fill_chain = src_extended_features_chain;
 
-	if (!fill_chain.empty() && (instance_info.version >= VKB_VK_API_VERSION_1_1 || instance_info.supports_properties2_ext)) {
+	if (!fill_chain.empty() && (instance_info.version >= VKB_VK_API_VERSION_1_1 || instance_info.properties2_ext_enabled)) {
 
 		detail::GenericFeaturesPNextNode* prev = nullptr;
 		for (auto& extension : fill_chain) {
@@ -1029,23 +1027,26 @@ PhysicalDevice PhysicalDeviceSelector::populate_device_details(VkPhysicalDevice 
 			prev = &extension;
 		}
 
+		bool phys_dev_is_1_1 = instance_info.version >= VKB_VK_API_VERSION_1_1 &&
+		                       physical_device.properties.apiVersion >= VKB_VK_API_VERSION_1_1;
+
 #if defined(VKB_VK_API_VERSION_1_1)
-		if (instance_info.version >= VKB_VK_API_VERSION_1_1 && physical_device.properties.apiVersion >= VKB_VK_API_VERSION_1_1) {
+		if (phys_dev_is_1_1 || instance_info.properties2_ext_enabled) {
 			VkPhysicalDeviceFeatures2 local_features{};
-			local_features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
+			local_features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2; // KHR is same as core here
 			local_features.pNext = &fill_chain.front();
-			detail::vulkan_functions().fp_vkGetPhysicalDeviceFeatures2(vk_phys_device, &local_features);
-		} else if (instance_info.supports_properties2_ext) {
+			// Use KHR function if not able to use the core function
+			if (!phys_dev_is_1_1) {
+				detail::vulkan_functions().fp_vkGetPhysicalDeviceFeatures2KHR(vk_phys_device, &local_features);
+			} else {
+				detail::vulkan_functions().fp_vkGetPhysicalDeviceFeatures2(vk_phys_device, &local_features);
+			}
+		}
+#elif defined(VK_KHR_get_physical_device_properties2)
+		if (instance_info.properties2_ext_enabled) {
 			VkPhysicalDeviceFeatures2KHR local_features_khr{};
 			local_features_khr.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2_KHR;
 			local_features_khr.pNext = &fill_chain.front();
-			detail::vulkan_functions().fp_vkGetPhysicalDeviceFeatures2KHR(vk_phys_device, &local_features_khr);
-		}
-#else
-		VkPhysicalDeviceFeatures2KHR local_features_khr{};
-		local_features_khr.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2_KHR;
-		local_features_khr.pNext = &fill_chain.front();
-		if (instance_info.supports_properties2_ext) {
 			detail::vulkan_functions().fp_vkGetPhysicalDeviceFeatures2KHR(vk_phys_device, &local_features_khr);
 		}
 #endif
@@ -1135,7 +1136,7 @@ PhysicalDeviceSelector::PhysicalDeviceSelector(Instance const& instance)
 PhysicalDeviceSelector::PhysicalDeviceSelector(Instance const& instance, VkSurfaceKHR surface) {
 	instance_info.instance = instance.instance;
 	instance_info.version = instance.instance_version;
-	instance_info.supports_properties2_ext = instance.supports_properties2_ext;
+	instance_info.properties2_ext_enabled = instance.properties2_ext_enabled;
 	instance_info.surface = surface;
 	criteria.require_present = !instance.headless;
 	criteria.required_version = instance.api_version;
@@ -1492,12 +1493,11 @@ Result<Device> DeviceBuilder::build() const {
 	if (physical_device.surface != VK_NULL_HANDLE || physical_device.defer_surface_initialization)
 		extensions.push_back({ VK_KHR_SWAPCHAIN_EXTENSION_NAME });
 
-	bool has_phys_dev_features_2 = false;
-	bool user_defined_phys_dev_features_2 = false;
 	std::vector<VkBaseOutStructure*> final_pnext_chain;
 	VkDeviceCreateInfo device_create_info = {};
 
-#if defined(VKB_VK_API_VERSION_1_1)
+#if defined(VK_KHR_get_physical_device_properties2)
+	bool user_defined_phys_dev_features_2 = false;
 	for (auto& pnext : info.pNext_chain) {
 		if (pnext->sType == VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2) {
 			user_defined_phys_dev_features_2 = true;
@@ -1505,25 +1505,26 @@ Result<Device> DeviceBuilder::build() const {
 		}
 	}
 
+	if (user_defined_phys_dev_features_2 && physical_device.extended_features_chain.size() > 0) {
+		return { DeviceError::VkPhysicalDeviceFeatures2_in_pNext_chain_while_using_add_required_extension_features };
+	}
+
+	// These objects must be alive during the call to vkCreateDevice
 	auto physical_device_extension_features_copy = physical_device.extended_features_chain;
 	VkPhysicalDeviceFeatures2 local_features2{};
 	local_features2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
 
 	if (!user_defined_phys_dev_features_2) {
-		if (physical_device.instance_version >= VKB_VK_API_VERSION_1_1) {
+		if (physical_device.instance_version >= VKB_VK_API_VERSION_1_1 || physical_device.properties2_ext_enabled) {
 			local_features2.features = physical_device.features;
 			final_pnext_chain.push_back(reinterpret_cast<VkBaseOutStructure*>(&local_features2));
-			has_phys_dev_features_2 = true;
 			for (auto& features_node : physical_device_extension_features_copy) {
 				final_pnext_chain.push_back(reinterpret_cast<VkBaseOutStructure*>(&features_node));
 			}
+		} else {
+			// Only set device_create_info.pEnabledFeatures when the pNext chain does not contain a VkPhysicalDeviceFeatures2 structure
+			device_create_info.pEnabledFeatures = &physical_device.features;
 		}
-	} else {
-		return { DeviceError::VkPhysicalDeviceFeatures2_in_pNext_chain_while_using_add_required_extension_features };
-	}
-
-	if (!user_defined_phys_dev_features_2 && !has_phys_dev_features_2) {
-		device_create_info.pEnabledFeatures = &physical_device.features;
 	}
 #endif
 

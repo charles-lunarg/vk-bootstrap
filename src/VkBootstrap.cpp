@@ -1519,8 +1519,7 @@ Result<Device> DeviceBuilder::build() const {
 			}
 		}
 	} else {
-		printf("User provided VkPhysicalDeviceFeatures2 instance found in pNext chain. All "
-		       "requirements added via 'add_required_extension_features' will be ignored.");
+		return { DeviceError::VkPhysicalDeviceFeatures2_in_pNext_chain_while_using_add_required_extension_features };
 	}
 
 	if (!user_defined_phys_dev_features_2 && !has_phys_dev_features_2) {
@@ -1772,8 +1771,7 @@ Result<Swapchain> SwapchainBuilder::build() const {
 		image_count = surface_support.capabilities.maxImageCount;
 	}
 
-	VkSurfaceFormatKHR surface_format =
-	    detail::find_best_surface_format(surface_support.formats, desired_formats);
+	VkSurfaceFormatKHR surface_format = detail::find_best_surface_format(surface_support.formats, desired_formats);
 
 	VkExtent2D extent = detail::find_extent(surface_support.capabilities, info.desired_width, info.desired_height);
 

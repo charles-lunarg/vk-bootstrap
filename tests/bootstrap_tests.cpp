@@ -335,6 +335,7 @@ TEST_CASE("Swapchain", "[VkBootstrap.bootstrap]") {
 			auto recreated_swapchain_ret = swapchain_builder.set_old_swapchain(swapchain).build();
 			REQUIRE(recreated_swapchain_ret.has_value());
 
+			vkb::destroy_swapchain(swapchain_ret.value());
 			vkb::destroy_swapchain(recreated_swapchain_ret.value());
 		}
 		AND_THEN("Swapchain can be created from individual handles") {
@@ -348,6 +349,7 @@ TEST_CASE("Swapchain", "[VkBootstrap.bootstrap]") {
 			auto recreated_swapchain_ret = swapchain_builder.set_old_swapchain(swapchain).build();
 			REQUIRE(recreated_swapchain_ret.has_value());
 
+			vkb::destroy_swapchain(swapchain_ret.value());
 			vkb::destroy_swapchain(recreated_swapchain_ret.value());
 		}
 		AND_THEN("Swapchain can be create with default gotten handles") {
@@ -360,6 +362,7 @@ TEST_CASE("Swapchain", "[VkBootstrap.bootstrap]") {
 			auto recreated_swapchain_ret = swapchain_builder.set_old_swapchain(swapchain).build();
 			REQUIRE(recreated_swapchain_ret.has_value());
 
+			vkb::destroy_swapchain(swapchain_ret.value());
 			vkb::destroy_swapchain(recreated_swapchain_ret.value());
 		}
 

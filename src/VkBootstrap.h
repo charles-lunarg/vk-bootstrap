@@ -288,7 +288,7 @@ struct Instance {
 
 	private:
 	bool headless = false;
-	bool supports_properties2_ext = false;
+	bool properties2_ext_enabled = false;
 	uint32_t instance_version = VKB_VK_API_VERSION_1_0;
 	uint32_t api_version = VKB_VK_API_VERSION_1_0;
 
@@ -507,6 +507,7 @@ struct PhysicalDevice {
 	VkPhysicalDeviceFeatures2KHR features2{};
 #endif
 	bool defer_surface_initialization = false;
+	bool properties2_ext_enabled = false;
 	enum class Suitable { yes, partial, no };
 	Suitable suitable = Suitable::yes;
 	friend class PhysicalDeviceSelector;
@@ -633,7 +634,7 @@ class PhysicalDeviceSelector {
 		VkSurfaceKHR surface = VK_NULL_HANDLE;
 		uint32_t version = VKB_VK_API_VERSION_1_0;
 		bool headless = false;
-		bool supports_properties2_ext = false;
+		bool properties2_ext_enabled = false;
 	} instance_info;
 
 	// We copy the extension features stored in the selector criteria under the prose of a
@@ -658,10 +659,10 @@ class PhysicalDeviceSelector {
 		uint32_t desired_version = VKB_VK_API_VERSION_1_0;
 
 		VkPhysicalDeviceFeatures required_features{};
-#if defined(VKB_VK_API_VERSION_1_1)
-		VkPhysicalDeviceFeatures2 required_features2{};
-		std::vector<detail::GenericFeaturesPNextNode> extended_features_chain;
+#if defined(VK_KHR_get_physical_device_properties2)
+		VkPhysicalDeviceFeatures2KHR required_features2{};
 #endif
+		std::vector<detail::GenericFeaturesPNextNode> extended_features_chain;
 		bool defer_surface_initialization = false;
 		bool use_first_gpu_unconditionally = false;
 		bool enable_portability_subset = true;

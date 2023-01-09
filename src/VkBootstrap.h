@@ -205,6 +205,7 @@ enum class QueueError {
 };
 enum class DeviceError {
 	failed_create_device,
+	VkPhysicalDeviceFeatures2_in_pNext_chain_while_using_add_required_extension_features,
 };
 enum class SwapchainError {
 	surface_handle_not_provided,
@@ -594,6 +595,8 @@ class PhysicalDeviceSelector {
 	PhysicalDeviceSelector& disable_portability_subset();
 
 	// Require a physical device which supports a specific set of general/extension features.
+	// If this function is used, the user should not put their own VkPhysicalDeviceFeatures2 in
+	// the pNext chain of VkDeviceCreateInfo.
 #if defined(VKB_VK_API_VERSION_1_1)
 	template <typename T> PhysicalDeviceSelector& add_required_extension_features(T const& features) {
 		criteria.extended_features_chain.push_back(features);

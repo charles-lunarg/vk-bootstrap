@@ -501,11 +501,8 @@ struct PhysicalDevice {
 	std::vector<std::string> extensions;
 	std::vector<VkQueueFamilyProperties> queue_families;
 	std::vector<detail::GenericFeaturesPNextNode> extended_features_chain;
-#if defined(VKB_VK_API_VERSION_1_1)
 	VkPhysicalDeviceFeatures2 features2{};
-#else
-	VkPhysicalDeviceFeatures2KHR features2{};
-#endif
+
 	bool defer_surface_initialization = false;
 	bool properties2_ext_enabled = false;
 	enum class Suitable { yes, partial, no };
@@ -598,12 +595,11 @@ class PhysicalDeviceSelector {
 	// Require a physical device which supports a specific set of general/extension features.
 	// If this function is used, the user should not put their own VkPhysicalDeviceFeatures2 in
 	// the pNext chain of VkDeviceCreateInfo.
-#if defined(VKB_VK_API_VERSION_1_1)
 	template <typename T> PhysicalDeviceSelector& add_required_extension_features(T const& features) {
 		criteria.extended_features_chain.push_back(features);
 		return *this;
 	}
-#endif
+
 	// Require a physical device which supports the features in VkPhysicalDeviceFeatures.
 	PhysicalDeviceSelector& set_required_features(VkPhysicalDeviceFeatures const& features);
 #if defined(VKB_VK_API_VERSION_1_2)
@@ -659,9 +655,8 @@ class PhysicalDeviceSelector {
 		uint32_t desired_version = VKB_VK_API_VERSION_1_0;
 
 		VkPhysicalDeviceFeatures required_features{};
-#if defined(VK_KHR_get_physical_device_properties2)
-		VkPhysicalDeviceFeatures2KHR required_features2{};
-#endif
+		VkPhysicalDeviceFeatures2 required_features2{};
+
 		std::vector<detail::GenericFeaturesPNextNode> extended_features_chain;
 		bool defer_surface_initialization = false;
 		bool use_first_gpu_unconditionally = false;

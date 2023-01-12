@@ -1,6 +1,6 @@
 # `vk-bootstrap`
 
-A utility library that jump starts initialization of Vulkan 
+A utility library that jump starts initialization of Vulkan
 
 This library simplifies the tedious process of:
 
@@ -76,19 +76,19 @@ See `example/triangle.cpp` for an example that renders a triangle to the screen.
 
 ## Setting up `vk-bootstrap`
 
-This library has no external dependencies beyond C++14, its standard library, and the Vulkan Headers.
+This library has no external dependencies beyond C++14, its standard library, and at least the 1.1 version of the Vulkan Headers.
 
-Note: on Unix platforms, `vk-bootstrap` will require the dynamic linker in order to compile as the library doesn't link against `vulkan-1.dll`/`libvulkan.so` directly. 
+Note: on Unix platforms, `vk-bootstrap` will require the dynamic linker in order to compile as the library doesn't link against `vulkan-1.dll`/`libvulkan.so` directly.
 
 ### Copy-Paste
 
-Copy the `src/VkBootstrap.h` and `src/VkBootstrap.cpp` files into your project, include them into your build, then compile as you normally would.
+Copy the `src/VkBootstrap.h`, `src/VkBootstrapDispatch.h`, and `src/VkBootstrap.cpp` files into your project, include them into your build, then compile as you normally would.
 
 `vk-bootstrap` is *not* a header only library, so no need to worry about macros in the header.
 
 #### Linux specific
 
-vk-bootstrap will load the required symbols at runtime, which requires that the application is linked to the system dynamic link. 
+vk-bootstrap will load the required symbols at runtime, which requires that the application is linked to the system dynamic link.
 How the dynamic linker is linked into the project depends on the build system in question.
 If CMake is being used, link vk-bootstrap with `${CMAKE_DL_LIBS}`.
 
@@ -106,7 +106,7 @@ With CMake, add the subdirectory to include the project
 add_subdirectory(vk-bootstrap)
 ```
 
-Then use `target_link_libraries` to use the library in whichever target needs it. 
+Then use `target_link_libraries` to use the library in whichever target needs it.
 
 ```cmake
 target_link_libraries(your_application_name vk-bootstrap::vk-bootstrap)
@@ -120,7 +120,7 @@ include(FetchContent)
 FetchContent_Declare(
     fetch_vk_bootstrap
     GIT_REPOSITORY https://github.com/charles-lunarg/vk-bootstrap
-    GIT_TAG        BRANCH_OR_TAG #suggest using a tag so the library doesn't update whenever new commits are pushed to a branch 
+    GIT_TAG        BRANCH_OR_TAG #suggest using a tag so the library doesn't update whenever new commits are pushed to a branch
 )
 FetchContent_MakeAvailable(fetch_vk_bootstrap)
 target_link_libraries(your_application_name vk-bootstrap::vk-bootstrap)
@@ -151,7 +151,7 @@ cmake ../path/to/your_project/ -DVK_BOOTSTRAP_TEST=ON
 
 ### Build Options
 | Name | Type |  Default Value | Description |
-| ---- | --- | ---- | ----- | 
+| ---- | --- | ---- | ----- |
 | `VK_BOOTSTRAP_WERROR` | bool | `OFF` | Enable warnings as errors during compilation. |
 | `VK_BOOTSTRAP_TEST` | bool | `OFF` | Enable building of the tests in this project. Will download GLFW and Catch2 automatically if enabled. |
 | `VK_BOOTSTRAP_VULKAN_HEADER_DIR` | string | `""` | Optional. Specify the directory that contains the Vulkan Headers. Useful if you are downloading the headers manually and don't want vk-bootstrap to download them itself. |

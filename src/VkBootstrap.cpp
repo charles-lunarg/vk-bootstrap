@@ -2240,7 +2240,7 @@ GraphicsPipelineBuilder& GraphicsPipelineBuilder::set_vertex_shader_module(VkSha
 	info.vertex_shader.shader_module = shader_module;
 	return *this;
 }
-GraphicsPipelineBuilder& GraphicsPipelineBuilder::set_vertex_shader_name(const char* name) {
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::set_vertex_shader_entrypoint_name(const char* name) {
 	info.vertex_shader.name = name;
 	return *this;
 }

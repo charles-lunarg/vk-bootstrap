@@ -109,7 +109,7 @@ class GraphicsPipelineBuilder {
 	GraphicsPipelineBuilder& clear_vertex_shader_pNext();
 	GraphicsPipelineBuilder& set_vertex_shader_flags(VkPipelineShaderStageCreateFlags flags);
 	GraphicsPipelineBuilder& set_vertex_shader_module(VkShaderModule shader_module);
-	GraphicsPipelineBuilder& set_vertex_shader_name(const char* name);
+	GraphicsPipelineBuilder& set_vertex_shader_entrypoint_name(const char* name);
 	GraphicsPipelineBuilder& set_vertex_shader_specialization_info(VkSpecializationInfo& specialization_info);
 	GraphicsPipelineBuilder& clear_vertex_shader();
 
@@ -253,6 +253,14 @@ class GraphicsPipelineBuilder {
 	GraphicsPipelineBuilder& set_allocation_callbacks(VkAllocationCallbacks* callbacks);
 
 	private:
+	struct ShaderInfo {
+		VkPipelineShaderStageCreateFlags flags = 0;
+		std::vector<VkBaseOutStructure*> pNext_chain;
+		VkShaderModule shader_module = VK_NULL_HANDLE;
+		const char* name = "main"; // assumed default is "main"
+		VkSpecializationInfo specialization_info = {};
+	};
+
 	struct GraphicsPipelineInfo {
 		VkDevice device = VK_NULL_HANDLE;
 		VkPipelineCache pipeline_cache = VK_NULL_HANDLE;
@@ -278,43 +286,17 @@ class GraphicsPipelineBuilder {
 			VkBool32 primitiveRestartEnable = VK_FALSE;
 		} input_assembly;
 
-		// Vertex shader state
-		struct VertexShader {
-			VkPipelineShaderStageCreateFlags flags = 0;
-			std::vector<VkBaseOutStructure*> pNext_chain;
-			VkShaderModule shader_module = VK_NULL_HANDLE;
-			const char* name = "";
-			VkSpecializationInfo specialization_info = {};
-		} vertex_shader;
-
-		struct TessellationControlShader { // Tessellation shader stage
-			VkPipelineShaderStageCreateFlags flags = 0;
-			std::vector<VkBaseOutStructure*> pNext_chain;
-			VkShaderModule shader_module = VK_NULL_HANDLE;
-			const char* name = "";
-			VkSpecializationInfo specialization_info = {};
-		} tessellation_control_shader;
-
-		struct TessellationEvaluationShader { // Tessellation shader stage
-			VkPipelineShaderStageCreateFlags flags = 0;
-			std::vector<VkBaseOutStructure*> pNext_chain;
-			VkShaderModule shader_module = VK_NULL_HANDLE;
-			const char* name = "";
-			VkSpecializationInfo specialization_info = {};
-		} tessellation_eval_shader;
+		ShaderInfo vertex_shader;
+		ShaderInfo fragment_shader;
+		ShaderInfo tessellation_control_shader;
+		ShaderInfo tessellation_eval_shader;
+		ShaderInfo geometry_shader;
 
 		struct TessellationState {
 			std::vector<VkBaseOutStructure*> pNext_chain;
 			uint32_t patch_control_points;
 		} tessellation_state;
 
-		struct GeometryShader {
-			VkPipelineShaderStageCreateFlags flags = 0;
-			std::vector<VkBaseOutStructure*> pNext_chain;
-			VkShaderModule shader_module = VK_NULL_HANDLE;
-			const char* name = "";
-			VkSpecializationInfo specialization_info = {};
-		} geometry_shader;
 
 		struct ViewportState { // Viewport state
 			std::vector<VkBaseOutStructure*> pNext_chain;
@@ -322,13 +304,6 @@ class GraphicsPipelineBuilder {
 			std::vector<VkRect2D> scissors;
 		} viewport_state;
 
-		struct FragmentShader {
-			VkPipelineShaderStageCreateFlags flags = 0;
-			std::vector<VkBaseOutStructure*> pNext_chain;
-			VkShaderModule shader_module = VK_NULL_HANDLE;
-			const char* name = "";
-			VkSpecializationInfo specialization_info = {};
-		} fragment_shader;
 
 		struct RasterizationState { // Rasterization state
 			std::vector<VkBaseOutStructure*> pNext_chain;
@@ -377,9 +352,8 @@ class GraphicsPipelineBuilder {
 			float blend_constants[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 		} color_blend_state;
 
-		struct DynamicState {
-			std::vector<VkDynamicState> dynamic_states;
-		} dynamic_state;
+		std::vector<VkDynamicState> dynamic_states;
+
 
 	} info;
 };

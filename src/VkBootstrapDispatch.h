@@ -138,6 +138,12 @@ struct DispatchTable {
 #if (defined(VK_HUAWEI_subpass_shading))
 		fp_vkCmdSubpassShadingHUAWEI = reinterpret_cast<PFN_vkCmdSubpassShadingHUAWEI>(procAddr(device, "vkCmdSubpassShadingHUAWEI"));
 #endif
+#if (defined(VK_HUAWEI_cluster_culling_shader))
+		fp_vkCmdDrawClusterHUAWEI = reinterpret_cast<PFN_vkCmdDrawClusterHUAWEI>(procAddr(device, "vkCmdDrawClusterHUAWEI"));
+#endif
+#if (defined(VK_HUAWEI_cluster_culling_shader))
+		fp_vkCmdDrawClusterIndirectHUAWEI = reinterpret_cast<PFN_vkCmdDrawClusterIndirectHUAWEI>(procAddr(device, "vkCmdDrawClusterIndirectHUAWEI"));
+#endif
 		fp_vkCmdCopyBuffer = reinterpret_cast<PFN_vkCmdCopyBuffer>(procAddr(device, "vkCmdCopyBuffer"));
 		fp_vkCmdCopyImage = reinterpret_cast<PFN_vkCmdCopyImage>(procAddr(device, "vkCmdCopyImage"));
 		fp_vkCmdBlitImage = reinterpret_cast<PFN_vkCmdBlitImage>(procAddr(device, "vkCmdBlitImage"));
@@ -1624,6 +1630,16 @@ struct DispatchTable {
 #if (defined(VK_HUAWEI_subpass_shading))
 	void cmdSubpassShadingHUAWEI(VkCommandBuffer commandBuffer) const noexcept {
 		fp_vkCmdSubpassShadingHUAWEI(commandBuffer);
+	}
+#endif
+#if (defined(VK_HUAWEI_cluster_culling_shader))
+	void cmdDrawClusterHUAWEI(VkCommandBuffer commandBuffer, uint32_t groupCountX, uint32_t groupCountY, uint32_t groupCountZ) const noexcept {
+		fp_vkCmdDrawClusterHUAWEI(commandBuffer, groupCountX, groupCountY, groupCountZ);
+	}
+#endif
+#if (defined(VK_HUAWEI_cluster_culling_shader))
+	void cmdDrawClusterIndirectHUAWEI(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset) const noexcept {
+		fp_vkCmdDrawClusterIndirectHUAWEI(commandBuffer, buffer, offset);
 	}
 #endif
 	void cmdCopyBuffer(VkCommandBuffer commandBuffer, VkBuffer srcBuffer, VkBuffer dstBuffer, uint32_t regionCount, const VkBufferCopy* pRegions) const noexcept {
@@ -3734,6 +3750,12 @@ struct DispatchTable {
 	PFN_vkCmdDispatchIndirect fp_vkCmdDispatchIndirect = nullptr;
 #if (defined(VK_HUAWEI_subpass_shading))
 	PFN_vkCmdSubpassShadingHUAWEI fp_vkCmdSubpassShadingHUAWEI = nullptr;
+#endif
+#if (defined(VK_HUAWEI_cluster_culling_shader))
+	PFN_vkCmdDrawClusterHUAWEI fp_vkCmdDrawClusterHUAWEI = nullptr;
+#endif
+#if (defined(VK_HUAWEI_cluster_culling_shader))
+	PFN_vkCmdDrawClusterIndirectHUAWEI fp_vkCmdDrawClusterIndirectHUAWEI = nullptr;
 #endif
 	PFN_vkCmdCopyBuffer fp_vkCmdCopyBuffer = nullptr;
 	PFN_vkCmdCopyImage fp_vkCmdCopyImage = nullptr;

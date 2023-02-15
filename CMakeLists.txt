@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
 project(VulkanBootstrap)
 
+option(VK_BOOTSTRAP_DISABLE_WARNINGS "Enable warnings as errors during compilation" OFF)
 option(VK_BOOTSTRAP_WERROR "Enable warnings as errors during compilation" OFF)
 
 add_library(vk-bootstrap-vulkan-headers INTERFACE)
@@ -42,25 +43,27 @@ else()
   set(VK_BOOTSTRAP_COMPILER_CLANGPP 0)
 endif()
 
-target_compile_options(vk-bootstrap-compiler-warnings
-        INTERFACE
-        $<$<OR:$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>,${VK_BOOTSTRAP_COMPILER_CLANGPP}>:
-        -Wall
-        -Wextra
-        -Wconversion
-        -Wsign-conversion>
-        $<$<CXX_COMPILER_ID:MSVC>:
-        /W4>
-        )
-
-if(VK_BOOTSTRAP_WERROR)
+if(NOT VK_BOOTSTRAP_DISABLE_WARNINGS)
   target_compile_options(vk-bootstrap-compiler-warnings
           INTERFACE
           $<$<OR:$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>,${VK_BOOTSTRAP_COMPILER_CLANGPP}>:
-          -pedantic-errors>
+          -Wall
+          -Wextra
+          -Wconversion
+          -Wsign-conversion>
           $<$<CXX_COMPILER_ID:MSVC>:
-          /WX>
+          /W4>
           )
+
+  if(VK_BOOTSTRAP_WERROR)
+    target_compile_options(vk-bootstrap-compiler-warnings
+            INTERFACE
+            $<$<OR:$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>,${VK_BOOTSTRAP_COMPILER_CLANGPP}>:
+            -pedantic-errors>
+            $<$<CXX_COMPILER_ID:MSVC>:
+            /WX>
+            )
+  endif()
 endif()
 
 target_include_directories(vk-bootstrap PUBLIC

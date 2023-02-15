@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
 project(VulkanBootstrap)
 
-option(VK_BOOTSTRAP_DISABLE_WARNINGS "Enable warnings as errors during compilation" OFF)
+option(VK_BOOTSTRAP_DISABLE_WARNINGS "Disable warnings during compilation" OFF)
 option(VK_BOOTSTRAP_WERROR "Enable warnings as errors during compilation" OFF)
 
 add_library(vk-bootstrap-vulkan-headers INTERFACE)

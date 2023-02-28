@@ -794,6 +794,13 @@ InstanceBuilder& InstanceBuilder::request_validation_layers(bool enable_validati
 	info.request_validation_layers = enable_validation;
 	return *this;
 }
+
+InstanceBuilder & InstanceBuilder::disable_debug_messenger() {
+	info.use_debug_messenger = false;
+	info.debug_callback = nullptr;
+	return *this;
+}
+
 InstanceBuilder& InstanceBuilder::use_default_debug_messenger() {
 	info.use_debug_messenger = true;
 	info.debug_callback = default_debug_callback;

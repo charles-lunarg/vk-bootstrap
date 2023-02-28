@@ -381,6 +381,8 @@ class InstanceBuilder {
 	// Checks if the validation layers are available and loads them if they are.
 	InstanceBuilder& request_validation_layers(bool enable_validation = true);
 
+	// Disables the debug messenger and clears the debug callback
+	InstanceBuilder& disable_debug_messenger();
 	// Use a default debug callback that prints to standard out.
 	InstanceBuilder& use_default_debug_messenger();
 	// Provide a user defined debug callback.

@@ -380,7 +380,7 @@ class InstanceBuilder {
 	InstanceBuilder& enable_validation_layers(bool require_validation = true);
 	// Checks if the validation layers are available and loads them if they are.
 	InstanceBuilder& request_validation_layers(bool enable_validation = true);
-	
+
 	// Use a default debug callback that prints to standard out.
 	InstanceBuilder& use_default_debug_messenger();
 	// Provide a user defined debug callback.

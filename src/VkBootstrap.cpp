@@ -584,7 +584,7 @@ Result<Instance> InstanceBuilder::build() const {
 
 	for (auto& ext : info.extensions)
 		extensions.push_back(ext);
-	if (info.debug_callback != nullptr && system.debug_utils_available) {
+	if (info.debug_callback != nullptr && info.use_debug_messenger && system.debug_utils_available) {
 		extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
 	}
 	bool properties2_ext_enabled =
@@ -792,12 +792,6 @@ InstanceBuilder& InstanceBuilder::enable_validation_layers(bool enable_validatio
 }
 InstanceBuilder& InstanceBuilder::request_validation_layers(bool enable_validation) {
 	info.request_validation_layers = enable_validation;
-	return *this;
-}
-
-InstanceBuilder & InstanceBuilder::disable_debug_messenger() {
-	info.use_debug_messenger = false;
-	info.debug_callback = nullptr;
 	return *this;
 }
 

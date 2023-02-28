@@ -335,6 +335,7 @@ TEST_CASE("Swapchain", "[VkBootstrap.bootstrap]") {
 			auto recreated_swapchain_ret = swapchain_builder.set_old_swapchain(swapchain).build();
 			REQUIRE(recreated_swapchain_ret.has_value());
 
+			vkb::destroy_swapchain(swapchain_ret.value());
 			vkb::destroy_swapchain(recreated_swapchain_ret.value());
 		}
 		AND_THEN("Swapchain can be created from individual handles") {
@@ -348,6 +349,7 @@ TEST_CASE("Swapchain", "[VkBootstrap.bootstrap]") {
 			auto recreated_swapchain_ret = swapchain_builder.set_old_swapchain(swapchain).build();
 			REQUIRE(recreated_swapchain_ret.has_value());
 
+			vkb::destroy_swapchain(swapchain_ret.value());
 			vkb::destroy_swapchain(recreated_swapchain_ret.value());
 		}
 		AND_THEN("Swapchain can be create with default gotten handles") {
@@ -360,6 +362,7 @@ TEST_CASE("Swapchain", "[VkBootstrap.bootstrap]") {
 			auto recreated_swapchain_ret = swapchain_builder.set_old_swapchain(swapchain).build();
 			REQUIRE(recreated_swapchain_ret.has_value());
 
+			vkb::destroy_swapchain(swapchain_ret.value());
 			vkb::destroy_swapchain(recreated_swapchain_ret.value());
 		}
 
@@ -563,8 +566,7 @@ TEST_CASE("Passing vkb classes to Vulkan handles", "[VkBootstrap.pass_class_to_h
 TEST_CASE("Querying Required Extension Features in 1.1", "[VkBootstrap.version]") {
 	GIVEN("A working instance") {
 		auto instance = get_headless_instance();
-		// Requires a device that supports runtime descriptor arrays via descriptor indexing extension.
-		{
+		SECTION("Requires a device that supports runtime descriptor arrays via descriptor indexing extension.") {
 			VkPhysicalDeviceDescriptorIndexingFeaturesEXT descriptor_indexing_features{};
 			descriptor_indexing_features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT;
 			descriptor_indexing_features.runtimeDescriptorArray = true;
@@ -582,6 +584,52 @@ TEST_CASE("Querying Required Extension Features in 1.1", "[VkBootstrap.version]"
 			REQUIRE(device_ret.has_value());
 			vkb::destroy_device(device_ret.value());
 		}
+		SECTION("Add a custom VkPhysicalDeviceFeatures2 pNext chain to the DeviceBuilder, without using "
+		        "add_required_extension_features()") {
+			VkPhysicalDeviceDescriptorIndexingFeaturesEXT descriptor_indexing_features{};
+			descriptor_indexing_features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT;
+			descriptor_indexing_features.runtimeDescriptorArray = true;
+
+			vkb::PhysicalDeviceSelector selector(instance);
+			auto phys_dev_ret = selector.add_required_extension(VK_EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME)
+			                        .add_required_extension(VK_KHR_MAINTENANCE3_EXTENSION_NAME)
+			                        .select();
+			// Ignore if hardware support isn't true
+			REQUIRE(phys_dev_ret.has_value());
+
+			VkPhysicalDeviceFeatures2 phys_dev_feats2{};
+			phys_dev_feats2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
+			phys_dev_feats2.pNext = reinterpret_cast<void*>(&descriptor_indexing_features);
+
+			vkb::DeviceBuilder device_builder(phys_dev_ret.value());
+			auto device_ret = device_builder.add_pNext(&phys_dev_feats2).build();
+			REQUIRE(device_ret.has_value());
+			vkb::destroy_device(device_ret.value());
+		}
+		SECTION(
+		    "Try to add a custom VkPhysicalDeviceFeatures2 pNext chain to the DeviceBuilder, resulting in an error") {
+			VkPhysicalDeviceDescriptorIndexingFeaturesEXT descriptor_indexing_features{};
+			descriptor_indexing_features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT;
+			descriptor_indexing_features.runtimeDescriptorArray = true;
+
+			vkb::PhysicalDeviceSelector selector(instance);
+			auto phys_dev_ret = selector.add_required_extension(VK_EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME)
+			                        .add_required_extension(VK_KHR_MAINTENANCE3_EXTENSION_NAME)
+			                        .add_required_extension_features(descriptor_indexing_features)
+			                        .select();
+			// Ignore if hardware support isn't true
+			REQUIRE(phys_dev_ret.has_value());
+
+			VkPhysicalDeviceFeatures2 phys_dev_feats2{};
+			phys_dev_feats2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
+			phys_dev_feats2.pNext = reinterpret_cast<void*>(&descriptor_indexing_features);
+
+			vkb::DeviceBuilder device_builder(phys_dev_ret.value());
+			auto device_ret = device_builder.add_pNext(&phys_dev_feats2).build();
+			REQUIRE(device_ret.error() ==
+			        vkb::DeviceError::VkPhysicalDeviceFeatures2_in_pNext_chain_while_using_add_required_extension_features);
+		}
+
 		vkb::destroy_instance(instance);
 	}
 }
@@ -592,8 +640,7 @@ TEST_CASE("Querying Vulkan 1.1 and 1.2 features", "[VkBootstrap.version]") {
 	GIVEN("A working instance") {
 		vkb::InstanceBuilder builder;
 		auto instance = get_headless_instance(2); // make sure we use 1.2
-		// Requires a device that supports multiview and bufferDeviceAddress
-		{
+		SECTION("Requires a device that supports multiview and bufferDeviceAddress") {
 			VkPhysicalDeviceVulkan11Features features_11{};
 			features_11.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES;
 			features_11.multiview = true;
@@ -611,8 +658,7 @@ TEST_CASE("Querying Vulkan 1.1 and 1.2 features", "[VkBootstrap.version]") {
 			REQUIRE(device_ret.has_value());
 			vkb::destroy_device(device_ret.value());
 		}
-		// protectedMemory should NOT be supported
-		{
+		SECTION("protectedMemory should NOT be supported") {
 			VkPhysicalDeviceVulkan11Features features_11{};
 			features_11.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES;
 			features_11.protectedMemory = true;

@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
 project(VulkanBootstrap)
 
+option(VK_BOOTSTRAP_DISABLE_WARNINGS "Disable warnings during compilation" OFF)
 option(VK_BOOTSTRAP_WERROR "Enable warnings as errors during compilation" OFF)
 
 add_library(vk-bootstrap-vulkan-headers INTERFACE)
@@ -42,25 +43,27 @@ else()
   set(VK_BOOTSTRAP_COMPILER_CLANGPP 0)
 endif()
 
-target_compile_options(vk-bootstrap-compiler-warnings
-        INTERFACE
-        $<$<OR:$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>,${VK_BOOTSTRAP_COMPILER_CLANGPP}>:
-        -Wall
-        -Wextra
-        -Wconversion
-        -Wsign-conversion>
-        $<$<CXX_COMPILER_ID:MSVC>:
-        /W4>
-        )
-
-if(VK_BOOTSTRAP_WERROR)
+if(NOT VK_BOOTSTRAP_DISABLE_WARNINGS)
   target_compile_options(vk-bootstrap-compiler-warnings
           INTERFACE
           $<$<OR:$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>,${VK_BOOTSTRAP_COMPILER_CLANGPP}>:
-          -pedantic-errors>
+          -Wall
+          -Wextra
+          -Wconversion
+          -Wsign-conversion>
           $<$<CXX_COMPILER_ID:MSVC>:
-          /WX>
+          /W4>
           )
+
+  if(VK_BOOTSTRAP_WERROR)
+    target_compile_options(vk-bootstrap-compiler-warnings
+            INTERFACE
+            $<$<OR:$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>,${VK_BOOTSTRAP_COMPILER_CLANGPP}>:
+            -pedantic-errors>
+            $<$<CXX_COMPILER_ID:MSVC>:
+            /WX>
+            )
+  endif()
 endif()
 
 target_include_directories(vk-bootstrap PUBLIC
@@ -81,10 +84,15 @@ install(TARGETS vk-bootstrap vk-bootstrap-compiler-warnings vk-bootstrap-vulkan-
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
-option(VK_BOOTSTRAP_TEST "Test Vk-Bootstrap with glfw and Catch2" OFF)
+# By default, we want to only build tests if this repo is built standalone, but still should be configurable by the user
+if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+    set(VK_BOOTSTRAP_TEST_DEFAULT_VALUE ON)
+else()
+    set(VK_BOOTSTRAP_TEST_DEFAULT_VALUE OFF)
+endif()
+option(VK_BOOTSTRAP_TEST "Test Vk-Bootstrap with glfw and Catch2" ${VK_BOOTSTRAP_TEST_DEFAULT_VALUE})
 
-if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME OR VK_BOOTSTRAP_TEST)
-
+if(VK_BOOTSTRAP_TEST)
     add_subdirectory(ext)
     add_subdirectory(tests)
     add_subdirectory(example)

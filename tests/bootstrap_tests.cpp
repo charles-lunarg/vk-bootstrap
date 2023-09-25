@@ -201,6 +201,11 @@ TEST_CASE("Select all Physical Devices", "[VkBootstrap.bootstrap]") {
 
     auto window = create_window_glfw("Select all Physical Devices");
     auto instance = get_instance(1);
+
+    auto instance_dispatch_table = instance.make_table();
+    // needs to successfully create an instance dispatch table
+    REQUIRE(instance_dispatch_table.fp_vkEnumeratePhysicalDevices);
+
     auto surface = create_surface_glfw(instance.instance, window);
 
     vkb::PhysicalDeviceSelector phys_device_selector(instance, surface);
@@ -537,7 +542,7 @@ TEST_CASE("Querying Required Extension Features", "[VkBootstrap.select_features]
     }
 }
 
-TEST_CASE("Passing vkb classes to Vulkan handles", "[VkBootstrap.pass_class_to_handle") {
+TEST_CASE("Passing vkb classes to Vulkan handles", "[VkBootstrap.pass_class_to_handle]") {
     GIVEN("A working instance") {
         auto instance = get_instance();
 

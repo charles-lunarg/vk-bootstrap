@@ -296,7 +296,9 @@ VKAPI_ATTR VkResult VKAPI_CALL shim_vkGetPhysicalDeviceSurfaceSupportKHR(
             }
         }
     }
-    if (surface && pSupported) *pSupported = true;
+    if (surface && pSupported) {
+        *pSupported = true;
+    }
     return VK_SUCCESS;
 }
 VKAPI_ATTR VkResult VKAPI_CALL shim_vkGetPhysicalDeviceSurfaceFormatsKHR(

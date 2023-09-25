@@ -334,6 +334,9 @@ TEST_CASE("Swapchain", "[VkBootstrap.bootstrap]") {
         auto graphics_queue_index = device.get_queue_index(vkb::QueueType::graphics).value();
         auto present_queue_index = device.get_queue_index(vkb::QueueType::present).value();
 
+        REQUIRE(device.get_first_presentation_queue_and_index().has_value());
+        REQUIRE(device.queue_family_index_supports_presentation(present_queue_index));
+
         THEN("Swapchain can be made") {
             vkb::SwapchainBuilder swapchain_builder(device);
             auto swapchain_ret = swapchain_builder.build();
@@ -727,7 +730,7 @@ TEST_CASE("Querying Required Extension Features in 1.1", "[VkBootstrap.version]"
 }
 
 TEST_CASE("Querying Vulkan 1.1 and 1.2 features", "[VkBootstrap.version]") {
-    [[maybe_unused]] VulkanMock& mock = get_and_setup_default();
+    VulkanMock& mock = get_and_setup_default();
     mock.api_version = VK_API_VERSION_1_2;
     mock.physical_devices_details[0].properties.apiVersion = VK_API_VERSION_1_2;
 
@@ -740,7 +743,6 @@ TEST_CASE("Querying Vulkan 1.1 and 1.2 features", "[VkBootstrap.version]") {
     mock.physical_devices_details[0].add_features_pNext_struct(mock_vulkan_12_features);
 
     GIVEN("A working instance") {
-        vkb::InstanceBuilder builder;
         auto instance = get_headless_instance(2); // make sure we use 1.2
         SECTION("Requires a device that supports multiview and bufferDeviceAddress") {
             VkPhysicalDeviceVulkan11Features features_11{};

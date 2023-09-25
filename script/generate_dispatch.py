@@ -95,9 +95,12 @@ vk_xml_raw = response.read()
 
 vk_xml = xmltodict.parse(vk_xml_raw,process_namespaces=True)
 
-command_params = {'return_type': '', 'args': [], 'requirements': [], 'macro_template': Template('')}
+command_params = {'return_type': '', 'args': [], 'dispatch_type': '', 'requirements': [], 'macro_template': Template('')}
 
-device_commands = {}
+commands = {}
+
+INSTANCE = 'instance'
+DEVICE = 'device'
 
 aliased_types = {}
 types_node = vk_xml['registry']['types']['type']
@@ -123,17 +126,20 @@ for command_node in commands_node:
             if not '@api' in param or param['@api'] == 'vulkan':
                 new_command_params['args'].append(param)
         if not command_name in exclusions:
+            commands[command_name] = new_command_params
+            commands[command_name]['is_alias'] = False
             if new_command_params['args'][0]['type'] in ['VkDevice', 'VkCommandBuffer', 'VkQueue']:
-                device_commands[command_name] = new_command_params
-                device_commands[command_name]['is_alias'] = False
+                commands[command_name]['dispatch_type'] = DEVICE
+            elif new_command_params['args'][0]['type'] in ['VkInstance', 'VkPhysicalDevice']:
+                commands[command_name]['dispatch_type'] = INSTANCE
     elif '@alias' in command_node:
         aliases[command_node['@alias']] = command_node['@name']
 
 # Push the alias name as a device function if the alias exists in device commands
 for alias_name, alias in aliases.items():
-    if alias in device_commands:
-        device_commands[alias] = copy.deepcopy(device_commands[alias_name])
-        device_commands[alias]['is_alias'] = True
+    if alias in commands:
+        commands[alias] = copy.deepcopy(commands[alias_name])
+        commands[alias]['is_alias'] = True
 
 # Add requirements for core PFN's
 features_node = vk_xml['registry']['feature']
@@ -145,8 +151,8 @@ for feature_node in features_node:
                     if not isinstance(require_node[param_node], list):
                         require_node[param_node] = [require_node[param_node]]
                     for param in require_node[param_node]:
-                        if param['@name'] in device_commands:
-                            device_commands[param['@name']]['requirements'] += [[feature_node['@name']]]
+                        if param['@name'] in commands:
+                            commands[param['@name']]['requirements'] += [[feature_node['@name']]]
 
 
 # Add requirements for extension PFN's
@@ -166,25 +172,25 @@ for extension_node in extensions_node:
                     if not isinstance(require_node['command'], list):
                         require_node['command'] = [require_node['command']]
                     for command_node in require_node['command']:
-                        if command_node['@name'] in device_commands:
+                        if command_node['@name'] in commands:
                             if '@author' in extension_node and extension_node['@author'] in excluded_extension_authors:
-                                device_commands.pop(command_node['@name'])
+                                commands.pop(command_node['@name'])
                             else:
-                                device_commands[command_node['@name']]['requirements'] += [requirements]
+                                commands[command_node['@name']]['requirements'] += [requirements]
             elif require_node == 'command':
                 if not isinstance(require_nodes['command'], list):
                     require_nodes['command'] = [require_nodes['command']]
                 for command_node in require_nodes['command']:
-                    if command_node['@name'] in device_commands:
+                    if command_node['@name'] in commands:
                         if '@author' in extension_node and extension_node['@author'] in excluded_extension_authors:
-                            device_commands.pop(command_node['@name'])
+                            commands.pop(command_node['@name'])
                         else:
-                            device_commands[command_node['@name']]['requirements'] += [requirements]
+                            commands[command_node['@name']]['requirements'] += [requirements]
 
 # Generate macro templates
-for command_name, command in device_commands.items():
+for command_name, command in commands.items():
     macro = ''
-    requirements_collection = device_commands[command_name]['requirements']
+    requirements_collection = commands[command_name]['requirements']
     collection_count = len(requirements_collection)
     if collection_count > 0:
         macro = '#if '
@@ -205,7 +211,7 @@ for command_name, command in device_commands.items():
         macro += '\n$body#endif\n'
     else:
         macro = '$body'
-    device_commands[command_name]['macro_template'] = Template(macro)
+    commands[command_name]['macro_template'] = Template(macro)
 
 # License
 dispatch_license = '''/*
@@ -232,108 +238,126 @@ info = '// This file is a part of VkBootstrap\n'
 info += '// https://github.com/charles-lunarg/vk-bootstrap\n\n'
 
 # # Content
-body = '\n#pragma once\n\n#include <vulkan/vulkan.h>\n\n'
-body += 'namespace vkb {\n\n'
-body += 'struct DispatchTable {\n'
-body += '\tDispatchTable() = default;\n'
-body += '\tDispatchTable(VkDevice device, PFN_vkGetDeviceProcAddr procAddr) : device(device), populated(true) {\n'
+head = '\n#pragma once\n\n#include <vulkan/vulkan.h>\n\n'
+head += 'namespace vkb {\n\n'
 
-proxy_section = ''
-fp_decl_section = ''
-pfn_load_section = ''
-
-proxy_template = Template('\t$return_type $proxy_name($args_full) const noexcept {\n\t\t$opt_return$fp_name($args_names);\n\t}\n')
-fp_decl_template = Template('\t$pfn_name $fp_name = nullptr;\n')
-pfn_load_template = Template('\t\t$fp_name = reinterpret_cast<$pfn_name>(procAddr(device, "$command_name"));\n')
-
-for command_name, command in device_commands.items():
-    params = device_commands[command]
-    # easy stuff out of the way
-    return_type = params['return_type']
-    if return_type != 'void':
-        opt_return = 'return '
+def create_dispatch_table(dispatch_type):
+    out = ''
+    if dispatch_type == INSTANCE:
+        out += 'struct InstanceDispatchTable {\n'
+        out += '\tInstanceDispatchTable() = default;\n'
+        out += '\tInstanceDispatchTable(VkInstance instance, PFN_vkGetInstanceProcAddr procAddr) : instance(instance), populated(true) {\n'
     else:
-        opt_return = ''
-    proxy_name = command_name[2].lower() + command_name[3:]
-    fp_name = 'fp_' + command_name
-    pfn_name = 'PFN_' + command_name
+        out += 'struct DispatchTable {\n'
+        out += '\tDispatchTable() = default;\n'
+        out += '\tDispatchTable(VkDevice device, PFN_vkGetDeviceProcAddr procAddr) : device(device), populated(true) {\n'
 
-    # Now for args
-    arg_template = Template('$front_mods$arg_type$back_mods$arg_name$array')
-    args_full = ''
-    args_names = ''
-    args_count = len(params['args'])
-    i = args_count
-    for arg in params['args']:
-        front_mods = ''
-        back_mods = ' '
-        array = ''
-        arg_type = arg['type']
-        arg_name = arg['name']
-        if '#text' in arg:
-            text = arg['#text']
-            text = text.replace(' ', '')
-            array_index = text.find('[')
-            if array_index != -1:
-                array = text[array_index:]
-                text = text[0:array_index]
-            if text == '*':
-                front_mods = ''
-                back_mods = '* '
-            elif text == '**':
-                front_mods = ''
-                back_mods = '** '
-            elif text == 'struct**':
-                front_mods = 'struct '
-                back_mods = '** '
-            elif text == 'const*':
-                front_mods = 'const '
-                back_mods = '* '
-            elif text == 'const**':
-                front_mods = 'const '
-                back_mods = '** '
-            elif text == 'const*const*':
-                front_mods = 'const '
-                back_mods = '* const* '
-            elif text == 'conststruct*':
-                front_mods = 'const struct '
-                back_mods = '* '
-        if i == args_count and arg_type == 'VkDevice':
-            args_names += arg_name
-            if i > 0:
-                i -= 1
-                if i > 0:
-                    args_names += ', '
+    proxy_section = ''
+    fp_decl_section = ''
+    pfn_load_section = ''
+
+    proxy_template = Template('\t$return_type $proxy_name($args_full) const noexcept {\n\t\t$opt_return$fp_name($args_names);\n\t}\n')
+    fp_decl_template = Template('\t$pfn_name $fp_name = nullptr;\n')
+    if dispatch_type == INSTANCE:
+        pfn_load_template = Template('\t\t$fp_name = reinterpret_cast<$pfn_name>(procAddr(instance, "$command_name"));\n')
+    else:
+        pfn_load_template = Template('\t\t$fp_name = reinterpret_cast<$pfn_name>(procAddr(device, "$command_name"));\n')
+
+    for command_name, command in commands.items():
+        if command['dispatch_type'] != dispatch_type:
+            continue
+        params = commands[command_name]
+        # easy stuff out of the way
+        return_type = params['return_type']
+        if return_type != 'void':
+            opt_return = 'return '
         else:
-            if arg_type in aliased_types and  arg_type not in excluded_alias_types:
-                arg_type = aliased_types[arg_type]
-            args_full += arg_template.substitute(front_mods = front_mods, arg_type = arg_type, back_mods = back_mods, arg_name = arg_name, array = array)
-            args_names += arg_name
-            if i > 0:
-                i -= 1
+            opt_return = ''
+        proxy_name = command_name[2].lower() + command_name[3:]
+        fp_name = 'fp_' + command_name
+        pfn_name = 'PFN_' + command_name
+
+        # Now for args
+        arg_template = Template('$front_mods$arg_type$back_mods$arg_name$array')
+        args_full = ''
+        args_names = ''
+        args_count = len(params['args'])
+        i = args_count
+        for arg in params['args']:
+            front_mods = ''
+            back_mods = ' '
+            array = ''
+            arg_type = arg['type']
+            arg_name = arg['name']
+            if '#text' in arg:
+                text = arg['#text']
+                text = text.replace(' ', '')
+                array_index = text.find('[')
+                if array_index != -1:
+                    array = text[array_index:]
+                    text = text[0:array_index]
+                if text == '*':
+                    front_mods = ''
+                    back_mods = '* '
+                elif text == '**':
+                    front_mods = ''
+                    back_mods = '** '
+                elif text == 'struct**':
+                    front_mods = 'struct '
+                    back_mods = '** '
+                elif text == 'const*':
+                    front_mods = 'const '
+                    back_mods = '* '
+                elif text == 'const**':
+                    front_mods = 'const '
+                    back_mods = '** '
+                elif text == 'const*const*':
+                    front_mods = 'const '
+                    back_mods = '* const* '
+                elif text == 'conststruct*':
+                    front_mods = 'const struct '
+                    back_mods = '* '
+            if i == args_count and (dispatch_type == INSTANCE and arg_type == 'VkInstance') or (dispatch_type == DEVICE and arg_type == 'VkDevice'):
+                args_names += arg_name
                 if i > 0:
-                    args_full += ', '
-                    args_names += ', '
+                    i -= 1
+                    if i > 0:
+                        args_names += ', '
+            else:
+                if arg_type in aliased_types and  arg_type not in excluded_alias_types:
+                    arg_type = aliased_types[arg_type]
+                args_full += arg_template.substitute(front_mods = front_mods, arg_type = arg_type, back_mods = back_mods, arg_name = arg_name, array = array)
+                args_names += arg_name
+                if i > 0:
+                    i -= 1
+                    if i > 0:
+                        args_full += ', '
+                        args_names += ', '
 
-    proxy_body = proxy_template.substitute(return_type = return_type, proxy_name = proxy_name, args_full = args_full, opt_return = opt_return, fp_name = fp_name, args_names = args_names)
-    fp_decl_body = fp_decl_template.substitute(pfn_name = pfn_name, fp_name = fp_name)
-    pfn_load_body = pfn_load_template.substitute(fp_name = fp_name, pfn_name = pfn_name, command_name = command)
+        proxy_body = proxy_template.substitute(return_type = return_type, proxy_name = proxy_name, args_full = args_full, opt_return = opt_return, fp_name = fp_name, args_names = args_names)
+        fp_decl_body = fp_decl_template.substitute(pfn_name = pfn_name, fp_name = fp_name)
+        pfn_load_body = pfn_load_template.substitute(fp_name = fp_name, pfn_name = pfn_name, command_name = command_name)
 
-    macro_template = params['macro_template']
-    proxy_section += macro_template.substitute(body=proxy_body)
-    fp_decl_section += macro_template.substitute(body=fp_decl_body)
-    pfn_load_section +=macro_template.substitute(body=pfn_load_body)
+        macro_template = params['macro_template']
+        proxy_section += macro_template.substitute(body=proxy_body)
+        fp_decl_section += macro_template.substitute(body=fp_decl_body)
+        pfn_load_section += macro_template.substitute(body=pfn_load_body)
 
-body += pfn_load_section
-body += '\t}\n'
-body += proxy_section
-body += fp_decl_section
-body += '\tbool is_populated() const { return populated; }\n'
-body += '\tVkDevice device = VK_NULL_HANDLE;\n'
-body += 'private:\n'
-body += '\t bool populated = false;\n'
-body += '};\n\n'
-body += '} // namespace vkb'
+    out += pfn_load_section
+    out += '\t}\n'
+    out += proxy_section
+    out += fp_decl_section
+    out += '\tbool is_populated() const { return populated; }\n'
+    if dispatch_type == INSTANCE:
+        out += '\tVkInstance instance = VK_NULL_HANDLE;\n'
+    else:
+        out += '\tVkDevice device = VK_NULL_HANDLE;\n'
+    out += 'private:\n'
+    out += '\t bool populated = false;\n'
+    out += '};\n\n'
+    return out
+
+tail = '} // namespace vkb'
 
 # find the version used to generate the code
 for type_node in  types_node:
@@ -346,8 +370,6 @@ version_fields = find_number_fields.findall(complete_header_version)
 header_version_field = find_number_fields.findall(vk_header_version)[0]
 version_tag = f'{version_fields[1]}.{version_fields[2]}.{header_version_field}'
 
-header = dispatch_license + info + body
-
 path_to_src = os.path.join('src')
 if not os.path.exists(path_to_src):
     path_to_src = os.path.join('..', 'src')
@@ -356,7 +378,7 @@ if not os.path.exists(path_to_src):
     sys.exit()
 
 header_file = codecs.open(os.path.join(path_to_src,'VkBootstrapDispatch.h'), 'w', 'utf-8')
-header_file.write(header)
+header_file.write(dispatch_license + info + head + create_dispatch_table('instance') + create_dispatch_table('device') + tail)
 header_file.close()
 
 path_to_gen = os.path.join('gen')

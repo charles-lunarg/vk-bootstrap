@@ -529,6 +529,8 @@ void destroy_instance(Instance instance) {
 
 Instance::operator VkInstance() const { return this->instance; }
 
+InstanceDispatchTable Instance::make_table() const { return { instance, fp_vkGetInstanceProcAddr }; }
+
 InstanceBuilder::InstanceBuilder(PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr) {
     info.fp_vkGetInstanceProcAddr = fp_vkGetInstanceProcAddr;
 }

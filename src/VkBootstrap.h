@@ -286,6 +286,9 @@ struct Instance {
     // in places where VkInstance would have been used.
     operator VkInstance() const;
 
+    // Return a loaded instance dispatch table
+    InstanceDispatchTable make_table() const;
+
     private:
     bool headless = false;
     bool properties2_ext_enabled = false;

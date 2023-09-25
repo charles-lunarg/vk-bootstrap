@@ -8,7 +8,6 @@ option(CATCH_ENABLE_WERROR "" OFF)
 option(CATCH_INSTALL_DOCS "" OFF)
 option(CATCH_INSTALL_HELPERS "" OFF)
 option(CATCH_INSTALL_EXTRAS "" ON)
-set_property(GLOBAL PROPERTY CTEST_TARGETS_ADDED 1) #remove Catch2 target spam
 
 include(FetchContent)
 FetchContent_Declare(

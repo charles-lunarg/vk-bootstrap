@@ -1,4 +1,8 @@
-#include "common.h"
+#include "vulkan_library_loader.hpp"
+
+#include "vulkan_mock.hpp"
+
+#include <algorithm>
 
 #include <catch2/catch_test_macros.hpp>
 
@@ -14,13 +18,63 @@ vkb::Instance get_headless_instance(uint32_t minor_version = 0) {
     return instance_ret.value();
 }
 
+VkExtensionProperties get_extension_properties(const char* extName) {
+    VkExtensionProperties ext_props{};
+    std::copy_n(extName, VK_MAX_EXTENSION_NAME_SIZE, ext_props.extensionName);
+    return ext_props;
+}
+
+VulkanMock& get_and_setup_default() {
+    VulkanMock& mock = get_vulkan_mock();
+    mock.instance_extensions.push_back(get_extension_properties(VK_KHR_SURFACE_EXTENSION_NAME));
+#if defined(_WIN32)
+    mock.instance_extensions.push_back(get_extension_properties("VK_KHR_win32_surface"));
+#elif defined(__ANDROID__)
+    mock.instance_extensions.push_back(get_extension_properties("VK_KHR_android_surface"));
+#elif defined(_DIRECT2DISPLAY)
+    mock.instance_extensions.push_back(get_extension_properties("VK_KHR_android_surface"));
+#elif defined(__linux__)
+    mock.instance_extensions.push_back(get_extension_properties("VK_KHR_xcb_surface"));
+    mock.instance_extensions.push_back(get_extension_properties("VK_KHR_xlib_surface"));
+    mock.instance_extensions.push_back(get_extension_properties("VK_KHR_wayland_surface"));
+#elif defined(__APPLE__)
+    mock.instance_extensions.push_back(get_extension_properties("VK_EXT_metal_surface"));
+#endif
+    mock.instance_extensions.push_back(get_extension_properties(VK_EXT_DEBUG_UTILS_EXTENSION_NAME));
+    VulkanMock::PhysicalDeviceDetails physical_device_details{};
+    physical_device_details.extensions.push_back(get_extension_properties(VK_KHR_SWAPCHAIN_EXTENSION_NAME));
+    physical_device_details.properties.apiVersion = VK_API_VERSION_1_0;
+    VkQueueFamilyProperties queue_family_properties{};
+    queue_family_properties.queueCount = 1;
+    queue_family_properties.queueFlags = VK_QUEUE_GRAPHICS_BIT | VK_QUEUE_COMPUTE_BIT | VK_QUEUE_TRANSFER_BIT;
+    queue_family_properties.minImageTransferGranularity = { 1, 1, 1 };
+    physical_device_details.queue_family_properties.push_back(queue_family_properties);
+    mock.add_physical_device(std::move(physical_device_details));
+    return mock;
+}
+
+VulkanMock::SurfaceDetails get_basic_surface_details() {
+    VulkanMock::SurfaceDetails details;
+    details.present_modes.push_back(VK_PRESENT_MODE_FIFO_KHR);
+    details.surface_formats.push_back(VkSurfaceFormatKHR{ VK_FORMAT_R8G8B8_SRGB, VK_COLORSPACE_SRGB_NONLINEAR_KHR });
+    details.capabilities.minImageCount = 2;
+    details.capabilities.minImageExtent = { 600, 800 };
+    details.capabilities.currentExtent = { 600, 800 };
+    details.capabilities.supportedUsageFlags = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+    return details;
+}
+
 // TODO
 // changing present modes and/or image formats
 
 TEST_CASE("Instance with surface", "[VkBootstrap.bootstrap]") {
+    VulkanMock& mock = get_and_setup_default();
+    mock.api_version = VK_API_VERSION_1_1;
+    mock.physical_devices_details[0].properties.apiVersion = VK_API_VERSION_1_1;
+    mock.physical_devices_details[0].extensions.push_back(get_extension_properties("VK_KHR_multiview"));
+    mock.physical_devices_details[0].extensions.push_back(get_extension_properties("VK_KHR_driver_properties"));
+    auto surface = mock.get_new_surface(get_basic_surface_details());
     GIVEN("A window and a vulkan instance") {
-
-        auto window = create_window_glfw("Instance with surface");
 
         auto sys_info_ret = vkb::SystemInfo::get_system_info();
         REQUIRE(sys_info_ret);
@@ -32,7 +86,6 @@ TEST_CASE("Instance with surface", "[VkBootstrap.bootstrap]") {
                                 .build();
         REQUIRE(instance_ret);
         vkb::Instance instance = instance_ret.value();
-        auto surface = create_surface_glfw(instance.instance, window);
 
         GIVEN("A default selected physical device") {
             vkb::PhysicalDeviceSelector phys_device_selector(instance);
@@ -64,7 +117,6 @@ TEST_CASE("Instance with surface", "[VkBootstrap.bootstrap]") {
 
         vkb::destroy_surface(instance, surface);
         vkb::destroy_instance(instance);
-        destroy_window_glfw(window);
     }
     GIVEN("Two Instances") {
         vkb::InstanceBuilder instance_builder1;
@@ -80,6 +132,7 @@ TEST_CASE("Instance with surface", "[VkBootstrap.bootstrap]") {
 }
 
 TEST_CASE("instance configuration", "[VkBootstrap.bootstrap]") {
+    [[maybe_unused]] VulkanMock& mock = get_and_setup_default();
     SECTION("custom debug callback") {
         vkb::InstanceBuilder builder;
 
@@ -121,6 +174,7 @@ TEST_CASE("instance configuration", "[VkBootstrap.bootstrap]") {
 }
 
 TEST_CASE("Headless Vulkan", "[VkBootstrap.bootstrap]") {
+    [[maybe_unused]] VulkanMock& mock = get_and_setup_default();
     auto instance = get_headless_instance();
 
     vkb::PhysicalDeviceSelector phys_device_selector(instance);
@@ -137,10 +191,11 @@ TEST_CASE("Headless Vulkan", "[VkBootstrap.bootstrap]") {
 }
 
 TEST_CASE("Device Configuration", "[VkBootstrap.bootstrap]") {
-
-    auto window = create_window_glfw("Device Configuration");
+    VulkanMock& mock = get_and_setup_default();
+    mock.api_version = VK_API_VERSION_1_1;
+    mock.physical_devices_details[0].properties.apiVersion = VK_API_VERSION_1_1;
     auto instance = get_instance(1);
-    auto surface = create_surface_glfw(instance.instance, window);
+    auto surface = mock.get_new_surface(get_basic_surface_details());
 
     vkb::PhysicalDeviceSelector phys_device_selector(instance);
 
@@ -198,15 +253,18 @@ TEST_CASE("Device Configuration", "[VkBootstrap.bootstrap]") {
 
 
 TEST_CASE("Select all Physical Devices", "[VkBootstrap.bootstrap]") {
+    VulkanMock& mock = get_and_setup_default();
+    mock.api_version = VK_API_VERSION_1_1;
+    mock.physical_devices_details[0].properties.apiVersion = VK_API_VERSION_1_1;
+    std::copy_n("mocking_gpus_for_fun_and_profit", VK_MAX_DRIVER_NAME_SIZE, mock.physical_devices_details[0].properties.deviceName);
 
-    auto window = create_window_glfw("Select all Physical Devices");
     auto instance = get_instance(1);
+    auto surface = mock.get_new_surface(get_basic_surface_details());
 
     auto instance_dispatch_table = instance.make_table();
     // needs to successfully create an instance dispatch table
     REQUIRE(instance_dispatch_table.fp_vkEnumeratePhysicalDevices);
 
-    auto surface = create_surface_glfw(instance.instance, window);
 
     vkb::PhysicalDeviceSelector phys_device_selector(instance, surface);
 
@@ -229,6 +287,7 @@ TEST_CASE("Select all Physical Devices", "[VkBootstrap.bootstrap]") {
 }
 
 TEST_CASE("Loading Dispatch Table", "[VkBootstrap.bootstrap]") {
+    [[maybe_unused]] VulkanMock& mock = get_and_setup_default();
     auto instance = get_headless_instance(0);
     {
         vkb::PhysicalDeviceSelector selector(instance);
@@ -255,10 +314,12 @@ TEST_CASE("Loading Dispatch Table", "[VkBootstrap.bootstrap]") {
 }
 
 TEST_CASE("Swapchain", "[VkBootstrap.bootstrap]") {
+    VulkanMock& mock = get_and_setup_default();
+    mock.api_version = VK_API_VERSION_1_1;
+    mock.physical_devices_details[0].properties.apiVersion = VK_API_VERSION_1_1;
+    auto surface = mock.get_new_surface(get_basic_surface_details());
     GIVEN("A working instance, window, surface, and device") {
-        auto window = create_window_glfw("Swapchain");
         auto instance = get_instance(1);
-        auto surface = create_surface_glfw(instance.instance, window);
 
         vkb::PhysicalDeviceSelector phys_device_selector(instance);
         auto phys_device_ret = phys_device_selector.set_surface(surface).select();
@@ -389,12 +450,14 @@ void VKAPI_PTR shim_vkFreeFunction(void* /*pUserData*/, void* pMemory) { return 
 
 
 TEST_CASE("Allocation Callbacks", "[VkBootstrap.bootstrap]") {
+    VulkanMock& mock = get_and_setup_default();
+    auto surface = mock.get_new_surface(get_basic_surface_details());
+
     VkAllocationCallbacks allocation_callbacks{};
     allocation_callbacks.pfnAllocation = &shim_vkAllocationFunction;
     allocation_callbacks.pfnReallocation = &shim_vkReallocationFunction;
     allocation_callbacks.pfnFree = &shim_vkFreeFunction;
 
-    auto window = create_window_glfw("Allocation Callbacks");
     vkb::InstanceBuilder builder;
 
     auto instance_ret = builder.request_validation_layers()
@@ -402,7 +465,6 @@ TEST_CASE("Allocation Callbacks", "[VkBootstrap.bootstrap]") {
                             .use_default_debug_messenger()
                             .build();
     REQUIRE(instance_ret.has_value());
-    auto surface = create_surface_glfw(instance_ret.value().instance, window, &allocation_callbacks);
 
     vkb::PhysicalDeviceSelector phys_device_selector(instance_ret.value());
 
@@ -428,6 +490,7 @@ TEST_CASE("Allocation Callbacks", "[VkBootstrap.bootstrap]") {
 }
 
 TEST_CASE("SystemInfo Loading Vulkan Automatically", "[VkBootstrap.loading]") {
+    [[maybe_unused]] VulkanMock& mock = get_and_setup_default();
     auto info_ret = vkb::SystemInfo::get_system_info();
     REQUIRE(info_ret);
     vkb::InstanceBuilder builder;
@@ -436,6 +499,7 @@ TEST_CASE("SystemInfo Loading Vulkan Automatically", "[VkBootstrap.loading]") {
 }
 
 TEST_CASE("SystemInfo Loading Vulkan Manually", "[VkBootstrap.loading]") {
+    [[maybe_unused]] VulkanMock& mock = get_and_setup_default();
     VulkanLibrary vk_lib;
     REQUIRE(vk_lib.vkGetInstanceProcAddr != NULL);
     auto info_ret = vkb::SystemInfo::get_system_info(vk_lib.vkGetInstanceProcAddr);
@@ -447,12 +511,14 @@ TEST_CASE("SystemInfo Loading Vulkan Manually", "[VkBootstrap.loading]") {
 }
 
 TEST_CASE("InstanceBuilder Loading Vulkan Automatically", "[VkBootstrap.loading]") {
+    [[maybe_unused]] VulkanMock& mock = get_and_setup_default();
     vkb::InstanceBuilder builder;
     auto ret = builder.build();
     REQUIRE(ret);
 }
 
 TEST_CASE("InstanceBuilder Loading Vulkan Manually", "[VkBootstrap.loading]") {
+    [[maybe_unused]] VulkanMock& mock = get_and_setup_default();
     VulkanLibrary vk_lib;
     REQUIRE(vk_lib.vkGetInstanceProcAddr != NULL);
     vkb::InstanceBuilder builder{ vk_lib.vkGetInstanceProcAddr };
@@ -460,6 +526,7 @@ TEST_CASE("InstanceBuilder Loading Vulkan Manually", "[VkBootstrap.loading]") {
     vk_lib.close();
 }
 TEST_CASE("ReLoading Vulkan Automatically", "[VkBootstrap.loading]") {
+    [[maybe_unused]] VulkanMock& mock = get_and_setup_default();
     {
         vkb::InstanceBuilder builder;
         auto ret = builder.build();
@@ -473,6 +540,7 @@ TEST_CASE("ReLoading Vulkan Automatically", "[VkBootstrap.loading]") {
 }
 
 TEST_CASE("ReLoading Vulkan Manually", "[VkBootstrap.loading]") {
+    [[maybe_unused]] VulkanMock& mock = get_and_setup_default();
     {
         VulkanLibrary vk_lib;
         REQUIRE(vk_lib.vkGetInstanceProcAddr != NULL);
@@ -492,6 +560,13 @@ TEST_CASE("ReLoading Vulkan Manually", "[VkBootstrap.loading]") {
 }
 
 TEST_CASE("Querying Required Extension Features but with 1.0", "[VkBootstrap.select_features]") {
+    VulkanMock& mock = get_and_setup_default();
+    mock.instance_extensions.push_back(get_extension_properties("VK_KHR_get_physical_device_properties2"));
+    mock.physical_devices_details[0].extensions.push_back(get_extension_properties("VK_EXT_descriptor_indexing"));
+    mock.physical_devices_details[0].extensions.push_back(get_extension_properties("VK_KHR_maintenance3"));
+    auto mock_descriptor_indexing_features = VkPhysicalDeviceDescriptorIndexingFeaturesEXT{};
+    mock_descriptor_indexing_features.runtimeDescriptorArray = true;
+    mock.physical_devices_details[0].add_features_pNext_struct(mock_descriptor_indexing_features);
     GIVEN("A working instance") {
         auto instance = get_headless_instance();
         // Requires a device that supports runtime descriptor arrays via descriptor indexing extension.
@@ -517,6 +592,13 @@ TEST_CASE("Querying Required Extension Features but with 1.0", "[VkBootstrap.sel
     }
 }
 TEST_CASE("Querying Required Extension Features", "[VkBootstrap.select_features]") {
+    VulkanMock& mock = get_and_setup_default();
+    mock.instance_extensions.push_back(get_extension_properties("VK_KHR_get_physical_device_properties2"));
+    mock.physical_devices_details[0].extensions.push_back(get_extension_properties("VK_EXT_descriptor_indexing"));
+    mock.physical_devices_details[0].extensions.push_back(get_extension_properties("VK_KHR_maintenance3"));
+    auto mock_descriptor_indexing_features = VkPhysicalDeviceDescriptorIndexingFeaturesEXT{};
+    mock_descriptor_indexing_features.runtimeDescriptorArray = true;
+    mock.physical_devices_details[0].add_features_pNext_struct(mock_descriptor_indexing_features);
     GIVEN("A working instance") {
         auto instance = get_headless_instance();
         // Requires a device that supports runtime descriptor arrays via descriptor indexing extension.
@@ -543,15 +625,14 @@ TEST_CASE("Querying Required Extension Features", "[VkBootstrap.select_features]
 }
 
 TEST_CASE("Passing vkb classes to Vulkan handles", "[VkBootstrap.pass_class_to_handle]") {
+    VulkanMock& mock = get_and_setup_default();
+    auto surface = mock.get_new_surface(get_basic_surface_details());
     GIVEN("A working instance") {
         auto instance = get_instance();
 
         // Check if we can get instance functions.
         PFN_vkVoidFunction instanceFunction = instance.fp_vkGetInstanceProcAddr(instance, "vkEnumeratePhysicalDevices"); // validation layers should be provided.
         REQUIRE(instanceFunction != NULL);
-
-        auto window = create_window_glfw("Conversion operators");
-        auto surface = create_surface_glfw(instance, window);
 
         vkb::PhysicalDeviceSelector physicalDeviceSelector(instance);
         auto physicalDevice =
@@ -567,8 +648,14 @@ TEST_CASE("Passing vkb classes to Vulkan handles", "[VkBootstrap.pass_class_to_h
     }
 }
 
-#if defined(VKB_VK_API_VERSION_1_1)
 TEST_CASE("Querying Required Extension Features in 1.1", "[VkBootstrap.version]") {
+    VulkanMock& mock = get_and_setup_default();
+    mock.instance_extensions.push_back(get_extension_properties("VK_KHR_get_physical_device_properties2"));
+    mock.physical_devices_details[0].extensions.push_back(get_extension_properties("VK_EXT_descriptor_indexing"));
+    mock.physical_devices_details[0].extensions.push_back(get_extension_properties("VK_KHR_maintenance3"));
+    auto mock_descriptor_indexing_features = VkPhysicalDeviceDescriptorIndexingFeaturesEXT{};
+    mock_descriptor_indexing_features.runtimeDescriptorArray = true;
+    mock.physical_devices_details[0].add_features_pNext_struct(mock_descriptor_indexing_features);
     GIVEN("A working instance") {
         auto instance = get_headless_instance();
         SECTION("Requires a device that supports runtime descriptor arrays via descriptor indexing extension.") {
@@ -638,10 +725,20 @@ TEST_CASE("Querying Required Extension Features in 1.1", "[VkBootstrap.version]"
         vkb::destroy_instance(instance);
     }
 }
-#endif
 
-#if defined(VKB_VK_API_VERSION_1_2)
 TEST_CASE("Querying Vulkan 1.1 and 1.2 features", "[VkBootstrap.version]") {
+    [[maybe_unused]] VulkanMock& mock = get_and_setup_default();
+    mock.api_version = VK_API_VERSION_1_2;
+    mock.physical_devices_details[0].properties.apiVersion = VK_API_VERSION_1_2;
+
+    auto mock_vulkan_11_features = VkPhysicalDeviceVulkan11Features{};
+    mock_vulkan_11_features.multiview = true;
+    mock.physical_devices_details[0].add_features_pNext_struct(mock_vulkan_11_features);
+
+    auto mock_vulkan_12_features = VkPhysicalDeviceVulkan12Features{};
+    mock_vulkan_12_features.bufferDeviceAddress = true;
+    mock.physical_devices_details[0].add_features_pNext_struct(mock_vulkan_12_features);
+
     GIVEN("A working instance") {
         vkb::InstanceBuilder builder;
         auto instance = get_headless_instance(2); // make sure we use 1.2
@@ -663,6 +760,8 @@ TEST_CASE("Querying Vulkan 1.1 and 1.2 features", "[VkBootstrap.version]") {
             REQUIRE(device_ret.has_value());
             vkb::destroy_device(device_ret.value());
         }
+        mock.api_version = VK_API_VERSION_1_1;
+        mock.physical_devices_details[0].properties.apiVersion = VK_API_VERSION_1_1;
         SECTION("protectedMemory should NOT be supported") {
             VkPhysicalDeviceVulkan11Features features_11{};
             features_11.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES;
@@ -676,5 +775,3 @@ TEST_CASE("Querying Vulkan 1.1 and 1.2 features", "[VkBootstrap.version]") {
         vkb::destroy_instance(instance);
     }
 }
-
-#endif

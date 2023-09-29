@@ -133,25 +133,21 @@ class VulkanFunctions {
     PFN_vkEnumerateInstanceLayerProperties fp_vkEnumerateInstanceLayerProperties = nullptr;
     PFN_vkEnumerateInstanceVersion fp_vkEnumerateInstanceVersion = nullptr;
     PFN_vkCreateInstance fp_vkCreateInstance = nullptr;
-    PFN_vkDestroyInstance fp_vkDestroyInstance = nullptr;
 
+    PFN_vkDestroyInstance fp_vkDestroyInstance = nullptr;
+    PFN_vkCreateDebugUtilsMessengerEXT fp_vkCreateDebugUtilsMessengerEXT = nullptr;
+    PFN_vkDestroyDebugUtilsMessengerEXT fp_vkDestroyDebugUtilsMessengerEXT = nullptr;
     PFN_vkEnumeratePhysicalDevices fp_vkEnumeratePhysicalDevices = nullptr;
     PFN_vkGetPhysicalDeviceFeatures fp_vkGetPhysicalDeviceFeatures = nullptr;
     PFN_vkGetPhysicalDeviceFeatures2 fp_vkGetPhysicalDeviceFeatures2 = nullptr;
     PFN_vkGetPhysicalDeviceFeatures2KHR fp_vkGetPhysicalDeviceFeatures2KHR = nullptr;
-    PFN_vkGetPhysicalDeviceFormatProperties fp_vkGetPhysicalDeviceFormatProperties = nullptr;
-    PFN_vkGetPhysicalDeviceImageFormatProperties fp_vkGetPhysicalDeviceImageFormatProperties = nullptr;
     PFN_vkGetPhysicalDeviceProperties fp_vkGetPhysicalDeviceProperties = nullptr;
-    PFN_vkGetPhysicalDeviceProperties2 fp_vkGetPhysicalDeviceProperties2 = nullptr;
     PFN_vkGetPhysicalDeviceQueueFamilyProperties fp_vkGetPhysicalDeviceQueueFamilyProperties = nullptr;
-    PFN_vkGetPhysicalDeviceQueueFamilyProperties2 fp_vkGetPhysicalDeviceQueueFamilyProperties2 = nullptr;
     PFN_vkGetPhysicalDeviceMemoryProperties fp_vkGetPhysicalDeviceMemoryProperties = nullptr;
-    PFN_vkGetPhysicalDeviceFormatProperties2 fp_vkGetPhysicalDeviceFormatProperties2 = nullptr;
-    PFN_vkGetPhysicalDeviceMemoryProperties2 fp_vkGetPhysicalDeviceMemoryProperties2 = nullptr;
-
-    PFN_vkGetDeviceProcAddr fp_vkGetDeviceProcAddr = nullptr;
-    PFN_vkCreateDevice fp_vkCreateDevice = nullptr;
     PFN_vkEnumerateDeviceExtensionProperties fp_vkEnumerateDeviceExtensionProperties = nullptr;
+
+    PFN_vkCreateDevice fp_vkCreateDevice = nullptr;
+    PFN_vkGetDeviceProcAddr fp_vkGetDeviceProcAddr = nullptr;
 
     PFN_vkDestroySurfaceKHR fp_vkDestroySurfaceKHR = nullptr;
     PFN_vkGetPhysicalDeviceSurfaceSupportKHR fp_vkGetPhysicalDeviceSurfaceSupportKHR = nullptr;
@@ -169,23 +165,20 @@ class VulkanFunctions {
     void init_instance_funcs(VkInstance inst) {
         instance = inst;
         get_inst_proc_addr(fp_vkDestroyInstance, "vkDestroyInstance");
+        get_inst_proc_addr(fp_vkCreateDebugUtilsMessengerEXT, "vkCreateDebugUtilsMessengerEXT");
+        get_inst_proc_addr(fp_vkDestroyDebugUtilsMessengerEXT, "vkDestroyDebugUtilsMessengerEXT");
         get_inst_proc_addr(fp_vkEnumeratePhysicalDevices, "vkEnumeratePhysicalDevices");
+
         get_inst_proc_addr(fp_vkGetPhysicalDeviceFeatures, "vkGetPhysicalDeviceFeatures");
         get_inst_proc_addr(fp_vkGetPhysicalDeviceFeatures2, "vkGetPhysicalDeviceFeatures2");
         get_inst_proc_addr(fp_vkGetPhysicalDeviceFeatures2KHR, "vkGetPhysicalDeviceFeatures2KHR");
-        get_inst_proc_addr(fp_vkGetPhysicalDeviceFormatProperties, "vkGetPhysicalDeviceFormatProperties");
-        get_inst_proc_addr(fp_vkGetPhysicalDeviceImageFormatProperties, "vkGetPhysicalDeviceImageFormatProperties");
         get_inst_proc_addr(fp_vkGetPhysicalDeviceProperties, "vkGetPhysicalDeviceProperties");
-        get_inst_proc_addr(fp_vkGetPhysicalDeviceProperties2, "vkGetPhysicalDeviceProperties2");
         get_inst_proc_addr(fp_vkGetPhysicalDeviceQueueFamilyProperties, "vkGetPhysicalDeviceQueueFamilyProperties");
-        get_inst_proc_addr(fp_vkGetPhysicalDeviceQueueFamilyProperties2, "vkGetPhysicalDeviceQueueFamilyProperties2");
         get_inst_proc_addr(fp_vkGetPhysicalDeviceMemoryProperties, "vkGetPhysicalDeviceMemoryProperties");
-        get_inst_proc_addr(fp_vkGetPhysicalDeviceFormatProperties2, "vkGetPhysicalDeviceFormatProperties2");
-        get_inst_proc_addr(fp_vkGetPhysicalDeviceMemoryProperties2, "vkGetPhysicalDeviceMemoryProperties2");
-
-        get_inst_proc_addr(fp_vkGetDeviceProcAddr, "vkGetDeviceProcAddr");
-        get_inst_proc_addr(fp_vkCreateDevice, "vkCreateDevice");
         get_inst_proc_addr(fp_vkEnumerateDeviceExtensionProperties, "vkEnumerateDeviceExtensionProperties");
+
+        get_inst_proc_addr(fp_vkCreateDevice, "vkCreateDevice");
+        get_inst_proc_addr(fp_vkGetDeviceProcAddr, "vkGetDeviceProcAddr");
 
         get_inst_proc_addr(fp_vkDestroySurfaceKHR, "vkDestroySurfaceKHR");
         get_inst_proc_addr(fp_vkGetPhysicalDeviceSurfaceSupportKHR, "vkGetPhysicalDeviceSurfaceSupportKHR");
@@ -269,11 +262,9 @@ VkResult create_debug_utils_messenger(VkInstance instance,
     messengerCreateInfo.pfnUserCallback = debug_callback;
     messengerCreateInfo.pUserData = user_data_pointer;
 
-    PFN_vkCreateDebugUtilsMessengerEXT createMessengerFunc;
-    detail::vulkan_functions().get_inst_proc_addr(createMessengerFunc, "vkCreateDebugUtilsMessengerEXT");
-
-    if (createMessengerFunc != nullptr) {
-        return createMessengerFunc(instance, &messengerCreateInfo, allocation_callbacks, pDebugMessenger);
+    if (detail::vulkan_functions().fp_vkCreateDebugUtilsMessengerEXT != nullptr) {
+        return detail::vulkan_functions().fp_vkCreateDebugUtilsMessengerEXT(
+            instance, &messengerCreateInfo, allocation_callbacks, pDebugMessenger);
     } else {
         return VK_ERROR_EXTENSION_NOT_PRESENT;
     }
@@ -282,11 +273,8 @@ VkResult create_debug_utils_messenger(VkInstance instance,
 void destroy_debug_utils_messenger(
     VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, VkAllocationCallbacks* allocation_callbacks) {
 
-    PFN_vkDestroyDebugUtilsMessengerEXT deleteMessengerFunc;
-    detail::vulkan_functions().get_inst_proc_addr(deleteMessengerFunc, "vkDestroyDebugUtilsMessengerEXT");
-
-    if (deleteMessengerFunc != nullptr) {
-        deleteMessengerFunc(instance, debugMessenger, allocation_callbacks);
+    if (detail::vulkan_functions().fp_vkDestroyDebugUtilsMessengerEXT != nullptr) {
+        detail::vulkan_functions().fp_vkDestroyDebugUtilsMessengerEXT(instance, debugMessenger, allocation_callbacks);
     }
 }
 
@@ -930,7 +918,13 @@ bool supports_features(VkPhysicalDeviceFeatures supported,
 	if (requested.variableMultisampleRate && !supported.variableMultisampleRate) return false;
 	if (requested.inheritedQueries && !supported.inheritedQueries) return false;
 
-	for(size_t i = 0; i < extension_requested.size(); ++i) {
+    // Should only be false if extension_supported was unable to be filled out, due to the
+    // physical device not supporting vkGetPhysicalDeviceFeatures2 in any capacity.
+    if (extension_requested.size() != extension_supported.size()) {
+        return false;
+    }
+
+	for(size_t i = 0; i < extension_requested.size() && i < extension_supported.size(); ++i) {
 		auto res = GenericFeaturesPNextNode::match(extension_requested[i], extension_supported[i]);
 		if(!res) return false;
 	}

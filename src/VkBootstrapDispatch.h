@@ -2237,6 +2237,21 @@ struct DispatchTable {
 #if (defined(VK_AMDX_shader_enqueue))
 		fp_vkCmdDispatchGraphIndirectCountAMDX = reinterpret_cast<PFN_vkCmdDispatchGraphIndirectCountAMDX>(procAddr(device, "vkCmdDispatchGraphIndirectCountAMDX"));
 #endif
+#if (defined(VK_NV_low_latency2))
+		fp_vkSetLatencySleepModeNV = reinterpret_cast<PFN_vkSetLatencySleepModeNV>(procAddr(device, "vkSetLatencySleepModeNV"));
+#endif
+#if (defined(VK_NV_low_latency2))
+		fp_vkLatencySleepNV = reinterpret_cast<PFN_vkLatencySleepNV>(procAddr(device, "vkLatencySleepNV"));
+#endif
+#if (defined(VK_NV_low_latency2))
+		fp_vkSetLatencyMarkerNV = reinterpret_cast<PFN_vkSetLatencyMarkerNV>(procAddr(device, "vkSetLatencyMarkerNV"));
+#endif
+#if (defined(VK_NV_low_latency2))
+		fp_vkGetLatencyTimingsNV = reinterpret_cast<PFN_vkGetLatencyTimingsNV>(procAddr(device, "vkGetLatencyTimingsNV"));
+#endif
+#if (defined(VK_NV_low_latency2))
+		fp_vkQueueNotifyOutOfBandNV = reinterpret_cast<PFN_vkQueueNotifyOutOfBandNV>(procAddr(device, "vkQueueNotifyOutOfBandNV"));
+#endif
 	}
 	void getDeviceQueue(uint32_t queueFamilyIndex, uint32_t queueIndex, VkQueue* pQueue) const noexcept {
 		fp_vkGetDeviceQueue(device, queueFamilyIndex, queueIndex, pQueue);
@@ -4440,6 +4455,31 @@ struct DispatchTable {
 		fp_vkCmdDispatchGraphIndirectCountAMDX(commandBuffer, scratch, countInfo);
 	}
 #endif
+#if (defined(VK_NV_low_latency2))
+	VkResult setLatencySleepModeNV(VkSwapchainKHR swapchain, VkLatencySleepModeInfoNV* pSleepModeInfo) const noexcept {
+		return fp_vkSetLatencySleepModeNV(device, swapchain, pSleepModeInfo);
+	}
+#endif
+#if (defined(VK_NV_low_latency2))
+	VkResult latencySleepNV(VkSwapchainKHR swapchain, VkLatencySleepInfoNV* pSleepInfo) const noexcept {
+		return fp_vkLatencySleepNV(device, swapchain, pSleepInfo);
+	}
+#endif
+#if (defined(VK_NV_low_latency2))
+	void setLatencyMarkerNV(VkSwapchainKHR swapchain, VkSetLatencyMarkerInfoNV* pLatencyMarkerInfo) const noexcept {
+		fp_vkSetLatencyMarkerNV(device, swapchain, pLatencyMarkerInfo);
+	}
+#endif
+#if (defined(VK_NV_low_latency2))
+	void getLatencyTimingsNV(VkSwapchainKHR swapchain, uint32_t* pTimingCount, VkGetLatencyMarkerInfoNV* pLatencyMarkerInfo) const noexcept {
+		fp_vkGetLatencyTimingsNV(device, swapchain, pTimingCount, pLatencyMarkerInfo);
+	}
+#endif
+#if (defined(VK_NV_low_latency2))
+	void queueNotifyOutOfBandNV(VkQueue queue, VkOutOfBandQueueTypeInfoNV pQueueTypeInfo) const noexcept {
+		fp_vkQueueNotifyOutOfBandNV(queue, pQueueTypeInfo);
+	}
+#endif
 	PFN_vkGetDeviceQueue fp_vkGetDeviceQueue = nullptr;
 	PFN_vkQueueSubmit fp_vkQueueSubmit = nullptr;
 	PFN_vkQueueWaitIdle fp_vkQueueWaitIdle = nullptr;
@@ -5665,6 +5705,21 @@ struct DispatchTable {
 #endif
 #if (defined(VK_AMDX_shader_enqueue))
 	PFN_vkCmdDispatchGraphIndirectCountAMDX fp_vkCmdDispatchGraphIndirectCountAMDX = nullptr;
+#endif
+#if (defined(VK_NV_low_latency2))
+	PFN_vkSetLatencySleepModeNV fp_vkSetLatencySleepModeNV = nullptr;
+#endif
+#if (defined(VK_NV_low_latency2))
+	PFN_vkLatencySleepNV fp_vkLatencySleepNV = nullptr;
+#endif
+#if (defined(VK_NV_low_latency2))
+	PFN_vkSetLatencyMarkerNV fp_vkSetLatencyMarkerNV = nullptr;
+#endif
+#if (defined(VK_NV_low_latency2))
+	PFN_vkGetLatencyTimingsNV fp_vkGetLatencyTimingsNV = nullptr;
+#endif
+#if (defined(VK_NV_low_latency2))
+	PFN_vkQueueNotifyOutOfBandNV fp_vkQueueNotifyOutOfBandNV = nullptr;
 #endif
 	bool is_populated() const { return populated; }
 	VkDevice device = VK_NULL_HANDLE;

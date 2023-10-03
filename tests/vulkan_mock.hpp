@@ -1,6 +1,7 @@
 #pragma once
 
 #include <assert.h>
+#include <cstdint>
 
 #include <memory>
 #include <utility>
@@ -25,6 +26,14 @@ inline size_t get_pnext_chain_struct_size(VkStructureType type) {
     }
     return 0;
 }
+
+template <typename T> T get_handle(size_t value) { return reinterpret_cast<T>(value); }
+
+#if INTPTR_MAX == INT32_MAX
+template <typename T> uint64_t get_uint64_handle(uint64_t value) { return static_cast<T>(value); }
+#elif INTPTR_MAX == INT64_MAX
+template <typename T> T get_uint64_handle(uint64_t value) { return reinterpret_cast<T>(value); }
+#endif
 
 struct VulkanMock {
     uint32_t api_version = VK_API_VERSION_1_3;
@@ -51,8 +60,8 @@ struct VulkanMock {
     std::vector<SurfaceDetails> surface_details;
 
     VkSurfaceKHR get_new_surface(SurfaceDetails details) {
-        size_t new_index = 0x123456789AB + surface_handles.size();
-        surface_handles.push_back(reinterpret_cast<VkSurfaceKHR>(new_index));
+        surface_handles.push_back(
+            get_uint64_handle<VkSurfaceKHR>(static_cast<uint64_t>(0x123456789ABU + surface_handles.size())));
         surface_details.push_back(details);
         return surface_handles.back();
     }
@@ -78,8 +87,7 @@ struct VulkanMock {
     std::vector<PhysicalDeviceDetails> physical_devices_details;
 
     void add_physical_device(PhysicalDeviceDetails details) {
-        size_t new_index = 0x001122334455 + physical_device_handles.size();
-        physical_device_handles.push_back(reinterpret_cast<VkPhysicalDevice>(new_index));
+        physical_device_handles.push_back(get_handle<VkPhysicalDevice>(0x22334455U + physical_device_handles.size()));
         physical_devices_details.emplace_back(std::move(details));
     }
 };

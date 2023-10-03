@@ -634,12 +634,12 @@ Result<Instance> InstanceBuilder::build() const {
         return make_error_code(InstanceError::requested_extensions_not_present);
     }
 
-    for (auto& layer : info.layers)
-        layers.push_back(layer);
-
     if (info.enable_validation_layers || (info.request_validation_layers && system.validation_layers_available)) {
         layers.push_back(detail::validation_layer_name);
     }
+    for (auto& layer : info.layers)
+        layers.push_back(layer);
+
     bool all_layers_supported = detail::check_layers_supported(system.available_layers, layers);
     if (!all_layers_supported) {
         return make_error_code(InstanceError::requested_layers_not_present);

@@ -54,5 +54,5 @@ jobs:
           commit-message: Update to latest Vulkan-Headers
           title: Update to latest Vulkan-Headers
           branch: run-autogen
-          base: master
+          base: main
           delete-branch: true

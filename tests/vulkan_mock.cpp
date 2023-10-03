@@ -3,6 +3,7 @@
 #include "vulkan_mock.hpp"
 
 #include <cstring>
+
 #include <algorithm>
 
 #if defined(__linux__) || defined(__APPLE__)
@@ -13,7 +14,6 @@
     if (strcmp(pName, #x) == 0) {                                                                                      \
         return reinterpret_cast<PFN_vkVoidFunction>(shim_##x);                                                         \
     }
-
 
 VulkanMock mock;
 
@@ -80,7 +80,7 @@ VKAPI_ATTR VkResult VKAPI_CALL shim_vkCreateInstance([[maybe_unused]] const VkIn
     if (pInstance == nullptr) {
         return VK_ERROR_INITIALIZATION_FAILED;
     }
-    *pInstance = reinterpret_cast<VkInstance>(0x0000ABCD);
+    *pInstance = get_handle<VkInstance>(0x0000ABCDU);
     return VK_SUCCESS;
 }
 VKAPI_ATTR void VKAPI_CALL shim_vkDestroyInstance(
@@ -93,7 +93,7 @@ VKAPI_ATTR VkResult VKAPI_CALL shim_vkCreateDebugUtilsMessengerEXT([[maybe_unuse
     if (instance == nullptr) {
         return VK_ERROR_INITIALIZATION_FAILED;
     }
-    *pMessenger = reinterpret_cast<VkDebugUtilsMessengerEXT>(0xDEBE0000DEBE0000);
+    *pMessenger = get_uint64_handle<VkDebugUtilsMessengerEXT>(0xDEBE0000DEBE0000U);
     return VK_SUCCESS;
 }
 
@@ -176,7 +176,7 @@ VKAPI_ATTR VkResult VKAPI_CALL shim_vkCreateDevice(VkPhysicalDevice physicalDevi
     if (physicalDevice == nullptr) {
         return VK_ERROR_INITIALIZATION_FAILED;
     }
-    *pDevice = reinterpret_cast<VkDevice>(0x00FEDC00);
+    *pDevice = get_handle<VkDevice>(0x0000ABCDU);
     get_physical_device_details(physicalDevice).created_devices.push_back(*pDevice);
     return VK_SUCCESS;
 }
@@ -197,7 +197,7 @@ VKAPI_ATTR void VKAPI_CALL shim_vkGetDeviceQueue(VkDevice device, uint32_t queue
         if (it != std::end(physical_devices.created_devices)) {
             if (queueFamilyIndex < physical_devices.queue_family_properties.size() &&
                 queueIndex < physical_devices.queue_family_properties[queueFamilyIndex].queueCount) {
-                *pQueue = reinterpret_cast<VkQueue>(0x0000CCEE);
+                *pQueue = get_handle<VkQueue>(0x0000CCEEU);
                 return;
             }
         }
@@ -208,7 +208,7 @@ VKAPI_ATTR VkResult VKAPI_CALL shim_vkCreateCommandPool([[maybe_unused]] VkDevic
     [[maybe_unused]] const VkCommandPoolCreateInfo* pCreateInfo,
     [[maybe_unused]] const VkAllocationCallbacks* pAllocator,
     VkCommandPool* pCommandPool) {
-    *pCommandPool = reinterpret_cast<VkCommandPool>(0x0000ABBB);
+    *pCommandPool = get_uint64_handle<VkCommandPool>(0x0000ABBBU);
     return VK_SUCCESS;
 }
 
@@ -216,7 +216,7 @@ VKAPI_ATTR VkResult VKAPI_CALL shim_vkCreateFence([[maybe_unused]] VkDevice devi
     [[maybe_unused]] const VkFenceCreateInfo* pCreateInfo,
     [[maybe_unused]] const VkAllocationCallbacks* pAllocator,
     VkFence* pFence) {
-    *pFence = reinterpret_cast<VkFence>(0x0000AAAC);
+    *pFence = get_uint64_handle<VkFence>(0x0000AAACU);
     return VK_SUCCESS;
 }
 VKAPI_ATTR void VKAPI_CALL shim_vkDestroyFence(
@@ -226,15 +226,15 @@ VKAPI_ATTR VkResult VKAPI_CALL shim_vkCreateSwapchainKHR([[maybe_unused]] VkDevi
     [[maybe_unused]] const VkSwapchainCreateInfoKHR* pCreateInfo,
     [[maybe_unused]] const VkAllocationCallbacks* pAllocator,
     VkSwapchainKHR* pSwapchain) {
-    *pSwapchain = reinterpret_cast<VkSwapchainKHR>(0x0000FFFE);
+    *pSwapchain = get_uint64_handle<VkSwapchainKHR>(0x0000FFFEU);
     return VK_SUCCESS;
 }
 VKAPI_ATTR VkResult VKAPI_CALL shim_vkGetSwapchainImagesKHR(
     [[maybe_unused]] VkDevice device, [[maybe_unused]] VkSwapchainKHR swapchain, uint32_t* pSwapchainImageCount, VkImage* pSwapchainImages) {
 
-    std::vector<VkImage> images = { reinterpret_cast<VkImage>(0x0000EDD0),
-        reinterpret_cast<VkImage>(0x0000EDD1),
-        reinterpret_cast<VkImage>(0x0000EDD1) };
+    std::vector<VkImage> images{ get_uint64_handle<VkImage>(0x0000EDD0U),
+        get_uint64_handle<VkImage>(0x0000EDD1U),
+        get_uint64_handle<VkImage>(0x0000EDD1U) };
     return fill_out_count_pointer_pair(images, pSwapchainImageCount, pSwapchainImages);
 }
 
@@ -242,7 +242,7 @@ VKAPI_ATTR VkResult VKAPI_CALL shim_vkCreateImageView([[maybe_unused]] VkDevice 
     [[maybe_unused]] const VkImageViewCreateInfo* pCreateInfo,
     [[maybe_unused]] const VkAllocationCallbacks* pAllocator,
     VkImageView* pView) {
-    if (pView) *pView = reinterpret_cast<VkImageView>(0x0000CCCE);
+    if (pView) *pView = get_uint64_handle<VkImageView>(0x0000CCCEU);
     return VK_SUCCESS;
 }
 
@@ -366,10 +366,13 @@ PFN_vkVoidFunction shim_vkGetInstanceProcAddr([[maybe_unused]] VkInstance instan
 }
 
 extern "C" {
+#if defined(WIN32)
 
 EXPORT_MACRO VKAPI_ATTR PFN_vkVoidFunction VKAPI_CALL vkGetInstanceProcAddr(VkInstance instance, const char* pName) {
+#pragma comment(linker, "/EXPORT:" __FUNCTION__ "=" __FUNCDNAME__)
     return shim_vkGetInstanceProcAddr(instance, pName);
 }
+#endif
 
 #if defined(__linux__) || defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__GNU__)
 #define DLSYM_FUNC_NAME dlsym

@@ -21,72 +21,64 @@ name: CI Build
 on: [push, pull_request, workflow_dispatch]
 
 jobs:
-  linux-build:
-    name: ${{ matrix.config.name }}
-    runs-on: ${{ matrix.config.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        config:
-        - {
-            name: "Ubuntu GCC Debug",
-            os: ubuntu-latest,
-            type: "debug",
-            build_dir: "build",
-            cc: "gcc", cxx: "g++"
-          }
-        - {
-            name: "Ubuntu Clang Debug",
-            os: ubuntu-latest,
-            type: "debug",
-            build_dir: "build",
-            cc: "clang", cxx: "clang++"
-          }
-        - {
-            name: "Ubuntu GCC Release",
-            os: ubuntu-latest,
-            type: "release",
-            build_dir: "build",
-            cc: "gcc", cxx: "g++"
-          }
-        - {
-            name: "Ubuntu Clang Release",
-            os: ubuntu-latest,
-            type: "release",
-            build_dir: "build",
-            cc: "clang", cxx: "clang++"
-          }
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v2.0.0
+    linux:
+        name: Linux
+        runs-on: ubuntu-latest
+        strategy:
+            fail-fast: false
+            matrix:
+                type: ["Debug", "Release"]
+                cc: ["gcc", "clang"]
+                cxx: ["g++", "clang++"]
+                exclude:
+                    - cc: gcc
+                      cxx: clang++
+                    - cc: clang
+                      cxx: g++
 
-    - name: Install build dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y xorg-dev
 
-    - name: CMake Configure
-      run: cmake -Bbuild -DVK_BOOTSTRAP_WERROR=ON -DVK_BOOTSTRAP_TEST=ON -DCMAKE_BUILD_TYPE=${{matrix.config.type}}
+        steps:
+            - uses: actions/checkout@v3
+            - uses: lukka/get-cmake@latest
+              with:
+                cmakeVersion: 3.15
 
-    - name: CMake Build
-      run: cmake --build build
+            - name: Install build dependencies
+              run: |
+                sudo apt-get update
+                sudo apt-get install -y xorg-dev
 
-  windows:
-    name: ${{ matrix.config.name }}
-    runs-on: ${{matrix.os}}
+            - name: CMake Configure
+              run: cmake -S. -B build -DCMAKE_BUILD_TYPE=${{matrix.type}} -DVK_BOOTSTRAP_WERROR=ON -DVK_BOOTSTRAP_TEST=ON
 
-    strategy:
-      matrix:
-          arch: [ Win32, x64 ]
-          config: [ Debug, Release ]
-          os: [windows-latest ]
+            - name: CMake Build
+              run: cmake --build build
 
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v2.0.0
+            - name: Install
+              run: cmake --install build --prefix build/install
 
-    - name: CMake Configure
-      run: cmake -Bbuild -DVK_BOOTSTRAP_WERROR=ON -DVK_BOOTSTRAP_TEST=ON -DCMAKE_BUILD_TYPE=${{matrix.config}}
+            - name: Run tests
+              working-directory: ./build
+              run: ctest --output-on-failure -C ${{matrix.type}}
 
-    - name: CMake Build
-      run: cmake --build build
+    windows:
+        name: Windows
+        runs-on: windows-latest
+
+        strategy:
+            matrix:
+                arch: [ Win32, x64 ]
+                config: [ Debug, Release ]
+
+        steps:
+            - uses: actions/checkout@v3
+
+            - name: CMake Configure
+              run: cmake -S. -B build -D CMAKE_BUILD_TYPE=${{matrix.config}} -D VK_BOOTSTRAP_WERROR=ON -D VK_BOOTSTRAP_TEST=ON -A ${{matrix.arch}}
+
+            - name: CMake Build
+              run: cmake --build build
+
+            - name: Run  tests
+              working-directory: ./build
+              run: ctest --output-on-failure -C ${{matrix.config}}

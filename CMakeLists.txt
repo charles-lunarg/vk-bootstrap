@@ -96,6 +96,7 @@ endif()
 option(VK_BOOTSTRAP_TEST "Test Vk-Bootstrap with glfw and Catch2" ${VK_BOOTSTRAP_TEST_DEFAULT_VALUE})
 
 if(VK_BOOTSTRAP_TEST)
+    enable_testing()
     add_subdirectory(ext)
     add_subdirectory(tests)
     add_subdirectory(example)

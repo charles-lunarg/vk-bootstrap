@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.15 FATAL_ERROR)
 project(VulkanBootstrap
     LANGUAGES CXX
     DESCRIPTION "A Vulkan utility library to ease the initialization steps in Vulkan")

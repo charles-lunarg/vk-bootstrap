@@ -209,8 +209,8 @@ TEST_CASE("Device Configuration", "[VkBootstrap.bootstrap]") {
         auto queue_families = phys_device.get_queue_families();
         for (uint32_t i = 0; i < (uint32_t)queue_families.size(); i++) {
             if (queue_families[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) {
-                queue_descriptions.push_back(vkb::CustomQueueDescription(
-                    i, queue_families[i].queueCount, std::vector<float>(queue_families[i].queueCount, 1.0f)));
+                queue_descriptions.push_back(
+                    vkb::CustomQueueDescription(i, std::vector<float>(queue_families[i].queueCount, 1.0f)));
             }
         }
         if (phys_device.has_dedicated_compute_queue()) {
@@ -218,15 +218,15 @@ TEST_CASE("Device Configuration", "[VkBootstrap.bootstrap]") {
                 if ((queue_families[i].queueFlags & VK_QUEUE_COMPUTE_BIT) &&
                     (queue_families[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) == 0 &&
                     (queue_families[i].queueFlags & VK_QUEUE_TRANSFER_BIT) == 0)
-                    queue_descriptions.push_back(vkb::CustomQueueDescription(
-                        i, queue_families[i].queueCount, std::vector<float>(queue_families[i].queueCount, 1.0f)));
+                    queue_descriptions.push_back(
+                        vkb::CustomQueueDescription(i, std::vector<float>(queue_families[i].queueCount, 1.0f)));
             }
         } else if (phys_device.has_separate_compute_queue()) {
             for (uint32_t i = 0; i < (uint32_t)queue_families.size(); i++) {
                 if ((queue_families[i].queueFlags & VK_QUEUE_COMPUTE_BIT) &&
                     ((queue_families[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) == 0)) {
-                    queue_descriptions.push_back(vkb::CustomQueueDescription(
-                        i, queue_families[i].queueCount, std::vector<float>(queue_families[i].queueCount, 1.0f)));
+                    queue_descriptions.push_back(
+                        vkb::CustomQueueDescription(i, std::vector<float>(queue_families[i].queueCount, 1.0f)));
                 }
             }
         }

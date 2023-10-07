@@ -719,9 +719,8 @@ struct Device {
 
 // For advanced device queue setup
 struct CustomQueueDescription {
-    explicit CustomQueueDescription(uint32_t index, uint32_t count, std::vector<float> priorities);
+    explicit CustomQueueDescription(uint32_t index, std::vector<float> priorities);
     uint32_t index = 0;
-    uint32_t count = 0;
     std::vector<float> priorities;
 };
 

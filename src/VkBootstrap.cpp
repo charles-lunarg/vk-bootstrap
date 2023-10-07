@@ -1437,10 +1437,8 @@ DispatchTable Device::make_table() const { return { device, fp_vkGetDeviceProcAd
 
 Device::operator VkDevice() const { return this->device; }
 
-CustomQueueDescription::CustomQueueDescription(uint32_t index, uint32_t count, std::vector<float> priorities)
-: index(index), count(count), priorities(priorities) {
-    assert(count == priorities.size());
-}
+CustomQueueDescription::CustomQueueDescription(uint32_t index, std::vector<float> priorities)
+: index(index), priorities(priorities) {}
 
 void destroy_device(Device device) {
     device.internal_table.fp_vkDestroyDevice(device.device, device.allocation_callbacks);
@@ -1455,7 +1453,7 @@ Result<Device> DeviceBuilder::build() const {
 
     if (queue_descriptions.size() == 0) {
         for (uint32_t i = 0; i < physical_device.queue_families.size(); i++) {
-            queue_descriptions.push_back(CustomQueueDescription{ i, 1, std::vector<float>{ 1.0f } });
+            queue_descriptions.push_back(CustomQueueDescription{ i, std::vector<float>{ 1.0f } });
         }
     }
 
@@ -1464,7 +1462,7 @@ Result<Device> DeviceBuilder::build() const {
         VkDeviceQueueCreateInfo queue_create_info = {};
         queue_create_info.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
         queue_create_info.queueFamilyIndex = desc.index;
-        queue_create_info.queueCount = desc.count;
+        queue_create_info.queueCount = static_cast<std::uint32_t>(desc.priorities.size());
         queue_create_info.pQueuePriorities = desc.priorities.data();
         queueCreateInfos.push_back(queue_create_info);
     }

@@ -4456,17 +4456,17 @@ struct DispatchTable {
 	}
 #endif
 #if (defined(VK_NV_low_latency2))
-	VkResult setLatencySleepModeNV(VkSwapchainKHR swapchain, VkLatencySleepModeInfoNV* pSleepModeInfo) const noexcept {
+	VkResult setLatencySleepModeNV(VkSwapchainKHR swapchain, const VkLatencySleepModeInfoNV* pSleepModeInfo) const noexcept {
 		return fp_vkSetLatencySleepModeNV(device, swapchain, pSleepModeInfo);
 	}
 #endif
 #if (defined(VK_NV_low_latency2))
-	VkResult latencySleepNV(VkSwapchainKHR swapchain, VkLatencySleepInfoNV* pSleepInfo) const noexcept {
+	VkResult latencySleepNV(VkSwapchainKHR swapchain, const VkLatencySleepInfoNV* pSleepInfo) const noexcept {
 		return fp_vkLatencySleepNV(device, swapchain, pSleepInfo);
 	}
 #endif
 #if (defined(VK_NV_low_latency2))
-	void setLatencyMarkerNV(VkSwapchainKHR swapchain, VkSetLatencyMarkerInfoNV* pLatencyMarkerInfo) const noexcept {
+	void setLatencyMarkerNV(VkSwapchainKHR swapchain, const VkSetLatencyMarkerInfoNV* pLatencyMarkerInfo) const noexcept {
 		fp_vkSetLatencyMarkerNV(device, swapchain, pLatencyMarkerInfo);
 	}
 #endif
@@ -4476,7 +4476,7 @@ struct DispatchTable {
 	}
 #endif
 #if (defined(VK_NV_low_latency2))
-	void queueNotifyOutOfBandNV(VkQueue queue, VkOutOfBandQueueTypeInfoNV pQueueTypeInfo) const noexcept {
+	void queueNotifyOutOfBandNV(VkQueue queue, const VkOutOfBandQueueTypeInfoNV* pQueueTypeInfo) const noexcept {
 		fp_vkQueueNotifyOutOfBandNV(queue, pQueueTypeInfo);
 	}
 #endif

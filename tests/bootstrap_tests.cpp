@@ -113,6 +113,9 @@ TEST_CASE("Instance with surface", "[VkBootstrap.bootstrap]") {
                                     .set_minimum_version(1, 0)
                                     .select();
             REQUIRE(phys_dev_ret.has_value());
+
+            REQUIRE(phys_dev_ret->is_extension_present(VK_KHR_DRIVER_PROPERTIES_EXTENSION_NAME));
+            REQUIRE(!phys_dev_ret->is_extension_present(VK_KHR_16BIT_STORAGE_EXTENSION_NAME));
         }
 
         vkb::destroy_surface(instance, surface);

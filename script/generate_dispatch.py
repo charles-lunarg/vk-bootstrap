@@ -213,6 +213,31 @@ for command_name, command in commands.items():
         macro = '$body'
     commands[command_name]['macro_template'] = Template(macro)
 
+for command_name, command in commands.items():
+    pfn_decl_macro = ''
+    requirements_collection = commands[command_name]['requirements']
+    collection_count = len(requirements_collection)
+    if collection_count > 0:
+        pfn_decl_macro = '#if '
+        while collection_count > 0:
+            for requirements in requirements_collection:
+                requirements_count = len(requirements)
+                pfn_decl_macro += '('
+                for requirement in requirements:
+                    pfn_decl_macro += f'defined({requirement})'
+                    requirements_count -= 1
+                    if requirements_count > 0:
+                        pfn_decl_macro += ' && '
+                pfn_decl_macro += ')'
+                if collection_count > 0:
+                    collection_count -= 1
+                    if collection_count > 0:
+                        pfn_decl_macro += ' || '
+        pfn_decl_macro += f'\n$body#else\n    void * fp_{command_name}{{}};\n#endif\n'
+    else:
+        pfn_decl_macro = '$body'
+    commands[command_name]['pfn_decl_macro_template'] = Template(pfn_decl_macro)
+
 # License
 dispatch_license = '''/*
  * Copyright © 2021 Cody Goodson (contact@vibimanx.com)
@@ -339,8 +364,9 @@ def create_dispatch_table(dispatch_type):
         pfn_load_body = pfn_load_template.substitute(fp_name = fp_name, pfn_name = pfn_name, command_name = command_name)
 
         macro_template = params['macro_template']
+        pfn_decl_macro_template = params['pfn_decl_macro_template']
         proxy_section += macro_template.substitute(body=proxy_body)
-        fp_decl_section += macro_template.substitute(body=fp_decl_body)
+        fp_decl_section += pfn_decl_macro_template.substitute(body=fp_decl_body)
         pfn_load_section += macro_template.substitute(body=pfn_load_body)
 
     out += pfn_load_section

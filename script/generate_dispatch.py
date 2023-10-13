@@ -245,23 +245,23 @@ def create_dispatch_table(dispatch_type):
     out = ''
     if dispatch_type == INSTANCE:
         out += 'struct InstanceDispatchTable {\n'
-        out += '\tInstanceDispatchTable() = default;\n'
-        out += '\tInstanceDispatchTable(VkInstance instance, PFN_vkGetInstanceProcAddr procAddr) : instance(instance), populated(true) {\n'
+        out += '    InstanceDispatchTable() = default;\n'
+        out += '    InstanceDispatchTable(VkInstance instance, PFN_vkGetInstanceProcAddr procAddr) : instance(instance), populated(true) {\n'
     else:
         out += 'struct DispatchTable {\n'
-        out += '\tDispatchTable() = default;\n'
-        out += '\tDispatchTable(VkDevice device, PFN_vkGetDeviceProcAddr procAddr) : device(device), populated(true) {\n'
+        out += '    DispatchTable() = default;\n'
+        out += '    DispatchTable(VkDevice device, PFN_vkGetDeviceProcAddr procAddr) : device(device), populated(true) {\n'
 
     proxy_section = ''
     fp_decl_section = ''
     pfn_load_section = ''
 
-    proxy_template = Template('\t$return_type $proxy_name($args_full) const noexcept {\n\t\t$opt_return$fp_name($args_names);\n\t}\n')
-    fp_decl_template = Template('\t$pfn_name $fp_name = nullptr;\n')
+    proxy_template = Template('    $return_type $proxy_name($args_full) const noexcept {\n        $opt_return$fp_name($args_names);\n    }\n')
+    fp_decl_template = Template('    $pfn_name $fp_name = nullptr;\n')
     if dispatch_type == INSTANCE:
-        pfn_load_template = Template('\t\t$fp_name = reinterpret_cast<$pfn_name>(procAddr(instance, "$command_name"));\n')
+        pfn_load_template = Template('        $fp_name = reinterpret_cast<$pfn_name>(procAddr(instance, "$command_name"));\n')
     else:
-        pfn_load_template = Template('\t\t$fp_name = reinterpret_cast<$pfn_name>(procAddr(device, "$command_name"));\n')
+        pfn_load_template = Template('        $fp_name = reinterpret_cast<$pfn_name>(procAddr(device, "$command_name"));\n')
 
     for command_name, command in commands.items():
         if command['dispatch_type'] != dispatch_type:
@@ -344,16 +344,16 @@ def create_dispatch_table(dispatch_type):
         pfn_load_section += macro_template.substitute(body=pfn_load_body)
 
     out += pfn_load_section
-    out += '\t}\n'
+    out += '    }\n'
     out += proxy_section
     out += fp_decl_section
-    out += '\tbool is_populated() const { return populated; }\n'
+    out += '    bool is_populated() const { return populated; }\n'
     if dispatch_type == INSTANCE:
-        out += '\tVkInstance instance = VK_NULL_HANDLE;\n'
+        out += '    VkInstance instance = VK_NULL_HANDLE;\n'
     else:
-        out += '\tVkDevice device = VK_NULL_HANDLE;\n'
+        out += '    VkDevice device = VK_NULL_HANDLE;\n'
     out += 'private:\n'
-    out += '\t bool populated = false;\n'
+    out += '     bool populated = false;\n'
     out += '};\n\n'
     return out
 

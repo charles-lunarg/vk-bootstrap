@@ -29,6 +29,12 @@ target_link_libraries(vk-bootstrap-test
     Catch2::Catch2WithMain
 )
 
+if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    target_compile_options(vk-bootstrap-test PRIVATE -Wno-error=deprecated-declarations)
+elseif(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+    target_compile_options(vk-bootstrap-test PRIVATE /wd4996)
+endif()
+
 list(APPEND CMAKE_MODULE_PATH ${Catch2_SOURCE_DIR}/extras)
 include(CTest)
 include(Catch)

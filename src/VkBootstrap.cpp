@@ -1369,6 +1369,11 @@ bool PhysicalDevice::has_separate_transfer_queue() const {
 }
 std::vector<VkQueueFamilyProperties> PhysicalDevice::get_queue_families() const { return queue_families; }
 std::vector<std::string> PhysicalDevice::get_extensions() const { return extensions; }
+bool PhysicalDevice::is_extension_present(const char* ext) const {
+    return std::find_if(std::begin(extensions), std::end(extensions), [ext](std::string const& ext_name) {
+        return ext_name == ext;
+    }) != std::end(extensions);
+}
 PhysicalDevice::operator VkPhysicalDevice() const { return this->physical_device; }
 
 // ---- Queues ---- //

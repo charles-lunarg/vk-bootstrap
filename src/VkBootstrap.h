@@ -495,6 +495,9 @@ struct PhysicalDevice {
     // Query the list of extensions which should be enabled
     std::vector<std::string> get_extensions() const;
 
+    // Returns true if an extension should be enabled on the device
+    bool is_extension_present(const char* extension) const;
+
     // A conversion function which allows this PhysicalDevice to be used
     // in places where VkPhysicalDevice would have been used.
     operator VkPhysicalDevice() const;

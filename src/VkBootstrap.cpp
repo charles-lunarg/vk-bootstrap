@@ -1005,7 +1005,7 @@ PhysicalDevice PhysicalDeviceSelector::populate_device_details(VkPhysicalDevice 
         available_extensions, detail::vulkan_functions().fp_vkEnumerateDeviceExtensionProperties, vk_phys_device, nullptr);
     if (available_extensions_ret != VK_SUCCESS) return physical_device;
     for (const auto& ext : available_extensions) {
-        physical_device.extensions.push_back(&ext.extensionName[0]);
+        physical_device.available_extensions.push_back(&ext.extensionName[0]);
     }
 
     physical_device.features2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2; // same value as the non-KHR version
@@ -1066,11 +1066,12 @@ PhysicalDevice::Suitable PhysicalDeviceSelector::is_device_suitable(PhysicalDevi
     if (criteria.require_present && !present_queue && !criteria.defer_surface_initialization)
         return PhysicalDevice::Suitable::no;
 
-    auto required_extensions_supported = detail::check_device_extension_support(pd.extensions, criteria.required_extensions);
+    auto required_extensions_supported =
+        detail::check_device_extension_support(pd.available_extensions, criteria.required_extensions);
     if (required_extensions_supported.size() != criteria.required_extensions.size())
         return PhysicalDevice::Suitable::no;
 
-    auto desired_extensions_supported = detail::check_device_extension_support(pd.extensions, criteria.desired_extensions);
+    auto desired_extensions_supported = detail::check_device_extension_support(pd.available_extensions, criteria.desired_extensions);
     if (desired_extensions_supported.size() != criteria.desired_extensions.size())
         suitable = PhysicalDevice::Suitable::partial;
 
@@ -1160,19 +1161,20 @@ Result<std::vector<PhysicalDevice>> PhysicalDeviceSelector::select_impl(DeviceSe
         phys_dev.features = criteria.required_features;
         phys_dev.extended_features_chain = criteria.extended_features_chain;
         bool portability_ext_available = false;
-        for (const auto& ext : phys_dev.extensions)
+        for (const auto& ext : phys_dev.available_extensions)
             if (criteria.enable_portability_subset && ext == "VK_KHR_portability_subset")
                 portability_ext_available = true;
 
-        auto desired_extensions_supported = detail::check_device_extension_support(phys_dev.extensions, criteria.desired_extensions);
+        auto desired_extensions_supported =
+            detail::check_device_extension_support(phys_dev.available_extensions, criteria.desired_extensions);
 
-        phys_dev.extensions.clear();
-        phys_dev.extensions.insert(
-            phys_dev.extensions.end(), criteria.required_extensions.begin(), criteria.required_extensions.end());
-        phys_dev.extensions.insert(
-            phys_dev.extensions.end(), desired_extensions_supported.begin(), desired_extensions_supported.end());
+        phys_dev.extensions_to_enable.clear();
+        phys_dev.extensions_to_enable.insert(
+            phys_dev.extensions_to_enable.end(), criteria.required_extensions.begin(), criteria.required_extensions.end());
+        phys_dev.extensions_to_enable.insert(
+            phys_dev.extensions_to_enable.end(), desired_extensions_supported.begin(), desired_extensions_supported.end());
         if (portability_ext_available) {
-            phys_dev.extensions.push_back("VK_KHR_portability_subset");
+            phys_dev.extensions_to_enable.push_back("VK_KHR_portability_subset");
         }
     };
 
@@ -1368,12 +1370,24 @@ bool PhysicalDevice::has_separate_transfer_queue() const {
     return detail::get_separate_queue_index(queue_families, VK_QUEUE_TRANSFER_BIT, VK_QUEUE_COMPUTE_BIT) != detail::QUEUE_INDEX_MAX_VALUE;
 }
 std::vector<VkQueueFamilyProperties> PhysicalDevice::get_queue_families() const { return queue_families; }
-std::vector<std::string> PhysicalDevice::get_extensions() const { return extensions; }
+std::vector<std::string> PhysicalDevice::get_extensions() const { return extensions_to_enable; }
+std::vector<std::string> PhysicalDevice::get_available_extensions() const { return available_extensions; }
 bool PhysicalDevice::is_extension_present(const char* ext) const {
-    return std::find_if(std::begin(extensions), std::end(extensions), [ext](std::string const& ext_name) {
+    return std::find_if(std::begin(available_extensions), std::end(available_extensions), [ext](std::string const& ext_name) {
         return ext_name == ext;
-    }) != std::end(extensions);
+    }) != std::end(available_extensions);
 }
+bool PhysicalDevice::enable_extension_if_present(const char* extension) {
+    auto it = std::find_if(std::begin(available_extensions),
+        std::end(available_extensions),
+        [extension](std::string const& ext_name) { return ext_name == extension; });
+    if (it != std::end(available_extensions)) {
+        extensions_to_enable.push_back(extension);
+        return true;
+    }
+    return false;
+}
+
 PhysicalDevice::operator VkPhysicalDevice() const { return this->physical_device; }
 
 // ---- Queues ---- //
@@ -1472,12 +1486,12 @@ Result<Device> DeviceBuilder::build() const {
         queueCreateInfos.push_back(queue_create_info);
     }
 
-    std::vector<const char*> extensions;
-    for (const auto& ext : physical_device.extensions) {
-        extensions.push_back(ext.c_str());
+    std::vector<const char*> extensions_to_enable;
+    for (const auto& ext : physical_device.extensions_to_enable) {
+        extensions_to_enable.push_back(ext.c_str());
     }
     if (physical_device.surface != VK_NULL_HANDLE || physical_device.defer_surface_initialization)
-        extensions.push_back({ VK_KHR_SWAPCHAIN_EXTENSION_NAME });
+        extensions_to_enable.push_back({ VK_KHR_SWAPCHAIN_EXTENSION_NAME });
 
     std::vector<VkBaseOutStructure*> final_pnext_chain;
     VkDeviceCreateInfo device_create_info = {};
@@ -1526,8 +1540,8 @@ Result<Device> DeviceBuilder::build() const {
     device_create_info.flags = info.flags;
     device_create_info.queueCreateInfoCount = static_cast<uint32_t>(queueCreateInfos.size());
     device_create_info.pQueueCreateInfos = queueCreateInfos.data();
-    device_create_info.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
-    device_create_info.ppEnabledExtensionNames = extensions.data();
+    device_create_info.enabledExtensionCount = static_cast<uint32_t>(extensions_to_enable.size());
+    device_create_info.ppEnabledExtensionNames = extensions_to_enable.data();
 
     Device device;
 

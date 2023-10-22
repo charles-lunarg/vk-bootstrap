@@ -73,6 +73,7 @@ TEST_CASE("Instance with surface", "[VkBootstrap.bootstrap]") {
     mock.physical_devices_details[0].properties.apiVersion = VK_API_VERSION_1_1;
     mock.physical_devices_details[0].extensions.push_back(get_extension_properties("VK_KHR_multiview"));
     mock.physical_devices_details[0].extensions.push_back(get_extension_properties("VK_KHR_driver_properties"));
+    mock.physical_devices_details[0].extensions.push_back(get_extension_properties("VK_EXT_robustness2"));
     auto surface = mock.get_new_surface(get_basic_surface_details());
     GIVEN("A window and a vulkan instance") {
 
@@ -116,6 +117,13 @@ TEST_CASE("Instance with surface", "[VkBootstrap.bootstrap]") {
 
             REQUIRE(phys_dev_ret->is_extension_present(VK_KHR_DRIVER_PROPERTIES_EXTENSION_NAME));
             REQUIRE(!phys_dev_ret->is_extension_present(VK_KHR_16BIT_STORAGE_EXTENSION_NAME));
+
+            REQUIRE(phys_dev_ret->enable_extension_if_present(VK_EXT_ROBUSTNESS_2_EXTENSION_NAME));
+            REQUIRE(!phys_dev_ret->enable_extension_if_present(VK_KHR_16BIT_STORAGE_EXTENSION_NAME));
+
+            auto device_ret = vkb::DeviceBuilder(phys_dev_ret.value()).build();
+            REQUIRE(device_ret.has_value());
+            vkb::destroy_device(device_ret.value());
         }
 
         vkb::destroy_surface(instance, surface);

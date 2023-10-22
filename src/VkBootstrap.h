@@ -495,8 +495,15 @@ struct PhysicalDevice {
     // Query the list of extensions which should be enabled
     std::vector<std::string> get_extensions() const;
 
+    // Query the list of extensions which the physical device supports
+    std::vector<std::string> get_available_extensions() const;
+
     // Returns true if an extension should be enabled on the device
     bool is_extension_present(const char* extension) const;
+
+    // If the given extension is present, make the extension be enabled on the device.
+    // Returns true the extension is present.
+    bool enable_extension_if_present(const char* extension);
 
     // A conversion function which allows this PhysicalDevice to be used
     // in places where VkPhysicalDevice would have been used.
@@ -504,7 +511,8 @@ struct PhysicalDevice {
 
     private:
     uint32_t instance_version = VKB_VK_API_VERSION_1_0;
-    std::vector<std::string> extensions;
+    std::vector<std::string> extensions_to_enable;
+    std::vector<std::string> available_extensions;
     std::vector<VkQueueFamilyProperties> queue_families;
     std::vector<detail::GenericFeaturesPNextNode> extended_features_chain;
     VkPhysicalDeviceFeatures2 features2{};
@@ -575,7 +583,7 @@ class PhysicalDeviceSelector {
     // Require a memory heap from VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT with `size` memory available.
     PhysicalDeviceSelector& required_device_memory_size(VkDeviceSize size);
     // Prefer a memory heap from VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT with `size` memory available.
-    PhysicalDeviceSelector& desired_device_memory_size(VkDeviceSize size);
+    [[deprecated]] PhysicalDeviceSelector& desired_device_memory_size(VkDeviceSize size);
 
     // Require a physical device which supports a specific extension.
     PhysicalDeviceSelector& add_required_extension(const char* extension);

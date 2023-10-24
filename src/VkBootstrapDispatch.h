@@ -2262,6 +2262,24 @@ struct DispatchTable {
 #if (defined(VK_FUCHSIA_buffer_collection))
         fp_vkGetBufferCollectionPropertiesFUCHSIA = reinterpret_cast<PFN_vkGetBufferCollectionPropertiesFUCHSIA>(procAddr(device, "vkGetBufferCollectionPropertiesFUCHSIA"));
 #endif
+#if (defined(VK_NV_cuda_kernel_launch))
+        fp_vkCreateCudaModuleNV = reinterpret_cast<PFN_vkCreateCudaModuleNV>(procAddr(device, "vkCreateCudaModuleNV"));
+#endif
+#if (defined(VK_NV_cuda_kernel_launch))
+        fp_vkGetCudaModuleCacheNV = reinterpret_cast<PFN_vkGetCudaModuleCacheNV>(procAddr(device, "vkGetCudaModuleCacheNV"));
+#endif
+#if (defined(VK_NV_cuda_kernel_launch))
+        fp_vkCreateCudaFunctionNV = reinterpret_cast<PFN_vkCreateCudaFunctionNV>(procAddr(device, "vkCreateCudaFunctionNV"));
+#endif
+#if (defined(VK_NV_cuda_kernel_launch))
+        fp_vkDestroyCudaModuleNV = reinterpret_cast<PFN_vkDestroyCudaModuleNV>(procAddr(device, "vkDestroyCudaModuleNV"));
+#endif
+#if (defined(VK_NV_cuda_kernel_launch))
+        fp_vkDestroyCudaFunctionNV = reinterpret_cast<PFN_vkDestroyCudaFunctionNV>(procAddr(device, "vkDestroyCudaFunctionNV"));
+#endif
+#if (defined(VK_NV_cuda_kernel_launch))
+        fp_vkCmdCudaLaunchKernelNV = reinterpret_cast<PFN_vkCmdCudaLaunchKernelNV>(procAddr(device, "vkCmdCudaLaunchKernelNV"));
+#endif
 #if (defined(VK_VERSION_1_3))
         fp_vkCmdBeginRendering = reinterpret_cast<PFN_vkCmdBeginRendering>(procAddr(device, "vkCmdBeginRendering"));
 #endif
@@ -4386,6 +4404,36 @@ struct DispatchTable {
         return fp_vkGetBufferCollectionPropertiesFUCHSIA(device, collection, pProperties);
     }
 #endif
+#if (defined(VK_NV_cuda_kernel_launch))
+    VkResult createCudaModuleNV(const VkCudaModuleCreateInfoNV* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkCudaModuleNV* pModule) const noexcept {
+        return fp_vkCreateCudaModuleNV(device, pCreateInfo, pAllocator, pModule);
+    }
+#endif
+#if (defined(VK_NV_cuda_kernel_launch))
+    VkResult getCudaModuleCacheNV(VkCudaModuleNV module, size_t* pCacheSize, void* pCacheData) const noexcept {
+        return fp_vkGetCudaModuleCacheNV(device, module, pCacheSize, pCacheData);
+    }
+#endif
+#if (defined(VK_NV_cuda_kernel_launch))
+    VkResult createCudaFunctionNV(const VkCudaFunctionCreateInfoNV* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkCudaFunctionNV* pFunction) const noexcept {
+        return fp_vkCreateCudaFunctionNV(device, pCreateInfo, pAllocator, pFunction);
+    }
+#endif
+#if (defined(VK_NV_cuda_kernel_launch))
+    void destroyCudaModuleNV(VkCudaModuleNV module, const VkAllocationCallbacks* pAllocator) const noexcept {
+        fp_vkDestroyCudaModuleNV(device, module, pAllocator);
+    }
+#endif
+#if (defined(VK_NV_cuda_kernel_launch))
+    void destroyCudaFunctionNV(VkCudaFunctionNV function, const VkAllocationCallbacks* pAllocator) const noexcept {
+        fp_vkDestroyCudaFunctionNV(device, function, pAllocator);
+    }
+#endif
+#if (defined(VK_NV_cuda_kernel_launch))
+    void cmdCudaLaunchKernelNV(VkCommandBuffer commandBuffer, const VkCudaLaunchInfoNV* pLaunchInfo) const noexcept {
+        fp_vkCmdCudaLaunchKernelNV(commandBuffer, pLaunchInfo);
+    }
+#endif
 #if (defined(VK_VERSION_1_3))
     void cmdBeginRendering(VkCommandBuffer commandBuffer, const VkRenderingInfoKHR* pRenderingInfo) const noexcept {
         fp_vkCmdBeginRendering(commandBuffer, pRenderingInfo);
@@ -6374,6 +6422,36 @@ struct DispatchTable {
     PFN_vkGetBufferCollectionPropertiesFUCHSIA fp_vkGetBufferCollectionPropertiesFUCHSIA = nullptr;
 #else
     void * fp_vkGetBufferCollectionPropertiesFUCHSIA{};
+#endif
+#if (defined(VK_NV_cuda_kernel_launch))
+    PFN_vkCreateCudaModuleNV fp_vkCreateCudaModuleNV = nullptr;
+#else
+    void * fp_vkCreateCudaModuleNV{};
+#endif
+#if (defined(VK_NV_cuda_kernel_launch))
+    PFN_vkGetCudaModuleCacheNV fp_vkGetCudaModuleCacheNV = nullptr;
+#else
+    void * fp_vkGetCudaModuleCacheNV{};
+#endif
+#if (defined(VK_NV_cuda_kernel_launch))
+    PFN_vkCreateCudaFunctionNV fp_vkCreateCudaFunctionNV = nullptr;
+#else
+    void * fp_vkCreateCudaFunctionNV{};
+#endif
+#if (defined(VK_NV_cuda_kernel_launch))
+    PFN_vkDestroyCudaModuleNV fp_vkDestroyCudaModuleNV = nullptr;
+#else
+    void * fp_vkDestroyCudaModuleNV{};
+#endif
+#if (defined(VK_NV_cuda_kernel_launch))
+    PFN_vkDestroyCudaFunctionNV fp_vkDestroyCudaFunctionNV = nullptr;
+#else
+    void * fp_vkDestroyCudaFunctionNV{};
+#endif
+#if (defined(VK_NV_cuda_kernel_launch))
+    PFN_vkCmdCudaLaunchKernelNV fp_vkCmdCudaLaunchKernelNV = nullptr;
+#else
+    void * fp_vkCmdCudaLaunchKernelNV{};
 #endif
 #if (defined(VK_VERSION_1_3))
     PFN_vkCmdBeginRendering fp_vkCmdBeginRendering = nullptr;

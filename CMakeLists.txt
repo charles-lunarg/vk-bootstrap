@@ -76,7 +76,7 @@ target_link_libraries(vk-bootstrap
         vk-bootstrap-compiler-warnings
         vk-bootstrap-vulkan-headers
         ${CMAKE_DL_LIBS})
-target_compile_features(vk-bootstrap PUBLIC cxx_std_14)
+target_compile_features(vk-bootstrap PUBLIC cxx_std_17)
 
 include(GNUInstallDirs)
 install(FILES src/VkBootstrap.h src/VkBootstrapDispatch.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})

@@ -80,6 +80,7 @@ template <typename T> class Result {
             new (&m_value) T{ result.m_value };
         else
             m_error = result.m_error;
+        return *this;
     }
     Result(Result&& expected) noexcept : m_init(expected.m_init) {
         if (m_init)
@@ -94,6 +95,7 @@ template <typename T> class Result {
             new (&m_value) T{ std::move(result.m_value) };
         else
             m_error = std::move(result.m_error);
+        return *this;
     }
     Result& operator=(const T& expect) noexcept {
         destroy();

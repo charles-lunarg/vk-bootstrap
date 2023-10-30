@@ -18,6 +18,7 @@ add_executable(vk-bootstrap-test
     bootstrap_tests.cpp
     error_code_tests.cpp
     unit_tests.cpp
+    include_checks.cpp
 )
 
 target_link_libraries(vk-bootstrap-test

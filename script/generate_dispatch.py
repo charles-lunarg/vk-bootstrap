@@ -327,6 +327,9 @@ def create_dispatch_table(dispatch_type):
                 elif text == '**':
                     front_mods = ''
                     back_mods = '** '
+                elif text == 'struct*':
+                    front_mods = 'struct '
+                    back_mods = '* '
                 elif text == 'struct**':
                     front_mods = 'struct '
                     back_mods = '** '

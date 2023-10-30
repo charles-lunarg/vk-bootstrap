@@ -837,10 +837,10 @@ class SwapchainBuilder {
 
     // Desired size of the swapchain. By default, the swapchain will use the size
     // of the window being drawn to.
-    [[deprecated]] SwapchainBuilder& set_desired_extent(uint32_t width, uint32_t height);
+    SwapchainBuilder& set_desired_extent(uint32_t width, uint32_t height);
 
     // When determining the surface format, make this the first to be used if supported.
-    [[deprecated]] SwapchainBuilder& set_desired_format(VkSurfaceFormatKHR format);
+    SwapchainBuilder& set_desired_format(VkSurfaceFormatKHR format);
     // Add this swapchain format to the end of the list of formats selected from.
     SwapchainBuilder& add_fallback_format(VkSurfaceFormatKHR format);
     // Use the default swapchain formats. This is done if no formats are provided.
@@ -848,7 +848,7 @@ class SwapchainBuilder {
     SwapchainBuilder& use_default_format_selection();
 
     // When determining the present mode, make this the first to be used if supported.
-    [[deprecated]] SwapchainBuilder& set_desired_present_mode(VkPresentModeKHR present_mode);
+    SwapchainBuilder& set_desired_present_mode(VkPresentModeKHR present_mode);
     // Add this present mode to the end of the list of present modes selected from.
     SwapchainBuilder& add_fallback_present_mode(VkPresentModeKHR present_mode);
     // Use the default presentation mode. This is done if no present modes are provided.
@@ -880,7 +880,7 @@ class SwapchainBuilder {
     // Note that the presentation engine is always free to create more images than requested.
     // You may pass one of the values specified in the BufferMode enum, or any integer value.
     // For instance, if you pass DOUBLE_BUFFERING, the presentation engine is allowed to give you a double buffering setup, triple buffering, or more. This is up to the drivers.
-    [[deprecated]] SwapchainBuilder& set_desired_min_image_count(uint32_t min_image_count);
+    SwapchainBuilder& set_desired_min_image_count(uint32_t min_image_count);
 
     // Sets a required minimum image count for the swapchain.
     // If the surface capabilities cannot allow it, building the swapchain will result in the `SwapchainError::required_min_image_count_too_low` error.

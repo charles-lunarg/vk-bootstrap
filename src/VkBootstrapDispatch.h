@@ -402,7 +402,7 @@ struct InstanceDispatchTable {
     }
 #endif
 #if (defined(VK_KHR_wayland_surface))
-    VkBool32 getPhysicalDeviceWaylandPresentationSupportKHR(VkPhysicalDevice physicalDevice, uint32_t queueFamilyIndex, wl_display display) const noexcept {
+    VkBool32 getPhysicalDeviceWaylandPresentationSupportKHR(VkPhysicalDevice physicalDevice, uint32_t queueFamilyIndex, struct wl_display* display) const noexcept {
         return fp_vkGetPhysicalDeviceWaylandPresentationSupportKHR(physicalDevice, queueFamilyIndex, display);
     }
 #endif
@@ -462,7 +462,7 @@ struct InstanceDispatchTable {
     }
 #endif
 #if (defined(VK_QNX_screen_surface))
-    VkBool32 getPhysicalDeviceScreenPresentationSupportQNX(VkPhysicalDevice physicalDevice, uint32_t queueFamilyIndex, _screen_window window) const noexcept {
+    VkBool32 getPhysicalDeviceScreenPresentationSupportQNX(VkPhysicalDevice physicalDevice, uint32_t queueFamilyIndex, struct _screen_window* window) const noexcept {
         return fp_vkGetPhysicalDeviceScreenPresentationSupportQNX(physicalDevice, queueFamilyIndex, window);
     }
 #endif

@@ -51,6 +51,7 @@ class VulkanFunctions {
     private:
     std::mutex init_mutex;
     struct VulkanLibrary {
+        uint32_t loaded_count = 0;
 #if defined(__linux__) || defined(__APPLE__)
         void* library;
 #elif defined(_WIN32)
@@ -58,20 +59,24 @@ class VulkanFunctions {
 #endif
         PFN_vkGetInstanceProcAddr ptr_vkGetInstanceProcAddr = VK_NULL_HANDLE;
 
-        VulkanLibrary() {
+        bool open() {
+            if (loaded_count == 0) {
 #if defined(__linux__)
-            library = dlopen("libvulkan.so.1", RTLD_NOW | RTLD_LOCAL);
-            if (!library) library = dlopen("libvulkan.so", RTLD_NOW | RTLD_LOCAL);
+                library = dlopen("libvulkan.so.1", RTLD_NOW | RTLD_LOCAL);
+                if (!library) library = dlopen("libvulkan.so", RTLD_NOW | RTLD_LOCAL);
 #elif defined(__APPLE__)
-            library = dlopen("libvulkan.dylib", RTLD_NOW | RTLD_LOCAL);
-            if (!library) library = dlopen("libvulkan.1.dylib", RTLD_NOW | RTLD_LOCAL);
+                library = dlopen("libvulkan.dylib", RTLD_NOW | RTLD_LOCAL);
+                if (!library) library = dlopen("libvulkan.1.dylib", RTLD_NOW | RTLD_LOCAL);
 #elif defined(_WIN32)
-            library = LoadLibrary(TEXT("vulkan-1.dll"));
+                library = LoadLibrary(TEXT("vulkan-1.dll"));
 #else
-            assert(false && "Unsupported platform");
+                assert(false && "Unsupported platform");
 #endif
-            if (!library) return;
-            load_func(ptr_vkGetInstanceProcAddr, "vkGetInstanceProcAddr");
+                if (!library) return false;
+                load_func(ptr_vkGetInstanceProcAddr, "vkGetInstanceProcAddr");
+            }
+            loaded_count++;
+            return ptr_vkGetInstanceProcAddr != nullptr;
         }
 
         template <typename T> void load_func(T& func_dest, const char* func_name) {
@@ -82,12 +87,15 @@ class VulkanFunctions {
 #endif
         }
         void close() {
+            if (loaded_count > 0) loaded_count--;
+            if (loaded_count == 0) {
 #if defined(__linux__) || defined(__APPLE__)
-            dlclose(library);
+                dlclose(library);
 #elif defined(_WIN32)
-            FreeLibrary(library);
+                FreeLibrary(library);
 #endif
-            library = 0;
+                library = 0;
+            }
         }
     };
     VulkanLibrary& get_vulkan_library() {
@@ -101,8 +109,11 @@ class VulkanFunctions {
             return true;
         } else {
             auto& lib = get_vulkan_library();
+            if (!lib.open()) {
+                return false;
+            }
             ptr_vkGetInstanceProcAddr = lib.ptr_vkGetInstanceProcAddr;
-            return lib.library != nullptr && lib.ptr_vkGetInstanceProcAddr != VK_NULL_HANDLE;
+            return true;
         }
     }
 
@@ -128,6 +139,7 @@ class VulkanFunctions {
 
     PFN_vkGetInstanceProcAddr ptr_vkGetInstanceProcAddr = nullptr;
     VkInstance instance = nullptr;
+    uint32_t loaded_count = 0;
 
     PFN_vkEnumerateInstanceExtensionProperties fp_vkEnumerateInstanceExtensionProperties = nullptr;
     PFN_vkEnumerateInstanceLayerProperties fp_vkEnumerateInstanceLayerProperties = nullptr;
@@ -185,6 +197,13 @@ class VulkanFunctions {
         get_inst_proc_addr(fp_vkGetPhysicalDeviceSurfaceFormatsKHR, "vkGetPhysicalDeviceSurfaceFormatsKHR");
         get_inst_proc_addr(fp_vkGetPhysicalDeviceSurfacePresentModesKHR, "vkGetPhysicalDeviceSurfacePresentModesKHR");
         get_inst_proc_addr(fp_vkGetPhysicalDeviceSurfaceCapabilitiesKHR, "vkGetPhysicalDeviceSurfaceCapabilitiesKHR");
+    }
+
+    void unload_vulkan() {
+        auto& lib = get_vulkan_library();
+        if (lib.library != nullptr) {
+            lib.close();
+        }
     }
 };
 
@@ -512,6 +531,7 @@ void destroy_instance(Instance instance) {
         if (instance.debug_messenger != VK_NULL_HANDLE)
             destroy_debug_utils_messenger(instance.instance, instance.debug_messenger, instance.allocation_callbacks);
         detail::vulkan_functions().fp_vkDestroyInstance(instance.instance, instance.allocation_callbacks);
+        detail::vulkan_functions().unload_vulkan();
     }
 }
 

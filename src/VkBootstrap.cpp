@@ -50,63 +50,61 @@ bool GenericFeaturesPNextNode::match(GenericFeaturesPNextNode const& requested, 
 class VulkanFunctions {
     private:
     std::mutex init_mutex;
-    struct VulkanLibrary {
-#if defined(__linux__) || defined(__APPLE__)
-        void* library;
-#elif defined(_WIN32)
-        HMODULE library;
-#endif
-        PFN_vkGetInstanceProcAddr ptr_vkGetInstanceProcAddr = VK_NULL_HANDLE;
 
-        VulkanLibrary() {
+#if defined(__linux__) || defined(__APPLE__)
+    void* library = nullptr;
+#elif defined(_WIN32)
+    HMODULE library = nullptr;
+#endif
+
+    bool load_vulkan_library() {
+        // Can immediately return if it has already been loaded
+        if (library) {
+            return true;
+        }
 #if defined(__linux__)
-            library = dlopen("libvulkan.so.1", RTLD_NOW | RTLD_LOCAL);
-            if (!library) library = dlopen("libvulkan.so", RTLD_NOW | RTLD_LOCAL);
+        library = dlopen("libvulkan.so.1", RTLD_NOW | RTLD_LOCAL);
+        if (!library) library = dlopen("libvulkan.so", RTLD_NOW | RTLD_LOCAL);
 #elif defined(__APPLE__)
-            library = dlopen("libvulkan.dylib", RTLD_NOW | RTLD_LOCAL);
-            if (!library) library = dlopen("libvulkan.1.dylib", RTLD_NOW | RTLD_LOCAL);
+        library = dlopen("libvulkan.dylib", RTLD_NOW | RTLD_LOCAL);
+        if (!library) library = dlopen("libvulkan.1.dylib", RTLD_NOW | RTLD_LOCAL);
+        if (!library) library = dlopen("libMoltenVK.dylib", RTLD_NOW | RTLD_LOCAL);
 #elif defined(_WIN32)
-            library = LoadLibrary(TEXT("vulkan-1.dll"));
+        library = LoadLibrary(TEXT("vulkan-1.dll"));
 #else
-            assert(false && "Unsupported platform");
+        assert(false && "Unsupported platform");
 #endif
-            if (!library) return;
-            load_func(ptr_vkGetInstanceProcAddr, "vkGetInstanceProcAddr");
-        }
-
-        template <typename T> void load_func(T& func_dest, const char* func_name) {
-#if defined(__linux__) || defined(__APPLE__)
-            func_dest = reinterpret_cast<T>(dlsym(library, func_name));
-#elif defined(_WIN32)
-            func_dest = reinterpret_cast<T>(GetProcAddress(library, func_name));
-#endif
-        }
-        void close() {
-#if defined(__linux__) || defined(__APPLE__)
-            dlclose(library);
-#elif defined(_WIN32)
-            FreeLibrary(library);
-#endif
-            library = 0;
-        }
-    };
-    VulkanLibrary& get_vulkan_library() {
-        static VulkanLibrary lib;
-        return lib;
+        if (!library) return false;
+        load_func(ptr_vkGetInstanceProcAddr, "vkGetInstanceProcAddr");
+        return ptr_vkGetInstanceProcAddr != nullptr;
     }
 
-    bool load_vulkan(PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr = nullptr) {
+    template <typename T> void load_func(T& func_dest, const char* func_name) {
+#if defined(__linux__) || defined(__APPLE__)
+        func_dest = reinterpret_cast<T>(dlsym(library, func_name));
+#elif defined(_WIN32)
+        func_dest = reinterpret_cast<T>(GetProcAddress(library, func_name));
+#endif
+    }
+    void close() {
+#if defined(__linux__) || defined(__APPLE__)
+        dlclose(library);
+#elif defined(_WIN32)
+        FreeLibrary(library);
+#endif
+        library = 0;
+    }
+
+    public:
+    bool init_vulkan_funcs(PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr = nullptr) {
+        std::lock_guard<std::mutex> lg(init_mutex);
         if (fp_vkGetInstanceProcAddr != nullptr) {
             ptr_vkGetInstanceProcAddr = fp_vkGetInstanceProcAddr;
-            return true;
         } else {
-            auto& lib = get_vulkan_library();
-            ptr_vkGetInstanceProcAddr = lib.ptr_vkGetInstanceProcAddr;
-            return lib.library != nullptr && lib.ptr_vkGetInstanceProcAddr != VK_NULL_HANDLE;
+            bool ret = load_vulkan_library();
+            if (!ret) return false;
         }
-    }
 
-    void init_pre_instance_funcs() {
         fp_vkEnumerateInstanceExtensionProperties = reinterpret_cast<PFN_vkEnumerateInstanceExtensionProperties>(
             ptr_vkGetInstanceProcAddr(VK_NULL_HANDLE, "vkEnumerateInstanceExtensionProperties"));
         fp_vkEnumerateInstanceLayerProperties = reinterpret_cast<PFN_vkEnumerateInstanceLayerProperties>(
@@ -115,6 +113,7 @@ class VulkanFunctions {
             ptr_vkGetInstanceProcAddr(VK_NULL_HANDLE, "vkEnumerateInstanceVersion"));
         fp_vkCreateInstance =
             reinterpret_cast<PFN_vkCreateInstance>(ptr_vkGetInstanceProcAddr(VK_NULL_HANDLE, "vkCreateInstance"));
+        return true;
     }
 
     public:
@@ -155,13 +154,6 @@ class VulkanFunctions {
     PFN_vkGetPhysicalDeviceSurfacePresentModesKHR fp_vkGetPhysicalDeviceSurfacePresentModesKHR = nullptr;
     PFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR fp_vkGetPhysicalDeviceSurfaceCapabilitiesKHR = nullptr;
 
-    bool init_vulkan_funcs(PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr) {
-        std::lock_guard<std::mutex> lg(init_mutex);
-        if (!load_vulkan(fp_vkGetInstanceProcAddr)) return false;
-        init_pre_instance_funcs();
-        return true;
-    }
-
     void init_instance_funcs(VkInstance inst) {
         instance = inst;
         get_inst_proc_addr(fp_vkDestroyInstance, "vkDestroyInstance");
@@ -188,7 +180,7 @@ class VulkanFunctions {
     }
 };
 
-VulkanFunctions& vulkan_functions() {
+static VulkanFunctions& vulkan_functions() {
     static VulkanFunctions v;
     return v;
 }

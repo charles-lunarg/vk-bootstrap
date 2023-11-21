@@ -377,6 +377,8 @@ class InstanceBuilder {
     InstanceBuilder& enable_layer(const char* layer_name);
     // Adds an extension to be enabled. Will fail to create an instance if the extension isn't available.
     InstanceBuilder& enable_extension(const char* extension_name);
+    InstanceBuilder& enable_extensions(std::vector<const char*> const& extensions);
+    InstanceBuilder& enable_extensions(size_t count, const char* const* extensions);
 
     // Headless Mode does not load the required extensions for presentation. Defaults to true.
     InstanceBuilder& set_headless(bool headless = true);
@@ -590,7 +592,8 @@ class PhysicalDeviceSelector {
     // Require a physical device which supports a specific extension.
     PhysicalDeviceSelector& add_required_extension(const char* extension);
     // Require a physical device which supports a set of extensions.
-    PhysicalDeviceSelector& add_required_extensions(std::vector<const char*> extensions);
+    PhysicalDeviceSelector& add_required_extensions(std::vector<const char*> const& extensions);
+    PhysicalDeviceSelector& add_required_extensions(size_t count, const char* const* extensions);
 
     // Prefer a physical device which supports a specific extension.
     [[deprecated]] PhysicalDeviceSelector& add_desired_extension(const char* extension);

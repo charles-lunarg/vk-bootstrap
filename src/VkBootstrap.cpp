@@ -776,6 +776,19 @@ InstanceBuilder& InstanceBuilder::enable_extension(const char* extension_name) {
     info.extensions.push_back(extension_name);
     return *this;
 }
+InstanceBuilder& InstanceBuilder::enable_extensions(std::vector<const char*> const& extensions) {
+    for (const auto extension : extensions) {
+        info.extensions.push_back(extension);
+    }
+    return *this;
+}
+InstanceBuilder& InstanceBuilder::enable_extensions(size_t count, const char* const* extensions) {
+    if (!extensions || count == 0) return *this;
+    for (size_t i = 0; i < count; i++) {
+        info.extensions.push_back(extensions[i]);
+    }
+    return *this;
+}
 InstanceBuilder& InstanceBuilder::enable_validation_layers(bool enable_validation) {
     info.enable_validation_layers = enable_validation;
     return *this;
@@ -1294,9 +1307,16 @@ PhysicalDeviceSelector& PhysicalDeviceSelector::add_required_extension(const cha
     criteria.required_extensions.push_back(extension);
     return *this;
 }
-PhysicalDeviceSelector& PhysicalDeviceSelector::add_required_extensions(std::vector<const char*> extensions) {
+PhysicalDeviceSelector& PhysicalDeviceSelector::add_required_extensions(std::vector<const char*> const& extensions) {
     for (const auto& ext : extensions) {
         criteria.required_extensions.push_back(ext);
+    }
+    return *this;
+}
+PhysicalDeviceSelector& PhysicalDeviceSelector::add_required_extensions(size_t count, const char* const* extensions) {
+    if (!extensions || count == 0) return *this;
+    for (size_t i = 0; i < count; i++) {
+        criteria.required_extensions.push_back(extensions[i]);
     }
     return *this;
 }

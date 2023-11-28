@@ -25,11 +25,14 @@ jobs:
     name: Tag header update
     runs-on: ubuntu-latest
     steps:
-      - name: Read CurentBuildVulkanVersion.cmake
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Read CurrentBuildVulkanVersion.cmake
         id: read-version-file
         uses: juliangruber/read-file-action@v1
         with:
-          path: ./gen/CurentBuildVulkanVersion.cmake
+          path: gen/CurrentBuildVulkanVersion.cmake
 
       - name: Match regex from version file
         uses: actions-ecosystem/action-regex-match@v2

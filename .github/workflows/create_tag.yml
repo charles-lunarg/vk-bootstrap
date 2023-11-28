@@ -46,5 +46,5 @@ jobs:
         if: ${{ steps.regex-match.outputs.match != '' }}
         with:
             tag-name: ${{ steps.regex-match.outputs.group1 }}
-            description: Update to latest Vulkan-Headers
+            description: Update to ${{ steps.regex-match.outputs.group1 }} of Vulkan-Headers
 

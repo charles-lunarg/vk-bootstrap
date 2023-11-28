@@ -12,7 +12,7 @@
 # IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
 # WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
-# Copyright © 2021 Charles Giessen (charles@lunarg.com)
+# Copyright © 2023 Charles Giessen (charles@lunarg.com)
 #
 
 
@@ -38,7 +38,7 @@ jobs:
 
 
         steps:
-            - uses: actions/checkout@v3
+            - uses: actions/checkout@v4
             - uses: lukka/get-cmake@latest
               with:
                 cmakeVersion: 3.15
@@ -71,7 +71,7 @@ jobs:
                 config: [ Debug, Release ]
 
         steps:
-            - uses: actions/checkout@v3
+            - uses: actions/checkout@v4
 
             - name: CMake Configure
               run: cmake -S. -B build -D CMAKE_BUILD_TYPE=${{matrix.config}} -D VK_BOOTSTRAP_WERROR=ON -D VK_BOOTSTRAP_TEST=ON -A ${{matrix.arch}}

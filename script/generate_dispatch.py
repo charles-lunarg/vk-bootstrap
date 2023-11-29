@@ -102,6 +102,30 @@ commands = {}
 INSTANCE = 'instance'
 DEVICE = 'device'
 
+def get_macro_guard(reqs_collection, command_name):
+    guard = ''
+    count = len(reqs_collection)
+    if count > 0:
+        while count > 0:
+            for reqs in reqs_collection:
+                reqs_count = len(reqs)
+                guard += '('
+                for req in reqs:
+                    guard += f'defined({req})'
+                    reqs_count -= 1
+                    if reqs_count > 0:
+                        guard += ' && '
+                guard += ')'
+                if count > 0:
+                    count -= 1
+                    if count > 0:
+                        guard += ' || '
+        # API breaking change causes this function to fail compilation
+        if command_name == 'vkGetLatencyTimingsNV':
+            guard = f'({guard}) && VK_HEADER_VERSION >= 271'
+    return guard
+
+
 aliased_types = {}
 types_node = vk_xml['registry']['types']['type']
 for type_node in  types_node:
@@ -189,51 +213,17 @@ for extension_node in extensions_node:
 
 # Generate macro templates
 for command_name, command in commands.items():
-    macro = ''
-    requirements_collection = commands[command_name]['requirements']
-    collection_count = len(requirements_collection)
-    if collection_count > 0:
-        macro = '#if '
-        while collection_count > 0:
-            for requirements in requirements_collection:
-                requirements_count = len(requirements)
-                macro += '('
-                for requirement in requirements:
-                    macro += f'defined({requirement})'
-                    requirements_count -= 1
-                    if requirements_count > 0:
-                        macro += ' && '
-                macro += ')'
-                if collection_count > 0:
-                    collection_count -= 1
-                    if collection_count > 0:
-                        macro += ' || '
-        macro += '\n$body#endif\n'
+    if len(commands[command_name]['requirements']) > 0:
+        macro_guard = get_macro_guard(commands[command_name]['requirements'], command_name)
+        macro = f'#if {macro_guard}\n$body#endif\n'
     else:
         macro = '$body'
     commands[command_name]['macro_template'] = Template(macro)
 
 for command_name, command in commands.items():
-    pfn_decl_macro = ''
-    requirements_collection = commands[command_name]['requirements']
-    collection_count = len(requirements_collection)
-    if collection_count > 0:
-        pfn_decl_macro = '#if '
-        while collection_count > 0:
-            for requirements in requirements_collection:
-                requirements_count = len(requirements)
-                pfn_decl_macro += '('
-                for requirement in requirements:
-                    pfn_decl_macro += f'defined({requirement})'
-                    requirements_count -= 1
-                    if requirements_count > 0:
-                        pfn_decl_macro += ' && '
-                pfn_decl_macro += ')'
-                if collection_count > 0:
-                    collection_count -= 1
-                    if collection_count > 0:
-                        pfn_decl_macro += ' || '
-        pfn_decl_macro += f'\n$body#else\n    void * fp_{command_name}{{}};\n#endif\n'
+    if len(commands[command_name]['requirements']) > 0:
+        macro_guard = get_macro_guard(commands[command_name]['requirements'], command_name)
+        pfn_decl_macro = f'#if {macro_guard}\n$body#else\n    void * fp_{command_name}{{}};\n#endif\n'
     else:
         pfn_decl_macro = '$body'
     commands[command_name]['pfn_decl_macro_template'] = Template(pfn_decl_macro)

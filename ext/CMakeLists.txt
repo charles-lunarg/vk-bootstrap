@@ -7,7 +7,7 @@ option(CATCH_BUILD_TESTING "" OFF)
 option(CATCH_ENABLE_WERROR "" OFF)
 option(CATCH_INSTALL_DOCS "" OFF)
 option(CATCH_INSTALL_HELPERS "" OFF)
-option(CATCH_INSTALL_EXTRAS "" ON)
+option(CATCH_INSTALL_EXTRAS "" OFF)
 
 include(FetchContent)
 FetchContent_Declare(

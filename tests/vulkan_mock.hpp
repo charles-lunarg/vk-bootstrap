@@ -8,7 +8,6 @@
 #include <string>
 #include <vector>
 
-#define VK_NO_PROTOTYPES
 #include <vulkan/vulkan.h>
 
 // Helper function to get the size of a struct given a VkStructureType

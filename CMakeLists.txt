@@ -1,39 +1,57 @@
-cmake_minimum_required(VERSION 3.15 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.15)
+
+include(gen/CurrentBuildVulkanVersion.cmake)
+
 project(VulkanBootstrap
     LANGUAGES CXX
-    DESCRIPTION "A Vulkan utility library to ease the initialization steps in Vulkan")
+    DESCRIPTION "A Vulkan utility library to ease the initialization steps in Vulkan"
+    VERSION ${VK_BOOTSTRAP_SOURCE_HEADER_VERSION})
 
 option(VK_BOOTSTRAP_DISABLE_WARNINGS "Disable warnings during compilation" OFF)
 option(VK_BOOTSTRAP_WERROR "Enable warnings as errors during compilation" OFF)
 
-add_library(vk-bootstrap-vulkan-headers INTERFACE)
+if (CMAKE_VERSION VERSION_LESS "3.21")
+    # By default, only build tests & install if this repo is standalone, but still allow configuration by the user
+    string(COMPARE EQUAL ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_SOURCE_DIR} PROJECT_IS_TOP_LEVEL)
+endif()
 
-set(VK_BOOTSTRAP_VULKAN_HEADER_DIR "" CACHE STRING "Specify the location of the Vulkan-Headers include directory.")
+option(VK_BOOTSTRAP_TEST "Test Vk-Bootstrap using Catch2 as well as build examples" ${PROJECT_IS_TOP_LEVEL})
+option(VK_BOOTSTRAP_INSTALL "Enable warnings as errors during compilation" ${PROJECT_IS_TOP_LEVEL})
+
+set(VK_BOOTSTRAP_VULKAN_HEADER_DIR "" CACHE FILEPATH "Specify the location of the Vulkan-Headers include directory.")
 mark_as_advanced(VK_BOOTSTRAP_VULKAN_HEADER_DIR)
 
-include(gen/CurrentBuildVulkanVersion.cmake)
+# Check if the user has set this variable explicitly
+if(IS_DIRECTORY ${VK_BOOTSTRAP_VULKAN_HEADER_DIR})
+    add_library(Vulkan-Headers INTERFACE)
+    add_library(Vulkan::Headers ALIAS Vulkan-Headers)
+    target_include_directories(Vulkan-Headers INTERFACE $<BUILD_INTERFACE:${VK_BOOTSTRAP_VULKAN_HEADER_DIR}>)
 
-if(NOT "${VK_BOOTSTRAP_VULKAN_HEADER_DIR}" STREQUAL "")
-    target_include_directories(vk-bootstrap-vulkan-headers INTERFACE $<BUILD_INTERFACE:${VK_BOOTSTRAP_VULKAN_HEADER_DIR}>)
-else ()
-    find_package(Vulkan QUIET)
-
-    if(${Vulkan_INCLUDE_DIR} STREQUAL "Vulkan_INCLUDE_DIR-NOTFOUND")
-        include(FetchContent)
-        FetchContent_Declare(
-            VulkanHeaders
-            GIT_REPOSITORY https://github.com/KhronosGroup/Vulkan-Headers
-            GIT_TAG        ${VK_BOOTSTRAP_SOURCE_HEADER_VERSION_GIT_TAG}
-        )
-        FetchContent_MakeAvailable(VulkanHeaders)
-        target_link_libraries(vk-bootstrap-vulkan-headers INTERFACE Vulkan::Headers)
-    else()
-        set_target_properties(vk-bootstrap-vulkan-headers PROPERTIES INTERFACE_INCLUDE_DIRECTORIES ${Vulkan_INCLUDE_DIR})
+# Check if the target is already defined
+elseif(NOT TARGET Vulkan::Headers)
+    # Try looking for the VulkanHeaders package directly
+    find_package(VulkanHeaders CONFIG QUIET)
+    if (NOT VulkanHeaders_FOUND)
+        # Try looking using the CMake built in Vulkan support
+        find_package(Vulkan QUIET)
+        if(NOT Vulkan_FOUND)
+            # Lastly just grab Vulkan-Headers directly using FetchContent
+            include(FetchContent)
+            FetchContent_Declare(
+                Vulkan-Headers-for-vk-bootstrap
+                GIT_REPOSITORY https://github.com/KhronosGroup/Vulkan-Headers
+                GIT_TAG        ${VK_BOOTSTRAP_SOURCE_HEADER_VERSION_GIT_TAG}
+            )
+            FetchContent_MakeAvailable(Vulkan-Headers-for-vk-bootstrap)
+            # If we had to use FetchContent to get the headers, disable installing
+            set(VK_BOOTSTRAP_INSTALL OFF)
+        endif()
     endif()
 endif()
 
-add_library(vk-bootstrap STATIC src/VkBootstrap.h src/VkBootstrap.cpp src/VkBootstrapDispatch.h)
-add_library(vk-bootstrap::vk-bootstrap ALIAS vk-bootstrap)
+if(NOT TARGET Vulkan::Headers)
+    message(FATAL_ERROR "Unable to locate required dependency Vulkan::Headers!")
+endif()
 
 add_library(vk-bootstrap-compiler-warnings INTERFACE)
 
@@ -68,32 +86,19 @@ if(NOT VK_BOOTSTRAP_DISABLE_WARNINGS)
     endif()
 endif()
 
+add_library(vk-bootstrap STATIC src/VkBootstrap.h src/VkBootstrap.cpp src/VkBootstrapDispatch.h)
+add_library(vk-bootstrap::vk-bootstrap ALIAS vk-bootstrap)
+
 target_include_directories(vk-bootstrap PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
     $<INSTALL_INTERFACE:include>)
 target_link_libraries(vk-bootstrap
+    PUBLIC
+        Vulkan::Headers
     PRIVATE
         vk-bootstrap-compiler-warnings
-        vk-bootstrap-vulkan-headers
         ${CMAKE_DL_LIBS})
 target_compile_features(vk-bootstrap PUBLIC cxx_std_17)
-
-include(GNUInstallDirs)
-install(FILES src/VkBootstrap.h src/VkBootstrapDispatch.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-install(TARGETS
-    vk-bootstrap
-    vk-bootstrap-compiler-warnings
-    vk-bootstrap-vulkan-headers
-    EXPORT
-        vk-bootstrap-targets)
-
-# By default, we want to only build tests if this repo is built standalone, but still should be configurable by the user
-if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
-    set(VK_BOOTSTRAP_TEST_DEFAULT_VALUE ON)
-else()
-    set(VK_BOOTSTRAP_TEST_DEFAULT_VALUE OFF)
-endif()
-option(VK_BOOTSTRAP_TEST "Test Vk-Bootstrap with glfw and Catch2" ${VK_BOOTSTRAP_TEST_DEFAULT_VALUE})
 
 if(VK_BOOTSTRAP_TEST)
     enable_testing()
@@ -101,3 +106,53 @@ if(VK_BOOTSTRAP_TEST)
     add_subdirectory(tests)
     add_subdirectory(example)
 endif ()
+
+if (VK_BOOTSTRAP_INSTALL)
+
+    include(GNUInstallDirs)
+    include(CMakePackageConfigHelpers)
+
+    install(FILES src/VkBootstrap.h src/VkBootstrapDispatch.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+
+    install(
+        TARGETS vk-bootstrap vk-bootstrap-compiler-warnings
+        EXPORT vk-bootstrap-targets
+        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+    )
+    install(
+        EXPORT vk-bootstrap-targets
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/vk-bootstrap
+        NAMESPACE vk-bootstrap::
+    )
+
+    # Create vk-bootstrap-config.cmake
+    set(VK_BOOTSTRAP_EXPORT_TARGETS ${CMAKE_INSTALL_LIBDIR}/cmake/vk-bootstrap/vk-bootstrap-targets.cmake)
+    file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/vk-bootstrap-config.cmake.in" [=[
+        @PACKAGE_INIT@
+
+        # Try to find Vulkan-Headers using find_package. Assume the package is available through either Vulkan-Headers or the older Vulkan
+        # Package managers should have Vulkan-Headers be a dependency of this repo.
+        find_package(VulkanHeaders CONFIG)
+        if (NOT VulkanHeaders_FOUND)
+            find_package(Vulkan)
+            if (NOT Vulkan_FOUND)
+                message(FATAL_ERROR "Unable to locate required dependency Vulkan::Headers!")
+            endif()
+        endif()
+        include(@PACKAGE_VK_BOOTSTRAP_EXPORT_TARGETS@)
+    ]=])
+
+    configure_package_config_file(
+        ${CMAKE_CURRENT_BINARY_DIR}/vk-bootstrap-config.cmake.in
+        ${CMAKE_CURRENT_BINARY_DIR}/vk-bootstrap-config.cmake
+        INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/vk-bootstrap
+        PATH_VARS VK_BOOTSTRAP_EXPORT_TARGETS
+        NO_SET_AND_CHECK_MACRO
+        NO_CHECK_REQUIRED_COMPONENTS_MACRO
+    )
+
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/vk-bootstrap-config.cmake
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/vk-bootstrap
+    )
+
+endif()

@@ -22,7 +22,7 @@ TEST_CASE("Dedicated Compute Queue, Separate Transfer", "[UnitTests.queue_select
     SECTION("Dedicated Queue First") {
         std::vector<VkQueueFamilyProperties> families = {
             VkQueueFamilyProperties{
-                VK_QUEUE_GRAPHICS_BIT | VK_QUEUE_COMPUTE_BIT | VK_QUEUE_GRAPHICS_BIT, 1, 0, VkExtent3D{ 1, 1, 1 } },
+                VK_QUEUE_GRAPHICS_BIT | VK_QUEUE_COMPUTE_BIT | VK_QUEUE_TRANSFER_BIT, 1, 0, VkExtent3D{ 1, 1, 1 } },
             VkQueueFamilyProperties{ VK_QUEUE_COMPUTE_BIT, 1, 0, VkExtent3D{ 1, 1, 1 } },
             VkQueueFamilyProperties{ VK_QUEUE_COMPUTE_BIT | VK_QUEUE_TRANSFER_BIT, 1, 0, VkExtent3D{ 1, 1, 1 } }
         };
@@ -37,7 +37,7 @@ TEST_CASE("Dedicated Compute Queue, Separate Transfer", "[UnitTests.queue_select
     SECTION("Dedicated Queue Last") {
         std::vector<VkQueueFamilyProperties> families = {
             VkQueueFamilyProperties{
-                VK_QUEUE_GRAPHICS_BIT | VK_QUEUE_COMPUTE_BIT | VK_QUEUE_GRAPHICS_BIT, 1, 0, VkExtent3D{ 1, 1, 1 } },
+                VK_QUEUE_GRAPHICS_BIT | VK_QUEUE_COMPUTE_BIT | VK_QUEUE_TRANSFER_BIT, 1, 0, VkExtent3D{ 1, 1, 1 } },
             VkQueueFamilyProperties{ VK_QUEUE_COMPUTE_BIT | VK_QUEUE_TRANSFER_BIT, 1, 0, VkExtent3D{ 1, 1, 1 } },
             VkQueueFamilyProperties{ VK_QUEUE_COMPUTE_BIT, 1, 0, VkExtent3D{ 1, 1, 1 } }
         };
@@ -55,7 +55,7 @@ TEST_CASE("Dedicated Transfer Queue, Separate Compute", "[UnitTests.queue_select
     SECTION("Dedicated Queue First") {
         std::vector<VkQueueFamilyProperties> families = {
             VkQueueFamilyProperties{
-                VK_QUEUE_GRAPHICS_BIT | VK_QUEUE_COMPUTE_BIT | VK_QUEUE_GRAPHICS_BIT, 1, 0, VkExtent3D{ 1, 1, 1 } },
+                VK_QUEUE_GRAPHICS_BIT | VK_QUEUE_COMPUTE_BIT | VK_QUEUE_TRANSFER_BIT, 1, 0, VkExtent3D{ 1, 1, 1 } },
             VkQueueFamilyProperties{ VK_QUEUE_TRANSFER_BIT, 1, 0, VkExtent3D{ 1, 1, 1 } },
             VkQueueFamilyProperties{ VK_QUEUE_COMPUTE_BIT | VK_QUEUE_TRANSFER_BIT, 1, 0, VkExtent3D{ 1, 1, 1 } }
         };
@@ -70,7 +70,7 @@ TEST_CASE("Dedicated Transfer Queue, Separate Compute", "[UnitTests.queue_select
     SECTION("Dedicated Queue Last") {
         std::vector<VkQueueFamilyProperties> families = {
             VkQueueFamilyProperties{
-                VK_QUEUE_GRAPHICS_BIT | VK_QUEUE_COMPUTE_BIT | VK_QUEUE_GRAPHICS_BIT, 1, 0, VkExtent3D{ 1, 1, 1 } },
+                VK_QUEUE_GRAPHICS_BIT | VK_QUEUE_COMPUTE_BIT | VK_QUEUE_TRANSFER_BIT, 1, 0, VkExtent3D{ 1, 1, 1 } },
             VkQueueFamilyProperties{ VK_QUEUE_COMPUTE_BIT | VK_QUEUE_TRANSFER_BIT, 1, 0, VkExtent3D{ 1, 1, 1 } },
             VkQueueFamilyProperties{ VK_QUEUE_TRANSFER_BIT, 1, 0, VkExtent3D{ 1, 1, 1 } }
         };

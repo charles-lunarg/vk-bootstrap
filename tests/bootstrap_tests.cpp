@@ -25,7 +25,7 @@ VkExtensionProperties get_extension_properties(const char* extName) {
 }
 
 VulkanMock& get_and_setup_default() {
-    VulkanMock& mock = get_vulkan_mock();
+    VulkanMock& mock = *get_vulkan_mock();
     mock.instance_extensions.push_back(get_extension_properties(VK_KHR_SURFACE_EXTENSION_NAME));
 #if defined(_WIN32)
     mock.instance_extensions.push_back(get_extension_properties("VK_KHR_win32_surface"));
@@ -512,7 +512,7 @@ TEST_CASE("SystemInfo Loading Vulkan Automatically", "[VkBootstrap.loading]") {
 TEST_CASE("SystemInfo Loading Vulkan Manually", "[VkBootstrap.loading]") {
     [[maybe_unused]] VulkanMock& mock = get_and_setup_default();
     VulkanLibrary vk_lib;
-    REQUIRE(vk_lib.vkGetInstanceProcAddr != NULL);
+    REQUIRE(vk_lib.vkGetInstanceProcAddr);
     auto info_ret = vkb::SystemInfo::get_system_info(vk_lib.vkGetInstanceProcAddr);
     REQUIRE(info_ret);
     vkb::InstanceBuilder builder;
@@ -531,7 +531,7 @@ TEST_CASE("InstanceBuilder Loading Vulkan Automatically", "[VkBootstrap.loading]
 TEST_CASE("InstanceBuilder Loading Vulkan Manually", "[VkBootstrap.loading]") {
     [[maybe_unused]] VulkanMock& mock = get_and_setup_default();
     VulkanLibrary vk_lib;
-    REQUIRE(vk_lib.vkGetInstanceProcAddr != NULL);
+    REQUIRE(vk_lib.vkGetInstanceProcAddr);
     vkb::InstanceBuilder builder{ vk_lib.vkGetInstanceProcAddr };
     auto ret = builder.build();
     vk_lib.close();
@@ -554,7 +554,7 @@ TEST_CASE("ReLoading Vulkan Manually", "[VkBootstrap.loading]") {
     [[maybe_unused]] VulkanMock& mock = get_and_setup_default();
     {
         VulkanLibrary vk_lib;
-        REQUIRE(vk_lib.vkGetInstanceProcAddr != NULL);
+        REQUIRE(vk_lib.vkGetInstanceProcAddr);
         vkb::InstanceBuilder builder{ vk_lib.vkGetInstanceProcAddr };
         auto ret = builder.build();
         REQUIRE(ret);
@@ -562,7 +562,7 @@ TEST_CASE("ReLoading Vulkan Manually", "[VkBootstrap.loading]") {
     }
     {
         VulkanLibrary vk_lib;
-        REQUIRE(vk_lib.vkGetInstanceProcAddr != NULL);
+        REQUIRE(vk_lib.vkGetInstanceProcAddr);
         vkb::InstanceBuilder builder{ vk_lib.vkGetInstanceProcAddr };
         auto ret = builder.build();
         REQUIRE(ret);
@@ -643,7 +643,7 @@ TEST_CASE("Passing vkb classes to Vulkan handles", "[VkBootstrap.pass_class_to_h
 
         // Check if we can get instance functions.
         PFN_vkVoidFunction instanceFunction = instance.fp_vkGetInstanceProcAddr(instance, "vkEnumeratePhysicalDevices"); // validation layers should be provided.
-        REQUIRE(instanceFunction != NULL);
+        REQUIRE(instanceFunction);
 
         vkb::PhysicalDeviceSelector physicalDeviceSelector(instance);
         auto physicalDevice =
@@ -655,7 +655,7 @@ TEST_CASE("Passing vkb classes to Vulkan handles", "[VkBootstrap.pass_class_to_h
 
         // Check if we can get a device function address, passing vkb::Device to the function.
         PFN_vkVoidFunction deviceFunction = instance.fp_vkGetDeviceProcAddr(device.value(), "vkAcquireNextImageKHR");
-        REQUIRE(deviceFunction != NULL);
+        REQUIRE(deviceFunction);
     }
 }
 

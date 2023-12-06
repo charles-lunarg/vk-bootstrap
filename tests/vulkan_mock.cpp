@@ -17,9 +17,11 @@
 
 VulkanMock mock;
 
-EXPORT_MACRO VulkanMock& get_vulkan_mock() {
+extern "C" {
+VulkanMock* get_vulkan_mock() {
     mock = VulkanMock{};
-    return mock;
+    return &mock;
+}
 }
 
 template <typename T> VkResult fill_out_count_pointer_pair(std::vector<T> const& data_vec, uint32_t* pCount, T* pData) {
@@ -368,13 +370,9 @@ PFN_vkVoidFunction shim_vkGetInstanceProcAddr([[maybe_unused]] VkInstance instan
 }
 
 extern "C" {
-#if defined(WIN32)
-
-EXPORT_MACRO VKAPI_ATTR PFN_vkVoidFunction VKAPI_CALL vkGetInstanceProcAddr(VkInstance instance, const char* pName) {
-#pragma comment(linker, "/EXPORT:" __FUNCTION__ "=" __FUNCDNAME__)
+VKAPI_ATTR PFN_vkVoidFunction VKAPI_CALL vkGetInstanceProcAddr(VkInstance instance, const char* pName) {
     return shim_vkGetInstanceProcAddr(instance, pName);
 }
-#endif
 
 #if defined(__linux__) || defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__GNU__)
 #define DLSYM_FUNC_NAME dlsym

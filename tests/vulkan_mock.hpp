@@ -91,12 +91,6 @@ struct VulkanMock {
     }
 };
 
-#if !defined(EXPORT_MACRO)
-#if defined(WIN32)
-#define EXPORT_MACRO __declspec(dllexport)
-#else
-#define EXPORT_MACRO
-#endif
-#endif
-
-EXPORT_MACRO VulkanMock& get_vulkan_mock();
+extern "C" {
+VulkanMock* get_vulkan_mock();
+}

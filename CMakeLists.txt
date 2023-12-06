@@ -26,7 +26,8 @@ if(IS_DIRECTORY ${VK_BOOTSTRAP_VULKAN_HEADER_DIR})
     add_library(Vulkan-Headers INTERFACE)
     add_library(Vulkan::Headers ALIAS Vulkan-Headers)
     target_include_directories(Vulkan-Headers INTERFACE $<BUILD_INTERFACE:${VK_BOOTSTRAP_VULKAN_HEADER_DIR}>)
-
+    # If we had to use a direct path to get the headers, disable installing
+    set(VK_BOOTSTRAP_INSTALL OFF)
 # Check if the target is already defined
 elseif(NOT TARGET Vulkan::Headers)
     # Try looking for the VulkanHeaders package directly
@@ -55,34 +56,22 @@ endif()
 
 add_library(vk-bootstrap-compiler-warnings INTERFACE)
 
-# Determine whether we're compiling with clang++
-string(FIND "${CMAKE_CXX_COMPILER}" "clang++" VK_BOOTSTRAP_COMPILER_CLANGPP)
-if(VK_BOOTSTRAP_COMPILER_CLANGPP GREATER -1)
-    set(VK_BOOTSTRAP_COMPILER_CLANGPP 1)
-else()
-    set(VK_BOOTSTRAP_COMPILER_CLANGPP 0)
+set(VK_BOOTSTRAP_COMPILER_FRONTEND ${CMAKE_CXX_COMPILER_FRONTEND_VARIANT})
+if(NOT VK_BOOTSTRAP_COMPILER_FRONTEND)
+    set(VK_BOOTSTRAP_COMPILER_FRONTEND "None")
 endif()
 
 if(NOT VK_BOOTSTRAP_DISABLE_WARNINGS)
-    target_compile_options(vk-bootstrap-compiler-warnings
-          INTERFACE
-          $<$<OR:$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>,${VK_BOOTSTRAP_COMPILER_CLANGPP}>:
-          -Wall
-          -Wextra
-          -Wconversion
-          -Wsign-conversion>
-          $<$<CXX_COMPILER_ID:MSVC>:
-          /W4>
-          )
-
-    if(VK_BOOTSTRAP_WERROR)
-        target_compile_options(vk-bootstrap-compiler-warnings
-            INTERFACE
-            $<$<OR:$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>,${VK_BOOTSTRAP_COMPILER_CLANGPP}>:
-            -pedantic-errors>
-            $<$<CXX_COMPILER_ID:MSVC>:
-            /WX>
-            )
+    if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|AppleClang" OR (CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND VK_BOOTSTRAP_COMPILER_FRONTEND MATCHES "GNU"))
+        target_compile_options(vk-bootstrap-compiler-warnings INTERFACE -Wall -Wextra -Wconversion -Wsign-conversion)
+        if(VK_BOOTSTRAP_WERROR)
+            target_compile_options(vk-bootstrap-compiler-warnings INTERFACE -pedantic-errors)
+        endif()
+    elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC" OR (CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND VK_BOOTSTRAP_COMPILER_FRONTEND MATCHES "MSVC"))
+        target_compile_options(vk-bootstrap-compiler-warnings INTERFACE /W4)
+        if(VK_BOOTSTRAP_WERROR)
+            target_compile_options(vk-bootstrap-compiler-warnings INTERFACE /WX)
+        endif()
     endif()
 endif()
 

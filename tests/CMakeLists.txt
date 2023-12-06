@@ -12,7 +12,14 @@ target_link_libraries(VulkanMock
         vk-bootstrap-compiler-warnings
 )
 target_compile_features(VulkanMock PUBLIC cxx_std_17)
-target_compile_definitions(VulkanMock PUBLIC VK_NO_PROTOTYPES)
+target_compile_definitions(VulkanMock PUBLIC VK_NO_PROTOTYPES COMPILING_DLL)
+if(WIN32)
+    if (CMAKE_CXX_COMPILER_ID MATCHES "MSVC" OR CMAKE_CXX_COMPILER_FRONTEND_VARIANT MATCHES "MSVC")
+        target_link_options(VulkanMock PRIVATE /DEF:${CMAKE_CURRENT_SOURCE_DIR}/vulkan_mock.def)
+    elseif (CMAKE_CXX_COMPILER_FRONTEND_VARIANT MATCHES "GNU")
+        target_link_options(VulkanMock PRIVATE -Wl,/DEF:${CMAKE_CURRENT_SOURCE_DIR}/vulkan_mock.def)
+    endif()
+endif()
 
 add_executable(vk-bootstrap-test
     vulkan_library_loader.hpp
@@ -35,6 +42,10 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     target_compile_options(vk-bootstrap-test PRIVATE -Wno-error=deprecated-declarations)
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
     target_compile_options(vk-bootstrap-test PRIVATE /wd4996)
+endif()
+
+if (WIN32 AND CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    target_compile_options(vk-bootstrap-compiler-warnings INTERFACE -Wno-microsoft-cast)
 endif()
 
 list(APPEND CMAKE_MODULE_PATH ${Catch2_SOURCE_DIR}/extras)

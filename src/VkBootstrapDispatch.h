@@ -229,8 +229,8 @@ struct InstanceDispatchTable {
 #if (defined(VK_KHR_get_display_properties2))
         fp_vkGetDisplayPlaneCapabilities2KHR = reinterpret_cast<PFN_vkGetDisplayPlaneCapabilities2KHR>(procAddr(instance, "vkGetDisplayPlaneCapabilities2KHR"));
 #endif
-#if (defined(VK_EXT_calibrated_timestamps))
-        fp_vkGetPhysicalDeviceCalibrateableTimeDomainsEXT = reinterpret_cast<PFN_vkGetPhysicalDeviceCalibrateableTimeDomainsEXT>(procAddr(instance, "vkGetPhysicalDeviceCalibrateableTimeDomainsEXT"));
+#if (defined(VK_KHR_calibrated_timestamps))
+        fp_vkGetPhysicalDeviceCalibrateableTimeDomainsKHR = reinterpret_cast<PFN_vkGetPhysicalDeviceCalibrateableTimeDomainsKHR>(procAddr(instance, "vkGetPhysicalDeviceCalibrateableTimeDomainsKHR"));
 #endif
 #if (defined(VK_EXT_debug_utils))
         fp_vkCreateDebugUtilsMessengerEXT = reinterpret_cast<PFN_vkCreateDebugUtilsMessengerEXT>(procAddr(instance, "vkCreateDebugUtilsMessengerEXT"));
@@ -641,9 +641,9 @@ struct InstanceDispatchTable {
         return fp_vkGetDisplayPlaneCapabilities2KHR(physicalDevice, pDisplayPlaneInfo, pCapabilities);
     }
 #endif
-#if (defined(VK_EXT_calibrated_timestamps))
-    VkResult getPhysicalDeviceCalibrateableTimeDomainsEXT(VkPhysicalDevice physicalDevice, uint32_t* pTimeDomainCount, VkTimeDomainEXT* pTimeDomains) const noexcept {
-        return fp_vkGetPhysicalDeviceCalibrateableTimeDomainsEXT(physicalDevice, pTimeDomainCount, pTimeDomains);
+#if (defined(VK_KHR_calibrated_timestamps))
+    VkResult getPhysicalDeviceCalibrateableTimeDomainsKHR(VkPhysicalDevice physicalDevice, uint32_t* pTimeDomainCount, VkTimeDomainEXT* pTimeDomains) const noexcept {
+        return fp_vkGetPhysicalDeviceCalibrateableTimeDomainsKHR(physicalDevice, pTimeDomainCount, pTimeDomains);
     }
 #endif
 #if (defined(VK_EXT_debug_utils))
@@ -1068,10 +1068,10 @@ struct InstanceDispatchTable {
 #else
     void * fp_vkGetDisplayPlaneCapabilities2KHR{};
 #endif
-#if (defined(VK_EXT_calibrated_timestamps))
-    PFN_vkGetPhysicalDeviceCalibrateableTimeDomainsEXT fp_vkGetPhysicalDeviceCalibrateableTimeDomainsEXT = nullptr;
+#if (defined(VK_KHR_calibrated_timestamps))
+    PFN_vkGetPhysicalDeviceCalibrateableTimeDomainsKHR fp_vkGetPhysicalDeviceCalibrateableTimeDomainsKHR = nullptr;
 #else
-    void * fp_vkGetPhysicalDeviceCalibrateableTimeDomainsEXT{};
+    void * fp_vkGetPhysicalDeviceCalibrateableTimeDomainsKHR{};
 #endif
 #if (defined(VK_EXT_debug_utils))
     PFN_vkCreateDebugUtilsMessengerEXT fp_vkCreateDebugUtilsMessengerEXT = nullptr;
@@ -1611,8 +1611,8 @@ struct DispatchTable {
 #if (defined(VK_AMD_display_native_hdr))
         fp_vkSetLocalDimmingAMD = reinterpret_cast<PFN_vkSetLocalDimmingAMD>(procAddr(device, "vkSetLocalDimmingAMD"));
 #endif
-#if (defined(VK_EXT_calibrated_timestamps))
-        fp_vkGetCalibratedTimestampsEXT = reinterpret_cast<PFN_vkGetCalibratedTimestampsEXT>(procAddr(device, "vkGetCalibratedTimestampsEXT"));
+#if (defined(VK_KHR_calibrated_timestamps))
+        fp_vkGetCalibratedTimestampsKHR = reinterpret_cast<PFN_vkGetCalibratedTimestampsKHR>(procAddr(device, "vkGetCalibratedTimestampsKHR"));
 #endif
 #if (defined(VK_EXT_debug_utils))
         fp_vkSetDebugUtilsObjectNameEXT = reinterpret_cast<PFN_vkSetDebugUtilsObjectNameEXT>(procAddr(device, "vkSetDebugUtilsObjectNameEXT"));
@@ -3319,9 +3319,9 @@ struct DispatchTable {
         fp_vkSetLocalDimmingAMD(device, swapChain, localDimmingEnable);
     }
 #endif
-#if (defined(VK_EXT_calibrated_timestamps))
-    VkResult getCalibratedTimestampsEXT(uint32_t timestampCount, const VkCalibratedTimestampInfoEXT* pTimestampInfos, uint64_t* pTimestamps, uint64_t* pMaxDeviation) const noexcept {
-        return fp_vkGetCalibratedTimestampsEXT(device, timestampCount, pTimestampInfos, pTimestamps, pMaxDeviation);
+#if (defined(VK_KHR_calibrated_timestamps))
+    VkResult getCalibratedTimestampsKHR(uint32_t timestampCount, const VkCalibratedTimestampInfoEXT* pTimestampInfos, uint64_t* pTimestamps, uint64_t* pMaxDeviation) const noexcept {
+        return fp_vkGetCalibratedTimestampsKHR(device, timestampCount, pTimestampInfos, pTimestamps, pMaxDeviation);
     }
 #endif
 #if (defined(VK_EXT_debug_utils))
@@ -5338,10 +5338,10 @@ struct DispatchTable {
 #else
     void * fp_vkSetLocalDimmingAMD{};
 #endif
-#if (defined(VK_EXT_calibrated_timestamps))
-    PFN_vkGetCalibratedTimestampsEXT fp_vkGetCalibratedTimestampsEXT = nullptr;
+#if (defined(VK_KHR_calibrated_timestamps))
+    PFN_vkGetCalibratedTimestampsKHR fp_vkGetCalibratedTimestampsKHR = nullptr;
 #else
-    void * fp_vkGetCalibratedTimestampsEXT{};
+    void * fp_vkGetCalibratedTimestampsKHR{};
 #endif
 #if (defined(VK_EXT_debug_utils))
     PFN_vkSetDebugUtilsObjectNameEXT fp_vkSetDebugUtilsObjectNameEXT = nullptr;

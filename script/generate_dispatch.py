@@ -160,9 +160,9 @@ for command_node in commands_node:
         aliases[command_node['@alias']] = command_node['@name']
 
 # Push the alias name as a device function if the alias exists in device commands
-for alias_name, alias in aliases.items():
-    if alias in commands:
-        commands[alias] = copy.deepcopy(commands[alias_name])
+for aliased_type, alias in aliases.items():
+    if aliased_type in commands:
+        commands[alias] = copy.deepcopy(commands[aliased_type])
         commands[alias]['is_alias'] = True
 
 # Add requirements for core PFN's

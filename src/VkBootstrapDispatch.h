@@ -1711,10 +1711,10 @@ struct DispatchTable {
 #if (defined(VK_EXT_discard_rectangles))
         fp_vkCmdSetDiscardRectangleEXT = reinterpret_cast<PFN_vkCmdSetDiscardRectangleEXT>(procAddr(device, "vkCmdSetDiscardRectangleEXT"));
 #endif
-#if (defined(VK_EXT_discard_rectangles))
+#if ((defined(VK_EXT_discard_rectangles))) && VK_HEADER_VERSION >= 241
         fp_vkCmdSetDiscardRectangleEnableEXT = reinterpret_cast<PFN_vkCmdSetDiscardRectangleEnableEXT>(procAddr(device, "vkCmdSetDiscardRectangleEnableEXT"));
 #endif
-#if (defined(VK_EXT_discard_rectangles))
+#if ((defined(VK_EXT_discard_rectangles))) && VK_HEADER_VERSION >= 241
         fp_vkCmdSetDiscardRectangleModeEXT = reinterpret_cast<PFN_vkCmdSetDiscardRectangleModeEXT>(procAddr(device, "vkCmdSetDiscardRectangleModeEXT"));
 #endif
 #if (defined(VK_EXT_sample_locations))
@@ -3574,12 +3574,12 @@ struct DispatchTable {
         fp_vkCmdSetDiscardRectangleEXT(commandBuffer, firstDiscardRectangle, discardRectangleCount, pDiscardRectangles);
     }
 #endif
-#if (defined(VK_EXT_discard_rectangles))
+#if ((defined(VK_EXT_discard_rectangles))) && VK_HEADER_VERSION >= 241
     void cmdSetDiscardRectangleEnableEXT(VkCommandBuffer commandBuffer, VkBool32 discardRectangleEnable) const noexcept {
         fp_vkCmdSetDiscardRectangleEnableEXT(commandBuffer, discardRectangleEnable);
     }
 #endif
-#if (defined(VK_EXT_discard_rectangles))
+#if ((defined(VK_EXT_discard_rectangles))) && VK_HEADER_VERSION >= 241
     void cmdSetDiscardRectangleModeEXT(VkCommandBuffer commandBuffer, VkDiscardRectangleModeEXT discardRectangleMode) const noexcept {
         fp_vkCmdSetDiscardRectangleModeEXT(commandBuffer, discardRectangleMode);
     }
@@ -5928,12 +5928,12 @@ struct DispatchTable {
 #else
     void * fp_vkCmdSetDiscardRectangleEXT{};
 #endif
-#if (defined(VK_EXT_discard_rectangles))
+#if ((defined(VK_EXT_discard_rectangles))) && VK_HEADER_VERSION >= 241
     PFN_vkCmdSetDiscardRectangleEnableEXT fp_vkCmdSetDiscardRectangleEnableEXT = nullptr;
 #else
     void * fp_vkCmdSetDiscardRectangleEnableEXT{};
 #endif
-#if (defined(VK_EXT_discard_rectangles))
+#if ((defined(VK_EXT_discard_rectangles))) && VK_HEADER_VERSION >= 241
     PFN_vkCmdSetDiscardRectangleModeEXT fp_vkCmdSetDiscardRectangleModeEXT = nullptr;
 #else
     void * fp_vkCmdSetDiscardRectangleModeEXT{};

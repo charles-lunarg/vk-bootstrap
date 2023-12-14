@@ -35,7 +35,16 @@ elseif(NOT TARGET Vulkan::Headers)
     if (NOT VulkanHeaders_FOUND)
         # Try looking using the CMake built in Vulkan support
         find_package(Vulkan QUIET)
-        if(NOT Vulkan_FOUND)
+
+        if(Vulkan_FOUND)
+            # Older CMake versions don't contain Vulkan::Headers - create it in that case
+            if (NOT TARGET Vulkan::Headers)
+                add_library(Vulkan-Headers INTERFACE)
+                add_library(Vulkan::Headers ALIAS Vulkan-Headers)
+                target_include_directories(Vulkan-Headers INTERFACE $<BUILD_INTERFACE:${Vulkan_INCLUDE_DIRS}>)
+                set(VK_BOOTSTRAP_INSTALL OFF)
+            endif()
+        else()
             # Lastly just grab Vulkan-Headers directly using FetchContent
             include(FetchContent)
             FetchContent_Declare(

@@ -102,6 +102,13 @@ commands = {}
 INSTANCE = 'instance'
 DEVICE = 'device'
 
+# No good way to detect incompatibilities with the macro defines and the actual functions. Just keep a list here
+HEADER_VERSION_WORKAROUNDS = {
+    'vkGetLatencyTimingsNV': '271', # Changed API parameters
+    'vkCmdSetDiscardRectangleEnableEXT': '241', # new function in older extension
+    'vkCmdSetDiscardRectangleModeEXT': '241', # new function in older extension
+}
+
 def get_macro_guard(reqs_collection, command_name):
     guard = ''
     count = len(reqs_collection)
@@ -121,8 +128,9 @@ def get_macro_guard(reqs_collection, command_name):
                     if count > 0:
                         guard += ' || '
         # API breaking change causes this function to fail compilation
-        if command_name == 'vkGetLatencyTimingsNV':
-            guard = f'({guard}) && VK_HEADER_VERSION >= 271'
+        for function, version in HEADER_VERSION_WORKAROUNDS.items():
+            if command_name == function:
+                guard = f'({guard}) && VK_HEADER_VERSION >= {version}'
     return guard
 
 

@@ -2590,6 +2590,24 @@ struct DispatchTable {
 #if (defined(VK_AMDX_shader_enqueue))
         fp_vkCmdDispatchGraphIndirectCountAMDX = reinterpret_cast<PFN_vkCmdDispatchGraphIndirectCountAMDX>(procAddr(device, "vkCmdDispatchGraphIndirectCountAMDX"));
 #endif
+#if (defined(VK_KHR_maintenance6))
+        fp_vkCmdBindDescriptorSets2KHR = reinterpret_cast<PFN_vkCmdBindDescriptorSets2KHR>(procAddr(device, "vkCmdBindDescriptorSets2KHR"));
+#endif
+#if (defined(VK_KHR_maintenance6))
+        fp_vkCmdPushConstants2KHR = reinterpret_cast<PFN_vkCmdPushConstants2KHR>(procAddr(device, "vkCmdPushConstants2KHR"));
+#endif
+#if (defined(VK_KHR_maintenance6))
+        fp_vkCmdPushDescriptorSet2KHR = reinterpret_cast<PFN_vkCmdPushDescriptorSet2KHR>(procAddr(device, "vkCmdPushDescriptorSet2KHR"));
+#endif
+#if (defined(VK_KHR_maintenance6))
+        fp_vkCmdPushDescriptorSetWithTemplate2KHR = reinterpret_cast<PFN_vkCmdPushDescriptorSetWithTemplate2KHR>(procAddr(device, "vkCmdPushDescriptorSetWithTemplate2KHR"));
+#endif
+#if (defined(VK_KHR_maintenance6))
+        fp_vkCmdSetDescriptorBufferOffsets2EXT = reinterpret_cast<PFN_vkCmdSetDescriptorBufferOffsets2EXT>(procAddr(device, "vkCmdSetDescriptorBufferOffsets2EXT"));
+#endif
+#if (defined(VK_KHR_maintenance6))
+        fp_vkCmdBindDescriptorBufferEmbeddedSamplers2EXT = reinterpret_cast<PFN_vkCmdBindDescriptorBufferEmbeddedSamplers2EXT>(procAddr(device, "vkCmdBindDescriptorBufferEmbeddedSamplers2EXT"));
+#endif
 #if (defined(VK_NV_low_latency2))
         fp_vkSetLatencySleepModeNV = reinterpret_cast<PFN_vkSetLatencySleepModeNV>(procAddr(device, "vkSetLatencySleepModeNV"));
 #endif
@@ -5039,6 +5057,36 @@ struct DispatchTable {
         fp_vkCmdDispatchGraphIndirectCountAMDX(commandBuffer, scratch, countInfo);
     }
 #endif
+#if (defined(VK_KHR_maintenance6))
+    void cmdBindDescriptorSets2KHR(VkCommandBuffer commandBuffer, const VkBindDescriptorSetsInfoKHR* pBindDescriptorSetsInfo) const noexcept {
+        fp_vkCmdBindDescriptorSets2KHR(commandBuffer, pBindDescriptorSetsInfo);
+    }
+#endif
+#if (defined(VK_KHR_maintenance6))
+    void cmdPushConstants2KHR(VkCommandBuffer commandBuffer, const VkPushConstantsInfoKHR* pPushConstantsInfo) const noexcept {
+        fp_vkCmdPushConstants2KHR(commandBuffer, pPushConstantsInfo);
+    }
+#endif
+#if (defined(VK_KHR_maintenance6))
+    void cmdPushDescriptorSet2KHR(VkCommandBuffer commandBuffer, const VkPushDescriptorSetInfoKHR* pPushDescriptorSetInfo) const noexcept {
+        fp_vkCmdPushDescriptorSet2KHR(commandBuffer, pPushDescriptorSetInfo);
+    }
+#endif
+#if (defined(VK_KHR_maintenance6))
+    void cmdPushDescriptorSetWithTemplate2KHR(VkCommandBuffer commandBuffer, const VkPushDescriptorSetWithTemplateInfoKHR* pPushDescriptorSetWithTemplateInfo) const noexcept {
+        fp_vkCmdPushDescriptorSetWithTemplate2KHR(commandBuffer, pPushDescriptorSetWithTemplateInfo);
+    }
+#endif
+#if (defined(VK_KHR_maintenance6))
+    void cmdSetDescriptorBufferOffsets2EXT(VkCommandBuffer commandBuffer, const VkSetDescriptorBufferOffsetsInfoEXT* pSetDescriptorBufferOffsetsInfo) const noexcept {
+        fp_vkCmdSetDescriptorBufferOffsets2EXT(commandBuffer, pSetDescriptorBufferOffsetsInfo);
+    }
+#endif
+#if (defined(VK_KHR_maintenance6))
+    void cmdBindDescriptorBufferEmbeddedSamplers2EXT(VkCommandBuffer commandBuffer, const VkBindDescriptorBufferEmbeddedSamplersInfoEXT* pBindDescriptorBufferEmbeddedSamplersInfo) const noexcept {
+        fp_vkCmdBindDescriptorBufferEmbeddedSamplers2EXT(commandBuffer, pBindDescriptorBufferEmbeddedSamplersInfo);
+    }
+#endif
 #if (defined(VK_NV_low_latency2))
     VkResult setLatencySleepModeNV(VkSwapchainKHR swapchain, const VkLatencySleepModeInfoNV* pSleepModeInfo) const noexcept {
         return fp_vkSetLatencySleepModeNV(device, swapchain, pSleepModeInfo);
@@ -7392,6 +7440,36 @@ struct DispatchTable {
     PFN_vkCmdDispatchGraphIndirectCountAMDX fp_vkCmdDispatchGraphIndirectCountAMDX = nullptr;
 #else
     void * fp_vkCmdDispatchGraphIndirectCountAMDX{};
+#endif
+#if (defined(VK_KHR_maintenance6))
+    PFN_vkCmdBindDescriptorSets2KHR fp_vkCmdBindDescriptorSets2KHR = nullptr;
+#else
+    void * fp_vkCmdBindDescriptorSets2KHR{};
+#endif
+#if (defined(VK_KHR_maintenance6))
+    PFN_vkCmdPushConstants2KHR fp_vkCmdPushConstants2KHR = nullptr;
+#else
+    void * fp_vkCmdPushConstants2KHR{};
+#endif
+#if (defined(VK_KHR_maintenance6))
+    PFN_vkCmdPushDescriptorSet2KHR fp_vkCmdPushDescriptorSet2KHR = nullptr;
+#else
+    void * fp_vkCmdPushDescriptorSet2KHR{};
+#endif
+#if (defined(VK_KHR_maintenance6))
+    PFN_vkCmdPushDescriptorSetWithTemplate2KHR fp_vkCmdPushDescriptorSetWithTemplate2KHR = nullptr;
+#else
+    void * fp_vkCmdPushDescriptorSetWithTemplate2KHR{};
+#endif
+#if (defined(VK_KHR_maintenance6))
+    PFN_vkCmdSetDescriptorBufferOffsets2EXT fp_vkCmdSetDescriptorBufferOffsets2EXT = nullptr;
+#else
+    void * fp_vkCmdSetDescriptorBufferOffsets2EXT{};
+#endif
+#if (defined(VK_KHR_maintenance6))
+    PFN_vkCmdBindDescriptorBufferEmbeddedSamplers2EXT fp_vkCmdBindDescriptorBufferEmbeddedSamplers2EXT = nullptr;
+#else
+    void * fp_vkCmdBindDescriptorBufferEmbeddedSamplers2EXT{};
 #endif
 #if (defined(VK_NV_low_latency2))
     PFN_vkSetLatencySleepModeNV fp_vkSetLatencySleepModeNV = nullptr;

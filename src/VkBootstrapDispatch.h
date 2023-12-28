@@ -1873,7 +1873,7 @@ struct DispatchTable {
 #if (defined(VK_NV_scissor_exclusive))
         fp_vkCmdSetExclusiveScissorNV = reinterpret_cast<PFN_vkCmdSetExclusiveScissorNV>(procAddr(device, "vkCmdSetExclusiveScissorNV"));
 #endif
-#if (defined(VK_NV_scissor_exclusive))
+#if ((defined(VK_NV_scissor_exclusive))) && VK_HEADER_VERSION >= 241
         fp_vkCmdSetExclusiveScissorEnableNV = reinterpret_cast<PFN_vkCmdSetExclusiveScissorEnableNV>(procAddr(device, "vkCmdSetExclusiveScissorEnableNV"));
 #endif
 #if (defined(VK_NV_shading_rate_image))
@@ -3862,7 +3862,7 @@ struct DispatchTable {
         fp_vkCmdSetExclusiveScissorNV(commandBuffer, firstExclusiveScissor, exclusiveScissorCount, pExclusiveScissors);
     }
 #endif
-#if (defined(VK_NV_scissor_exclusive))
+#if ((defined(VK_NV_scissor_exclusive))) && VK_HEADER_VERSION >= 241
     void cmdSetExclusiveScissorEnableNV(VkCommandBuffer commandBuffer, uint32_t firstExclusiveScissor, uint32_t exclusiveScissorCount, const VkBool32* pExclusiveScissorEnables) const noexcept {
         fp_vkCmdSetExclusiveScissorEnableNV(commandBuffer, firstExclusiveScissor, exclusiveScissorCount, pExclusiveScissorEnables);
     }
@@ -6246,7 +6246,7 @@ struct DispatchTable {
 #else
     void * fp_vkCmdSetExclusiveScissorNV{};
 #endif
-#if (defined(VK_NV_scissor_exclusive))
+#if ((defined(VK_NV_scissor_exclusive))) && VK_HEADER_VERSION >= 241
     PFN_vkCmdSetExclusiveScissorEnableNV fp_vkCmdSetExclusiveScissorEnableNV = nullptr;
 #else
     void * fp_vkCmdSetExclusiveScissorEnableNV{};

@@ -107,6 +107,7 @@ HEADER_VERSION_WORKAROUNDS = {
     'vkGetLatencyTimingsNV': '271', # Changed API parameters
     'vkCmdSetDiscardRectangleEnableEXT': '241', # new function in older extension
     'vkCmdSetDiscardRectangleModeEXT': '241', # new function in older extension
+    'vkCmdSetExclusiveScissorEnableNV': '241', # new function in older extension
 }
 
 def get_macro_guard(reqs_collection, command_name):

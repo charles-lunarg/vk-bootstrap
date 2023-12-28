@@ -489,7 +489,7 @@ bool SystemInfo::is_layer_available(const char* layer_name) const {
     if (!layer_name) return false;
     return detail::check_layer_supported(available_layers, layer_name);
 }
-void destroy_surface(Instance instance, VkSurfaceKHR surface) {
+void destroy_surface(Instance const& instance, VkSurfaceKHR surface) {
     if (instance.instance != VK_NULL_HANDLE && surface != VK_NULL_HANDLE) {
         detail::vulkan_functions().fp_vkDestroySurfaceKHR(instance.instance, surface, instance.allocation_callbacks);
     }
@@ -499,7 +499,7 @@ void destroy_surface(VkInstance instance, VkSurfaceKHR surface, VkAllocationCall
         detail::vulkan_functions().fp_vkDestroySurfaceKHR(instance, surface, callbacks);
     }
 }
-void destroy_instance(Instance instance) {
+void destroy_instance(Instance const& instance) {
     if (instance.instance != VK_NULL_HANDLE) {
         if (instance.debug_messenger != VK_NULL_HANDLE)
             destroy_debug_utils_messenger(instance.instance, instance.debug_messenger, instance.allocation_callbacks);
@@ -1471,7 +1471,7 @@ Device::operator VkDevice() const { return this->device; }
 CustomQueueDescription::CustomQueueDescription(uint32_t index, std::vector<float> priorities)
 : index(index), priorities(priorities) {}
 
-void destroy_device(Device device) {
+void destroy_device(Device const& device) {
     device.internal_table.fp_vkDestroyDevice(device.device, device.allocation_callbacks);
 }
 

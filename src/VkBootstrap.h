@@ -301,9 +301,9 @@ struct Instance {
     friend class PhysicalDeviceSelector;
 };
 
-void destroy_surface(Instance instance, VkSurfaceKHR surface); // release surface handle
+void destroy_surface(Instance const& instance, VkSurfaceKHR surface); // release surface handle
 void destroy_surface(VkInstance instance, VkSurfaceKHR surface, VkAllocationCallbacks* callbacks = nullptr); // release surface handle
-void destroy_instance(Instance instance); // release instance resources
+void destroy_instance(Instance const& instance); // release instance resources
 
 /* If headless mode is false, by default vk-bootstrap use the following logic to enable the windowing extensions
 
@@ -730,8 +730,9 @@ struct Device {
         PFN_vkDestroyDevice fp_vkDestroyDevice = nullptr;
     } internal_table;
     friend class DeviceBuilder;
-    friend void destroy_device(Device device);
+    friend void destroy_device(Device const& device);
 };
+
 
 // For advanced device queue setup
 struct CustomQueueDescription {
@@ -740,7 +741,7 @@ struct CustomQueueDescription {
     std::vector<float> priorities;
 };
 
-void destroy_device(Device device);
+void destroy_device(Device const& device);
 
 class DeviceBuilder {
     public:

@@ -332,6 +332,9 @@ def create_dispatch_table(dispatch_type):
                 elif text == 'struct**':
                     front_mods = 'struct '
                     back_mods = '** '
+                elif text == 'const':
+                    front_mods = 'const '
+                    back_mods = ' '
                 elif text == 'const*':
                     front_mods = 'const '
                     back_mods = '* '
@@ -344,6 +347,9 @@ def create_dispatch_table(dispatch_type):
                 elif text == 'conststruct*':
                     front_mods = 'const struct '
                     back_mods = '* '
+                else:
+                    print("Unhandled Text Case!")
+                    assert(False)
             if i == args_count and (dispatch_type == INSTANCE and arg_type == 'VkInstance') or (dispatch_type == DEVICE and arg_type == 'VkDevice'):
                 args_names += arg_name
                 if i > 0:

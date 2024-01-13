@@ -1316,7 +1316,7 @@ PhysicalDeviceSelector& PhysicalDeviceSelector::add_desired_extension(const char
     criteria.desired_extensions.push_back(extension);
     return *this;
 }
-PhysicalDeviceSelector& PhysicalDeviceSelector::add_desired_extensions(std::vector<const char*> extensions) {
+PhysicalDeviceSelector& PhysicalDeviceSelector::add_desired_extensions(const std::vector<const char*>& extensions) {
     for (const auto& ext : extensions) {
         criteria.desired_extensions.push_back(ext);
     }
@@ -1469,22 +1469,22 @@ DispatchTable Device::make_table() const { return { device, fp_vkGetDeviceProcAd
 Device::operator VkDevice() const { return this->device; }
 
 CustomQueueDescription::CustomQueueDescription(uint32_t index, std::vector<float> priorities)
-: index(index), priorities(priorities) {}
+: index(index), priorities(std::move(priorities)) {}
 
 void destroy_device(Device const& device) {
     device.internal_table.fp_vkDestroyDevice(device.device, device.allocation_callbacks);
 }
 
-DeviceBuilder::DeviceBuilder(PhysicalDevice phys_device) { physical_device = phys_device; }
+DeviceBuilder::DeviceBuilder(PhysicalDevice phys_device) { physical_device = std::move(phys_device); }
 
 Result<Device> DeviceBuilder::build() const {
 
     std::vector<CustomQueueDescription> queue_descriptions;
     queue_descriptions.insert(queue_descriptions.end(), info.queue_descriptions.begin(), info.queue_descriptions.end());
 
-    if (queue_descriptions.size() == 0) {
+    if (queue_descriptions.empty()) {
         for (uint32_t i = 0; i < physical_device.queue_families.size(); i++) {
-            queue_descriptions.push_back(CustomQueueDescription{ i, std::vector<float>{ 1.0f } });
+            queue_descriptions.emplace_back(i, std::vector<float>{ 1.0f });
         }
     }
 
@@ -1516,7 +1516,7 @@ Result<Device> DeviceBuilder::build() const {
         }
     }
 
-    if (user_defined_phys_dev_features_2 && physical_device.extended_features_chain.size() > 0) {
+    if (user_defined_phys_dev_features_2 && !physical_device.extended_features_chain.empty()) {
         return { DeviceError::VkPhysicalDeviceFeatures2_in_pNext_chain_while_using_add_required_extension_features };
     }
 
@@ -1574,7 +1574,7 @@ Result<Device> DeviceBuilder::build() const {
     return device;
 }
 DeviceBuilder& DeviceBuilder::custom_queue_setup(std::vector<CustomQueueDescription> queue_descriptions) {
-    info.queue_descriptions = queue_descriptions;
+    info.queue_descriptions = std::move(queue_descriptions);
     return *this;
 }
 DeviceBuilder& DeviceBuilder::set_allocation_callbacks(VkAllocationCallbacks* callbacks) {
@@ -1885,7 +1885,7 @@ Result<std::vector<VkImageView>> Swapchain::get_image_views() { return get_image
 Result<std::vector<VkImageView>> Swapchain::get_image_views(const void* pNext) {
     const auto swapchain_images_ret = get_images();
     if (!swapchain_images_ret) return swapchain_images_ret.error();
-    const auto swapchain_images = swapchain_images_ret.value();
+    const auto& swapchain_images = swapchain_images_ret.value();
 
     bool already_contains_image_view_usage = false;
     while (pNext) {

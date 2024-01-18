@@ -121,6 +121,14 @@ TEST_CASE("Instance with surface", "[VkBootstrap.bootstrap]") {
             REQUIRE(phys_dev_ret->enable_extension_if_present(VK_EXT_ROBUSTNESS_2_EXTENSION_NAME));
             REQUIRE(!phys_dev_ret->enable_extension_if_present(VK_KHR_16BIT_STORAGE_EXTENSION_NAME));
 
+            const std::vector<const char*> extension_set_1 = { VK_KHR_DRIVER_PROPERTIES_EXTENSION_NAME, 
+                VK_EXT_ROBUSTNESS_2_EXTENSION_NAME };
+            const std::vector<const char*> extension_set_2 = { VK_KHR_16BIT_STORAGE_EXTENSION_NAME, 
+                VK_KHR_DRIVER_PROPERTIES_EXTENSION_NAME };
+
+            REQUIRE(phys_dev_ret->enable_extensions_if_present(extension_set_1));
+            REQUIRE(!phys_dev_ret->enable_extensions_if_present(extension_set_2));
+
             auto device_ret = vkb::DeviceBuilder(phys_dev_ret.value()).build();
             REQUIRE(device_ret.has_value());
             vkb::destroy_device(device_ret.value());

@@ -1399,6 +1399,17 @@ bool PhysicalDevice::enable_extension_if_present(const char* extension) {
     }
     return false;
 }
+bool PhysicalDevice::enable_extensions_if_present(const std::vector<const char*>& extensions) { 
+    for (const auto extension : extensions) {
+        auto it = std::find_if(std::begin(available_extensions),
+            std::end(available_extensions),
+            [extension](std::string const& ext_name) { return ext_name == extension; });
+        if (it == std::end(available_extensions)) return false;
+    }
+    for (const auto extension : extensions)
+        extensions_to_enable.push_back(extension);
+    return true;
+}
 
 PhysicalDevice::operator VkPhysicalDevice() const { return this->physical_device; }
 

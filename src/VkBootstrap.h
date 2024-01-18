@@ -509,6 +509,10 @@ struct PhysicalDevice {
     // Returns true the extension is present.
     bool enable_extension_if_present(const char* extension);
 
+    // If all the given extensions are present, make all the extensions be enabled on the device.
+    // Returns true if all the extensions are present.
+    bool enable_extensions_if_present(const std::vector<const char*>& extensions);
+
     // A conversion function which allows this PhysicalDevice to be used
     // in places where VkPhysicalDevice would have been used.
     operator VkPhysicalDevice() const;

@@ -2056,8 +2056,8 @@ struct DispatchTable {
 #if (defined(VK_KHR_pipeline_executable_properties))
         fp_vkGetPipelineExecutableInternalRepresentationsKHR = reinterpret_cast<PFN_vkGetPipelineExecutableInternalRepresentationsKHR>(procAddr(device, "vkGetPipelineExecutableInternalRepresentationsKHR"));
 #endif
-#if (defined(VK_EXT_line_rasterization))
-        fp_vkCmdSetLineStippleEXT = reinterpret_cast<PFN_vkCmdSetLineStippleEXT>(procAddr(device, "vkCmdSetLineStippleEXT"));
+#if (defined(VK_KHR_line_rasterization))
+        fp_vkCmdSetLineStippleKHR = reinterpret_cast<PFN_vkCmdSetLineStippleKHR>(procAddr(device, "vkCmdSetLineStippleKHR"));
 #endif
 #if (defined(VKSC_VERSION_1_0))
         fp_vkGetFaultData = reinterpret_cast<PFN_vkGetFaultData>(procAddr(device, "vkGetFaultData"));
@@ -2623,6 +2623,12 @@ struct DispatchTable {
 #if (defined(VK_NV_low_latency2))
         fp_vkQueueNotifyOutOfBandNV = reinterpret_cast<PFN_vkQueueNotifyOutOfBandNV>(procAddr(device, "vkQueueNotifyOutOfBandNV"));
 #endif
+#if (defined(VK_KHR_dynamic_rendering_local_read))
+        fp_vkCmdSetRenderingAttachmentLocationsKHR = reinterpret_cast<PFN_vkCmdSetRenderingAttachmentLocationsKHR>(procAddr(device, "vkCmdSetRenderingAttachmentLocationsKHR"));
+#endif
+#if (defined(VK_KHR_dynamic_rendering_local_read))
+        fp_vkCmdSetRenderingInputAttachmentIndicesKHR = reinterpret_cast<PFN_vkCmdSetRenderingInputAttachmentIndicesKHR>(procAddr(device, "vkCmdSetRenderingInputAttachmentIndicesKHR"));
+#endif
 #if (defined(VK_EXT_host_query_reset))
         fp_vkResetQueryPoolEXT = reinterpret_cast<PFN_vkResetQueryPoolEXT>(procAddr(device, "vkResetQueryPoolEXT"));
 #endif
@@ -2721,6 +2727,9 @@ struct DispatchTable {
 #endif
 #if (defined(VK_KHR_buffer_device_address))
         fp_vkGetDeviceMemoryOpaqueCaptureAddressKHR = reinterpret_cast<PFN_vkGetDeviceMemoryOpaqueCaptureAddressKHR>(procAddr(device, "vkGetDeviceMemoryOpaqueCaptureAddressKHR"));
+#endif
+#if (defined(VK_EXT_line_rasterization))
+        fp_vkCmdSetLineStippleEXT = reinterpret_cast<PFN_vkCmdSetLineStippleEXT>(procAddr(device, "vkCmdSetLineStippleEXT"));
 #endif
 #if (defined(VK_EXT_extended_dynamic_state)) || (defined(VK_EXT_shader_object))
         fp_vkCmdSetCullModeEXT = reinterpret_cast<PFN_vkCmdSetCullModeEXT>(procAddr(device, "vkCmdSetCullModeEXT"));
@@ -4167,9 +4176,9 @@ struct DispatchTable {
         return fp_vkGetPipelineExecutableInternalRepresentationsKHR(device, pExecutableInfo, pInternalRepresentationCount, pInternalRepresentations);
     }
 #endif
-#if (defined(VK_EXT_line_rasterization))
-    void cmdSetLineStippleEXT(VkCommandBuffer commandBuffer, uint32_t lineStippleFactor, uint16_t lineStipplePattern) const noexcept {
-        fp_vkCmdSetLineStippleEXT(commandBuffer, lineStippleFactor, lineStipplePattern);
+#if (defined(VK_KHR_line_rasterization))
+    void cmdSetLineStippleKHR(VkCommandBuffer commandBuffer, uint32_t lineStippleFactor, uint16_t lineStipplePattern) const noexcept {
+        fp_vkCmdSetLineStippleKHR(commandBuffer, lineStippleFactor, lineStipplePattern);
     }
 #endif
 #if (defined(VKSC_VERSION_1_0))
@@ -5112,6 +5121,16 @@ struct DispatchTable {
         fp_vkQueueNotifyOutOfBandNV(queue, pQueueTypeInfo);
     }
 #endif
+#if (defined(VK_KHR_dynamic_rendering_local_read))
+    void cmdSetRenderingAttachmentLocationsKHR(VkCommandBuffer commandBuffer, const VkRenderingAttachmentLocationInfoKHR* pLocationInfo) const noexcept {
+        fp_vkCmdSetRenderingAttachmentLocationsKHR(commandBuffer, pLocationInfo);
+    }
+#endif
+#if (defined(VK_KHR_dynamic_rendering_local_read))
+    void cmdSetRenderingInputAttachmentIndicesKHR(VkCommandBuffer commandBuffer, const VkRenderingInputAttachmentIndexInfoKHR* pLocationInfo) const noexcept {
+        fp_vkCmdSetRenderingInputAttachmentIndicesKHR(commandBuffer, pLocationInfo);
+    }
+#endif
 #if (defined(VK_EXT_host_query_reset))
     void resetQueryPoolEXT(VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount) const noexcept {
         fp_vkResetQueryPoolEXT(device, queryPool, firstQuery, queryCount);
@@ -5275,6 +5294,11 @@ struct DispatchTable {
 #if (defined(VK_KHR_buffer_device_address))
     uint64_t getDeviceMemoryOpaqueCaptureAddressKHR(const VkDeviceMemoryOpaqueCaptureAddressInfoKHR* pInfo) const noexcept {
         return fp_vkGetDeviceMemoryOpaqueCaptureAddressKHR(device, pInfo);
+    }
+#endif
+#if (defined(VK_EXT_line_rasterization))
+    void cmdSetLineStippleEXT(VkCommandBuffer commandBuffer, uint32_t lineStippleFactor, uint16_t lineStipplePattern) const noexcept {
+        fp_vkCmdSetLineStippleEXT(commandBuffer, lineStippleFactor, lineStipplePattern);
     }
 #endif
 #if (defined(VK_EXT_extended_dynamic_state)) || (defined(VK_EXT_shader_object))
@@ -6551,10 +6575,10 @@ struct DispatchTable {
 #else
     void * fp_vkGetPipelineExecutableInternalRepresentationsKHR{};
 #endif
-#if (defined(VK_EXT_line_rasterization))
-    PFN_vkCmdSetLineStippleEXT fp_vkCmdSetLineStippleEXT = nullptr;
+#if (defined(VK_KHR_line_rasterization))
+    PFN_vkCmdSetLineStippleKHR fp_vkCmdSetLineStippleKHR = nullptr;
 #else
-    void * fp_vkCmdSetLineStippleEXT{};
+    void * fp_vkCmdSetLineStippleKHR{};
 #endif
 #if (defined(VKSC_VERSION_1_0))
     PFN_vkGetFaultData fp_vkGetFaultData = nullptr;
@@ -7496,6 +7520,16 @@ struct DispatchTable {
 #else
     void * fp_vkQueueNotifyOutOfBandNV{};
 #endif
+#if (defined(VK_KHR_dynamic_rendering_local_read))
+    PFN_vkCmdSetRenderingAttachmentLocationsKHR fp_vkCmdSetRenderingAttachmentLocationsKHR = nullptr;
+#else
+    void * fp_vkCmdSetRenderingAttachmentLocationsKHR{};
+#endif
+#if (defined(VK_KHR_dynamic_rendering_local_read))
+    PFN_vkCmdSetRenderingInputAttachmentIndicesKHR fp_vkCmdSetRenderingInputAttachmentIndicesKHR = nullptr;
+#else
+    void * fp_vkCmdSetRenderingInputAttachmentIndicesKHR{};
+#endif
 #if (defined(VK_EXT_host_query_reset))
     PFN_vkResetQueryPoolEXT fp_vkResetQueryPoolEXT = nullptr;
 #else
@@ -7660,6 +7694,11 @@ struct DispatchTable {
     PFN_vkGetDeviceMemoryOpaqueCaptureAddressKHR fp_vkGetDeviceMemoryOpaqueCaptureAddressKHR = nullptr;
 #else
     void * fp_vkGetDeviceMemoryOpaqueCaptureAddressKHR{};
+#endif
+#if (defined(VK_EXT_line_rasterization))
+    PFN_vkCmdSetLineStippleEXT fp_vkCmdSetLineStippleEXT = nullptr;
+#else
+    void * fp_vkCmdSetLineStippleEXT{};
 #endif
 #if (defined(VK_EXT_extended_dynamic_state)) || (defined(VK_EXT_shader_object))
     PFN_vkCmdSetCullModeEXT fp_vkCmdSetCullModeEXT = nullptr;

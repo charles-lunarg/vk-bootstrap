@@ -130,7 +130,7 @@ template <typename T> class Result {
 	const T&  value () const&    noexcept { assert (m_init); return m_value; }
 	T&        value () &         noexcept { assert (m_init); return m_value; }
 	const T&& value () const&&   noexcept { assert (m_init); return std::move (m_value); }
-	T&&       value () &&        noexcept { assert (m_init); return std::move (m_value); }
+	T         value () &&        noexcept { assert (m_init); return std::move (m_value); }
 
     // std::error_code associated with the error
     std::error_code error() const { assert (!m_init); return m_error.type; }

@@ -1,6 +1,6 @@
 # Getting Started
 
-`vk-bootstrap` reduces the complexity of setting up a vulkan application by simplifying the three initial steps; instance creation, Physical device selection, and device creation. 
+`vk-bootstrap` reduces the complexity of setting up a vulkan application by simplifying the three initial steps; instance creation, Physical device selection, and device creation.
 
 ## Instance Creation
 
@@ -16,17 +16,17 @@ Because creating an instance may fail, the builder returns an 'Result' type. Thi
 if (!instance_builder_return) {
     std::cerr << "Failed to create Vulkan instance. Error: " << instance_builder_return.error().message() << "\n";
     return -1;
-} 
+}
 ```
-Once any possible errors have been dealt with, we can pull the `vkb::Instance` struct out of the `Result`. 
+Once any possible errors have been dealt with, we can pull the `vkb::Instance` struct out of the `Result`.
 ```cpp
 vkb::Instance vkb_instance = instance_builder_return.value();
 ```
 This is enough to create a usable `VkInstance` handle but many will want to customize it a bit. To configure instance creation, simply call the member functions on the `vkb::InstanceBuilder` object before `build()` is called.
 
-The most common customization to instance creation is enabling the "Validation Layers", an invaluable tool for any vulkan application developer. 
+The most common customization to instance creation is enabling the "Validation Layers", an invaluable tool for any vulkan application developer.
 ```cpp
-instance_builder.request_validation_layers ();
+instance_builder.request_validation_layers();
 ```
 The other common customization point is setting up the `Debug Messenger Callback`, the mechanism in which an application can control what and where the "Validation Layers" log its output.
 ```cpp
@@ -34,7 +34,7 @@ instance_builder.set_debug_callback (
     [] (VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
 	    VkDebugUtilsMessageTypeFlagsEXT messageType,
 	    const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
-	    void *pUserData) 
+	    void *pUserData)
         -> VkBool32 {
 			auto severity = vkb::to_string_message_severity (messageSeverity);
 			auto type = vkb::to_string_message_type (messageType);
@@ -49,7 +49,7 @@ instance_builder.use_default_debug_messenger();
 ```
 Configuration can be chained together and done inline with building, like so.
 ```cpp
-auto inst_builder_ret = instance_builder 
+auto inst_builder_ret = instance_builder
         .set_app_name ("Awesome Vulkan Application")
         .set_engine_name("Excellent Game Engine")
         .require_api_version(1,0,0)
@@ -83,9 +83,9 @@ CustomVulkanWrapper custom_vk_class;
 custom_vk_class.instance = vkb_instance.instance;
 ```
 
-When the application is finished with the vulkan, call `vkb::destroy_instance()` to dispose of the instance and associated data. 
+When the application is finished with the vulkan, call `vkb::destroy_instance()` to dispose of the instance and associated data.
 ```cpp
-// cleanup 
+// cleanup
 vkb::destroy_instance(vkb_instance);
 ```
 ### Instance Creation Summary
@@ -98,7 +98,7 @@ auto instance_builder_return = instance_builder
         .build ();
 if (!instance_builder_return) {
     // Handle error
-} 
+}
 vkb::Instance vkb_instance = instance_builder_return.value ();
 
 // at program end
@@ -106,11 +106,11 @@ vkb::destroy_instance(vkb_instance);
 ```
 ## Surface Creation
 
-Presenting images to the screen Vulkan requires creating a surface, encapsulated in a `VkSurfaceKHR` handle. Creating a surface is the responsibility of the windowing system, thus is out of scope for `vk-bootstrap`. However, `vk-bootstrap` does try to make the process as painless as possible by automatically enabling the correct windowing extensions in `VkInstance` creation. 
+Presenting images to the screen Vulkan requires creating a surface, encapsulated in a `VkSurfaceKHR` handle. Creating a surface is the responsibility of the windowing system, thus is out of scope for `vk-bootstrap`. However, `vk-bootstrap` does try to make the process as painless as possible by automatically enabling the correct windowing extensions in `VkInstance` creation.
 
 Windowing libraries which support Vulkan usually provide a way of getting the `VkSurfaceKHR` handle for the window. These methods require a valid Vulkan instance, thus must be done after instance creation.
 
-Examples for GLFW and SDL2 are listed below. 
+Examples for GLFW and SDL2 are listed below.
 ```cpp
 vkb::Instance vkb_instance; //valid vkb::Instance
 VkSurfaceKHR surface = nullptr;
@@ -134,7 +134,7 @@ Creating a `vkb::PhysicalDeviceSelector` requires a valid `vkb::Instance` to con
 
 It follows the same pattern laid out by `vkb::InstanceBuilder`.
 ```cpp
-vkb::PhysicalDeviceSelector phys_device_selector (vkb_instance); 
+vkb::PhysicalDeviceSelector phys_device_selector (vkb_instance);
 auto physical_device_selector_return = phys_device_selector
         .set_surface(surface_handle)
         .select ();
@@ -149,21 +149,19 @@ By default, this will prefer a discrete GPU.
 
 No cleanup is required for `vkb::PhysicalDevice`.
 
-The `vkb::PhysicalDeviceSelector` will look for the first device in the list that satisfied all the specified criteria, and if none is found, will return the first device that partially satisfies the criteria. 
+The `vkb::PhysicalDeviceSelector` will look for the first device in the list that satisfied all the specified criteria, and if none is found, will return the first device that partially satisfies the criteria.
 
-The various "require" and "desire" pairs of functions indicate to `vk-bootstrap` what features and capabilities are necessary for an application and what are simply preferred. A "require" function will fail any `VkPhysicalDevice` that doesn't satisfy the constraint, while any criteria that doesn't satisfy the "desire" functions will make the `VkPhysicalDevice` only 'partially satisfy'. 
+The various "require" functions indicate to `vk-bootstrap` what features and capabilities are necessary for an application. A "require" function will fail any `VkPhysicalDevice` that doesn't satisfy the constraint.
 
 ```c
 // Application cannot function without this extension
 phys_device_selector.add_required_extension("VK_KHR_timeline_semaphore");
 
-// Application can deal with the lack of this extension
-phys_device_selector.add_desired_extension("VK_KHR_imageless_framebuffer");
 ```
 
-Note: 
+Note:
 
-Because `vk-bootstrap` does not manage creating a `VkSurfaceKHR` handle, it is explicitly passed into the `vkb::PhysicalDeviceSelector` for proper querying of surface support details. Unless the `vkb::InstanceBuilder::set_headless()` function was called, the physical device selector will emit `no_surface_provided` error. If an application does intend to present but cannot create a `VkSurfaceKHR` handle before physical device selection, use `defer_surface_initialization()` to disable the `no_surface_provided` error. 
+Because `vk-bootstrap` does not manage creating a `VkSurfaceKHR` handle, it is explicitly passed into the `vkb::PhysicalDeviceSelector` for proper querying of surface support details. Unless the `vkb::InstanceBuilder::set_headless()` function was called, the physical device selector will emit `no_surface_provided` error. If an application does intend to present but cannot create a `VkSurfaceKHR` handle before physical device selection, use `defer_surface_initialization()` to disable the `no_surface_provided` error.
 
 ## Device Creation
 
@@ -198,17 +196,30 @@ vkb::destroy_device(vkb_device);
 
 By default, `vkb::DeviceBuilder` will enable one queue from each queue family available on the `VkPhysicalDevice`. This is done because in practice, most use cases only need a single queue from each family.
 
-To get a `VkQueue` or the index of a `VkQueue`, use the `get_queue(QueueType type)` and `get_queue_index(QueueType type)` functions of `vkb::Device`. These will return the appropriate `VkQueue` or `uint32_t` if they exist and were enabled, else they will return an error.
+To get a `VkQueue` and the index of a `VkQueue`, use the `get_preferred_queue_and_index(VkQueueFlags flags)` functions of `vkb::Device`. These will return the appropriate `VkQueue` handle and `uint32_t` index stored in a `vkb::QueueAndIndex` struct if they exist and were enabled, else they will return an error.
 
 ```cpp
-auto queue_ret = vkb_device.get_queue (vkb::QueueType::graphics);
+auto queue_ret = vkb_device.get_preferred_queue_and_index (VK_QUEUE_GRAPHICS_BIT);
 if (!queue_ret) {
     // handle error
 }
 graphics_queue = queue_ret.value ();
 ```
 
-Queue families represent a set of queues with similar operations, such as graphics, transfer, and compute. Because not all Vulkan hardware has queue families for each operation category, an application should be able to handle the presence or lack of certain queue families. For this reason the `get_dedicated_queue`  and `get_dedicated_queue_index` functions of `vkb::Device` exist to allow applications to easily know if there is a queue dedicated to a particular operation, such as compute or transfer operations.
+To query a queue capable of multiple operations, use multiple `VkQueueFlags` combined with bitwise-or to look for a queue that supports all specified flags, if such a queue exists.
+
+```cpp
+vkb_device.get_preferred_queue_and_index(VK_QUEUE_GRAPHICS_BIT | VK_QUEUE_COMPUTE_BIT | VK_QUEUE_TRANSFER_BIT);
+```
+
+To get a `VkQueue` capable of presentation, use `get_first_presentation_queue_and_index()`.
+To check if any given queue family index is capable of presentation operations, use `queue_family_index_supports_presentation(VkQueue queue)`.
+
+`get_preferred_queue_and_index(VkQueueFlags flags)` looks for a queue that supports the given queue flags while minimizing unsupported flags.
+It does not require that the queue exclusively supports only the given queue flags, which may result in the same queue handle being returns by different queries.
+Because not all Vulkan hardware has queue families for each operation category, an application needs to be careful that they didn't get the same queue handle multiple times.
+While it is fine to query the same queue multiple times, it is not fine to use that queue in multiple threads at the same time, or to ignore other synchronization requirements of VkQueue's in the Vulkan API.
+
 
 #### Custom queue setup
 
@@ -222,14 +233,14 @@ for (uint32_t i = 0; i < static_cast<uint32_t>(queue_families.size ()); i++) {
     if (queue_families[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) {
         // Find the first queue family with graphics operations supported
         queue_descriptions.push_back (vkb::CustomQueueDescription (
-            i, queue_families[i].queueCount, 
+            i, queue_families[i].queueCount,
             std::vector<float> (queue_families[i].queueCount, 1.0f)));
     }
 }
 ```
 ## Swapchain
 
-Creating a swapchain follows the same form outlined by `vkb::InstanceBuilder` and `vkb::DeviceBuilder`. Create the `vkb::SwapchainBuilder`, provide `vkb::Device`, call the appropriate builder functions, and call `build()`. 
+Creating a swapchain follows the same form outlined by `vkb::InstanceBuilder` and `vkb::DeviceBuilder`. Create the `vkb::SwapchainBuilder`, provide `vkb::Device`, call the appropriate builder functions, and call `build()`.
 
 ```cpp
 vkb::SwapchainBuilder swapchain_builder{ device };

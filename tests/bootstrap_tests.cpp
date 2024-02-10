@@ -353,6 +353,9 @@ TEST_CASE("Swapchain", "[VkBootstrap.bootstrap]") {
         auto graphics_queue_index = device.get_queue_index(vkb::QueueType::graphics).value();
         auto present_queue_index = device.get_queue_index(vkb::QueueType::present).value();
 
+        REQUIRE(device.get_first_presentation_queue_and_index().has_value());
+        REQUIRE(device.queue_family_index_supports_presentation(present_queue_index));
+
         THEN("Swapchain can be made") {
             vkb::SwapchainBuilder swapchain_builder(device);
             auto swapchain_ret = swapchain_builder.build();

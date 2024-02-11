@@ -599,9 +599,11 @@ class PhysicalDeviceSelector {
     PhysicalDeviceSelector& add_required_extensions(size_t count, const char* const* extensions);
 
     // Prefer a physical device which supports a specific extension.
-    [[deprecated]] PhysicalDeviceSelector& add_desired_extension(const char* extension);
+    [[deprecated("Use vkb::PhysicalDevice::enable_extension_if_present instead")]] PhysicalDeviceSelector&
+    add_desired_extension(const char* extension);
     // Prefer a physical device which supports a set of extensions.
-    [[deprecated]] PhysicalDeviceSelector& add_desired_extensions(const std::vector<const char*>& extensions);
+    [[deprecated("Use vkb::PhysicalDevice::enable_extensions_if_present instead")]] PhysicalDeviceSelector&
+    add_desired_extensions(const std::vector<const char*>& extensions);
 
     // Prefer a physical device that supports a (major, minor) version of vulkan.
     [[deprecated("Use set_minimum_version + InstanceBuilder::require_api_version.")]] PhysicalDeviceSelector&

@@ -262,7 +262,7 @@ info = '// This file is a part of VkBootstrap\n'
 info += '// https://github.com/charles-lunarg/vk-bootstrap\n\n'
 
 # # Content
-head = '\n#pragma once\n\n#include <vulkan/vulkan.h>\n\n'
+head = '\n#pragma once\n\n#include <vulkan/vulkan_core.h>\n\n'
 head += 'namespace vkb {\n\n'
 
 def create_dispatch_table(dispatch_type):

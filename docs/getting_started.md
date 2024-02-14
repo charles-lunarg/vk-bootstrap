@@ -1,6 +1,6 @@
 # Getting Started
 
-`vk-bootstrap` reduces the complexity of setting up a vulkan application by simplifying the three initial steps; instance creation, Physical device selection, and device creation. 
+`vk-bootstrap` reduces the complexity of setting up a vulkan application by simplifying the three initial steps; instance creation, Physical device selection, and device creation.
 
 ## Instance Creation
 
@@ -16,15 +16,15 @@ Because creating an instance may fail, the builder returns an 'Result' type. Thi
 if (!instance_builder_return) {
     std::cerr << "Failed to create Vulkan instance. Error: " << instance_builder_return.error().message() << "\n";
     return -1;
-} 
+}
 ```
-Once any possible errors have been dealt with, we can pull the `vkb::Instance` struct out of the `Result`. 
+Once any possible errors have been dealt with, we can pull the `vkb::Instance` struct out of the `Result`.
 ```cpp
 vkb::Instance vkb_instance = instance_builder_return.value();
 ```
 This is enough to create a usable `VkInstance` handle but many will want to customize it a bit. To configure instance creation, simply call the member functions on the `vkb::InstanceBuilder` object before `build()` is called.
 
-The most common customization to instance creation is enabling the "Validation Layers", an invaluable tool for any vulkan application developer. 
+The most common customization to instance creation is enabling the "Validation Layers", an invaluable tool for any vulkan application developer.
 ```cpp
 instance_builder.request_validation_layers ();
 ```
@@ -34,7 +34,7 @@ instance_builder.set_debug_callback (
     [] (VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
 	    VkDebugUtilsMessageTypeFlagsEXT messageType,
 	    const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
-	    void *pUserData) 
+	    void *pUserData)
         -> VkBool32 {
 			auto severity = vkb::to_string_message_severity (messageSeverity);
 			auto type = vkb::to_string_message_type (messageType);
@@ -49,7 +49,7 @@ instance_builder.use_default_debug_messenger();
 ```
 Configuration can be chained together and done inline with building, like so.
 ```cpp
-auto inst_builder_ret = instance_builder 
+auto inst_builder_ret = instance_builder
         .set_app_name ("Awesome Vulkan Application")
         .set_engine_name("Excellent Game Engine")
         .require_api_version(1,0,0)
@@ -83,9 +83,9 @@ CustomVulkanWrapper custom_vk_class;
 custom_vk_class.instance = vkb_instance.instance;
 ```
 
-When the application is finished with the vulkan, call `vkb::destroy_instance()` to dispose of the instance and associated data. 
+When the application is finished with the vulkan, call `vkb::destroy_instance()` to dispose of the instance and associated data.
 ```cpp
-// cleanup 
+// cleanup
 vkb::destroy_instance(vkb_instance);
 ```
 ### Instance Creation Summary
@@ -98,7 +98,7 @@ auto instance_builder_return = instance_builder
         .build ();
 if (!instance_builder_return) {
     // Handle error
-} 
+}
 vkb::Instance vkb_instance = instance_builder_return.value ();
 
 // at program end
@@ -106,11 +106,11 @@ vkb::destroy_instance(vkb_instance);
 ```
 ## Surface Creation
 
-Presenting images to the screen Vulkan requires creating a surface, encapsulated in a `VkSurfaceKHR` handle. Creating a surface is the responsibility of the windowing system, thus is out of scope for `vk-bootstrap`. However, `vk-bootstrap` does try to make the process as painless as possible by automatically enabling the correct windowing extensions in `VkInstance` creation. 
+Presenting images to the screen Vulkan requires creating a surface, encapsulated in a `VkSurfaceKHR` handle. Creating a surface is the responsibility of the windowing system, thus is out of scope for `vk-bootstrap`. However, `vk-bootstrap` does try to make the process as painless as possible by automatically enabling the correct windowing extensions in `VkInstance` creation.
 
 Windowing libraries which support Vulkan usually provide a way of getting the `VkSurfaceKHR` handle for the window. These methods require a valid Vulkan instance, thus must be done after instance creation.
 
-Examples for GLFW and SDL2 are listed below. 
+Examples for GLFW and SDL2 are listed below.
 ```cpp
 vkb::Instance vkb_instance; //valid vkb::Instance
 VkSurfaceKHR surface = nullptr;
@@ -134,14 +134,14 @@ Creating a `vkb::PhysicalDeviceSelector` requires a valid `vkb::Instance` to con
 
 It follows the same pattern laid out by `vkb::InstanceBuilder`.
 ```cpp
-vkb::PhysicalDeviceSelector phys_device_selector (vkb_instance); 
+vkb::PhysicalDeviceSelector phys_device_selector (vkb_instance);
 auto physical_device_selector_return = phys_device_selector
         .set_surface(surface_handle)
         .select ();
 if (!physical_device_selector_return) {
     // Handle error
 }
-auto phys_device = phys_device_ret.value ();
+auto phys_device = physical_device_selector_return.value ();
 ```
 
 To select a physical device, call `select()` on the `vkb::PhysicalDeviceSelector` object.
@@ -149,11 +149,13 @@ By default, this will prefer a discrete GPU.
 
 No cleanup is required for `vkb::PhysicalDevice`.
 
-The `vkb::PhysicalDeviceSelector` will look for the first device in the list that satisfied all the specified criteria, and if none is found, will return the first device that partially satisfies the criteria. 
+The `vkb::PhysicalDeviceSelector` will look for the first device in the list that satisfied all the specified criteria, and if none is found, will return the first device that partially satisfies the criteria.
 
-The various "require" and "desire" pairs of functions indicate to `vk-bootstrap` what features and capabilities are necessary for an application and what are simply preferred. A "require" function will fail any `VkPhysicalDevice` that doesn't satisfy the constraint, while any criteria that doesn't satisfy the "desire" functions will make the `VkPhysicalDevice` only 'partially satisfy'. 
+The various "require" functions indicate to `vk-bootstrap` what features and capabilities are necessary for an application. A "require" function will fail any `VkPhysicalDevice` that doesn't satisfy the constraint.
 
-```c
+For example, "requiring" certain device extensions to be supported is done as follows:
+
+```cpp
 // Application cannot function without this extension
 phys_device_selector.add_required_extension("VK_KHR_timeline_semaphore");
 
@@ -161,9 +163,50 @@ phys_device_selector.add_required_extension("VK_KHR_timeline_semaphore");
 phys_device_selector.add_desired_extension("VK_KHR_imageless_framebuffer");
 ```
 
-Note: 
+While requiring that certain features are available is as follows:
 
-Because `vk-bootstrap` does not manage creating a `VkSurfaceKHR` handle, it is explicitly passed into the `vkb::PhysicalDeviceSelector` for proper querying of surface support details. Unless the `vkb::InstanceBuilder::set_headless()` function was called, the physical device selector will emit `no_surface_provided` error. If an application does intend to present but cannot create a `VkSurfaceKHR` handle before physical device selection, use `defer_surface_initialization()` to disable the `no_surface_provided` error. 
+```cpp
+VkPhysicalDeviceFeatures required_features{};
+required_features.multiViewport = true;
+
+phys_device_selector.set_required_features(required_features);
+```
+
+To enable features for newer versions of Vulkan, use `set_required_features_11()`, `set_required_features_12()`, and `set_required_features_13()` and follow the same pattern as `set_required_features()` of passing in the features struct, corresponding to the version.
+
+Note that `set_required_features_11()` was released with 1.2, so it cannot be used for 1.1 only capable Vulkan devices.
+
+Features only available through extensions need to use `add_required_extension_features()`. For example:
+
+```cpp
+VkPhysicalDeviceDescriptorIndexingFeatures descriptor_indexing_features{};
+descriptor_indexing_features.<features_used> = true;
+
+phys_device_selector.add_required_extension_features(&descriptor_indexing_features);
+```
+
+The features and extensions used as selection criteria in `vkb::PhysicalDeviceSelector` automatically propagate into `vkb::DeviceBuilder`. That means the application only needs to state the feature requirement once, and `vk-bootstrap` will handle enabling it on the resulting device.
+
+Note:
+
+Because `vk-bootstrap` does not manage creating a `VkSurfaceKHR` handle, it is explicitly passed into the `vkb::PhysicalDeviceSelector` for proper querying of surface support details. Unless the `vkb::InstanceBuilder::set_headless()` function was called, the physical device selector will emit `no_surface_provided` error. If an application does intend to present but cannot create a `VkSurfaceKHR` handle before physical device selection, use `defer_surface_initialization()` to disable the `no_surface_provided` error.
+
+## Physical Device
+
+The `vkb::PhysicalDevice` represents a chosen physical device, along with all the necessary details about how to create a `VkDevice` from it with the requested features and extensions. While most use cases will simply give the  `vkb::PhysicalDevice` to `vkb::DeviceBuilder`, there are a handful of useful things that can be done with it.
+
+Adding optional extensions. It is occasionally useful to enable features if they are present but not require that they be available on the physical device.
+
+This is done using `enable_extension_if_present()` as follows.
+
+```cpp
+bool supported = phys_device.enable_extension_if_present("VK_KHR_timeline_semaphore");
+if (supported){
+    // allows easy feedback whether an extension is supported or not.
+}
+```
+
+Use `enable_extensions_if_present()` to check if a group of extensions are available, and enable all of them if they are all present. This will *not* enable any extension unless they are all present, useful for handling dependencies between extensions, where one extension requires another one to be enabled.
 
 ## Device Creation
 
@@ -177,17 +220,6 @@ if (!dev_ret) {
 }
 vkb::Device vkb_device = dev_ret.value();
  ```
-
-The features and extensions used as selection criteria in `vkb::PhysicalDeviceSelector` automatically propagate into `vkb::DeviceBuilder`. Because of this, there is no way to enable features or extensions that were not specified during `vkb::PhysicalDeviceSelector`. This is by design as any feature or extension enabled in a device *must* have support from the `VkPhysicalDevice` it is created with.
-
-The common method to extend Vulkan functionality in existing API calls is to use the pNext chain. This is accounted for `VkDevice` creation with the `add_pNext` member function of `vkb::DeviceBuilder`. Note: Any structures added to the pNext chain must remain valid until `build()` is called.
-
-```cpp
-VkPhysicalDeviceDescriptorIndexingFeatures descriptor_indexing_features{};
-
-auto dev_ret = device_builder.add_pNext(&descriptor_indexing_features)
-                             .build ();
-```
 
 To destroy a `vkb::Device`, call `vkb::destroy_device()`.
 ```cpp
@@ -222,14 +254,13 @@ for (uint32_t i = 0; i < static_cast<uint32_t>(queue_families.size ()); i++) {
     if (queue_families[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) {
         // Find the first queue family with graphics operations supported
         queue_descriptions.push_back (vkb::CustomQueueDescription (
-            i, queue_families[i].queueCount, 
             std::vector<float> (queue_families[i].queueCount, 1.0f)));
     }
 }
 ```
 ## Swapchain
 
-Creating a swapchain follows the same form outlined by `vkb::InstanceBuilder` and `vkb::DeviceBuilder`. Create the `vkb::SwapchainBuilder`, provide `vkb::Device`, call the appropriate builder functions, and call `build()`. 
+Creating a swapchain follows the same form outlined by `vkb::InstanceBuilder` and `vkb::DeviceBuilder`. Create the `vkb::SwapchainBuilder`, provide `vkb::Device`, call the appropriate builder functions, and call `build()`.
 
 ```cpp
 vkb::SwapchainBuilder swapchain_builder{ device };

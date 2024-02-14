@@ -254,7 +254,7 @@ for (uint32_t i = 0; i < static_cast<uint32_t>(queue_families.size ()); i++) {
     if (queue_families[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) {
         // Find the first queue family with graphics operations supported
         queue_descriptions.push_back (vkb::CustomQueueDescription (
-            std::vector<float> (queue_families[i].queueCount, 1.0f)));
+            i, std::vector<float> (queue_families[i].queueCount, 1.0f)));
     }
 }
 ```

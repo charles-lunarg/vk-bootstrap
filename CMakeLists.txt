@@ -98,6 +98,15 @@ target_link_libraries(vk-bootstrap
         ${CMAKE_DL_LIBS})
 target_compile_features(vk-bootstrap PUBLIC cxx_std_17)
 
+if(BUILD_SHARED_LIBS)
+
+    # Needed to allow mixing shared and static libraries when linking
+    set_target_properties(vk-bootstrap PROPERTIES
+        POSITION_INDEPENDENT_CODE ON
+    )
+
+endif()
+
 if(VK_BOOTSTRAP_TEST)
     enable_testing()
     add_subdirectory(ext)

@@ -98,6 +98,9 @@ target_link_libraries(vk-bootstrap
         ${CMAKE_DL_LIBS})
 target_compile_features(vk-bootstrap PUBLIC cxx_std_17)
 
+option(VK_BOOTSTRAP_POSITION_INDEPENDENT_CODE "Default value is the value of BUILD_SHARED_LIBS" ${BUILD_SHARED_LIBS})
+set_target_properties(vk-bootstrap PROPERTIES POSITION_INDEPENDENT_CODE ${VK_BOOTSTRAP_POSITION_INDEPENDENT_CODE})
+
 if(VK_BOOTSTRAP_TEST)
     enable_testing()
     add_subdirectory(ext)

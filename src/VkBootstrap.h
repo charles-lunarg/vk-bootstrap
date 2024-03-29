@@ -806,30 +806,11 @@ class DeviceBuilder {
 
     // For Advanced Users: specify the exact list of VkDeviceQueueCreateInfo's needed for the application.
     // If a custom queue setup is provided, getting the queues and queue indexes is up to the application.
-    DeviceBuilder& custom_queue_setup(size_t count, CustomQueueDescription const* queue_descriptions) {
-        info.queue_descriptions.assign(queue_descriptions, queue_descriptions + count);
-        return *this;
-    }
-    // For Advanced Users: specify the exact list of VkDeviceQueueCreateInfo's needed for the application.
-    // If a custom queue setup is provided, getting the queues and queue indexes is up to the application.
-    DeviceBuilder& custom_queue_setup(std::vector<CustomQueueDescription> const& queue_descriptions) {
-        info.queue_descriptions = queue_descriptions;
-        return *this;
-    }
-    // For Advanced Users: specify the exact list of VkDeviceQueueCreateInfo's needed for the application.
-    // If a custom queue setup is provided, getting the queues and queue indexes is up to the application.
-    DeviceBuilder& custom_queue_setup(std::vector<CustomQueueDescription>&& queue_descriptions) {
-        info.queue_descriptions = std::move(queue_descriptions);
-        return *this;
-    }
-
+    DeviceBuilder& custom_queue_setup(size_t count, CustomQueueDescription const* queue_descriptions);
+    DeviceBuilder& custom_queue_setup(std::vector<CustomQueueDescription> const& queue_descriptions);
+    DeviceBuilder& custom_queue_setup(std::vector<CustomQueueDescription>&& queue_descriptions);
 #if VKB_SPAN_OVERLOADS
-    // For Advanced Users: specify the exact list of VkDeviceQueueCreateInfo's needed for the application.
-    // If a custom queue setup is provided, getting the queues and queue indexes is up to the application.
-    DeviceBuilder& custom_queue_setup(std::span<const CustomQueueDescription> queue_descriptions) {
-        info.queue_descriptions.assign(queue_descriptions.begin(), queue_descriptions.end());
-        return *this;
-    }
+    DeviceBuilder& custom_queue_setup(std::span<const CustomQueueDescription> queue_descriptions);
 #endif
 
     // Add a structure to the pNext chain of VkDeviceCreateInfo.
@@ -876,14 +857,9 @@ struct Swapchain {
     Result<std::vector<VkImageView>> get_image_views();
     Result<std::vector<VkImageView>> get_image_views(const void* pNext);
     void destroy_image_views(size_t count, VkImageView const* image_views);
-    void destroy_image_views(std::vector<VkImageView> const& image_views) {
-        destroy_image_views(image_views.size(), image_views.data());
-    }
-
+    void destroy_image_views(std::vector<VkImageView> const& image_views);
 #if VKB_SPAN_OVERLOADS
-    void destroy_image_views(std::span<const VkImageView> image_views) {
-        destroy_image_views(image_views.size(), image_views.data());
-    }
+    void destroy_image_views(std::span<const VkImageView> image_views);
 #endif
 
     // A conversion function which allows this Swapchain to be used

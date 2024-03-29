@@ -1684,6 +1684,24 @@ DeviceBuilder& DeviceBuilder::set_allocation_callbacks(VkAllocationCallbacks* ca
     info.allocation_callbacks = callbacks;
     return *this;
 }
+DeviceBuilder& DeviceBuilder::custom_queue_setup(size_t count, CustomQueueDescription const* queue_descriptions) {
+    info.queue_descriptions.assign(queue_descriptions, queue_descriptions + count);
+    return *this;
+}
+DeviceBuilder& DeviceBuilder::custom_queue_setup(std::vector<CustomQueueDescription> const& queue_descriptions) {
+    info.queue_descriptions = queue_descriptions;
+    return *this;
+}
+DeviceBuilder& DeviceBuilder::custom_queue_setup(std::vector<CustomQueueDescription>&& queue_descriptions) {
+    info.queue_descriptions = std::move(queue_descriptions);
+    return *this;
+}
+#if VKB_SPAN_OVERLOADS
+DeviceBuilder& DeviceBuilder::custom_queue_setup(std::span<const CustomQueueDescription> queue_descriptions) {
+    info.queue_descriptions.assign(queue_descriptions.begin(), queue_descriptions.end());
+    return *this;
+}
+#endif
 
 // ---- Swapchain ---- //
 
@@ -2030,6 +2048,14 @@ void Swapchain::destroy_image_views(size_t count, VkImageView const* image_views
         internal_table.fp_vkDestroyImageView(device, image_views[i], allocation_callbacks);
     }
 }
+void Swapchain::destroy_image_views(std::vector<VkImageView> const& image_views) {
+    destroy_image_views(image_views.size(), image_views.data());
+}
+#if VKB_SPAN_OVERLOADS
+void Swapchain::destroy_image_views(std::span<const VkImageView> image_views) {
+    destroy_image_views(image_views.size(), image_views.data());
+}
+#endif
 Swapchain::operator VkSwapchainKHR() const { return this->swapchain; }
 SwapchainBuilder& SwapchainBuilder::set_old_swapchain(VkSwapchainKHR old_swapchain) {
     info.old_swapchain = old_swapchain;

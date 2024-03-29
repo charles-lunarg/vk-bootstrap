@@ -20,6 +20,16 @@
 #include <cstdio>
 #include <cstring>
 
+#if __cplusplus >= 202002L
+#define VKB_SPAN_OVERLOADS 1
+#elif !defined(VKB_SPAN_OVERLOADS)
+#define VKB_SPAN_OVERLOADS 0
+#endif
+
+#if VKB_SPAN_OVERLOADS
+#include <span>
+#endif
+
 #include <vector>
 #include <string>
 #include <system_error>
@@ -373,8 +383,21 @@ class InstanceBuilder {
     InstanceBuilder& enable_layer(const char* layer_name);
     // Adds an extension to be enabled. Will fail to create an instance if the extension isn't available.
     InstanceBuilder& enable_extension(const char* extension_name);
-    InstanceBuilder& enable_extensions(std::vector<const char*> const& extensions);
+
+    // Add extensions to be enabled. Will fail to create an instance if the extension aren't available.
     InstanceBuilder& enable_extensions(size_t count, const char* const* extensions);
+
+    // Add extensions to be enabled. Will fail to create an instance if the extension aren't available.
+    InstanceBuilder& enable_extensions(std::vector<const char*> const& extensions) {
+        return enable_extensions(extensions.size(), extensions.data());
+    }
+
+#if VKB_SPAN_OVERLOADS
+    // Add extensions to be enabled. Will fail to create an instance if the extension aren't available.
+    InstanceBuilder& enable_extensions(std::span<const char*> extensions) {
+        return enable_extensions(extensions.size(), extensions.data());
+    }
+#endif
 
     // Headless Mode does not load the required extensions for presentation. Defaults to true.
     InstanceBuilder& set_headless(bool headless = true);
@@ -514,7 +537,16 @@ struct PhysicalDevice {
 
     // If all the given extensions are present, make all the extensions be enabled on the device.
     // Returns true if all the extensions are present.
-    bool enable_extensions_if_present(const std::vector<const char*>& extensions);
+    bool enable_extensions_if_present(size_t count, const char* const* extensions);
+    bool enable_extensions_if_present(const std::vector<const char*>& extensions) {
+        return enable_extensions_if_present(extensions.size(), extensions.data());
+    }
+
+#if VKB_SPAN_OVERLOADS
+    bool enable_extensions_if_present(std::span<const char*> extensions) {
+        return enable_extensions_if_present(extensions.size(), extensions.data());
+    }
+#endif
 
     // If the features from VkPhysicalDeviceFeatures are all present, make all of the features be enable on the device.
     // Returns true if all the features are present.
@@ -602,8 +634,17 @@ class PhysicalDeviceSelector {
     // Require a physical device which supports a specific extension.
     PhysicalDeviceSelector& add_required_extension(const char* extension);
     // Require a physical device which supports a set of extensions.
-    PhysicalDeviceSelector& add_required_extensions(std::vector<const char*> const& extensions);
     PhysicalDeviceSelector& add_required_extensions(size_t count, const char* const* extensions);
+    PhysicalDeviceSelector& add_required_extensions(std::vector<const char*> const& extensions) {
+        return add_required_extensions(extensions.size(), extensions.data());
+    }
+
+#if VKB_SPAN_OVERLOADS
+    // Require a physical device which supports a set of extensions.
+    PhysicalDeviceSelector& add_required_extensions(std::span<const char*> extensions) {
+        return add_required_extensions(extensions.size(), extensions.data());
+    }
+#endif
 
     // Require a physical device that supports a (major, minor) version of vulkan.
     PhysicalDeviceSelector& set_minimum_version(uint32_t major, uint32_t minor);
@@ -736,8 +777,21 @@ struct Device {
 
 // For advanced device queue setup
 struct CustomQueueDescription {
-    explicit CustomQueueDescription(uint32_t index, std::vector<float> priorities);
-    uint32_t index = 0;
+    explicit CustomQueueDescription(uint32_t index, std::vector<float> const& priorities)
+    : index(index), priorities(priorities) {}
+
+    explicit CustomQueueDescription(uint32_t index, std::vector<float>&& priorities)
+    : index(index), priorities(std::move(priorities)) {}
+
+    explicit CustomQueueDescription(uint32_t index, size_t count, float const* priorities)
+    : index(index), priorities(priorities, priorities + count) {}
+
+#if VKB_SPAN_OVERLOADS
+    explicit CustomQueueDescription(uint32_t index, std::span<const float> priorities)
+    : index(index), priorities(priorities.begin(), priorities.end()) {}
+#endif
+
+    uint32_t index;
     std::vector<float> priorities;
 };
 
@@ -752,7 +806,31 @@ class DeviceBuilder {
 
     // For Advanced Users: specify the exact list of VkDeviceQueueCreateInfo's needed for the application.
     // If a custom queue setup is provided, getting the queues and queue indexes is up to the application.
-    DeviceBuilder& custom_queue_setup(std::vector<CustomQueueDescription> queue_descriptions);
+    DeviceBuilder& custom_queue_setup(size_t count, CustomQueueDescription const* queue_descriptions) {
+        info.queue_descriptions.assign(queue_descriptions, queue_descriptions + count);
+        return *this;
+    }
+    // For Advanced Users: specify the exact list of VkDeviceQueueCreateInfo's needed for the application.
+    // If a custom queue setup is provided, getting the queues and queue indexes is up to the application.
+    DeviceBuilder& custom_queue_setup(std::vector<CustomQueueDescription> const& queue_descriptions) {
+        info.queue_descriptions = queue_descriptions;
+        return *this;
+    }
+    // For Advanced Users: specify the exact list of VkDeviceQueueCreateInfo's needed for the application.
+    // If a custom queue setup is provided, getting the queues and queue indexes is up to the application.
+    DeviceBuilder& custom_queue_setup(std::vector<CustomQueueDescription>&& queue_descriptions) {
+        info.queue_descriptions = std::move(queue_descriptions);
+        return *this;
+    }
+
+#if VKB_SPAN_OVERLOADS
+    // For Advanced Users: specify the exact list of VkDeviceQueueCreateInfo's needed for the application.
+    // If a custom queue setup is provided, getting the queues and queue indexes is up to the application.
+    DeviceBuilder& custom_queue_setup(std::span<const CustomQueueDescription> queue_descriptions) {
+        info.queue_descriptions.assign(queue_descriptions.begin(), queue_descriptions.end());
+        return *this;
+    }
+#endif
 
     // Add a structure to the pNext chain of VkDeviceCreateInfo.
     // The structure must be valid when DeviceBuilder::build() is called.
@@ -797,7 +875,16 @@ struct Swapchain {
     // structure.
     Result<std::vector<VkImageView>> get_image_views();
     Result<std::vector<VkImageView>> get_image_views(const void* pNext);
-    void destroy_image_views(std::vector<VkImageView> const& image_views);
+    void destroy_image_views(size_t count, VkImageView const* image_views);
+    void destroy_image_views(std::vector<VkImageView> const& image_views) {
+        destroy_image_views(image_views.size(), image_views.data());
+    }
+
+#if VKB_SPAN_OVERLOADS
+    void destroy_image_views(std::span<const VkImageView> image_views) {
+        destroy_image_views(image_views.size(), image_views.data());
+    }
+#endif
 
     // A conversion function which allows this Swapchain to be used
     // in places where VkSwapchainKHR would have been used.

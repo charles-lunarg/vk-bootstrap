@@ -47,6 +47,54 @@ bool GenericFeaturesPNextNode::match(GenericFeaturesPNextNode const& requested, 
     return true;
 }
 
+void GenericFeaturesPNextNode::combine(GenericFeaturesPNextNode const& right) noexcept {
+    assert(sType == right.sType && "Non-matching sTypes in features nodes!");
+    for (uint32_t i = 0; i < GenericFeaturesPNextNode::field_capacity; i++) {
+        fields[i] = fields[i] || right.fields[i];
+    }
+}
+
+bool GenericFeatureChain::match(GenericFeatureChain const& extension_requested) const noexcept {
+    // Should only be false if extension_supported was unable to be filled out, due to the
+    // physical device not supporting vkGetPhysicalDeviceFeatures2 in any capacity.
+    if (extension_requested.nodes.size() != nodes.size()) {
+        return false;
+    }
+
+    for (size_t i = 0; i < nodes.size() && i < nodes.size(); ++i) {
+        if (!GenericFeaturesPNextNode::match(extension_requested.nodes[i], nodes[i])) return false;
+    }
+    return true;
+}
+
+void GenericFeatureChain::chain_up(VkPhysicalDeviceFeatures2& feats2) noexcept {
+    detail::GenericFeaturesPNextNode* prev = nullptr;
+    for (auto& extension : nodes) {
+        if (prev != nullptr) {
+            prev->pNext = &extension;
+        }
+        prev = &extension;
+    }
+    feats2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
+    feats2.pNext = !nodes.empty() ? &nodes.at(0) : nullptr;
+}
+
+void GenericFeatureChain::combine(GenericFeatureChain const& right) noexcept {
+    for (const auto& right_node : right.nodes) {
+        bool already_contained = false;
+        for (auto& left_node : nodes) {
+            if (left_node.sType == right_node.sType) {
+                left_node.combine(right_node);
+                already_contained = true;
+            }
+        }
+        if (!already_contained) {
+            nodes.push_back(right_node);
+        }
+    }
+}
+
+
 class VulkanFunctions {
     private:
     std::mutex init_mutex;
@@ -863,10 +911,68 @@ std::vector<std::string> check_device_extension_support(
 }
 
 // clang-format off
+void combine_features(VkPhysicalDeviceFeatures& dest, VkPhysicalDeviceFeatures src){
+    dest.robustBufferAccess = dest.robustBufferAccess || src.robustBufferAccess;
+	dest.fullDrawIndexUint32 = dest.fullDrawIndexUint32 || src.fullDrawIndexUint32;
+	dest.imageCubeArray = dest.imageCubeArray || src.imageCubeArray;
+	dest.independentBlend = dest.independentBlend || src.independentBlend;
+	dest.geometryShader = dest.geometryShader || src.geometryShader;
+	dest.tessellationShader = dest.tessellationShader || src.tessellationShader;
+	dest.sampleRateShading = dest.sampleRateShading || src.sampleRateShading;
+	dest.dualSrcBlend = dest.dualSrcBlend || src.dualSrcBlend;
+	dest.logicOp = dest.logicOp || src.logicOp;
+	dest.multiDrawIndirect = dest.multiDrawIndirect || src.multiDrawIndirect;
+	dest.drawIndirectFirstInstance = dest.drawIndirectFirstInstance || src.drawIndirectFirstInstance;
+	dest.depthClamp = dest.depthClamp || src.depthClamp;
+	dest.depthBiasClamp = dest.depthBiasClamp || src.depthBiasClamp;
+	dest.fillModeNonSolid = dest.fillModeNonSolid || src.fillModeNonSolid;
+	dest.depthBounds = dest.depthBounds || src.depthBounds;
+	dest.wideLines = dest.wideLines || src.wideLines;
+	dest.largePoints = dest.largePoints || src.largePoints;
+	dest.alphaToOne = dest.alphaToOne || src.alphaToOne;
+	dest.multiViewport = dest.multiViewport || src.multiViewport;
+	dest.samplerAnisotropy = dest.samplerAnisotropy || src.samplerAnisotropy;
+	dest.textureCompressionETC2 = dest.textureCompressionETC2 || src.textureCompressionETC2;
+	dest.textureCompressionASTC_LDR = dest.textureCompressionASTC_LDR || src.textureCompressionASTC_LDR;
+	dest.textureCompressionBC = dest.textureCompressionBC || src.textureCompressionBC;
+	dest.occlusionQueryPrecise = dest.occlusionQueryPrecise || src.occlusionQueryPrecise;
+	dest.pipelineStatisticsQuery = dest.pipelineStatisticsQuery || src.pipelineStatisticsQuery;
+	dest.vertexPipelineStoresAndAtomics = dest.vertexPipelineStoresAndAtomics || src.vertexPipelineStoresAndAtomics;
+	dest.fragmentStoresAndAtomics = dest.fragmentStoresAndAtomics || src.fragmentStoresAndAtomics;
+	dest.shaderTessellationAndGeometryPointSize = dest.shaderTessellationAndGeometryPointSize || src.shaderTessellationAndGeometryPointSize;
+	dest.shaderImageGatherExtended = dest.shaderImageGatherExtended || src.shaderImageGatherExtended;
+	dest.shaderStorageImageExtendedFormats = dest.shaderStorageImageExtendedFormats || src.shaderStorageImageExtendedFormats;
+	dest.shaderStorageImageMultisample = dest.shaderStorageImageMultisample || src.shaderStorageImageMultisample;
+	dest.shaderStorageImageReadWithoutFormat = dest.shaderStorageImageReadWithoutFormat || src.shaderStorageImageReadWithoutFormat;
+	dest.shaderStorageImageWriteWithoutFormat = dest.shaderStorageImageWriteWithoutFormat || src.shaderStorageImageWriteWithoutFormat;
+	dest.shaderUniformBufferArrayDynamicIndexing = dest.shaderUniformBufferArrayDynamicIndexing || src.shaderUniformBufferArrayDynamicIndexing;
+	dest.shaderSampledImageArrayDynamicIndexing = dest.shaderSampledImageArrayDynamicIndexing || src.shaderSampledImageArrayDynamicIndexing;
+	dest.shaderStorageBufferArrayDynamicIndexing = dest.shaderStorageBufferArrayDynamicIndexing || src.shaderStorageBufferArrayDynamicIndexing;
+	dest.shaderStorageImageArrayDynamicIndexing = dest.shaderStorageImageArrayDynamicIndexing || src.shaderStorageImageArrayDynamicIndexing;
+	dest.shaderClipDistance = dest.shaderClipDistance || src.shaderClipDistance;
+	dest.shaderCullDistance = dest.shaderCullDistance || src.shaderCullDistance;
+	dest.shaderFloat64 = dest.shaderFloat64 || src.shaderFloat64;
+	dest.shaderInt64 = dest.shaderInt64 || src.shaderInt64;
+	dest.shaderInt16 = dest.shaderInt16 || src.shaderInt16;
+	dest.shaderResourceResidency = dest.shaderResourceResidency || src.shaderResourceResidency;
+	dest.shaderResourceMinLod = dest.shaderResourceMinLod || src.shaderResourceMinLod;
+	dest.sparseBinding = dest.sparseBinding || src.sparseBinding;
+	dest.sparseResidencyBuffer = dest.sparseResidencyBuffer || src.sparseResidencyBuffer;
+	dest.sparseResidencyImage2D = dest.sparseResidencyImage2D || src.sparseResidencyImage2D;
+	dest.sparseResidencyImage3D = dest.sparseResidencyImage3D || src.sparseResidencyImage3D;
+	dest.sparseResidency2Samples = dest.sparseResidency2Samples || src.sparseResidency2Samples;
+	dest.sparseResidency4Samples = dest.sparseResidency4Samples || src.sparseResidency4Samples;
+	dest.sparseResidency8Samples = dest.sparseResidency8Samples || src.sparseResidency8Samples;
+	dest.sparseResidency16Samples = dest.sparseResidency16Samples || src.sparseResidency16Samples;
+	dest.sparseResidencyAliased = dest.sparseResidencyAliased || src.sparseResidencyAliased;
+	dest.variableMultisampleRate = dest.variableMultisampleRate || src.variableMultisampleRate;
+	dest.inheritedQueries = dest.inheritedQueries || src.inheritedQueries;
+}
+
 bool supports_features(VkPhysicalDeviceFeatures supported,
 					   VkPhysicalDeviceFeatures requested,
-					   std::vector<GenericFeaturesPNextNode> const& extension_supported,
-					   std::vector<GenericFeaturesPNextNode> const& extension_requested) {
+					   GenericFeatureChain const& extension_supported,
+					   GenericFeatureChain const& extension_requested) {
 	if (requested.robustBufferAccess && !supported.robustBufferAccess) return false;
 	if (requested.fullDrawIndexUint32 && !supported.fullDrawIndexUint32) return false;
 	if (requested.imageCubeArray && !supported.imageCubeArray) return false;
@@ -923,18 +1029,7 @@ bool supports_features(VkPhysicalDeviceFeatures supported,
 	if (requested.variableMultisampleRate && !supported.variableMultisampleRate) return false;
 	if (requested.inheritedQueries && !supported.inheritedQueries) return false;
 
-    // Should only be false if extension_supported was unable to be filled out, due to the
-    // physical device not supporting vkGetPhysicalDeviceFeatures2 in any capacity.
-    if (extension_requested.size() != extension_supported.size()) {
-        return false;
-    }
-
-	for(size_t i = 0; i < extension_requested.size() && i < extension_supported.size(); ++i) {
-		auto res = GenericFeaturesPNextNode::match(extension_requested[i], extension_supported[i]);
-		if(!res) return false;
-	}
-
-	return true;
+	return extension_supported.match(extension_requested);
 }
 // clang-format on
 // Finds the first queue which supports the desired operations. Returns QUEUE_INDEX_MAX_VALUE if none is found
@@ -988,8 +1083,8 @@ uint32_t get_present_queue_index(
 }
 } // namespace detail
 
-PhysicalDevice PhysicalDeviceSelector::populate_device_details(VkPhysicalDevice vk_phys_device,
-    std::vector<detail::GenericFeaturesPNextNode> const& src_extended_features_chain) const {
+PhysicalDevice PhysicalDeviceSelector::populate_device_details(
+    VkPhysicalDevice vk_phys_device, detail::GenericFeatureChain const& src_extended_features_chain) const {
     PhysicalDevice physical_device{};
     physical_device.physical_device = vk_phys_device;
     physical_device.surface = instance_info.surface;
@@ -1013,25 +1108,14 @@ PhysicalDevice PhysicalDeviceSelector::populate_device_details(VkPhysicalDevice 
         physical_device.available_extensions.push_back(&ext.extensionName[0]);
     }
 
-    physical_device.features2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2; // same value as the non-KHR version
     physical_device.properties2_ext_enabled = instance_info.properties2_ext_enabled;
 
     auto fill_chain = src_extended_features_chain;
 
     bool instance_is_1_1 = instance_info.version >= VKB_VK_API_VERSION_1_1;
-    if (!fill_chain.empty() && (instance_is_1_1 || instance_info.properties2_ext_enabled)) {
-
-        detail::GenericFeaturesPNextNode* prev = nullptr;
-        for (auto& extension : fill_chain) {
-            if (prev != nullptr) {
-                prev->pNext = &extension;
-            }
-            prev = &extension;
-        }
-
+    if (!fill_chain.nodes.empty() && (instance_is_1_1 || instance_info.properties2_ext_enabled)) {
         VkPhysicalDeviceFeatures2 local_features{};
-        local_features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2; // KHR is same as core here
-        local_features.pNext = &fill_chain.front();
+        fill_chain.chain_up(local_features);
         // Use KHR function if not able to use the core function
         if (instance_is_1_1) {
             detail::vulkan_functions().fp_vkGetPhysicalDeviceFeatures2(vk_phys_device, &local_features);
@@ -1135,7 +1219,7 @@ PhysicalDeviceSelector::PhysicalDeviceSelector(Instance const& instance, VkSurfa
 Result<std::vector<PhysicalDevice>> PhysicalDeviceSelector::select_impl(DeviceSelectionMode selection) const {
 #if !defined(NDEBUG)
     // Validation
-    for (const auto& node : criteria.extended_features_chain) {
+    for (const auto& node : criteria.extended_features_chain.nodes) {
         assert(node.sType != static_cast<VkStructureType>(0) &&
                "Features struct sType must be filled with the struct's "
                "corresponding VkStructureType enum");
@@ -1336,7 +1420,7 @@ PhysicalDeviceSelector& PhysicalDeviceSelector::disable_portability_subset() {
 }
 
 PhysicalDeviceSelector& PhysicalDeviceSelector::set_required_features(VkPhysicalDeviceFeatures const& features) {
-    criteria.required_features = features;
+    detail::combine_features(criteria.required_features, features);
     return *this;
 }
 #if defined(VKB_VK_API_VERSION_1_2)
@@ -1399,7 +1483,7 @@ bool PhysicalDevice::enable_extension_if_present(const char* extension) {
     }
     return false;
 }
-bool PhysicalDevice::enable_extensions_if_present(const std::vector<const char*>& extensions) { 
+bool PhysicalDevice::enable_extensions_if_present(const std::vector<const char*>& extensions) {
     for (const auto extension : extensions) {
         auto it = std::find_if(std::begin(available_extensions),
             std::end(available_extensions),
@@ -1410,6 +1494,39 @@ bool PhysicalDevice::enable_extensions_if_present(const std::vector<const char*>
         extensions_to_enable.push_back(extension);
     return true;
 }
+
+bool PhysicalDevice::enable_features_if_present(const VkPhysicalDeviceFeatures& features_to_enable) {
+    VkPhysicalDeviceFeatures actual_pdf{};
+    detail::vulkan_functions().fp_vkGetPhysicalDeviceFeatures(physical_device, &actual_pdf);
+
+    bool required_features_supported = detail::supports_features(actual_pdf, features_to_enable, {}, {});
+    if (required_features_supported) {
+        detail::combine_features(features, features_to_enable);
+    }
+    return required_features_supported;
+}
+
+bool PhysicalDevice::enable_features_node_if_present(detail::GenericFeaturesPNextNode const& node) {
+    VkPhysicalDeviceFeatures2 actual_pdf2{};
+
+    detail::GenericFeatureChain requested_features;
+    requested_features.nodes.push_back(node);
+
+    detail::GenericFeatureChain fill_chain = requested_features;
+    // Zero out supported features
+    memset(fill_chain.nodes.front().fields, UINT8_MAX, sizeof(VkBool32) * detail::GenericFeaturesPNextNode::field_capacity);
+
+    actual_pdf2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
+    fill_chain.chain_up(actual_pdf2);
+
+    detail::vulkan_functions().fp_vkGetPhysicalDeviceFeatures2(physical_device, &actual_pdf2);
+    bool required_features_supported = detail::supports_features({}, {}, fill_chain, requested_features);
+    if (required_features_supported) {
+        extended_features_chain.combine(requested_features);
+    }
+    return required_features_supported;
+}
+
 
 PhysicalDevice::operator VkPhysicalDevice() const { return this->physical_device; }
 
@@ -1527,7 +1644,7 @@ Result<Device> DeviceBuilder::build() const {
         }
     }
 
-    if (user_defined_phys_dev_features_2 && !physical_device.extended_features_chain.empty()) {
+    if (user_defined_phys_dev_features_2 && !physical_device.extended_features_chain.nodes.empty()) {
         return { DeviceError::VkPhysicalDeviceFeatures2_in_pNext_chain_while_using_add_required_extension_features };
     }
 
@@ -1535,12 +1652,12 @@ Result<Device> DeviceBuilder::build() const {
     auto physical_device_extension_features_copy = physical_device.extended_features_chain;
     VkPhysicalDeviceFeatures2 local_features2{};
     local_features2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
+    local_features2.features = physical_device.features;
 
     if (!user_defined_phys_dev_features_2) {
         if (physical_device.instance_version >= VKB_VK_API_VERSION_1_1 || physical_device.properties2_ext_enabled) {
-            local_features2.features = physical_device.features;
             final_pnext_chain.push_back(reinterpret_cast<VkBaseOutStructure*>(&local_features2));
-            for (auto& features_node : physical_device_extension_features_copy) {
+            for (auto& features_node : physical_device_extension_features_copy.nodes) {
                 final_pnext_chain.push_back(reinterpret_cast<VkBaseOutStructure*>(&features_node));
             }
         } else {

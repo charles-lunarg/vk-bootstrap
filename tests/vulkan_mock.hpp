@@ -10,9 +10,11 @@
 
 #include <vulkan/vulkan_core.h>
 
-// Helper function to get the size of a struct given a VkStructureType
+#include <VkBootstrap.h>
+
+// Helper function to return the size of the sType if it is a known features struct, otherwise return 0
 // Hand written, must be updated to include any used struct.
-inline size_t get_pnext_chain_struct_size(VkStructureType type) {
+inline size_t check_if_features2_struct(VkStructureType type) {
     switch (type) {
         case (VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES):
             return sizeof(VkPhysicalDeviceDescriptorIndexingFeatures);
@@ -21,9 +23,14 @@ inline size_t get_pnext_chain_struct_size(VkStructureType type) {
         case (VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES):
             return sizeof(VkPhysicalDeviceVulkan12Features);
         default:
-            assert(false && "Must update get_pnext_chain_struct_size(VkStructureType type) to add type!");
+            return 0;
     }
-    return 0;
+}
+
+inline size_t get_pnext_chain_struct_size(VkStructureType type) {
+    auto size = check_if_features2_struct(type);
+    assert(size > 0 && "Must update get_pnext_chain_struct_size(VkStructureType type) to add type!");
+    return size;
 }
 
 template <typename T> T get_handle(size_t value) { return reinterpret_cast<T>(value); }
@@ -65,21 +72,24 @@ struct VulkanMock {
         return surface_handles.back();
     }
 
+    struct CreatedDeviceDetails {
+        VkPhysicalDeviceFeatures features{};
+        std::vector<const char*> extensions;
+        std::vector<vkb::detail::GenericFeaturesPNextNode> features_pNextChain;
+    };
+
     struct PhysicalDeviceDetails {
         VkPhysicalDeviceProperties properties{};
         VkPhysicalDeviceFeatures features{};
         VkPhysicalDeviceMemoryProperties memory_properties{};
         std::vector<VkExtensionProperties> extensions;
         std::vector<VkQueueFamilyProperties> queue_family_properties;
-        std::vector<std::unique_ptr<VkBaseOutStructure>> features_pNextChain;
+        std::vector<vkb::detail::GenericFeaturesPNextNode> features_pNextChain;
 
-        std::vector<VkDevice> created_devices;
+        std::vector<VkDevice> created_device_handles;
+        std::vector<CreatedDeviceDetails> created_device_details;
 
-        template <typename T> void add_features_pNext_struct(T t) {
-            T* new_type = new T();
-            *new_type = t;
-            features_pNextChain.emplace_back(reinterpret_cast<VkBaseOutStructure*>(new_type));
-        }
+        template <typename T> void add_features_pNext_struct(T features) { features_pNextChain.push_back(features); }
     };
 
     std::vector<VkPhysicalDevice> physical_device_handles;

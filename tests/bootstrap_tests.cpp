@@ -121,9 +121,9 @@ TEST_CASE("Instance with surface", "[VkBootstrap.bootstrap]") {
             REQUIRE(phys_dev_ret->enable_extension_if_present(VK_EXT_ROBUSTNESS_2_EXTENSION_NAME));
             REQUIRE(!phys_dev_ret->enable_extension_if_present(VK_KHR_16BIT_STORAGE_EXTENSION_NAME));
 
-            const std::vector<const char*> extension_set_1 = { VK_KHR_DRIVER_PROPERTIES_EXTENSION_NAME, 
+            const std::vector<const char*> extension_set_1 = { VK_KHR_DRIVER_PROPERTIES_EXTENSION_NAME,
                 VK_EXT_ROBUSTNESS_2_EXTENSION_NAME };
-            const std::vector<const char*> extension_set_2 = { VK_KHR_16BIT_STORAGE_EXTENSION_NAME, 
+            const std::vector<const char*> extension_set_2 = { VK_KHR_16BIT_STORAGE_EXTENSION_NAME,
                 VK_KHR_DRIVER_PROPERTIES_EXTENSION_NAME };
 
             REQUIRE(phys_dev_ret->enable_extensions_if_present(extension_set_1));
@@ -599,7 +599,6 @@ TEST_CASE("Querying Required Extension Features but with 1.0", "[VkBootstrap.sel
                                     .add_required_extension(VK_KHR_MAINTENANCE3_EXTENSION_NAME)
                                     .add_required_extension_features(descriptor_indexing_features)
                                     .select();
-            // Ignore if hardware support isn't true
             REQUIRE(phys_dev_ret.has_value());
 
             vkb::DeviceBuilder device_builder(phys_dev_ret.value());
@@ -631,13 +630,108 @@ TEST_CASE("Querying Required Extension Features", "[VkBootstrap.select_features]
                                     .add_required_extension(VK_KHR_MAINTENANCE3_EXTENSION_NAME)
                                     .add_required_extension_features(descriptor_indexing_features)
                                     .select();
-            // Ignore if hardware support isn't true
             REQUIRE(phys_dev_ret.has_value());
 
             vkb::DeviceBuilder device_builder(phys_dev_ret.value());
             auto device_ret = device_builder.build();
             REQUIRE(device_ret.has_value());
             vkb::destroy_device(device_ret.value());
+        }
+        vkb::destroy_instance(instance);
+    }
+}
+
+TEST_CASE("Adding Optional Extension Features", "[VkBootstrap.enable_features_if_present]") {
+    VulkanMock& mock = get_and_setup_default();
+    mock.api_version = VK_API_VERSION_1_1;
+    mock.physical_devices_details[0].properties.apiVersion = VK_API_VERSION_1_1;
+    mock.instance_extensions.push_back(get_extension_properties("VK_KHR_get_physical_device_properties2"));
+    auto vulkan_10_features = VkPhysicalDeviceFeatures{};
+    vulkan_10_features.multiViewport = true;
+    mock.physical_devices_details[0].features = vulkan_10_features;
+
+    auto vulkan_11_features = VkPhysicalDeviceVulkan11Features{};
+    vulkan_11_features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES;
+    vulkan_11_features.shaderDrawParameters = true;
+    mock.physical_devices_details[0].add_features_pNext_struct(vulkan_11_features);
+
+    auto vulkan_12_features = VkPhysicalDeviceVulkan12Features{};
+    vulkan_12_features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES;
+    vulkan_12_features.bufferDeviceAddress = true;
+    mock.physical_devices_details[0].add_features_pNext_struct(vulkan_12_features);
+
+
+    GIVEN("A working instance and physical device which has a VkPhysicalDeviceVulkan12Features in its features pNext "
+          "chain") {
+        auto instance = get_headless_instance();
+
+        VkPhysicalDeviceVulkan12Features physical_device_features_12{};
+        physical_device_features_12.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES;
+        physical_device_features_12.bufferDeviceAddress = true;
+
+        vkb::PhysicalDeviceSelector selector(instance);
+        selector.add_required_extension_features(physical_device_features_12);
+        {
+
+            SECTION("Require enable_features_if_present to work with an empty feature struct") {
+                auto phys_dev = selector.select().value();
+                VkPhysicalDeviceFeatures phys_dev_features_empty{};
+                REQUIRE(phys_dev.enable_features_if_present(phys_dev_features_empty));
+                auto device = vkb::DeviceBuilder(phys_dev).build().value();
+                vkb::destroy_device(device);
+            }
+            SECTION("Require enable_features_if_present to fail with an unsupported feature struct") {
+                auto phys_dev = selector.select().value();
+                VkPhysicalDeviceFeatures phys_dev_features_bad{};
+                phys_dev_features_bad.depthClamp = true;
+                REQUIRE(!phys_dev.enable_features_if_present(phys_dev_features_bad));
+                auto device = vkb::DeviceBuilder(phys_dev).build().value();
+                REQUIRE(!mock.physical_devices_details.at(0).created_device_details.at(0).features.depthClamp);
+                vkb::destroy_device(device);
+            }
+            SECTION("Require enable_features_if_present to work with a supported feature struct") {
+                auto phys_dev = selector.select().value();
+                VkPhysicalDeviceFeatures phys_dev_features_good{};
+                phys_dev_features_good.multiViewport = true;
+                REQUIRE(phys_dev.enable_features_if_present(phys_dev_features_good));
+                auto device = vkb::DeviceBuilder(phys_dev).build().value();
+                REQUIRE(mock.physical_devices_details.at(0).created_device_details.at(0).features.multiViewport);
+                vkb::destroy_device(device);
+            }
+
+            SECTION("Require enable_extension_features_if_present to work with an empty 1.1 feature struct") {
+                auto phys_dev = selector.select().value();
+                VkPhysicalDeviceVulkan11Features phys_dev_vulkan_11_features{};
+                phys_dev_vulkan_11_features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES;
+                REQUIRE(phys_dev.enable_extension_features_if_present(phys_dev_vulkan_11_features));
+                auto device = vkb::DeviceBuilder(phys_dev).build().value();
+                vkb::destroy_device(device);
+            }
+            SECTION("Require enable_extension_features_if_present to fail with an unsupported 1.1 feature struct") {
+                auto phys_dev = selector.select().value();
+                VkPhysicalDeviceVulkan11Features phys_dev_vulkan_11_features{};
+                phys_dev_vulkan_11_features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES;
+                phys_dev_vulkan_11_features.multiview = true;
+                REQUIRE(!phys_dev.enable_extension_features_if_present(phys_dev_vulkan_11_features));
+                auto device = vkb::DeviceBuilder(phys_dev).build().value();
+                auto* s = reinterpret_cast<VkPhysicalDeviceVulkan12Features*>(
+                    &mock.physical_devices_details.at(0).created_device_details.at(0).features_pNextChain.at(0));
+                REQUIRE(s->sType == VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES);
+                vkb::destroy_device(device);
+            }
+            SECTION("Require enable_extension_features_if_present to work with a supported 1.1 feature struct") {
+                auto phys_dev = selector.select().value();
+                VkPhysicalDeviceVulkan11Features phys_dev_vulkan_11_features{};
+                phys_dev_vulkan_11_features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES;
+                phys_dev_vulkan_11_features.shaderDrawParameters = true;
+                REQUIRE(phys_dev.enable_extension_features_if_present(phys_dev_vulkan_11_features));
+                auto device = vkb::DeviceBuilder(phys_dev).build().value();
+                auto* s = reinterpret_cast<VkPhysicalDeviceVulkan11Features*>(
+                    &mock.physical_devices_details.at(0).created_device_details.at(0).features_pNextChain.at(1));
+                REQUIRE(s->sType == VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES);
+                REQUIRE(s->shaderDrawParameters);
+                vkb::destroy_device(device);
+            }
         }
         vkb::destroy_instance(instance);
     }
@@ -687,7 +781,6 @@ TEST_CASE("Querying Required Extension Features in 1.1", "[VkBootstrap.version]"
                                     .add_required_extension(VK_KHR_MAINTENANCE3_EXTENSION_NAME)
                                     .add_required_extension_features(descriptor_indexing_features)
                                     .select();
-            // Ignore if hardware support isn't true
             REQUIRE(phys_dev_ret.has_value());
 
             vkb::DeviceBuilder device_builder(phys_dev_ret.value());
@@ -705,7 +798,6 @@ TEST_CASE("Querying Required Extension Features in 1.1", "[VkBootstrap.version]"
             auto phys_dev_ret = selector.add_required_extension(VK_EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME)
                                     .add_required_extension(VK_KHR_MAINTENANCE3_EXTENSION_NAME)
                                     .select();
-            // Ignore if hardware support isn't true
             REQUIRE(phys_dev_ret.has_value());
 
             VkPhysicalDeviceFeatures2 phys_dev_feats2{};
@@ -728,7 +820,6 @@ TEST_CASE("Querying Required Extension Features in 1.1", "[VkBootstrap.version]"
                                     .add_required_extension(VK_KHR_MAINTENANCE3_EXTENSION_NAME)
                                     .add_required_extension_features(descriptor_indexing_features)
                                     .select();
-            // Ignore if hardware support isn't true
             REQUIRE(phys_dev_ret.has_value());
 
             VkPhysicalDeviceFeatures2 phys_dev_feats2{};
@@ -765,17 +856,23 @@ TEST_CASE("Querying Vulkan 1.1 and 1.2 features", "[VkBootstrap.version]") {
             features_11.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES;
             features_11.multiview = true;
             VkPhysicalDeviceVulkan12Features features_12{};
-            features_11.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES;
+            features_12.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES;
             features_12.bufferDeviceAddress = true;
 
             vkb::PhysicalDeviceSelector selector(instance);
             auto phys_dev_ret = selector.set_required_features_11(features_11).set_required_features_12(features_12).select();
-            // Ignore if hardware support isn't true
             REQUIRE(phys_dev_ret.has_value());
 
             vkb::DeviceBuilder device_builder(phys_dev_ret.value());
             auto device_ret = device_builder.build();
             REQUIRE(device_ret.has_value());
+            auto* s1 = reinterpret_cast<VkPhysicalDeviceVulkan11Features*>(
+                &mock.physical_devices_details.at(0).created_device_details.at(0).features_pNextChain.at(0));
+            REQUIRE(s1->multiview);
+            auto* s2 = reinterpret_cast<VkPhysicalDeviceVulkan12Features*>(
+                &mock.physical_devices_details.at(0).created_device_details.at(0).features_pNextChain.at(1));
+            REQUIRE(s2->bufferDeviceAddress);
+
             vkb::destroy_device(device_ret.value());
         }
         mock.api_version = VK_API_VERSION_1_1;
@@ -787,8 +884,79 @@ TEST_CASE("Querying Vulkan 1.1 and 1.2 features", "[VkBootstrap.version]") {
 
             vkb::PhysicalDeviceSelector selector(instance);
             auto phys_dev_ret = selector.set_required_features_11(features_11).select();
-            // Ignore if hardware support differs
             REQUIRE(!phys_dev_ret.has_value());
+        }
+        vkb::destroy_instance(instance);
+    }
+}
+
+TEST_CASE("Add required features in multiple calls", "[VkBootstrap.required_features]") {
+    VulkanMock& mock = get_and_setup_default();
+    mock.api_version = VK_API_VERSION_1_2;
+    mock.physical_devices_details[0].properties.apiVersion = VK_API_VERSION_1_2;
+    mock.physical_devices_details[0].features.independentBlend = true;
+    mock.physical_devices_details[0].features.shaderInt64 = true;
+
+    GIVEN("A working instance") {
+        auto instance = get_headless_instance(1); // make sure we use 1.1
+        SECTION("Requires a device that supports independentBlend and shaderInt64") {
+            VkPhysicalDeviceFeatures features1{};
+            features1.independentBlend = true;
+            VkPhysicalDeviceFeatures features2{};
+            features2.shaderInt64 = true;
+
+            vkb::PhysicalDeviceSelector selector(instance);
+            auto phys_dev_ret = selector.set_required_features(features1).set_required_features(features2).select();
+            REQUIRE(phys_dev_ret.has_value());
+
+            vkb::DeviceBuilder device_builder(phys_dev_ret.value());
+            auto device_ret = device_builder.build();
+            REQUIRE(device_ret.has_value());
+
+            REQUIRE(mock.physical_devices_details.at(0).created_device_details.at(0).features.independentBlend);
+            REQUIRE(mock.physical_devices_details.at(0).created_device_details.at(0).features.shaderInt64);
+
+            vkb::destroy_device(device_ret.value());
+        }
+        vkb::destroy_instance(instance);
+    }
+}
+
+TEST_CASE("Add required extension features in multiple calls", "[VkBootstrap.required_features]") {
+    VulkanMock& mock = get_and_setup_default();
+    mock.api_version = VK_API_VERSION_1_2;
+    mock.physical_devices_details[0].properties.apiVersion = VK_API_VERSION_1_2;
+
+    auto mock_vulkan_11_features = VkPhysicalDeviceVulkan11Features{};
+    mock_vulkan_11_features.multiview = true;
+    mock_vulkan_11_features.samplerYcbcrConversion = true;
+    mock.physical_devices_details[0].add_features_pNext_struct(mock_vulkan_11_features);
+
+    GIVEN("A working instance") {
+        auto instance = get_headless_instance(1); // make sure we use 1.1
+        SECTION("Requires a device that supports multiview and samplerYcbcrConversion") {
+            VkPhysicalDeviceVulkan11Features features1{};
+            features1.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES;
+            features1.multiview = true;
+
+            VkPhysicalDeviceVulkan11Features features2{};
+            features2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES;
+            features2.samplerYcbcrConversion = true;
+
+
+            vkb::PhysicalDeviceSelector selector(instance);
+            auto phys_dev_ret = selector.set_required_features_11(features1).set_required_features_11(features2).select();
+            REQUIRE(phys_dev_ret.has_value());
+
+            vkb::DeviceBuilder device_builder(phys_dev_ret.value());
+            auto device_ret = device_builder.build();
+            REQUIRE(device_ret.has_value());
+            auto* s1 = reinterpret_cast<VkPhysicalDeviceVulkan11Features*>(
+                &mock.physical_devices_details.at(0).created_device_details.at(0).features_pNextChain.at(0));
+            REQUIRE(s1->multiview);
+            REQUIRE(s1->samplerYcbcrConversion);
+
+            vkb::destroy_device(device_ret.value());
         }
         vkb::destroy_instance(instance);
     }

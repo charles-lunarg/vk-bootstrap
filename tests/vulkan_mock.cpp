@@ -138,13 +138,17 @@ VKAPI_ATTR void VKAPI_CALL shim_vkGetPhysicalDeviceMemoryProperties(
 }
 
 VKAPI_ATTR void VKAPI_CALL shim_vkGetPhysicalDeviceFeatures2KHR(VkPhysicalDevice physicalDevice, VkPhysicalDeviceFeatures2* pFeatures) {
+    pFeatures->features = get_physical_device_details(physicalDevice).features;
     const auto& phys_dev = get_physical_device_details(physicalDevice);
     VkBaseOutStructure* current = static_cast<VkBaseOutStructure*>(pFeatures->pNext);
     while (current) {
         for (const auto& features_pNext : phys_dev.features_pNextChain) {
-            if (features_pNext->sType == current->sType) {
+            if (features_pNext.sType == current->sType) {
                 VkBaseOutStructure* next = static_cast<VkBaseOutStructure*>(current->pNext);
-                std::memcpy(current, features_pNext.get(), get_pnext_chain_struct_size(features_pNext->sType));
+                std::memcpy(static_cast<void*>(current),
+                    static_cast<const void*>(&features_pNext),
+                    get_pnext_chain_struct_size(features_pNext.sType));
+                // Repair pNext void* since we clobbered it in the memcpy
                 current->pNext = next;
                 break;
             }
@@ -179,27 +183,56 @@ VKAPI_ATTR VkResult VKAPI_CALL shim_vkCreateDevice(VkPhysicalDevice physicalDevi
         return VK_ERROR_INITIALIZATION_FAILED;
     }
     *pDevice = get_handle<VkDevice>(0x0000ABCDU);
-    get_physical_device_details(physicalDevice).created_devices.push_back(*pDevice);
+    auto& physical_device_details = get_physical_device_details(physicalDevice);
+    physical_device_details.created_device_handles.push_back(*pDevice);
+    VkPhysicalDeviceFeatures new_feats{};
+    if (pCreateInfo->pEnabledFeatures) {
+        new_feats = *pCreateInfo->pEnabledFeatures;
+    }
+    std::vector<vkb::detail::GenericFeaturesPNextNode> new_chain;
+    std::vector<const char*> created_extensions;
+    for (uint32_t i = 0; i < pCreateInfo->enabledExtensionCount; i++) {
+        created_extensions.push_back(pCreateInfo->ppEnabledExtensionNames[i]);
+    }
+    const void* pNext_chain = pCreateInfo->pNext;
+    while (pNext_chain) {
+        const auto* chain = static_cast<const VkBaseOutStructure*>(pNext_chain);
+        const void* next = chain->pNext;
+        if (check_if_features2_struct(chain->sType) > 0) {
+            vkb::detail::GenericFeaturesPNextNode node;
+            std::memcpy(static_cast<void*>(&node), pNext_chain, get_pnext_chain_struct_size(chain->sType));
+            new_chain.push_back(node);
+        }
+        if (chain->sType == VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2) {
+            new_feats = static_cast<const VkPhysicalDeviceFeatures2*>(pNext_chain)->features;
+        }
+        pNext_chain = next;
+    }
+    physical_device_details.created_device_details.push_back({ new_feats, created_extensions, new_chain });
     return VK_SUCCESS;
 }
 
 VKAPI_ATTR void VKAPI_CALL shim_vkDestroyDevice(
     [[maybe_unused]] VkDevice device, [[maybe_unused]] const VkAllocationCallbacks* pAllocator) {
     for (auto& physical_devices : mock.physical_devices_details) {
-        auto it = std::find(std::begin(physical_devices.created_devices), std::end(physical_devices.created_devices), device);
-        if (it != std::end(physical_devices.created_devices)) {
-            physical_devices.created_devices.erase(it);
+        auto it = std::find(
+            std::begin(physical_devices.created_device_handles), std::end(physical_devices.created_device_handles), device);
+        if (it != std::end(physical_devices.created_device_handles)) {
+            auto index = it - physical_devices.created_device_handles.begin();
+            physical_devices.created_device_handles.erase(it);
+            physical_devices.created_device_details.erase(physical_devices.created_device_details.begin() + index);
         }
     }
 }
 
 VKAPI_ATTR void VKAPI_CALL shim_vkGetDeviceQueue(VkDevice device, uint32_t queueFamilyIndex, uint32_t queueIndex, VkQueue* pQueue) {
     for (auto& physical_devices : mock.physical_devices_details) {
-        auto it = std::find(std::begin(physical_devices.created_devices), std::end(physical_devices.created_devices), device);
-        if (it != std::end(physical_devices.created_devices)) {
+        auto it = std::find(
+            std::begin(physical_devices.created_device_handles), std::end(physical_devices.created_device_handles), device);
+        if (it != std::end(physical_devices.created_device_handles)) {
             if (queueFamilyIndex < physical_devices.queue_family_properties.size() &&
                 queueIndex < physical_devices.queue_family_properties[queueFamilyIndex].queueCount) {
-                *pQueue = get_handle<VkQueue>(0x0000CCEEU);
+                *pQueue = get_handle<VkQueue>(0x0000CCEEU + queueIndex);
                 return;
             }
         }

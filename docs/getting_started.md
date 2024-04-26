@@ -182,7 +182,7 @@ Features only available through extensions need to use `add_required_extension_f
 VkPhysicalDeviceDescriptorIndexingFeatures descriptor_indexing_features{};
 descriptor_indexing_features.<features_used> = true;
 
-phys_device_selector.add_required_extension_features(&descriptor_indexing_features);
+phys_device_selector.add_required_extension_features(descriptor_indexing_features);
 ```
 
 The features and extensions used as selection criteria in `vkb::PhysicalDeviceSelector` automatically propagate into `vkb::DeviceBuilder`. That means the application only needs to state the feature requirement once, and `vk-bootstrap` will handle enabling it on the resulting device.

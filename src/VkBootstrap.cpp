@@ -768,12 +768,6 @@ InstanceBuilder& InstanceBuilder::enable_extension(const char* extension_name) {
     info.extensions.push_back(extension_name);
     return *this;
 }
-InstanceBuilder& InstanceBuilder::enable_extensions(std::vector<const char*> const& extensions) {
-    for (const auto extension : extensions) {
-        info.extensions.push_back(extension);
-    }
-    return *this;
-}
 InstanceBuilder& InstanceBuilder::enable_extensions(size_t count, const char* const* extensions) {
     if (!extensions || count == 0) return *this;
     for (size_t i = 0; i < count; i++) {
@@ -1038,7 +1032,7 @@ PhysicalDevice PhysicalDeviceSelector::populate_device_details(VkPhysicalDevice 
         } else {
             detail::vulkan_functions().fp_vkGetPhysicalDeviceFeatures2KHR(vk_phys_device, &local_features);
         }
-        physical_device.extended_features_chain = fill_chain;
+        physical_device.extended_features_chain = std::move(fill_chain);
     }
 
     return physical_device;
@@ -1299,12 +1293,6 @@ PhysicalDeviceSelector& PhysicalDeviceSelector::add_required_extension(const cha
     criteria.required_extensions.push_back(extension);
     return *this;
 }
-PhysicalDeviceSelector& PhysicalDeviceSelector::add_required_extensions(std::vector<const char*> const& extensions) {
-    for (const auto& ext : extensions) {
-        criteria.required_extensions.push_back(ext);
-    }
-    return *this;
-}
 PhysicalDeviceSelector& PhysicalDeviceSelector::add_required_extensions(size_t count, const char* const* extensions) {
     if (!extensions || count == 0) return *this;
     for (size_t i = 0; i < count; i++) {
@@ -1399,15 +1387,16 @@ bool PhysicalDevice::enable_extension_if_present(const char* extension) {
     }
     return false;
 }
-bool PhysicalDevice::enable_extensions_if_present(const std::vector<const char*>& extensions) { 
-    for (const auto extension : extensions) {
+bool PhysicalDevice::enable_extensions_if_present(size_t count, const char* const* extensions) {
+    for (size_t i = 0; i < count; ++i) {
+        const auto extension = extensions[i];
         auto it = std::find_if(std::begin(available_extensions),
             std::end(available_extensions),
             [extension](std::string const& ext_name) { return ext_name == extension; });
         if (it == std::end(available_extensions)) return false;
     }
-    for (const auto extension : extensions)
-        extensions_to_enable.push_back(extension);
+    for (size_t i = 0; i < count; ++i)
+        extensions_to_enable.push_back(extensions[i]);
     return true;
 }
 
@@ -1478,9 +1467,6 @@ DispatchTable Device::make_table() const { return { device, fp_vkGetDeviceProcAd
 // ---- Device ---- //
 
 Device::operator VkDevice() const { return this->device; }
-
-CustomQueueDescription::CustomQueueDescription(uint32_t index, std::vector<float> priorities)
-: index(index), priorities(std::move(priorities)) {}
 
 void destroy_device(Device const& device) {
     device.internal_table.fp_vkDestroyDevice(device.device, device.allocation_callbacks);
@@ -1584,14 +1570,28 @@ Result<Device> DeviceBuilder::build() const {
     device.instance_version = physical_device.instance_version;
     return device;
 }
-DeviceBuilder& DeviceBuilder::custom_queue_setup(std::vector<CustomQueueDescription> queue_descriptions) {
-    info.queue_descriptions = std::move(queue_descriptions);
-    return *this;
-}
 DeviceBuilder& DeviceBuilder::set_allocation_callbacks(VkAllocationCallbacks* callbacks) {
     info.allocation_callbacks = callbacks;
     return *this;
 }
+DeviceBuilder& DeviceBuilder::custom_queue_setup(size_t count, CustomQueueDescription const* queue_descriptions) {
+    info.queue_descriptions.assign(queue_descriptions, queue_descriptions + count);
+    return *this;
+}
+DeviceBuilder& DeviceBuilder::custom_queue_setup(std::vector<CustomQueueDescription> const& queue_descriptions) {
+    info.queue_descriptions = queue_descriptions;
+    return *this;
+}
+DeviceBuilder& DeviceBuilder::custom_queue_setup(std::vector<CustomQueueDescription>&& queue_descriptions) {
+    info.queue_descriptions = std::move(queue_descriptions);
+    return *this;
+}
+#if VKB_SPAN_OVERLOADS
+DeviceBuilder& DeviceBuilder::custom_queue_setup(std::span<const CustomQueueDescription> queue_descriptions) {
+    info.queue_descriptions.assign(queue_descriptions.begin(), queue_descriptions.end());
+    return *this;
+}
+#endif
 
 // ---- Swapchain ---- //
 
@@ -1938,11 +1938,19 @@ Result<std::vector<VkImageView>> Swapchain::get_image_views(const void* pNext) {
     }
     return views;
 }
-void Swapchain::destroy_image_views(std::vector<VkImageView> const& image_views) {
-    for (auto& image_view : image_views) {
-        internal_table.fp_vkDestroyImageView(device, image_view, allocation_callbacks);
+void Swapchain::destroy_image_views(size_t count, VkImageView const* image_views) {
+    for (size_t i = 0; i < count; ++i) {
+        internal_table.fp_vkDestroyImageView(device, image_views[i], allocation_callbacks);
     }
 }
+void Swapchain::destroy_image_views(std::vector<VkImageView> const& image_views) {
+    destroy_image_views(image_views.size(), image_views.data());
+}
+#if VKB_SPAN_OVERLOADS
+void Swapchain::destroy_image_views(std::span<const VkImageView> image_views) {
+    destroy_image_views(image_views.size(), image_views.data());
+}
+#endif
 Swapchain::operator VkSwapchainKHR() const { return this->swapchain; }
 SwapchainBuilder& SwapchainBuilder::set_old_swapchain(VkSwapchainKHR old_swapchain) {
     info.old_swapchain = old_swapchain;

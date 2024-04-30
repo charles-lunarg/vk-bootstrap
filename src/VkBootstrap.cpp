@@ -1512,7 +1512,7 @@ bool PhysicalDevice::is_features_node_present(detail::GenericFeaturesPNextNode c
     detail::GenericFeatureChain requested_features;
     requested_features.nodes.push_back(node);
 
-    return detail::supports_features({}, {}, extended_features_chain, requested_features);
+    return extended_features_chain.match(requested_features);
 }
 
 bool PhysicalDevice::enable_features_node_if_present(detail::GenericFeaturesPNextNode const& node) {
@@ -1529,7 +1529,7 @@ bool PhysicalDevice::enable_features_node_if_present(detail::GenericFeaturesPNex
     fill_chain.chain_up(actual_pdf2);
 
     detail::vulkan_functions().fp_vkGetPhysicalDeviceFeatures2(physical_device, &actual_pdf2);
-    bool required_features_supported = detail::supports_features({}, {}, fill_chain, requested_features);
+    bool required_features_supported = fill_chain.match(requested_features);
     if (required_features_supported) {
         extended_features_chain.combine(requested_features);
     }

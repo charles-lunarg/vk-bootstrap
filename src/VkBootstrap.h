@@ -528,6 +528,11 @@ struct PhysicalDevice {
     // Returns true if an extension should be enabled on the device
     bool is_extension_present(const char* extension) const;
 
+    // Returns true if all of the features are present
+    template <typename T> bool are_extension_features_present(T const& features) const {
+        return is_features_node_present(detail::GenericFeaturesPNextNode(features));
+    }
+
     // If the given extension is present, make the extension be enabled on the device.
     // Returns true the extension is present.
     bool enable_extension_if_present(const char* extension);
@@ -564,6 +569,7 @@ struct PhysicalDevice {
     friend class PhysicalDeviceSelector;
     friend class DeviceBuilder;
 
+    bool is_features_node_present(detail::GenericFeaturesPNextNode const& node) const;
     bool enable_features_node_if_present(detail::GenericFeaturesPNextNode const& node);
 };
 

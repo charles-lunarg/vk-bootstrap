@@ -1508,6 +1508,13 @@ bool PhysicalDevice::enable_features_if_present(const VkPhysicalDeviceFeatures& 
     return required_features_supported;
 }
 
+bool PhysicalDevice::is_features_node_present(detail::GenericFeaturesPNextNode const& node) const {
+    detail::GenericFeatureChain requested_features;
+    requested_features.nodes.push_back(node);
+
+    return detail::supports_features({}, {}, extended_features_chain, requested_features);
+}
+
 bool PhysicalDevice::enable_features_node_if_present(detail::GenericFeaturesPNextNode const& node) {
     VkPhysicalDeviceFeatures2 actual_pdf2{};
 

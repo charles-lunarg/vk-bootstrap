@@ -528,7 +528,7 @@ struct PhysicalDevice {
     // Returns true if an extension should be enabled on the device
     bool is_extension_present(const char* extension) const;
 
-    // Returns true if all of the features are present
+    // Returns true if all the features are present
     template <typename T> bool are_extension_features_present(T const& features) const {
         return is_features_node_present(detail::GenericFeaturesPNextNode(features));
     }
@@ -542,11 +542,11 @@ struct PhysicalDevice {
     bool enable_extensions_if_present(const std::vector<const char*>& extensions);
 
     // If the features from VkPhysicalDeviceFeatures are all present, make all of the features be enable on the device.
-    // Returns true all of the features are present.
+    // Returns true if all the features are present.
     bool enable_features_if_present(const VkPhysicalDeviceFeatures& features_to_enable);
 
     // If the features from the provided features struct are all present, make all of the features be enable on the
-    // device. Returns true all of the features are present.
+    // device. Returns true if all of the features are present.
     template <typename T> bool enable_extension_features_if_present(T const& features_check) {
         return enable_features_node_if_present(detail::GenericFeaturesPNextNode(features_check));
     }

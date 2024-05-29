@@ -542,8 +542,8 @@ struct PhysicalDevice {
 
     // If the features from the provided features struct are all present, make all of the features be enable on the
     // device. Returns true all of the features are present.
-    template <typename T> bool enable_extension_features_if_present(T const& features) {
-        return enable_features_node_if_present(detail::GenericFeaturesPNextNode(features));
+    template <typename T> bool enable_extension_features_if_present(T const& features_check) {
+        return enable_features_node_if_present(detail::GenericFeaturesPNextNode(features_check));
     }
 
     // A conversion function which allows this PhysicalDevice to be used

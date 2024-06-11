@@ -150,6 +150,7 @@ cmake ../path/to/your_project/ -DVK_BOOTSTRAP_TEST=ON
 ```
 
 ### Build Options
+
 | Name | Type |  Default Value | Description |
 | ---- | --- | ---- | ----- | 
 | `VK_BOOTSTRAP_WERROR` | bool | `OFF` | Enable warnings as errors during compilation. |

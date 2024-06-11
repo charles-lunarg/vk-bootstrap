@@ -5127,8 +5127,8 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_KHR_dynamic_rendering_local_read))
-    void cmdSetRenderingInputAttachmentIndicesKHR(VkCommandBuffer commandBuffer, const VkRenderingInputAttachmentIndexInfoKHR* pLocationInfo) const noexcept {
-        fp_vkCmdSetRenderingInputAttachmentIndicesKHR(commandBuffer, pLocationInfo);
+    void cmdSetRenderingInputAttachmentIndicesKHR(VkCommandBuffer commandBuffer, const VkRenderingInputAttachmentIndexInfoKHR* pInputAttachmentIndexInfo) const noexcept {
+        fp_vkCmdSetRenderingInputAttachmentIndicesKHR(commandBuffer, pInputAttachmentIndexInfo);
     }
 #endif
 #if (defined(VK_EXT_host_query_reset))

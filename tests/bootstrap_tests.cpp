@@ -632,6 +632,8 @@ TEST_CASE("Querying Required Extension Features", "[VkBootstrap.select_features]
                                     .select();
             REQUIRE(phys_dev_ret.has_value());
 
+            REQUIRE(phys_dev_ret.value().are_extension_features_present(descriptor_indexing_features));
+
             vkb::DeviceBuilder device_builder(phys_dev_ret.value());
             auto device_ret = device_builder.build();
             REQUIRE(device_ret.has_value());
@@ -783,6 +785,13 @@ TEST_CASE("Querying Required Extension Features in 1.1", "[VkBootstrap.version]"
                                     .select();
             REQUIRE(phys_dev_ret.has_value());
 
+            REQUIRE(phys_dev_ret.value().are_extension_features_present(descriptor_indexing_features));
+
+            VkPhysicalDeviceASTCDecodeFeaturesEXT astc_features{};
+            astc_features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ASTC_DECODE_FEATURES_EXT;
+            astc_features.decodeModeSharedExponent = true;
+            REQUIRE(!phys_dev_ret.value().are_extension_features_present(astc_features));
+
             vkb::DeviceBuilder device_builder(phys_dev_ret.value());
             auto device_ret = device_builder.build();
             REQUIRE(device_ret.has_value());
@@ -799,6 +808,13 @@ TEST_CASE("Querying Required Extension Features in 1.1", "[VkBootstrap.version]"
                                     .add_required_extension(VK_KHR_MAINTENANCE3_EXTENSION_NAME)
                                     .select();
             REQUIRE(phys_dev_ret.has_value());
+
+            REQUIRE(!phys_dev_ret.value().are_extension_features_present(descriptor_indexing_features));
+
+            VkPhysicalDeviceASTCDecodeFeaturesEXT astc_features{};
+            astc_features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ASTC_DECODE_FEATURES_EXT;
+            astc_features.decodeModeSharedExponent = true;
+            REQUIRE(!phys_dev_ret.value().are_extension_features_present(astc_features));
 
             VkPhysicalDeviceFeatures2 phys_dev_feats2{};
             phys_dev_feats2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
@@ -821,6 +837,8 @@ TEST_CASE("Querying Required Extension Features in 1.1", "[VkBootstrap.version]"
                                     .add_required_extension_features(descriptor_indexing_features)
                                     .select();
             REQUIRE(phys_dev_ret.has_value());
+
+            REQUIRE(phys_dev_ret.value().are_extension_features_present(descriptor_indexing_features));
 
             VkPhysicalDeviceFeatures2 phys_dev_feats2{};
             phys_dev_feats2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;

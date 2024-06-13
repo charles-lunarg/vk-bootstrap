@@ -54,7 +54,7 @@ void GenericFeaturesPNextNode::combine(GenericFeaturesPNextNode const& right) no
     }
 }
 
-bool GenericFeatureChain::match(GenericFeatureChain const& extension_requested) const noexcept {
+bool GenericFeatureChain::match_all(GenericFeatureChain const& extension_requested) const noexcept {
     // Should only be false if extension_supported was unable to be filled out, due to the
     // physical device not supporting vkGetPhysicalDeviceFeatures2 in any capacity.
     if (extension_requested.nodes.size() != nodes.size()) {
@@ -63,6 +63,21 @@ bool GenericFeatureChain::match(GenericFeatureChain const& extension_requested) 
 
     for (size_t i = 0; i < nodes.size() && i < nodes.size(); ++i) {
         if (!GenericFeaturesPNextNode::match(extension_requested.nodes[i], nodes[i])) return false;
+    }
+    return true;
+}
+
+bool GenericFeatureChain::find_and_match(GenericFeatureChain const& extensions_requested) const noexcept {
+    for (const auto& requested_extension_node : extensions_requested.nodes) {
+        bool found = false;
+        for (const auto& supported_node : nodes) {
+            if (supported_node.sType == requested_extension_node.sType) {
+                found = true;
+                if (!GenericFeaturesPNextNode::match(requested_extension_node, supported_node)) return false;
+                break;
+            }
+        }
+        if (!found) return false;
     }
     return true;
 }
@@ -1030,8 +1045,7 @@ bool supports_features(const VkPhysicalDeviceFeatures& supported,
 	if (requested.variableMultisampleRate && !supported.variableMultisampleRate) return false;
 	if (requested.inheritedQueries && !supported.inheritedQueries) return false;
 
-
-	return extension_supported.match(extension_requested);
+	return extension_supported.match_all(extension_requested);
 }
 // clang-format on
 // Finds the first queue which supports the desired operations. Returns QUEUE_INDEX_MAX_VALUE if none is found
@@ -1512,7 +1526,7 @@ bool PhysicalDevice::is_features_node_present(detail::GenericFeaturesPNextNode c
     detail::GenericFeatureChain requested_features;
     requested_features.nodes.push_back(node);
 
-    return extended_features_chain.match(requested_features);
+    return extended_features_chain.find_and_match(requested_features);
 }
 
 bool PhysicalDevice::enable_features_node_if_present(detail::GenericFeaturesPNextNode const& node) {
@@ -1529,7 +1543,7 @@ bool PhysicalDevice::enable_features_node_if_present(detail::GenericFeaturesPNex
     fill_chain.chain_up(actual_pdf2);
 
     detail::vulkan_functions().fp_vkGetPhysicalDeviceFeatures2(physical_device, &actual_pdf2);
-    bool required_features_supported = fill_chain.match(requested_features);
+    bool required_features_supported = fill_chain.match_all(requested_features);
     if (required_features_supported) {
         extended_features_chain.combine(requested_features);
     }

@@ -656,7 +656,7 @@ TEST_CASE("Adding Optional Extension Features", "[VkBootstrap.enable_features_if
     mock.physical_devices_details[0].add_features_pNext_struct(vulkan_11_features);
 
     auto vulkan_12_features = VkPhysicalDeviceVulkan12Features{};
-    vulkan_12_features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES;
+    // Forget to set this sType - let vk-bootstrap deal with it
     vulkan_12_features.bufferDeviceAddress = true;
     mock.physical_devices_details[0].add_features_pNext_struct(vulkan_12_features);
 

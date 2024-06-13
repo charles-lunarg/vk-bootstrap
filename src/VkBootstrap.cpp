@@ -973,7 +973,7 @@ bool supports_features(const VkPhysicalDeviceFeatures& supported,
 					   const VkPhysicalDeviceFeatures& requested,
 					   const GenericFeatureChain& extension_supported,
 					   const GenericFeatureChain& extension_requested) {
-    
+
 	if (requested.robustBufferAccess && !supported.robustBufferAccess) return false;
 	if (requested.fullDrawIndexUint32 && !supported.fullDrawIndexUint32) return false;
 	if (requested.imageCubeArray && !supported.imageCubeArray) return false;
@@ -1029,7 +1029,7 @@ bool supports_features(const VkPhysicalDeviceFeatures& supported,
 	if (requested.sparseResidencyAliased && !supported.sparseResidencyAliased) return false;
 	if (requested.variableMultisampleRate && !supported.variableMultisampleRate) return false;
 	if (requested.inheritedQueries && !supported.inheritedQueries) return false;
-    
+
 
 	return extension_supported.match(extension_requested);
 }
@@ -1427,20 +1427,20 @@ PhysicalDeviceSelector& PhysicalDeviceSelector::set_required_features(VkPhysical
 }
 #if defined(VKB_VK_API_VERSION_1_2)
 // Just calls add_required_features
-PhysicalDeviceSelector& PhysicalDeviceSelector::set_required_features_11(VkPhysicalDeviceVulkan11Features const& features_11) {
-    assert(features_11.sType == VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES);
+PhysicalDeviceSelector& PhysicalDeviceSelector::set_required_features_11(VkPhysicalDeviceVulkan11Features& features_11) {
+    features_11.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES;
     add_required_extension_features(features_11);
     return *this;
 }
-PhysicalDeviceSelector& PhysicalDeviceSelector::set_required_features_12(VkPhysicalDeviceVulkan12Features const& features_12) {
-    assert(features_12.sType == VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES);
+PhysicalDeviceSelector& PhysicalDeviceSelector::set_required_features_12(VkPhysicalDeviceVulkan12Features& features_12) {
+    features_12.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES;
     add_required_extension_features(features_12);
     return *this;
 }
 #endif
 #if defined(VKB_VK_API_VERSION_1_3)
-PhysicalDeviceSelector& PhysicalDeviceSelector::set_required_features_13(VkPhysicalDeviceVulkan13Features const& features_13) {
-    assert(features_13.sType == VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_FEATURES);
+PhysicalDeviceSelector& PhysicalDeviceSelector::set_required_features_13(VkPhysicalDeviceVulkan13Features& features_13) {
+    features_13.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_FEATURES;
     add_required_extension_features(features_13);
     return *this;
 }

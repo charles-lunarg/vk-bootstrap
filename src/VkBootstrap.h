@@ -194,7 +194,8 @@ struct GenericFeatureChain {
         nodes.push_back(features);
     }
 
-    bool match(GenericFeatureChain const& extension_requested) const noexcept;
+    bool match_all(GenericFeatureChain const& extension_requested) const noexcept;
+    bool find_and_match(GenericFeatureChain const& extension_requested) const noexcept;
 
     void chain_up(VkPhysicalDeviceFeatures2& feats2) noexcept;
 

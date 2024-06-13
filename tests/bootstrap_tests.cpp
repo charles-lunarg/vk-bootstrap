@@ -792,6 +792,12 @@ TEST_CASE("Querying Required Extension Features in 1.1", "[VkBootstrap.version]"
             astc_features.decodeModeSharedExponent = true;
             REQUIRE(!phys_dev_ret.value().are_extension_features_present(astc_features));
 
+            VkPhysicalDeviceDescriptorIndexingFeaturesEXT unsupported_descriptor_indexing_features{};
+            unsupported_descriptor_indexing_features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT;
+            unsupported_descriptor_indexing_features.runtimeDescriptorArray = true;
+            unsupported_descriptor_indexing_features.descriptorBindingUniformTexelBufferUpdateAfterBind = true;
+            REQUIRE(!phys_dev_ret.value().are_extension_features_present(unsupported_descriptor_indexing_features));
+
             vkb::DeviceBuilder device_builder(phys_dev_ret.value());
             auto device_ret = device_builder.build();
             REQUIRE(device_ret.has_value());

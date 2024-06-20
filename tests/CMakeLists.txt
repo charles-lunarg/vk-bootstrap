@@ -7,7 +7,7 @@ else()
 endif()
 target_link_libraries(VulkanMock
     PUBLIC
-        Vulkan::Headers vk-bootstrap
+        Vulkan::Headers vk-bootstrap Catch2::Catch2
     PRIVATE
         vk-bootstrap-compiler-warnings
 )
@@ -23,10 +23,13 @@ endif()
 
 add_executable(vk-bootstrap-test
     vulkan_library_loader.hpp
+    vulkan_mock_setup.hpp
+    vulkan_mock_setup.cpp
     bootstrap_tests.cpp
     error_code_tests.cpp
     unit_tests.cpp
     include_checks.cpp
+    vulkan_hpp_tests.cpp
 )
 
 target_link_libraries(vk-bootstrap-test

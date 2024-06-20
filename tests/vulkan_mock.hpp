@@ -22,6 +22,8 @@ inline size_t check_if_features2_struct(VkStructureType type) {
             return sizeof(VkPhysicalDeviceVulkan11Features);
         case (VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES):
             return sizeof(VkPhysicalDeviceVulkan12Features);
+        case (VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_SIZE_CONTROL_FEATURES):
+            return sizeof(VkPhysicalDeviceSubgroupSizeControlFeatures);
         default:
             return 0;
     }

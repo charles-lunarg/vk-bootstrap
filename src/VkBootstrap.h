@@ -185,7 +185,7 @@ struct GenericFeatureChain {
     template <typename T> void add(T const& features) noexcept {
         // If this struct is already in the list, combine it
         for (auto& node : nodes) {
-            if (features.sType == node.sType) {
+            if (static_cast<VkStructureType>(features.sType) == node.sType) {
                 node.combine(features);
                 return;
             }

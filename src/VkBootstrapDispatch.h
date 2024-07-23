@@ -2098,6 +2098,9 @@ struct DispatchTable {
 #if (defined(VK_NV_device_generated_commands_compute))
         fp_vkGetPipelineIndirectDeviceAddressNV = reinterpret_cast<PFN_vkGetPipelineIndirectDeviceAddressNV>(procAddr(device, "vkGetPipelineIndirectDeviceAddressNV"));
 #endif
+#if (defined(VK_AMD_anti_lag))
+        fp_vkAntiLagUpdateAMD = reinterpret_cast<PFN_vkAntiLagUpdateAMD>(procAddr(device, "vkAntiLagUpdateAMD"));
+#endif
 #if (defined(VK_VERSION_1_3))
         fp_vkCmdSetCullMode = reinterpret_cast<PFN_vkCmdSetCullMode>(procAddr(device, "vkCmdSetCullMode"));
 #endif
@@ -4244,6 +4247,11 @@ struct DispatchTable {
 #if (defined(VK_NV_device_generated_commands_compute))
     VkDeviceAddress getPipelineIndirectDeviceAddressNV(const VkPipelineIndirectDeviceAddressInfoNV* pInfo) const noexcept {
         return fp_vkGetPipelineIndirectDeviceAddressNV(device, pInfo);
+    }
+#endif
+#if (defined(VK_AMD_anti_lag))
+    void antiLagUpdateAMD(const VkAntiLagDataAMD* pData) const noexcept {
+        fp_vkAntiLagUpdateAMD(device, pData);
     }
 #endif
 #if (defined(VK_VERSION_1_3))
@@ -6644,6 +6652,11 @@ struct DispatchTable {
     PFN_vkGetPipelineIndirectDeviceAddressNV fp_vkGetPipelineIndirectDeviceAddressNV = nullptr;
 #else
     void * fp_vkGetPipelineIndirectDeviceAddressNV{};
+#endif
+#if (defined(VK_AMD_anti_lag))
+    PFN_vkAntiLagUpdateAMD fp_vkAntiLagUpdateAMD = nullptr;
+#else
+    void * fp_vkAntiLagUpdateAMD{};
 #endif
 #if (defined(VK_VERSION_1_3))
     PFN_vkCmdSetCullMode fp_vkCmdSetCullMode = nullptr;

@@ -671,7 +671,7 @@ class PhysicalDeviceSelector {
 #if defined(VKB_VK_API_VERSION_1_2)
     // Require a physical device which supports the features in VkPhysicalDeviceVulkan11Features.
     // Must have vulkan version 1.2 - This is due to the VkPhysicalDeviceVulkan11Features struct being added in 1.2, not 1.1
-    PhysicalDeviceSelector& set_required_features_11(VkPhysicalDeviceVulkan11Features const & features_11);
+    PhysicalDeviceSelector& set_required_features_11(VkPhysicalDeviceVulkan11Features const& features_11);
     // Require a physical device which supports the features in VkPhysicalDeviceVulkan12Features.
     // Must have vulkan version 1.2
     PhysicalDeviceSelector& set_required_features_12(VkPhysicalDeviceVulkan12Features const& features_12);

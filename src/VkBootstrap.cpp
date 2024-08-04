@@ -1440,22 +1440,27 @@ PhysicalDeviceSelector& PhysicalDeviceSelector::set_required_features(VkPhysical
     return *this;
 }
 #if defined(VKB_VK_API_VERSION_1_2)
-// Just calls add_required_features
-PhysicalDeviceSelector& PhysicalDeviceSelector::set_required_features_11(VkPhysicalDeviceVulkan11Features& features_11) {
-    features_11.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES;
-    add_required_extension_features(features_11);
+// The implementation of the set_required_features_1X functions sets the sType manually. This was a poor choice since
+// users of Vulkan should expect to fill out their structs properly. To make the functions take the struct parameter by
+// const reference, a local copy must be made in order to set the sType.
+PhysicalDeviceSelector& PhysicalDeviceSelector::set_required_features_11(VkPhysicalDeviceVulkan11Features const& features_11) {
+    VkPhysicalDeviceVulkan11Features features_11_copy = features_11;
+    features_11_copy.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES;
+    add_required_extension_features(features_11_copy);
     return *this;
 }
-PhysicalDeviceSelector& PhysicalDeviceSelector::set_required_features_12(VkPhysicalDeviceVulkan12Features& features_12) {
-    features_12.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES;
-    add_required_extension_features(features_12);
+PhysicalDeviceSelector& PhysicalDeviceSelector::set_required_features_12(VkPhysicalDeviceVulkan12Features const& features_12) {
+    VkPhysicalDeviceVulkan12Features features_12_copy = features_12;
+    features_12_copy.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES;
+    add_required_extension_features(features_12_copy);
     return *this;
 }
 #endif
 #if defined(VKB_VK_API_VERSION_1_3)
-PhysicalDeviceSelector& PhysicalDeviceSelector::set_required_features_13(VkPhysicalDeviceVulkan13Features& features_13) {
-    features_13.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_FEATURES;
-    add_required_extension_features(features_13);
+PhysicalDeviceSelector& PhysicalDeviceSelector::set_required_features_13(VkPhysicalDeviceVulkan13Features const& features_13) {
+    VkPhysicalDeviceVulkan13Features features_13_copy = features_13;
+    features_13_copy.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_FEATURES;
+    add_required_extension_features(features_13_copy);
     return *this;
 }
 #endif

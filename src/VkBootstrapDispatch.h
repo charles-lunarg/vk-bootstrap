@@ -1690,7 +1690,7 @@ struct DispatchTable {
 #if (defined(VK_VERSION_1_1))
         fp_vkUpdateDescriptorSetWithTemplate = reinterpret_cast<PFN_vkUpdateDescriptorSetWithTemplate>(procAddr(device, "vkUpdateDescriptorSetWithTemplate"));
 #endif
-#if (defined(VK_KHR_push_descriptor)) || (defined(VK_KHR_push_descriptor)) || (defined(VK_KHR_descriptor_update_template))
+#if (defined(VK_KHR_push_descriptor)) || (defined(VK_KHR_descriptor_update_template))
         fp_vkCmdPushDescriptorSetWithTemplateKHR = reinterpret_cast<PFN_vkCmdPushDescriptorSetWithTemplateKHR>(procAddr(device, "vkCmdPushDescriptorSetWithTemplateKHR"));
 #endif
 #if (defined(VK_EXT_hdr_metadata))
@@ -1993,7 +1993,7 @@ struct DispatchTable {
 #if (defined(VK_KHR_ray_tracing_pipeline))
         fp_vkCmdSetRayTracingPipelineStackSizeKHR = reinterpret_cast<PFN_vkCmdSetRayTracingPipelineStackSizeKHR>(procAddr(device, "vkCmdSetRayTracingPipelineStackSizeKHR"));
 #endif
-#if (defined(VK_EXT_full_screen_exclusive)) || (defined(VK_EXT_full_screen_exclusive))
+#if (defined(VK_EXT_full_screen_exclusive))
         fp_vkGetDeviceGroupSurfacePresentModes2EXT = reinterpret_cast<PFN_vkGetDeviceGroupSurfacePresentModes2EXT>(procAddr(device, "vkGetDeviceGroupSurfacePresentModes2EXT"));
 #endif
 #if (defined(VK_EXT_full_screen_exclusive))
@@ -3569,7 +3569,7 @@ struct DispatchTable {
         fp_vkUpdateDescriptorSetWithTemplate(device, descriptorSet, descriptorUpdateTemplate, pData);
     }
 #endif
-#if (defined(VK_KHR_push_descriptor)) || (defined(VK_KHR_push_descriptor)) || (defined(VK_KHR_descriptor_update_template))
+#if (defined(VK_KHR_push_descriptor)) || (defined(VK_KHR_descriptor_update_template))
     void cmdPushDescriptorSetWithTemplateKHR(VkCommandBuffer commandBuffer, VkDescriptorUpdateTemplateKHR descriptorUpdateTemplate, VkPipelineLayout layout, uint32_t set, const void* pData) const noexcept {
         fp_vkCmdPushDescriptorSetWithTemplateKHR(commandBuffer, descriptorUpdateTemplate, layout, set, pData);
     }
@@ -4074,7 +4074,7 @@ struct DispatchTable {
         fp_vkCmdSetRayTracingPipelineStackSizeKHR(commandBuffer, pipelineStackSize);
     }
 #endif
-#if (defined(VK_EXT_full_screen_exclusive)) || (defined(VK_EXT_full_screen_exclusive))
+#if (defined(VK_EXT_full_screen_exclusive))
     VkResult getDeviceGroupSurfacePresentModes2EXT(const VkPhysicalDeviceSurfaceInfo2KHR* pSurfaceInfo, VkDeviceGroupPresentModeFlagsKHR* pModes) const noexcept {
         return fp_vkGetDeviceGroupSurfacePresentModes2EXT(device, pSurfaceInfo, pModes);
     }
@@ -5973,7 +5973,7 @@ struct DispatchTable {
 #else
     void * fp_vkUpdateDescriptorSetWithTemplate{};
 #endif
-#if (defined(VK_KHR_push_descriptor)) || (defined(VK_KHR_push_descriptor)) || (defined(VK_KHR_descriptor_update_template))
+#if (defined(VK_KHR_push_descriptor)) || (defined(VK_KHR_descriptor_update_template))
     PFN_vkCmdPushDescriptorSetWithTemplateKHR fp_vkCmdPushDescriptorSetWithTemplateKHR = nullptr;
 #else
     void * fp_vkCmdPushDescriptorSetWithTemplateKHR{};
@@ -6478,7 +6478,7 @@ struct DispatchTable {
 #else
     void * fp_vkCmdSetRayTracingPipelineStackSizeKHR{};
 #endif
-#if (defined(VK_EXT_full_screen_exclusive)) || (defined(VK_EXT_full_screen_exclusive))
+#if (defined(VK_EXT_full_screen_exclusive))
     PFN_vkGetDeviceGroupSurfacePresentModes2EXT fp_vkGetDeviceGroupSurfacePresentModes2EXT = nullptr;
 #else
     void * fp_vkGetDeviceGroupSurfacePresentModes2EXT{};

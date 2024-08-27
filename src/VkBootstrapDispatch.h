@@ -1396,6 +1396,21 @@ struct DispatchTable {
         fp_vkDestroyPipelineCache = reinterpret_cast<PFN_vkDestroyPipelineCache>(procAddr(device, "vkDestroyPipelineCache"));
         fp_vkGetPipelineCacheData = reinterpret_cast<PFN_vkGetPipelineCacheData>(procAddr(device, "vkGetPipelineCacheData"));
         fp_vkMergePipelineCaches = reinterpret_cast<PFN_vkMergePipelineCaches>(procAddr(device, "vkMergePipelineCaches"));
+#if (defined(VK_KHR_pipeline_binary))
+        fp_vkCreatePipelineBinariesKHR = reinterpret_cast<PFN_vkCreatePipelineBinariesKHR>(procAddr(device, "vkCreatePipelineBinariesKHR"));
+#endif
+#if (defined(VK_KHR_pipeline_binary))
+        fp_vkDestroyPipelineBinaryKHR = reinterpret_cast<PFN_vkDestroyPipelineBinaryKHR>(procAddr(device, "vkDestroyPipelineBinaryKHR"));
+#endif
+#if (defined(VK_KHR_pipeline_binary))
+        fp_vkGetPipelineKeyKHR = reinterpret_cast<PFN_vkGetPipelineKeyKHR>(procAddr(device, "vkGetPipelineKeyKHR"));
+#endif
+#if (defined(VK_KHR_pipeline_binary))
+        fp_vkGetPipelineBinaryDataKHR = reinterpret_cast<PFN_vkGetPipelineBinaryDataKHR>(procAddr(device, "vkGetPipelineBinaryDataKHR"));
+#endif
+#if (defined(VK_KHR_pipeline_binary))
+        fp_vkReleaseCapturedPipelineDataKHR = reinterpret_cast<PFN_vkReleaseCapturedPipelineDataKHR>(procAddr(device, "vkReleaseCapturedPipelineDataKHR"));
+#endif
         fp_vkCreateGraphicsPipelines = reinterpret_cast<PFN_vkCreateGraphicsPipelines>(procAddr(device, "vkCreateGraphicsPipelines"));
         fp_vkCreateComputePipelines = reinterpret_cast<PFN_vkCreateComputePipelines>(procAddr(device, "vkCreateComputePipelines"));
 #if (defined(VK_HUAWEI_subpass_shading))
@@ -2983,6 +2998,31 @@ struct DispatchTable {
     VkResult mergePipelineCaches(VkPipelineCache dstCache, uint32_t srcCacheCount, const VkPipelineCache* pSrcCaches) const noexcept {
         return fp_vkMergePipelineCaches(device, dstCache, srcCacheCount, pSrcCaches);
     }
+#if (defined(VK_KHR_pipeline_binary))
+    VkResult createPipelineBinariesKHR(const VkPipelineBinaryCreateInfoKHR* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkPipelineBinaryHandlesInfoKHR* pBinaries) const noexcept {
+        return fp_vkCreatePipelineBinariesKHR(device, pCreateInfo, pAllocator, pBinaries);
+    }
+#endif
+#if (defined(VK_KHR_pipeline_binary))
+    void destroyPipelineBinaryKHR(VkPipelineBinaryKHR pipelineBinary, const VkAllocationCallbacks* pAllocator) const noexcept {
+        fp_vkDestroyPipelineBinaryKHR(device, pipelineBinary, pAllocator);
+    }
+#endif
+#if (defined(VK_KHR_pipeline_binary))
+    VkResult getPipelineKeyKHR(const VkPipelineCreateInfoKHR* pPipelineCreateInfo, VkPipelineBinaryKeyKHR* pPipelineKey) const noexcept {
+        return fp_vkGetPipelineKeyKHR(device, pPipelineCreateInfo, pPipelineKey);
+    }
+#endif
+#if (defined(VK_KHR_pipeline_binary))
+    VkResult getPipelineBinaryDataKHR(const VkPipelineBinaryDataInfoKHR* pInfo, VkPipelineBinaryKeyKHR* pPipelineBinaryKey, size_t* pPipelineBinaryDataSize, void* pPipelineBinaryData) const noexcept {
+        return fp_vkGetPipelineBinaryDataKHR(device, pInfo, pPipelineBinaryKey, pPipelineBinaryDataSize, pPipelineBinaryData);
+    }
+#endif
+#if (defined(VK_KHR_pipeline_binary))
+    VkResult releaseCapturedPipelineDataKHR(const VkReleaseCapturedPipelineDataInfoKHR* pInfo, const VkAllocationCallbacks* pAllocator) const noexcept {
+        return fp_vkReleaseCapturedPipelineDataKHR(device, pInfo, pAllocator);
+    }
+#endif
     VkResult createGraphicsPipelines(VkPipelineCache pipelineCache, uint32_t createInfoCount, const VkGraphicsPipelineCreateInfo* pCreateInfos, const VkAllocationCallbacks* pAllocator, VkPipeline* pPipelines) const noexcept {
         return fp_vkCreateGraphicsPipelines(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
     }
@@ -5531,6 +5571,31 @@ struct DispatchTable {
     PFN_vkDestroyPipelineCache fp_vkDestroyPipelineCache = nullptr;
     PFN_vkGetPipelineCacheData fp_vkGetPipelineCacheData = nullptr;
     PFN_vkMergePipelineCaches fp_vkMergePipelineCaches = nullptr;
+#if (defined(VK_KHR_pipeline_binary))
+    PFN_vkCreatePipelineBinariesKHR fp_vkCreatePipelineBinariesKHR = nullptr;
+#else
+    void * fp_vkCreatePipelineBinariesKHR{};
+#endif
+#if (defined(VK_KHR_pipeline_binary))
+    PFN_vkDestroyPipelineBinaryKHR fp_vkDestroyPipelineBinaryKHR = nullptr;
+#else
+    void * fp_vkDestroyPipelineBinaryKHR{};
+#endif
+#if (defined(VK_KHR_pipeline_binary))
+    PFN_vkGetPipelineKeyKHR fp_vkGetPipelineKeyKHR = nullptr;
+#else
+    void * fp_vkGetPipelineKeyKHR{};
+#endif
+#if (defined(VK_KHR_pipeline_binary))
+    PFN_vkGetPipelineBinaryDataKHR fp_vkGetPipelineBinaryDataKHR = nullptr;
+#else
+    void * fp_vkGetPipelineBinaryDataKHR{};
+#endif
+#if (defined(VK_KHR_pipeline_binary))
+    PFN_vkReleaseCapturedPipelineDataKHR fp_vkReleaseCapturedPipelineDataKHR = nullptr;
+#else
+    void * fp_vkReleaseCapturedPipelineDataKHR{};
+#endif
     PFN_vkCreateGraphicsPipelines fp_vkCreateGraphicsPipelines = nullptr;
     PFN_vkCreateComputePipelines fp_vkCreateComputePipelines = nullptr;
 #if (defined(VK_HUAWEI_subpass_shading))

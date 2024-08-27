@@ -1547,10 +1547,18 @@ bool PhysicalDevice::enable_features_node_if_present(detail::GenericFeaturesPNex
     actual_pdf2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
     fill_chain.chain_up(actual_pdf2);
 
-    detail::vulkan_functions().fp_vkGetPhysicalDeviceFeatures2(physical_device, &actual_pdf2);
-    bool required_features_supported = fill_chain.match_all(requested_features);
-    if (required_features_supported) {
-        extended_features_chain.combine(requested_features);
+    bool required_features_supported = false;
+    bool instance_is_1_1 = instance_version >= VKB_VK_API_VERSION_1_1;
+    if (instance_is_1_1 || properties2_ext_enabled) {
+        if (instance_is_1_1) {
+            detail::vulkan_functions().fp_vkGetPhysicalDeviceFeatures2(physical_device, &actual_pdf2);
+        } else {
+            detail::vulkan_functions().fp_vkGetPhysicalDeviceFeatures2KHR(physical_device, &actual_pdf2);
+        }
+        required_features_supported = fill_chain.match_all(requested_features);
+        if (required_features_supported) {
+            extended_features_chain.combine(requested_features);
+        }
     }
     return required_features_supported;
 }

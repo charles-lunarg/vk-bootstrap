@@ -1576,6 +1576,33 @@ struct DispatchTable {
 #if (defined(VK_NV_device_generated_commands))
         fp_vkDestroyIndirectCommandsLayoutNV = reinterpret_cast<PFN_vkDestroyIndirectCommandsLayoutNV>(procAddr(device, "vkDestroyIndirectCommandsLayoutNV"));
 #endif
+#if (defined(VK_EXT_device_generated_commands))
+        fp_vkCmdExecuteGeneratedCommandsEXT = reinterpret_cast<PFN_vkCmdExecuteGeneratedCommandsEXT>(procAddr(device, "vkCmdExecuteGeneratedCommandsEXT"));
+#endif
+#if (defined(VK_EXT_device_generated_commands))
+        fp_vkCmdPreprocessGeneratedCommandsEXT = reinterpret_cast<PFN_vkCmdPreprocessGeneratedCommandsEXT>(procAddr(device, "vkCmdPreprocessGeneratedCommandsEXT"));
+#endif
+#if (defined(VK_EXT_device_generated_commands))
+        fp_vkGetGeneratedCommandsMemoryRequirementsEXT = reinterpret_cast<PFN_vkGetGeneratedCommandsMemoryRequirementsEXT>(procAddr(device, "vkGetGeneratedCommandsMemoryRequirementsEXT"));
+#endif
+#if (defined(VK_EXT_device_generated_commands))
+        fp_vkCreateIndirectCommandsLayoutEXT = reinterpret_cast<PFN_vkCreateIndirectCommandsLayoutEXT>(procAddr(device, "vkCreateIndirectCommandsLayoutEXT"));
+#endif
+#if (defined(VK_EXT_device_generated_commands))
+        fp_vkDestroyIndirectCommandsLayoutEXT = reinterpret_cast<PFN_vkDestroyIndirectCommandsLayoutEXT>(procAddr(device, "vkDestroyIndirectCommandsLayoutEXT"));
+#endif
+#if (defined(VK_EXT_device_generated_commands))
+        fp_vkCreateIndirectExecutionSetEXT = reinterpret_cast<PFN_vkCreateIndirectExecutionSetEXT>(procAddr(device, "vkCreateIndirectExecutionSetEXT"));
+#endif
+#if (defined(VK_EXT_device_generated_commands))
+        fp_vkDestroyIndirectExecutionSetEXT = reinterpret_cast<PFN_vkDestroyIndirectExecutionSetEXT>(procAddr(device, "vkDestroyIndirectExecutionSetEXT"));
+#endif
+#if (defined(VK_EXT_device_generated_commands))
+        fp_vkUpdateIndirectExecutionSetPipelineEXT = reinterpret_cast<PFN_vkUpdateIndirectExecutionSetPipelineEXT>(procAddr(device, "vkUpdateIndirectExecutionSetPipelineEXT"));
+#endif
+#if (defined(VK_EXT_device_generated_commands))
+        fp_vkUpdateIndirectExecutionSetShaderEXT = reinterpret_cast<PFN_vkUpdateIndirectExecutionSetShaderEXT>(procAddr(device, "vkUpdateIndirectExecutionSetShaderEXT"));
+#endif
 #if (defined(VK_KHR_push_descriptor))
         fp_vkCmdPushDescriptorSetKHR = reinterpret_cast<PFN_vkCmdPushDescriptorSetKHR>(procAddr(device, "vkCmdPushDescriptorSetKHR"));
 #endif
@@ -2647,6 +2674,9 @@ struct DispatchTable {
 #if (defined(VK_KHR_dynamic_rendering_local_read))
         fp_vkCmdSetRenderingInputAttachmentIndicesKHR = reinterpret_cast<PFN_vkCmdSetRenderingInputAttachmentIndicesKHR>(procAddr(device, "vkCmdSetRenderingInputAttachmentIndicesKHR"));
 #endif
+#if (defined(VK_EXT_shader_object)) || (defined(VK_EXT_depth_clamp_control))
+        fp_vkCmdSetDepthClampRangeEXT = reinterpret_cast<PFN_vkCmdSetDepthClampRangeEXT>(procAddr(device, "vkCmdSetDepthClampRangeEXT"));
+#endif
 #if (defined(VK_EXT_host_query_reset))
         fp_vkResetQueryPoolEXT = reinterpret_cast<PFN_vkResetQueryPoolEXT>(procAddr(device, "vkResetQueryPoolEXT"));
 #endif
@@ -3392,6 +3422,51 @@ struct DispatchTable {
 #if (defined(VK_NV_device_generated_commands))
     void destroyIndirectCommandsLayoutNV(VkIndirectCommandsLayoutNV indirectCommandsLayout, const VkAllocationCallbacks* pAllocator) const noexcept {
         fp_vkDestroyIndirectCommandsLayoutNV(device, indirectCommandsLayout, pAllocator);
+    }
+#endif
+#if (defined(VK_EXT_device_generated_commands))
+    void cmdExecuteGeneratedCommandsEXT(VkCommandBuffer commandBuffer, VkBool32 isPreprocessed, const VkGeneratedCommandsInfoEXT* pGeneratedCommandsInfo) const noexcept {
+        fp_vkCmdExecuteGeneratedCommandsEXT(commandBuffer, isPreprocessed, pGeneratedCommandsInfo);
+    }
+#endif
+#if (defined(VK_EXT_device_generated_commands))
+    void cmdPreprocessGeneratedCommandsEXT(VkCommandBuffer commandBuffer, const VkGeneratedCommandsInfoEXT* pGeneratedCommandsInfo, VkCommandBuffer stateCommandBuffer) const noexcept {
+        fp_vkCmdPreprocessGeneratedCommandsEXT(commandBuffer, pGeneratedCommandsInfo, stateCommandBuffer);
+    }
+#endif
+#if (defined(VK_EXT_device_generated_commands))
+    void getGeneratedCommandsMemoryRequirementsEXT(const VkGeneratedCommandsMemoryRequirementsInfoEXT* pInfo, VkMemoryRequirements2KHR* pMemoryRequirements) const noexcept {
+        fp_vkGetGeneratedCommandsMemoryRequirementsEXT(device, pInfo, pMemoryRequirements);
+    }
+#endif
+#if (defined(VK_EXT_device_generated_commands))
+    VkResult createIndirectCommandsLayoutEXT(const VkIndirectCommandsLayoutCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkIndirectCommandsLayoutEXT* pIndirectCommandsLayout) const noexcept {
+        return fp_vkCreateIndirectCommandsLayoutEXT(device, pCreateInfo, pAllocator, pIndirectCommandsLayout);
+    }
+#endif
+#if (defined(VK_EXT_device_generated_commands))
+    void destroyIndirectCommandsLayoutEXT(VkIndirectCommandsLayoutEXT indirectCommandsLayout, const VkAllocationCallbacks* pAllocator) const noexcept {
+        fp_vkDestroyIndirectCommandsLayoutEXT(device, indirectCommandsLayout, pAllocator);
+    }
+#endif
+#if (defined(VK_EXT_device_generated_commands))
+    VkResult createIndirectExecutionSetEXT(const VkIndirectExecutionSetCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkIndirectExecutionSetEXT* pIndirectExecutionSet) const noexcept {
+        return fp_vkCreateIndirectExecutionSetEXT(device, pCreateInfo, pAllocator, pIndirectExecutionSet);
+    }
+#endif
+#if (defined(VK_EXT_device_generated_commands))
+    void destroyIndirectExecutionSetEXT(VkIndirectExecutionSetEXT indirectExecutionSet, const VkAllocationCallbacks* pAllocator) const noexcept {
+        fp_vkDestroyIndirectExecutionSetEXT(device, indirectExecutionSet, pAllocator);
+    }
+#endif
+#if (defined(VK_EXT_device_generated_commands))
+    void updateIndirectExecutionSetPipelineEXT(VkIndirectExecutionSetEXT indirectExecutionSet, uint32_t executionSetWriteCount, const VkWriteIndirectExecutionSetPipelineEXT* pExecutionSetWrites) const noexcept {
+        fp_vkUpdateIndirectExecutionSetPipelineEXT(device, indirectExecutionSet, executionSetWriteCount, pExecutionSetWrites);
+    }
+#endif
+#if (defined(VK_EXT_device_generated_commands))
+    void updateIndirectExecutionSetShaderEXT(VkIndirectExecutionSetEXT indirectExecutionSet, uint32_t executionSetWriteCount, const VkWriteIndirectExecutionSetShaderEXT* pExecutionSetWrites) const noexcept {
+        fp_vkUpdateIndirectExecutionSetShaderEXT(device, indirectExecutionSet, executionSetWriteCount, pExecutionSetWrites);
     }
 #endif
 #if (defined(VK_KHR_push_descriptor))
@@ -5179,6 +5254,11 @@ struct DispatchTable {
         fp_vkCmdSetRenderingInputAttachmentIndicesKHR(commandBuffer, pInputAttachmentIndexInfo);
     }
 #endif
+#if (defined(VK_EXT_shader_object)) || (defined(VK_EXT_depth_clamp_control))
+    void cmdSetDepthClampRangeEXT(VkCommandBuffer commandBuffer, VkDepthClampModeEXT depthClampMode, const VkDepthClampRangeEXT* pDepthClampRange) const noexcept {
+        fp_vkCmdSetDepthClampRangeEXT(commandBuffer, depthClampMode, pDepthClampRange);
+    }
+#endif
 #if (defined(VK_EXT_host_query_reset))
     void resetQueryPoolEXT(VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount) const noexcept {
         fp_vkResetQueryPoolEXT(device, queryPool, firstQuery, queryCount);
@@ -5822,6 +5902,51 @@ struct DispatchTable {
     PFN_vkDestroyIndirectCommandsLayoutNV fp_vkDestroyIndirectCommandsLayoutNV = nullptr;
 #else
     void * fp_vkDestroyIndirectCommandsLayoutNV{};
+#endif
+#if (defined(VK_EXT_device_generated_commands))
+    PFN_vkCmdExecuteGeneratedCommandsEXT fp_vkCmdExecuteGeneratedCommandsEXT = nullptr;
+#else
+    void * fp_vkCmdExecuteGeneratedCommandsEXT{};
+#endif
+#if (defined(VK_EXT_device_generated_commands))
+    PFN_vkCmdPreprocessGeneratedCommandsEXT fp_vkCmdPreprocessGeneratedCommandsEXT = nullptr;
+#else
+    void * fp_vkCmdPreprocessGeneratedCommandsEXT{};
+#endif
+#if (defined(VK_EXT_device_generated_commands))
+    PFN_vkGetGeneratedCommandsMemoryRequirementsEXT fp_vkGetGeneratedCommandsMemoryRequirementsEXT = nullptr;
+#else
+    void * fp_vkGetGeneratedCommandsMemoryRequirementsEXT{};
+#endif
+#if (defined(VK_EXT_device_generated_commands))
+    PFN_vkCreateIndirectCommandsLayoutEXT fp_vkCreateIndirectCommandsLayoutEXT = nullptr;
+#else
+    void * fp_vkCreateIndirectCommandsLayoutEXT{};
+#endif
+#if (defined(VK_EXT_device_generated_commands))
+    PFN_vkDestroyIndirectCommandsLayoutEXT fp_vkDestroyIndirectCommandsLayoutEXT = nullptr;
+#else
+    void * fp_vkDestroyIndirectCommandsLayoutEXT{};
+#endif
+#if (defined(VK_EXT_device_generated_commands))
+    PFN_vkCreateIndirectExecutionSetEXT fp_vkCreateIndirectExecutionSetEXT = nullptr;
+#else
+    void * fp_vkCreateIndirectExecutionSetEXT{};
+#endif
+#if (defined(VK_EXT_device_generated_commands))
+    PFN_vkDestroyIndirectExecutionSetEXT fp_vkDestroyIndirectExecutionSetEXT = nullptr;
+#else
+    void * fp_vkDestroyIndirectExecutionSetEXT{};
+#endif
+#if (defined(VK_EXT_device_generated_commands))
+    PFN_vkUpdateIndirectExecutionSetPipelineEXT fp_vkUpdateIndirectExecutionSetPipelineEXT = nullptr;
+#else
+    void * fp_vkUpdateIndirectExecutionSetPipelineEXT{};
+#endif
+#if (defined(VK_EXT_device_generated_commands))
+    PFN_vkUpdateIndirectExecutionSetShaderEXT fp_vkUpdateIndirectExecutionSetShaderEXT = nullptr;
+#else
+    void * fp_vkUpdateIndirectExecutionSetShaderEXT{};
 #endif
 #if (defined(VK_KHR_push_descriptor))
     PFN_vkCmdPushDescriptorSetKHR fp_vkCmdPushDescriptorSetKHR = nullptr;
@@ -7607,6 +7732,11 @@ struct DispatchTable {
     PFN_vkCmdSetRenderingInputAttachmentIndicesKHR fp_vkCmdSetRenderingInputAttachmentIndicesKHR = nullptr;
 #else
     void * fp_vkCmdSetRenderingInputAttachmentIndicesKHR{};
+#endif
+#if (defined(VK_EXT_shader_object)) || (defined(VK_EXT_depth_clamp_control))
+    PFN_vkCmdSetDepthClampRangeEXT fp_vkCmdSetDepthClampRangeEXT = nullptr;
+#else
+    void * fp_vkCmdSetDepthClampRangeEXT{};
 #endif
 #if (defined(VK_EXT_host_query_reset))
     PFN_vkResetQueryPoolEXT fp_vkResetQueryPoolEXT = nullptr;

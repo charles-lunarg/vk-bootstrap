@@ -30,6 +30,12 @@ jobs:
         PR_NUMBER: ${{ github.event.number }}
 
     steps:
+      - uses: actions/create-github-app-token@v1
+        id: generate-token
+        with:
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -54,6 +60,7 @@ jobs:
         uses: peter-evans/create-pull-request@v7
         if: ${{ steps.git-diff.outputs.git-diff == 'true' }}
         with:
+          token: ${{ steps.generate-token.outputs.token }}
           commit-message: Update to latest Vulkan-Headers
           title: Update to latest Vulkan-Headers
           branch: run-autogen

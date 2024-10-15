@@ -5170,23 +5170,23 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_AMDX_shader_enqueue))
-    void cmdInitializeGraphScratchMemoryAMDX(VkCommandBuffer commandBuffer, VkDeviceAddress scratch) const noexcept {
-        fp_vkCmdInitializeGraphScratchMemoryAMDX(commandBuffer, scratch);
+    void cmdInitializeGraphScratchMemoryAMDX(VkCommandBuffer commandBuffer, VkPipeline executionGraph, VkDeviceAddress scratch, VkDeviceSize scratchSize) const noexcept {
+        fp_vkCmdInitializeGraphScratchMemoryAMDX(commandBuffer, executionGraph, scratch, scratchSize);
     }
 #endif
 #if (defined(VK_AMDX_shader_enqueue))
-    void cmdDispatchGraphAMDX(VkCommandBuffer commandBuffer, VkDeviceAddress scratch, const VkDispatchGraphCountInfoAMDX* pCountInfo) const noexcept {
-        fp_vkCmdDispatchGraphAMDX(commandBuffer, scratch, pCountInfo);
+    void cmdDispatchGraphAMDX(VkCommandBuffer commandBuffer, VkDeviceAddress scratch, VkDeviceSize scratchSize, const VkDispatchGraphCountInfoAMDX* pCountInfo) const noexcept {
+        fp_vkCmdDispatchGraphAMDX(commandBuffer, scratch, scratchSize, pCountInfo);
     }
 #endif
 #if (defined(VK_AMDX_shader_enqueue))
-    void cmdDispatchGraphIndirectAMDX(VkCommandBuffer commandBuffer, VkDeviceAddress scratch, const VkDispatchGraphCountInfoAMDX* pCountInfo) const noexcept {
-        fp_vkCmdDispatchGraphIndirectAMDX(commandBuffer, scratch, pCountInfo);
+    void cmdDispatchGraphIndirectAMDX(VkCommandBuffer commandBuffer, VkDeviceAddress scratch, VkDeviceSize scratchSize, const VkDispatchGraphCountInfoAMDX* pCountInfo) const noexcept {
+        fp_vkCmdDispatchGraphIndirectAMDX(commandBuffer, scratch, scratchSize, pCountInfo);
     }
 #endif
 #if (defined(VK_AMDX_shader_enqueue))
-    void cmdDispatchGraphIndirectCountAMDX(VkCommandBuffer commandBuffer, VkDeviceAddress scratch, VkDeviceAddress countInfo) const noexcept {
-        fp_vkCmdDispatchGraphIndirectCountAMDX(commandBuffer, scratch, countInfo);
+    void cmdDispatchGraphIndirectCountAMDX(VkCommandBuffer commandBuffer, VkDeviceAddress scratch, VkDeviceSize scratchSize, VkDeviceAddress countInfo) const noexcept {
+        fp_vkCmdDispatchGraphIndirectCountAMDX(commandBuffer, scratch, scratchSize, countInfo);
     }
 #endif
 #if (defined(VK_KHR_maintenance6))

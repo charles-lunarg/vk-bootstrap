@@ -2356,10 +2356,10 @@ struct DispatchTable {
 #if (defined(VK_VERSION_1_3))
         fp_vkCmdWriteTimestamp2 = reinterpret_cast<PFN_vkCmdWriteTimestamp2>(procAddr(device, "vkCmdWriteTimestamp2"));
 #endif
-#if (defined(VK_KHR_synchronization2))
+#if (defined(VK_AMD_buffer_marker))
         fp_vkCmdWriteBufferMarker2AMD = reinterpret_cast<PFN_vkCmdWriteBufferMarker2AMD>(procAddr(device, "vkCmdWriteBufferMarker2AMD"));
 #endif
-#if (defined(VK_KHR_synchronization2))
+#if (defined(VK_NV_device_diagnostic_checkpoints))
         fp_vkGetQueueCheckpointData2NV = reinterpret_cast<PFN_vkGetQueueCheckpointData2NV>(procAddr(device, "vkGetQueueCheckpointData2NV"));
 #endif
 #if (defined(VK_EXT_host_image_copy))
@@ -4724,12 +4724,12 @@ struct DispatchTable {
         fp_vkCmdWriteTimestamp2(commandBuffer, stage, queryPool, query);
     }
 #endif
-#if (defined(VK_KHR_synchronization2))
+#if (defined(VK_AMD_buffer_marker))
     void cmdWriteBufferMarker2AMD(VkCommandBuffer commandBuffer, VkPipelineStageFlags2KHR stage, VkBuffer dstBuffer, VkDeviceSize dstOffset, uint32_t marker) const noexcept {
         fp_vkCmdWriteBufferMarker2AMD(commandBuffer, stage, dstBuffer, dstOffset, marker);
     }
 #endif
-#if (defined(VK_KHR_synchronization2))
+#if (defined(VK_NV_device_diagnostic_checkpoints))
     void getQueueCheckpointData2NV(VkQueue queue, uint32_t* pCheckpointDataCount, VkCheckpointData2NV* pCheckpointData) const noexcept {
         fp_vkGetQueueCheckpointData2NV(queue, pCheckpointDataCount, pCheckpointData);
     }
@@ -7203,12 +7203,12 @@ struct DispatchTable {
 #else
     void * fp_vkCmdWriteTimestamp2{};
 #endif
-#if (defined(VK_KHR_synchronization2))
+#if (defined(VK_AMD_buffer_marker))
     PFN_vkCmdWriteBufferMarker2AMD fp_vkCmdWriteBufferMarker2AMD = nullptr;
 #else
     void * fp_vkCmdWriteBufferMarker2AMD{};
 #endif
-#if (defined(VK_KHR_synchronization2))
+#if (defined(VK_NV_device_diagnostic_checkpoints))
     PFN_vkGetQueueCheckpointData2NV fp_vkGetQueueCheckpointData2NV = nullptr;
 #else
     void * fp_vkGetQueueCheckpointData2NV{};

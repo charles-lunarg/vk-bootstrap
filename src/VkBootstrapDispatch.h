@@ -2623,16 +2623,16 @@ struct DispatchTable {
 #if (defined(VK_AMDX_shader_enqueue))
         fp_vkCreateExecutionGraphPipelinesAMDX = reinterpret_cast<PFN_vkCreateExecutionGraphPipelinesAMDX>(procAddr(device, "vkCreateExecutionGraphPipelinesAMDX"));
 #endif
-#if (defined(VK_AMDX_shader_enqueue))
+#if ((defined(VK_AMDX_shader_enqueue))) && VK_HEADER_VERSION >= 298
         fp_vkCmdInitializeGraphScratchMemoryAMDX = reinterpret_cast<PFN_vkCmdInitializeGraphScratchMemoryAMDX>(procAddr(device, "vkCmdInitializeGraphScratchMemoryAMDX"));
 #endif
-#if (defined(VK_AMDX_shader_enqueue))
+#if ((defined(VK_AMDX_shader_enqueue))) && VK_HEADER_VERSION >= 298
         fp_vkCmdDispatchGraphAMDX = reinterpret_cast<PFN_vkCmdDispatchGraphAMDX>(procAddr(device, "vkCmdDispatchGraphAMDX"));
 #endif
-#if (defined(VK_AMDX_shader_enqueue))
+#if ((defined(VK_AMDX_shader_enqueue))) && VK_HEADER_VERSION >= 298
         fp_vkCmdDispatchGraphIndirectAMDX = reinterpret_cast<PFN_vkCmdDispatchGraphIndirectAMDX>(procAddr(device, "vkCmdDispatchGraphIndirectAMDX"));
 #endif
-#if (defined(VK_AMDX_shader_enqueue))
+#if ((defined(VK_AMDX_shader_enqueue))) && VK_HEADER_VERSION >= 298
         fp_vkCmdDispatchGraphIndirectCountAMDX = reinterpret_cast<PFN_vkCmdDispatchGraphIndirectCountAMDX>(procAddr(device, "vkCmdDispatchGraphIndirectCountAMDX"));
 #endif
 #if (defined(VK_KHR_maintenance6))
@@ -5169,22 +5169,22 @@ struct DispatchTable {
         return fp_vkCreateExecutionGraphPipelinesAMDX(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
     }
 #endif
-#if (defined(VK_AMDX_shader_enqueue))
+#if ((defined(VK_AMDX_shader_enqueue))) && VK_HEADER_VERSION >= 298
     void cmdInitializeGraphScratchMemoryAMDX(VkCommandBuffer commandBuffer, VkPipeline executionGraph, VkDeviceAddress scratch, VkDeviceSize scratchSize) const noexcept {
         fp_vkCmdInitializeGraphScratchMemoryAMDX(commandBuffer, executionGraph, scratch, scratchSize);
     }
 #endif
-#if (defined(VK_AMDX_shader_enqueue))
+#if ((defined(VK_AMDX_shader_enqueue))) && VK_HEADER_VERSION >= 298
     void cmdDispatchGraphAMDX(VkCommandBuffer commandBuffer, VkDeviceAddress scratch, VkDeviceSize scratchSize, const VkDispatchGraphCountInfoAMDX* pCountInfo) const noexcept {
         fp_vkCmdDispatchGraphAMDX(commandBuffer, scratch, scratchSize, pCountInfo);
     }
 #endif
-#if (defined(VK_AMDX_shader_enqueue))
+#if ((defined(VK_AMDX_shader_enqueue))) && VK_HEADER_VERSION >= 298
     void cmdDispatchGraphIndirectAMDX(VkCommandBuffer commandBuffer, VkDeviceAddress scratch, VkDeviceSize scratchSize, const VkDispatchGraphCountInfoAMDX* pCountInfo) const noexcept {
         fp_vkCmdDispatchGraphIndirectAMDX(commandBuffer, scratch, scratchSize, pCountInfo);
     }
 #endif
-#if (defined(VK_AMDX_shader_enqueue))
+#if ((defined(VK_AMDX_shader_enqueue))) && VK_HEADER_VERSION >= 298
     void cmdDispatchGraphIndirectCountAMDX(VkCommandBuffer commandBuffer, VkDeviceAddress scratch, VkDeviceSize scratchSize, VkDeviceAddress countInfo) const noexcept {
         fp_vkCmdDispatchGraphIndirectCountAMDX(commandBuffer, scratch, scratchSize, countInfo);
     }
@@ -7648,22 +7648,22 @@ struct DispatchTable {
 #else
     void * fp_vkCreateExecutionGraphPipelinesAMDX{};
 #endif
-#if (defined(VK_AMDX_shader_enqueue))
+#if ((defined(VK_AMDX_shader_enqueue))) && VK_HEADER_VERSION >= 298
     PFN_vkCmdInitializeGraphScratchMemoryAMDX fp_vkCmdInitializeGraphScratchMemoryAMDX = nullptr;
 #else
     void * fp_vkCmdInitializeGraphScratchMemoryAMDX{};
 #endif
-#if (defined(VK_AMDX_shader_enqueue))
+#if ((defined(VK_AMDX_shader_enqueue))) && VK_HEADER_VERSION >= 298
     PFN_vkCmdDispatchGraphAMDX fp_vkCmdDispatchGraphAMDX = nullptr;
 #else
     void * fp_vkCmdDispatchGraphAMDX{};
 #endif
-#if (defined(VK_AMDX_shader_enqueue))
+#if ((defined(VK_AMDX_shader_enqueue))) && VK_HEADER_VERSION >= 298
     PFN_vkCmdDispatchGraphIndirectAMDX fp_vkCmdDispatchGraphIndirectAMDX = nullptr;
 #else
     void * fp_vkCmdDispatchGraphIndirectAMDX{};
 #endif
-#if (defined(VK_AMDX_shader_enqueue))
+#if ((defined(VK_AMDX_shader_enqueue))) && VK_HEADER_VERSION >= 298
     PFN_vkCmdDispatchGraphIndirectCountAMDX fp_vkCmdDispatchGraphIndirectCountAMDX = nullptr;
 #else
     void * fp_vkCmdDispatchGraphIndirectCountAMDX{};

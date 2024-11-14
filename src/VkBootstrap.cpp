@@ -61,7 +61,7 @@ bool GenericFeatureChain::match_all(GenericFeatureChain const& extension_request
         return false;
     }
 
-    for (size_t i = 0; i < nodes.size() && i < nodes.size(); ++i) {
+    for (size_t i = 0; i < extension_requested.nodes.size() && i < nodes.size(); ++i) {
         if (!GenericFeaturesPNextNode::match(extension_requested.nodes[i], nodes[i])) return false;
     }
     return true;

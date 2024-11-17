@@ -115,27 +115,26 @@ HEADER_VERSION_WORKAROUNDS = {
 }
 
 def get_macro_guard(reqs_collection, command_name):
-    guard = ''
-    count = len(reqs_collection)
-    if count > 0:
-        while count > 0:
-            for reqs in reqs_collection:
-                reqs_count = len(reqs)
-                guard += '('
-                for req in reqs:
-                    guard += f'defined({req})'
-                    reqs_count -= 1
-                    if reqs_count > 0:
-                        guard += ' && '
-                guard += ')'
-                if count > 0:
-                    count -= 1
-                    if count > 0:
-                        guard += ' || '
-        # API breaking change causes this function to fail compilation
-        for function, version in HEADER_VERSION_WORKAROUNDS.items():
-            if command_name == function:
-                guard = f'({guard}) && VK_HEADER_VERSION >= {version}'
+    unique_guards = []
+    for reqs in reqs_collection:
+        is_unique = True
+        for unique_guard in unique_guards:
+            if set(unique_guard) == set(reqs):
+                is_unique = False
+        if is_unique:
+            if (isinstance(reqs, str)):
+                unique_guards.append([reqs])
+            else:
+                unique_guards.append(reqs)
+    guards = []
+    for reqs in unique_guards:
+        guards.append(' && '.join(map('defined({0})'.format, reqs)))
+
+    guard = ' || '.join(map('({0})'.format, guards))
+    # API breaking change causes this function to fail compilation, so guard it to not work before the known good version
+    if command_name in HEADER_VERSION_WORKAROUNDS:
+        guard = f'({guard}) && VK_HEADER_VERSION >= {HEADER_VERSION_WORKAROUNDS[command_name]}'
+
     return guard
 
 
@@ -193,36 +192,27 @@ for feature_node in features_node:
 
 
 # Add requirements for extension PFN's
-extensions_node = vk_xml['registry']['extensions']['extension']
-for extension_node in extensions_node:
+for extension_node in vk_xml['registry']['extensions']['extension']:
     extension_name = extension_node['@name']
-    if 'require' in extension_node.keys():
-        require_nodes = extension_node['require']
-        for require_node in require_nodes:
-            requirements = [extension_name]
-            if not isinstance(require_node, str):
-                if 'command' in require_node.keys():
-                    if '@feature' in require_node.keys():
-                        requirements.append(require_node['@feature'])
-                    if '@extension' in require_node.keys():
-                        requirements.extend(require_node['@extension'].split(','))
-                    if not isinstance(require_node['command'], list):
-                        require_node['command'] = [require_node['command']]
-                    for command_node in require_node['command']:
-                        if command_node['@name'] in commands:
-                            if '@author' in extension_node and extension_node['@author'] in excluded_extension_authors:
-                                commands.pop(command_node['@name'])
-                            else:
-                                commands[command_node['@name']]['requirements'] += [requirements]
-            elif require_node == 'command':
-                if not isinstance(require_nodes['command'], list):
-                    require_nodes['command'] = [require_nodes['command']]
-                for command_node in require_nodes['command']:
-                    if command_node['@name'] in commands:
-                        if '@author' in extension_node and extension_node['@author'] in excluded_extension_authors:
-                            commands.pop(command_node['@name'])
-                        else:
-                            commands[command_node['@name']]['requirements'] += [requirements]
+    if 'require' not in extension_node.keys():
+        continue
+    requires_list = [extension_node['require']] if isinstance(extension_node['require'], dict) else extension_node['require']
+    for requires_dict in requires_list:
+        requirements = []
+        if 'command' not in requires_dict.keys():
+            continue
+        if '@depends' in requires_dict:
+            for dep in requires_dict['@depends'].split(','):
+                requirements.append([extension_name, dep])
+        command_list = [requires_dict['command']] if isinstance(requires_dict['command'], dict) else requires_dict['command']
+        for command_node in command_list:
+            if command_node['@name'] in commands:
+                if '@author' in extension_node and extension_node['@author'] in excluded_extension_authors:
+                    commands.pop(command_node['@name'])
+                else:
+                    if not requirements:
+                        requirements = [extension_name]
+                    commands[command_node['@name']]['requirements'].extend(requirements)
 
 # Generate macro templates
 for command_name, command in commands.items():

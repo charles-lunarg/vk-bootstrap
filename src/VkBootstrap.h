@@ -742,7 +742,7 @@ enum class QueueType { present, graphics, compute, transfer };
 
 namespace detail {
 // Sentinel value, used in implementation only
-inline const uint32_t QUEUE_INDEX_MAX_VALUE = 65536;
+inline const uint32_t QUEUE_INDEX_MAX_VALUE = UINT32_MAX;
 } // namespace detail
 
 // ---- Device ---- //

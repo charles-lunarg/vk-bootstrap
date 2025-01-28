@@ -2690,6 +2690,12 @@ struct DispatchTable {
 #if (defined(VK_EXT_shader_object) && defined(VK_EXT_depth_clamp_control)) || (defined(VK_EXT_depth_clamp_control))
         fp_vkCmdSetDepthClampRangeEXT = reinterpret_cast<PFN_vkCmdSetDepthClampRangeEXT>(procAddr(device, "vkCmdSetDepthClampRangeEXT"));
 #endif
+#if (defined(VK_EXT_external_memory_metal))
+        fp_vkGetMemoryMetalHandleEXT = reinterpret_cast<PFN_vkGetMemoryMetalHandleEXT>(procAddr(device, "vkGetMemoryMetalHandleEXT"));
+#endif
+#if (defined(VK_EXT_external_memory_metal))
+        fp_vkGetMemoryMetalHandlePropertiesEXT = reinterpret_cast<PFN_vkGetMemoryMetalHandlePropertiesEXT>(procAddr(device, "vkGetMemoryMetalHandlePropertiesEXT"));
+#endif
 #if (defined(VK_EXT_host_query_reset))
         fp_vkResetQueryPoolEXT = reinterpret_cast<PFN_vkResetQueryPoolEXT>(procAddr(device, "vkResetQueryPoolEXT"));
 #endif
@@ -5323,6 +5329,16 @@ struct DispatchTable {
         fp_vkCmdSetDepthClampRangeEXT(commandBuffer, depthClampMode, pDepthClampRange);
     }
 #endif
+#if (defined(VK_EXT_external_memory_metal))
+    VkResult getMemoryMetalHandleEXT(const VkMemoryGetMetalHandleInfoEXT* pGetMetalHandleInfo, void** pHandle) const noexcept {
+        return fp_vkGetMemoryMetalHandleEXT(device, pGetMetalHandleInfo, pHandle);
+    }
+#endif
+#if (defined(VK_EXT_external_memory_metal))
+    VkResult getMemoryMetalHandlePropertiesEXT(VkExternalMemoryHandleTypeFlagBitsKHR handleType, const void* pHandle, VkMemoryMetalHandlePropertiesEXT* pMemoryMetalHandleProperties) const noexcept {
+        return fp_vkGetMemoryMetalHandlePropertiesEXT(device, handleType, pHandle, pMemoryMetalHandleProperties);
+    }
+#endif
 #if (defined(VK_EXT_host_query_reset))
     void resetQueryPoolEXT(VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount) const noexcept {
         fp_vkResetQueryPoolEXT(device, queryPool, firstQuery, queryCount);
@@ -7886,6 +7902,16 @@ struct DispatchTable {
     PFN_vkCmdSetDepthClampRangeEXT fp_vkCmdSetDepthClampRangeEXT = nullptr;
 #else
     void * fp_vkCmdSetDepthClampRangeEXT{};
+#endif
+#if (defined(VK_EXT_external_memory_metal))
+    PFN_vkGetMemoryMetalHandleEXT fp_vkGetMemoryMetalHandleEXT = nullptr;
+#else
+    void * fp_vkGetMemoryMetalHandleEXT{};
+#endif
+#if (defined(VK_EXT_external_memory_metal))
+    PFN_vkGetMemoryMetalHandlePropertiesEXT fp_vkGetMemoryMetalHandlePropertiesEXT = nullptr;
+#else
+    void * fp_vkGetMemoryMetalHandlePropertiesEXT{};
 #endif
 #if (defined(VK_EXT_host_query_reset))
     PFN_vkResetQueryPoolEXT fp_vkResetQueryPoolEXT = nullptr;

@@ -304,7 +304,7 @@ class PhysicalDeviceSelector;
 struct Instance {
     VkInstance instance = VK_NULL_HANDLE;
     VkDebugUtilsMessengerEXT debug_messenger = VK_NULL_HANDLE;
-    VkAllocationCallbacks* allocation_callbacks = VK_NULL_HANDLE;
+    VkAllocationCallbacks* allocation_callbacks = nullptr;
     PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr = nullptr;
     PFN_vkGetDeviceProcAddr fp_vkGetDeviceProcAddr = nullptr;
 
@@ -474,7 +474,7 @@ class InstanceBuilder {
         std::vector<VkValidationFeatureDisableEXT> disabled_validation_features;
 
         // Custom allocator
-        VkAllocationCallbacks* allocation_callbacks = VK_NULL_HANDLE;
+        VkAllocationCallbacks* allocation_callbacks = nullptr;
 
         bool request_validation_layers = false;
         bool enable_validation_layers = false;
@@ -752,7 +752,7 @@ struct Device {
     PhysicalDevice physical_device;
     VkSurfaceKHR surface = VK_NULL_HANDLE;
     std::vector<VkQueueFamilyProperties> queue_families;
-    VkAllocationCallbacks* allocation_callbacks = VK_NULL_HANDLE;
+    VkAllocationCallbacks* allocation_callbacks = nullptr;
     PFN_vkGetDeviceProcAddr fp_vkGetDeviceProcAddr = nullptr;
     uint32_t instance_version = VKB_VK_API_VERSION_1_0;
 
@@ -817,7 +817,7 @@ class DeviceBuilder {
         VkDeviceCreateFlags flags = static_cast<VkDeviceCreateFlags>(0);
         std::vector<VkBaseOutStructure*> pNext_chain;
         std::vector<CustomQueueDescription> queue_descriptions;
-        VkAllocationCallbacks* allocation_callbacks = VK_NULL_HANDLE;
+        VkAllocationCallbacks* allocation_callbacks = nullptr;
     } info;
 };
 
@@ -834,7 +834,7 @@ struct Swapchain {
     uint32_t requested_min_image_count = 0;
     VkPresentModeKHR present_mode = VK_PRESENT_MODE_IMMEDIATE_KHR; // The present mode actually used when creating the swapchain.
     uint32_t instance_version = VKB_VK_API_VERSION_1_0;
-    VkAllocationCallbacks* allocation_callbacks = VK_NULL_HANDLE;
+    VkAllocationCallbacks* allocation_callbacks = nullptr;
 
     // Returns a vector of VkImage handles to the swapchain.
     Result<std::vector<VkImage>> get_images();
@@ -992,7 +992,7 @@ class SwapchainBuilder {
         std::vector<VkPresentModeKHR> desired_present_modes;
         bool clipped = true;
         VkSwapchainKHR old_swapchain = VK_NULL_HANDLE;
-        VkAllocationCallbacks* allocation_callbacks = VK_NULL_HANDLE;
+        VkAllocationCallbacks* allocation_callbacks = nullptr;
     } info;
 };
 

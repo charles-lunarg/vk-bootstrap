@@ -1088,7 +1088,7 @@ uint32_t get_dedicated_queue_index(
 uint32_t get_present_queue_index(
     VkPhysicalDevice const phys_device, VkSurfaceKHR const surface, std::vector<VkQueueFamilyProperties> const& families) {
     for (uint32_t i = 0; i < static_cast<uint32_t>(families.size()); i++) {
-        VkBool32 presentSupport = false;
+        VkBool32 presentSupport = VK_FALSE;
         if (surface != VK_NULL_HANDLE) {
             VkResult res = detail::vulkan_functions().fp_vkGetPhysicalDeviceSurfaceSupportKHR(phys_device, i, surface, &presentSupport);
             if (res != VK_SUCCESS) return QUEUE_INDEX_MAX_VALUE; // TODO: determine if this should fail another way

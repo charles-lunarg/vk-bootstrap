@@ -166,7 +166,7 @@ struct GenericFeaturesPNextNode {
     GenericFeaturesPNextNode();
 
     template <typename T> GenericFeaturesPNextNode(T const& features) noexcept {
-        memset(fields, UINT8_MAX, sizeof(VkBool32) * field_capacity);
+        memset(fields, UINT8_MAX, sizeof(uint8_t) * field_capacity);
         memcpy(this, &features, sizeof(T));
     }
 
@@ -176,7 +176,7 @@ struct GenericFeaturesPNextNode {
 
     VkStructureType sType = static_cast<VkStructureType>(0);
     void* pNext = nullptr;
-    VkBool32 fields[field_capacity];
+    uint8_t fields[field_capacity];
 };
 
 struct GenericFeatureChain {

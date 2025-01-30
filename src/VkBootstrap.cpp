@@ -37,7 +37,7 @@ namespace vkb {
 
 namespace detail {
 
-GenericFeaturesPNextNode::GenericFeaturesPNextNode() { memset(fields, UINT8_MAX, sizeof(VkBool32) * field_capacity); }
+GenericFeaturesPNextNode::GenericFeaturesPNextNode() { memset(fields, UINT8_MAX, sizeof(uint8_t) * field_capacity); }
 
 bool GenericFeaturesPNextNode::match(GenericFeaturesPNextNode const& requested, GenericFeaturesPNextNode const& supported) noexcept {
     assert(requested.sType == supported.sType && "Non-matching sTypes in features nodes!");
@@ -1088,7 +1088,7 @@ uint32_t get_dedicated_queue_index(
 uint32_t get_present_queue_index(
     VkPhysicalDevice const phys_device, VkSurfaceKHR const surface, std::vector<VkQueueFamilyProperties> const& families) {
     for (uint32_t i = 0; i < static_cast<uint32_t>(families.size()); i++) {
-        VkBool32 presentSupport = false;
+        VkBool32 presentSupport = VK_FALSE;
         if (surface != VK_NULL_HANDLE) {
             VkResult res = detail::vulkan_functions().fp_vkGetPhysicalDeviceSurfaceSupportKHR(phys_device, i, surface, &presentSupport);
             if (res != VK_SUCCESS) return QUEUE_INDEX_MAX_VALUE; // TODO: determine if this should fail another way
@@ -1542,7 +1542,7 @@ bool PhysicalDevice::enable_features_node_if_present(detail::GenericFeaturesPNex
 
     detail::GenericFeatureChain fill_chain = requested_features;
     // Zero out supported features
-    memset(fill_chain.nodes.front().fields, UINT8_MAX, sizeof(VkBool32) * detail::GenericFeaturesPNextNode::field_capacity);
+    memset(fill_chain.nodes.front().fields, UINT8_MAX, sizeof(uint8_t) * detail::GenericFeaturesPNextNode::field_capacity);
 
     actual_pdf2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
     fill_chain.chain_up(actual_pdf2);

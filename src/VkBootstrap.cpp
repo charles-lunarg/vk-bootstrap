@@ -1878,7 +1878,6 @@ SwapchainBuilder::SwapchainBuilder(Device const& device) {
     assert(graphics.has_value() && present.has_value() && "Graphics and Present queue indexes must be valid");
     info.graphics_queue_index = present.value();
     info.present_queue_index = graphics.value();
-    info.allocation_callbacks = device.allocation_callbacks;
 }
 SwapchainBuilder::SwapchainBuilder(Device const& device, VkSurfaceKHR const surface) {
     info.physical_device = device.physical_device.physical_device;
@@ -1892,7 +1891,6 @@ SwapchainBuilder::SwapchainBuilder(Device const& device, VkSurfaceKHR const surf
     assert(graphics.has_value() && present.has_value() && "Graphics and Present queue indexes must be valid");
     info.graphics_queue_index = graphics.value();
     info.present_queue_index = present.value();
-    info.allocation_callbacks = device.allocation_callbacks;
 }
 SwapchainBuilder::SwapchainBuilder(VkPhysicalDevice const physical_device,
     VkDevice const device,

@@ -292,6 +292,9 @@ struct InstanceDispatchTable {
 #if (defined(VK_NV_cooperative_matrix2))
         fp_vkGetPhysicalDeviceCooperativeMatrixFlexibleDimensionsPropertiesNV = reinterpret_cast<PFN_vkGetPhysicalDeviceCooperativeMatrixFlexibleDimensionsPropertiesNV>(procAddr(instance, "vkGetPhysicalDeviceCooperativeMatrixFlexibleDimensionsPropertiesNV"));
 #endif
+#if (defined(VK_NV_cooperative_vector))
+        fp_vkGetPhysicalDeviceCooperativeVectorPropertiesNV = reinterpret_cast<PFN_vkGetPhysicalDeviceCooperativeVectorPropertiesNV>(procAddr(instance, "vkGetPhysicalDeviceCooperativeVectorPropertiesNV"));
+#endif
 #if (defined(VK_KHR_get_physical_device_properties2))
         fp_vkGetPhysicalDeviceFeatures2KHR = reinterpret_cast<PFN_vkGetPhysicalDeviceFeatures2KHR>(procAddr(instance, "vkGetPhysicalDeviceFeatures2KHR"));
 #endif
@@ -786,6 +789,11 @@ struct InstanceDispatchTable {
 #if (defined(VK_NV_cooperative_matrix2))
     VkResult getPhysicalDeviceCooperativeMatrixFlexibleDimensionsPropertiesNV(VkPhysicalDevice physicalDevice, uint32_t* pPropertyCount, VkCooperativeMatrixFlexibleDimensionsPropertiesNV* pProperties) const noexcept {
         return fp_vkGetPhysicalDeviceCooperativeMatrixFlexibleDimensionsPropertiesNV(physicalDevice, pPropertyCount, pProperties);
+    }
+#endif
+#if (defined(VK_NV_cooperative_vector))
+    VkResult getPhysicalDeviceCooperativeVectorPropertiesNV(VkPhysicalDevice physicalDevice, uint32_t* pPropertyCount, VkCooperativeVectorPropertiesNV* pProperties) const noexcept {
+        return fp_vkGetPhysicalDeviceCooperativeVectorPropertiesNV(physicalDevice, pPropertyCount, pProperties);
     }
 #endif
 #if (defined(VK_KHR_get_physical_device_properties2))
@@ -1284,6 +1292,11 @@ struct InstanceDispatchTable {
     PFN_vkGetPhysicalDeviceCooperativeMatrixFlexibleDimensionsPropertiesNV fp_vkGetPhysicalDeviceCooperativeMatrixFlexibleDimensionsPropertiesNV = nullptr;
 #else
     void * fp_vkGetPhysicalDeviceCooperativeMatrixFlexibleDimensionsPropertiesNV{};
+#endif
+#if (defined(VK_NV_cooperative_vector))
+    PFN_vkGetPhysicalDeviceCooperativeVectorPropertiesNV fp_vkGetPhysicalDeviceCooperativeVectorPropertiesNV = nullptr;
+#else
+    void * fp_vkGetPhysicalDeviceCooperativeVectorPropertiesNV{};
 #endif
 #if (defined(VK_KHR_get_physical_device_properties2))
     PFN_vkGetPhysicalDeviceFeatures2KHR fp_vkGetPhysicalDeviceFeatures2KHR = nullptr;
@@ -2039,6 +2052,12 @@ struct DispatchTable {
 #if (defined(VK_KHR_ray_tracing_maintenance1) && defined(VK_KHR_ray_tracing_pipeline))
         fp_vkCmdTraceRaysIndirect2KHR = reinterpret_cast<PFN_vkCmdTraceRaysIndirect2KHR>(procAddr(device, "vkCmdTraceRaysIndirect2KHR"));
 #endif
+#if (defined(VK_NV_cluster_acceleration_structure))
+        fp_vkGetClusterAccelerationStructureBuildSizesNV = reinterpret_cast<PFN_vkGetClusterAccelerationStructureBuildSizesNV>(procAddr(device, "vkGetClusterAccelerationStructureBuildSizesNV"));
+#endif
+#if (defined(VK_NV_cluster_acceleration_structure))
+        fp_vkCmdBuildClusterAccelerationStructureIndirectNV = reinterpret_cast<PFN_vkCmdBuildClusterAccelerationStructureIndirectNV>(procAddr(device, "vkCmdBuildClusterAccelerationStructureIndirectNV"));
+#endif
 #if (defined(VK_KHR_acceleration_structure))
         fp_vkGetDeviceAccelerationStructureCompatibilityKHR = reinterpret_cast<PFN_vkGetDeviceAccelerationStructureCompatibilityKHR>(procAddr(device, "vkGetDeviceAccelerationStructureCompatibilityKHR"));
 #endif
@@ -2435,6 +2454,12 @@ struct DispatchTable {
 #if (defined(VK_NV_memory_decompression))
         fp_vkCmdDecompressMemoryIndirectCountNV = reinterpret_cast<PFN_vkCmdDecompressMemoryIndirectCountNV>(procAddr(device, "vkCmdDecompressMemoryIndirectCountNV"));
 #endif
+#if (defined(VK_NV_partitioned_acceleration_structure))
+        fp_vkGetPartitionedAccelerationStructuresBuildSizesNV = reinterpret_cast<PFN_vkGetPartitionedAccelerationStructuresBuildSizesNV>(procAddr(device, "vkGetPartitionedAccelerationStructuresBuildSizesNV"));
+#endif
+#if (defined(VK_NV_partitioned_acceleration_structure))
+        fp_vkCmdBuildPartitionedAccelerationStructuresNV = reinterpret_cast<PFN_vkCmdBuildPartitionedAccelerationStructuresNV>(procAddr(device, "vkCmdBuildPartitionedAccelerationStructuresNV"));
+#endif
 #if (defined(VK_EXT_descriptor_buffer))
         fp_vkGetDescriptorSetLayoutSizeEXT = reinterpret_cast<PFN_vkGetDescriptorSetLayoutSizeEXT>(procAddr(device, "vkGetDescriptorSetLayoutSizeEXT"));
 #endif
@@ -2695,6 +2720,12 @@ struct DispatchTable {
 #endif
 #if (defined(VK_EXT_external_memory_metal))
         fp_vkGetMemoryMetalHandlePropertiesEXT = reinterpret_cast<PFN_vkGetMemoryMetalHandlePropertiesEXT>(procAddr(device, "vkGetMemoryMetalHandlePropertiesEXT"));
+#endif
+#if (defined(VK_NV_cooperative_vector))
+        fp_vkConvertCooperativeVectorMatrixNV = reinterpret_cast<PFN_vkConvertCooperativeVectorMatrixNV>(procAddr(device, "vkConvertCooperativeVectorMatrixNV"));
+#endif
+#if (defined(VK_NV_cooperative_vector))
+        fp_vkCmdConvertCooperativeVectorMatrixNV = reinterpret_cast<PFN_vkCmdConvertCooperativeVectorMatrixNV>(procAddr(device, "vkCmdConvertCooperativeVectorMatrixNV"));
 #endif
 #if (defined(VK_EXT_host_query_reset))
         fp_vkResetQueryPoolEXT = reinterpret_cast<PFN_vkResetQueryPoolEXT>(procAddr(device, "vkResetQueryPoolEXT"));
@@ -4244,6 +4275,16 @@ struct DispatchTable {
         fp_vkCmdTraceRaysIndirect2KHR(commandBuffer, indirectDeviceAddress);
     }
 #endif
+#if (defined(VK_NV_cluster_acceleration_structure))
+    void getClusterAccelerationStructureBuildSizesNV(const VkClusterAccelerationStructureInputInfoNV* pInfo, VkAccelerationStructureBuildSizesInfoKHR* pSizeInfo) const noexcept {
+        fp_vkGetClusterAccelerationStructureBuildSizesNV(device, pInfo, pSizeInfo);
+    }
+#endif
+#if (defined(VK_NV_cluster_acceleration_structure))
+    void cmdBuildClusterAccelerationStructureIndirectNV(VkCommandBuffer commandBuffer, const VkClusterAccelerationStructureCommandsInfoNV* pCommandInfos) const noexcept {
+        fp_vkCmdBuildClusterAccelerationStructureIndirectNV(commandBuffer, pCommandInfos);
+    }
+#endif
 #if (defined(VK_KHR_acceleration_structure))
     void getDeviceAccelerationStructureCompatibilityKHR(const VkAccelerationStructureVersionInfoKHR* pVersionInfo, VkAccelerationStructureCompatibilityKHR* pCompatibility) const noexcept {
         fp_vkGetDeviceAccelerationStructureCompatibilityKHR(device, pVersionInfo, pCompatibility);
@@ -4904,6 +4945,16 @@ struct DispatchTable {
         fp_vkCmdDecompressMemoryIndirectCountNV(commandBuffer, indirectCommandsAddress, indirectCommandsCountAddress, stride);
     }
 #endif
+#if (defined(VK_NV_partitioned_acceleration_structure))
+    void getPartitionedAccelerationStructuresBuildSizesNV(const VkPartitionedAccelerationStructureInstancesInputNV* pInfo, VkAccelerationStructureBuildSizesInfoKHR* pSizeInfo) const noexcept {
+        fp_vkGetPartitionedAccelerationStructuresBuildSizesNV(device, pInfo, pSizeInfo);
+    }
+#endif
+#if (defined(VK_NV_partitioned_acceleration_structure))
+    void cmdBuildPartitionedAccelerationStructuresNV(VkCommandBuffer commandBuffer, const VkBuildPartitionedAccelerationStructureInfoNV* pBuildInfo) const noexcept {
+        fp_vkCmdBuildPartitionedAccelerationStructuresNV(commandBuffer, pBuildInfo);
+    }
+#endif
 #if (defined(VK_EXT_descriptor_buffer))
     void getDescriptorSetLayoutSizeEXT(VkDescriptorSetLayout layout, VkDeviceSize* pLayoutSizeInBytes) const noexcept {
         fp_vkGetDescriptorSetLayoutSizeEXT(device, layout, pLayoutSizeInBytes);
@@ -5337,6 +5388,16 @@ struct DispatchTable {
 #if (defined(VK_EXT_external_memory_metal))
     VkResult getMemoryMetalHandlePropertiesEXT(VkExternalMemoryHandleTypeFlagBitsKHR handleType, const void* pHandle, VkMemoryMetalHandlePropertiesEXT* pMemoryMetalHandleProperties) const noexcept {
         return fp_vkGetMemoryMetalHandlePropertiesEXT(device, handleType, pHandle, pMemoryMetalHandleProperties);
+    }
+#endif
+#if (defined(VK_NV_cooperative_vector))
+    VkResult convertCooperativeVectorMatrixNV(const VkConvertCooperativeVectorMatrixInfoNV* pInfo) const noexcept {
+        return fp_vkConvertCooperativeVectorMatrixNV(device, pInfo);
+    }
+#endif
+#if (defined(VK_NV_cooperative_vector))
+    void cmdConvertCooperativeVectorMatrixNV(VkCommandBuffer commandBuffer, uint32_t infoCount, const VkConvertCooperativeVectorMatrixInfoNV* pInfos) const noexcept {
+        fp_vkCmdConvertCooperativeVectorMatrixNV(commandBuffer, infoCount, pInfos);
     }
 #endif
 #if (defined(VK_EXT_host_query_reset))
@@ -6818,6 +6879,16 @@ struct DispatchTable {
 #else
     void * fp_vkCmdTraceRaysIndirect2KHR{};
 #endif
+#if (defined(VK_NV_cluster_acceleration_structure))
+    PFN_vkGetClusterAccelerationStructureBuildSizesNV fp_vkGetClusterAccelerationStructureBuildSizesNV = nullptr;
+#else
+    void * fp_vkGetClusterAccelerationStructureBuildSizesNV{};
+#endif
+#if (defined(VK_NV_cluster_acceleration_structure))
+    PFN_vkCmdBuildClusterAccelerationStructureIndirectNV fp_vkCmdBuildClusterAccelerationStructureIndirectNV = nullptr;
+#else
+    void * fp_vkCmdBuildClusterAccelerationStructureIndirectNV{};
+#endif
 #if (defined(VK_KHR_acceleration_structure))
     PFN_vkGetDeviceAccelerationStructureCompatibilityKHR fp_vkGetDeviceAccelerationStructureCompatibilityKHR = nullptr;
 #else
@@ -7478,6 +7549,16 @@ struct DispatchTable {
 #else
     void * fp_vkCmdDecompressMemoryIndirectCountNV{};
 #endif
+#if (defined(VK_NV_partitioned_acceleration_structure))
+    PFN_vkGetPartitionedAccelerationStructuresBuildSizesNV fp_vkGetPartitionedAccelerationStructuresBuildSizesNV = nullptr;
+#else
+    void * fp_vkGetPartitionedAccelerationStructuresBuildSizesNV{};
+#endif
+#if (defined(VK_NV_partitioned_acceleration_structure))
+    PFN_vkCmdBuildPartitionedAccelerationStructuresNV fp_vkCmdBuildPartitionedAccelerationStructuresNV = nullptr;
+#else
+    void * fp_vkCmdBuildPartitionedAccelerationStructuresNV{};
+#endif
 #if (defined(VK_EXT_descriptor_buffer))
     PFN_vkGetDescriptorSetLayoutSizeEXT fp_vkGetDescriptorSetLayoutSizeEXT = nullptr;
 #else
@@ -7912,6 +7993,16 @@ struct DispatchTable {
     PFN_vkGetMemoryMetalHandlePropertiesEXT fp_vkGetMemoryMetalHandlePropertiesEXT = nullptr;
 #else
     void * fp_vkGetMemoryMetalHandlePropertiesEXT{};
+#endif
+#if (defined(VK_NV_cooperative_vector))
+    PFN_vkConvertCooperativeVectorMatrixNV fp_vkConvertCooperativeVectorMatrixNV = nullptr;
+#else
+    void * fp_vkConvertCooperativeVectorMatrixNV{};
+#endif
+#if (defined(VK_NV_cooperative_vector))
+    PFN_vkCmdConvertCooperativeVectorMatrixNV fp_vkCmdConvertCooperativeVectorMatrixNV = nullptr;
+#else
+    void * fp_vkCmdConvertCooperativeVectorMatrixNV{};
 #endif
 #if (defined(VK_EXT_host_query_reset))
     PFN_vkResetQueryPoolEXT fp_vkResetQueryPoolEXT = nullptr;

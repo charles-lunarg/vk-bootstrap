@@ -61,7 +61,7 @@ To query the available layers and extensions, get a `SystemInfo` struct from `Sy
 ```cpp
 auto system_info_ret = vkb::SystemInfo::get_system_info();
 if (!system_info_ret) {
-    printf("%s\n", system_info_ret.error().message());
+    std::cerr << system_info_ret.error().message().c_str() << "\n";
     return -1;
 }
 auto system_info = system_info_ret.value();

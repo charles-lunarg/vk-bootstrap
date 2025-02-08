@@ -1636,7 +1636,9 @@ CustomQueueDescription::CustomQueueDescription(uint32_t index, std::vector<float
 : index(index), priorities(std::move(priorities)) {}
 
 void destroy_device(Device const& device) {
-    device.internal_table.fp_vkDestroyDevice(device.device, device.allocation_callbacks);
+    if (device.device != VK_NULL_HANDLE) {
+        device.internal_table.fp_vkDestroyDevice(device.device, device.allocation_callbacks);
+    }
 }
 
 DeviceBuilder::DeviceBuilder(PhysicalDevice phys_device) { physical_device = std::move(phys_device); }

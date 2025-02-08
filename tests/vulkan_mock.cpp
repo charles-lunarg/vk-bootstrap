@@ -6,7 +6,7 @@
 
 #include <algorithm>
 
-#if defined(__linux__) || defined(__APPLE__)
+#if defined(__linux__) || defined(__APPLE__) || defined(__FreeBSD__)
 #include <dlfcn.h>
 #endif
 

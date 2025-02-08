@@ -26,7 +26,7 @@
 #include <windows.h>
 #endif // _WIN32
 
-#if defined(__linux__) || defined(__APPLE__)
+#if defined(__linux__) || defined(__APPLE__) || defined(__FreeBSD__)
 #include <dlfcn.h>
 #endif
 
@@ -114,7 +114,7 @@ class VulkanFunctions {
     private:
     std::mutex init_mutex;
 
-#if defined(__linux__) || defined(__APPLE__)
+#if defined(__linux__) || defined(__APPLE__) || defined(__FreeBSD__)
     void* library = nullptr;
 #elif defined(_WIN32)
     HMODULE library = nullptr;
@@ -125,7 +125,7 @@ class VulkanFunctions {
         if (library) {
             return true;
         }
-#if defined(__linux__)
+#if defined(__linux__) || defined(__FreeBSD__)
         library = dlopen("libvulkan.so.1", RTLD_NOW | RTLD_LOCAL);
         if (!library) library = dlopen("libvulkan.so", RTLD_NOW | RTLD_LOCAL);
 #elif defined(__APPLE__)
@@ -143,14 +143,14 @@ class VulkanFunctions {
     }
 
     template <typename T> void load_func(T& func_dest, const char* func_name) {
-#if defined(__linux__) || defined(__APPLE__)
+#if defined(__linux__) || defined(__APPLE__) || defined(__FreeBSD__)
         func_dest = reinterpret_cast<T>(dlsym(library, func_name));
 #elif defined(_WIN32)
         func_dest = reinterpret_cast<T>(GetProcAddress(library, func_name));
 #endif
     }
     void close() {
-#if defined(__linux__) || defined(__APPLE__)
+#if defined(__linux__) || defined(__APPLE__) || defined(__FreeBSD__)
         dlclose(library);
 #elif defined(_WIN32)
         FreeLibrary(library);
@@ -661,7 +661,7 @@ Result<Instance> InstanceBuilder::build() const {
         bool added_window_exts = check_add_window_ext("VK_KHR_android_surface");
 #elif defined(_DIRECT2DISPLAY)
         bool added_window_exts = check_add_window_ext("VK_KHR_display");
-#elif defined(__linux__)
+#elif defined(__linux__) || defined(__FreeBSD__)
         // make sure all three calls to check_add_window_ext, don't allow short circuiting
         bool added_window_exts = check_add_window_ext("VK_KHR_xcb_surface");
         added_window_exts = check_add_window_ext("VK_KHR_xlib_surface") || added_window_exts;

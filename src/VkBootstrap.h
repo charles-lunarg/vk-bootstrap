@@ -333,7 +333,7 @@ void destroy_instance(Instance const& instance); // release instance resources
 
 #if defined(_WIN32)
     VK_KHR_win32_surface
-#elif defined(__linux__)
+#elif defined(__linux__) || defined(__FreeBSD__)
     VK_KHR_xcb_surface
     VK_KHR_xlib_surface
     VK_KHR_wayland_surface

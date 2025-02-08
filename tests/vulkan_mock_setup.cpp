@@ -28,7 +28,7 @@ VulkanMock& get_and_setup_default() {
     mock.instance_extensions.push_back(get_extension_properties("VK_KHR_android_surface"));
 #elif defined(_DIRECT2DISPLAY)
     mock.instance_extensions.push_back(get_extension_properties("VK_KHR_android_surface"));
-#elif defined(__linux__)
+#elif defined(__linux__) || defined(__FreeBSD__)
     mock.instance_extensions.push_back(get_extension_properties("VK_KHR_xcb_surface"));
     mock.instance_extensions.push_back(get_extension_properties("VK_KHR_xlib_surface"));
     mock.instance_extensions.push_back(get_extension_properties("VK_KHR_wayland_surface"));

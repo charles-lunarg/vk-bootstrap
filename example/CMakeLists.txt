@@ -1,5 +1,3 @@
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-
 function(add_vulkan_example name)
     add_executable(vk-bootstrap-${name} ${name}.cpp)
     target_link_libraries(vk-bootstrap-${name}

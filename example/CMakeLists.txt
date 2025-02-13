@@ -1,11 +1,18 @@
-add_executable(vk-bootstrap-triangle triangle.cpp)
-target_link_libraries(vk-bootstrap-triangle
-    PRIVATE
-        glfw
-        vk-bootstrap
-        vk-bootstrap-compiler-warnings
-        Vulkan::Headers)
-target_include_directories(vk-bootstrap-triangle PRIVATE ${CMAKE_CURRENT_BINARY_DIR}) # path to build directory for shaders
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+function(add_vulkan_example name)
+    add_executable(vk-bootstrap-${name} ${name}.cpp)
+    target_link_libraries(vk-bootstrap-${name}
+        PRIVATE
+            glfw
+            vk-bootstrap
+            vk-bootstrap-compiler-warnings
+            Vulkan::Headers)
+    target_include_directories(vk-bootstrap-${name} PRIVATE ${CMAKE_CURRENT_BINARY_DIR}) # path to build directory for shaders
+endfunction()
+
+add_vulkan_example(triangle)
+add_vulkan_example(basic_usage)
 
 find_program(GLSLANG_FOUND glslang)
 if(GLSLANG_FOUND)

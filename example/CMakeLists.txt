@@ -11,6 +11,7 @@ endfunction()
 
 add_vulkan_example(triangle)
 add_vulkan_example(basic_usage)
+add_vulkan_example(simple_compute)
 
 find_program(GLSLANG_FOUND glslang)
 if(GLSLANG_FOUND)
@@ -40,6 +41,7 @@ if(GLSLANG_FOUND)
 
     compile_shader(triangle.frag)
     compile_shader(triangle.vert)
+    compile_shader(simple_compute.comp)
     add_custom_target(generate_shaders DEPENDS ${COMPILED_SHADER_FILES})
     add_dependencies(vk-bootstrap-triangle generate_shaders)
 endif()

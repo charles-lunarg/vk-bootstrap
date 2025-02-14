@@ -23,6 +23,8 @@ struct Data {
     VkDeviceMemory memory_a;
     VkBuffer buffer_b;
     VkDeviceMemory memory_b;
+    uint32_t* buffer_ptr_a;
+    uint32_t* buffer_ptr_b;
 
     VkDescriptorSet descriptor_set;
     VkDescriptorPool descriptor_pool;
@@ -31,7 +33,10 @@ struct Data {
 
 int device_initialization(Init& init) {
     vkb::InstanceBuilder instance_builder;
-    auto instance_ret = instance_builder.use_default_debug_messenger().request_validation_layers().build();
+    auto instance_ret = instance_builder.use_default_debug_messenger()
+                            .request_validation_layers()
+                            .set_headless() // Skip vk-bootstrap trying to create WSI for you
+                            .build();
     if (!instance_ret) {
         std::cout << instance_ret.error().message() << "\n";
         return -1;
@@ -41,8 +46,7 @@ int device_initialization(Init& init) {
     init.inst_disp = init.instance.make_table();
 
     vkb::PhysicalDeviceSelector phys_device_selector(init.instance);
-    // Skip vk-bootstrap trying to create WSI for you
-    auto phys_device_ret = phys_device_selector.defer_surface_initialization().select();
+    auto phys_device_ret = phys_device_selector.select();
     if (!phys_device_ret) {
         std::cout << phys_device_ret.error().message() << "\n";
         return -1;
@@ -91,8 +95,7 @@ std::vector<char> readFile(const std::string& filename) {
     return buffer;
 }
 
-
-int create_descriptor(Init& init, Data& data) {
+void create_descriptor(Init& init, Data& data) {
     VkDescriptorPoolSize pool_size = { VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 2 };
 
     VkDescriptorPoolCreateInfo pool_info = {};
@@ -117,11 +120,9 @@ int create_descriptor(Init& init, Data& data) {
     ds_allocate_info.descriptorSetCount = 1;
     ds_allocate_info.pSetLayouts = &data.descriptor_set_layout;
     init.disp.allocateDescriptorSets(&ds_allocate_info, &data.descriptor_set);
-
-    return 0;
 }
 
-int create_compute_pipeline(Init& init, Data& data) {
+void create_compute_pipeline(Init& init, Data& data) {
     auto spv_code = readFile(std::string(EXAMPLE_BUILD_DIRECTORY) + "/simple_compute.comp.spv");
 
     VkShaderModuleCreateInfo create_info = {};
@@ -153,10 +154,9 @@ int create_compute_pipeline(Init& init, Data& data) {
     init.disp.createComputePipelines(VK_NULL_HANDLE, 1, &pipeline_info, nullptr, &data.compute_pipeline);
 
     init.disp.destroyShaderModule(shader_module, nullptr);
-    return 0;
 }
 
-int create_command_pool(Init& init, Data& data) {
+void create_command_pool(Init& init, Data& data) {
     VkCommandPoolCreateInfo pool_info = {};
     pool_info.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
     pool_info.queueFamilyIndex = init.device.get_queue_index(vkb::QueueType::graphics).value();
@@ -168,8 +168,6 @@ int create_command_pool(Init& init, Data& data) {
     allocate_info.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
     allocate_info.commandBufferCount = 1;
     init.disp.allocateCommandBuffers(&allocate_info, &data.command_buffer);
-
-    return 0;
 }
 
 uint32_t get_memory_index(Init& init, const uint32_t type_bits) {
@@ -187,7 +185,7 @@ uint32_t get_memory_index(Init& init, const uint32_t type_bits) {
     return UINT32_MAX;
 }
 
-int create_buffers(Init& init, Data& data) {
+void create_buffers(Init& init, Data& data) {
     VkBufferCreateInfo buffer_info = {};
     buffer_info.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
     buffer_info.size = sizeof(uint32_t);
@@ -215,14 +213,10 @@ int create_buffers(Init& init, Data& data) {
 
     // Update buffers with data
     // (We are doing the world's most inefficient adding of 42 + 58 to get 100)
-    void* buffer_ptr;
-    init.disp.mapMemory(data.memory_a, 0, VK_WHOLE_SIZE, 0, &buffer_ptr);
-    ((uint32_t*)buffer_ptr)[0] = 42;
-    init.disp.unmapMemory(data.memory_a);
-
-    init.disp.mapMemory(data.memory_b, 0, VK_WHOLE_SIZE, 0, &buffer_ptr);
-    ((uint32_t*)buffer_ptr)[0] = 58;
-    init.disp.unmapMemory(data.memory_b);
+    init.disp.mapMemory(data.memory_a, 0, VK_WHOLE_SIZE, 0, ((void**)&data.buffer_ptr_a));
+    init.disp.mapMemory(data.memory_b, 0, VK_WHOLE_SIZE, 0, ((void**)&data.buffer_ptr_b));
+    *data.buffer_ptr_a = 42;
+    *data.buffer_ptr_b = 58;
 
     VkDescriptorBufferInfo buffer_infos[2] = {
         { data.buffer_a, 0, VK_WHOLE_SIZE },
@@ -237,11 +231,9 @@ int create_buffers(Init& init, Data& data) {
     write_ds.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
     write_ds.pBufferInfo = buffer_infos;
     init.disp.updateDescriptorSets(1, &write_ds, 0, nullptr);
-
-    return 0;
 }
 
-int create_and_submit_work(Init& init, Data& data) {
+void create_and_submit_work(Init& init, Data& data) {
     VkCommandBufferBeginInfo begin_info = {};
     begin_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 
@@ -261,13 +253,7 @@ int create_and_submit_work(Init& init, Data& data) {
     init.disp.deviceWaitIdle();
 
     // Lets see if we did it
-    void* buffer_ptr;
-    init.disp.mapMemory(data.memory_a, 0, VK_WHOLE_SIZE, 0, &buffer_ptr);
-    uint32_t result = ((uint32_t*)buffer_ptr)[0];
-    init.disp.unmapMemory(data.memory_a);
-
-    std::cout << "Expected a + b to be 100\nResult == " << result << "\n";
-    return 0;
+    std::cout << "Expected a + b to be 100\nResult == " << *data.buffer_ptr_a << "\n";
 }
 
 void cleanup(Init& init, Data& data) {
@@ -291,12 +277,12 @@ int main() {
 
     if (0 != device_initialization(init)) return -1;
     if (0 != get_queues(init, data)) return -1;
-    if (0 != create_descriptor(init, data)) return -1;
-    if (0 != create_compute_pipeline(init, data)) return -1;
-    if (0 != create_command_pool(init, data)) return -1;
-    if (0 != create_buffers(init, data)) return -1;
-    if (0 != create_and_submit_work(init, data)) return -1;
-
+    // We are not error checking here, not good practice, but this is just an example program!
+    create_descriptor(init, data);
+    create_compute_pipeline(init, data);
+    create_command_pool(init, data);
+    create_buffers(init, data);
+    create_and_submit_work(init, data);
     cleanup(init, data);
     return 0;
 }

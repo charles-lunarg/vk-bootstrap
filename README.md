@@ -56,6 +56,7 @@ void init_vulkan () {
 ### More fun quick examples
 
 - [triangle.cpp](./example/triangle.cpp) - renders a triangle to the screen.
+- [simple_compute.cpp](./example/triangle.cpp) - Does a simple add with a compute shader and no surface.
 
 ## Setting up `vk-bootstrap`
 

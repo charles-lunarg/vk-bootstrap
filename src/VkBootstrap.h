@@ -165,8 +165,10 @@ struct GenericFeaturesPNextNode {
 
     GenericFeaturesPNextNode();
 
+    void disable_fields();
+
     template <typename T> GenericFeaturesPNextNode(T const& features) noexcept {
-        memset(fields, UINT8_MAX, sizeof(VkBool32) * field_capacity);
+        disable_fields();
         memcpy(this, &features, sizeof(T));
     }
 

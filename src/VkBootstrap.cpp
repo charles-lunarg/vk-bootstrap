@@ -37,7 +37,13 @@ namespace vkb {
 
 namespace detail {
 
-GenericFeaturesPNextNode::GenericFeaturesPNextNode() { memset(fields, UINT8_MAX, sizeof(VkBool32) * field_capacity); }
+GenericFeaturesPNextNode::GenericFeaturesPNextNode() { disable_fields(); }
+
+void GenericFeaturesPNextNode::disable_fields() {
+    for (auto& field : fields) {
+        field = VK_FALSE;
+    }
+}
 
 bool GenericFeaturesPNextNode::match(GenericFeaturesPNextNode const& requested, GenericFeaturesPNextNode const& supported) noexcept {
     assert(requested.sType == supported.sType && "Non-matching sTypes in features nodes!");
@@ -1542,7 +1548,7 @@ bool PhysicalDevice::enable_features_node_if_present(detail::GenericFeaturesPNex
 
     detail::GenericFeatureChain fill_chain = requested_features;
     // Zero out supported features
-    memset(fill_chain.nodes.front().fields, UINT8_MAX, sizeof(VkBool32) * detail::GenericFeaturesPNextNode::field_capacity);
+    fill_chain.nodes.front().disable_fields();
 
     actual_pdf2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
     fill_chain.chain_up(actual_pdf2);

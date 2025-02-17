@@ -34,10 +34,7 @@ TEST_CASE("VulkanHpp Instance with surface", "[VkBootstrap.vulkan_hpp]") {
         REQUIRE(sys_info_ret);
 
         vkb::InstanceBuilder instance_builder;
-        auto instance_ret = instance_builder.require_api_version(1, 1, 0)
-                                .set_minimum_instance_version(1, 0, 0)
-                                .use_default_debug_messenger()
-                                .build();
+        auto instance_ret = instance_builder.require_api_version(1, 1, 0).use_default_debug_messenger().build();
         REQUIRE(instance_ret);
         vkb::Instance instance = instance_ret.value();
         vk::Instance hpp_instance{ instance };

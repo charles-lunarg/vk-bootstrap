@@ -74,10 +74,8 @@ instance_builder.set_app_version(3, 0, 0);
 instance_builder.set_engine_version(5, 0, 2);
 
 // The Instance Version (aka the version of your loader)
-// TODO - which?
 // This will make sure you require a 1.3 Vulkan Loader
 instance_builder.require_api_version(1, 3, 0);
-instance_builder.set_minimum_instance_version(1, 3, 0);
 ```
 
 ## Enabling Instance Level Extensions and Layers

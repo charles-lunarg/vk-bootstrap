@@ -2,20 +2,21 @@
 
 `vk-bootstrap` reduces the complexity of dealing with `VkInstance`, `VkPhysicalDevice`, and `VkDevice`, the three things every Vulkan app needs to start.
 
+- [Getting Started](#getting-started)
 - [Build Pattern](#build-pattern)
 - [Instance Creation](#instance-creation)
-   * [Versions](#versions)
-   * [Enabling Instance Level Extensions and Layers](#enabling-instance-level-extensions-and-layers)
+  - [Versions](#versions)
+  - [Enabling Instance Level Extensions and Layers](#enabling-instance-level-extensions-and-layers)
 - [Physical Device Selection](#physical-device-selection)
 - [Physical Device Object](#physical-device-object)
 - [Device Creation](#device-creation)
-   * [Queues](#queues)
-      + [Custom queue setup](#custom-queue-setup)
+  - [Queues](#queues)
+    - [Custom queue setup](#custom-queue-setup)
 - [Dispatch Table](#dispatch-table)
 - [WSI](#wsi)
-   * [For those who don't want a surface](#for-those-who-dont-want-a-surface)
-   * [Surface Creation](#surface-creation)
-   * [Swapchain](#swapchain)
+  - [For those who don't want a surface](#for-those-who-dont-want-a-surface)
+  - [Surface Creation](#surface-creation)
+  - [Swapchain](#swapchain)
 - [Cleanup](#cleanup)
 - [Creating your own debug callback](#creating-your-own-debug-callback)
 

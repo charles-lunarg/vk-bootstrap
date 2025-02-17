@@ -446,6 +446,8 @@ const char* to_string(InstanceError err) {
         CASE_TO_STRING(InstanceError, vulkan_version_unavailable)
         CASE_TO_STRING(InstanceError, vulkan_version_1_1_unavailable)
         CASE_TO_STRING(InstanceError, vulkan_version_1_2_unavailable)
+        CASE_TO_STRING(InstanceError, vulkan_version_1_3_unavailable)
+        CASE_TO_STRING(InstanceError, vulkan_version_1_4_unavailable)
         CASE_TO_STRING(InstanceError, failed_create_debug_messenger)
         CASE_TO_STRING(InstanceError, failed_create_instance)
         CASE_TO_STRING(InstanceError, requested_layers_not_present)
@@ -604,7 +606,11 @@ Result<Instance> InstanceBuilder::build() const {
         }
         if (pfn_vkEnumerateInstanceVersion == nullptr || instance_version < info.minimum_instance_version ||
             (info.minimum_instance_version == 0 && instance_version < info.required_api_version)) {
-            if (VK_VERSION_MINOR(info.required_api_version) == 2)
+            if (VK_VERSION_MINOR(info.required_api_version) == 4)
+                return make_error_code(InstanceError::vulkan_version_1_4_unavailable);
+            else if (VK_VERSION_MINOR(info.required_api_version) == 3)
+                return make_error_code(InstanceError::vulkan_version_1_3_unavailable);
+            else if (VK_VERSION_MINOR(info.required_api_version) == 2)
                 return make_error_code(InstanceError::vulkan_version_1_2_unavailable);
             else if (VK_VERSION_MINOR(info.required_api_version))
                 return make_error_code(InstanceError::vulkan_version_1_1_unavailable);

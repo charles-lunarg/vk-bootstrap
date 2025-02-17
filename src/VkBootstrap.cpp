@@ -551,6 +551,15 @@ SystemInfo::SystemInfo() {
             }
         }
     }
+
+    PFN_vkEnumerateInstanceVersion pfn_vkEnumerateInstanceVersion = detail::vulkan_functions().fp_vkEnumerateInstanceVersion;
+
+    if (pfn_vkEnumerateInstanceVersion != nullptr) {
+        VkResult res = pfn_vkEnumerateInstanceVersion(&instance_api_version);
+        if (res != VK_SUCCESS) {
+            instance_api_version = VKB_VK_API_VERSION_1_0;
+        }
+    }
 }
 bool SystemInfo::is_extension_available(const char* extension_name) const {
     if (!extension_name) return false;
@@ -560,6 +569,11 @@ bool SystemInfo::is_layer_available(const char* layer_name) const {
     if (!layer_name) return false;
     return detail::check_layer_supported(available_layers, layer_name);
 }
+bool SystemInfo::is_instance_version_available(uint32_t major_api_version, uint32_t minor_api_version) {
+    return instance_api_version >= VKB_MAKE_VK_VERSION(0, major_api_version, minor_api_version, 0);
+}
+bool SystemInfo::is_instance_version_available(uint32_t api_version) { return instance_api_version >= api_version; }
+
 void destroy_surface(Instance const& instance, VkSurfaceKHR surface) {
     if (instance.instance != VK_NULL_HANDLE && surface != VK_NULL_HANDLE) {
         detail::vulkan_functions().fp_vkDestroySurfaceKHR(instance.instance, surface, instance.allocation_callbacks);

@@ -455,6 +455,25 @@ TEST_CASE("SystemInfo Loading Vulkan Automatically", "[VkBootstrap.loading]") {
     REQUIRE(ret);
 }
 
+TEST_CASE("SystemInfo Check Instance API Version", "[VkBootstrap.instance_api_version]") {
+    VulkanMock& mock = get_and_setup_default();
+    mock.api_version = VK_API_VERSION_1_2;
+    auto info_ret = vkb::SystemInfo::get_system_info();
+    REQUIRE(info_ret);
+    auto system_info = info_ret.value();
+    REQUIRE(system_info.is_instance_version_available(VK_MAKE_API_VERSION(0, 1, 0, 0)));
+    REQUIRE(system_info.is_instance_version_available(VK_MAKE_API_VERSION(0, 1, 1, 0)));
+    REQUIRE(system_info.is_instance_version_available(VK_MAKE_API_VERSION(0, 1, 2, 0)));
+    REQUIRE(!system_info.is_instance_version_available(VK_MAKE_API_VERSION(0, 1, 3, 0)));
+    REQUIRE(!system_info.is_instance_version_available(VK_MAKE_API_VERSION(0, 1, 4, 0)));
+
+    REQUIRE(system_info.is_instance_version_available(1, 0));
+    REQUIRE(system_info.is_instance_version_available(1, 1));
+    REQUIRE(system_info.is_instance_version_available(1, 2));
+    REQUIRE(!system_info.is_instance_version_available(1, 3));
+    REQUIRE(!system_info.is_instance_version_available(1, 4));
+}
+
 TEST_CASE("SystemInfo Loading Vulkan Manually", "[VkBootstrap.loading]") {
     [[maybe_unused]] VulkanMock& mock = get_and_setup_default();
     VulkanLibrary vk_lib;

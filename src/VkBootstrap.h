@@ -278,11 +278,18 @@ struct SystemInfo {
     bool is_layer_available(const char* layer_name) const;
     // Returns true if an extension is available
     bool is_extension_available(const char* extension_name) const;
+    // Returns true if the Instance API Version is greater than or equal to the specified version
+    bool is_instance_version_available(uint32_t major_api_version, uint32_t minor_api_version);
+    // Returns true if the Instance API Version is greater than or equal to the specified version.
+    // Should be constructed with VK_MAKE_VERSION or VK_MAKE_API_VERSION.
+    bool is_instance_version_available(uint32_t api_version);
 
     std::vector<VkLayerProperties> available_layers;
     std::vector<VkExtensionProperties> available_extensions;
     bool validation_layers_available = false;
     bool debug_utils_available = false;
+
+    uint32_t instance_api_version = VKB_VK_API_VERSION_1_0;
 };
 
 // Forward declared - check VkBoostrap.cpp for implementations

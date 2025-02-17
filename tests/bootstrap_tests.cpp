@@ -48,7 +48,6 @@ TEST_CASE("Instance with surface", "[VkBootstrap.bootstrap]") {
         THEN("Can select physical device with customized requirements") {
             vkb::PhysicalDeviceSelector selector(instance);
             auto phys_dev_ret = selector.set_surface(surface)
-                                    .add_desired_extension(VK_KHR_MULTIVIEW_EXTENSION_NAME)
                                     .add_required_extension(VK_KHR_DRIVER_PROPERTIES_EXTENSION_NAME)
                                     .set_minimum_version(1, 0)
                                     .select();

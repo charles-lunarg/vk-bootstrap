@@ -593,8 +593,7 @@ Result<Instance> InstanceBuilder::build() const {
 
     uint32_t instance_version = VKB_VK_API_VERSION_1_0;
 
-    if (info.minimum_instance_version > VKB_VK_API_VERSION_1_0 || info.required_api_version > VKB_VK_API_VERSION_1_0 ||
-        info.desired_api_version > VKB_VK_API_VERSION_1_0) {
+    if (info.minimum_instance_version > VKB_VK_API_VERSION_1_0 || info.required_api_version > VKB_VK_API_VERSION_1_0) {
         PFN_vkEnumerateInstanceVersion pfn_vkEnumerateInstanceVersion = detail::vulkan_functions().fp_vkEnumerateInstanceVersion;
 
         if (pfn_vkEnumerateInstanceVersion != nullptr) {
@@ -615,11 +614,6 @@ Result<Instance> InstanceBuilder::build() const {
     }
 
     uint32_t api_version = instance_version < VKB_VK_API_VERSION_1_1 ? instance_version : info.required_api_version;
-
-    if (info.desired_api_version > VKB_VK_API_VERSION_1_0 && instance_version >= info.desired_api_version) {
-        instance_version = info.desired_api_version;
-        api_version = info.desired_api_version;
-    }
 
     VkApplicationInfo app_info = {};
     app_info.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
@@ -819,14 +813,6 @@ InstanceBuilder& InstanceBuilder::set_minimum_instance_version(uint32_t major, u
     info.minimum_instance_version = VKB_MAKE_VK_VERSION(0, major, minor, patch);
     return *this;
 }
-InstanceBuilder& InstanceBuilder::desire_api_version(uint32_t preferred_vulkan_version) {
-    info.desired_api_version = preferred_vulkan_version;
-    return *this;
-}
-InstanceBuilder& InstanceBuilder::desire_api_version(uint32_t major, uint32_t minor, uint32_t patch) {
-    info.desired_api_version = VKB_MAKE_VK_VERSION(0, major, minor, patch);
-    return *this;
-}
 InstanceBuilder& InstanceBuilder::enable_layer(const char* layer_name) {
     if (!layer_name) return *this;
     info.layers.push_back(layer_name);
@@ -918,10 +904,10 @@ void destroy_debug_messenger(VkInstance const instance, VkDebugUtilsMessengerEXT
 namespace detail {
 
 std::vector<std::string> check_device_extension_support(
-    std::vector<std::string> const& available_extensions, std::vector<std::string> const& desired_extensions) {
+    std::vector<std::string> const& available_extensions, std::vector<std::string> const& required_extensions) {
     std::vector<std::string> extensions_to_enable;
     for (const auto& avail_ext : available_extensions) {
-        for (auto& req_ext : desired_extensions) {
+        for (auto& req_ext : required_extensions) {
             if (avail_ext == req_ext) {
                 extensions_to_enable.push_back(req_ext);
                 break;
@@ -1156,7 +1142,6 @@ PhysicalDevice::Suitable PhysicalDeviceSelector::is_device_suitable(PhysicalDevi
     if (criteria.name.size() > 0 && criteria.name != pd.properties.deviceName) return PhysicalDevice::Suitable::no;
 
     if (criteria.required_version > pd.properties.apiVersion) return PhysicalDevice::Suitable::no;
-    if (criteria.desired_version > pd.properties.apiVersion) suitable = PhysicalDevice::Suitable::partial;
 
     bool dedicated_compute = detail::get_dedicated_queue_index(pd.queue_families, VK_QUEUE_COMPUTE_BIT, VK_QUEUE_TRANSFER_BIT) !=
                              detail::QUEUE_INDEX_MAX_VALUE;
@@ -1181,10 +1166,6 @@ PhysicalDevice::Suitable PhysicalDeviceSelector::is_device_suitable(PhysicalDevi
         detail::check_device_extension_support(pd.available_extensions, criteria.required_extensions);
     if (required_extensions_supported.size() != criteria.required_extensions.size())
         return PhysicalDevice::Suitable::no;
-
-    auto desired_extensions_supported = detail::check_device_extension_support(pd.available_extensions, criteria.desired_extensions);
-    if (desired_extensions_supported.size() != criteria.desired_extensions.size())
-        suitable = PhysicalDevice::Suitable::partial;
 
     if (!criteria.defer_surface_initialization && criteria.require_present) {
         std::vector<VkSurfaceFormatKHR> formats;
@@ -1216,8 +1197,6 @@ PhysicalDevice::Suitable PhysicalDeviceSelector::is_device_suitable(PhysicalDevi
         if (pd.memory_properties.memoryHeaps[i].flags & VK_MEMORY_HEAP_DEVICE_LOCAL_BIT) {
             if (pd.memory_properties.memoryHeaps[i].size < criteria.required_mem_size) {
                 return PhysicalDevice::Suitable::no;
-            } else if (pd.memory_properties.memoryHeaps[i].size < criteria.desired_mem_size) {
-                suitable = PhysicalDevice::Suitable::partial;
             }
         }
     }
@@ -1235,10 +1214,9 @@ PhysicalDeviceSelector::PhysicalDeviceSelector(Instance const& instance, VkSurfa
     instance_info.surface = surface;
     criteria.require_present = !instance.headless;
     criteria.required_version = instance.api_version;
-    criteria.desired_version = instance.api_version;
 }
 
-Result<std::vector<PhysicalDevice>> PhysicalDeviceSelector::select_impl(DeviceSelectionMode selection) const {
+Result<std::vector<PhysicalDevice>> PhysicalDeviceSelector::select_impl() const {
 #if !defined(NDEBUG)
     // Validation
     for (const auto& node : criteria.extended_features_chain.nodes) {
@@ -1276,14 +1254,10 @@ Result<std::vector<PhysicalDevice>> PhysicalDeviceSelector::select_impl(DeviceSe
             if (criteria.enable_portability_subset && ext == "VK_KHR_portability_subset")
                 portability_ext_available = true;
 
-        auto desired_extensions_supported =
-            detail::check_device_extension_support(phys_dev.available_extensions, criteria.desired_extensions);
 
         phys_dev.extensions_to_enable.clear();
         phys_dev.extensions_to_enable.insert(
             phys_dev.extensions_to_enable.end(), criteria.required_extensions.begin(), criteria.required_extensions.end());
-        phys_dev.extensions_to_enable.insert(
-            phys_dev.extensions_to_enable.end(), desired_extensions_supported.begin(), desired_extensions_supported.end());
         if (portability_ext_available) {
             phys_dev.extensions_to_enable.push_back("VK_KHR_portability_subset");
         }
@@ -1307,14 +1281,9 @@ Result<std::vector<PhysicalDevice>> PhysicalDeviceSelector::select_impl(DeviceSe
     }
 
     // sort the list into fully and partially suitable devices. use stable_partition to maintain relative order
-    const auto partition_index = std::stable_partition(physical_devices.begin(), physical_devices.end(), [](auto const& pd) {
+    std::stable_partition(physical_devices.begin(), physical_devices.end(), [](auto const& pd) {
         return pd.suitable == PhysicalDevice::Suitable::yes;
     });
-
-    // Remove the partially suitable elements if they aren't desired
-    if (selection == DeviceSelectionMode::only_fully_suitable) {
-        physical_devices.erase(partition_index, physical_devices.end());
-    }
 
     // Make the physical device ready to be used to create a Device from it
     for (auto& physical_device : physical_devices) {
@@ -1324,8 +1293,8 @@ Result<std::vector<PhysicalDevice>> PhysicalDeviceSelector::select_impl(DeviceSe
     return physical_devices;
 }
 
-Result<PhysicalDevice> PhysicalDeviceSelector::select(DeviceSelectionMode selection) const {
-    auto const selected_devices = select_impl(selection);
+Result<PhysicalDevice> PhysicalDeviceSelector::select() const {
+    auto const selected_devices = select_impl();
 
     if (!selected_devices) return Result<PhysicalDevice>{ selected_devices.error() };
     if (selected_devices.value().size() == 0) {
@@ -1336,8 +1305,8 @@ Result<PhysicalDevice> PhysicalDeviceSelector::select(DeviceSelectionMode select
 }
 
 // Return all devices which are considered suitable - intended for applications which want to let the user pick the physical device
-Result<std::vector<PhysicalDevice>> PhysicalDeviceSelector::select_devices(DeviceSelectionMode selection) const {
-    auto const selected_devices = select_impl(selection);
+Result<std::vector<PhysicalDevice>> PhysicalDeviceSelector::select_devices() const {
+    auto const selected_devices = select_impl();
     if (!selected_devices) return Result<std::vector<PhysicalDevice>>{ selected_devices.error() };
     if (selected_devices.value().size() == 0) {
         return Result<std::vector<PhysicalDevice>>{ PhysicalDeviceError::no_suitable_device };
@@ -1345,8 +1314,8 @@ Result<std::vector<PhysicalDevice>> PhysicalDeviceSelector::select_devices(Devic
     return selected_devices.value();
 }
 
-Result<std::vector<std::string>> PhysicalDeviceSelector::select_device_names(DeviceSelectionMode selection) const {
-    auto const selected_devices = select_impl(selection);
+Result<std::vector<std::string>> PhysicalDeviceSelector::select_device_names() const {
+    auto const selected_devices = select_impl();
     if (!selected_devices) return Result<std::vector<std::string>>{ selected_devices.error() };
     if (selected_devices.value().size() == 0) {
         return Result<std::vector<std::string>>{ PhysicalDeviceError::no_suitable_device };
@@ -1397,10 +1366,6 @@ PhysicalDeviceSelector& PhysicalDeviceSelector::required_device_memory_size(VkDe
     criteria.required_mem_size = size;
     return *this;
 }
-PhysicalDeviceSelector& PhysicalDeviceSelector::desired_device_memory_size(VkDeviceSize size) {
-    criteria.desired_mem_size = size;
-    return *this;
-}
 PhysicalDeviceSelector& PhysicalDeviceSelector::add_required_extension(const char* extension) {
     criteria.required_extensions.push_back(extension);
     return *this;
@@ -1418,22 +1383,8 @@ PhysicalDeviceSelector& PhysicalDeviceSelector::add_required_extensions(size_t c
     }
     return *this;
 }
-PhysicalDeviceSelector& PhysicalDeviceSelector::add_desired_extension(const char* extension) {
-    criteria.desired_extensions.push_back(extension);
-    return *this;
-}
-PhysicalDeviceSelector& PhysicalDeviceSelector::add_desired_extensions(const std::vector<const char*>& extensions) {
-    for (const auto& ext : extensions) {
-        criteria.desired_extensions.push_back(ext);
-    }
-    return *this;
-}
 PhysicalDeviceSelector& PhysicalDeviceSelector::set_minimum_version(uint32_t major, uint32_t minor) {
     criteria.required_version = VKB_MAKE_VK_VERSION(0, major, minor, 0);
-    return *this;
-}
-PhysicalDeviceSelector& PhysicalDeviceSelector::set_desired_version(uint32_t major, uint32_t minor) {
-    criteria.desired_version = VKB_MAKE_VK_VERSION(0, major, minor, 0);
     return *this;
 }
 PhysicalDeviceSelector& PhysicalDeviceSelector::disable_portability_subset() {

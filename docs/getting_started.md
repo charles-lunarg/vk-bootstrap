@@ -32,11 +32,11 @@ vkb::Result<vkb::Wrapper> result = vkb::WrapperBuilder()
 
 if (!result) { /* handle error */ }
 
-// The result also holds the vk-bootstrap wrappre
+// The result also holds the vk-bootstrap wrapper
 vkb::Wrapper wrapper = result.value();
 
 // The underlying Vulkan handle can easily be acquired
-vkObject object = wrapper.object;
+VkObject object = wrapper.object;
 ```
 
 # Instance Creation
@@ -164,7 +164,8 @@ The features and extensions used as selection criteria in `vkb::PhysicalDeviceSe
 
 Note:
 
-Because `vk-bootstrap` does not manage creating a `VkSurfaceKHR` handle, it is explicitly passed into the `vkb::PhysicalDeviceSelector` for proper querying of surface support details. Unless the `vkb::InstanceBuilder::set_headless()` function was called, the physical device selector will emit `no_surface_provided` error. If an application does intend to present but cannot create a `VkSurfaceKHR` handle before physical device selection, use `defer_surface_initialization()` to disable the `no_surface_provided` error.
+Because `vk-bootstrap` does not manage creating a `VkSurfaceKHR` handle, it is explicitly passed into the `vkb::PhysicalDeviceSelector` for proper querying of surface support details. (See [the WSI section](#wsi))
+
 
 # Physical Device Object
 
@@ -195,7 +196,6 @@ if (!dev_ret) {
 }
 vkb::Device vkb_device = dev_ret.value();
  ```
-
 
 ## Queues
 
@@ -267,9 +267,13 @@ instance_builder.set_headless()
 auto instance_ret = instance_builder.build();
 ```
 
+> If this is not set, you might see a `no_surface_provided` error.
+
 ## Surface Creation
 
 Presenting images to the screen Vulkan requires creating a surface, encapsulated in a `VkSurfaceKHR` handle. Creating a surface is the responsibility of the windowing system, thus is out of scope for `vk-bootstrap`. However, `vk-bootstrap` does try to make the process as painless as possible by automatically enabling the correct windowing extensions in `VkInstance` creation.
+
+> If an application does intend to present but cannot create a `VkSurfaceKHR` handle before physical device selection, use `defer_surface_initialization()` to disable the `no_surface_provided` error.
 
 Windowing libraries which support Vulkan usually provide a way of getting the `VkSurfaceKHR` handle for the window. These methods require a valid Vulkan instance, thus must be done after instance creation.
 

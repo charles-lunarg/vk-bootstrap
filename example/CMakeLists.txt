@@ -9,9 +9,10 @@ function(add_vulkan_example name)
     target_include_directories(vk-bootstrap-${name} PRIVATE ${CMAKE_CURRENT_BINARY_DIR}) # path to build directory for shaders
 endfunction()
 
-add_vulkan_example(triangle)
 add_vulkan_example(basic_usage)
 add_vulkan_example(simple_compute)
+add_vulkan_example(system_info)
+add_vulkan_example(triangle)
 
 find_program(GLSLANG_FOUND glslang)
 if(GLSLANG_FOUND)

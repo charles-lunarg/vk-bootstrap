@@ -5,10 +5,8 @@
 
 bool init_vulkan() {
     vkb::InstanceBuilder builder;
-    auto inst_ret = builder.set_app_name("Example Vulkan Application")
-                        .request_validation_layers()
-                        .use_default_debug_messenger()
-                        .build();
+    auto inst_ret =
+        builder.set_app_name("Example Vulkan Application").request_validation_layers().use_default_debug_messenger().build();
     if (!inst_ret) {
         std::cerr << "Failed to create Vulkan instance. Error: " << inst_ret.error().message() << "\n";
         return false;
@@ -20,8 +18,9 @@ bool init_vulkan() {
     GLFWwindow* window = glfwCreateWindow(1024, 1024, "Vulkan Triangle", NULL, NULL);
 
     VkSurfaceKHR surface = VK_NULL_HANDLE;
-    if (VkResult err = glfwCreateWindowSurface(vkb_inst, window, nullptr, &surface)) {
-        std::cerr << "Failed to select create windows surface\n";
+    VkResult glfw_result = glfwCreateWindowSurface(vkb_inst, window, nullptr, &surface);
+    if (glfw_result != VK_SUCCESS) {
+        std::cerr << "Failed to select create window surface. Error: " << std::to_string(glfw_result) << "\n";
         return false;
     }
 

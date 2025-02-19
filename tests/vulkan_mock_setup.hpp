@@ -15,4 +15,6 @@ VkExtensionProperties get_extension_properties(const char* extName);
 
 VulkanMock& get_and_setup_default();
 
+VulkanMock::PhysicalDeviceDetails& add_basic_physical_device(VulkanMock& mock);
+
 VulkanMock::SurfaceDetails get_basic_surface_details();

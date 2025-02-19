@@ -36,6 +36,11 @@ VulkanMock& get_and_setup_default() {
     mock.instance_extensions.push_back(get_extension_properties("VK_EXT_metal_surface"));
 #endif
     mock.instance_extensions.push_back(get_extension_properties(VK_EXT_DEBUG_UTILS_EXTENSION_NAME));
+    add_basic_physical_device(mock);
+    return mock;
+}
+
+VulkanMock::PhysicalDeviceDetails& add_basic_physical_device(VulkanMock& mock) {
     VulkanMock::PhysicalDeviceDetails physical_device_details{};
     physical_device_details.extensions.push_back(get_extension_properties(VK_KHR_SWAPCHAIN_EXTENSION_NAME));
     physical_device_details.properties.apiVersion = VK_API_VERSION_1_0;
@@ -45,7 +50,7 @@ VulkanMock& get_and_setup_default() {
     queue_family_properties.minImageTransferGranularity = { 1, 1, 1 };
     physical_device_details.queue_family_properties.push_back(queue_family_properties);
     mock.add_physical_device(std::move(physical_device_details));
-    return mock;
+    return mock.physical_devices_details.back();
 }
 
 VulkanMock::SurfaceDetails get_basic_surface_details() {

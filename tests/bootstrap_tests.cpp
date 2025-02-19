@@ -532,6 +532,44 @@ TEST_CASE("ReLoading Vulkan Manually", "[VkBootstrap.loading]") {
     }
 }
 
+TEST_CASE("Minimum instance API version", "[VkBootstrap.api_version]") {
+    VulkanMock& mock = get_and_setup_default();
+    mock.api_version = VK_API_VERSION_1_2;
+    mock.physical_devices_details[0].properties.apiVersion = VK_API_VERSION_1_3;
+    mock.physical_devices_details[0].properties.deviceID = 1;
+    add_basic_physical_device(mock).properties.apiVersion = VK_API_VERSION_1_4;
+    mock.physical_devices_details[1].properties.deviceID = 2;
+    {
+        auto ret = vkb::InstanceBuilder{}.set_headless().require_api_version(1, 4).set_minimum_instance_version(1, 2).build();
+        REQUIRE(ret);
+        auto pd_ret = vkb::PhysicalDeviceSelector{ ret.value() }.select();
+        REQUIRE(pd_ret);
+        REQUIRE(pd_ret.value().properties.deviceID == 2);
+    }
+    {
+        auto ret = vkb::InstanceBuilder{}
+                       .set_headless()
+                       .require_api_version(VK_MAKE_API_VERSION(0, 1, 4, 0))
+                       .set_minimum_instance_version(VK_MAKE_API_VERSION(0, 1, 2, 0))
+                       .build();
+        REQUIRE(ret);
+        auto pd_ret = vkb::PhysicalDeviceSelector{ ret.value() }.select();
+        REQUIRE(pd_ret);
+        REQUIRE(pd_ret.value().properties.deviceID == 2);
+    }
+}
+TEST_CASE("Minimum instance API version lower than VkPhysicalDevice", "[VkBootstrap.api_version]") {
+    VulkanMock& mock = get_and_setup_default();
+    mock.api_version = VK_API_VERSION_1_2;
+    mock.physical_devices_details[0].properties.apiVersion = VK_API_VERSION_1_3;
+    mock.physical_devices_details[0].properties.deviceID = 1;
+    {
+        auto ret = vkb::InstanceBuilder{}.set_headless().require_api_version(1, 4).set_minimum_instance_version(1, 2).build();
+        REQUIRE(ret);
+        auto pd_ret = vkb::PhysicalDeviceSelector{ ret.value() }.select();
+        REQUIRE(pd_ret.error() == vkb::PhysicalDeviceError::no_suitable_device);
+    }
+}
 TEST_CASE("Querying Required Extension Features but with 1.0", "[VkBootstrap.select_features]") {
     VulkanMock& mock = get_and_setup_default();
     mock.instance_extensions.push_back(get_extension_properties("VK_KHR_get_physical_device_properties2"));

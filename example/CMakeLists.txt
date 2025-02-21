@@ -10,6 +10,7 @@ function(add_vulkan_example name)
 endfunction()
 
 add_vulkan_example(basic_usage)
+add_vulkan_example(custom_debug_callback)
 add_vulkan_example(simple_compute)
 add_vulkan_example(system_info)
 add_vulkan_example(triangle)

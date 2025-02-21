@@ -366,3 +366,5 @@ instance_builder.set_debug_callback (
 		}
     );
 ```
+
+See [custom_debug_callback.cpp](../example/custom_debug_callback.cpp) for a working example.

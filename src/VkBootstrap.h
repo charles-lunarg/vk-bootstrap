@@ -67,7 +67,7 @@ template <typename T> class Result {
     Result(std::error_code error_code, VkResult result = VK_SUCCESS) noexcept
     : m_error{ error_code, result }, m_init{ false } {}
 
-    ~Result() noexcept { destroy(); }
+    virtual ~Result() noexcept {}
     Result(Result const& expected) noexcept : m_init(expected.m_init) {
         if (m_init)
             new (&m_value) T{ expected.m_value };
@@ -87,7 +87,6 @@ template <typename T> class Result {
             new (&m_value) T{ std::move(expected.m_value) };
         else
             m_error = std::move(expected.m_error);
-        expected.destroy();
     }
     Result& operator=(Result&& result) noexcept {
         m_init = result.m_init;
@@ -98,25 +97,21 @@ template <typename T> class Result {
         return *this;
     }
     Result& operator=(const T& expect) noexcept {
-        destroy();
         m_init = true;
         new (&m_value) T{ expect };
         return *this;
     }
     Result& operator=(T&& expect) noexcept {
-        destroy();
         m_init = true;
         new (&m_value) T{ std::move(expect) };
         return *this;
     }
     Result& operator=(const Error& error) noexcept {
-        destroy();
         m_init = false;
         m_error = error;
         return *this;
     }
     Result& operator=(Error&& error) noexcept {
-        destroy();
         m_init = false;
         m_error = error;
         return *this;
@@ -148,9 +143,6 @@ template <typename T> class Result {
     explicit operator bool() const { return m_init; }
 
     private:
-    void destroy() {
-        if (m_init) m_value.~T();
-    }
     union {
         T m_value;
         Error m_error;

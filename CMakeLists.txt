@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.22)
 
 include(gen/CurrentBuildVulkanVersion.cmake)
 
@@ -9,11 +9,6 @@ project(VulkanBootstrap
 
 option(VK_BOOTSTRAP_DISABLE_WARNINGS "Disable warnings during compilation" OFF)
 option(VK_BOOTSTRAP_WERROR "Enable warnings as errors during compilation" OFF)
-
-if (CMAKE_VERSION VERSION_LESS "3.21")
-    # By default, only build tests & install if this repo is standalone, but still allow configuration by the user
-    string(COMPARE EQUAL ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_SOURCE_DIR} PROJECT_IS_TOP_LEVEL)
-endif()
 
 option(VK_BOOTSTRAP_TEST "Test Vk-Bootstrap using Catch2 as well as build examples" ${PROJECT_IS_TOP_LEVEL})
 option(VK_BOOTSTRAP_INSTALL "Enable installing of vk-bootstrap" ${PROJECT_IS_TOP_LEVEL})

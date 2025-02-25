@@ -42,7 +42,7 @@ jobs:
             - uses: actions/checkout@v4
             - uses: lukka/get-cmake@latest
               with:
-                cmakeVersion: 3.15
+                cmakeVersion: 3.22
 
             - name: Install build dependencies
               run: |

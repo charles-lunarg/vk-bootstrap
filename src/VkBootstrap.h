@@ -87,7 +87,6 @@ template <typename T> class Result {
             new (&m_value) T{ std::move(expected.m_value) };
         else
             m_error = std::move(expected.m_error);
-        expected.destroy();
     }
     Result& operator=(Result&& result) noexcept {
         m_init = result.m_init;

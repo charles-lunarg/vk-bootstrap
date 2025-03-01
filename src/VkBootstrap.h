@@ -318,6 +318,8 @@ struct Instance {
     VkAllocationCallbacks* allocation_callbacks = nullptr;
     PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr = nullptr;
     PFN_vkGetDeviceProcAddr fp_vkGetDeviceProcAddr = nullptr;
+    uint32_t instance_version = VKB_VK_API_VERSION_1_0;
+    uint32_t api_version = VKB_VK_API_VERSION_1_0;
 
     // A conversion function which allows this Instance to be used
     // in places where VkInstance would have been used.
@@ -329,8 +331,6 @@ struct Instance {
     private:
     bool headless = false;
     bool properties2_ext_enabled = false;
-    uint32_t instance_version = VKB_VK_API_VERSION_1_0;
-    uint32_t api_version = VKB_VK_API_VERSION_1_0;
 
     friend class InstanceBuilder;
     friend class PhysicalDeviceSelector;

@@ -318,7 +318,9 @@ struct Instance {
     VkAllocationCallbacks* allocation_callbacks = nullptr;
     PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr = nullptr;
     PFN_vkGetDeviceProcAddr fp_vkGetDeviceProcAddr = nullptr;
+    // The apiVersion used to create the instance
     uint32_t instance_version = VKB_VK_API_VERSION_1_0;
+    // The instance version queried from vkEnumerateInstanceVersion
     uint32_t api_version = VKB_VK_API_VERSION_1_0;
 
     // A conversion function which allows this Instance to be used

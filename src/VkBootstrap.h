@@ -304,9 +304,13 @@ inline VKAPI_ATTR VkBool32 VKAPI_CALL default_debug_callback(VkDebugUtilsMessage
     void*) {
     auto ms = to_string_message_severity(messageSeverity);
     auto mt = to_string_message_type(messageType);
-    printf("[%s: %s]\n%s\n", ms, mt, pCallbackData->pMessage);
+    if (messageType & VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT) {
+        printf("[%s: %s] - %s\n%s\n", ms, mt, pCallbackData->pMessageIdName, pCallbackData->pMessage);
+    } else {
+        printf("[%s: %s]\n%s\n", ms, mt, pCallbackData->pMessage);
+    }
 
-    return VK_FALSE; // Applications must return false here
+    return VK_FALSE; // Applications must return false here (Except Validation, if return true, will skip calling to driver)
 }
 
 class InstanceBuilder;

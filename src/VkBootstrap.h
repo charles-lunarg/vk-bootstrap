@@ -34,6 +34,10 @@
 #define VKB_MAKE_VK_VERSION(variant, major, minor, patch) VK_MAKE_VERSION(major, minor, patch)
 #endif
 
+#if defined(VK_API_VERSION_1_4) || defined(VK_VERSION_1_4)
+#define VKB_VK_API_VERSION_1_4 VKB_MAKE_VK_VERSION(0, 1, 4, 0)
+#endif
+
 #if defined(VK_API_VERSION_1_3) || defined(VK_VERSION_1_3)
 #define VKB_VK_API_VERSION_1_3 VKB_MAKE_VK_VERSION(0, 1, 3, 0)
 #endif
@@ -665,6 +669,11 @@ class PhysicalDeviceSelector {
     // Require a physical device which supports the features in VkPhysicalDeviceVulkan13Features.
     // Must have vulkan version 1.3
     PhysicalDeviceSelector& set_required_features_13(VkPhysicalDeviceVulkan13Features const& features_13);
+#endif
+#if defined(VKB_VK_API_VERSION_1_4)
+    // Require a physical device which supports the features in VkPhysicalDeviceVulkan13Features.
+    // Must have vulkan version 1.4
+    PhysicalDeviceSelector& set_required_features_14(VkPhysicalDeviceVulkan14Features const& features_14);
 #endif
 
     // Used when surface creation happens after physical device selection.

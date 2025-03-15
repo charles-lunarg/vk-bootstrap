@@ -1441,6 +1441,14 @@ PhysicalDeviceSelector& PhysicalDeviceSelector::set_required_features_13(VkPhysi
     return *this;
 }
 #endif
+#if defined(VKB_VK_API_VERSION_1_4)
+PhysicalDeviceSelector& PhysicalDeviceSelector::set_required_features_14(VkPhysicalDeviceVulkan14Features const& features_14) {
+    VkPhysicalDeviceVulkan14Features features_14_copy = features_14;
+    features_14_copy.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_4_FEATURES;
+    add_required_extension_features(features_14_copy);
+    return *this;
+}
+#endif
 PhysicalDeviceSelector& PhysicalDeviceSelector::defer_surface_initialization() {
     criteria.defer_surface_initialization = true;
     return *this;

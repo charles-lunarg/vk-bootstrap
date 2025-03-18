@@ -80,9 +80,10 @@ template <typename T> class Result {
     }
     Result& operator=(Result const& result) noexcept {
         m_init = result.m_init;
-        if (m_init)
+        if (m_init) {
+            destroy();
             new (&m_value) T{ result.m_value };
-        else
+        } else
             m_error = result.m_error;
         return *this;
     }
@@ -94,9 +95,10 @@ template <typename T> class Result {
     }
     Result& operator=(Result&& result) noexcept {
         m_init = result.m_init;
-        if (m_init)
+        if (m_init) {
+            destroy();
             new (&m_value) T{ std::move(result.m_value) };
-        else
+        } else
             m_error = std::move(result.m_error);
         return *this;
     }

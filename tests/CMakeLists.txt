@@ -7,7 +7,7 @@ else()
 endif()
 target_link_libraries(VulkanMock
     PUBLIC
-        Vulkan::Headers vk-bootstrap Catch2::Catch2
+        Vulkan::Headers Catch2::Catch2
     PRIVATE
         vk-bootstrap-compiler-warnings
 )

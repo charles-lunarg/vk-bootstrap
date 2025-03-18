@@ -143,11 +143,11 @@ VKAPI_ATTR void VKAPI_CALL shim_vkGetPhysicalDeviceFeatures2KHR(VkPhysicalDevice
     VkBaseOutStructure* current = static_cast<VkBaseOutStructure*>(pFeatures->pNext);
     while (current) {
         for (const auto& features_pNext : phys_dev.features_pNextChain) {
-            if (features_pNext.sType == current->sType) {
+            VkBaseOutStructure structure_data{};
+            memcpy(&structure_data, features_pNext.data(), sizeof(structure_data));
+            if (structure_data.sType == current->sType) {
                 VkBaseOutStructure* next = static_cast<VkBaseOutStructure*>(current->pNext);
-                std::memcpy(static_cast<void*>(current),
-                    static_cast<const void*>(&features_pNext),
-                    get_pnext_chain_struct_size(features_pNext.sType));
+                std::memcpy(static_cast<void*>(current), features_pNext.data(), features_pNext.size());
                 // Repair pNext void* since we clobbered it in the memcpy
                 current->pNext = next;
                 break;
@@ -189,7 +189,7 @@ VKAPI_ATTR VkResult VKAPI_CALL shim_vkCreateDevice(VkPhysicalDevice physicalDevi
     if (pCreateInfo->pEnabledFeatures) {
         new_feats = *pCreateInfo->pEnabledFeatures;
     }
-    std::vector<vkb::detail::GenericFeaturesPNextNode> new_chain;
+    std::vector<std::vector<char>> new_chain;
     std::vector<const char*> created_extensions;
     for (uint32_t i = 0; i < pCreateInfo->enabledExtensionCount; i++) {
         created_extensions.push_back(pCreateInfo->ppEnabledExtensionNames[i]);
@@ -199,9 +199,10 @@ VKAPI_ATTR VkResult VKAPI_CALL shim_vkCreateDevice(VkPhysicalDevice physicalDevi
         const auto* chain = static_cast<const VkBaseOutStructure*>(pNext_chain);
         const void* next = chain->pNext;
         if (check_if_features2_struct(chain->sType) > 0) {
-            vkb::detail::GenericFeaturesPNextNode node;
-            std::memcpy(static_cast<void*>(&node), pNext_chain, get_pnext_chain_struct_size(chain->sType));
-            new_chain.push_back(node);
+            std::vector<char> new_node;
+            new_node.resize(get_pnext_chain_struct_size(chain->sType));
+            std::memcpy(new_node.data(), pNext_chain, new_node.size());
+            new_chain.push_back(new_node);
         }
         if (chain->sType == VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2) {
             new_feats = static_cast<const VkPhysicalDeviceFeatures2*>(pNext_chain)->features;

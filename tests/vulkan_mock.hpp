@@ -10,8 +10,6 @@
 
 #include <vulkan/vulkan_core.h>
 
-#include <VkBootstrap.h>
-
 // Helper function to return the size of the sType if it is a known features struct, otherwise return 0
 // Hand written, must be updated to include any used struct.
 inline size_t check_if_features2_struct(VkStructureType type) {
@@ -77,7 +75,7 @@ struct VulkanMock {
     struct CreatedDeviceDetails {
         VkPhysicalDeviceFeatures features{};
         std::vector<const char*> extensions;
-        std::vector<vkb::detail::GenericFeaturesPNextNode> features_pNextChain;
+        std::vector<std::vector<char>> features_pNextChain;
     };
 
     struct PhysicalDeviceDetails {
@@ -86,12 +84,17 @@ struct VulkanMock {
         VkPhysicalDeviceMemoryProperties memory_properties{};
         std::vector<VkExtensionProperties> extensions;
         std::vector<VkQueueFamilyProperties> queue_family_properties;
-        std::vector<vkb::detail::GenericFeaturesPNextNode> features_pNextChain;
+        std::vector<std::vector<char>> features_pNextChain;
 
         std::vector<VkDevice> created_device_handles;
         std::vector<CreatedDeviceDetails> created_device_details;
 
-        template <typename T> void add_features_pNext_struct(T features) { features_pNextChain.push_back(features); }
+        template <typename T> void add_features_pNext_struct(T features) {
+            std::vector<char> new_struct;
+            new_struct.resize(sizeof(T));
+            memcpy(new_struct.data(), &features, new_struct.size());
+            features_pNextChain.push_back(new_struct);
+        }
     };
 
     std::vector<VkPhysicalDevice> physical_device_handles;

@@ -6,10 +6,6 @@
 
 #include <algorithm>
 
-#if defined(__linux__) || defined(__APPLE__) || defined(__FreeBSD__)
-#include <dlfcn.h>
-#endif
-
 #define GPA_IMPL(x)                                                                                                    \
     if (strcmp(pName, #x) == 0) {                                                                                      \
         return reinterpret_cast<PFN_vkVoidFunction>(shim_##x);                                                         \
@@ -403,49 +399,17 @@ PFN_vkVoidFunction shim_vkGetInstanceProcAddr([[maybe_unused]] VkInstance instan
     return nullptr;
 }
 
+#if defined(__GNUC__) && __GNUC__ >= 4
+#define EXPORT_FUNCTION __attribute__((visibility("default")))
+#elif defined(WIN32)
+#define EXPORT_FUNCTION __declspec(dllexport)
+#else
+#define EXPORT_FUNCTION
+#endif
+
+
 extern "C" {
-VKAPI_ATTR PFN_vkVoidFunction VKAPI_CALL vkGetInstanceProcAddr(VkInstance instance, const char* pName) {
+EXPORT_FUNCTION VKAPI_ATTR PFN_vkVoidFunction VKAPI_CALL vkGetInstanceProcAddr(VkInstance instance, const char* pName) {
     return shim_vkGetInstanceProcAddr(instance, pName);
 }
-
-#if defined(__linux__) || defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__GNU__)
-#define DLSYM_FUNC_NAME dlsym
-
-#elif defined(__APPLE__)
-#define DLSYM_FUNC_NAME my_dlsym
-#endif
-
-using PFN_DLSYM = void* (*)(void* handle, const char* symbol);
-
-
-#if defined(__APPLE__)
-#define real_dlsym dlsym
-#else
-PFN_DLSYM real_dlsym = nullptr;
-#endif
-
-void* DLSYM_FUNC_NAME([[maybe_unused]] void* handle, const char* symbol) {
-    if (strcmp(symbol, "vkGetInstanceProcAddr") == 0) {
-        return reinterpret_cast<void*>(shim_vkGetInstanceProcAddr);
-    }
-
-    return nullptr;
-}
-
-/* Shiming functions on apple is limited by the linker prefering to not use functions in the
- * executable in loaded dylibs. By adding an interposer, we redirect the linker to use our
- * version of the function over the real one, thus shimming the system function.
- */
-#if defined(__APPLE__)
-#define MACOS_ATTRIB __attribute__((section("__DATA,__interpose")))
-#define VOIDCP_CAST(_func) reinterpret_cast<const void*>(&_func)
-
-struct Interposer {
-    const void* shim_function;
-    const void* underlying_function;
-};
-
-__attribute__((used)) static Interposer _interpose_dlsym MACOS_ATTRIB = { VOIDCP_CAST(my_dlsym), VOIDCP_CAST(dlsym) };
-
-#endif
 }

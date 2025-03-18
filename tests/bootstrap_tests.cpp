@@ -710,7 +710,7 @@ TEST_CASE("Adding Optional Extension Features", "[VkBootstrap.enable_features_if
                 REQUIRE(!phys_dev.enable_extension_features_if_present(phys_dev_vulkan_11_features));
                 auto device = vkb::DeviceBuilder(phys_dev).build().value();
                 auto* s = reinterpret_cast<VkPhysicalDeviceVulkan12Features*>(
-                    &mock.physical_devices_details.at(0).created_device_details.at(0).features_pNextChain.at(0));
+                    mock.physical_devices_details.at(0).created_device_details.at(0).features_pNextChain.at(0).data());
                 REQUIRE(s->sType == VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES);
                 vkb::destroy_device(device);
             }
@@ -722,7 +722,7 @@ TEST_CASE("Adding Optional Extension Features", "[VkBootstrap.enable_features_if
                 REQUIRE(phys_dev.enable_extension_features_if_present(phys_dev_vulkan_11_features));
                 auto device = vkb::DeviceBuilder(phys_dev).build().value();
                 auto* s = reinterpret_cast<VkPhysicalDeviceVulkan11Features*>(
-                    &mock.physical_devices_details.at(0).created_device_details.at(0).features_pNextChain.at(1));
+                    mock.physical_devices_details.at(0).created_device_details.at(0).features_pNextChain.at(1).data());
                 REQUIRE(s->sType == VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES);
                 REQUIRE(s->shaderDrawParameters);
                 vkb::destroy_device(device);
@@ -884,10 +884,10 @@ TEST_CASE("Querying Vulkan 1.1 and 1.2 features", "[VkBootstrap.version]") {
             auto device_ret = device_builder.build();
             REQUIRE(device_ret.has_value());
             auto* s1 = reinterpret_cast<VkPhysicalDeviceVulkan11Features*>(
-                &mock.physical_devices_details.at(0).created_device_details.at(0).features_pNextChain.at(0));
+                mock.physical_devices_details.at(0).created_device_details.at(0).features_pNextChain.at(0).data());
             REQUIRE(s1->multiview);
             auto* s2 = reinterpret_cast<VkPhysicalDeviceVulkan12Features*>(
-                &mock.physical_devices_details.at(0).created_device_details.at(0).features_pNextChain.at(1));
+                mock.physical_devices_details.at(0).created_device_details.at(0).features_pNextChain.at(1).data());
             REQUIRE(s2->bufferDeviceAddress);
 
             vkb::destroy_device(device_ret.value());
@@ -969,7 +969,7 @@ TEST_CASE("Add required extension features in multiple calls", "[VkBootstrap.req
             auto device_ret = device_builder.build();
             REQUIRE(device_ret.has_value());
             auto* s1 = reinterpret_cast<VkPhysicalDeviceVulkan11Features*>(
-                &mock.physical_devices_details.at(0).created_device_details.at(0).features_pNextChain.at(0));
+                mock.physical_devices_details.at(0).created_device_details.at(0).features_pNextChain.at(0).data());
             REQUIRE(s1->multiview);
             REQUIRE(s1->samplerYcbcrConversion);
 

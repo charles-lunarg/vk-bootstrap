@@ -98,6 +98,15 @@ set_target_properties(vk-bootstrap PROPERTIES POSITION_INDEPENDENT_CODE ${VK_BOO
 
 if(VK_BOOTSTRAP_TEST)
     enable_testing()
+
+    option(ENABLE_ADDRESS_SANITIZER "Use address sanitization")
+    if (ENABLE_ADDRESS_SANITIZER)
+        target_compile_options(vk-bootstrap-compiler-warnings INTERFACE -fsanitize=address)
+        if (NOT MSVC)
+            target_link_options(vk-bootstrap-compiler-warnings INTERFACE -fsanitize=address)
+        endif()
+    endif()
+
     add_subdirectory(ext)
     add_subdirectory(tests)
     add_subdirectory(example)

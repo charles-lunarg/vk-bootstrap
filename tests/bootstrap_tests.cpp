@@ -978,3 +978,53 @@ TEST_CASE("Add required extension features in multiple calls", "[VkBootstrap.req
         vkb::destroy_instance(instance);
     }
 }
+
+// Simple Rule of 3 type
+class Sample {
+    public:
+    Sample() { data = new int; }
+    Sample(Sample const& sample) {
+        data = new int;
+        *data = *sample.data;
+    }
+    Sample& operator=(Sample const& sample) {
+
+        *data = *sample.data;
+        return *this;
+    }
+
+    virtual ~Sample() { delete data; }
+
+    private:
+    int* data;
+};
+
+TEST_CASE("Check vkb::Result", "[VkBootstrap.Result]") {
+    {
+        vkb::Result<std::vector<float>> a{ std::vector<float>(30, 3.0f) };
+        auto b = std::move(a);
+        b.value().push_back(5.0f);
+        vkb::Result<std::vector<float>> c{ std::move(b) };
+        c.value().push_back(7.0f);
+        auto d = std::move(c);
+        d.value().push_back(9.0f);
+    }
+    {
+        vkb::Result<std::unique_ptr<float>> a{ std::make_unique<float>(3.0f) };
+        vkb::Result<std::unique_ptr<float>> b{ std::make_unique<float>(3.0f) };
+        b = std::move(a);
+        *b.value().get() = 5.0f;
+        vkb::Result<std::unique_ptr<float>> c{ std::move(b) };
+        *c.value().get() = 7.0f;
+        auto d = std::move(c);
+        *d.value().get() = 9.0f;
+    }
+    {
+
+        vkb::Result<Sample> result(Sample{});
+        vkb::Result<Sample> anotherResult(std::move(result));
+        vkb::Result<Sample> c = result;
+        vkb::Result<Sample> d(Sample{});
+        d = c;
+    }
+}

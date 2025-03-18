@@ -210,7 +210,8 @@ TEST_CASE("Select all Physical Devices", "[VkBootstrap.bootstrap]") {
     VulkanMock& mock = get_and_setup_default();
     mock.api_version = VK_API_VERSION_1_1;
     mock.physical_devices_details[0].properties.apiVersion = VK_API_VERSION_1_1;
-    std::copy_n("mocking_gpus_for_fun_and_profit", VK_MAX_DRIVER_NAME_SIZE, mock.physical_devices_details[0].properties.deviceName);
+    const char* message = "mocking_gpus_for_fun_and_profit";
+    std::copy_n(message, sizeof(message) + 1, mock.physical_devices_details[0].properties.deviceName);
 
     auto instance = get_instance(1);
     auto surface = mock.get_new_surface(get_basic_surface_details());

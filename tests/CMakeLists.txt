@@ -1,10 +1,12 @@
+add_library(VulkanMock SHARED vulkan_mock.hpp vulkan_mock.cpp)
+# Need to set the target name to "vulkan" so that it'll be loaded instead of the *actual* Vulkan Loader on the system
 if (WIN32)
-    add_library(VulkanMock SHARED vulkan_mock.hpp vulkan_mock.cpp)
-    # Need to name the target "vulkan-1" so that it'll be loaded instead of the *actual* vulkan-1.dll on the system
     set_target_properties(VulkanMock PROPERTIES OUTPUT_NAME "vulkan-1")
 else()
-    add_library(VulkanMock STATIC vulkan_mock.hpp vulkan_mock.cpp)
+    set_target_properties(VulkanMock PROPERTIES OUTPUT_NAME "vulkan")
 endif()
+set_target_properties(VulkanMock PROPERTIES SOVERSION 1)
+
 target_link_libraries(VulkanMock
     PUBLIC
         Vulkan::Headers Catch2::Catch2

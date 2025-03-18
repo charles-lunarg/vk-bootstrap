@@ -15,7 +15,7 @@ vkb::Instance get_headless_instance(uint32_t minor_version) {
 
 VkExtensionProperties get_extension_properties(const char* extName) {
     VkExtensionProperties ext_props{};
-    std::copy_n(extName, VK_MAX_EXTENSION_NAME_SIZE, ext_props.extensionName);
+    std::copy_n(extName, strlen(extName) + 1, ext_props.extensionName);
     return ext_props;
 }
 

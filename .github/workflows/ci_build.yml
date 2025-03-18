@@ -50,7 +50,7 @@ jobs:
                 sudo apt-get install -y xorg-dev
 
             - name: CMake Configure
-              run: cmake -S. -B build -DCMAKE_BUILD_TYPE=${{matrix.type}} -DVK_BOOTSTRAP_WERROR=ON -DVK_BOOTSTRAP_TEST=ON
+              run: cmake -S. -B build -DCMAKE_BUILD_TYPE=${{matrix.type}} -DVK_BOOTSTRAP_WERROR=ON -DVK_BOOTSTRAP_TEST=ON -DENABLE_ADDRESS_SANITIZER=ON
 
             - name: CMake Build
               run: cmake --build build

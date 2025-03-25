@@ -2538,6 +2538,9 @@ struct DispatchTable {
 #if (defined(VK_VERSION_1_3))
         fp_vkCmdEndRendering = reinterpret_cast<PFN_vkCmdEndRendering>(procAddr(device, "vkCmdEndRendering"));
 #endif
+#if (defined(VK_EXT_fragment_density_map_offset))
+        fp_vkCmdEndRendering2EXT = reinterpret_cast<PFN_vkCmdEndRendering2EXT>(procAddr(device, "vkCmdEndRendering2EXT"));
+#endif
 #if (defined(VK_VALVE_descriptor_set_host_mapping))
         fp_vkGetDescriptorSetLayoutHostMappingInfoVALVE = reinterpret_cast<PFN_vkGetDescriptorSetLayoutHostMappingInfoVALVE>(procAddr(device, "vkGetDescriptorSetLayoutHostMappingInfoVALVE"));
 #endif
@@ -5083,6 +5086,11 @@ struct DispatchTable {
 #if (defined(VK_VERSION_1_3))
     void cmdEndRendering(VkCommandBuffer commandBuffer) const noexcept {
         fp_vkCmdEndRendering(commandBuffer);
+    }
+#endif
+#if (defined(VK_EXT_fragment_density_map_offset))
+    void cmdEndRendering2EXT(VkCommandBuffer commandBuffer, const VkRenderingEndInfoEXT* pRenderingEndInfo) const noexcept {
+        fp_vkCmdEndRendering2EXT(commandBuffer, pRenderingEndInfo);
     }
 #endif
 #if (defined(VK_VALVE_descriptor_set_host_mapping))
@@ -7688,6 +7696,11 @@ struct DispatchTable {
     PFN_vkCmdEndRendering fp_vkCmdEndRendering = nullptr;
 #else
     void * fp_vkCmdEndRendering{};
+#endif
+#if (defined(VK_EXT_fragment_density_map_offset))
+    PFN_vkCmdEndRendering2EXT fp_vkCmdEndRendering2EXT = nullptr;
+#else
+    void * fp_vkCmdEndRendering2EXT{};
 #endif
 #if (defined(VK_VALVE_descriptor_set_host_mapping))
     PFN_vkGetDescriptorSetLayoutHostMappingInfoVALVE fp_vkGetDescriptorSetLayoutHostMappingInfoVALVE = nullptr;

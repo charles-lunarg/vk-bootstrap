@@ -30,7 +30,7 @@ jobs:
         PR_NUMBER: ${{ github.event.number }}
 
     steps:
-      - uses: actions/create-github-app-token@v1
+      - uses: actions/create-github-app-token@v2
         id: generate-token
         with:
           app-id: ${{ vars.APP_ID }}

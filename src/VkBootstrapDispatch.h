@@ -2730,6 +2730,21 @@ struct DispatchTable {
 #if (defined(VK_NV_cooperative_vector))
         fp_vkCmdConvertCooperativeVectorMatrixNV = reinterpret_cast<PFN_vkCmdConvertCooperativeVectorMatrixNV>(procAddr(device, "vkCmdConvertCooperativeVectorMatrixNV"));
 #endif
+#if (defined(VK_QCOM_tile_shading))
+        fp_vkCmdDispatchTileQCOM = reinterpret_cast<PFN_vkCmdDispatchTileQCOM>(procAddr(device, "vkCmdDispatchTileQCOM"));
+#endif
+#if (defined(VK_QCOM_tile_shading))
+        fp_vkCmdBeginPerTileExecutionQCOM = reinterpret_cast<PFN_vkCmdBeginPerTileExecutionQCOM>(procAddr(device, "vkCmdBeginPerTileExecutionQCOM"));
+#endif
+#if (defined(VK_QCOM_tile_shading))
+        fp_vkCmdEndPerTileExecutionQCOM = reinterpret_cast<PFN_vkCmdEndPerTileExecutionQCOM>(procAddr(device, "vkCmdEndPerTileExecutionQCOM"));
+#endif
+#if (defined(VK_NV_external_compute_queue))
+        fp_vkCreateExternalComputeQueueNV = reinterpret_cast<PFN_vkCreateExternalComputeQueueNV>(procAddr(device, "vkCreateExternalComputeQueueNV"));
+#endif
+#if (defined(VK_NV_external_compute_queue))
+        fp_vkDestroyExternalComputeQueueNV = reinterpret_cast<PFN_vkDestroyExternalComputeQueueNV>(procAddr(device, "vkDestroyExternalComputeQueueNV"));
+#endif
 #if (defined(VK_EXT_host_query_reset))
         fp_vkResetQueryPoolEXT = reinterpret_cast<PFN_vkResetQueryPoolEXT>(procAddr(device, "vkResetQueryPoolEXT"));
 #endif
@@ -5408,6 +5423,31 @@ struct DispatchTable {
         fp_vkCmdConvertCooperativeVectorMatrixNV(commandBuffer, infoCount, pInfos);
     }
 #endif
+#if (defined(VK_QCOM_tile_shading))
+    void cmdDispatchTileQCOM(VkCommandBuffer commandBuffer) const noexcept {
+        fp_vkCmdDispatchTileQCOM(commandBuffer);
+    }
+#endif
+#if (defined(VK_QCOM_tile_shading))
+    void cmdBeginPerTileExecutionQCOM(VkCommandBuffer commandBuffer, const VkPerTileBeginInfoQCOM* pPerTileBeginInfo) const noexcept {
+        fp_vkCmdBeginPerTileExecutionQCOM(commandBuffer, pPerTileBeginInfo);
+    }
+#endif
+#if (defined(VK_QCOM_tile_shading))
+    void cmdEndPerTileExecutionQCOM(VkCommandBuffer commandBuffer, const VkPerTileEndInfoQCOM* pPerTileEndInfo) const noexcept {
+        fp_vkCmdEndPerTileExecutionQCOM(commandBuffer, pPerTileEndInfo);
+    }
+#endif
+#if (defined(VK_NV_external_compute_queue))
+    VkResult createExternalComputeQueueNV(const VkExternalComputeQueueCreateInfoNV* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkExternalComputeQueueNV* pExternalQueue) const noexcept {
+        return fp_vkCreateExternalComputeQueueNV(device, pCreateInfo, pAllocator, pExternalQueue);
+    }
+#endif
+#if (defined(VK_NV_external_compute_queue))
+    void destroyExternalComputeQueueNV(VkExternalComputeQueueNV externalQueue, const VkAllocationCallbacks* pAllocator) const noexcept {
+        fp_vkDestroyExternalComputeQueueNV(device, externalQueue, pAllocator);
+    }
+#endif
 #if (defined(VK_EXT_host_query_reset))
     void resetQueryPoolEXT(VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount) const noexcept {
         fp_vkResetQueryPoolEXT(device, queryPool, firstQuery, queryCount);
@@ -8016,6 +8056,31 @@ struct DispatchTable {
     PFN_vkCmdConvertCooperativeVectorMatrixNV fp_vkCmdConvertCooperativeVectorMatrixNV = nullptr;
 #else
     void * fp_vkCmdConvertCooperativeVectorMatrixNV{};
+#endif
+#if (defined(VK_QCOM_tile_shading))
+    PFN_vkCmdDispatchTileQCOM fp_vkCmdDispatchTileQCOM = nullptr;
+#else
+    void * fp_vkCmdDispatchTileQCOM{};
+#endif
+#if (defined(VK_QCOM_tile_shading))
+    PFN_vkCmdBeginPerTileExecutionQCOM fp_vkCmdBeginPerTileExecutionQCOM = nullptr;
+#else
+    void * fp_vkCmdBeginPerTileExecutionQCOM{};
+#endif
+#if (defined(VK_QCOM_tile_shading))
+    PFN_vkCmdEndPerTileExecutionQCOM fp_vkCmdEndPerTileExecutionQCOM = nullptr;
+#else
+    void * fp_vkCmdEndPerTileExecutionQCOM{};
+#endif
+#if (defined(VK_NV_external_compute_queue))
+    PFN_vkCreateExternalComputeQueueNV fp_vkCreateExternalComputeQueueNV = nullptr;
+#else
+    void * fp_vkCreateExternalComputeQueueNV{};
+#endif
+#if (defined(VK_NV_external_compute_queue))
+    PFN_vkDestroyExternalComputeQueueNV fp_vkDestroyExternalComputeQueueNV = nullptr;
+#else
+    void * fp_vkDestroyExternalComputeQueueNV{};
 #endif
 #if (defined(VK_EXT_host_query_reset))
     PFN_vkResetQueryPoolEXT fp_vkResetQueryPoolEXT = nullptr;

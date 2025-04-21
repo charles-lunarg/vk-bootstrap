@@ -152,7 +152,8 @@ class VulkanFunctions {
 #if defined(__linux__) || defined(__APPLE__) || defined(__FreeBSD__)
         func_dest = reinterpret_cast<T>(dlsym(library, func_name));
 #elif defined(_WIN32)
-        func_dest = reinterpret_cast<T>(GetProcAddress(library, func_name));
+        // GetProcAddress returns FARPROC, so need to cast it into a void* which can safely be cast to T
+        func_dest = reinterpret_cast<T>(reinterpret_cast<void*>(GetProcAddress(library, func_name)));
 #endif
     }
     void close() {

@@ -2604,6 +2604,9 @@ struct DispatchTable {
 #if (defined(VK_EXT_metal_objects))
         fp_vkExportMetalObjectsEXT = reinterpret_cast<PFN_vkExportMetalObjectsEXT>(procAddr(device, "vkExportMetalObjectsEXT"));
 #endif
+#if (defined(VK_QCOM_tile_memory_heap))
+        fp_vkCmdBindTileMemoryQCOM = reinterpret_cast<PFN_vkCmdBindTileMemoryQCOM>(procAddr(device, "vkCmdBindTileMemoryQCOM"));
+#endif
 #if (defined(VK_QCOM_tile_properties))
         fp_vkGetFramebufferTilePropertiesQCOM = reinterpret_cast<PFN_vkGetFramebufferTilePropertiesQCOM>(procAddr(device, "vkGetFramebufferTilePropertiesQCOM"));
 #endif
@@ -5211,6 +5214,11 @@ struct DispatchTable {
 #if (defined(VK_EXT_metal_objects))
     void exportMetalObjectsEXT(VkExportMetalObjectsInfoEXT* pMetalObjectsInfo) const noexcept {
         fp_vkExportMetalObjectsEXT(device, pMetalObjectsInfo);
+    }
+#endif
+#if (defined(VK_QCOM_tile_memory_heap))
+    void cmdBindTileMemoryQCOM(VkCommandBuffer commandBuffer, const VkTileMemoryBindInfoQCOM* pTileMemoryBindInfo) const noexcept {
+        fp_vkCmdBindTileMemoryQCOM(commandBuffer, pTileMemoryBindInfo);
     }
 #endif
 #if (defined(VK_QCOM_tile_properties))
@@ -7846,6 +7854,11 @@ struct DispatchTable {
     PFN_vkExportMetalObjectsEXT fp_vkExportMetalObjectsEXT = nullptr;
 #else
     void * fp_vkExportMetalObjectsEXT{};
+#endif
+#if (defined(VK_QCOM_tile_memory_heap))
+    PFN_vkCmdBindTileMemoryQCOM fp_vkCmdBindTileMemoryQCOM = nullptr;
+#else
+    void * fp_vkCmdBindTileMemoryQCOM{};
 #endif
 #if (defined(VK_QCOM_tile_properties))
     PFN_vkGetFramebufferTilePropertiesQCOM fp_vkGetFramebufferTilePropertiesQCOM = nullptr;

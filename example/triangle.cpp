@@ -218,8 +218,8 @@ VkShaderModule createShaderModule(Init& init, const std::vector<char>& code) {
 }
 
 int create_graphics_pipeline(Init& init, RenderData& data) {
-    auto vert_code = readFile(std::string(EXAMPLE_BUILD_DIRECTORY) + "/triangle.vert.spv");
-    auto frag_code = readFile(std::string(EXAMPLE_BUILD_DIRECTORY) + "/triangle.frag.spv");
+    auto vert_code = readFile(std::string(EXAMPLE_SOURCE_DIRECTORY) + "/example/shaders/triangle.vert.spv");
+    auto frag_code = readFile(std::string(EXAMPLE_SOURCE_DIRECTORY) + "/example/shaders/triangle.frag.spv");
 
     VkShaderModule vert_module = createShaderModule(init, vert_code);
     VkShaderModule frag_module = createShaderModule(init, frag_code);

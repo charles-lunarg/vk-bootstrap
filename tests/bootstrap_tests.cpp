@@ -1028,3 +1028,29 @@ TEST_CASE("Check vkb::Result", "[VkBootstrap.Result]") {
         d = c;
     }
 }
+
+TEST_CASE("Test VK_EXT_layer_settings", "[VkBoostrap.LayerSettings]") {
+    VulkanMock& mock = get_and_setup_default();
+
+    SECTION("Missing extension") {
+        VkBool32 vkTrue = VK_TRUE;
+        const VkLayerSettingEXT layer_setting = {
+            "VK_LAYER_KHRONOS_validation", "validate_core", VK_LAYER_SETTING_TYPE_BOOL32_EXT, 1, &vkTrue
+        };
+
+        auto ret = vkb::InstanceBuilder{}.set_headless().add_layer_setting(layer_setting).build();
+        REQUIRE(ret.error() == vkb::InstanceError::requested_extensions_not_present);
+    }
+
+    mock.instance_extensions.push_back(get_extension_properties(VK_EXT_LAYER_SETTINGS_EXTENSION_NAME));
+
+    SECTION("Set layer setting") {
+        VkBool32 vkTrue = VK_TRUE;
+        const VkLayerSettingEXT layer_setting = {
+            "VK_LAYER_KHRONOS_validation", "validate_core", VK_LAYER_SETTING_TYPE_BOOL32_EXT, 1, &vkTrue
+        };
+
+        auto ret = vkb::InstanceBuilder{}.set_headless().add_layer_setting(layer_setting).build();
+        REQUIRE(ret);
+    }
+}

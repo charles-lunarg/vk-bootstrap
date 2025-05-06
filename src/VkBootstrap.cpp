@@ -660,6 +660,10 @@ Result<Instance> InstanceBuilder::build() const {
         extensions.push_back(VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME);
     }
 
+    if (info.layer_settings.size() > 0) {
+        extensions.push_back(VK_EXT_LAYER_SETTINGS_EXTENSION_NAME);
+    }
+
 #if defined(VK_KHR_portability_enumeration)
     bool portability_enumeration_support =
         detail::check_extension_supported(system.available_extensions, VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME);
@@ -740,6 +744,15 @@ Result<Instance> InstanceBuilder::build() const {
         checks.disabledValidationCheckCount = static_cast<uint32_t>(info.disabled_validation_checks.size());
         checks.pDisabledValidationChecks = info.disabled_validation_checks.data();
         pNext_chain.push_back(reinterpret_cast<VkBaseOutStructure*>(&checks));
+    }
+
+    VkLayerSettingsCreateInfoEXT layer_settings_ci{};
+    if (info.layer_settings.size() > 0) {
+        layer_settings_ci.sType = VK_STRUCTURE_TYPE_LAYER_SETTINGS_CREATE_INFO_EXT;
+        layer_settings_ci.pNext = nullptr;
+        layer_settings_ci.settingCount = static_cast<uint32_t>(info.layer_settings.size());
+        layer_settings_ci.pSettings = info.layer_settings.data();
+        pNext_chain.push_back(reinterpret_cast<VkBaseOutStructure*>(&layer_settings_ci));
     }
 
     VkInstanceCreateInfo instance_create_info = {};
@@ -914,6 +927,10 @@ InstanceBuilder& InstanceBuilder::add_validation_feature_disable(VkValidationFea
 }
 InstanceBuilder& InstanceBuilder::set_allocation_callbacks(VkAllocationCallbacks* callbacks) {
     info.allocation_callbacks = callbacks;
+    return *this;
+}
+InstanceBuilder& InstanceBuilder::add_layer_setting(VkLayerSettingEXT setting) {
+    info.layer_settings.push_back(setting);
     return *this;
 }
 

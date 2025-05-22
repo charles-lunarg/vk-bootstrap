@@ -455,6 +455,9 @@ class InstanceBuilder {
     // Provide custom allocation callbacks.
     InstanceBuilder& set_allocation_callbacks(VkAllocationCallbacks* callbacks);
 
+    // Set a setting on a requested layer via VK_EXT_layer_settings
+    InstanceBuilder& add_layer_setting(VkLayerSettingEXT setting);
+
     private:
     struct InstanceInfo {
         // VkApplicationInfo
@@ -470,6 +473,7 @@ class InstanceBuilder {
         std::vector<const char*> extensions;
         VkInstanceCreateFlags flags = static_cast<VkInstanceCreateFlags>(0);
         std::vector<VkBaseOutStructure*> pNext_elements;
+        std::vector<VkLayerSettingEXT> layer_settings;
 
         // debug callback - use the default so it is not nullptr
         PFN_vkDebugUtilsMessengerCallbackEXT debug_callback = default_debug_callback;

@@ -295,6 +295,9 @@ struct InstanceDispatchTable {
 #if (defined(VK_NV_cooperative_vector))
         fp_vkGetPhysicalDeviceCooperativeVectorPropertiesNV = reinterpret_cast<PFN_vkGetPhysicalDeviceCooperativeVectorPropertiesNV>(procAddr(instance, "vkGetPhysicalDeviceCooperativeVectorPropertiesNV"));
 #endif
+#if (defined(VK_ARM_tensors))
+        fp_vkGetPhysicalDeviceExternalTensorPropertiesARM = reinterpret_cast<PFN_vkGetPhysicalDeviceExternalTensorPropertiesARM>(procAddr(instance, "vkGetPhysicalDeviceExternalTensorPropertiesARM"));
+#endif
 #if (defined(VK_KHR_get_physical_device_properties2))
         fp_vkGetPhysicalDeviceFeatures2KHR = reinterpret_cast<PFN_vkGetPhysicalDeviceFeatures2KHR>(procAddr(instance, "vkGetPhysicalDeviceFeatures2KHR"));
 #endif
@@ -794,6 +797,11 @@ struct InstanceDispatchTable {
 #if (defined(VK_NV_cooperative_vector))
     VkResult getPhysicalDeviceCooperativeVectorPropertiesNV(VkPhysicalDevice physicalDevice, uint32_t* pPropertyCount, VkCooperativeVectorPropertiesNV* pProperties) const noexcept {
         return fp_vkGetPhysicalDeviceCooperativeVectorPropertiesNV(physicalDevice, pPropertyCount, pProperties);
+    }
+#endif
+#if (defined(VK_ARM_tensors))
+    void getPhysicalDeviceExternalTensorPropertiesARM(VkPhysicalDevice physicalDevice, const VkPhysicalDeviceExternalTensorInfoARM* pExternalTensorInfo, VkExternalTensorPropertiesARM* pExternalTensorProperties) const noexcept {
+        fp_vkGetPhysicalDeviceExternalTensorPropertiesARM(physicalDevice, pExternalTensorInfo, pExternalTensorProperties);
     }
 #endif
 #if (defined(VK_KHR_get_physical_device_properties2))
@@ -1297,6 +1305,11 @@ struct InstanceDispatchTable {
     PFN_vkGetPhysicalDeviceCooperativeVectorPropertiesNV fp_vkGetPhysicalDeviceCooperativeVectorPropertiesNV = nullptr;
 #else
     void * fp_vkGetPhysicalDeviceCooperativeVectorPropertiesNV{};
+#endif
+#if (defined(VK_ARM_tensors))
+    PFN_vkGetPhysicalDeviceExternalTensorPropertiesARM fp_vkGetPhysicalDeviceExternalTensorPropertiesARM = nullptr;
+#else
+    void * fp_vkGetPhysicalDeviceExternalTensorPropertiesARM{};
 #endif
 #if (defined(VK_KHR_get_physical_device_properties2))
     PFN_vkGetPhysicalDeviceFeatures2KHR fp_vkGetPhysicalDeviceFeatures2KHR = nullptr;
@@ -2496,6 +2509,9 @@ struct DispatchTable {
 #if (defined(VK_EXT_pageable_device_local_memory))
         fp_vkSetDeviceMemoryPriorityEXT = reinterpret_cast<PFN_vkSetDeviceMemoryPriorityEXT>(procAddr(device, "vkSetDeviceMemoryPriorityEXT"));
 #endif
+#if (defined(VK_KHR_present_wait2))
+        fp_vkWaitForPresent2KHR = reinterpret_cast<PFN_vkWaitForPresent2KHR>(procAddr(device, "vkWaitForPresent2KHR"));
+#endif
 #if (defined(VK_KHR_present_wait))
         fp_vkWaitForPresentKHR = reinterpret_cast<PFN_vkWaitForPresentKHR>(procAddr(device, "vkWaitForPresentKHR"));
 #endif
@@ -2747,6 +2763,36 @@ struct DispatchTable {
 #endif
 #if (defined(VK_NV_external_compute_queue))
         fp_vkDestroyExternalComputeQueueNV = reinterpret_cast<PFN_vkDestroyExternalComputeQueueNV>(procAddr(device, "vkDestroyExternalComputeQueueNV"));
+#endif
+#if (defined(VK_ARM_tensors))
+        fp_vkCreateTensorARM = reinterpret_cast<PFN_vkCreateTensorARM>(procAddr(device, "vkCreateTensorARM"));
+#endif
+#if (defined(VK_ARM_tensors))
+        fp_vkDestroyTensorARM = reinterpret_cast<PFN_vkDestroyTensorARM>(procAddr(device, "vkDestroyTensorARM"));
+#endif
+#if (defined(VK_ARM_tensors))
+        fp_vkCreateTensorViewARM = reinterpret_cast<PFN_vkCreateTensorViewARM>(procAddr(device, "vkCreateTensorViewARM"));
+#endif
+#if (defined(VK_ARM_tensors))
+        fp_vkDestroyTensorViewARM = reinterpret_cast<PFN_vkDestroyTensorViewARM>(procAddr(device, "vkDestroyTensorViewARM"));
+#endif
+#if (defined(VK_ARM_tensors))
+        fp_vkGetTensorMemoryRequirementsARM = reinterpret_cast<PFN_vkGetTensorMemoryRequirementsARM>(procAddr(device, "vkGetTensorMemoryRequirementsARM"));
+#endif
+#if (defined(VK_ARM_tensors))
+        fp_vkBindTensorMemoryARM = reinterpret_cast<PFN_vkBindTensorMemoryARM>(procAddr(device, "vkBindTensorMemoryARM"));
+#endif
+#if (defined(VK_ARM_tensors))
+        fp_vkGetDeviceTensorMemoryRequirementsARM = reinterpret_cast<PFN_vkGetDeviceTensorMemoryRequirementsARM>(procAddr(device, "vkGetDeviceTensorMemoryRequirementsARM"));
+#endif
+#if (defined(VK_ARM_tensors))
+        fp_vkCmdCopyTensorARM = reinterpret_cast<PFN_vkCmdCopyTensorARM>(procAddr(device, "vkCmdCopyTensorARM"));
+#endif
+#if (defined(VK_ARM_tensors) && defined(VK_EXT_descriptor_buffer))
+        fp_vkGetTensorOpaqueCaptureDescriptorDataARM = reinterpret_cast<PFN_vkGetTensorOpaqueCaptureDescriptorDataARM>(procAddr(device, "vkGetTensorOpaqueCaptureDescriptorDataARM"));
+#endif
+#if (defined(VK_ARM_tensors) && defined(VK_EXT_descriptor_buffer))
+        fp_vkGetTensorViewOpaqueCaptureDescriptorDataARM = reinterpret_cast<PFN_vkGetTensorViewOpaqueCaptureDescriptorDataARM>(procAddr(device, "vkGetTensorViewOpaqueCaptureDescriptorDataARM"));
 #endif
 #if (defined(VK_EXT_host_query_reset))
         fp_vkResetQueryPoolEXT = reinterpret_cast<PFN_vkResetQueryPoolEXT>(procAddr(device, "vkResetQueryPoolEXT"));
@@ -5036,6 +5082,11 @@ struct DispatchTable {
         fp_vkSetDeviceMemoryPriorityEXT(device, memory, priority);
     }
 #endif
+#if (defined(VK_KHR_present_wait2))
+    VkResult waitForPresent2KHR(VkSwapchainKHR swapchain, const VkPresentWait2InfoKHR* pPresentWait2Info) const noexcept {
+        return fp_vkWaitForPresent2KHR(device, swapchain, pPresentWait2Info);
+    }
+#endif
 #if (defined(VK_KHR_present_wait))
     VkResult waitForPresentKHR(VkSwapchainKHR swapchain, uint64_t presentId, uint64_t timeout) const noexcept {
         return fp_vkWaitForPresentKHR(device, swapchain, presentId, timeout);
@@ -5432,8 +5483,8 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_QCOM_tile_shading))
-    void cmdDispatchTileQCOM(VkCommandBuffer commandBuffer) const noexcept {
-        fp_vkCmdDispatchTileQCOM(commandBuffer);
+    void cmdDispatchTileQCOM(VkCommandBuffer commandBuffer, const VkDispatchTileInfoQCOM* pDispatchTileInfo) const noexcept {
+        fp_vkCmdDispatchTileQCOM(commandBuffer, pDispatchTileInfo);
     }
 #endif
 #if (defined(VK_QCOM_tile_shading))
@@ -5454,6 +5505,56 @@ struct DispatchTable {
 #if (defined(VK_NV_external_compute_queue))
     void destroyExternalComputeQueueNV(VkExternalComputeQueueNV externalQueue, const VkAllocationCallbacks* pAllocator) const noexcept {
         fp_vkDestroyExternalComputeQueueNV(device, externalQueue, pAllocator);
+    }
+#endif
+#if (defined(VK_ARM_tensors))
+    VkResult createTensorARM(const VkTensorCreateInfoARM* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkTensorARM* pTensor) const noexcept {
+        return fp_vkCreateTensorARM(device, pCreateInfo, pAllocator, pTensor);
+    }
+#endif
+#if (defined(VK_ARM_tensors))
+    void destroyTensorARM(VkTensorARM tensor, const VkAllocationCallbacks* pAllocator) const noexcept {
+        fp_vkDestroyTensorARM(device, tensor, pAllocator);
+    }
+#endif
+#if (defined(VK_ARM_tensors))
+    VkResult createTensorViewARM(const VkTensorViewCreateInfoARM* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkTensorViewARM* pView) const noexcept {
+        return fp_vkCreateTensorViewARM(device, pCreateInfo, pAllocator, pView);
+    }
+#endif
+#if (defined(VK_ARM_tensors))
+    void destroyTensorViewARM(VkTensorViewARM tensorView, const VkAllocationCallbacks* pAllocator) const noexcept {
+        fp_vkDestroyTensorViewARM(device, tensorView, pAllocator);
+    }
+#endif
+#if (defined(VK_ARM_tensors))
+    void getTensorMemoryRequirementsARM(const VkTensorMemoryRequirementsInfoARM* pInfo, VkMemoryRequirements2KHR* pMemoryRequirements) const noexcept {
+        fp_vkGetTensorMemoryRequirementsARM(device, pInfo, pMemoryRequirements);
+    }
+#endif
+#if (defined(VK_ARM_tensors))
+    VkResult bindTensorMemoryARM(uint32_t bindInfoCount, const VkBindTensorMemoryInfoARM* pBindInfos) const noexcept {
+        return fp_vkBindTensorMemoryARM(device, bindInfoCount, pBindInfos);
+    }
+#endif
+#if (defined(VK_ARM_tensors))
+    void getDeviceTensorMemoryRequirementsARM(const VkDeviceTensorMemoryRequirementsARM* pInfo, VkMemoryRequirements2KHR* pMemoryRequirements) const noexcept {
+        fp_vkGetDeviceTensorMemoryRequirementsARM(device, pInfo, pMemoryRequirements);
+    }
+#endif
+#if (defined(VK_ARM_tensors))
+    void cmdCopyTensorARM(VkCommandBuffer commandBuffer, const VkCopyTensorInfoARM* pCopyTensorInfo) const noexcept {
+        fp_vkCmdCopyTensorARM(commandBuffer, pCopyTensorInfo);
+    }
+#endif
+#if (defined(VK_ARM_tensors) && defined(VK_EXT_descriptor_buffer))
+    VkResult getTensorOpaqueCaptureDescriptorDataARM(const VkTensorCaptureDescriptorDataInfoARM* pInfo, void* pData) const noexcept {
+        return fp_vkGetTensorOpaqueCaptureDescriptorDataARM(device, pInfo, pData);
+    }
+#endif
+#if (defined(VK_ARM_tensors) && defined(VK_EXT_descriptor_buffer))
+    VkResult getTensorViewOpaqueCaptureDescriptorDataARM(const VkTensorViewCaptureDescriptorDataInfoARM* pInfo, void* pData) const noexcept {
+        return fp_vkGetTensorViewOpaqueCaptureDescriptorDataARM(device, pInfo, pData);
     }
 #endif
 #if (defined(VK_EXT_host_query_reset))
@@ -7675,6 +7776,11 @@ struct DispatchTable {
 #else
     void * fp_vkSetDeviceMemoryPriorityEXT{};
 #endif
+#if (defined(VK_KHR_present_wait2))
+    PFN_vkWaitForPresent2KHR fp_vkWaitForPresent2KHR = nullptr;
+#else
+    void * fp_vkWaitForPresent2KHR{};
+#endif
 #if (defined(VK_KHR_present_wait))
     PFN_vkWaitForPresentKHR fp_vkWaitForPresentKHR = nullptr;
 #else
@@ -8094,6 +8200,56 @@ struct DispatchTable {
     PFN_vkDestroyExternalComputeQueueNV fp_vkDestroyExternalComputeQueueNV = nullptr;
 #else
     void * fp_vkDestroyExternalComputeQueueNV{};
+#endif
+#if (defined(VK_ARM_tensors))
+    PFN_vkCreateTensorARM fp_vkCreateTensorARM = nullptr;
+#else
+    void * fp_vkCreateTensorARM{};
+#endif
+#if (defined(VK_ARM_tensors))
+    PFN_vkDestroyTensorARM fp_vkDestroyTensorARM = nullptr;
+#else
+    void * fp_vkDestroyTensorARM{};
+#endif
+#if (defined(VK_ARM_tensors))
+    PFN_vkCreateTensorViewARM fp_vkCreateTensorViewARM = nullptr;
+#else
+    void * fp_vkCreateTensorViewARM{};
+#endif
+#if (defined(VK_ARM_tensors))
+    PFN_vkDestroyTensorViewARM fp_vkDestroyTensorViewARM = nullptr;
+#else
+    void * fp_vkDestroyTensorViewARM{};
+#endif
+#if (defined(VK_ARM_tensors))
+    PFN_vkGetTensorMemoryRequirementsARM fp_vkGetTensorMemoryRequirementsARM = nullptr;
+#else
+    void * fp_vkGetTensorMemoryRequirementsARM{};
+#endif
+#if (defined(VK_ARM_tensors))
+    PFN_vkBindTensorMemoryARM fp_vkBindTensorMemoryARM = nullptr;
+#else
+    void * fp_vkBindTensorMemoryARM{};
+#endif
+#if (defined(VK_ARM_tensors))
+    PFN_vkGetDeviceTensorMemoryRequirementsARM fp_vkGetDeviceTensorMemoryRequirementsARM = nullptr;
+#else
+    void * fp_vkGetDeviceTensorMemoryRequirementsARM{};
+#endif
+#if (defined(VK_ARM_tensors))
+    PFN_vkCmdCopyTensorARM fp_vkCmdCopyTensorARM = nullptr;
+#else
+    void * fp_vkCmdCopyTensorARM{};
+#endif
+#if (defined(VK_ARM_tensors) && defined(VK_EXT_descriptor_buffer))
+    PFN_vkGetTensorOpaqueCaptureDescriptorDataARM fp_vkGetTensorOpaqueCaptureDescriptorDataARM = nullptr;
+#else
+    void * fp_vkGetTensorOpaqueCaptureDescriptorDataARM{};
+#endif
+#if (defined(VK_ARM_tensors) && defined(VK_EXT_descriptor_buffer))
+    PFN_vkGetTensorViewOpaqueCaptureDescriptorDataARM fp_vkGetTensorViewOpaqueCaptureDescriptorDataARM = nullptr;
+#else
+    void * fp_vkGetTensorViewOpaqueCaptureDescriptorDataARM{};
 #endif
 #if (defined(VK_EXT_host_query_reset))
     PFN_vkResetQueryPoolEXT fp_vkResetQueryPoolEXT = nullptr;

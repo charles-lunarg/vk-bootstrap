@@ -314,7 +314,7 @@ Recreating the swapchain is equivalent to creating a new swapchain but providing
 vkb::SwapchainBuilder swapchain_builder{ device };
 auto swap_ret = swapchain_builder.set_old_swapchain (vkb_swapchain)
                                  .build ();
-if !(swap_ret){
+if (!swap_ret){
     // If it failed to create a swapchain, the old swapchain handle is invalid.
     vkb_swapchain.swapchain = VK_NULL_HANDLE;
 }

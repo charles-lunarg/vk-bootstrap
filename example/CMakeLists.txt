@@ -24,7 +24,6 @@ if(GLSLANG_FOUND)
         set(SHADER_SOURCE ${CMAKE_SOURCE_DIR}/example/shaders/${SHADER_NAME})
         set(SHADER_SPIRV_NAME ${SHADER_NAME}.spv)
         set(SHADER_SPIRV_PATH ${CMAKE_SOURCE_DIR}/example/shaders/${SHADER_SPIRV_NAME})
-        set(SHADER_DEST_SPIRV ${CMAKE_BINARY_DIR}/example/${SHADER_SPIRV_NAME})
 
         add_custom_command(
             OUTPUT ${SHADER_SPIRV_PATH}
@@ -33,12 +32,7 @@ if(GLSLANG_FOUND)
             COMMENT "Shader ${SHADER_NAME} compiled"
         )
 
-        add_custom_command(
-            OUTPUT ${SHADER_DEST_SPIRV}
-            COMMAND ${CMAKE_COMMAND} -E copy ${SHADER_SPIRV_PATH} ${SHADER_DEST_SPIRV}
-            DEPENDS ${SHADER_SPIRV_PATH}
-        )
-        list(APPEND COMPILED_SHADER_FILES ${SHADER_DEST_SPIRV})
+        list(APPEND COMPILED_SHADER_FILES ${SHADER_SPIRV_PATH})
     endmacro()
 
     compile_shader(triangle.frag)

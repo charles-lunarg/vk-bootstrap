@@ -43,6 +43,9 @@ struct InstanceDispatchTable {
 #if (defined(VK_KHR_android_surface))
         fp_vkCreateAndroidSurfaceKHR = reinterpret_cast<PFN_vkCreateAndroidSurfaceKHR>(procAddr(instance, "vkCreateAndroidSurfaceKHR"));
 #endif
+#if (defined(VK_OHOS_surface))
+        fp_vkCreateSurfaceOHOS = reinterpret_cast<PFN_vkCreateSurfaceOHOS>(procAddr(instance, "vkCreateSurfaceOHOS"));
+#endif
 #if (defined(VK_KHR_display))
         fp_vkGetPhysicalDeviceDisplayPropertiesKHR = reinterpret_cast<PFN_vkGetPhysicalDeviceDisplayPropertiesKHR>(procAddr(instance, "vkGetPhysicalDeviceDisplayPropertiesKHR"));
 #endif
@@ -377,6 +380,11 @@ struct InstanceDispatchTable {
 #if (defined(VK_KHR_android_surface))
     VkResult createAndroidSurfaceKHR(const VkAndroidSurfaceCreateInfoKHR* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface) const noexcept {
         return fp_vkCreateAndroidSurfaceKHR(instance, pCreateInfo, pAllocator, pSurface);
+    }
+#endif
+#if (defined(VK_OHOS_surface))
+    VkResult createSurfaceOHOS(const VkSurfaceCreateInfoOHOS* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface) const noexcept {
+        return fp_vkCreateSurfaceOHOS(instance, pCreateInfo, pAllocator, pSurface);
     }
 #endif
 #if (defined(VK_KHR_display))
@@ -885,6 +893,11 @@ struct InstanceDispatchTable {
     PFN_vkCreateAndroidSurfaceKHR fp_vkCreateAndroidSurfaceKHR = nullptr;
 #else
     void * fp_vkCreateAndroidSurfaceKHR{};
+#endif
+#if (defined(VK_OHOS_surface))
+    PFN_vkCreateSurfaceOHOS fp_vkCreateSurfaceOHOS = nullptr;
+#else
+    void * fp_vkCreateSurfaceOHOS{};
 #endif
 #if (defined(VK_KHR_display))
     PFN_vkGetPhysicalDeviceDisplayPropertiesKHR fp_vkGetPhysicalDeviceDisplayPropertiesKHR = nullptr;
@@ -2749,7 +2762,7 @@ struct DispatchTable {
 #if (defined(VK_NV_cooperative_vector))
         fp_vkCmdConvertCooperativeVectorMatrixNV = reinterpret_cast<PFN_vkCmdConvertCooperativeVectorMatrixNV>(procAddr(device, "vkCmdConvertCooperativeVectorMatrixNV"));
 #endif
-#if (defined(VK_QCOM_tile_shading))
+#if ((defined(VK_QCOM_tile_shading))) && VK_HEADER_VERSION >= 316
         fp_vkCmdDispatchTileQCOM = reinterpret_cast<PFN_vkCmdDispatchTileQCOM>(procAddr(device, "vkCmdDispatchTileQCOM"));
 #endif
 #if (defined(VK_QCOM_tile_shading))
@@ -5482,7 +5495,7 @@ struct DispatchTable {
         fp_vkCmdConvertCooperativeVectorMatrixNV(commandBuffer, infoCount, pInfos);
     }
 #endif
-#if (defined(VK_QCOM_tile_shading))
+#if ((defined(VK_QCOM_tile_shading))) && VK_HEADER_VERSION >= 316
     void cmdDispatchTileQCOM(VkCommandBuffer commandBuffer, const VkDispatchTileInfoQCOM* pDispatchTileInfo) const noexcept {
         fp_vkCmdDispatchTileQCOM(commandBuffer, pDispatchTileInfo);
     }
@@ -8176,7 +8189,7 @@ struct DispatchTable {
 #else
     void * fp_vkCmdConvertCooperativeVectorMatrixNV{};
 #endif
-#if (defined(VK_QCOM_tile_shading))
+#if ((defined(VK_QCOM_tile_shading))) && VK_HEADER_VERSION >= 316
     PFN_vkCmdDispatchTileQCOM fp_vkCmdDispatchTileQCOM = nullptr;
 #else
     void * fp_vkCmdDispatchTileQCOM{};

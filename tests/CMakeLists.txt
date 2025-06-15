@@ -58,13 +58,52 @@ list(APPEND CMAKE_MODULE_PATH ${Catch2_SOURCE_DIR}/extras)
 include(Catch)
 catch_discover_tests(vk-bootstrap-test)
 
-# Test add_subdirectory support using fetch content vulkan headers
+find_package (Git)
+if (NOT GIT_FOUND)
+    message(FATAL_ERROR "git was not found - necessary to perform integration tests!")
+endif ()
+
+# We need the current hash in order for the integration tests to call git clone on the local checkout of vk-bootstrap
+execute_process(
+    COMMAND git log -1 --format=%h
+    WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+    OUTPUT_VARIABLE CURRENT_VK_BOOTSTRAP_GIT_TAG
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
+# Test add_subdirectory suppport using fetch content vulkan headers
 add_test(NAME integration.add_subdirectory.fetch_content_vulkan_headers
     COMMAND ${CMAKE_CTEST_COMMAND}
         --build-and-test ${CMAKE_CURRENT_LIST_DIR}/integration
                          ${CMAKE_CURRENT_BINARY_DIR}/add_subdirectory/fetch_content_vulkan_headers
         --build-generator ${CMAKE_GENERATOR}
-        --build-options -DADD_SUBDIRECTORY_TESTING=ON -DVULKAN_HEADER_VERSION_GIT_TAG=${VK_BOOTSTRAP_SOURCE_HEADER_VERSION_GIT_TAG}
+        --build-options -DADD_SUBDIRECTORY_TESTING=ON
+                        -DVULKAN_HEADER_VERSION_GIT_TAG=${VK_BOOTSTRAP_SOURCE_HEADER_VERSION_GIT_TAG}
+                        -DFETCH_CONTENT_VULKAN_HEADERS=ON
+)
+
+# Test fetch content support using fetch content for the vulkan headers made available after vk-bootstrap
+add_test(NAME integration.fetch_content_vk_bootstrap.fetch_content_vulkan_headers
+    COMMAND ${CMAKE_CTEST_COMMAND}
+        --build-and-test ${CMAKE_CURRENT_LIST_DIR}/integration
+                         ${CMAKE_CURRENT_BINARY_DIR}/fetch_content/fetch_content_vk_bootstrap_vulkan_headers
+        --build-generator ${CMAKE_GENERATOR}
+        --build-options -DVULKAN_HEADER_VERSION_GIT_TAG=${VK_BOOTSTRAP_SOURCE_HEADER_VERSION_GIT_TAG}
+                        -DVK_BOOTSTRAP_REPO_BASE=${PROJECT_SOURCE_DIR}
+                        -DCURRENT_VK_BOOTSTRAP_GIT_TAG=${CURRENT_VK_BOOTSTRAP_GIT_TAG}
+                        -DFETCH_CONTENT_VK_BOOTSTRAP_VULKAN_HEADERS=ON
+)
+
+# Test fetch content support using fetch content for vulkan headers made available before vk-bootstrap
+add_test(NAME integration.fetch_content_vulkan_headers.fetch_content_vk_bootstrap
+    COMMAND ${CMAKE_CTEST_COMMAND}
+        --build-and-test ${CMAKE_CURRENT_LIST_DIR}/integration
+                         ${CMAKE_CURRENT_BINARY_DIR}/fetch_content/fetch_content_vulkan_headers_vk_bootstrap
+        --build-generator ${CMAKE_GENERATOR}
+        --build-options -DVULKAN_HEADER_VERSION_GIT_TAG=${VK_BOOTSTRAP_SOURCE_HEADER_VERSION_GIT_TAG}
+                        -DVK_BOOTSTRAP_REPO_BASE=${PROJECT_SOURCE_DIR}
+                        -DCURRENT_VK_BOOTSTRAP_GIT_TAG=${CURRENT_VK_BOOTSTRAP_GIT_TAG}
+                        -DFETCH_CONTENT_VULKAN_HEADERS_VK_BOOTSTRAP=ON
 )
 
 get_target_property(vulkan_headers_include_dir Vulkan::Headers INTERFACE_INCLUDE_DIRECTORIES)

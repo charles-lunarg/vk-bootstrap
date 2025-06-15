@@ -9,7 +9,27 @@ if (VULKAN_HEADER_VERSION_GIT_TAG)
         GIT_REPOSITORY https://github.com/KhronosGroup/Vulkan-Headers
         GIT_TAG        ${VULKAN_HEADER_VERSION_GIT_TAG}
     )
-    FetchContent_MakeAvailable(VulkanHeadersIntegrationTest)
+
+    if (FETCH_CONTENT_VULKAN_HEADERS)
+        FetchContent_MakeAvailable(VulkanHeadersIntegrationTest)
+    else()
+        FetchContent_Declare(
+            vk-bootstrap
+            GIT_REPOSITORY ${VK_BOOTSTRAP_REPO_BASE}
+            GIT_TAG ${CURRENT_VK_BOOTSTRAP_GIT_TAG}
+        )
+        if (FETCH_CONTENT_VK_BOOTSTRAP_VULKAN_HEADERS)
+            FetchContent_MakeAvailable(vk-bootstrap VulkanHeadersIntegrationTest)
+        elseif (FETCH_CONTENT_VULKAN_HEADERS_VK_BOOTSTRAP)
+            FetchContent_MakeAvailable(VulkanHeadersIntegrationTest vk-bootstrap)
+        endif()
+
+
+        if (NOT TARGET vk-bootstrap)
+            message(FATAL_ERROR "vk-bootstrap target not defined")
+        endif()
+    endif()
+
 
     if (NOT TARGET Vulkan::Headers)
         message(FATAL_ERROR "Vulkan::Headers target not defined")

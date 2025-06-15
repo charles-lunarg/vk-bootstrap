@@ -1301,6 +1301,21 @@ Result<std::vector<PhysicalDevice>> PhysicalDeviceSelector::select_impl() const 
         }
     }
 
+    // Check if any devices match our preferred type
+    if (!physical_devices.empty()) {
+        auto preferred_type = static_cast<VkPhysicalDeviceType>(criteria.preferred_type);
+
+        for (auto it = physical_devices.begin(); it != physical_devices.end(); ++it) {
+            if (it->properties.deviceType == preferred_type) {
+                // If this is the preferred device and not already at the front
+                if (it != physical_devices.begin()) {
+                    std::rotate(physical_devices.begin(), it, it + 1);
+                }
+                break;
+            }
+        }
+    }
+
     // sort the list into fully and partially suitable devices. use stable_partition to maintain relative order
     std::stable_partition(physical_devices.begin(), physical_devices.end(), [](auto const& pd) {
         return pd.suitable == PhysicalDevice::Suitable::yes;

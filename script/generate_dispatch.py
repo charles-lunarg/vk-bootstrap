@@ -112,6 +112,7 @@ HEADER_VERSION_WORKAROUNDS = {
     'vkCmdDispatchGraphAMDX': '298', # Changed API parameters
     'vkCmdDispatchGraphIndirectAMDX': '298', # Changed API parameters
     'vkCmdDispatchGraphIndirectCountAMDX': '298', # Changed API parameters
+    'vkCmdDispatchTileQCOM': '316', # Changed API parameters
 }
 
 def get_macro_guard(reqs_collection, command_name):

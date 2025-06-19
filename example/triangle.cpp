@@ -446,7 +446,7 @@ int create_command_buffers(Init& init, RenderData& data) {
 
 int create_sync_objects(Init& init, RenderData& data) {
     data.available_semaphores.resize(MAX_FRAMES_IN_FLIGHT);
-    data.finished_semaphore.resize(MAX_FRAMES_IN_FLIGHT);
+    data.finished_semaphore.resize(init.swapchain.image_count);
     data.in_flight_fences.resize(MAX_FRAMES_IN_FLIGHT);
     data.image_in_flight.resize(init.swapchain.image_count, VK_NULL_HANDLE);
 
@@ -457,9 +457,15 @@ int create_sync_objects(Init& init, RenderData& data) {
     fence_info.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
     fence_info.flags = VK_FENCE_CREATE_SIGNALED_BIT;
 
+    for (size_t i = 0; i < init.swapchain.image_count; i++) {
+        if (init.disp.createSemaphore(&semaphore_info, nullptr, &data.finished_semaphore[i]) != VK_SUCCESS) {
+            std::cout << "failed to create sync objects\n";
+            return -1; // failed to create synchronization objects for a frame
+        }
+    }
+
     for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
         if (init.disp.createSemaphore(&semaphore_info, nullptr, &data.available_semaphores[i]) != VK_SUCCESS ||
-            init.disp.createSemaphore(&semaphore_info, nullptr, &data.finished_semaphore[i]) != VK_SUCCESS ||
             init.disp.createFence(&fence_info, nullptr, &data.in_flight_fences[i]) != VK_SUCCESS) {
             std::cout << "failed to create sync objects\n";
             return -1; // failed to create synchronization objects for a frame
@@ -517,7 +523,7 @@ int draw_frame(Init& init, RenderData& data) {
     submitInfo.commandBufferCount = 1;
     submitInfo.pCommandBuffers = &data.command_buffers[image_index];
 
-    VkSemaphore signal_semaphores[] = { data.finished_semaphore[data.current_frame] };
+    VkSemaphore signal_semaphores[] = { data.finished_semaphore[image_index] };
     submitInfo.signalSemaphoreCount = 1;
     submitInfo.pSignalSemaphores = signal_semaphores;
 
@@ -553,8 +559,10 @@ int draw_frame(Init& init, RenderData& data) {
 }
 
 void cleanup(Init& init, RenderData& data) {
-    for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
+    for (size_t i = 0; i < init.swapchain.image_count; i++) {
         init.disp.destroySemaphore(data.finished_semaphore[i], nullptr);
+    }
+    for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
         init.disp.destroySemaphore(data.available_semaphores[i], nullptr);
         init.disp.destroyFence(data.in_flight_fences[i], nullptr);
     }

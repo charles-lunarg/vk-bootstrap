@@ -301,6 +301,12 @@ struct InstanceDispatchTable {
 #if (defined(VK_ARM_tensors))
         fp_vkGetPhysicalDeviceExternalTensorPropertiesARM = reinterpret_cast<PFN_vkGetPhysicalDeviceExternalTensorPropertiesARM>(procAddr(instance, "vkGetPhysicalDeviceExternalTensorPropertiesARM"));
 #endif
+#if (defined(VK_ARM_data_graph))
+        fp_vkGetPhysicalDeviceQueueFamilyDataGraphPropertiesARM = reinterpret_cast<PFN_vkGetPhysicalDeviceQueueFamilyDataGraphPropertiesARM>(procAddr(instance, "vkGetPhysicalDeviceQueueFamilyDataGraphPropertiesARM"));
+#endif
+#if (defined(VK_ARM_data_graph))
+        fp_vkGetPhysicalDeviceQueueFamilyDataGraphProcessingEnginePropertiesARM = reinterpret_cast<PFN_vkGetPhysicalDeviceQueueFamilyDataGraphProcessingEnginePropertiesARM>(procAddr(instance, "vkGetPhysicalDeviceQueueFamilyDataGraphProcessingEnginePropertiesARM"));
+#endif
 #if (defined(VK_KHR_get_physical_device_properties2))
         fp_vkGetPhysicalDeviceFeatures2KHR = reinterpret_cast<PFN_vkGetPhysicalDeviceFeatures2KHR>(procAddr(instance, "vkGetPhysicalDeviceFeatures2KHR"));
 #endif
@@ -810,6 +816,16 @@ struct InstanceDispatchTable {
 #if (defined(VK_ARM_tensors))
     void getPhysicalDeviceExternalTensorPropertiesARM(VkPhysicalDevice physicalDevice, const VkPhysicalDeviceExternalTensorInfoARM* pExternalTensorInfo, VkExternalTensorPropertiesARM* pExternalTensorProperties) const noexcept {
         fp_vkGetPhysicalDeviceExternalTensorPropertiesARM(physicalDevice, pExternalTensorInfo, pExternalTensorProperties);
+    }
+#endif
+#if (defined(VK_ARM_data_graph))
+    VkResult getPhysicalDeviceQueueFamilyDataGraphPropertiesARM(VkPhysicalDevice physicalDevice, uint32_t queueFamilyIndex, uint32_t* pQueueFamilyDataGraphPropertyCount, VkQueueFamilyDataGraphPropertiesARM* pQueueFamilyDataGraphProperties) const noexcept {
+        return fp_vkGetPhysicalDeviceQueueFamilyDataGraphPropertiesARM(physicalDevice, queueFamilyIndex, pQueueFamilyDataGraphPropertyCount, pQueueFamilyDataGraphProperties);
+    }
+#endif
+#if (defined(VK_ARM_data_graph))
+    void getPhysicalDeviceQueueFamilyDataGraphProcessingEnginePropertiesARM(VkPhysicalDevice physicalDevice, const VkPhysicalDeviceQueueFamilyDataGraphProcessingEngineInfoARM* pQueueFamilyDataGraphProcessingEngineInfo, VkQueueFamilyDataGraphProcessingEnginePropertiesARM* pQueueFamilyDataGraphProcessingEngineProperties) const noexcept {
+        fp_vkGetPhysicalDeviceQueueFamilyDataGraphProcessingEnginePropertiesARM(physicalDevice, pQueueFamilyDataGraphProcessingEngineInfo, pQueueFamilyDataGraphProcessingEngineProperties);
     }
 #endif
 #if (defined(VK_KHR_get_physical_device_properties2))
@@ -1323,6 +1339,16 @@ struct InstanceDispatchTable {
     PFN_vkGetPhysicalDeviceExternalTensorPropertiesARM fp_vkGetPhysicalDeviceExternalTensorPropertiesARM = nullptr;
 #else
     void * fp_vkGetPhysicalDeviceExternalTensorPropertiesARM{};
+#endif
+#if (defined(VK_ARM_data_graph))
+    PFN_vkGetPhysicalDeviceQueueFamilyDataGraphPropertiesARM fp_vkGetPhysicalDeviceQueueFamilyDataGraphPropertiesARM = nullptr;
+#else
+    void * fp_vkGetPhysicalDeviceQueueFamilyDataGraphPropertiesARM{};
+#endif
+#if (defined(VK_ARM_data_graph))
+    PFN_vkGetPhysicalDeviceQueueFamilyDataGraphProcessingEnginePropertiesARM fp_vkGetPhysicalDeviceQueueFamilyDataGraphProcessingEnginePropertiesARM = nullptr;
+#else
+    void * fp_vkGetPhysicalDeviceQueueFamilyDataGraphProcessingEnginePropertiesARM{};
 #endif
 #if (defined(VK_KHR_get_physical_device_properties2))
     PFN_vkGetPhysicalDeviceFeatures2KHR fp_vkGetPhysicalDeviceFeatures2KHR = nullptr;
@@ -2806,6 +2832,33 @@ struct DispatchTable {
 #endif
 #if (defined(VK_ARM_tensors) && defined(VK_EXT_descriptor_buffer))
         fp_vkGetTensorViewOpaqueCaptureDescriptorDataARM = reinterpret_cast<PFN_vkGetTensorViewOpaqueCaptureDescriptorDataARM>(procAddr(device, "vkGetTensorViewOpaqueCaptureDescriptorDataARM"));
+#endif
+#if (defined(VK_ARM_data_graph))
+        fp_vkCreateDataGraphPipelinesARM = reinterpret_cast<PFN_vkCreateDataGraphPipelinesARM>(procAddr(device, "vkCreateDataGraphPipelinesARM"));
+#endif
+#if (defined(VK_ARM_data_graph))
+        fp_vkCreateDataGraphPipelineSessionARM = reinterpret_cast<PFN_vkCreateDataGraphPipelineSessionARM>(procAddr(device, "vkCreateDataGraphPipelineSessionARM"));
+#endif
+#if (defined(VK_ARM_data_graph))
+        fp_vkGetDataGraphPipelineSessionBindPointRequirementsARM = reinterpret_cast<PFN_vkGetDataGraphPipelineSessionBindPointRequirementsARM>(procAddr(device, "vkGetDataGraphPipelineSessionBindPointRequirementsARM"));
+#endif
+#if (defined(VK_ARM_data_graph))
+        fp_vkGetDataGraphPipelineSessionMemoryRequirementsARM = reinterpret_cast<PFN_vkGetDataGraphPipelineSessionMemoryRequirementsARM>(procAddr(device, "vkGetDataGraphPipelineSessionMemoryRequirementsARM"));
+#endif
+#if (defined(VK_ARM_data_graph))
+        fp_vkBindDataGraphPipelineSessionMemoryARM = reinterpret_cast<PFN_vkBindDataGraphPipelineSessionMemoryARM>(procAddr(device, "vkBindDataGraphPipelineSessionMemoryARM"));
+#endif
+#if (defined(VK_ARM_data_graph))
+        fp_vkDestroyDataGraphPipelineSessionARM = reinterpret_cast<PFN_vkDestroyDataGraphPipelineSessionARM>(procAddr(device, "vkDestroyDataGraphPipelineSessionARM"));
+#endif
+#if (defined(VK_ARM_data_graph))
+        fp_vkCmdDispatchDataGraphARM = reinterpret_cast<PFN_vkCmdDispatchDataGraphARM>(procAddr(device, "vkCmdDispatchDataGraphARM"));
+#endif
+#if (defined(VK_ARM_data_graph))
+        fp_vkGetDataGraphPipelineAvailablePropertiesARM = reinterpret_cast<PFN_vkGetDataGraphPipelineAvailablePropertiesARM>(procAddr(device, "vkGetDataGraphPipelineAvailablePropertiesARM"));
+#endif
+#if (defined(VK_ARM_data_graph))
+        fp_vkGetDataGraphPipelinePropertiesARM = reinterpret_cast<PFN_vkGetDataGraphPipelinePropertiesARM>(procAddr(device, "vkGetDataGraphPipelinePropertiesARM"));
 #endif
 #if (defined(VK_EXT_host_query_reset))
         fp_vkResetQueryPoolEXT = reinterpret_cast<PFN_vkResetQueryPoolEXT>(procAddr(device, "vkResetQueryPoolEXT"));
@@ -5570,6 +5623,51 @@ struct DispatchTable {
         return fp_vkGetTensorViewOpaqueCaptureDescriptorDataARM(device, pInfo, pData);
     }
 #endif
+#if (defined(VK_ARM_data_graph))
+    VkResult createDataGraphPipelinesARM(VkDeferredOperationKHR deferredOperation, VkPipelineCache pipelineCache, uint32_t createInfoCount, const VkDataGraphPipelineCreateInfoARM* pCreateInfos, const VkAllocationCallbacks* pAllocator, VkPipeline* pPipelines) const noexcept {
+        return fp_vkCreateDataGraphPipelinesARM(device, deferredOperation, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
+    }
+#endif
+#if (defined(VK_ARM_data_graph))
+    VkResult createDataGraphPipelineSessionARM(const VkDataGraphPipelineSessionCreateInfoARM* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDataGraphPipelineSessionARM* pSession) const noexcept {
+        return fp_vkCreateDataGraphPipelineSessionARM(device, pCreateInfo, pAllocator, pSession);
+    }
+#endif
+#if (defined(VK_ARM_data_graph))
+    VkResult getDataGraphPipelineSessionBindPointRequirementsARM(const VkDataGraphPipelineSessionBindPointRequirementsInfoARM* pInfo, uint32_t* pBindPointRequirementCount, VkDataGraphPipelineSessionBindPointRequirementARM* pBindPointRequirements) const noexcept {
+        return fp_vkGetDataGraphPipelineSessionBindPointRequirementsARM(device, pInfo, pBindPointRequirementCount, pBindPointRequirements);
+    }
+#endif
+#if (defined(VK_ARM_data_graph))
+    void getDataGraphPipelineSessionMemoryRequirementsARM(const VkDataGraphPipelineSessionMemoryRequirementsInfoARM* pInfo, VkMemoryRequirements2KHR* pMemoryRequirements) const noexcept {
+        fp_vkGetDataGraphPipelineSessionMemoryRequirementsARM(device, pInfo, pMemoryRequirements);
+    }
+#endif
+#if (defined(VK_ARM_data_graph))
+    VkResult bindDataGraphPipelineSessionMemoryARM(uint32_t bindInfoCount, const VkBindDataGraphPipelineSessionMemoryInfoARM* pBindInfos) const noexcept {
+        return fp_vkBindDataGraphPipelineSessionMemoryARM(device, bindInfoCount, pBindInfos);
+    }
+#endif
+#if (defined(VK_ARM_data_graph))
+    void destroyDataGraphPipelineSessionARM(VkDataGraphPipelineSessionARM session, const VkAllocationCallbacks* pAllocator) const noexcept {
+        fp_vkDestroyDataGraphPipelineSessionARM(device, session, pAllocator);
+    }
+#endif
+#if (defined(VK_ARM_data_graph))
+    void cmdDispatchDataGraphARM(VkCommandBuffer commandBuffer, VkDataGraphPipelineSessionARM session, const VkDataGraphPipelineDispatchInfoARM* pInfo) const noexcept {
+        fp_vkCmdDispatchDataGraphARM(commandBuffer, session, pInfo);
+    }
+#endif
+#if (defined(VK_ARM_data_graph))
+    VkResult getDataGraphPipelineAvailablePropertiesARM(const VkDataGraphPipelineInfoARM* pPipelineInfo, uint32_t* pPropertiesCount, VkDataGraphPipelinePropertyARM* pProperties) const noexcept {
+        return fp_vkGetDataGraphPipelineAvailablePropertiesARM(device, pPipelineInfo, pPropertiesCount, pProperties);
+    }
+#endif
+#if (defined(VK_ARM_data_graph))
+    VkResult getDataGraphPipelinePropertiesARM(const VkDataGraphPipelineInfoARM* pPipelineInfo, uint32_t propertiesCount, VkDataGraphPipelinePropertyQueryResultARM* pProperties) const noexcept {
+        return fp_vkGetDataGraphPipelinePropertiesARM(device, pPipelineInfo, propertiesCount, pProperties);
+    }
+#endif
 #if (defined(VK_EXT_host_query_reset))
     void resetQueryPoolEXT(VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount) const noexcept {
         fp_vkResetQueryPoolEXT(device, queryPool, firstQuery, queryCount);
@@ -8263,6 +8361,51 @@ struct DispatchTable {
     PFN_vkGetTensorViewOpaqueCaptureDescriptorDataARM fp_vkGetTensorViewOpaqueCaptureDescriptorDataARM = nullptr;
 #else
     void * fp_vkGetTensorViewOpaqueCaptureDescriptorDataARM{};
+#endif
+#if (defined(VK_ARM_data_graph))
+    PFN_vkCreateDataGraphPipelinesARM fp_vkCreateDataGraphPipelinesARM = nullptr;
+#else
+    void * fp_vkCreateDataGraphPipelinesARM{};
+#endif
+#if (defined(VK_ARM_data_graph))
+    PFN_vkCreateDataGraphPipelineSessionARM fp_vkCreateDataGraphPipelineSessionARM = nullptr;
+#else
+    void * fp_vkCreateDataGraphPipelineSessionARM{};
+#endif
+#if (defined(VK_ARM_data_graph))
+    PFN_vkGetDataGraphPipelineSessionBindPointRequirementsARM fp_vkGetDataGraphPipelineSessionBindPointRequirementsARM = nullptr;
+#else
+    void * fp_vkGetDataGraphPipelineSessionBindPointRequirementsARM{};
+#endif
+#if (defined(VK_ARM_data_graph))
+    PFN_vkGetDataGraphPipelineSessionMemoryRequirementsARM fp_vkGetDataGraphPipelineSessionMemoryRequirementsARM = nullptr;
+#else
+    void * fp_vkGetDataGraphPipelineSessionMemoryRequirementsARM{};
+#endif
+#if (defined(VK_ARM_data_graph))
+    PFN_vkBindDataGraphPipelineSessionMemoryARM fp_vkBindDataGraphPipelineSessionMemoryARM = nullptr;
+#else
+    void * fp_vkBindDataGraphPipelineSessionMemoryARM{};
+#endif
+#if (defined(VK_ARM_data_graph))
+    PFN_vkDestroyDataGraphPipelineSessionARM fp_vkDestroyDataGraphPipelineSessionARM = nullptr;
+#else
+    void * fp_vkDestroyDataGraphPipelineSessionARM{};
+#endif
+#if (defined(VK_ARM_data_graph))
+    PFN_vkCmdDispatchDataGraphARM fp_vkCmdDispatchDataGraphARM = nullptr;
+#else
+    void * fp_vkCmdDispatchDataGraphARM{};
+#endif
+#if (defined(VK_ARM_data_graph))
+    PFN_vkGetDataGraphPipelineAvailablePropertiesARM fp_vkGetDataGraphPipelineAvailablePropertiesARM = nullptr;
+#else
+    void * fp_vkGetDataGraphPipelineAvailablePropertiesARM{};
+#endif
+#if (defined(VK_ARM_data_graph))
+    PFN_vkGetDataGraphPipelinePropertiesARM fp_vkGetDataGraphPipelinePropertiesARM = nullptr;
+#else
+    void * fp_vkGetDataGraphPipelinePropertiesARM{};
 #endif
 #if (defined(VK_EXT_host_query_reset))
     PFN_vkResetQueryPoolEXT fp_vkResetQueryPoolEXT = nullptr;

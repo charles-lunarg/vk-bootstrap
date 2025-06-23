@@ -41,7 +41,8 @@ jobs:
         with:
             python-version: '3.9'
 
-      - run: pip install vulkan_object
+      - name: Install python package 'xmltodict'
+        run: pip install xmltodict
 
       - name: Check out repository code
         uses: actions/checkout@v4
@@ -49,7 +50,7 @@ jobs:
           fetch-depth: 2
 
       - name: Run dispatch generator
-        run: python script/generate_dispatch.py
+        run: python script/generate_dispatch.py --auto
 
       - name: Diff source to see if anything changed
         id: git-diff

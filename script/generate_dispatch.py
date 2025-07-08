@@ -155,8 +155,6 @@ def create_dispatch_table(dispatch_type):
 tail = '} // namespace vkb'
 
 # find the version used to generate the code
-version = '.'.join(vk.versions[list(vk.versions.keys())[-1]].name.split('_')[2:]) + '.' + str(vk.headerVersion)
-
 path_to_src = os.path.join('src')
 if not os.path.exists(path_to_src):
     path_to_src = os.path.join('..', 'src')
@@ -177,8 +175,8 @@ if not os.path.exists(path_to_gen):
 
 # Generate a CMake file that contains the header version used.
 cmake_version_file = codecs.open(os.path.join(path_to_gen,'CurrentBuildVulkanVersion.cmake'), 'w', 'utf-8')
-cmake_version_file.write(f'set(VK_BOOTSTRAP_SOURCE_HEADER_VERSION {version})\n')
-cmake_version_file.write(f'set(VK_BOOTSTRAP_SOURCE_HEADER_VERSION_GIT_TAG v{version})\n')
+cmake_version_file.write(f'set(VK_BOOTSTRAP_SOURCE_HEADER_VERSION {vk.headerVersionComplete})\n')
+cmake_version_file.write(f'set(VK_BOOTSTRAP_SOURCE_HEADER_VERSION_GIT_TAG v{vk.headerVersionComplete})\n')
 cmake_version_file.close()
 
 print('Generation finished.')

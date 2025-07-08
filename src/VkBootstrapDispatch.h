@@ -2949,6 +2949,9 @@ struct DispatchTable {
 #if (defined(VK_EXT_swapchain_maintenance1))
         fp_vkReleaseSwapchainImagesEXT = reinterpret_cast<PFN_vkReleaseSwapchainImagesEXT>(procAddr(device, "vkReleaseSwapchainImagesEXT"));
 #endif
+#if (defined(VK_KHR_swapchain_maintenance1))
+        fp_vkReleaseSwapchainImagesKHR = reinterpret_cast<PFN_vkReleaseSwapchainImagesKHR>(procAddr(device, "vkReleaseSwapchainImagesKHR"));
+#endif
         fp_vkResetCommandBuffer = reinterpret_cast<PFN_vkResetCommandBuffer>(procAddr(device, "vkResetCommandBuffer"));
         fp_vkResetCommandPool = reinterpret_cast<PFN_vkResetCommandPool>(procAddr(device, "vkResetCommandPool"));
         fp_vkResetDescriptorPool = reinterpret_cast<PFN_vkResetDescriptorPool>(procAddr(device, "vkResetDescriptorPool"));
@@ -5829,8 +5832,13 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_EXT_swapchain_maintenance1))
-    VkResult releaseSwapchainImagesEXT(const VkReleaseSwapchainImagesInfoEXT* pReleaseInfo) const noexcept {
+    VkResult releaseSwapchainImagesEXT(const VkReleaseSwapchainImagesInfoKHR* pReleaseInfo) const noexcept {
         return fp_vkReleaseSwapchainImagesEXT(device, pReleaseInfo);
+    }
+#endif
+#if (defined(VK_KHR_swapchain_maintenance1))
+    VkResult releaseSwapchainImagesKHR(const VkReleaseSwapchainImagesInfoKHR* pReleaseInfo) const noexcept {
+        return fp_vkReleaseSwapchainImagesKHR(device, pReleaseInfo);
     }
 #endif
     VkResult resetCommandBuffer(VkCommandBuffer commandBuffer, VkCommandBufferResetFlags flags) const noexcept {
@@ -8579,6 +8587,11 @@ struct DispatchTable {
     PFN_vkReleaseSwapchainImagesEXT fp_vkReleaseSwapchainImagesEXT = nullptr;
 #else
     void * fp_vkReleaseSwapchainImagesEXT{};
+#endif
+#if (defined(VK_KHR_swapchain_maintenance1))
+    PFN_vkReleaseSwapchainImagesKHR fp_vkReleaseSwapchainImagesKHR = nullptr;
+#else
+    void * fp_vkReleaseSwapchainImagesKHR{};
 #endif
     PFN_vkResetCommandBuffer fp_vkResetCommandBuffer = nullptr;
     PFN_vkResetCommandPool fp_vkResetCommandPool = nullptr;

@@ -960,7 +960,6 @@ TEST_CASE("Add required extension features in multiple calls", "[VkBootstrap.req
             features2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES;
             features2.samplerYcbcrConversion = true;
 
-
             vkb::PhysicalDeviceSelector selector(instance);
             auto phys_dev_ret = selector.set_required_features_11(features1).set_required_features_11(features2).select();
             REQUIRE(phys_dev_ret.has_value());

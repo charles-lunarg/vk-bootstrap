@@ -37,82 +37,133 @@ namespace vkb {
 
 namespace detail {
 
-GenericFeaturesPNextNode::GenericFeaturesPNextNode() { disable_fields(); }
+bool FeaturesChain::empty() const { return structure_infos.empty(); }
 
-void GenericFeaturesPNextNode::disable_fields() {
-    for (auto& field : fields) {
-        field = VK_FALSE;
+bool FeaturesChain::is_feature_struct_in_chain(VkStructureType in_sType) const {
+    return structure_infos.end() != find_sType(in_sType);
+}
+
+void FeaturesChain::add_structure(VkStructureType in_sType, size_t struct_size, const void* in_structure) {
+#if !defined(NDEBUG)
+    // Validation
+    assert(in_sType != static_cast<VkStructureType>(0) && "Features struct sType must be filled with the struct's "
+                                                          "corresponding VkStructureType enum");
+    assert(in_sType != VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2 &&
+           "Do not pass VkPhysicalDeviceFeatures2 as a required extension feature structure. An "
+           "instance of this is managed internally for selection criteria and device creation.");
+#endif
+
+    auto found = find_sType(in_sType);
+    if (found != structure_infos.end()) {
+        // Merge in_structure into the current structure
+#if !defined(NDEBUG)
+        assert(found->starting_location + found->struct_size <= structures.size() &&
+               "Internal Consistency Error: FeatureChain::add_structure tyring to merge structures into memory that is "
+               "past the end of the structures array");
+#endif
+        merge_feature_struct(in_sType, &(structures.at(found->starting_location)), in_structure);
+    } else {
+        // Track when we invalidate the structures vector
+        chain_iteration_is_valid = false;
+        // Add a structure into the chain
+        structure_infos.push_back(StructInfo{ in_sType, structures.size(), struct_size });
+        auto& new_structure_info = structure_infos.back();
+        structures.insert(structures.end(), struct_size, std::byte(0));
+        memcpy(&(structures.at(new_structure_info.starting_location)), in_structure, struct_size);
     }
 }
 
-bool GenericFeaturesPNextNode::match(GenericFeaturesPNextNode const& requested, GenericFeaturesPNextNode const& supported) noexcept {
-    assert(requested.sType == supported.sType && "Non-matching sTypes in features nodes!");
-    for (uint32_t i = 0; i < field_capacity; i++) {
-        if (requested.fields[i] && !supported.fields[i]) return false;
-    }
-    return true;
-}
-
-void GenericFeaturesPNextNode::combine(GenericFeaturesPNextNode const& right) noexcept {
-    assert(sType == right.sType && "Non-matching sTypes in features nodes!");
-    for (uint32_t i = 0; i < GenericFeaturesPNextNode::field_capacity; i++) {
-        fields[i] = fields[i] || right.fields[i];
+void FeaturesChain::remove_structure(VkStructureType in_sType) {
+    auto found = find_sType(in_sType);
+    if (found != structure_infos.end()) {
+        chain_iteration_is_valid = false;
+        if (found->starting_location + found->struct_size < structures.size()) {
+            structures.erase(structures.begin() + static_cast<int>(found->starting_location),
+                structures.begin() + static_cast<int>(found->starting_location + found->struct_size));
+            structure_infos.erase(found);
+        }
     }
 }
 
-bool GenericFeatureChain::match_all(GenericFeatureChain const& extension_requested) const noexcept {
-    // Should only be false if extension_supported was unable to be filled out, due to the
-    // physical device not supporting vkGetPhysicalDeviceFeatures2 in any capacity.
-    if (extension_requested.nodes.size() != nodes.size()) {
+void FeaturesChain::reset_all_fields() {
+    std::fill(structures.begin(), structures.end(), std::byte(0));
+    for (const auto& structure_info : structure_infos) {
+        VkBaseOutStructure in_structure{};
+        in_structure.sType = structure_info.sType;
+        memcpy(&(structures.at(structure_info.starting_location)), &in_structure, sizeof(VkBaseOutStructure));
+    }
+}
+
+bool FeaturesChain::match(VkStructureType in_sType, const void* in_structure) const {
+    auto found = find_sType(in_sType);
+    if (found != structure_infos.end()) {
+        std::vector<std::string> error_list;
+        compare_feature_struct(in_sType, error_list, &(structures.at(found->starting_location)), in_structure);
+        return error_list.size() == 0;
+    } else {
         return false;
     }
+}
 
-    for (size_t i = 0; i < extension_requested.nodes.size() && i < nodes.size(); ++i) {
-        if (!GenericFeaturesPNextNode::match(extension_requested.nodes[i], nodes[i])) return false;
+bool FeaturesChain::match_all(FeaturesChain const& extension_requested) const {
+    if (structure_infos.size() != extension_requested.structure_infos.size()) {
+        return false;
+    }
+    for (size_t i = 0; i < structure_infos.size(); ++i) {
+        std::vector<std::string> error_list;
+        compare_feature_struct(structure_infos.at(i).sType,
+            error_list,
+            &(structures.at(structure_infos.at(i).starting_location)),
+            &(extension_requested.structures.at(extension_requested.structure_infos.at(i).starting_location)));
+        if (error_list.size() > 0) {
+            return false;
+        }
     }
     return true;
 }
 
-bool GenericFeatureChain::find_and_match(GenericFeatureChain const& extensions_requested) const noexcept {
-    for (const auto& requested_extension_node : extensions_requested.nodes) {
-        bool found = false;
-        for (const auto& supported_node : nodes) {
-            if (supported_node.sType == requested_extension_node.sType) {
-                found = true;
-                if (!GenericFeaturesPNextNode::match(requested_extension_node, supported_node)) return false;
-                break;
-            }
+void FeaturesChain::combine_all(FeaturesChain const& extensions_requested) {
+    for (const auto& extension_structure_info : extensions_requested.structure_infos) {
+        if (is_feature_struct_in_chain(extension_structure_info.sType)) {
+
+        } else {
+            add_structure(extension_structure_info.sType,
+                extension_structure_info.struct_size,
+                &extensions_requested.structures.at(extension_structure_info.starting_location));
         }
-        if (!found) return false;
     }
-    return true;
 }
 
-void GenericFeatureChain::chain_up(VkPhysicalDeviceFeatures2& feats2) noexcept {
-    detail::GenericFeaturesPNextNode* prev = nullptr;
-    for (auto& extension : nodes) {
-        if (prev != nullptr) {
-            prev->pNext = &extension;
-        }
-        prev = &extension;
+void FeaturesChain::create_chained_features(VkPhysicalDeviceFeatures2& features2) {
+    features2.pNext = &structures.at(0);
+    // Write the address of structure N+1 to the pNext member of structure N
+    for (size_t i = 0; i < structure_infos.size() - 1; i++) {
+        VkBaseOutStructure in_structure{};
+        memcpy(&in_structure, &(structures.at(structure_infos.at(i).starting_location)), sizeof(VkBaseOutStructure));
+        in_structure.pNext =
+            reinterpret_cast<VkBaseOutStructure*>(&(structures.at(structure_infos.at(i + 1).starting_location)));
+        memcpy(&(structures.at(structure_infos.at(i).starting_location)), &in_structure, sizeof(VkBaseOutStructure));
     }
-    feats2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
-    feats2.pNext = !nodes.empty() ? &nodes.at(0) : nullptr;
+    // Write nullptr to the last structures pNext member
+    VkBaseOutStructure in_structure{};
+    memcpy(&in_structure, &(structures.at(structure_infos.back().starting_location)), sizeof(VkBaseOutStructure));
+    in_structure.pNext = nullptr;
+    memcpy(&(structures.at(structure_infos.back().starting_location)), &in_structure, sizeof(VkBaseOutStructure));
+    chain_iteration_is_valid = true;
 }
 
-void GenericFeatureChain::combine(GenericFeatureChain const& right) noexcept {
-    for (const auto& right_node : right.nodes) {
-        bool already_contained = false;
-        for (auto& left_node : nodes) {
-            if (left_node.sType == right_node.sType) {
-                left_node.combine(right_node);
-                already_contained = true;
-            }
-        }
-        if (!already_contained) {
-            nodes.push_back(right_node);
-        }
+std::vector<void*> FeaturesChain::get_pNext_chain_members() {
+    std::vector<void*> members;
+    for (const auto& structure_info : structure_infos) {
+        members.push_back(&(structures.at(structure_info.starting_location)));
     }
+    return members;
+}
+
+std::vector<vkb::detail::FeaturesChain::StructInfo>::const_iterator FeaturesChain::find_sType(VkStructureType in_sType) const {
+    return std::find_if(structure_infos.begin(), structure_infos.end(), [in_sType](StructInfo const& struct_info) {
+        return struct_info.sType == in_sType;
+    });
 }
 
 
@@ -380,12 +431,25 @@ bool check_extensions_supported(
     return all_found;
 }
 
-template <typename T> void setup_pNext_chain(T& structure, std::vector<VkBaseOutStructure*> const& structs) {
+template <typename T> void setup_pNext_chain(T& structure, std::vector<void*> const& structs) {
     structure.pNext = nullptr;
-    if (structs.size() <= 0) return;
+    if (structs.empty()) return;
     for (size_t i = 0; i < structs.size() - 1; i++) {
-        structs.at(i)->pNext = structs.at(i + 1);
+        VkBaseOutStructure out_structure{};
+        memcpy(&out_structure, structs.at(i), sizeof(VkBaseOutStructure));
+#if !defined(NDEBUG)
+        assert(out_structure.sType != VK_STRUCTURE_TYPE_APPLICATION_INFO);
+#endif
+        out_structure.pNext = static_cast<VkBaseOutStructure*>(structs.at(i + 1));
+        memcpy(structs.at(i), &out_structure, sizeof(VkBaseOutStructure));
     }
+    VkBaseOutStructure out_structure{};
+    memcpy(&out_structure, structs.back(), sizeof(VkBaseOutStructure));
+    out_structure.pNext = nullptr;
+#if !defined(NDEBUG)
+    assert(out_structure.sType != VK_STRUCTURE_TYPE_APPLICATION_INFO);
+#endif
+    memcpy(structs.back(), &out_structure, sizeof(VkBaseOutStructure));
     structure.pNext = structs.at(0);
 }
 const char* validation_layer_name = "VK_LAYER_KHRONOS_validation";
@@ -713,7 +777,7 @@ Result<Instance> InstanceBuilder::build() const {
         return make_error_code(InstanceError::requested_layers_not_present);
     }
 
-    std::vector<VkBaseOutStructure*> pNext_chain;
+    std::vector<void*> pNext_chain;
 
     VkDebugUtilsMessengerCreateInfoEXT messengerCreateInfo = {};
     if (info.use_debug_messenger) {
@@ -723,7 +787,7 @@ Result<Instance> InstanceBuilder::build() const {
         messengerCreateInfo.messageType = info.debug_message_type;
         messengerCreateInfo.pfnUserCallback = info.debug_callback;
         messengerCreateInfo.pUserData = info.debug_user_data_pointer;
-        pNext_chain.push_back(reinterpret_cast<VkBaseOutStructure*>(&messengerCreateInfo));
+        pNext_chain.push_back(&messengerCreateInfo);
     }
 
     VkValidationFeaturesEXT features{};
@@ -734,7 +798,7 @@ Result<Instance> InstanceBuilder::build() const {
         features.pEnabledValidationFeatures = info.enabled_validation_features.data();
         features.disabledValidationFeatureCount = static_cast<uint32_t>(info.disabled_validation_features.size());
         features.pDisabledValidationFeatures = info.disabled_validation_features.data();
-        pNext_chain.push_back(reinterpret_cast<VkBaseOutStructure*>(&features));
+        pNext_chain.push_back(&features);
     }
 
     VkValidationFlagsEXT checks{};
@@ -743,7 +807,7 @@ Result<Instance> InstanceBuilder::build() const {
         checks.pNext = nullptr;
         checks.disabledValidationCheckCount = static_cast<uint32_t>(info.disabled_validation_checks.size());
         checks.pDisabledValidationChecks = info.disabled_validation_checks.data();
-        pNext_chain.push_back(reinterpret_cast<VkBaseOutStructure*>(&checks));
+        pNext_chain.push_back(&checks);
     }
 
     VkLayerSettingsCreateInfoEXT layer_settings_ci{};
@@ -752,17 +816,13 @@ Result<Instance> InstanceBuilder::build() const {
         layer_settings_ci.pNext = nullptr;
         layer_settings_ci.settingCount = static_cast<uint32_t>(info.layer_settings.size());
         layer_settings_ci.pSettings = info.layer_settings.data();
-        pNext_chain.push_back(reinterpret_cast<VkBaseOutStructure*>(&layer_settings_ci));
+        pNext_chain.push_back(&layer_settings_ci);
     }
 
     VkInstanceCreateInfo instance_create_info = {};
     instance_create_info.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
     detail::setup_pNext_chain(instance_create_info, pNext_chain);
-#if !defined(NDEBUG)
-    for (auto& node : pNext_chain) {
-        assert(node->sType != VK_STRUCTURE_TYPE_APPLICATION_INFO);
-    }
-#endif
+
     instance_create_info.flags = info.flags;
     instance_create_info.pApplicationInfo = &app_info;
     instance_create_info.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
@@ -1016,8 +1076,8 @@ void combine_features(VkPhysicalDeviceFeatures& dest, VkPhysicalDeviceFeatures s
 
 bool supports_features(const VkPhysicalDeviceFeatures& supported,
 					   const VkPhysicalDeviceFeatures& requested,
-					   const GenericFeatureChain& extension_supported,
-					   const GenericFeatureChain& extension_requested) {
+					   const FeaturesChain& extension_supported,
+					   const FeaturesChain& extension_requested) {
 
 	if (requested.robustBufferAccess && !supported.robustBufferAccess) return false;
 	if (requested.fullDrawIndexUint32 && !supported.fullDrawIndexUint32) return false;
@@ -1130,7 +1190,7 @@ uint32_t get_present_queue_index(
 } // namespace detail
 
 PhysicalDevice PhysicalDeviceSelector::populate_device_details(
-    VkPhysicalDevice vk_phys_device, detail::GenericFeatureChain const& src_extended_features_chain) const {
+    VkPhysicalDevice vk_phys_device, detail::FeaturesChain const& src_extended_features_chain) const {
     PhysicalDevice physical_device{};
     physical_device.physical_device = vk_phys_device;
     physical_device.surface = instance_info.surface;
@@ -1159,9 +1219,9 @@ PhysicalDevice PhysicalDeviceSelector::populate_device_details(
     auto fill_chain = src_extended_features_chain;
 
     bool instance_is_1_1 = instance_info.version >= VKB_VK_API_VERSION_1_1;
-    if (!fill_chain.nodes.empty() && (instance_is_1_1 || instance_info.properties2_ext_enabled)) {
+    if (!fill_chain.empty() && (instance_is_1_1 || instance_info.properties2_ext_enabled)) {
         VkPhysicalDeviceFeatures2 local_features{};
-        fill_chain.chain_up(local_features);
+        fill_chain.create_chained_features(local_features);
         // Use KHR function if not able to use the core function
         if (instance_is_1_1) {
             detail::vulkan_functions().fp_vkGetPhysicalDeviceFeatures2(vk_phys_device, &local_features);
@@ -1255,18 +1315,6 @@ PhysicalDeviceSelector::PhysicalDeviceSelector(Instance const& instance, VkSurfa
 }
 
 Result<std::vector<PhysicalDevice>> PhysicalDeviceSelector::select_impl() const {
-#if !defined(NDEBUG)
-    // Validation
-    for (const auto& node : criteria.extended_features_chain.nodes) {
-        assert(node.sType != static_cast<VkStructureType>(0) &&
-               "Features struct sType must be filled with the struct's "
-               "corresponding VkStructureType enum");
-        assert(node.sType != VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2 &&
-               "Do not pass VkPhysicalDeviceFeatures2 as a required extension feature structure. An "
-               "instance of this is managed internally for selection criteria and device creation.");
-    }
-#endif
-
     if (criteria.require_present && !criteria.defer_surface_initialization) {
         if (instance_info.surface == VK_NULL_HANDLE)
             return Result<std::vector<PhysicalDevice>>{ PhysicalDeviceError::no_surface_provided };
@@ -1530,25 +1578,18 @@ bool PhysicalDevice::enable_features_if_present(const VkPhysicalDeviceFeatures& 
     return required_features_supported;
 }
 
-bool PhysicalDevice::is_features_node_present(detail::GenericFeaturesPNextNode const& node) const {
-    detail::GenericFeatureChain requested_features;
-    requested_features.nodes.push_back(node);
-
-    return extended_features_chain.find_and_match(requested_features);
-}
-
-bool PhysicalDevice::enable_features_node_if_present(detail::GenericFeaturesPNextNode const& node) {
+bool PhysicalDevice::enable_features_struct_if_present(VkStructureType sType, size_t struct_size, const void* features_struct) {
     VkPhysicalDeviceFeatures2 actual_pdf2{};
 
-    detail::GenericFeatureChain requested_features;
-    requested_features.nodes.push_back(node);
+    detail::FeaturesChain requested_features;
+    requested_features.add_structure(sType, struct_size, features_struct);
 
-    detail::GenericFeatureChain fill_chain = requested_features;
+    detail::FeaturesChain fill_chain = requested_features;
     // Zero out supported features
-    fill_chain.nodes.front().disable_fields();
+    fill_chain.reset_all_fields();
 
     actual_pdf2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
-    fill_chain.chain_up(actual_pdf2);
+    fill_chain.create_chained_features(actual_pdf2);
 
     bool required_features_supported = false;
     bool instance_is_1_1 = instance_version >= VKB_VK_API_VERSION_1_1;
@@ -1560,7 +1601,7 @@ bool PhysicalDevice::enable_features_node_if_present(detail::GenericFeaturesPNex
         }
         required_features_supported = fill_chain.match_all(requested_features);
         if (required_features_supported) {
-            extended_features_chain.combine(requested_features);
+            extended_features_chain.combine_all(requested_features);
         }
     }
     return required_features_supported;
@@ -1674,18 +1715,20 @@ Result<Device> DeviceBuilder::build() const {
     if (physical_device.surface != VK_NULL_HANDLE || physical_device.defer_surface_initialization)
         extensions_to_enable.push_back({ VK_KHR_SWAPCHAIN_EXTENSION_NAME });
 
-    std::vector<VkBaseOutStructure*> final_pnext_chain;
+    std::vector<void*> final_pnext_chain;
     VkDeviceCreateInfo device_create_info = {};
 
     bool user_defined_phys_dev_features_2 = false;
     for (auto& pnext : info.pNext_chain) {
-        if (pnext->sType == VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2) {
+        VkBaseOutStructure out_structure{};
+        memcpy(&out_structure, pnext, sizeof(VkBaseOutStructure));
+        if (out_structure.sType == VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2) {
             user_defined_phys_dev_features_2 = true;
             break;
         }
     }
 
-    if (user_defined_phys_dev_features_2 && !physical_device.extended_features_chain.nodes.empty()) {
+    if (user_defined_phys_dev_features_2 && !physical_device.extended_features_chain.empty()) {
         return { DeviceError::VkPhysicalDeviceFeatures2_in_pNext_chain_while_using_add_required_extension_features };
     }
 
@@ -1697,9 +1740,10 @@ Result<Device> DeviceBuilder::build() const {
 
     if (!user_defined_phys_dev_features_2) {
         if (physical_device.instance_version >= VKB_VK_API_VERSION_1_1 || physical_device.properties2_ext_enabled) {
-            final_pnext_chain.push_back(reinterpret_cast<VkBaseOutStructure*>(&local_features2));
-            for (auto& features_node : physical_device_extension_features_copy.nodes) {
-                final_pnext_chain.push_back(reinterpret_cast<VkBaseOutStructure*>(&features_node));
+            final_pnext_chain.push_back(&local_features2);
+            auto features_chain_members = physical_device_extension_features_copy.get_pNext_chain_members();
+            for (auto& features_struct : features_chain_members) {
+                final_pnext_chain.push_back(features_struct);
             }
         } else {
             // Only set device_create_info.pEnabledFeatures when the pNext chain does not contain a VkPhysicalDeviceFeatures2 structure
@@ -1712,11 +1756,7 @@ Result<Device> DeviceBuilder::build() const {
     }
 
     detail::setup_pNext_chain(device_create_info, final_pnext_chain);
-#if !defined(NDEBUG)
-    for (auto& node : final_pnext_chain) {
-        assert(node->sType != VK_STRUCTURE_TYPE_APPLICATION_INFO);
-    }
-#endif
+
     device_create_info.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
     device_create_info.flags = info.flags;
     device_create_info.queueCreateInfoCount = static_cast<uint32_t>(queueCreateInfos.size());
@@ -1981,11 +2021,7 @@ Result<Swapchain> SwapchainBuilder::build() const {
     VkSwapchainCreateInfoKHR swapchain_create_info = {};
     swapchain_create_info.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
     detail::setup_pNext_chain(swapchain_create_info, info.pNext_chain);
-#if !defined(NDEBUG)
-    for (auto& node : info.pNext_chain) {
-        assert(node->sType != VK_STRUCTURE_TYPE_APPLICATION_INFO);
-    }
-#endif
+
     swapchain_create_info.flags = info.create_flags;
     swapchain_create_info.surface = info.surface;
     swapchain_create_info.minImageCount = image_count;

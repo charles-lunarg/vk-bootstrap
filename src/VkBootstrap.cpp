@@ -957,124 +957,22 @@ std::vector<std::string> check_device_extension_support(
 
 // clang-format off
 void combine_features(VkPhysicalDeviceFeatures& dest, VkPhysicalDeviceFeatures src){
-    dest.robustBufferAccess = dest.robustBufferAccess || src.robustBufferAccess;
-	dest.fullDrawIndexUint32 = dest.fullDrawIndexUint32 || src.fullDrawIndexUint32;
-	dest.imageCubeArray = dest.imageCubeArray || src.imageCubeArray;
-	dest.independentBlend = dest.independentBlend || src.independentBlend;
-	dest.geometryShader = dest.geometryShader || src.geometryShader;
-	dest.tessellationShader = dest.tessellationShader || src.tessellationShader;
-	dest.sampleRateShading = dest.sampleRateShading || src.sampleRateShading;
-	dest.dualSrcBlend = dest.dualSrcBlend || src.dualSrcBlend;
-	dest.logicOp = dest.logicOp || src.logicOp;
-	dest.multiDrawIndirect = dest.multiDrawIndirect || src.multiDrawIndirect;
-	dest.drawIndirectFirstInstance = dest.drawIndirectFirstInstance || src.drawIndirectFirstInstance;
-	dest.depthClamp = dest.depthClamp || src.depthClamp;
-	dest.depthBiasClamp = dest.depthBiasClamp || src.depthBiasClamp;
-	dest.fillModeNonSolid = dest.fillModeNonSolid || src.fillModeNonSolid;
-	dest.depthBounds = dest.depthBounds || src.depthBounds;
-	dest.wideLines = dest.wideLines || src.wideLines;
-	dest.largePoints = dest.largePoints || src.largePoints;
-	dest.alphaToOne = dest.alphaToOne || src.alphaToOne;
-	dest.multiViewport = dest.multiViewport || src.multiViewport;
-	dest.samplerAnisotropy = dest.samplerAnisotropy || src.samplerAnisotropy;
-	dest.textureCompressionETC2 = dest.textureCompressionETC2 || src.textureCompressionETC2;
-	dest.textureCompressionASTC_LDR = dest.textureCompressionASTC_LDR || src.textureCompressionASTC_LDR;
-	dest.textureCompressionBC = dest.textureCompressionBC || src.textureCompressionBC;
-	dest.occlusionQueryPrecise = dest.occlusionQueryPrecise || src.occlusionQueryPrecise;
-	dest.pipelineStatisticsQuery = dest.pipelineStatisticsQuery || src.pipelineStatisticsQuery;
-	dest.vertexPipelineStoresAndAtomics = dest.vertexPipelineStoresAndAtomics || src.vertexPipelineStoresAndAtomics;
-	dest.fragmentStoresAndAtomics = dest.fragmentStoresAndAtomics || src.fragmentStoresAndAtomics;
-	dest.shaderTessellationAndGeometryPointSize = dest.shaderTessellationAndGeometryPointSize || src.shaderTessellationAndGeometryPointSize;
-	dest.shaderImageGatherExtended = dest.shaderImageGatherExtended || src.shaderImageGatherExtended;
-	dest.shaderStorageImageExtendedFormats = dest.shaderStorageImageExtendedFormats || src.shaderStorageImageExtendedFormats;
-	dest.shaderStorageImageMultisample = dest.shaderStorageImageMultisample || src.shaderStorageImageMultisample;
-	dest.shaderStorageImageReadWithoutFormat = dest.shaderStorageImageReadWithoutFormat || src.shaderStorageImageReadWithoutFormat;
-	dest.shaderStorageImageWriteWithoutFormat = dest.shaderStorageImageWriteWithoutFormat || src.shaderStorageImageWriteWithoutFormat;
-	dest.shaderUniformBufferArrayDynamicIndexing = dest.shaderUniformBufferArrayDynamicIndexing || src.shaderUniformBufferArrayDynamicIndexing;
-	dest.shaderSampledImageArrayDynamicIndexing = dest.shaderSampledImageArrayDynamicIndexing || src.shaderSampledImageArrayDynamicIndexing;
-	dest.shaderStorageBufferArrayDynamicIndexing = dest.shaderStorageBufferArrayDynamicIndexing || src.shaderStorageBufferArrayDynamicIndexing;
-	dest.shaderStorageImageArrayDynamicIndexing = dest.shaderStorageImageArrayDynamicIndexing || src.shaderStorageImageArrayDynamicIndexing;
-	dest.shaderClipDistance = dest.shaderClipDistance || src.shaderClipDistance;
-	dest.shaderCullDistance = dest.shaderCullDistance || src.shaderCullDistance;
-	dest.shaderFloat64 = dest.shaderFloat64 || src.shaderFloat64;
-	dest.shaderInt64 = dest.shaderInt64 || src.shaderInt64;
-	dest.shaderInt16 = dest.shaderInt16 || src.shaderInt16;
-	dest.shaderResourceResidency = dest.shaderResourceResidency || src.shaderResourceResidency;
-	dest.shaderResourceMinLod = dest.shaderResourceMinLod || src.shaderResourceMinLod;
-	dest.sparseBinding = dest.sparseBinding || src.sparseBinding;
-	dest.sparseResidencyBuffer = dest.sparseResidencyBuffer || src.sparseResidencyBuffer;
-	dest.sparseResidencyImage2D = dest.sparseResidencyImage2D || src.sparseResidencyImage2D;
-	dest.sparseResidencyImage3D = dest.sparseResidencyImage3D || src.sparseResidencyImage3D;
-	dest.sparseResidency2Samples = dest.sparseResidency2Samples || src.sparseResidency2Samples;
-	dest.sparseResidency4Samples = dest.sparseResidency4Samples || src.sparseResidency4Samples;
-	dest.sparseResidency8Samples = dest.sparseResidency8Samples || src.sparseResidency8Samples;
-	dest.sparseResidency16Samples = dest.sparseResidency16Samples || src.sparseResidency16Samples;
-	dest.sparseResidencyAliased = dest.sparseResidencyAliased || src.sparseResidencyAliased;
-	dest.variableMultisampleRate = dest.variableMultisampleRate || src.variableMultisampleRate;
-	dest.inheritedQueries = dest.inheritedQueries || src.inheritedQueries;
+	VkBool32* dest_array = (VkBool32*)(&dest);
+	VkBool32* src_array = (VkBool32*)(&src);
+	for(uint_32 i = 0; i < sizeof(VkPhysicalDeviceFeatures) / sizeof(VkBool32); i++) {
+		dest_array[i] = dest_array[i] || src_array[i];
+	}
 }
 
 bool supports_features(const VkPhysicalDeviceFeatures& supported,
 					   const VkPhysicalDeviceFeatures& requested,
 					   const GenericFeatureChain& extension_supported,
 					   const GenericFeatureChain& extension_requested) {
-
-	if (requested.robustBufferAccess && !supported.robustBufferAccess) return false;
-	if (requested.fullDrawIndexUint32 && !supported.fullDrawIndexUint32) return false;
-	if (requested.imageCubeArray && !supported.imageCubeArray) return false;
-	if (requested.independentBlend && !supported.independentBlend) return false;
-	if (requested.geometryShader && !supported.geometryShader) return false;
-	if (requested.tessellationShader && !supported.tessellationShader) return false;
-	if (requested.sampleRateShading && !supported.sampleRateShading) return false;
-	if (requested.dualSrcBlend && !supported.dualSrcBlend) return false;
-	if (requested.logicOp && !supported.logicOp) return false;
-	if (requested.multiDrawIndirect && !supported.multiDrawIndirect) return false;
-	if (requested.drawIndirectFirstInstance && !supported.drawIndirectFirstInstance) return false;
-	if (requested.depthClamp && !supported.depthClamp) return false;
-	if (requested.depthBiasClamp && !supported.depthBiasClamp) return false;
-	if (requested.fillModeNonSolid && !supported.fillModeNonSolid) return false;
-	if (requested.depthBounds && !supported.depthBounds) return false;
-	if (requested.wideLines && !supported.wideLines) return false;
-	if (requested.largePoints && !supported.largePoints) return false;
-	if (requested.alphaToOne && !supported.alphaToOne) return false;
-	if (requested.multiViewport && !supported.multiViewport) return false;
-	if (requested.samplerAnisotropy && !supported.samplerAnisotropy) return false;
-	if (requested.textureCompressionETC2 && !supported.textureCompressionETC2) return false;
-	if (requested.textureCompressionASTC_LDR && !supported.textureCompressionASTC_LDR) return false;
-	if (requested.textureCompressionBC && !supported.textureCompressionBC) return false;
-	if (requested.occlusionQueryPrecise && !supported.occlusionQueryPrecise) return false;
-	if (requested.pipelineStatisticsQuery && !supported.pipelineStatisticsQuery) return false;
-	if (requested.vertexPipelineStoresAndAtomics && !supported.vertexPipelineStoresAndAtomics) return false;
-	if (requested.fragmentStoresAndAtomics && !supported.fragmentStoresAndAtomics) return false;
-	if (requested.shaderTessellationAndGeometryPointSize && !supported.shaderTessellationAndGeometryPointSize) return false;
-	if (requested.shaderImageGatherExtended && !supported.shaderImageGatherExtended) return false;
-	if (requested.shaderStorageImageExtendedFormats && !supported.shaderStorageImageExtendedFormats) return false;
-	if (requested.shaderStorageImageMultisample && !supported.shaderStorageImageMultisample) return false;
-	if (requested.shaderStorageImageReadWithoutFormat && !supported.shaderStorageImageReadWithoutFormat) return false;
-	if (requested.shaderStorageImageWriteWithoutFormat && !supported.shaderStorageImageWriteWithoutFormat) return false;
-	if (requested.shaderUniformBufferArrayDynamicIndexing && !supported.shaderUniformBufferArrayDynamicIndexing) return false;
-	if (requested.shaderSampledImageArrayDynamicIndexing && !supported.shaderSampledImageArrayDynamicIndexing) return false;
-	if (requested.shaderStorageBufferArrayDynamicIndexing && !supported.shaderStorageBufferArrayDynamicIndexing) return false;
-	if (requested.shaderStorageImageArrayDynamicIndexing && !supported.shaderStorageImageArrayDynamicIndexing) return false;
-	if (requested.shaderClipDistance && !supported.shaderClipDistance) return false;
-	if (requested.shaderCullDistance && !supported.shaderCullDistance) return false;
-	if (requested.shaderFloat64 && !supported.shaderFloat64) return false;
-	if (requested.shaderInt64 && !supported.shaderInt64) return false;
-	if (requested.shaderInt16 && !supported.shaderInt16) return false;
-	if (requested.shaderResourceResidency && !supported.shaderResourceResidency) return false;
-	if (requested.shaderResourceMinLod && !supported.shaderResourceMinLod) return false;
-	if (requested.sparseBinding && !supported.sparseBinding) return false;
-	if (requested.sparseResidencyBuffer && !supported.sparseResidencyBuffer) return false;
-	if (requested.sparseResidencyImage2D && !supported.sparseResidencyImage2D) return false;
-	if (requested.sparseResidencyImage3D && !supported.sparseResidencyImage3D) return false;
-	if (requested.sparseResidency2Samples && !supported.sparseResidency2Samples) return false;
-	if (requested.sparseResidency4Samples && !supported.sparseResidency4Samples) return false;
-	if (requested.sparseResidency8Samples && !supported.sparseResidency8Samples) return false;
-	if (requested.sparseResidency16Samples && !supported.sparseResidency16Samples) return false;
-	if (requested.sparseResidencyAliased && !supported.sparseResidencyAliased) return false;
-	if (requested.variableMultisampleRate && !supported.variableMultisampleRate) return false;
-	if (requested.inheritedQueries && !supported.inheritedQueries) return false;
-
+	VkBool32* requested_array = (VkBool32*)(&requested);
+	VkBool32* supported_array = (VkBool32*)(&supported);
+	for(uint_32 i = 0; i < sizeof(VkPhysicalDeviceFeatures) / sizeof(VkBool32); i++) {
+		if(requested_array[i] && !supported_array[i]) return false;
+	}
 	return extension_supported.match_all(extension_requested);
 }
 // clang-format on

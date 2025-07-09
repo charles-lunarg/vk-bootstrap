@@ -1,0 +1,512 @@
+/*
+ * Copyright © 2025 Charles Giessen (charles@lunarg.com)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
+ * documentation files (the “Software”), to deal in the Software without restriction, including without
+ * limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT
+ * LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ */
+
+// This file is a part of VkBootstrap
+// https://github.com/charles-lunarg/vk-bootstrap
+
+#pragma once
+#include <string>
+#include <vector>
+#include <vulkan/vulkan_core.h>
+#if defined(VK_ENABLE_BETA_EXTENSIONS)
+#include <vulkan/vulkan_beta.h>
+#endif // defined(VK_ENABLE_BETA_EXTENSIONS)
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+#include <vulkan/vulkan_android.h>
+#endif // defined(VK_USE_PLATFORM_ANDROID_KHR)
+#if defined(VK_USE_PLATFORM_SCREEN_QNX)
+#include <screen/screen.h>
+#include <vulkan/vulkan_screen.h>
+#endif // defined(VK_USE_PLATFORM_SCREEN_QNX)
+
+namespace vkb {
+
+void compare_VkPhysicalDevice16BitStorageFeatures(std::vector<std::string> & error_list, VkPhysicalDevice16BitStorageFeatures const& supported, VkPhysicalDevice16BitStorageFeatures const& requested);
+void merge_VkPhysicalDevice16BitStorageFeatures(VkPhysicalDevice16BitStorageFeatures & current, VkPhysicalDevice16BitStorageFeatures const& merge_in);
+void compare_VkPhysicalDeviceMultiviewFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceMultiviewFeatures const& supported, VkPhysicalDeviceMultiviewFeatures const& requested);
+void merge_VkPhysicalDeviceMultiviewFeatures(VkPhysicalDeviceMultiviewFeatures & current, VkPhysicalDeviceMultiviewFeatures const& merge_in);
+void compare_VkPhysicalDeviceVariablePointersFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceVariablePointersFeatures const& supported, VkPhysicalDeviceVariablePointersFeatures const& requested);
+void merge_VkPhysicalDeviceVariablePointersFeatures(VkPhysicalDeviceVariablePointersFeatures & current, VkPhysicalDeviceVariablePointersFeatures const& merge_in);
+void compare_VkPhysicalDeviceProtectedMemoryFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceProtectedMemoryFeatures const& supported, VkPhysicalDeviceProtectedMemoryFeatures const& requested);
+void merge_VkPhysicalDeviceProtectedMemoryFeatures(VkPhysicalDeviceProtectedMemoryFeatures & current, VkPhysicalDeviceProtectedMemoryFeatures const& merge_in);
+void compare_VkPhysicalDeviceSamplerYcbcrConversionFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceSamplerYcbcrConversionFeatures const& supported, VkPhysicalDeviceSamplerYcbcrConversionFeatures const& requested);
+void merge_VkPhysicalDeviceSamplerYcbcrConversionFeatures(VkPhysicalDeviceSamplerYcbcrConversionFeatures & current, VkPhysicalDeviceSamplerYcbcrConversionFeatures const& merge_in);
+void compare_VkPhysicalDeviceShaderDrawParametersFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceShaderDrawParametersFeatures const& supported, VkPhysicalDeviceShaderDrawParametersFeatures const& requested);
+void merge_VkPhysicalDeviceShaderDrawParametersFeatures(VkPhysicalDeviceShaderDrawParametersFeatures & current, VkPhysicalDeviceShaderDrawParametersFeatures const& merge_in);
+void compare_VkPhysicalDeviceVulkan11Features(std::vector<std::string> & error_list, VkPhysicalDeviceVulkan11Features const& supported, VkPhysicalDeviceVulkan11Features const& requested);
+void merge_VkPhysicalDeviceVulkan11Features(VkPhysicalDeviceVulkan11Features & current, VkPhysicalDeviceVulkan11Features const& merge_in);
+void compare_VkPhysicalDeviceVulkan12Features(std::vector<std::string> & error_list, VkPhysicalDeviceVulkan12Features const& supported, VkPhysicalDeviceVulkan12Features const& requested);
+void merge_VkPhysicalDeviceVulkan12Features(VkPhysicalDeviceVulkan12Features & current, VkPhysicalDeviceVulkan12Features const& merge_in);
+void compare_VkPhysicalDevice8BitStorageFeatures(std::vector<std::string> & error_list, VkPhysicalDevice8BitStorageFeatures const& supported, VkPhysicalDevice8BitStorageFeatures const& requested);
+void merge_VkPhysicalDevice8BitStorageFeatures(VkPhysicalDevice8BitStorageFeatures & current, VkPhysicalDevice8BitStorageFeatures const& merge_in);
+void compare_VkPhysicalDeviceShaderAtomicInt64Features(std::vector<std::string> & error_list, VkPhysicalDeviceShaderAtomicInt64Features const& supported, VkPhysicalDeviceShaderAtomicInt64Features const& requested);
+void merge_VkPhysicalDeviceShaderAtomicInt64Features(VkPhysicalDeviceShaderAtomicInt64Features & current, VkPhysicalDeviceShaderAtomicInt64Features const& merge_in);
+void compare_VkPhysicalDeviceShaderFloat16Int8Features(std::vector<std::string> & error_list, VkPhysicalDeviceShaderFloat16Int8Features const& supported, VkPhysicalDeviceShaderFloat16Int8Features const& requested);
+void merge_VkPhysicalDeviceShaderFloat16Int8Features(VkPhysicalDeviceShaderFloat16Int8Features & current, VkPhysicalDeviceShaderFloat16Int8Features const& merge_in);
+void compare_VkPhysicalDeviceDescriptorIndexingFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceDescriptorIndexingFeatures const& supported, VkPhysicalDeviceDescriptorIndexingFeatures const& requested);
+void merge_VkPhysicalDeviceDescriptorIndexingFeatures(VkPhysicalDeviceDescriptorIndexingFeatures & current, VkPhysicalDeviceDescriptorIndexingFeatures const& merge_in);
+void compare_VkPhysicalDeviceScalarBlockLayoutFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceScalarBlockLayoutFeatures const& supported, VkPhysicalDeviceScalarBlockLayoutFeatures const& requested);
+void merge_VkPhysicalDeviceScalarBlockLayoutFeatures(VkPhysicalDeviceScalarBlockLayoutFeatures & current, VkPhysicalDeviceScalarBlockLayoutFeatures const& merge_in);
+void compare_VkPhysicalDeviceVulkanMemoryModelFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceVulkanMemoryModelFeatures const& supported, VkPhysicalDeviceVulkanMemoryModelFeatures const& requested);
+void merge_VkPhysicalDeviceVulkanMemoryModelFeatures(VkPhysicalDeviceVulkanMemoryModelFeatures & current, VkPhysicalDeviceVulkanMemoryModelFeatures const& merge_in);
+void compare_VkPhysicalDeviceImagelessFramebufferFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceImagelessFramebufferFeatures const& supported, VkPhysicalDeviceImagelessFramebufferFeatures const& requested);
+void merge_VkPhysicalDeviceImagelessFramebufferFeatures(VkPhysicalDeviceImagelessFramebufferFeatures & current, VkPhysicalDeviceImagelessFramebufferFeatures const& merge_in);
+void compare_VkPhysicalDeviceUniformBufferStandardLayoutFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceUniformBufferStandardLayoutFeatures const& supported, VkPhysicalDeviceUniformBufferStandardLayoutFeatures const& requested);
+void merge_VkPhysicalDeviceUniformBufferStandardLayoutFeatures(VkPhysicalDeviceUniformBufferStandardLayoutFeatures & current, VkPhysicalDeviceUniformBufferStandardLayoutFeatures const& merge_in);
+void compare_VkPhysicalDeviceShaderSubgroupExtendedTypesFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceShaderSubgroupExtendedTypesFeatures const& supported, VkPhysicalDeviceShaderSubgroupExtendedTypesFeatures const& requested);
+void merge_VkPhysicalDeviceShaderSubgroupExtendedTypesFeatures(VkPhysicalDeviceShaderSubgroupExtendedTypesFeatures & current, VkPhysicalDeviceShaderSubgroupExtendedTypesFeatures const& merge_in);
+void compare_VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures const& supported, VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures const& requested);
+void merge_VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures(VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures & current, VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures const& merge_in);
+void compare_VkPhysicalDeviceHostQueryResetFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceHostQueryResetFeatures const& supported, VkPhysicalDeviceHostQueryResetFeatures const& requested);
+void merge_VkPhysicalDeviceHostQueryResetFeatures(VkPhysicalDeviceHostQueryResetFeatures & current, VkPhysicalDeviceHostQueryResetFeatures const& merge_in);
+void compare_VkPhysicalDeviceTimelineSemaphoreFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceTimelineSemaphoreFeatures const& supported, VkPhysicalDeviceTimelineSemaphoreFeatures const& requested);
+void merge_VkPhysicalDeviceTimelineSemaphoreFeatures(VkPhysicalDeviceTimelineSemaphoreFeatures & current, VkPhysicalDeviceTimelineSemaphoreFeatures const& merge_in);
+void compare_VkPhysicalDeviceBufferDeviceAddressFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceBufferDeviceAddressFeatures const& supported, VkPhysicalDeviceBufferDeviceAddressFeatures const& requested);
+void merge_VkPhysicalDeviceBufferDeviceAddressFeatures(VkPhysicalDeviceBufferDeviceAddressFeatures & current, VkPhysicalDeviceBufferDeviceAddressFeatures const& merge_in);
+void compare_VkPhysicalDeviceVulkan13Features(std::vector<std::string> & error_list, VkPhysicalDeviceVulkan13Features const& supported, VkPhysicalDeviceVulkan13Features const& requested);
+void merge_VkPhysicalDeviceVulkan13Features(VkPhysicalDeviceVulkan13Features & current, VkPhysicalDeviceVulkan13Features const& merge_in);
+void compare_VkPhysicalDeviceShaderTerminateInvocationFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceShaderTerminateInvocationFeatures const& supported, VkPhysicalDeviceShaderTerminateInvocationFeatures const& requested);
+void merge_VkPhysicalDeviceShaderTerminateInvocationFeatures(VkPhysicalDeviceShaderTerminateInvocationFeatures & current, VkPhysicalDeviceShaderTerminateInvocationFeatures const& merge_in);
+void compare_VkPhysicalDeviceShaderDemoteToHelperInvocationFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceShaderDemoteToHelperInvocationFeatures const& supported, VkPhysicalDeviceShaderDemoteToHelperInvocationFeatures const& requested);
+void merge_VkPhysicalDeviceShaderDemoteToHelperInvocationFeatures(VkPhysicalDeviceShaderDemoteToHelperInvocationFeatures & current, VkPhysicalDeviceShaderDemoteToHelperInvocationFeatures const& merge_in);
+void compare_VkPhysicalDevicePrivateDataFeatures(std::vector<std::string> & error_list, VkPhysicalDevicePrivateDataFeatures const& supported, VkPhysicalDevicePrivateDataFeatures const& requested);
+void merge_VkPhysicalDevicePrivateDataFeatures(VkPhysicalDevicePrivateDataFeatures & current, VkPhysicalDevicePrivateDataFeatures const& merge_in);
+void compare_VkPhysicalDevicePipelineCreationCacheControlFeatures(std::vector<std::string> & error_list, VkPhysicalDevicePipelineCreationCacheControlFeatures const& supported, VkPhysicalDevicePipelineCreationCacheControlFeatures const& requested);
+void merge_VkPhysicalDevicePipelineCreationCacheControlFeatures(VkPhysicalDevicePipelineCreationCacheControlFeatures & current, VkPhysicalDevicePipelineCreationCacheControlFeatures const& merge_in);
+void compare_VkPhysicalDeviceSynchronization2Features(std::vector<std::string> & error_list, VkPhysicalDeviceSynchronization2Features const& supported, VkPhysicalDeviceSynchronization2Features const& requested);
+void merge_VkPhysicalDeviceSynchronization2Features(VkPhysicalDeviceSynchronization2Features & current, VkPhysicalDeviceSynchronization2Features const& merge_in);
+void compare_VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeatures const& supported, VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeatures const& requested);
+void merge_VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeatures(VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeatures & current, VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeatures const& merge_in);
+void compare_VkPhysicalDeviceImageRobustnessFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceImageRobustnessFeatures const& supported, VkPhysicalDeviceImageRobustnessFeatures const& requested);
+void merge_VkPhysicalDeviceImageRobustnessFeatures(VkPhysicalDeviceImageRobustnessFeatures & current, VkPhysicalDeviceImageRobustnessFeatures const& merge_in);
+void compare_VkPhysicalDeviceSubgroupSizeControlFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceSubgroupSizeControlFeatures const& supported, VkPhysicalDeviceSubgroupSizeControlFeatures const& requested);
+void merge_VkPhysicalDeviceSubgroupSizeControlFeatures(VkPhysicalDeviceSubgroupSizeControlFeatures & current, VkPhysicalDeviceSubgroupSizeControlFeatures const& merge_in);
+void compare_VkPhysicalDeviceInlineUniformBlockFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceInlineUniformBlockFeatures const& supported, VkPhysicalDeviceInlineUniformBlockFeatures const& requested);
+void merge_VkPhysicalDeviceInlineUniformBlockFeatures(VkPhysicalDeviceInlineUniformBlockFeatures & current, VkPhysicalDeviceInlineUniformBlockFeatures const& merge_in);
+void compare_VkPhysicalDeviceTextureCompressionASTCHDRFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceTextureCompressionASTCHDRFeatures const& supported, VkPhysicalDeviceTextureCompressionASTCHDRFeatures const& requested);
+void merge_VkPhysicalDeviceTextureCompressionASTCHDRFeatures(VkPhysicalDeviceTextureCompressionASTCHDRFeatures & current, VkPhysicalDeviceTextureCompressionASTCHDRFeatures const& merge_in);
+void compare_VkPhysicalDeviceDynamicRenderingFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceDynamicRenderingFeatures const& supported, VkPhysicalDeviceDynamicRenderingFeatures const& requested);
+void merge_VkPhysicalDeviceDynamicRenderingFeatures(VkPhysicalDeviceDynamicRenderingFeatures & current, VkPhysicalDeviceDynamicRenderingFeatures const& merge_in);
+void compare_VkPhysicalDeviceShaderIntegerDotProductFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceShaderIntegerDotProductFeatures const& supported, VkPhysicalDeviceShaderIntegerDotProductFeatures const& requested);
+void merge_VkPhysicalDeviceShaderIntegerDotProductFeatures(VkPhysicalDeviceShaderIntegerDotProductFeatures & current, VkPhysicalDeviceShaderIntegerDotProductFeatures const& merge_in);
+void compare_VkPhysicalDeviceMaintenance4Features(std::vector<std::string> & error_list, VkPhysicalDeviceMaintenance4Features const& supported, VkPhysicalDeviceMaintenance4Features const& requested);
+void merge_VkPhysicalDeviceMaintenance4Features(VkPhysicalDeviceMaintenance4Features & current, VkPhysicalDeviceMaintenance4Features const& merge_in);
+void compare_VkPhysicalDeviceVulkan14Features(std::vector<std::string> & error_list, VkPhysicalDeviceVulkan14Features const& supported, VkPhysicalDeviceVulkan14Features const& requested);
+void merge_VkPhysicalDeviceVulkan14Features(VkPhysicalDeviceVulkan14Features & current, VkPhysicalDeviceVulkan14Features const& merge_in);
+void compare_VkPhysicalDeviceGlobalPriorityQueryFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceGlobalPriorityQueryFeatures const& supported, VkPhysicalDeviceGlobalPriorityQueryFeatures const& requested);
+void merge_VkPhysicalDeviceGlobalPriorityQueryFeatures(VkPhysicalDeviceGlobalPriorityQueryFeatures & current, VkPhysicalDeviceGlobalPriorityQueryFeatures const& merge_in);
+void compare_VkPhysicalDeviceShaderSubgroupRotateFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceShaderSubgroupRotateFeatures const& supported, VkPhysicalDeviceShaderSubgroupRotateFeatures const& requested);
+void merge_VkPhysicalDeviceShaderSubgroupRotateFeatures(VkPhysicalDeviceShaderSubgroupRotateFeatures & current, VkPhysicalDeviceShaderSubgroupRotateFeatures const& merge_in);
+void compare_VkPhysicalDeviceShaderFloatControls2Features(std::vector<std::string> & error_list, VkPhysicalDeviceShaderFloatControls2Features const& supported, VkPhysicalDeviceShaderFloatControls2Features const& requested);
+void merge_VkPhysicalDeviceShaderFloatControls2Features(VkPhysicalDeviceShaderFloatControls2Features & current, VkPhysicalDeviceShaderFloatControls2Features const& merge_in);
+void compare_VkPhysicalDeviceShaderExpectAssumeFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceShaderExpectAssumeFeatures const& supported, VkPhysicalDeviceShaderExpectAssumeFeatures const& requested);
+void merge_VkPhysicalDeviceShaderExpectAssumeFeatures(VkPhysicalDeviceShaderExpectAssumeFeatures & current, VkPhysicalDeviceShaderExpectAssumeFeatures const& merge_in);
+void compare_VkPhysicalDeviceLineRasterizationFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceLineRasterizationFeatures const& supported, VkPhysicalDeviceLineRasterizationFeatures const& requested);
+void merge_VkPhysicalDeviceLineRasterizationFeatures(VkPhysicalDeviceLineRasterizationFeatures & current, VkPhysicalDeviceLineRasterizationFeatures const& merge_in);
+void compare_VkPhysicalDeviceVertexAttributeDivisorFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceVertexAttributeDivisorFeatures const& supported, VkPhysicalDeviceVertexAttributeDivisorFeatures const& requested);
+void merge_VkPhysicalDeviceVertexAttributeDivisorFeatures(VkPhysicalDeviceVertexAttributeDivisorFeatures & current, VkPhysicalDeviceVertexAttributeDivisorFeatures const& merge_in);
+void compare_VkPhysicalDeviceIndexTypeUint8Features(std::vector<std::string> & error_list, VkPhysicalDeviceIndexTypeUint8Features const& supported, VkPhysicalDeviceIndexTypeUint8Features const& requested);
+void merge_VkPhysicalDeviceIndexTypeUint8Features(VkPhysicalDeviceIndexTypeUint8Features & current, VkPhysicalDeviceIndexTypeUint8Features const& merge_in);
+void compare_VkPhysicalDeviceMaintenance5Features(std::vector<std::string> & error_list, VkPhysicalDeviceMaintenance5Features const& supported, VkPhysicalDeviceMaintenance5Features const& requested);
+void merge_VkPhysicalDeviceMaintenance5Features(VkPhysicalDeviceMaintenance5Features & current, VkPhysicalDeviceMaintenance5Features const& merge_in);
+void compare_VkPhysicalDeviceDynamicRenderingLocalReadFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceDynamicRenderingLocalReadFeatures const& supported, VkPhysicalDeviceDynamicRenderingLocalReadFeatures const& requested);
+void merge_VkPhysicalDeviceDynamicRenderingLocalReadFeatures(VkPhysicalDeviceDynamicRenderingLocalReadFeatures & current, VkPhysicalDeviceDynamicRenderingLocalReadFeatures const& merge_in);
+void compare_VkPhysicalDeviceMaintenance6Features(std::vector<std::string> & error_list, VkPhysicalDeviceMaintenance6Features const& supported, VkPhysicalDeviceMaintenance6Features const& requested);
+void merge_VkPhysicalDeviceMaintenance6Features(VkPhysicalDeviceMaintenance6Features & current, VkPhysicalDeviceMaintenance6Features const& merge_in);
+void compare_VkPhysicalDevicePipelineProtectedAccessFeatures(std::vector<std::string> & error_list, VkPhysicalDevicePipelineProtectedAccessFeatures const& supported, VkPhysicalDevicePipelineProtectedAccessFeatures const& requested);
+void merge_VkPhysicalDevicePipelineProtectedAccessFeatures(VkPhysicalDevicePipelineProtectedAccessFeatures & current, VkPhysicalDevicePipelineProtectedAccessFeatures const& merge_in);
+void compare_VkPhysicalDevicePipelineRobustnessFeatures(std::vector<std::string> & error_list, VkPhysicalDevicePipelineRobustnessFeatures const& supported, VkPhysicalDevicePipelineRobustnessFeatures const& requested);
+void merge_VkPhysicalDevicePipelineRobustnessFeatures(VkPhysicalDevicePipelineRobustnessFeatures & current, VkPhysicalDevicePipelineRobustnessFeatures const& merge_in);
+void compare_VkPhysicalDeviceHostImageCopyFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceHostImageCopyFeatures const& supported, VkPhysicalDeviceHostImageCopyFeatures const& requested);
+void merge_VkPhysicalDeviceHostImageCopyFeatures(VkPhysicalDeviceHostImageCopyFeatures & current, VkPhysicalDeviceHostImageCopyFeatures const& merge_in);
+void compare_VkPhysicalDevicePerformanceQueryFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDevicePerformanceQueryFeaturesKHR const& supported, VkPhysicalDevicePerformanceQueryFeaturesKHR const& requested);
+void merge_VkPhysicalDevicePerformanceQueryFeaturesKHR(VkPhysicalDevicePerformanceQueryFeaturesKHR & current, VkPhysicalDevicePerformanceQueryFeaturesKHR const& merge_in);
+void compare_VkPhysicalDeviceShaderBfloat16FeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceShaderBfloat16FeaturesKHR const& supported, VkPhysicalDeviceShaderBfloat16FeaturesKHR const& requested);
+void merge_VkPhysicalDeviceShaderBfloat16FeaturesKHR(VkPhysicalDeviceShaderBfloat16FeaturesKHR & current, VkPhysicalDeviceShaderBfloat16FeaturesKHR const& merge_in);
+#if defined(VK_ENABLE_BETA_EXTENSIONS)
+void compare_VkPhysicalDevicePortabilitySubsetFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDevicePortabilitySubsetFeaturesKHR const& supported, VkPhysicalDevicePortabilitySubsetFeaturesKHR const& requested);
+void merge_VkPhysicalDevicePortabilitySubsetFeaturesKHR(VkPhysicalDevicePortabilitySubsetFeaturesKHR & current, VkPhysicalDevicePortabilitySubsetFeaturesKHR const& merge_in);
+#endif // defined(VK_ENABLE_BETA_EXTENSIONS)
+void compare_VkPhysicalDeviceShaderClockFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceShaderClockFeaturesKHR const& supported, VkPhysicalDeviceShaderClockFeaturesKHR const& requested);
+void merge_VkPhysicalDeviceShaderClockFeaturesKHR(VkPhysicalDeviceShaderClockFeaturesKHR & current, VkPhysicalDeviceShaderClockFeaturesKHR const& merge_in);
+void compare_VkPhysicalDeviceFragmentShadingRateFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceFragmentShadingRateFeaturesKHR const& supported, VkPhysicalDeviceFragmentShadingRateFeaturesKHR const& requested);
+void merge_VkPhysicalDeviceFragmentShadingRateFeaturesKHR(VkPhysicalDeviceFragmentShadingRateFeaturesKHR & current, VkPhysicalDeviceFragmentShadingRateFeaturesKHR const& merge_in);
+void compare_VkPhysicalDeviceShaderQuadControlFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceShaderQuadControlFeaturesKHR const& supported, VkPhysicalDeviceShaderQuadControlFeaturesKHR const& requested);
+void merge_VkPhysicalDeviceShaderQuadControlFeaturesKHR(VkPhysicalDeviceShaderQuadControlFeaturesKHR & current, VkPhysicalDeviceShaderQuadControlFeaturesKHR const& merge_in);
+void compare_VkPhysicalDevicePresentWaitFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDevicePresentWaitFeaturesKHR const& supported, VkPhysicalDevicePresentWaitFeaturesKHR const& requested);
+void merge_VkPhysicalDevicePresentWaitFeaturesKHR(VkPhysicalDevicePresentWaitFeaturesKHR & current, VkPhysicalDevicePresentWaitFeaturesKHR const& merge_in);
+void compare_VkPhysicalDevicePipelineExecutablePropertiesFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDevicePipelineExecutablePropertiesFeaturesKHR const& supported, VkPhysicalDevicePipelineExecutablePropertiesFeaturesKHR const& requested);
+void merge_VkPhysicalDevicePipelineExecutablePropertiesFeaturesKHR(VkPhysicalDevicePipelineExecutablePropertiesFeaturesKHR & current, VkPhysicalDevicePipelineExecutablePropertiesFeaturesKHR const& merge_in);
+void compare_VkPhysicalDevicePresentIdFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDevicePresentIdFeaturesKHR const& supported, VkPhysicalDevicePresentIdFeaturesKHR const& requested);
+void merge_VkPhysicalDevicePresentIdFeaturesKHR(VkPhysicalDevicePresentIdFeaturesKHR & current, VkPhysicalDevicePresentIdFeaturesKHR const& merge_in);
+void compare_VkPhysicalDeviceFragmentShaderBarycentricFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceFragmentShaderBarycentricFeaturesKHR const& supported, VkPhysicalDeviceFragmentShaderBarycentricFeaturesKHR const& requested);
+void merge_VkPhysicalDeviceFragmentShaderBarycentricFeaturesKHR(VkPhysicalDeviceFragmentShaderBarycentricFeaturesKHR & current, VkPhysicalDeviceFragmentShaderBarycentricFeaturesKHR const& merge_in);
+void compare_VkPhysicalDeviceShaderSubgroupUniformControlFlowFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceShaderSubgroupUniformControlFlowFeaturesKHR const& supported, VkPhysicalDeviceShaderSubgroupUniformControlFlowFeaturesKHR const& requested);
+void merge_VkPhysicalDeviceShaderSubgroupUniformControlFlowFeaturesKHR(VkPhysicalDeviceShaderSubgroupUniformControlFlowFeaturesKHR & current, VkPhysicalDeviceShaderSubgroupUniformControlFlowFeaturesKHR const& merge_in);
+void compare_VkPhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR const& supported, VkPhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR const& requested);
+void merge_VkPhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR(VkPhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR & current, VkPhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR const& merge_in);
+void compare_VkPhysicalDeviceRayTracingMaintenance1FeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceRayTracingMaintenance1FeaturesKHR const& supported, VkPhysicalDeviceRayTracingMaintenance1FeaturesKHR const& requested);
+void merge_VkPhysicalDeviceRayTracingMaintenance1FeaturesKHR(VkPhysicalDeviceRayTracingMaintenance1FeaturesKHR & current, VkPhysicalDeviceRayTracingMaintenance1FeaturesKHR const& merge_in);
+void compare_VkPhysicalDeviceShaderMaximalReconvergenceFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceShaderMaximalReconvergenceFeaturesKHR const& supported, VkPhysicalDeviceShaderMaximalReconvergenceFeaturesKHR const& requested);
+void merge_VkPhysicalDeviceShaderMaximalReconvergenceFeaturesKHR(VkPhysicalDeviceShaderMaximalReconvergenceFeaturesKHR & current, VkPhysicalDeviceShaderMaximalReconvergenceFeaturesKHR const& merge_in);
+void compare_VkPhysicalDevicePresentId2FeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDevicePresentId2FeaturesKHR const& supported, VkPhysicalDevicePresentId2FeaturesKHR const& requested);
+void merge_VkPhysicalDevicePresentId2FeaturesKHR(VkPhysicalDevicePresentId2FeaturesKHR & current, VkPhysicalDevicePresentId2FeaturesKHR const& merge_in);
+void compare_VkPhysicalDevicePresentWait2FeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDevicePresentWait2FeaturesKHR const& supported, VkPhysicalDevicePresentWait2FeaturesKHR const& requested);
+void merge_VkPhysicalDevicePresentWait2FeaturesKHR(VkPhysicalDevicePresentWait2FeaturesKHR & current, VkPhysicalDevicePresentWait2FeaturesKHR const& merge_in);
+void compare_VkPhysicalDeviceRayTracingPositionFetchFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceRayTracingPositionFetchFeaturesKHR const& supported, VkPhysicalDeviceRayTracingPositionFetchFeaturesKHR const& requested);
+void merge_VkPhysicalDeviceRayTracingPositionFetchFeaturesKHR(VkPhysicalDeviceRayTracingPositionFetchFeaturesKHR & current, VkPhysicalDeviceRayTracingPositionFetchFeaturesKHR const& merge_in);
+void compare_VkPhysicalDevicePipelineBinaryFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDevicePipelineBinaryFeaturesKHR const& supported, VkPhysicalDevicePipelineBinaryFeaturesKHR const& requested);
+void merge_VkPhysicalDevicePipelineBinaryFeaturesKHR(VkPhysicalDevicePipelineBinaryFeaturesKHR & current, VkPhysicalDevicePipelineBinaryFeaturesKHR const& merge_in);
+void compare_VkPhysicalDeviceSwapchainMaintenance1FeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceSwapchainMaintenance1FeaturesKHR const& supported, VkPhysicalDeviceSwapchainMaintenance1FeaturesKHR const& requested);
+void merge_VkPhysicalDeviceSwapchainMaintenance1FeaturesKHR(VkPhysicalDeviceSwapchainMaintenance1FeaturesKHR & current, VkPhysicalDeviceSwapchainMaintenance1FeaturesKHR const& merge_in);
+void compare_VkPhysicalDeviceCooperativeMatrixFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceCooperativeMatrixFeaturesKHR const& supported, VkPhysicalDeviceCooperativeMatrixFeaturesKHR const& requested);
+void merge_VkPhysicalDeviceCooperativeMatrixFeaturesKHR(VkPhysicalDeviceCooperativeMatrixFeaturesKHR & current, VkPhysicalDeviceCooperativeMatrixFeaturesKHR const& merge_in);
+void compare_VkPhysicalDeviceComputeShaderDerivativesFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceComputeShaderDerivativesFeaturesKHR const& supported, VkPhysicalDeviceComputeShaderDerivativesFeaturesKHR const& requested);
+void merge_VkPhysicalDeviceComputeShaderDerivativesFeaturesKHR(VkPhysicalDeviceComputeShaderDerivativesFeaturesKHR & current, VkPhysicalDeviceComputeShaderDerivativesFeaturesKHR const& merge_in);
+void compare_VkPhysicalDeviceVideoEncodeAV1FeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceVideoEncodeAV1FeaturesKHR const& supported, VkPhysicalDeviceVideoEncodeAV1FeaturesKHR const& requested);
+void merge_VkPhysicalDeviceVideoEncodeAV1FeaturesKHR(VkPhysicalDeviceVideoEncodeAV1FeaturesKHR & current, VkPhysicalDeviceVideoEncodeAV1FeaturesKHR const& merge_in);
+void compare_VkPhysicalDeviceVideoDecodeVP9FeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceVideoDecodeVP9FeaturesKHR const& supported, VkPhysicalDeviceVideoDecodeVP9FeaturesKHR const& requested);
+void merge_VkPhysicalDeviceVideoDecodeVP9FeaturesKHR(VkPhysicalDeviceVideoDecodeVP9FeaturesKHR & current, VkPhysicalDeviceVideoDecodeVP9FeaturesKHR const& merge_in);
+void compare_VkPhysicalDeviceVideoMaintenance1FeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceVideoMaintenance1FeaturesKHR const& supported, VkPhysicalDeviceVideoMaintenance1FeaturesKHR const& requested);
+void merge_VkPhysicalDeviceVideoMaintenance1FeaturesKHR(VkPhysicalDeviceVideoMaintenance1FeaturesKHR & current, VkPhysicalDeviceVideoMaintenance1FeaturesKHR const& merge_in);
+void compare_VkPhysicalDeviceUnifiedImageLayoutsFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceUnifiedImageLayoutsFeaturesKHR const& supported, VkPhysicalDeviceUnifiedImageLayoutsFeaturesKHR const& requested);
+void merge_VkPhysicalDeviceUnifiedImageLayoutsFeaturesKHR(VkPhysicalDeviceUnifiedImageLayoutsFeaturesKHR & current, VkPhysicalDeviceUnifiedImageLayoutsFeaturesKHR const& merge_in);
+void compare_VkPhysicalDeviceVideoEncodeIntraRefreshFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceVideoEncodeIntraRefreshFeaturesKHR const& supported, VkPhysicalDeviceVideoEncodeIntraRefreshFeaturesKHR const& requested);
+void merge_VkPhysicalDeviceVideoEncodeIntraRefreshFeaturesKHR(VkPhysicalDeviceVideoEncodeIntraRefreshFeaturesKHR & current, VkPhysicalDeviceVideoEncodeIntraRefreshFeaturesKHR const& merge_in);
+void compare_VkPhysicalDeviceVideoEncodeQuantizationMapFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceVideoEncodeQuantizationMapFeaturesKHR const& supported, VkPhysicalDeviceVideoEncodeQuantizationMapFeaturesKHR const& requested);
+void merge_VkPhysicalDeviceVideoEncodeQuantizationMapFeaturesKHR(VkPhysicalDeviceVideoEncodeQuantizationMapFeaturesKHR & current, VkPhysicalDeviceVideoEncodeQuantizationMapFeaturesKHR const& merge_in);
+void compare_VkPhysicalDeviceShaderRelaxedExtendedInstructionFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceShaderRelaxedExtendedInstructionFeaturesKHR const& supported, VkPhysicalDeviceShaderRelaxedExtendedInstructionFeaturesKHR const& requested);
+void merge_VkPhysicalDeviceShaderRelaxedExtendedInstructionFeaturesKHR(VkPhysicalDeviceShaderRelaxedExtendedInstructionFeaturesKHR & current, VkPhysicalDeviceShaderRelaxedExtendedInstructionFeaturesKHR const& merge_in);
+void compare_VkPhysicalDeviceMaintenance7FeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceMaintenance7FeaturesKHR const& supported, VkPhysicalDeviceMaintenance7FeaturesKHR const& requested);
+void merge_VkPhysicalDeviceMaintenance7FeaturesKHR(VkPhysicalDeviceMaintenance7FeaturesKHR & current, VkPhysicalDeviceMaintenance7FeaturesKHR const& merge_in);
+void compare_VkPhysicalDeviceMaintenance8FeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceMaintenance8FeaturesKHR const& supported, VkPhysicalDeviceMaintenance8FeaturesKHR const& requested);
+void merge_VkPhysicalDeviceMaintenance8FeaturesKHR(VkPhysicalDeviceMaintenance8FeaturesKHR & current, VkPhysicalDeviceMaintenance8FeaturesKHR const& merge_in);
+void compare_VkPhysicalDeviceMaintenance9FeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceMaintenance9FeaturesKHR const& supported, VkPhysicalDeviceMaintenance9FeaturesKHR const& requested);
+void merge_VkPhysicalDeviceMaintenance9FeaturesKHR(VkPhysicalDeviceMaintenance9FeaturesKHR & current, VkPhysicalDeviceMaintenance9FeaturesKHR const& merge_in);
+void compare_VkPhysicalDeviceVideoMaintenance2FeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceVideoMaintenance2FeaturesKHR const& supported, VkPhysicalDeviceVideoMaintenance2FeaturesKHR const& requested);
+void merge_VkPhysicalDeviceVideoMaintenance2FeaturesKHR(VkPhysicalDeviceVideoMaintenance2FeaturesKHR & current, VkPhysicalDeviceVideoMaintenance2FeaturesKHR const& merge_in);
+void compare_VkPhysicalDeviceDepthClampZeroOneFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceDepthClampZeroOneFeaturesKHR const& supported, VkPhysicalDeviceDepthClampZeroOneFeaturesKHR const& requested);
+void merge_VkPhysicalDeviceDepthClampZeroOneFeaturesKHR(VkPhysicalDeviceDepthClampZeroOneFeaturesKHR & current, VkPhysicalDeviceDepthClampZeroOneFeaturesKHR const& merge_in);
+void compare_VkPhysicalDeviceRobustness2FeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceRobustness2FeaturesKHR const& supported, VkPhysicalDeviceRobustness2FeaturesKHR const& requested);
+void merge_VkPhysicalDeviceRobustness2FeaturesKHR(VkPhysicalDeviceRobustness2FeaturesKHR & current, VkPhysicalDeviceRobustness2FeaturesKHR const& merge_in);
+void compare_VkPhysicalDevicePresentModeFifoLatestReadyFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDevicePresentModeFifoLatestReadyFeaturesKHR const& supported, VkPhysicalDevicePresentModeFifoLatestReadyFeaturesKHR const& requested);
+void merge_VkPhysicalDevicePresentModeFifoLatestReadyFeaturesKHR(VkPhysicalDevicePresentModeFifoLatestReadyFeaturesKHR & current, VkPhysicalDevicePresentModeFifoLatestReadyFeaturesKHR const& merge_in);
+void compare_VkPhysicalDeviceTransformFeedbackFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceTransformFeedbackFeaturesEXT const& supported, VkPhysicalDeviceTransformFeedbackFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceTransformFeedbackFeaturesEXT(VkPhysicalDeviceTransformFeedbackFeaturesEXT & current, VkPhysicalDeviceTransformFeedbackFeaturesEXT const& merge_in);
+void compare_VkPhysicalDeviceCornerSampledImageFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceCornerSampledImageFeaturesNV const& supported, VkPhysicalDeviceCornerSampledImageFeaturesNV const& requested);
+void merge_VkPhysicalDeviceCornerSampledImageFeaturesNV(VkPhysicalDeviceCornerSampledImageFeaturesNV & current, VkPhysicalDeviceCornerSampledImageFeaturesNV const& merge_in);
+void compare_VkPhysicalDeviceASTCDecodeFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceASTCDecodeFeaturesEXT const& supported, VkPhysicalDeviceASTCDecodeFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceASTCDecodeFeaturesEXT(VkPhysicalDeviceASTCDecodeFeaturesEXT & current, VkPhysicalDeviceASTCDecodeFeaturesEXT const& merge_in);
+void compare_VkPhysicalDeviceConditionalRenderingFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceConditionalRenderingFeaturesEXT const& supported, VkPhysicalDeviceConditionalRenderingFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceConditionalRenderingFeaturesEXT(VkPhysicalDeviceConditionalRenderingFeaturesEXT & current, VkPhysicalDeviceConditionalRenderingFeaturesEXT const& merge_in);
+void compare_VkPhysicalDeviceDepthClipEnableFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceDepthClipEnableFeaturesEXT const& supported, VkPhysicalDeviceDepthClipEnableFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceDepthClipEnableFeaturesEXT(VkPhysicalDeviceDepthClipEnableFeaturesEXT & current, VkPhysicalDeviceDepthClipEnableFeaturesEXT const& merge_in);
+void compare_VkPhysicalDeviceRelaxedLineRasterizationFeaturesIMG(std::vector<std::string> & error_list, VkPhysicalDeviceRelaxedLineRasterizationFeaturesIMG const& supported, VkPhysicalDeviceRelaxedLineRasterizationFeaturesIMG const& requested);
+void merge_VkPhysicalDeviceRelaxedLineRasterizationFeaturesIMG(VkPhysicalDeviceRelaxedLineRasterizationFeaturesIMG & current, VkPhysicalDeviceRelaxedLineRasterizationFeaturesIMG const& merge_in);
+#if defined(VK_ENABLE_BETA_EXTENSIONS)
+void compare_VkPhysicalDeviceShaderEnqueueFeaturesAMDX(std::vector<std::string> & error_list, VkPhysicalDeviceShaderEnqueueFeaturesAMDX const& supported, VkPhysicalDeviceShaderEnqueueFeaturesAMDX const& requested);
+void merge_VkPhysicalDeviceShaderEnqueueFeaturesAMDX(VkPhysicalDeviceShaderEnqueueFeaturesAMDX & current, VkPhysicalDeviceShaderEnqueueFeaturesAMDX const& merge_in);
+#endif // defined(VK_ENABLE_BETA_EXTENSIONS)
+void compare_VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT const& supported, VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT(VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT & current, VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT const& merge_in);
+void compare_VkPhysicalDeviceShaderSMBuiltinsFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceShaderSMBuiltinsFeaturesNV const& supported, VkPhysicalDeviceShaderSMBuiltinsFeaturesNV const& requested);
+void merge_VkPhysicalDeviceShaderSMBuiltinsFeaturesNV(VkPhysicalDeviceShaderSMBuiltinsFeaturesNV & current, VkPhysicalDeviceShaderSMBuiltinsFeaturesNV const& merge_in);
+void compare_VkPhysicalDeviceShadingRateImageFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceShadingRateImageFeaturesNV const& supported, VkPhysicalDeviceShadingRateImageFeaturesNV const& requested);
+void merge_VkPhysicalDeviceShadingRateImageFeaturesNV(VkPhysicalDeviceShadingRateImageFeaturesNV & current, VkPhysicalDeviceShadingRateImageFeaturesNV const& merge_in);
+void compare_VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV const& supported, VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV const& requested);
+void merge_VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV(VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV & current, VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV const& merge_in);
+void compare_VkPhysicalDeviceMeshShaderFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceMeshShaderFeaturesNV const& supported, VkPhysicalDeviceMeshShaderFeaturesNV const& requested);
+void merge_VkPhysicalDeviceMeshShaderFeaturesNV(VkPhysicalDeviceMeshShaderFeaturesNV & current, VkPhysicalDeviceMeshShaderFeaturesNV const& merge_in);
+void compare_VkPhysicalDeviceShaderImageFootprintFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceShaderImageFootprintFeaturesNV const& supported, VkPhysicalDeviceShaderImageFootprintFeaturesNV const& requested);
+void merge_VkPhysicalDeviceShaderImageFootprintFeaturesNV(VkPhysicalDeviceShaderImageFootprintFeaturesNV & current, VkPhysicalDeviceShaderImageFootprintFeaturesNV const& merge_in);
+void compare_VkPhysicalDeviceExclusiveScissorFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceExclusiveScissorFeaturesNV const& supported, VkPhysicalDeviceExclusiveScissorFeaturesNV const& requested);
+void merge_VkPhysicalDeviceExclusiveScissorFeaturesNV(VkPhysicalDeviceExclusiveScissorFeaturesNV & current, VkPhysicalDeviceExclusiveScissorFeaturesNV const& merge_in);
+void compare_VkPhysicalDeviceShaderIntegerFunctions2FeaturesINTEL(std::vector<std::string> & error_list, VkPhysicalDeviceShaderIntegerFunctions2FeaturesINTEL const& supported, VkPhysicalDeviceShaderIntegerFunctions2FeaturesINTEL const& requested);
+void merge_VkPhysicalDeviceShaderIntegerFunctions2FeaturesINTEL(VkPhysicalDeviceShaderIntegerFunctions2FeaturesINTEL & current, VkPhysicalDeviceShaderIntegerFunctions2FeaturesINTEL const& merge_in);
+void compare_VkPhysicalDeviceFragmentDensityMapFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceFragmentDensityMapFeaturesEXT const& supported, VkPhysicalDeviceFragmentDensityMapFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceFragmentDensityMapFeaturesEXT(VkPhysicalDeviceFragmentDensityMapFeaturesEXT & current, VkPhysicalDeviceFragmentDensityMapFeaturesEXT const& merge_in);
+void compare_VkPhysicalDeviceCoherentMemoryFeaturesAMD(std::vector<std::string> & error_list, VkPhysicalDeviceCoherentMemoryFeaturesAMD const& supported, VkPhysicalDeviceCoherentMemoryFeaturesAMD const& requested);
+void merge_VkPhysicalDeviceCoherentMemoryFeaturesAMD(VkPhysicalDeviceCoherentMemoryFeaturesAMD & current, VkPhysicalDeviceCoherentMemoryFeaturesAMD const& merge_in);
+void compare_VkPhysicalDeviceShaderImageAtomicInt64FeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceShaderImageAtomicInt64FeaturesEXT const& supported, VkPhysicalDeviceShaderImageAtomicInt64FeaturesEXT const& requested);
+void merge_VkPhysicalDeviceShaderImageAtomicInt64FeaturesEXT(VkPhysicalDeviceShaderImageAtomicInt64FeaturesEXT & current, VkPhysicalDeviceShaderImageAtomicInt64FeaturesEXT const& merge_in);
+void compare_VkPhysicalDeviceMemoryPriorityFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceMemoryPriorityFeaturesEXT const& supported, VkPhysicalDeviceMemoryPriorityFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceMemoryPriorityFeaturesEXT(VkPhysicalDeviceMemoryPriorityFeaturesEXT & current, VkPhysicalDeviceMemoryPriorityFeaturesEXT const& merge_in);
+void compare_VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV const& supported, VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV const& requested);
+void merge_VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV(VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV & current, VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV const& merge_in);
+void compare_VkPhysicalDeviceBufferDeviceAddressFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceBufferDeviceAddressFeaturesEXT const& supported, VkPhysicalDeviceBufferDeviceAddressFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceBufferDeviceAddressFeaturesEXT(VkPhysicalDeviceBufferDeviceAddressFeaturesEXT & current, VkPhysicalDeviceBufferDeviceAddressFeaturesEXT const& merge_in);
+void compare_VkPhysicalDeviceCooperativeMatrixFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceCooperativeMatrixFeaturesNV const& supported, VkPhysicalDeviceCooperativeMatrixFeaturesNV const& requested);
+void merge_VkPhysicalDeviceCooperativeMatrixFeaturesNV(VkPhysicalDeviceCooperativeMatrixFeaturesNV & current, VkPhysicalDeviceCooperativeMatrixFeaturesNV const& merge_in);
+void compare_VkPhysicalDeviceCoverageReductionModeFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceCoverageReductionModeFeaturesNV const& supported, VkPhysicalDeviceCoverageReductionModeFeaturesNV const& requested);
+void merge_VkPhysicalDeviceCoverageReductionModeFeaturesNV(VkPhysicalDeviceCoverageReductionModeFeaturesNV & current, VkPhysicalDeviceCoverageReductionModeFeaturesNV const& merge_in);
+void compare_VkPhysicalDeviceFragmentShaderInterlockFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceFragmentShaderInterlockFeaturesEXT const& supported, VkPhysicalDeviceFragmentShaderInterlockFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceFragmentShaderInterlockFeaturesEXT(VkPhysicalDeviceFragmentShaderInterlockFeaturesEXT & current, VkPhysicalDeviceFragmentShaderInterlockFeaturesEXT const& merge_in);
+void compare_VkPhysicalDeviceYcbcrImageArraysFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceYcbcrImageArraysFeaturesEXT const& supported, VkPhysicalDeviceYcbcrImageArraysFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceYcbcrImageArraysFeaturesEXT(VkPhysicalDeviceYcbcrImageArraysFeaturesEXT & current, VkPhysicalDeviceYcbcrImageArraysFeaturesEXT const& merge_in);
+void compare_VkPhysicalDeviceProvokingVertexFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceProvokingVertexFeaturesEXT const& supported, VkPhysicalDeviceProvokingVertexFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceProvokingVertexFeaturesEXT(VkPhysicalDeviceProvokingVertexFeaturesEXT & current, VkPhysicalDeviceProvokingVertexFeaturesEXT const& merge_in);
+void compare_VkPhysicalDeviceShaderAtomicFloatFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceShaderAtomicFloatFeaturesEXT const& supported, VkPhysicalDeviceShaderAtomicFloatFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceShaderAtomicFloatFeaturesEXT(VkPhysicalDeviceShaderAtomicFloatFeaturesEXT & current, VkPhysicalDeviceShaderAtomicFloatFeaturesEXT const& merge_in);
+void compare_VkPhysicalDeviceExtendedDynamicStateFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceExtendedDynamicStateFeaturesEXT const& supported, VkPhysicalDeviceExtendedDynamicStateFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceExtendedDynamicStateFeaturesEXT(VkPhysicalDeviceExtendedDynamicStateFeaturesEXT & current, VkPhysicalDeviceExtendedDynamicStateFeaturesEXT const& merge_in);
+void compare_VkPhysicalDeviceMapMemoryPlacedFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceMapMemoryPlacedFeaturesEXT const& supported, VkPhysicalDeviceMapMemoryPlacedFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceMapMemoryPlacedFeaturesEXT(VkPhysicalDeviceMapMemoryPlacedFeaturesEXT & current, VkPhysicalDeviceMapMemoryPlacedFeaturesEXT const& merge_in);
+void compare_VkPhysicalDeviceShaderAtomicFloat2FeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceShaderAtomicFloat2FeaturesEXT const& supported, VkPhysicalDeviceShaderAtomicFloat2FeaturesEXT const& requested);
+void merge_VkPhysicalDeviceShaderAtomicFloat2FeaturesEXT(VkPhysicalDeviceShaderAtomicFloat2FeaturesEXT & current, VkPhysicalDeviceShaderAtomicFloat2FeaturesEXT const& merge_in);
+void compare_VkPhysicalDeviceDeviceGeneratedCommandsFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceDeviceGeneratedCommandsFeaturesNV const& supported, VkPhysicalDeviceDeviceGeneratedCommandsFeaturesNV const& requested);
+void merge_VkPhysicalDeviceDeviceGeneratedCommandsFeaturesNV(VkPhysicalDeviceDeviceGeneratedCommandsFeaturesNV & current, VkPhysicalDeviceDeviceGeneratedCommandsFeaturesNV const& merge_in);
+void compare_VkPhysicalDeviceInheritedViewportScissorFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceInheritedViewportScissorFeaturesNV const& supported, VkPhysicalDeviceInheritedViewportScissorFeaturesNV const& requested);
+void merge_VkPhysicalDeviceInheritedViewportScissorFeaturesNV(VkPhysicalDeviceInheritedViewportScissorFeaturesNV & current, VkPhysicalDeviceInheritedViewportScissorFeaturesNV const& merge_in);
+void compare_VkPhysicalDeviceTexelBufferAlignmentFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceTexelBufferAlignmentFeaturesEXT const& supported, VkPhysicalDeviceTexelBufferAlignmentFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceTexelBufferAlignmentFeaturesEXT(VkPhysicalDeviceTexelBufferAlignmentFeaturesEXT & current, VkPhysicalDeviceTexelBufferAlignmentFeaturesEXT const& merge_in);
+void compare_VkPhysicalDeviceDepthBiasControlFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceDepthBiasControlFeaturesEXT const& supported, VkPhysicalDeviceDepthBiasControlFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceDepthBiasControlFeaturesEXT(VkPhysicalDeviceDepthBiasControlFeaturesEXT & current, VkPhysicalDeviceDepthBiasControlFeaturesEXT const& merge_in);
+void compare_VkPhysicalDeviceDeviceMemoryReportFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceDeviceMemoryReportFeaturesEXT const& supported, VkPhysicalDeviceDeviceMemoryReportFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceDeviceMemoryReportFeaturesEXT(VkPhysicalDeviceDeviceMemoryReportFeaturesEXT & current, VkPhysicalDeviceDeviceMemoryReportFeaturesEXT const& merge_in);
+void compare_VkPhysicalDeviceCustomBorderColorFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceCustomBorderColorFeaturesEXT const& supported, VkPhysicalDeviceCustomBorderColorFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceCustomBorderColorFeaturesEXT(VkPhysicalDeviceCustomBorderColorFeaturesEXT & current, VkPhysicalDeviceCustomBorderColorFeaturesEXT const& merge_in);
+void compare_VkPhysicalDevicePresentBarrierFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDevicePresentBarrierFeaturesNV const& supported, VkPhysicalDevicePresentBarrierFeaturesNV const& requested);
+void merge_VkPhysicalDevicePresentBarrierFeaturesNV(VkPhysicalDevicePresentBarrierFeaturesNV & current, VkPhysicalDevicePresentBarrierFeaturesNV const& merge_in);
+void compare_VkPhysicalDeviceDiagnosticsConfigFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceDiagnosticsConfigFeaturesNV const& supported, VkPhysicalDeviceDiagnosticsConfigFeaturesNV const& requested);
+void merge_VkPhysicalDeviceDiagnosticsConfigFeaturesNV(VkPhysicalDeviceDiagnosticsConfigFeaturesNV & current, VkPhysicalDeviceDiagnosticsConfigFeaturesNV const& merge_in);
+#if defined(VK_ENABLE_BETA_EXTENSIONS)
+void compare_VkPhysicalDeviceCudaKernelLaunchFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceCudaKernelLaunchFeaturesNV const& supported, VkPhysicalDeviceCudaKernelLaunchFeaturesNV const& requested);
+void merge_VkPhysicalDeviceCudaKernelLaunchFeaturesNV(VkPhysicalDeviceCudaKernelLaunchFeaturesNV & current, VkPhysicalDeviceCudaKernelLaunchFeaturesNV const& merge_in);
+#endif // defined(VK_ENABLE_BETA_EXTENSIONS)
+void compare_VkPhysicalDeviceTileShadingFeaturesQCOM(std::vector<std::string> & error_list, VkPhysicalDeviceTileShadingFeaturesQCOM const& supported, VkPhysicalDeviceTileShadingFeaturesQCOM const& requested);
+void merge_VkPhysicalDeviceTileShadingFeaturesQCOM(VkPhysicalDeviceTileShadingFeaturesQCOM & current, VkPhysicalDeviceTileShadingFeaturesQCOM const& merge_in);
+void compare_VkPhysicalDeviceDescriptorBufferFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceDescriptorBufferFeaturesEXT const& supported, VkPhysicalDeviceDescriptorBufferFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceDescriptorBufferFeaturesEXT(VkPhysicalDeviceDescriptorBufferFeaturesEXT & current, VkPhysicalDeviceDescriptorBufferFeaturesEXT const& merge_in);
+void compare_VkPhysicalDeviceGraphicsPipelineLibraryFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceGraphicsPipelineLibraryFeaturesEXT const& supported, VkPhysicalDeviceGraphicsPipelineLibraryFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceGraphicsPipelineLibraryFeaturesEXT(VkPhysicalDeviceGraphicsPipelineLibraryFeaturesEXT & current, VkPhysicalDeviceGraphicsPipelineLibraryFeaturesEXT const& merge_in);
+void compare_VkPhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD(std::vector<std::string> & error_list, VkPhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD const& supported, VkPhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD const& requested);
+void merge_VkPhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD(VkPhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD & current, VkPhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD const& merge_in);
+void compare_VkPhysicalDeviceFragmentShadingRateEnumsFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceFragmentShadingRateEnumsFeaturesNV const& supported, VkPhysicalDeviceFragmentShadingRateEnumsFeaturesNV const& requested);
+void merge_VkPhysicalDeviceFragmentShadingRateEnumsFeaturesNV(VkPhysicalDeviceFragmentShadingRateEnumsFeaturesNV & current, VkPhysicalDeviceFragmentShadingRateEnumsFeaturesNV const& merge_in);
+void compare_VkPhysicalDeviceRayTracingMotionBlurFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceRayTracingMotionBlurFeaturesNV const& supported, VkPhysicalDeviceRayTracingMotionBlurFeaturesNV const& requested);
+void merge_VkPhysicalDeviceRayTracingMotionBlurFeaturesNV(VkPhysicalDeviceRayTracingMotionBlurFeaturesNV & current, VkPhysicalDeviceRayTracingMotionBlurFeaturesNV const& merge_in);
+void compare_VkPhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT const& supported, VkPhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT(VkPhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT & current, VkPhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT const& merge_in);
+void compare_VkPhysicalDeviceFragmentDensityMap2FeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceFragmentDensityMap2FeaturesEXT const& supported, VkPhysicalDeviceFragmentDensityMap2FeaturesEXT const& requested);
+void merge_VkPhysicalDeviceFragmentDensityMap2FeaturesEXT(VkPhysicalDeviceFragmentDensityMap2FeaturesEXT & current, VkPhysicalDeviceFragmentDensityMap2FeaturesEXT const& merge_in);
+void compare_VkPhysicalDeviceImageCompressionControlFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceImageCompressionControlFeaturesEXT const& supported, VkPhysicalDeviceImageCompressionControlFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceImageCompressionControlFeaturesEXT(VkPhysicalDeviceImageCompressionControlFeaturesEXT & current, VkPhysicalDeviceImageCompressionControlFeaturesEXT const& merge_in);
+void compare_VkPhysicalDeviceAttachmentFeedbackLoopLayoutFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceAttachmentFeedbackLoopLayoutFeaturesEXT const& supported, VkPhysicalDeviceAttachmentFeedbackLoopLayoutFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceAttachmentFeedbackLoopLayoutFeaturesEXT(VkPhysicalDeviceAttachmentFeedbackLoopLayoutFeaturesEXT & current, VkPhysicalDeviceAttachmentFeedbackLoopLayoutFeaturesEXT const& merge_in);
+void compare_VkPhysicalDevice4444FormatsFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDevice4444FormatsFeaturesEXT const& supported, VkPhysicalDevice4444FormatsFeaturesEXT const& requested);
+void merge_VkPhysicalDevice4444FormatsFeaturesEXT(VkPhysicalDevice4444FormatsFeaturesEXT & current, VkPhysicalDevice4444FormatsFeaturesEXT const& merge_in);
+void compare_VkPhysicalDeviceFaultFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceFaultFeaturesEXT const& supported, VkPhysicalDeviceFaultFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceFaultFeaturesEXT(VkPhysicalDeviceFaultFeaturesEXT & current, VkPhysicalDeviceFaultFeaturesEXT const& merge_in);
+void compare_VkPhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT const& supported, VkPhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT(VkPhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT & current, VkPhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT const& merge_in);
+void compare_VkPhysicalDeviceRGBA10X6FormatsFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceRGBA10X6FormatsFeaturesEXT const& supported, VkPhysicalDeviceRGBA10X6FormatsFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceRGBA10X6FormatsFeaturesEXT(VkPhysicalDeviceRGBA10X6FormatsFeaturesEXT & current, VkPhysicalDeviceRGBA10X6FormatsFeaturesEXT const& merge_in);
+void compare_VkPhysicalDeviceMutableDescriptorTypeFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceMutableDescriptorTypeFeaturesEXT const& supported, VkPhysicalDeviceMutableDescriptorTypeFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceMutableDescriptorTypeFeaturesEXT(VkPhysicalDeviceMutableDescriptorTypeFeaturesEXT & current, VkPhysicalDeviceMutableDescriptorTypeFeaturesEXT const& merge_in);
+void compare_VkPhysicalDeviceVertexInputDynamicStateFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceVertexInputDynamicStateFeaturesEXT const& supported, VkPhysicalDeviceVertexInputDynamicStateFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceVertexInputDynamicStateFeaturesEXT(VkPhysicalDeviceVertexInputDynamicStateFeaturesEXT & current, VkPhysicalDeviceVertexInputDynamicStateFeaturesEXT const& merge_in);
+void compare_VkPhysicalDeviceAddressBindingReportFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceAddressBindingReportFeaturesEXT const& supported, VkPhysicalDeviceAddressBindingReportFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceAddressBindingReportFeaturesEXT(VkPhysicalDeviceAddressBindingReportFeaturesEXT & current, VkPhysicalDeviceAddressBindingReportFeaturesEXT const& merge_in);
+void compare_VkPhysicalDeviceDepthClipControlFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceDepthClipControlFeaturesEXT const& supported, VkPhysicalDeviceDepthClipControlFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceDepthClipControlFeaturesEXT(VkPhysicalDeviceDepthClipControlFeaturesEXT & current, VkPhysicalDeviceDepthClipControlFeaturesEXT const& merge_in);
+void compare_VkPhysicalDevicePrimitiveTopologyListRestartFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDevicePrimitiveTopologyListRestartFeaturesEXT const& supported, VkPhysicalDevicePrimitiveTopologyListRestartFeaturesEXT const& requested);
+void merge_VkPhysicalDevicePrimitiveTopologyListRestartFeaturesEXT(VkPhysicalDevicePrimitiveTopologyListRestartFeaturesEXT & current, VkPhysicalDevicePrimitiveTopologyListRestartFeaturesEXT const& merge_in);
+void compare_VkPhysicalDeviceSubpassShadingFeaturesHUAWEI(std::vector<std::string> & error_list, VkPhysicalDeviceSubpassShadingFeaturesHUAWEI const& supported, VkPhysicalDeviceSubpassShadingFeaturesHUAWEI const& requested);
+void merge_VkPhysicalDeviceSubpassShadingFeaturesHUAWEI(VkPhysicalDeviceSubpassShadingFeaturesHUAWEI & current, VkPhysicalDeviceSubpassShadingFeaturesHUAWEI const& merge_in);
+void compare_VkPhysicalDeviceInvocationMaskFeaturesHUAWEI(std::vector<std::string> & error_list, VkPhysicalDeviceInvocationMaskFeaturesHUAWEI const& supported, VkPhysicalDeviceInvocationMaskFeaturesHUAWEI const& requested);
+void merge_VkPhysicalDeviceInvocationMaskFeaturesHUAWEI(VkPhysicalDeviceInvocationMaskFeaturesHUAWEI & current, VkPhysicalDeviceInvocationMaskFeaturesHUAWEI const& merge_in);
+void compare_VkPhysicalDeviceExternalMemoryRDMAFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceExternalMemoryRDMAFeaturesNV const& supported, VkPhysicalDeviceExternalMemoryRDMAFeaturesNV const& requested);
+void merge_VkPhysicalDeviceExternalMemoryRDMAFeaturesNV(VkPhysicalDeviceExternalMemoryRDMAFeaturesNV & current, VkPhysicalDeviceExternalMemoryRDMAFeaturesNV const& merge_in);
+void compare_VkPhysicalDevicePipelinePropertiesFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDevicePipelinePropertiesFeaturesEXT const& supported, VkPhysicalDevicePipelinePropertiesFeaturesEXT const& requested);
+void merge_VkPhysicalDevicePipelinePropertiesFeaturesEXT(VkPhysicalDevicePipelinePropertiesFeaturesEXT & current, VkPhysicalDevicePipelinePropertiesFeaturesEXT const& merge_in);
+void compare_VkPhysicalDeviceFrameBoundaryFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceFrameBoundaryFeaturesEXT const& supported, VkPhysicalDeviceFrameBoundaryFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceFrameBoundaryFeaturesEXT(VkPhysicalDeviceFrameBoundaryFeaturesEXT & current, VkPhysicalDeviceFrameBoundaryFeaturesEXT const& merge_in);
+void compare_VkPhysicalDeviceMultisampledRenderToSingleSampledFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceMultisampledRenderToSingleSampledFeaturesEXT const& supported, VkPhysicalDeviceMultisampledRenderToSingleSampledFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceMultisampledRenderToSingleSampledFeaturesEXT(VkPhysicalDeviceMultisampledRenderToSingleSampledFeaturesEXT & current, VkPhysicalDeviceMultisampledRenderToSingleSampledFeaturesEXT const& merge_in);
+void compare_VkPhysicalDeviceExtendedDynamicState2FeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceExtendedDynamicState2FeaturesEXT const& supported, VkPhysicalDeviceExtendedDynamicState2FeaturesEXT const& requested);
+void merge_VkPhysicalDeviceExtendedDynamicState2FeaturesEXT(VkPhysicalDeviceExtendedDynamicState2FeaturesEXT & current, VkPhysicalDeviceExtendedDynamicState2FeaturesEXT const& merge_in);
+void compare_VkPhysicalDeviceColorWriteEnableFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceColorWriteEnableFeaturesEXT const& supported, VkPhysicalDeviceColorWriteEnableFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceColorWriteEnableFeaturesEXT(VkPhysicalDeviceColorWriteEnableFeaturesEXT & current, VkPhysicalDeviceColorWriteEnableFeaturesEXT const& merge_in);
+void compare_VkPhysicalDevicePrimitivesGeneratedQueryFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDevicePrimitivesGeneratedQueryFeaturesEXT const& supported, VkPhysicalDevicePrimitivesGeneratedQueryFeaturesEXT const& requested);
+void merge_VkPhysicalDevicePrimitivesGeneratedQueryFeaturesEXT(VkPhysicalDevicePrimitivesGeneratedQueryFeaturesEXT & current, VkPhysicalDevicePrimitivesGeneratedQueryFeaturesEXT const& merge_in);
+void compare_VkPhysicalDeviceImageViewMinLodFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceImageViewMinLodFeaturesEXT const& supported, VkPhysicalDeviceImageViewMinLodFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceImageViewMinLodFeaturesEXT(VkPhysicalDeviceImageViewMinLodFeaturesEXT & current, VkPhysicalDeviceImageViewMinLodFeaturesEXT const& merge_in);
+void compare_VkPhysicalDeviceMultiDrawFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceMultiDrawFeaturesEXT const& supported, VkPhysicalDeviceMultiDrawFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceMultiDrawFeaturesEXT(VkPhysicalDeviceMultiDrawFeaturesEXT & current, VkPhysicalDeviceMultiDrawFeaturesEXT const& merge_in);
+void compare_VkPhysicalDeviceImage2DViewOf3DFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceImage2DViewOf3DFeaturesEXT const& supported, VkPhysicalDeviceImage2DViewOf3DFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceImage2DViewOf3DFeaturesEXT(VkPhysicalDeviceImage2DViewOf3DFeaturesEXT & current, VkPhysicalDeviceImage2DViewOf3DFeaturesEXT const& merge_in);
+void compare_VkPhysicalDeviceShaderTileImageFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceShaderTileImageFeaturesEXT const& supported, VkPhysicalDeviceShaderTileImageFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceShaderTileImageFeaturesEXT(VkPhysicalDeviceShaderTileImageFeaturesEXT & current, VkPhysicalDeviceShaderTileImageFeaturesEXT const& merge_in);
+void compare_VkPhysicalDeviceOpacityMicromapFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceOpacityMicromapFeaturesEXT const& supported, VkPhysicalDeviceOpacityMicromapFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceOpacityMicromapFeaturesEXT(VkPhysicalDeviceOpacityMicromapFeaturesEXT & current, VkPhysicalDeviceOpacityMicromapFeaturesEXT const& merge_in);
+#if defined(VK_ENABLE_BETA_EXTENSIONS)
+void compare_VkPhysicalDeviceDisplacementMicromapFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceDisplacementMicromapFeaturesNV const& supported, VkPhysicalDeviceDisplacementMicromapFeaturesNV const& requested);
+void merge_VkPhysicalDeviceDisplacementMicromapFeaturesNV(VkPhysicalDeviceDisplacementMicromapFeaturesNV & current, VkPhysicalDeviceDisplacementMicromapFeaturesNV const& merge_in);
+#endif // defined(VK_ENABLE_BETA_EXTENSIONS)
+void compare_VkPhysicalDeviceClusterCullingShaderFeaturesHUAWEI(std::vector<std::string> & error_list, VkPhysicalDeviceClusterCullingShaderFeaturesHUAWEI const& supported, VkPhysicalDeviceClusterCullingShaderFeaturesHUAWEI const& requested);
+void merge_VkPhysicalDeviceClusterCullingShaderFeaturesHUAWEI(VkPhysicalDeviceClusterCullingShaderFeaturesHUAWEI & current, VkPhysicalDeviceClusterCullingShaderFeaturesHUAWEI const& merge_in);
+void compare_VkPhysicalDeviceBorderColorSwizzleFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceBorderColorSwizzleFeaturesEXT const& supported, VkPhysicalDeviceBorderColorSwizzleFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceBorderColorSwizzleFeaturesEXT(VkPhysicalDeviceBorderColorSwizzleFeaturesEXT & current, VkPhysicalDeviceBorderColorSwizzleFeaturesEXT const& merge_in);
+void compare_VkPhysicalDevicePageableDeviceLocalMemoryFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDevicePageableDeviceLocalMemoryFeaturesEXT const& supported, VkPhysicalDevicePageableDeviceLocalMemoryFeaturesEXT const& requested);
+void merge_VkPhysicalDevicePageableDeviceLocalMemoryFeaturesEXT(VkPhysicalDevicePageableDeviceLocalMemoryFeaturesEXT & current, VkPhysicalDevicePageableDeviceLocalMemoryFeaturesEXT const& merge_in);
+void compare_VkPhysicalDeviceSchedulingControlsFeaturesARM(std::vector<std::string> & error_list, VkPhysicalDeviceSchedulingControlsFeaturesARM const& supported, VkPhysicalDeviceSchedulingControlsFeaturesARM const& requested);
+void merge_VkPhysicalDeviceSchedulingControlsFeaturesARM(VkPhysicalDeviceSchedulingControlsFeaturesARM & current, VkPhysicalDeviceSchedulingControlsFeaturesARM const& merge_in);
+void compare_VkPhysicalDeviceImageSlicedViewOf3DFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceImageSlicedViewOf3DFeaturesEXT const& supported, VkPhysicalDeviceImageSlicedViewOf3DFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceImageSlicedViewOf3DFeaturesEXT(VkPhysicalDeviceImageSlicedViewOf3DFeaturesEXT & current, VkPhysicalDeviceImageSlicedViewOf3DFeaturesEXT const& merge_in);
+void compare_VkPhysicalDeviceDescriptorSetHostMappingFeaturesVALVE(std::vector<std::string> & error_list, VkPhysicalDeviceDescriptorSetHostMappingFeaturesVALVE const& supported, VkPhysicalDeviceDescriptorSetHostMappingFeaturesVALVE const& requested);
+void merge_VkPhysicalDeviceDescriptorSetHostMappingFeaturesVALVE(VkPhysicalDeviceDescriptorSetHostMappingFeaturesVALVE & current, VkPhysicalDeviceDescriptorSetHostMappingFeaturesVALVE const& merge_in);
+void compare_VkPhysicalDeviceNonSeamlessCubeMapFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceNonSeamlessCubeMapFeaturesEXT const& supported, VkPhysicalDeviceNonSeamlessCubeMapFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceNonSeamlessCubeMapFeaturesEXT(VkPhysicalDeviceNonSeamlessCubeMapFeaturesEXT & current, VkPhysicalDeviceNonSeamlessCubeMapFeaturesEXT const& merge_in);
+void compare_VkPhysicalDeviceRenderPassStripedFeaturesARM(std::vector<std::string> & error_list, VkPhysicalDeviceRenderPassStripedFeaturesARM const& supported, VkPhysicalDeviceRenderPassStripedFeaturesARM const& requested);
+void merge_VkPhysicalDeviceRenderPassStripedFeaturesARM(VkPhysicalDeviceRenderPassStripedFeaturesARM & current, VkPhysicalDeviceRenderPassStripedFeaturesARM const& merge_in);
+void compare_VkPhysicalDeviceFragmentDensityMapOffsetFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceFragmentDensityMapOffsetFeaturesEXT const& supported, VkPhysicalDeviceFragmentDensityMapOffsetFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceFragmentDensityMapOffsetFeaturesEXT(VkPhysicalDeviceFragmentDensityMapOffsetFeaturesEXT & current, VkPhysicalDeviceFragmentDensityMapOffsetFeaturesEXT const& merge_in);
+void compare_VkPhysicalDeviceCopyMemoryIndirectFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceCopyMemoryIndirectFeaturesNV const& supported, VkPhysicalDeviceCopyMemoryIndirectFeaturesNV const& requested);
+void merge_VkPhysicalDeviceCopyMemoryIndirectFeaturesNV(VkPhysicalDeviceCopyMemoryIndirectFeaturesNV & current, VkPhysicalDeviceCopyMemoryIndirectFeaturesNV const& merge_in);
+void compare_VkPhysicalDeviceMemoryDecompressionFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceMemoryDecompressionFeaturesNV const& supported, VkPhysicalDeviceMemoryDecompressionFeaturesNV const& requested);
+void merge_VkPhysicalDeviceMemoryDecompressionFeaturesNV(VkPhysicalDeviceMemoryDecompressionFeaturesNV & current, VkPhysicalDeviceMemoryDecompressionFeaturesNV const& merge_in);
+void compare_VkPhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV const& supported, VkPhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV const& requested);
+void merge_VkPhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV(VkPhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV & current, VkPhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV const& merge_in);
+void compare_VkPhysicalDeviceRayTracingLinearSweptSpheresFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceRayTracingLinearSweptSpheresFeaturesNV const& supported, VkPhysicalDeviceRayTracingLinearSweptSpheresFeaturesNV const& requested);
+void merge_VkPhysicalDeviceRayTracingLinearSweptSpheresFeaturesNV(VkPhysicalDeviceRayTracingLinearSweptSpheresFeaturesNV & current, VkPhysicalDeviceRayTracingLinearSweptSpheresFeaturesNV const& merge_in);
+void compare_VkPhysicalDeviceLinearColorAttachmentFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceLinearColorAttachmentFeaturesNV const& supported, VkPhysicalDeviceLinearColorAttachmentFeaturesNV const& requested);
+void merge_VkPhysicalDeviceLinearColorAttachmentFeaturesNV(VkPhysicalDeviceLinearColorAttachmentFeaturesNV & current, VkPhysicalDeviceLinearColorAttachmentFeaturesNV const& merge_in);
+void compare_VkPhysicalDeviceImageCompressionControlSwapchainFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceImageCompressionControlSwapchainFeaturesEXT const& supported, VkPhysicalDeviceImageCompressionControlSwapchainFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceImageCompressionControlSwapchainFeaturesEXT(VkPhysicalDeviceImageCompressionControlSwapchainFeaturesEXT & current, VkPhysicalDeviceImageCompressionControlSwapchainFeaturesEXT const& merge_in);
+void compare_VkPhysicalDeviceImageProcessingFeaturesQCOM(std::vector<std::string> & error_list, VkPhysicalDeviceImageProcessingFeaturesQCOM const& supported, VkPhysicalDeviceImageProcessingFeaturesQCOM const& requested);
+void merge_VkPhysicalDeviceImageProcessingFeaturesQCOM(VkPhysicalDeviceImageProcessingFeaturesQCOM & current, VkPhysicalDeviceImageProcessingFeaturesQCOM const& merge_in);
+void compare_VkPhysicalDeviceNestedCommandBufferFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceNestedCommandBufferFeaturesEXT const& supported, VkPhysicalDeviceNestedCommandBufferFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceNestedCommandBufferFeaturesEXT(VkPhysicalDeviceNestedCommandBufferFeaturesEXT & current, VkPhysicalDeviceNestedCommandBufferFeaturesEXT const& merge_in);
+void compare_VkPhysicalDeviceExtendedDynamicState3FeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceExtendedDynamicState3FeaturesEXT const& supported, VkPhysicalDeviceExtendedDynamicState3FeaturesEXT const& requested);
+void merge_VkPhysicalDeviceExtendedDynamicState3FeaturesEXT(VkPhysicalDeviceExtendedDynamicState3FeaturesEXT & current, VkPhysicalDeviceExtendedDynamicState3FeaturesEXT const& merge_in);
+void compare_VkPhysicalDeviceSubpassMergeFeedbackFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceSubpassMergeFeedbackFeaturesEXT const& supported, VkPhysicalDeviceSubpassMergeFeedbackFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceSubpassMergeFeedbackFeaturesEXT(VkPhysicalDeviceSubpassMergeFeedbackFeaturesEXT & current, VkPhysicalDeviceSubpassMergeFeedbackFeaturesEXT const& merge_in);
+void compare_VkPhysicalDeviceTensorFeaturesARM(std::vector<std::string> & error_list, VkPhysicalDeviceTensorFeaturesARM const& supported, VkPhysicalDeviceTensorFeaturesARM const& requested);
+void merge_VkPhysicalDeviceTensorFeaturesARM(VkPhysicalDeviceTensorFeaturesARM & current, VkPhysicalDeviceTensorFeaturesARM const& merge_in);
+void compare_VkPhysicalDeviceDescriptorBufferTensorFeaturesARM(std::vector<std::string> & error_list, VkPhysicalDeviceDescriptorBufferTensorFeaturesARM const& supported, VkPhysicalDeviceDescriptorBufferTensorFeaturesARM const& requested);
+void merge_VkPhysicalDeviceDescriptorBufferTensorFeaturesARM(VkPhysicalDeviceDescriptorBufferTensorFeaturesARM & current, VkPhysicalDeviceDescriptorBufferTensorFeaturesARM const& merge_in);
+void compare_VkPhysicalDeviceShaderModuleIdentifierFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceShaderModuleIdentifierFeaturesEXT const& supported, VkPhysicalDeviceShaderModuleIdentifierFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceShaderModuleIdentifierFeaturesEXT(VkPhysicalDeviceShaderModuleIdentifierFeaturesEXT & current, VkPhysicalDeviceShaderModuleIdentifierFeaturesEXT const& merge_in);
+void compare_VkPhysicalDeviceOpticalFlowFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceOpticalFlowFeaturesNV const& supported, VkPhysicalDeviceOpticalFlowFeaturesNV const& requested);
+void merge_VkPhysicalDeviceOpticalFlowFeaturesNV(VkPhysicalDeviceOpticalFlowFeaturesNV & current, VkPhysicalDeviceOpticalFlowFeaturesNV const& merge_in);
+void compare_VkPhysicalDeviceLegacyDitheringFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceLegacyDitheringFeaturesEXT const& supported, VkPhysicalDeviceLegacyDitheringFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceLegacyDitheringFeaturesEXT(VkPhysicalDeviceLegacyDitheringFeaturesEXT & current, VkPhysicalDeviceLegacyDitheringFeaturesEXT const& merge_in);
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+void compare_VkPhysicalDeviceExternalFormatResolveFeaturesANDROID(std::vector<std::string> & error_list, VkPhysicalDeviceExternalFormatResolveFeaturesANDROID const& supported, VkPhysicalDeviceExternalFormatResolveFeaturesANDROID const& requested);
+void merge_VkPhysicalDeviceExternalFormatResolveFeaturesANDROID(VkPhysicalDeviceExternalFormatResolveFeaturesANDROID & current, VkPhysicalDeviceExternalFormatResolveFeaturesANDROID const& merge_in);
+#endif // defined(VK_USE_PLATFORM_ANDROID_KHR)
+void compare_VkPhysicalDeviceAntiLagFeaturesAMD(std::vector<std::string> & error_list, VkPhysicalDeviceAntiLagFeaturesAMD const& supported, VkPhysicalDeviceAntiLagFeaturesAMD const& requested);
+void merge_VkPhysicalDeviceAntiLagFeaturesAMD(VkPhysicalDeviceAntiLagFeaturesAMD & current, VkPhysicalDeviceAntiLagFeaturesAMD const& merge_in);
+void compare_VkPhysicalDeviceShaderObjectFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceShaderObjectFeaturesEXT const& supported, VkPhysicalDeviceShaderObjectFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceShaderObjectFeaturesEXT(VkPhysicalDeviceShaderObjectFeaturesEXT & current, VkPhysicalDeviceShaderObjectFeaturesEXT const& merge_in);
+void compare_VkPhysicalDeviceTilePropertiesFeaturesQCOM(std::vector<std::string> & error_list, VkPhysicalDeviceTilePropertiesFeaturesQCOM const& supported, VkPhysicalDeviceTilePropertiesFeaturesQCOM const& requested);
+void merge_VkPhysicalDeviceTilePropertiesFeaturesQCOM(VkPhysicalDeviceTilePropertiesFeaturesQCOM & current, VkPhysicalDeviceTilePropertiesFeaturesQCOM const& merge_in);
+void compare_VkPhysicalDeviceAmigoProfilingFeaturesSEC(std::vector<std::string> & error_list, VkPhysicalDeviceAmigoProfilingFeaturesSEC const& supported, VkPhysicalDeviceAmigoProfilingFeaturesSEC const& requested);
+void merge_VkPhysicalDeviceAmigoProfilingFeaturesSEC(VkPhysicalDeviceAmigoProfilingFeaturesSEC & current, VkPhysicalDeviceAmigoProfilingFeaturesSEC const& merge_in);
+void compare_VkPhysicalDeviceMultiviewPerViewViewportsFeaturesQCOM(std::vector<std::string> & error_list, VkPhysicalDeviceMultiviewPerViewViewportsFeaturesQCOM const& supported, VkPhysicalDeviceMultiviewPerViewViewportsFeaturesQCOM const& requested);
+void merge_VkPhysicalDeviceMultiviewPerViewViewportsFeaturesQCOM(VkPhysicalDeviceMultiviewPerViewViewportsFeaturesQCOM & current, VkPhysicalDeviceMultiviewPerViewViewportsFeaturesQCOM const& merge_in);
+void compare_VkPhysicalDeviceRayTracingInvocationReorderFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceRayTracingInvocationReorderFeaturesNV const& supported, VkPhysicalDeviceRayTracingInvocationReorderFeaturesNV const& requested);
+void merge_VkPhysicalDeviceRayTracingInvocationReorderFeaturesNV(VkPhysicalDeviceRayTracingInvocationReorderFeaturesNV & current, VkPhysicalDeviceRayTracingInvocationReorderFeaturesNV const& merge_in);
+void compare_VkPhysicalDeviceCooperativeVectorFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceCooperativeVectorFeaturesNV const& supported, VkPhysicalDeviceCooperativeVectorFeaturesNV const& requested);
+void merge_VkPhysicalDeviceCooperativeVectorFeaturesNV(VkPhysicalDeviceCooperativeVectorFeaturesNV & current, VkPhysicalDeviceCooperativeVectorFeaturesNV const& merge_in);
+void compare_VkPhysicalDeviceExtendedSparseAddressSpaceFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceExtendedSparseAddressSpaceFeaturesNV const& supported, VkPhysicalDeviceExtendedSparseAddressSpaceFeaturesNV const& requested);
+void merge_VkPhysicalDeviceExtendedSparseAddressSpaceFeaturesNV(VkPhysicalDeviceExtendedSparseAddressSpaceFeaturesNV & current, VkPhysicalDeviceExtendedSparseAddressSpaceFeaturesNV const& merge_in);
+void compare_VkPhysicalDeviceLegacyVertexAttributesFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceLegacyVertexAttributesFeaturesEXT const& supported, VkPhysicalDeviceLegacyVertexAttributesFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceLegacyVertexAttributesFeaturesEXT(VkPhysicalDeviceLegacyVertexAttributesFeaturesEXT & current, VkPhysicalDeviceLegacyVertexAttributesFeaturesEXT const& merge_in);
+void compare_VkPhysicalDeviceShaderCoreBuiltinsFeaturesARM(std::vector<std::string> & error_list, VkPhysicalDeviceShaderCoreBuiltinsFeaturesARM const& supported, VkPhysicalDeviceShaderCoreBuiltinsFeaturesARM const& requested);
+void merge_VkPhysicalDeviceShaderCoreBuiltinsFeaturesARM(VkPhysicalDeviceShaderCoreBuiltinsFeaturesARM & current, VkPhysicalDeviceShaderCoreBuiltinsFeaturesARM const& merge_in);
+void compare_VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT const& supported, VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT const& requested);
+void merge_VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT(VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT & current, VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT const& merge_in);
+void compare_VkPhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT const& supported, VkPhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT(VkPhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT & current, VkPhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT const& merge_in);
+void compare_VkPhysicalDeviceDataGraphFeaturesARM(std::vector<std::string> & error_list, VkPhysicalDeviceDataGraphFeaturesARM const& supported, VkPhysicalDeviceDataGraphFeaturesARM const& requested);
+void merge_VkPhysicalDeviceDataGraphFeaturesARM(VkPhysicalDeviceDataGraphFeaturesARM & current, VkPhysicalDeviceDataGraphFeaturesARM const& merge_in);
+void compare_VkPhysicalDeviceMultiviewPerViewRenderAreasFeaturesQCOM(std::vector<std::string> & error_list, VkPhysicalDeviceMultiviewPerViewRenderAreasFeaturesQCOM const& supported, VkPhysicalDeviceMultiviewPerViewRenderAreasFeaturesQCOM const& requested);
+void merge_VkPhysicalDeviceMultiviewPerViewRenderAreasFeaturesQCOM(VkPhysicalDeviceMultiviewPerViewRenderAreasFeaturesQCOM & current, VkPhysicalDeviceMultiviewPerViewRenderAreasFeaturesQCOM const& merge_in);
+void compare_VkPhysicalDevicePerStageDescriptorSetFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDevicePerStageDescriptorSetFeaturesNV const& supported, VkPhysicalDevicePerStageDescriptorSetFeaturesNV const& requested);
+void merge_VkPhysicalDevicePerStageDescriptorSetFeaturesNV(VkPhysicalDevicePerStageDescriptorSetFeaturesNV & current, VkPhysicalDevicePerStageDescriptorSetFeaturesNV const& merge_in);
+void compare_VkPhysicalDeviceImageProcessing2FeaturesQCOM(std::vector<std::string> & error_list, VkPhysicalDeviceImageProcessing2FeaturesQCOM const& supported, VkPhysicalDeviceImageProcessing2FeaturesQCOM const& requested);
+void merge_VkPhysicalDeviceImageProcessing2FeaturesQCOM(VkPhysicalDeviceImageProcessing2FeaturesQCOM & current, VkPhysicalDeviceImageProcessing2FeaturesQCOM const& merge_in);
+void compare_VkPhysicalDeviceCubicWeightsFeaturesQCOM(std::vector<std::string> & error_list, VkPhysicalDeviceCubicWeightsFeaturesQCOM const& supported, VkPhysicalDeviceCubicWeightsFeaturesQCOM const& requested);
+void merge_VkPhysicalDeviceCubicWeightsFeaturesQCOM(VkPhysicalDeviceCubicWeightsFeaturesQCOM & current, VkPhysicalDeviceCubicWeightsFeaturesQCOM const& merge_in);
+void compare_VkPhysicalDeviceYcbcrDegammaFeaturesQCOM(std::vector<std::string> & error_list, VkPhysicalDeviceYcbcrDegammaFeaturesQCOM const& supported, VkPhysicalDeviceYcbcrDegammaFeaturesQCOM const& requested);
+void merge_VkPhysicalDeviceYcbcrDegammaFeaturesQCOM(VkPhysicalDeviceYcbcrDegammaFeaturesQCOM & current, VkPhysicalDeviceYcbcrDegammaFeaturesQCOM const& merge_in);
+void compare_VkPhysicalDeviceCubicClampFeaturesQCOM(std::vector<std::string> & error_list, VkPhysicalDeviceCubicClampFeaturesQCOM const& supported, VkPhysicalDeviceCubicClampFeaturesQCOM const& requested);
+void merge_VkPhysicalDeviceCubicClampFeaturesQCOM(VkPhysicalDeviceCubicClampFeaturesQCOM & current, VkPhysicalDeviceCubicClampFeaturesQCOM const& merge_in);
+void compare_VkPhysicalDeviceAttachmentFeedbackLoopDynamicStateFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceAttachmentFeedbackLoopDynamicStateFeaturesEXT const& supported, VkPhysicalDeviceAttachmentFeedbackLoopDynamicStateFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceAttachmentFeedbackLoopDynamicStateFeaturesEXT(VkPhysicalDeviceAttachmentFeedbackLoopDynamicStateFeaturesEXT & current, VkPhysicalDeviceAttachmentFeedbackLoopDynamicStateFeaturesEXT const& merge_in);
+#if defined(VK_USE_PLATFORM_SCREEN_QNX)
+void compare_VkPhysicalDeviceExternalMemoryScreenBufferFeaturesQNX(std::vector<std::string> & error_list, VkPhysicalDeviceExternalMemoryScreenBufferFeaturesQNX const& supported, VkPhysicalDeviceExternalMemoryScreenBufferFeaturesQNX const& requested);
+void merge_VkPhysicalDeviceExternalMemoryScreenBufferFeaturesQNX(VkPhysicalDeviceExternalMemoryScreenBufferFeaturesQNX & current, VkPhysicalDeviceExternalMemoryScreenBufferFeaturesQNX const& merge_in);
+#endif // defined(VK_USE_PLATFORM_SCREEN_QNX)
+void compare_VkPhysicalDeviceDescriptorPoolOverallocationFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceDescriptorPoolOverallocationFeaturesNV const& supported, VkPhysicalDeviceDescriptorPoolOverallocationFeaturesNV const& requested);
+void merge_VkPhysicalDeviceDescriptorPoolOverallocationFeaturesNV(VkPhysicalDeviceDescriptorPoolOverallocationFeaturesNV & current, VkPhysicalDeviceDescriptorPoolOverallocationFeaturesNV const& merge_in);
+void compare_VkPhysicalDeviceTileMemoryHeapFeaturesQCOM(std::vector<std::string> & error_list, VkPhysicalDeviceTileMemoryHeapFeaturesQCOM const& supported, VkPhysicalDeviceTileMemoryHeapFeaturesQCOM const& requested);
+void merge_VkPhysicalDeviceTileMemoryHeapFeaturesQCOM(VkPhysicalDeviceTileMemoryHeapFeaturesQCOM & current, VkPhysicalDeviceTileMemoryHeapFeaturesQCOM const& merge_in);
+void compare_VkPhysicalDeviceRawAccessChainsFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceRawAccessChainsFeaturesNV const& supported, VkPhysicalDeviceRawAccessChainsFeaturesNV const& requested);
+void merge_VkPhysicalDeviceRawAccessChainsFeaturesNV(VkPhysicalDeviceRawAccessChainsFeaturesNV & current, VkPhysicalDeviceRawAccessChainsFeaturesNV const& merge_in);
+void compare_VkPhysicalDeviceCommandBufferInheritanceFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceCommandBufferInheritanceFeaturesNV const& supported, VkPhysicalDeviceCommandBufferInheritanceFeaturesNV const& requested);
+void merge_VkPhysicalDeviceCommandBufferInheritanceFeaturesNV(VkPhysicalDeviceCommandBufferInheritanceFeaturesNV & current, VkPhysicalDeviceCommandBufferInheritanceFeaturesNV const& merge_in);
+void compare_VkPhysicalDeviceShaderAtomicFloat16VectorFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceShaderAtomicFloat16VectorFeaturesNV const& supported, VkPhysicalDeviceShaderAtomicFloat16VectorFeaturesNV const& requested);
+void merge_VkPhysicalDeviceShaderAtomicFloat16VectorFeaturesNV(VkPhysicalDeviceShaderAtomicFloat16VectorFeaturesNV & current, VkPhysicalDeviceShaderAtomicFloat16VectorFeaturesNV const& merge_in);
+void compare_VkPhysicalDeviceShaderReplicatedCompositesFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceShaderReplicatedCompositesFeaturesEXT const& supported, VkPhysicalDeviceShaderReplicatedCompositesFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceShaderReplicatedCompositesFeaturesEXT(VkPhysicalDeviceShaderReplicatedCompositesFeaturesEXT & current, VkPhysicalDeviceShaderReplicatedCompositesFeaturesEXT const& merge_in);
+void compare_VkPhysicalDeviceShaderFloat8FeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceShaderFloat8FeaturesEXT const& supported, VkPhysicalDeviceShaderFloat8FeaturesEXT const& requested);
+void merge_VkPhysicalDeviceShaderFloat8FeaturesEXT(VkPhysicalDeviceShaderFloat8FeaturesEXT & current, VkPhysicalDeviceShaderFloat8FeaturesEXT const& merge_in);
+void compare_VkPhysicalDeviceRayTracingValidationFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceRayTracingValidationFeaturesNV const& supported, VkPhysicalDeviceRayTracingValidationFeaturesNV const& requested);
+void merge_VkPhysicalDeviceRayTracingValidationFeaturesNV(VkPhysicalDeviceRayTracingValidationFeaturesNV & current, VkPhysicalDeviceRayTracingValidationFeaturesNV const& merge_in);
+void compare_VkPhysicalDeviceClusterAccelerationStructureFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceClusterAccelerationStructureFeaturesNV const& supported, VkPhysicalDeviceClusterAccelerationStructureFeaturesNV const& requested);
+void merge_VkPhysicalDeviceClusterAccelerationStructureFeaturesNV(VkPhysicalDeviceClusterAccelerationStructureFeaturesNV & current, VkPhysicalDeviceClusterAccelerationStructureFeaturesNV const& merge_in);
+void compare_VkPhysicalDevicePartitionedAccelerationStructureFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDevicePartitionedAccelerationStructureFeaturesNV const& supported, VkPhysicalDevicePartitionedAccelerationStructureFeaturesNV const& requested);
+void merge_VkPhysicalDevicePartitionedAccelerationStructureFeaturesNV(VkPhysicalDevicePartitionedAccelerationStructureFeaturesNV & current, VkPhysicalDevicePartitionedAccelerationStructureFeaturesNV const& merge_in);
+void compare_VkPhysicalDeviceDeviceGeneratedCommandsFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceDeviceGeneratedCommandsFeaturesEXT const& supported, VkPhysicalDeviceDeviceGeneratedCommandsFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceDeviceGeneratedCommandsFeaturesEXT(VkPhysicalDeviceDeviceGeneratedCommandsFeaturesEXT & current, VkPhysicalDeviceDeviceGeneratedCommandsFeaturesEXT const& merge_in);
+void compare_VkPhysicalDeviceImageAlignmentControlFeaturesMESA(std::vector<std::string> & error_list, VkPhysicalDeviceImageAlignmentControlFeaturesMESA const& supported, VkPhysicalDeviceImageAlignmentControlFeaturesMESA const& requested);
+void merge_VkPhysicalDeviceImageAlignmentControlFeaturesMESA(VkPhysicalDeviceImageAlignmentControlFeaturesMESA & current, VkPhysicalDeviceImageAlignmentControlFeaturesMESA const& merge_in);
+void compare_VkPhysicalDeviceDepthClampControlFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceDepthClampControlFeaturesEXT const& supported, VkPhysicalDeviceDepthClampControlFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceDepthClampControlFeaturesEXT(VkPhysicalDeviceDepthClampControlFeaturesEXT & current, VkPhysicalDeviceDepthClampControlFeaturesEXT const& merge_in);
+void compare_VkPhysicalDeviceHdrVividFeaturesHUAWEI(std::vector<std::string> & error_list, VkPhysicalDeviceHdrVividFeaturesHUAWEI const& supported, VkPhysicalDeviceHdrVividFeaturesHUAWEI const& requested);
+void merge_VkPhysicalDeviceHdrVividFeaturesHUAWEI(VkPhysicalDeviceHdrVividFeaturesHUAWEI & current, VkPhysicalDeviceHdrVividFeaturesHUAWEI const& merge_in);
+void compare_VkPhysicalDeviceCooperativeMatrix2FeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceCooperativeMatrix2FeaturesNV const& supported, VkPhysicalDeviceCooperativeMatrix2FeaturesNV const& requested);
+void merge_VkPhysicalDeviceCooperativeMatrix2FeaturesNV(VkPhysicalDeviceCooperativeMatrix2FeaturesNV & current, VkPhysicalDeviceCooperativeMatrix2FeaturesNV const& merge_in);
+void compare_VkPhysicalDevicePipelineOpacityMicromapFeaturesARM(std::vector<std::string> & error_list, VkPhysicalDevicePipelineOpacityMicromapFeaturesARM const& supported, VkPhysicalDevicePipelineOpacityMicromapFeaturesARM const& requested);
+void merge_VkPhysicalDevicePipelineOpacityMicromapFeaturesARM(VkPhysicalDevicePipelineOpacityMicromapFeaturesARM & current, VkPhysicalDevicePipelineOpacityMicromapFeaturesARM const& merge_in);
+void compare_VkPhysicalDeviceVertexAttributeRobustnessFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceVertexAttributeRobustnessFeaturesEXT const& supported, VkPhysicalDeviceVertexAttributeRobustnessFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceVertexAttributeRobustnessFeaturesEXT(VkPhysicalDeviceVertexAttributeRobustnessFeaturesEXT & current, VkPhysicalDeviceVertexAttributeRobustnessFeaturesEXT const& merge_in);
+void compare_VkPhysicalDeviceFormatPackFeaturesARM(std::vector<std::string> & error_list, VkPhysicalDeviceFormatPackFeaturesARM const& supported, VkPhysicalDeviceFormatPackFeaturesARM const& requested);
+void merge_VkPhysicalDeviceFormatPackFeaturesARM(VkPhysicalDeviceFormatPackFeaturesARM & current, VkPhysicalDeviceFormatPackFeaturesARM const& merge_in);
+void compare_VkPhysicalDeviceFragmentDensityMapLayeredFeaturesVALVE(std::vector<std::string> & error_list, VkPhysicalDeviceFragmentDensityMapLayeredFeaturesVALVE const& supported, VkPhysicalDeviceFragmentDensityMapLayeredFeaturesVALVE const& requested);
+void merge_VkPhysicalDeviceFragmentDensityMapLayeredFeaturesVALVE(VkPhysicalDeviceFragmentDensityMapLayeredFeaturesVALVE & current, VkPhysicalDeviceFragmentDensityMapLayeredFeaturesVALVE const& merge_in);
+#if defined(VK_ENABLE_BETA_EXTENSIONS)
+void compare_VkPhysicalDevicePresentMeteringFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDevicePresentMeteringFeaturesNV const& supported, VkPhysicalDevicePresentMeteringFeaturesNV const& requested);
+void merge_VkPhysicalDevicePresentMeteringFeaturesNV(VkPhysicalDevicePresentMeteringFeaturesNV & current, VkPhysicalDevicePresentMeteringFeaturesNV const& merge_in);
+#endif // defined(VK_ENABLE_BETA_EXTENSIONS)
+void compare_VkPhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT const& supported, VkPhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT(VkPhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT & current, VkPhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT const& merge_in);
+void compare_VkPhysicalDevicePipelineCacheIncrementalModeFeaturesSEC(std::vector<std::string> & error_list, VkPhysicalDevicePipelineCacheIncrementalModeFeaturesSEC const& supported, VkPhysicalDevicePipelineCacheIncrementalModeFeaturesSEC const& requested);
+void merge_VkPhysicalDevicePipelineCacheIncrementalModeFeaturesSEC(VkPhysicalDevicePipelineCacheIncrementalModeFeaturesSEC & current, VkPhysicalDevicePipelineCacheIncrementalModeFeaturesSEC const& merge_in);
+void compare_VkPhysicalDeviceAccelerationStructureFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceAccelerationStructureFeaturesKHR const& supported, VkPhysicalDeviceAccelerationStructureFeaturesKHR const& requested);
+void merge_VkPhysicalDeviceAccelerationStructureFeaturesKHR(VkPhysicalDeviceAccelerationStructureFeaturesKHR & current, VkPhysicalDeviceAccelerationStructureFeaturesKHR const& merge_in);
+void compare_VkPhysicalDeviceRayTracingPipelineFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceRayTracingPipelineFeaturesKHR const& supported, VkPhysicalDeviceRayTracingPipelineFeaturesKHR const& requested);
+void merge_VkPhysicalDeviceRayTracingPipelineFeaturesKHR(VkPhysicalDeviceRayTracingPipelineFeaturesKHR & current, VkPhysicalDeviceRayTracingPipelineFeaturesKHR const& merge_in);
+void compare_VkPhysicalDeviceRayQueryFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceRayQueryFeaturesKHR const& supported, VkPhysicalDeviceRayQueryFeaturesKHR const& requested);
+void merge_VkPhysicalDeviceRayQueryFeaturesKHR(VkPhysicalDeviceRayQueryFeaturesKHR & current, VkPhysicalDeviceRayQueryFeaturesKHR const& merge_in);
+void compare_VkPhysicalDeviceMeshShaderFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceMeshShaderFeaturesEXT const& supported, VkPhysicalDeviceMeshShaderFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceMeshShaderFeaturesEXT(VkPhysicalDeviceMeshShaderFeaturesEXT & current, VkPhysicalDeviceMeshShaderFeaturesEXT const& merge_in);
+void compare_feature_struct(VkStructureType sType, std::vector<std::string> & error_list, const void* supported, const void* requested);
+void merge_feature_struct(VkStructureType sType, void* current, const void* merge_in);
+} // namespace vkb

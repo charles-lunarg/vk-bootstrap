@@ -48,8 +48,9 @@ jobs:
         with:
           fetch-depth: 2
 
-      - name: Run dispatch generator
-        run: python script/generate_dispatch.py
+      - run: python script/generate_dispatch.py
+
+      - run: python script/generate_features_chain.py
 
       - name: Diff source to see if anything changed
         id: git-diff

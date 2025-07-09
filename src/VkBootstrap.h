@@ -27,6 +27,7 @@
 #include <vulkan/vulkan_core.h>
 
 #include "VkBootstrapDispatch.h"
+#include "VkBootstrapFeatureChain.h"
 
 #ifdef VK_MAKE_API_VERSION
 #define VKB_MAKE_VK_VERSION(variant, major, minor, patch) VK_MAKE_API_VERSION(variant, major, minor, patch)
@@ -164,49 +165,37 @@ template <typename T> class Result {
 };
 
 namespace detail {
-struct GenericFeaturesPNextNode {
+class FeaturesChain {
+    struct StructInfo {
+        VkStructureType sType{};
+        size_t starting_location{};
+        size_t struct_size{};
+    };
+    std::vector<StructInfo> structure_infos;
+    std::vector<std::byte> structures;
 
-    static const uint32_t field_capacity = 256;
+    std::vector<StructInfo>::const_iterator find_sType(VkStructureType sType) const;
 
-    GenericFeaturesPNextNode();
+    public:
+    bool empty() const;
 
-    void disable_fields();
+    bool is_feature_struct_in_chain(VkStructureType sType) const;
 
-    template <typename T> GenericFeaturesPNextNode(T const& features) noexcept {
-        disable_fields();
-        memcpy(this, &features, sizeof(T));
-    }
+    // Add a features structure to the FeaturesChain if it isn't present. If it is, merge the already existing structure with structure
+    void add_structure(VkStructureType sType, size_t struct_size, const void* structure);
 
-    static bool match(GenericFeaturesPNextNode const& requested, GenericFeaturesPNextNode const& supported) noexcept;
+    // If a structure with sType exists, remove it from the FeatureChain
+    void remove_structure(VkStructureType sType);
 
-    void combine(GenericFeaturesPNextNode const& right) noexcept;
+    // Return true if this FeatureChain contains an sType struct and all of the true fields in structure are also true in the FeatureChain struct
+    bool match(VkStructureType sType, const void* structure) const;
 
-    VkStructureType sType = static_cast<VkStructureType>(0);
-    void* pNext = nullptr;
-    VkBool32 fields[field_capacity];
-};
+    // Add to the error_list all structure fields in requested_features_chain not present in this chain
+    void match_all(std::vector<std::string>& error_list, FeaturesChain const& requested_features_chain) const;
 
-struct GenericFeatureChain {
-    std::vector<GenericFeaturesPNextNode> nodes;
+    void create_chained_features(VkPhysicalDeviceFeatures2& features2);
 
-    template <typename T> void add(T const& features) noexcept {
-        // If this struct is already in the list, combine it
-        for (auto& node : nodes) {
-            if (static_cast<VkStructureType>(features.sType) == node.sType) {
-                node.combine(features);
-                return;
-            }
-        }
-        // Otherwise append to the end
-        nodes.push_back(features);
-    }
-
-    bool match_all(GenericFeatureChain const& extension_requested) const noexcept;
-    bool find_and_match(GenericFeatureChain const& extension_requested) const noexcept;
-
-    void chain_up(VkPhysicalDeviceFeatures2& feats2) noexcept;
-
-    void combine(GenericFeatureChain const& right) noexcept;
+    std::vector<void*> get_pNext_chain_members();
 };
 
 } // namespace detail
@@ -472,7 +461,6 @@ class InstanceBuilder {
         std::vector<const char*> layers;
         std::vector<const char*> extensions;
         VkInstanceCreateFlags flags = static_cast<VkInstanceCreateFlags>(0);
-        std::vector<VkBaseOutStructure*> pNext_elements;
         std::vector<VkLayerSettingEXT> layer_settings;
 
         // debug callback - use the default so it is not nullptr
@@ -547,7 +535,7 @@ struct PhysicalDevice {
 
     // Returns true if all the features are present
     template <typename T> bool are_extension_features_present(T const& features) const {
-        return is_features_node_present(detail::GenericFeaturesPNextNode(features));
+        return extended_features_chain.match(static_cast<VkStructureType>(features.sType), &features);
     }
 
     // If the given extension is present, make the extension be enabled on the device.
@@ -565,7 +553,10 @@ struct PhysicalDevice {
     // If the features from the provided features struct are all present, make all of the features be enable on the
     // device. Returns true if all of the features are present.
     template <typename T> bool enable_extension_features_if_present(T const& features_check) {
-        return enable_features_node_if_present(detail::GenericFeaturesPNextNode(features_check));
+        T scratch_space_struct{};
+        scratch_space_struct.sType = features_check.sType;
+        return enable_features_struct_if_present(
+            static_cast<VkStructureType>(features_check.sType), sizeof(T), &features_check, &scratch_space_struct);
     }
 
     // A conversion function which allows this PhysicalDevice to be used
@@ -577,7 +568,7 @@ struct PhysicalDevice {
     std::vector<std::string> extensions_to_enable;
     std::vector<std::string> available_extensions;
     std::vector<VkQueueFamilyProperties> queue_families;
-    detail::GenericFeatureChain extended_features_chain;
+    detail::FeaturesChain extended_features_chain;
 
     bool defer_surface_initialization = false;
     bool properties2_ext_enabled = false;
@@ -586,8 +577,7 @@ struct PhysicalDevice {
     friend class PhysicalDeviceSelector;
     friend class DeviceBuilder;
 
-    bool is_features_node_present(detail::GenericFeaturesPNextNode const& node) const;
-    bool enable_features_node_if_present(detail::GenericFeaturesPNextNode const& node);
+    bool enable_features_struct_if_present(VkStructureType sType, size_t struct_size, const void* features_struct, void* query_struct);
 };
 
 enum class PreferredDeviceType { other = 0, integrated = 1, discrete = 2, virtual_gpu = 3, cpu = 4 };
@@ -651,12 +641,11 @@ class PhysicalDeviceSelector {
     // By default PhysicalDeviceSelector enables the portability subset if available
     // This function disables that behavior
     PhysicalDeviceSelector& disable_portability_subset();
-
     // Require a physical device which supports a specific set of general/extension features.
     // If this function is used, the user should not put their own VkPhysicalDeviceFeatures2 in
     // the pNext chain of VkDeviceCreateInfo.
     template <typename T> PhysicalDeviceSelector& add_required_extension_features(T const& features) {
-        criteria.extended_features_chain.add(features);
+        criteria.extended_features_chain.add_structure(static_cast<VkStructureType>(features.sType), sizeof(T), &features);
         return *this;
     }
 
@@ -719,14 +708,13 @@ class PhysicalDeviceSelector {
         VkPhysicalDeviceFeatures required_features{};
         VkPhysicalDeviceFeatures2 required_features2{};
 
-        detail::GenericFeatureChain extended_features_chain;
+        detail::FeaturesChain extended_features_chain;
         bool defer_surface_initialization = false;
         bool use_first_gpu_unconditionally = false;
         bool enable_portability_subset = true;
     } criteria;
 
-    PhysicalDevice populate_device_details(
-        VkPhysicalDevice phys_device, detail::GenericFeatureChain const& src_extended_features_chain) const;
+    PhysicalDevice populate_device_details(VkPhysicalDevice phys_device, detail::FeaturesChain const& src_extended_features_chain) const;
 
     PhysicalDevice::Suitable is_device_suitable(PhysicalDevice const& phys_device) const;
 
@@ -800,7 +788,7 @@ class DeviceBuilder {
     // Add a structure to the pNext chain of VkDeviceCreateInfo.
     // The structure must be valid when DeviceBuilder::build() is called.
     template <typename T> DeviceBuilder& add_pNext(T* structure) {
-        info.pNext_chain.push_back(reinterpret_cast<VkBaseOutStructure*>(structure));
+        info.pNext_chain.push_back(structure);
         return *this;
     }
 
@@ -811,7 +799,7 @@ class DeviceBuilder {
     PhysicalDevice physical_device;
     struct DeviceInfo {
         VkDeviceCreateFlags flags = static_cast<VkDeviceCreateFlags>(0);
-        std::vector<VkBaseOutStructure*> pNext_chain;
+        std::vector<void*> pNext_chain;
         std::vector<CustomQueueDescription> queue_descriptions;
         VkAllocationCallbacks* allocation_callbacks = nullptr;
     } info;
@@ -952,7 +940,7 @@ class SwapchainBuilder {
     // Add a structure to the pNext chain of VkSwapchainCreateInfoKHR.
     // The structure must be valid when SwapchainBuilder::build() is called.
     template <typename T> SwapchainBuilder& add_pNext(T* structure) {
-        info.pNext_chain.push_back(reinterpret_cast<VkBaseOutStructure*>(structure));
+        info.pNext_chain.push_back(structure);
         return *this;
     }
 
@@ -966,7 +954,7 @@ class SwapchainBuilder {
     struct SwapchainInfo {
         VkPhysicalDevice physical_device = VK_NULL_HANDLE;
         VkDevice device = VK_NULL_HANDLE;
-        std::vector<VkBaseOutStructure*> pNext_chain;
+        std::vector<void*> pNext_chain;
         VkSwapchainCreateFlagBitsKHR create_flags = static_cast<VkSwapchainCreateFlagBitsKHR>(0);
         VkSurfaceKHR surface = VK_NULL_HANDLE;
         std::vector<VkSurfaceFormatKHR> desired_formats;

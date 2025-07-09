@@ -33,86 +33,109 @@
 #include <mutex>
 #include <algorithm>
 
+#include "VkBootstrapFeatureChain.inl"
+
 namespace vkb {
 
 namespace detail {
 
-GenericFeaturesPNextNode::GenericFeaturesPNextNode() { disable_fields(); }
+bool FeaturesChain::empty() const { return structure_infos.empty(); }
 
-void GenericFeaturesPNextNode::disable_fields() {
-    for (auto& field : fields) {
-        field = VK_FALSE;
+bool FeaturesChain::is_feature_struct_in_chain(VkStructureType sType) const {
+    return structure_infos.end() != find_sType(sType);
+}
+
+void FeaturesChain::add_structure(VkStructureType sType, size_t struct_size, const void* structure) {
+#if !defined(NDEBUG)
+    // Validation
+    assert(sType != static_cast<VkStructureType>(0) && "Features struct sType must be filled with the struct's "
+                                                       "corresponding VkStructureType enum");
+    assert(sType != VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2 &&
+           "Do not pass VkPhysicalDeviceFeatures2 as a required extension feature structure. An "
+           "instance of this is managed internally for selection criteria and device creation.");
+#endif
+
+    auto found = find_sType(sType);
+    if (found != structure_infos.end()) {
+        // Merge structure into the current structure
+#if !defined(NDEBUG)
+        assert(found->starting_location + found->struct_size <= structures.size() &&
+               "Internal Consistency Error: FeatureChain::add_structure tyring to merge structures into memory that is "
+               "past the end of the structures array");
+#endif
+        merge_feature_struct(sType, &(structures.at(found->starting_location)), structure);
+    } else {
+        // Add a structure into the chain
+        structure_infos.push_back(StructInfo{ sType, structures.size(), struct_size });
+        auto& new_structure_info = structure_infos.back();
+        structures.insert(structures.end(), struct_size, std::byte(0));
+        memcpy(&(structures.at(new_structure_info.starting_location)), structure, struct_size);
     }
 }
 
-bool GenericFeaturesPNextNode::match(GenericFeaturesPNextNode const& requested, GenericFeaturesPNextNode const& supported) noexcept {
-    assert(requested.sType == supported.sType && "Non-matching sTypes in features nodes!");
-    for (uint32_t i = 0; i < field_capacity; i++) {
-        if (requested.fields[i] && !supported.fields[i]) return false;
-    }
-    return true;
-}
-
-void GenericFeaturesPNextNode::combine(GenericFeaturesPNextNode const& right) noexcept {
-    assert(sType == right.sType && "Non-matching sTypes in features nodes!");
-    for (uint32_t i = 0; i < GenericFeaturesPNextNode::field_capacity; i++) {
-        fields[i] = fields[i] || right.fields[i];
+void FeaturesChain::remove_structure(VkStructureType sType) {
+    auto found = find_sType(sType);
+    if (found != structure_infos.end()) {
+        if (found->starting_location + found->struct_size < structures.size()) {
+            structures.erase(structures.begin() + static_cast<int>(found->starting_location),
+                structures.begin() + static_cast<int>(found->starting_location + found->struct_size));
+            structure_infos.erase(found);
+        }
     }
 }
 
-bool GenericFeatureChain::match_all(GenericFeatureChain const& extension_requested) const noexcept {
-    // Should only be false if extension_supported was unable to be filled out, due to the
-    // physical device not supporting vkGetPhysicalDeviceFeatures2 in any capacity.
-    if (extension_requested.nodes.size() != nodes.size()) {
+bool FeaturesChain::match(VkStructureType sType, const void* structure) const {
+    auto found = find_sType(sType);
+    if (found != structure_infos.end()) {
+        std::vector<std::string> error_list;
+        compare_feature_struct(sType, error_list, &(structures.at(found->starting_location)), structure);
+        return error_list.size() == 0;
+    } else {
         return false;
     }
-
-    for (size_t i = 0; i < extension_requested.nodes.size() && i < nodes.size(); ++i) {
-        if (!GenericFeaturesPNextNode::match(extension_requested.nodes[i], nodes[i])) return false;
-    }
-    return true;
 }
 
-bool GenericFeatureChain::find_and_match(GenericFeatureChain const& extensions_requested) const noexcept {
-    for (const auto& requested_extension_node : extensions_requested.nodes) {
-        bool found = false;
-        for (const auto& supported_node : nodes) {
-            if (supported_node.sType == requested_extension_node.sType) {
-                found = true;
-                if (!GenericFeaturesPNextNode::match(requested_extension_node, supported_node)) return false;
-                break;
-            }
-        }
-        if (!found) return false;
+void FeaturesChain::match_all(std::vector<std::string>& error_list, FeaturesChain const& requested_features_chain) const {
+    if (structure_infos.size() != requested_features_chain.structure_infos.size()) {
+        return;
     }
-    return true;
+    for (size_t i = 0; i < structure_infos.size(); ++i) {
+        compare_feature_struct(structure_infos.at(i).sType,
+            error_list,
+            &(structures.at(structure_infos.at(i).starting_location)),
+            &(requested_features_chain.structures.at(requested_features_chain.structure_infos.at(i).starting_location)));
+    }
 }
 
-void GenericFeatureChain::chain_up(VkPhysicalDeviceFeatures2& feats2) noexcept {
-    detail::GenericFeaturesPNextNode* prev = nullptr;
-    for (auto& extension : nodes) {
-        if (prev != nullptr) {
-            prev->pNext = &extension;
-        }
-        prev = &extension;
+void FeaturesChain::create_chained_features(VkPhysicalDeviceFeatures2& features2) {
+    features2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
+    features2.pNext = &structures.at(0);
+    // Write the address of structure N+1 to the pNext member of structure N
+    for (size_t i = 0; i < structure_infos.size() - 1; i++) {
+        VkBaseOutStructure structure{};
+        memcpy(&structure, &(structures.at(structure_infos.at(i).starting_location)), sizeof(VkBaseOutStructure));
+        structure.pNext = reinterpret_cast<VkBaseOutStructure*>(&(structures.at(structure_infos.at(i + 1).starting_location)));
+        memcpy(&(structures.at(structure_infos.at(i).starting_location)), &structure, sizeof(VkBaseOutStructure));
     }
-    feats2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
-    feats2.pNext = !nodes.empty() ? &nodes.at(0) : nullptr;
+    // Write nullptr to the last structures pNext member
+    VkBaseOutStructure structure{};
+    memcpy(&structure, &(structures.at(structure_infos.back().starting_location)), sizeof(VkBaseOutStructure));
+    structure.pNext = nullptr;
+    memcpy(&(structures.at(structure_infos.back().starting_location)), &structure, sizeof(VkBaseOutStructure));
 }
 
-void GenericFeatureChain::combine(GenericFeatureChain const& right) noexcept {
-    for (const auto& right_node : right.nodes) {
-        bool already_contained = false;
-        for (auto& left_node : nodes) {
-            if (left_node.sType == right_node.sType) {
-                left_node.combine(right_node);
-                already_contained = true;
-            }
-        }
-        if (!already_contained) {
-            nodes.push_back(right_node);
-        }
+std::vector<void*> FeaturesChain::get_pNext_chain_members() {
+    std::vector<void*> members;
+    for (const auto& structure_info : structure_infos) {
+        members.push_back(&(structures.at(structure_info.starting_location)));
     }
+    return members;
+}
+
+std::vector<vkb::detail::FeaturesChain::StructInfo>::const_iterator FeaturesChain::find_sType(VkStructureType sType) const {
+    return std::find_if(structure_infos.begin(), structure_infos.end(), [sType](StructInfo const& struct_info) {
+        return struct_info.sType == sType;
+    });
 }
 
 
@@ -380,12 +403,25 @@ bool check_extensions_supported(
     return all_found;
 }
 
-template <typename T> void setup_pNext_chain(T& structure, std::vector<VkBaseOutStructure*> const& structs) {
+template <typename T> void setup_pNext_chain(T& structure, std::vector<void*> const& structs) {
     structure.pNext = nullptr;
-    if (structs.size() <= 0) return;
+    if (structs.empty()) return;
     for (size_t i = 0; i < structs.size() - 1; i++) {
-        structs.at(i)->pNext = structs.at(i + 1);
+        VkBaseOutStructure out_structure{};
+        memcpy(&out_structure, structs.at(i), sizeof(VkBaseOutStructure));
+#if !defined(NDEBUG)
+        assert(out_structure.sType != VK_STRUCTURE_TYPE_APPLICATION_INFO);
+#endif
+        out_structure.pNext = static_cast<VkBaseOutStructure*>(structs.at(i + 1));
+        memcpy(structs.at(i), &out_structure, sizeof(VkBaseOutStructure));
     }
+    VkBaseOutStructure out_structure{};
+    memcpy(&out_structure, structs.back(), sizeof(VkBaseOutStructure));
+    out_structure.pNext = nullptr;
+#if !defined(NDEBUG)
+    assert(out_structure.sType != VK_STRUCTURE_TYPE_APPLICATION_INFO);
+#endif
+    memcpy(structs.back(), &out_structure, sizeof(VkBaseOutStructure));
     structure.pNext = structs.at(0);
 }
 const char* validation_layer_name = "VK_LAYER_KHRONOS_validation";
@@ -713,7 +749,7 @@ Result<Instance> InstanceBuilder::build() const {
         return make_error_code(InstanceError::requested_layers_not_present);
     }
 
-    std::vector<VkBaseOutStructure*> pNext_chain;
+    std::vector<void*> pNext_chain;
 
     VkDebugUtilsMessengerCreateInfoEXT messengerCreateInfo = {};
     if (info.use_debug_messenger) {
@@ -723,7 +759,7 @@ Result<Instance> InstanceBuilder::build() const {
         messengerCreateInfo.messageType = info.debug_message_type;
         messengerCreateInfo.pfnUserCallback = info.debug_callback;
         messengerCreateInfo.pUserData = info.debug_user_data_pointer;
-        pNext_chain.push_back(reinterpret_cast<VkBaseOutStructure*>(&messengerCreateInfo));
+        pNext_chain.push_back(&messengerCreateInfo);
     }
 
     VkValidationFeaturesEXT features{};
@@ -734,7 +770,7 @@ Result<Instance> InstanceBuilder::build() const {
         features.pEnabledValidationFeatures = info.enabled_validation_features.data();
         features.disabledValidationFeatureCount = static_cast<uint32_t>(info.disabled_validation_features.size());
         features.pDisabledValidationFeatures = info.disabled_validation_features.data();
-        pNext_chain.push_back(reinterpret_cast<VkBaseOutStructure*>(&features));
+        pNext_chain.push_back(&features);
     }
 
     VkValidationFlagsEXT checks{};
@@ -743,7 +779,7 @@ Result<Instance> InstanceBuilder::build() const {
         checks.pNext = nullptr;
         checks.disabledValidationCheckCount = static_cast<uint32_t>(info.disabled_validation_checks.size());
         checks.pDisabledValidationChecks = info.disabled_validation_checks.data();
-        pNext_chain.push_back(reinterpret_cast<VkBaseOutStructure*>(&checks));
+        pNext_chain.push_back(&checks);
     }
 
     VkLayerSettingsCreateInfoEXT layer_settings_ci{};
@@ -752,17 +788,13 @@ Result<Instance> InstanceBuilder::build() const {
         layer_settings_ci.pNext = nullptr;
         layer_settings_ci.settingCount = static_cast<uint32_t>(info.layer_settings.size());
         layer_settings_ci.pSettings = info.layer_settings.data();
-        pNext_chain.push_back(reinterpret_cast<VkBaseOutStructure*>(&layer_settings_ci));
+        pNext_chain.push_back(&layer_settings_ci);
     }
 
     VkInstanceCreateInfo instance_create_info = {};
     instance_create_info.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
     detail::setup_pNext_chain(instance_create_info, pNext_chain);
-#if !defined(NDEBUG)
-    for (auto& node : pNext_chain) {
-        assert(node->sType != VK_STRUCTURE_TYPE_APPLICATION_INFO);
-    }
-#endif
+
     instance_create_info.flags = info.flags;
     instance_create_info.pApplicationInfo = &app_info;
     instance_create_info.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
@@ -1014,68 +1046,70 @@ void combine_features(VkPhysicalDeviceFeatures& dest, VkPhysicalDeviceFeatures s
 	dest.inheritedQueries = dest.inheritedQueries || src.inheritedQueries;
 }
 
-bool supports_features(const VkPhysicalDeviceFeatures& supported,
+std::vector<std::string> supports_features(const VkPhysicalDeviceFeatures& supported,
 					   const VkPhysicalDeviceFeatures& requested,
-					   const GenericFeatureChain& extension_supported,
-					   const GenericFeatureChain& extension_requested) {
+					   const FeaturesChain& extension_supported,
+					   const FeaturesChain& extension_requested) {
+    std::vector<std::string> error_list;
 
-	if (requested.robustBufferAccess && !supported.robustBufferAccess) return false;
-	if (requested.fullDrawIndexUint32 && !supported.fullDrawIndexUint32) return false;
-	if (requested.imageCubeArray && !supported.imageCubeArray) return false;
-	if (requested.independentBlend && !supported.independentBlend) return false;
-	if (requested.geometryShader && !supported.geometryShader) return false;
-	if (requested.tessellationShader && !supported.tessellationShader) return false;
-	if (requested.sampleRateShading && !supported.sampleRateShading) return false;
-	if (requested.dualSrcBlend && !supported.dualSrcBlend) return false;
-	if (requested.logicOp && !supported.logicOp) return false;
-	if (requested.multiDrawIndirect && !supported.multiDrawIndirect) return false;
-	if (requested.drawIndirectFirstInstance && !supported.drawIndirectFirstInstance) return false;
-	if (requested.depthClamp && !supported.depthClamp) return false;
-	if (requested.depthBiasClamp && !supported.depthBiasClamp) return false;
-	if (requested.fillModeNonSolid && !supported.fillModeNonSolid) return false;
-	if (requested.depthBounds && !supported.depthBounds) return false;
-	if (requested.wideLines && !supported.wideLines) return false;
-	if (requested.largePoints && !supported.largePoints) return false;
-	if (requested.alphaToOne && !supported.alphaToOne) return false;
-	if (requested.multiViewport && !supported.multiViewport) return false;
-	if (requested.samplerAnisotropy && !supported.samplerAnisotropy) return false;
-	if (requested.textureCompressionETC2 && !supported.textureCompressionETC2) return false;
-	if (requested.textureCompressionASTC_LDR && !supported.textureCompressionASTC_LDR) return false;
-	if (requested.textureCompressionBC && !supported.textureCompressionBC) return false;
-	if (requested.occlusionQueryPrecise && !supported.occlusionQueryPrecise) return false;
-	if (requested.pipelineStatisticsQuery && !supported.pipelineStatisticsQuery) return false;
-	if (requested.vertexPipelineStoresAndAtomics && !supported.vertexPipelineStoresAndAtomics) return false;
-	if (requested.fragmentStoresAndAtomics && !supported.fragmentStoresAndAtomics) return false;
-	if (requested.shaderTessellationAndGeometryPointSize && !supported.shaderTessellationAndGeometryPointSize) return false;
-	if (requested.shaderImageGatherExtended && !supported.shaderImageGatherExtended) return false;
-	if (requested.shaderStorageImageExtendedFormats && !supported.shaderStorageImageExtendedFormats) return false;
-	if (requested.shaderStorageImageMultisample && !supported.shaderStorageImageMultisample) return false;
-	if (requested.shaderStorageImageReadWithoutFormat && !supported.shaderStorageImageReadWithoutFormat) return false;
-	if (requested.shaderStorageImageWriteWithoutFormat && !supported.shaderStorageImageWriteWithoutFormat) return false;
-	if (requested.shaderUniformBufferArrayDynamicIndexing && !supported.shaderUniformBufferArrayDynamicIndexing) return false;
-	if (requested.shaderSampledImageArrayDynamicIndexing && !supported.shaderSampledImageArrayDynamicIndexing) return false;
-	if (requested.shaderStorageBufferArrayDynamicIndexing && !supported.shaderStorageBufferArrayDynamicIndexing) return false;
-	if (requested.shaderStorageImageArrayDynamicIndexing && !supported.shaderStorageImageArrayDynamicIndexing) return false;
-	if (requested.shaderClipDistance && !supported.shaderClipDistance) return false;
-	if (requested.shaderCullDistance && !supported.shaderCullDistance) return false;
-	if (requested.shaderFloat64 && !supported.shaderFloat64) return false;
-	if (requested.shaderInt64 && !supported.shaderInt64) return false;
-	if (requested.shaderInt16 && !supported.shaderInt16) return false;
-	if (requested.shaderResourceResidency && !supported.shaderResourceResidency) return false;
-	if (requested.shaderResourceMinLod && !supported.shaderResourceMinLod) return false;
-	if (requested.sparseBinding && !supported.sparseBinding) return false;
-	if (requested.sparseResidencyBuffer && !supported.sparseResidencyBuffer) return false;
-	if (requested.sparseResidencyImage2D && !supported.sparseResidencyImage2D) return false;
-	if (requested.sparseResidencyImage3D && !supported.sparseResidencyImage3D) return false;
-	if (requested.sparseResidency2Samples && !supported.sparseResidency2Samples) return false;
-	if (requested.sparseResidency4Samples && !supported.sparseResidency4Samples) return false;
-	if (requested.sparseResidency8Samples && !supported.sparseResidency8Samples) return false;
-	if (requested.sparseResidency16Samples && !supported.sparseResidency16Samples) return false;
-	if (requested.sparseResidencyAliased && !supported.sparseResidencyAliased) return false;
-	if (requested.variableMultisampleRate && !supported.variableMultisampleRate) return false;
-	if (requested.inheritedQueries && !supported.inheritedQueries) return false;
+	if (requested.robustBufferAccess && !supported.robustBufferAccess) { error_list.push_back("VkPhysicalDeviceFeatures::robustBufferAccess"); }
+	if (requested.fullDrawIndexUint32 && !supported.fullDrawIndexUint32) { error_list.push_back("VkPhysicalDeviceFeatures::fullDrawIndexUint32"); }
+	if (requested.imageCubeArray && !supported.imageCubeArray) { error_list.push_back("VkPhysicalDeviceFeatures::imageCubeArray"); }
+	if (requested.independentBlend && !supported.independentBlend) { error_list.push_back("VkPhysicalDeviceFeatures::independentBlend"); }
+	if (requested.geometryShader && !supported.geometryShader) { error_list.push_back("VkPhysicalDeviceFeatures::geometryShader"); }
+	if (requested.tessellationShader && !supported.tessellationShader) { error_list.push_back("VkPhysicalDeviceFeatures::tessellationShader"); }
+	if (requested.sampleRateShading && !supported.sampleRateShading) { error_list.push_back("VkPhysicalDeviceFeatures::sampleRateShading"); }
+	if (requested.dualSrcBlend && !supported.dualSrcBlend) { error_list.push_back("VkPhysicalDeviceFeatures::dualSrcBlend"); }
+	if (requested.logicOp && !supported.logicOp) { error_list.push_back("VkPhysicalDeviceFeatures::logicOp"); }
+	if (requested.multiDrawIndirect && !supported.multiDrawIndirect) { error_list.push_back("VkPhysicalDeviceFeatures::multiDrawIndirect"); }
+	if (requested.drawIndirectFirstInstance && !supported.drawIndirectFirstInstance) { error_list.push_back("VkPhysicalDeviceFeatures::drawIndirectFirstInstance"); }
+	if (requested.depthClamp && !supported.depthClamp) { error_list.push_back("VkPhysicalDeviceFeatures::depthClamp"); }
+	if (requested.depthBiasClamp && !supported.depthBiasClamp) { error_list.push_back("VkPhysicalDeviceFeatures::depthBiasClamp"); }
+	if (requested.fillModeNonSolid && !supported.fillModeNonSolid) { error_list.push_back("VkPhysicalDeviceFeatures::fillModeNonSolid"); }
+	if (requested.depthBounds && !supported.depthBounds) { error_list.push_back("VkPhysicalDeviceFeatures::depthBounds"); }
+	if (requested.wideLines && !supported.wideLines) { error_list.push_back("VkPhysicalDeviceFeatures::wideLines"); }
+	if (requested.largePoints && !supported.largePoints) { error_list.push_back("VkPhysicalDeviceFeatures::largePoints"); }
+	if (requested.alphaToOne && !supported.alphaToOne) { error_list.push_back("VkPhysicalDeviceFeatures::alphaToOne"); }
+	if (requested.multiViewport && !supported.multiViewport) { error_list.push_back("VkPhysicalDeviceFeatures::multiViewport"); }
+	if (requested.samplerAnisotropy && !supported.samplerAnisotropy) { error_list.push_back("VkPhysicalDeviceFeatures::samplerAnisotropy"); }
+	if (requested.textureCompressionETC2 && !supported.textureCompressionETC2) { error_list.push_back("VkPhysicalDeviceFeatures::textureCompressionETC2"); }
+	if (requested.textureCompressionASTC_LDR && !supported.textureCompressionASTC_LDR) { error_list.push_back("VkPhysicalDeviceFeatures::textureCompressionASTC_LDR"); }
+	if (requested.textureCompressionBC && !supported.textureCompressionBC) { error_list.push_back("VkPhysicalDeviceFeatures::textureCompressionBC"); }
+	if (requested.occlusionQueryPrecise && !supported.occlusionQueryPrecise) { error_list.push_back("VkPhysicalDeviceFeatures::occlusionQueryPrecise"); }
+	if (requested.pipelineStatisticsQuery && !supported.pipelineStatisticsQuery) { error_list.push_back("VkPhysicalDeviceFeatures::pipelineStatisticsQuery"); }
+	if (requested.vertexPipelineStoresAndAtomics && !supported.vertexPipelineStoresAndAtomics) { error_list.push_back("VkPhysicalDeviceFeatures::vertexPipelineStoresAndAtomics"); }
+	if (requested.fragmentStoresAndAtomics && !supported.fragmentStoresAndAtomics) { error_list.push_back("VkPhysicalDeviceFeatures::fragmentStoresAndAtomics"); }
+	if (requested.shaderTessellationAndGeometryPointSize && !supported.shaderTessellationAndGeometryPointSize) { error_list.push_back("VkPhysicalDeviceFeatures::shaderTessellationAndGeometryPointSize"); }
+	if (requested.shaderImageGatherExtended && !supported.shaderImageGatherExtended) { error_list.push_back("VkPhysicalDeviceFeatures::shaderImageGatherExtended"); }
+	if (requested.shaderStorageImageExtendedFormats && !supported.shaderStorageImageExtendedFormats) { error_list.push_back("VkPhysicalDeviceFeatures::shaderStorageImageExtendedFormats"); }
+	if (requested.shaderStorageImageMultisample && !supported.shaderStorageImageMultisample) { error_list.push_back("VkPhysicalDeviceFeatures::shaderStorageImageMultisample"); }
+	if (requested.shaderStorageImageReadWithoutFormat && !supported.shaderStorageImageReadWithoutFormat) { error_list.push_back("VkPhysicalDeviceFeatures::shaderStorageImageReadWithoutFormat"); }
+	if (requested.shaderStorageImageWriteWithoutFormat && !supported.shaderStorageImageWriteWithoutFormat) { error_list.push_back("VkPhysicalDeviceFeatures::shaderStorageImageWriteWithoutFormat"); }
+	if (requested.shaderUniformBufferArrayDynamicIndexing && !supported.shaderUniformBufferArrayDynamicIndexing) { error_list.push_back("VkPhysicalDeviceFeatures::shaderUniformBufferArrayDynamicIndexing"); }
+	if (requested.shaderSampledImageArrayDynamicIndexing && !supported.shaderSampledImageArrayDynamicIndexing) { error_list.push_back("VkPhysicalDeviceFeatures::shaderSampledImageArrayDynamicIndexing"); }
+	if (requested.shaderStorageBufferArrayDynamicIndexing && !supported.shaderStorageBufferArrayDynamicIndexing) { error_list.push_back("VkPhysicalDeviceFeatures::shaderStorageBufferArrayDynamicIndexing"); }
+	if (requested.shaderStorageImageArrayDynamicIndexing && !supported.shaderStorageImageArrayDynamicIndexing) { error_list.push_back("VkPhysicalDeviceFeatures::shaderStorageImageArrayDynamicIndexing"); }
+	if (requested.shaderClipDistance && !supported.shaderClipDistance) { error_list.push_back("VkPhysicalDeviceFeatures::shaderClipDistance"); }
+	if (requested.shaderCullDistance && !supported.shaderCullDistance) { error_list.push_back("VkPhysicalDeviceFeatures::shaderCullDistance"); }
+	if (requested.shaderFloat64 && !supported.shaderFloat64) { error_list.push_back("VkPhysicalDeviceFeatures::shaderFloat64"); }
+	if (requested.shaderInt64 && !supported.shaderInt64) { error_list.push_back("VkPhysicalDeviceFeatures::shaderInt64"); }
+	if (requested.shaderInt16 && !supported.shaderInt16) { error_list.push_back("VkPhysicalDeviceFeatures::shaderInt16"); }
+	if (requested.shaderResourceResidency && !supported.shaderResourceResidency) { error_list.push_back("VkPhysicalDeviceFeatures::shaderResourceResidency"); }
+	if (requested.shaderResourceMinLod && !supported.shaderResourceMinLod) { error_list.push_back("VkPhysicalDeviceFeatures::shaderResourceMinLod"); }
+	if (requested.sparseBinding && !supported.sparseBinding) { error_list.push_back("VkPhysicalDeviceFeatures::sparseBinding"); }
+	if (requested.sparseResidencyBuffer && !supported.sparseResidencyBuffer) { error_list.push_back("VkPhysicalDeviceFeatures::sparseResidencyBuffer"); }
+	if (requested.sparseResidencyImage2D && !supported.sparseResidencyImage2D) { error_list.push_back("VkPhysicalDeviceFeatures::sparseResidencyImage2D"); }
+	if (requested.sparseResidencyImage3D && !supported.sparseResidencyImage3D) { error_list.push_back("VkPhysicalDeviceFeatures::sparseResidencyImage3D"); }
+	if (requested.sparseResidency2Samples && !supported.sparseResidency2Samples) { error_list.push_back("VkPhysicalDeviceFeatures::sparseResidency2Samples"); }
+	if (requested.sparseResidency4Samples && !supported.sparseResidency4Samples) { error_list.push_back("VkPhysicalDeviceFeatures::sparseResidency4Samples"); }
+	if (requested.sparseResidency8Samples && !supported.sparseResidency8Samples) { error_list.push_back("VkPhysicalDeviceFeatures::sparseResidency8Samples"); }
+	if (requested.sparseResidency16Samples && !supported.sparseResidency16Samples) { error_list.push_back("VkPhysicalDeviceFeatures::sparseResidency16Samples"); }
+	if (requested.sparseResidencyAliased && !supported.sparseResidencyAliased) { error_list.push_back("VkPhysicalDeviceFeatures::sparseResidencyAliased"); }
+	if (requested.variableMultisampleRate && !supported.variableMultisampleRate) { error_list.push_back("VkPhysicalDeviceFeatures::variableMultisampleRate"); }
+	if (requested.inheritedQueries && !supported.inheritedQueries) { error_list.push_back("VkPhysicalDeviceFeatures::inheritedQueries"); }
 
-	return extension_supported.match_all(extension_requested);
+	extension_supported.match_all(error_list, extension_requested);
+    return error_list;
 }
 // clang-format on
 // Finds the first queue which supports the desired operations. Returns QUEUE_INDEX_MAX_VALUE if none is found
@@ -1130,7 +1164,7 @@ uint32_t get_present_queue_index(
 } // namespace detail
 
 PhysicalDevice PhysicalDeviceSelector::populate_device_details(
-    VkPhysicalDevice vk_phys_device, detail::GenericFeatureChain const& src_extended_features_chain) const {
+    VkPhysicalDevice vk_phys_device, detail::FeaturesChain const& src_extended_features_chain) const {
     PhysicalDevice physical_device{};
     physical_device.physical_device = vk_phys_device;
     physical_device.surface = instance_info.surface;
@@ -1159,9 +1193,9 @@ PhysicalDevice PhysicalDeviceSelector::populate_device_details(
     auto fill_chain = src_extended_features_chain;
 
     bool instance_is_1_1 = instance_info.version >= VKB_VK_API_VERSION_1_1;
-    if (!fill_chain.nodes.empty() && (instance_is_1_1 || instance_info.properties2_ext_enabled)) {
+    if (!fill_chain.empty() && (instance_is_1_1 || instance_info.properties2_ext_enabled)) {
         VkPhysicalDeviceFeatures2 local_features{};
-        fill_chain.chain_up(local_features);
+        fill_chain.create_chained_features(local_features);
         // Use KHR function if not able to use the core function
         if (instance_is_1_1) {
             detail::vulkan_functions().fp_vkGetPhysicalDeviceFeatures2(vk_phys_device, &local_features);
@@ -1227,9 +1261,9 @@ PhysicalDevice::Suitable PhysicalDeviceSelector::is_device_suitable(PhysicalDevi
         suitable = PhysicalDevice::Suitable::partial;
     }
 
-    bool required_features_supported = detail::supports_features(
+    auto unsupported_features = detail::supports_features(
         pd.features, criteria.required_features, pd.extended_features_chain, criteria.extended_features_chain);
-    if (!required_features_supported) return PhysicalDevice::Suitable::no;
+    if (!unsupported_features.empty()) return PhysicalDevice::Suitable::no;
 
     for (uint32_t i = 0; i < pd.memory_properties.memoryHeapCount; i++) {
         if (pd.memory_properties.memoryHeaps[i].flags & VK_MEMORY_HEAP_DEVICE_LOCAL_BIT) {
@@ -1255,18 +1289,6 @@ PhysicalDeviceSelector::PhysicalDeviceSelector(Instance const& instance, VkSurfa
 }
 
 Result<std::vector<PhysicalDevice>> PhysicalDeviceSelector::select_impl() const {
-#if !defined(NDEBUG)
-    // Validation
-    for (const auto& node : criteria.extended_features_chain.nodes) {
-        assert(node.sType != static_cast<VkStructureType>(0) &&
-               "Features struct sType must be filled with the struct's "
-               "corresponding VkStructureType enum");
-        assert(node.sType != VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2 &&
-               "Do not pass VkPhysicalDeviceFeatures2 as a required extension feature structure. An "
-               "instance of this is managed internally for selection criteria and device creation.");
-    }
-#endif
-
     if (criteria.require_present && !criteria.defer_surface_initialization) {
         if (instance_info.surface == VK_NULL_HANDLE)
             return Result<std::vector<PhysicalDevice>>{ PhysicalDeviceError::no_surface_provided };
@@ -1523,34 +1545,20 @@ bool PhysicalDevice::enable_features_if_present(const VkPhysicalDeviceFeatures& 
     VkPhysicalDeviceFeatures actual_pdf{};
     detail::vulkan_functions().fp_vkGetPhysicalDeviceFeatures(physical_device, &actual_pdf);
 
-    bool required_features_supported = detail::supports_features(actual_pdf, features_to_enable, {}, {});
-    if (required_features_supported) {
+    auto unsupported_features = detail::supports_features(actual_pdf, features_to_enable, {}, {});
+    if (unsupported_features.empty()) {
         detail::combine_features(features, features_to_enable);
+        return true;
     }
-    return required_features_supported;
+    return false;
 }
 
-bool PhysicalDevice::is_features_node_present(detail::GenericFeaturesPNextNode const& node) const {
-    detail::GenericFeatureChain requested_features;
-    requested_features.nodes.push_back(node);
-
-    return extended_features_chain.find_and_match(requested_features);
-}
-
-bool PhysicalDevice::enable_features_node_if_present(detail::GenericFeaturesPNextNode const& node) {
+bool PhysicalDevice::enable_features_struct_if_present(
+    VkStructureType sType, size_t struct_size, const void* features_struct, void* query_struct) {
     VkPhysicalDeviceFeatures2 actual_pdf2{};
-
-    detail::GenericFeatureChain requested_features;
-    requested_features.nodes.push_back(node);
-
-    detail::GenericFeatureChain fill_chain = requested_features;
-    // Zero out supported features
-    fill_chain.nodes.front().disable_fields();
-
     actual_pdf2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
-    fill_chain.chain_up(actual_pdf2);
+    actual_pdf2.pNext = query_struct;
 
-    bool required_features_supported = false;
     bool instance_is_1_1 = instance_version >= VKB_VK_API_VERSION_1_1;
     if (instance_is_1_1 || properties2_ext_enabled) {
         if (instance_is_1_1) {
@@ -1558,12 +1566,16 @@ bool PhysicalDevice::enable_features_node_if_present(detail::GenericFeaturesPNex
         } else {
             detail::vulkan_functions().fp_vkGetPhysicalDeviceFeatures2KHR(physical_device, &actual_pdf2);
         }
-        required_features_supported = fill_chain.match_all(requested_features);
-        if (required_features_supported) {
-            extended_features_chain.combine(requested_features);
+
+        std::vector<std::string> error_list;
+        compare_feature_struct(sType, error_list, query_struct, features_struct);
+
+        if (error_list.size() == 0) {
+            extended_features_chain.add_structure(sType, struct_size, features_struct);
+            return true;
         }
     }
-    return required_features_supported;
+    return false;
 }
 
 
@@ -1674,18 +1686,20 @@ Result<Device> DeviceBuilder::build() const {
     if (physical_device.surface != VK_NULL_HANDLE || physical_device.defer_surface_initialization)
         extensions_to_enable.push_back({ VK_KHR_SWAPCHAIN_EXTENSION_NAME });
 
-    std::vector<VkBaseOutStructure*> final_pnext_chain;
+    std::vector<void*> final_pnext_chain;
     VkDeviceCreateInfo device_create_info = {};
 
     bool user_defined_phys_dev_features_2 = false;
     for (auto& pnext : info.pNext_chain) {
-        if (pnext->sType == VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2) {
+        VkBaseOutStructure out_structure{};
+        memcpy(&out_structure, pnext, sizeof(VkBaseOutStructure));
+        if (out_structure.sType == VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2) {
             user_defined_phys_dev_features_2 = true;
             break;
         }
     }
 
-    if (user_defined_phys_dev_features_2 && !physical_device.extended_features_chain.nodes.empty()) {
+    if (user_defined_phys_dev_features_2 && !physical_device.extended_features_chain.empty()) {
         return { DeviceError::VkPhysicalDeviceFeatures2_in_pNext_chain_while_using_add_required_extension_features };
     }
 
@@ -1697,9 +1711,10 @@ Result<Device> DeviceBuilder::build() const {
 
     if (!user_defined_phys_dev_features_2) {
         if (physical_device.instance_version >= VKB_VK_API_VERSION_1_1 || physical_device.properties2_ext_enabled) {
-            final_pnext_chain.push_back(reinterpret_cast<VkBaseOutStructure*>(&local_features2));
-            for (auto& features_node : physical_device_extension_features_copy.nodes) {
-                final_pnext_chain.push_back(reinterpret_cast<VkBaseOutStructure*>(&features_node));
+            final_pnext_chain.push_back(&local_features2);
+            auto features_chain_members = physical_device_extension_features_copy.get_pNext_chain_members();
+            for (auto& features_struct : features_chain_members) {
+                final_pnext_chain.push_back(features_struct);
             }
         } else {
             // Only set device_create_info.pEnabledFeatures when the pNext chain does not contain a VkPhysicalDeviceFeatures2 structure
@@ -1712,11 +1727,7 @@ Result<Device> DeviceBuilder::build() const {
     }
 
     detail::setup_pNext_chain(device_create_info, final_pnext_chain);
-#if !defined(NDEBUG)
-    for (auto& node : final_pnext_chain) {
-        assert(node->sType != VK_STRUCTURE_TYPE_APPLICATION_INFO);
-    }
-#endif
+
     device_create_info.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
     device_create_info.flags = info.flags;
     device_create_info.queueCreateInfoCount = static_cast<uint32_t>(queueCreateInfos.size());
@@ -1981,11 +1992,7 @@ Result<Swapchain> SwapchainBuilder::build() const {
     VkSwapchainCreateInfoKHR swapchain_create_info = {};
     swapchain_create_info.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
     detail::setup_pNext_chain(swapchain_create_info, info.pNext_chain);
-#if !defined(NDEBUG)
-    for (auto& node : info.pNext_chain) {
-        assert(node->sType != VK_STRUCTURE_TYPE_APPLICATION_INFO);
-    }
-#endif
+
     swapchain_create_info.flags = info.create_flags;
     swapchain_create_info.surface = info.surface;
     swapchain_create_info.minImageCount = image_count;

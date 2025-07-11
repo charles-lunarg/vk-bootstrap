@@ -134,6 +134,8 @@ def create_dispatch_table(dispatch_type):
         if command.params[0].name == dispatch_type:
             params = params[1:]
         param_decl = [x.cDeclaration.strip() for x in params]
+        if command.name == 'vkReleaseSwapchainImagesEXT':
+            param_decl[0] = param_decl[0].replace('VkReleaseSwapchainImagesInfoKHR', 'VkReleaseSwapchainImagesInfoEXT')
         param_names = [x.name for x in params]
         if command.params[0].name == dispatch_type:
             param_names.insert(0, dispatch_type)

@@ -5832,7 +5832,7 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_EXT_swapchain_maintenance1))
-    VkResult releaseSwapchainImagesEXT(const VkReleaseSwapchainImagesInfoKHR* pReleaseInfo) const noexcept {
+    VkResult releaseSwapchainImagesEXT(const VkReleaseSwapchainImagesInfoEXT* pReleaseInfo) const noexcept {
         return fp_vkReleaseSwapchainImagesEXT(device, pReleaseInfo);
     }
 #endif

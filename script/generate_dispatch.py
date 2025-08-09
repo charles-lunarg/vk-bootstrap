@@ -52,6 +52,11 @@ HEADER_VERSION_WORKAROUNDS = {
     'vkCmdDispatchTileQCOM': '316', # Changed API parameters
 }
 
+# Functions that have types which have been promoted - workaround to allow users to use the non-promoted functions (ie, when the header is older)
+DEPROMOTED_TYPES = {
+    "vkReleaseSwapchainImagesEXT": [ "VkReleaseSwapchainImagesInfoKHR","VkReleaseSwapchainImagesInfoEXT"]
+}
+
 # License
 dispatch_license = '''/*
  * Copyright © 2021 Cody Goodson (contact@vibimanx.com)
@@ -135,6 +140,9 @@ def create_dispatch_table(dispatch_type):
             params = params[1:]
         param_decl = [x.cDeclaration.strip() for x in params]
         param_names = [x.name for x in params]
+        if command.name in DEPROMOTED_TYPES:
+            replacement = DEPROMOTED_TYPES.get(command.name)
+            param_decl = [x.replace(replacement[0], replacement[1]) for x in param_decl]
         if command.params[0].name == dispatch_type:
             param_names.insert(0, dispatch_type)
         out += f'    {command.returnType} {command.name[2].lower()}{command.name[3:]}({", ".join(param_decl)}) const noexcept {{\n        {"return " if command.returnType != "void" else ""}fp_{command.name}({", ".join(param_names)});\n    }}\n'

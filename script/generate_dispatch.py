@@ -20,7 +20,7 @@
 # This file is a part of VkBootstrap
 # https://github.com/charles-lunarg/vk-bootstrap
 
-# This script reqiores the vulkan_object package to be installed
+# This script requires the vulkan_object package to be installed
 # https://github.com/KhronosGroup/vulkan-object
 
 import os
@@ -60,7 +60,7 @@ DEPROMOTED_TYPES = {
 # License
 dispatch_license = '''/*
  * Copyright © 2021 Cody Goodson (contact@vibimanx.com)
- * Copyright © 2022 Charles Giessen (charles@lunarg.com)
+ * Copyright © 2022-2025 Charles Giessen (charles@lunarg.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
  * documentation files (the “Software”), to deal in the Software without restriction, including without

@@ -52,11 +52,6 @@ HEADER_VERSION_WORKAROUNDS = {
     'vkCmdDispatchTileQCOM': '316', # Changed API parameters
 }
 
-# Functions that have types which have been promoted - workaround to allow users to use the non-promoted functions (ie, when the header is older)
-DEPROMOTED_TYPES = {
-    "vkReleaseSwapchainImagesEXT": [ "VkReleaseSwapchainImagesInfoKHR","VkReleaseSwapchainImagesInfoEXT"]
-}
-
 # License
 dispatch_license = '''/*
  * Copyright © 2021 Cody Goodson (contact@vibimanx.com)
@@ -111,7 +106,51 @@ def command_end_include_guard_member_decl(command):
         return ''
     return f'#else\n    void * fp_{command.name}{{}};\n#endif\n'
 
+# Types which have been promoted from use the promoted types instead of their original types.
+# Because we support using vk-bootstrap generated from newer code with older headers, we must manually undo these promotions
+
+def get_depromotion_map():
+    depromotion_map = {}
+    type_alias_map = {}
+
+    # Gather aliases from all types
+    for struct_name, struct in vk.structs.items():
+        if len(struct.aliases) > 0:
+            type_alias_map[struct_name] = struct.aliases
+    for enum_name, enum in vk.structs.items():
+        if len(enum.aliases) > 0:
+            type_alias_map[enum_name] = enum.aliases
+    for flag_name, flag in vk.enums.items():
+        if len(flag.aliases) > 0:
+            type_alias_map[flag_name] = flag.aliases
+    for bitmask_name, bitmask in vk.bitmasks.items():
+        if len(bitmask.aliases) > 0:
+            type_alias_map[bitmask_name] = bitmask.aliases
+    for handle_name, handle in vk.handles.items():
+        if len(handle.aliases) > 0:
+            type_alias_map[handle_name] = handle.aliases
+
+    for command_name, command in vk.commands.items():
+        if command.alias is not None:
+            command_tag = None
+            for tag in vk.vendorTags:
+                if tag in command_name:
+                    command_tag = tag
+            if command_tag is None:
+                continue
+
+            for param in command.params:
+                if param.type in type_alias_map:
+                    best_alias_match = [x for x in type_alias_map[param.type] if x.endswith(command_tag)][0]
+                    if command_name not in depromotion_map:
+                        depromotion_map[command_name] = []
+                    depromotion_map[command_name].append([param.type, best_alias_match])
+
+    return depromotion_map
+
 def create_dispatch_table(dispatch_type):
+    depromotion_map = get_depromotion_map()
+
     out = ''
     if dispatch_type == INSTANCE:
         commands = [x for x in vk.commands.values() if x.instance and x.name not in exclusions and x.params[0].type in ['VkInstance','VkPhysicalDevice']]
@@ -140,9 +179,27 @@ def create_dispatch_table(dispatch_type):
             params = params[1:]
         param_decl = [x.cDeclaration.strip() for x in params]
         param_names = [x.name for x in params]
-        if command.name in DEPROMOTED_TYPES:
-            replacement = DEPROMOTED_TYPES.get(command.name)
-            param_decl = [x.replace(replacement[0], replacement[1]) for x in param_decl]
+        if command.name in depromotion_map:
+            new_param_decl = []
+            cur_depromotion_list = depromotion_map[command.name]
+            for param in param_decl:
+                valid_demotions = []
+                for cur_depromotion in cur_depromotion_list:
+                    if cur_depromotion[0] in param:
+                        valid_demotions.append(cur_depromotion)
+                if len(valid_demotions) > 0:
+
+                    depromotion_to_apply = valid_demotions[0]
+                    # Sometimes demotions are valid substrings of the wrong parameter type. Because we just concat the cDecl, there isn't a great way to detect this.
+                    # Rather, we just pick the longest depromotion available.
+                    for cur_depromotion in valid_demotions:
+                        if len(cur_depromotion[0]) > len(depromotion_to_apply[0]):
+                            depromotion_to_apply = cur_depromotion
+                    new_param_decl.append(param.replace(depromotion_to_apply[0], depromotion_to_apply[1]))
+                else:
+                    new_param_decl.append(param)
+            param_decl = new_param_decl
+
         if command.params[0].name == dispatch_type:
             param_names.insert(0, dispatch_type)
         out += f'    {command.returnType} {command.name[2].lower()}{command.name[3:]}({", ".join(param_decl)}) const noexcept {{\n        {"return " if command.returnType != "void" else ""}fp_{command.name}({", ".join(param_names)});\n    }}\n'

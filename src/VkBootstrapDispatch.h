@@ -480,7 +480,7 @@ struct InstanceDispatchTable {
     }
 #endif
 #if (defined(VK_KHR_device_group_creation))
-    VkResult enumeratePhysicalDeviceGroupsKHR(uint32_t* pPhysicalDeviceGroupCount, VkPhysicalDeviceGroupProperties* pPhysicalDeviceGroupProperties) const noexcept {
+    VkResult enumeratePhysicalDeviceGroupsKHR(uint32_t* pPhysicalDeviceGroupCount, VkPhysicalDeviceGroupPropertiesKHR* pPhysicalDeviceGroupProperties) const noexcept {
         return fp_vkEnumeratePhysicalDeviceGroupsKHR(instance, pPhysicalDeviceGroupCount, pPhysicalDeviceGroupProperties);
     }
 #endif
@@ -526,7 +526,7 @@ struct InstanceDispatchTable {
         return fp_vkGetInstanceProcAddr(instance, pName);
     }
 #if (defined(VK_EXT_calibrated_timestamps))
-    VkResult getPhysicalDeviceCalibrateableTimeDomainsEXT(VkPhysicalDevice physicalDevice, uint32_t* pTimeDomainCount, VkTimeDomainKHR* pTimeDomains) const noexcept {
+    VkResult getPhysicalDeviceCalibrateableTimeDomainsEXT(VkPhysicalDevice physicalDevice, uint32_t* pTimeDomainCount, VkTimeDomainEXT* pTimeDomains) const noexcept {
         return fp_vkGetPhysicalDeviceCalibrateableTimeDomainsEXT(physicalDevice, pTimeDomainCount, pTimeDomains);
     }
 #endif
@@ -586,7 +586,7 @@ struct InstanceDispatchTable {
     }
 #endif
 #if (defined(VK_KHR_external_memory_capabilities))
-    void getPhysicalDeviceExternalBufferPropertiesKHR(VkPhysicalDevice physicalDevice, const VkPhysicalDeviceExternalBufferInfo* pExternalBufferInfo, VkExternalBufferProperties* pExternalBufferProperties) const noexcept {
+    void getPhysicalDeviceExternalBufferPropertiesKHR(VkPhysicalDevice physicalDevice, const VkPhysicalDeviceExternalBufferInfoKHR* pExternalBufferInfo, VkExternalBufferPropertiesKHR* pExternalBufferProperties) const noexcept {
         fp_vkGetPhysicalDeviceExternalBufferPropertiesKHR(physicalDevice, pExternalBufferInfo, pExternalBufferProperties);
     }
 #endif
@@ -596,7 +596,7 @@ struct InstanceDispatchTable {
     }
 #endif
 #if (defined(VK_KHR_external_fence_capabilities))
-    void getPhysicalDeviceExternalFencePropertiesKHR(VkPhysicalDevice physicalDevice, const VkPhysicalDeviceExternalFenceInfo* pExternalFenceInfo, VkExternalFenceProperties* pExternalFenceProperties) const noexcept {
+    void getPhysicalDeviceExternalFencePropertiesKHR(VkPhysicalDevice physicalDevice, const VkPhysicalDeviceExternalFenceInfoKHR* pExternalFenceInfo, VkExternalFencePropertiesKHR* pExternalFenceProperties) const noexcept {
         fp_vkGetPhysicalDeviceExternalFencePropertiesKHR(physicalDevice, pExternalFenceInfo, pExternalFenceProperties);
     }
 #endif
@@ -611,7 +611,7 @@ struct InstanceDispatchTable {
     }
 #endif
 #if (defined(VK_KHR_external_semaphore_capabilities))
-    void getPhysicalDeviceExternalSemaphorePropertiesKHR(VkPhysicalDevice physicalDevice, const VkPhysicalDeviceExternalSemaphoreInfo* pExternalSemaphoreInfo, VkExternalSemaphoreProperties* pExternalSemaphoreProperties) const noexcept {
+    void getPhysicalDeviceExternalSemaphorePropertiesKHR(VkPhysicalDevice physicalDevice, const VkPhysicalDeviceExternalSemaphoreInfoKHR* pExternalSemaphoreInfo, VkExternalSemaphorePropertiesKHR* pExternalSemaphoreProperties) const noexcept {
         fp_vkGetPhysicalDeviceExternalSemaphorePropertiesKHR(physicalDevice, pExternalSemaphoreInfo, pExternalSemaphoreProperties);
     }
 #endif
@@ -629,7 +629,7 @@ struct InstanceDispatchTable {
     }
 #endif
 #if (defined(VK_KHR_get_physical_device_properties2))
-    void getPhysicalDeviceFeatures2KHR(VkPhysicalDevice physicalDevice, VkPhysicalDeviceFeatures2* pFeatures) const noexcept {
+    void getPhysicalDeviceFeatures2KHR(VkPhysicalDevice physicalDevice, VkPhysicalDeviceFeatures2KHR* pFeatures) const noexcept {
         fp_vkGetPhysicalDeviceFeatures2KHR(physicalDevice, pFeatures);
     }
 #endif
@@ -642,7 +642,7 @@ struct InstanceDispatchTable {
     }
 #endif
 #if (defined(VK_KHR_get_physical_device_properties2))
-    void getPhysicalDeviceFormatProperties2KHR(VkPhysicalDevice physicalDevice, VkFormat format, VkFormatProperties2* pFormatProperties) const noexcept {
+    void getPhysicalDeviceFormatProperties2KHR(VkPhysicalDevice physicalDevice, VkFormat format, VkFormatProperties2KHR* pFormatProperties) const noexcept {
         fp_vkGetPhysicalDeviceFormatProperties2KHR(physicalDevice, format, pFormatProperties);
     }
 #endif
@@ -660,7 +660,7 @@ struct InstanceDispatchTable {
     }
 #endif
 #if (defined(VK_KHR_get_physical_device_properties2))
-    VkResult getPhysicalDeviceImageFormatProperties2KHR(VkPhysicalDevice physicalDevice, const VkPhysicalDeviceImageFormatInfo2* pImageFormatInfo, VkImageFormatProperties2* pImageFormatProperties) const noexcept {
+    VkResult getPhysicalDeviceImageFormatProperties2KHR(VkPhysicalDevice physicalDevice, const VkPhysicalDeviceImageFormatInfo2KHR* pImageFormatInfo, VkImageFormatProperties2KHR* pImageFormatProperties) const noexcept {
         return fp_vkGetPhysicalDeviceImageFormatProperties2KHR(physicalDevice, pImageFormatInfo, pImageFormatProperties);
     }
 #endif
@@ -673,7 +673,7 @@ struct InstanceDispatchTable {
     }
 #endif
 #if (defined(VK_KHR_get_physical_device_properties2))
-    void getPhysicalDeviceMemoryProperties2KHR(VkPhysicalDevice physicalDevice, VkPhysicalDeviceMemoryProperties2* pMemoryProperties) const noexcept {
+    void getPhysicalDeviceMemoryProperties2KHR(VkPhysicalDevice physicalDevice, VkPhysicalDeviceMemoryProperties2KHR* pMemoryProperties) const noexcept {
         fp_vkGetPhysicalDeviceMemoryProperties2KHR(physicalDevice, pMemoryProperties);
     }
 #endif
@@ -701,7 +701,7 @@ struct InstanceDispatchTable {
     }
 #endif
 #if (defined(VK_KHR_get_physical_device_properties2))
-    void getPhysicalDeviceProperties2KHR(VkPhysicalDevice physicalDevice, VkPhysicalDeviceProperties2* pProperties) const noexcept {
+    void getPhysicalDeviceProperties2KHR(VkPhysicalDevice physicalDevice, VkPhysicalDeviceProperties2KHR* pProperties) const noexcept {
         fp_vkGetPhysicalDeviceProperties2KHR(physicalDevice, pProperties);
     }
 #endif
@@ -729,7 +729,7 @@ struct InstanceDispatchTable {
     }
 #endif
 #if (defined(VK_KHR_get_physical_device_properties2))
-    void getPhysicalDeviceQueueFamilyProperties2KHR(VkPhysicalDevice physicalDevice, uint32_t* pQueueFamilyPropertyCount, VkQueueFamilyProperties2* pQueueFamilyProperties) const noexcept {
+    void getPhysicalDeviceQueueFamilyProperties2KHR(VkPhysicalDevice physicalDevice, uint32_t* pQueueFamilyPropertyCount, VkQueueFamilyProperties2KHR* pQueueFamilyProperties) const noexcept {
         fp_vkGetPhysicalDeviceQueueFamilyProperties2KHR(physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties);
     }
 #endif
@@ -747,7 +747,7 @@ struct InstanceDispatchTable {
     }
 #endif
 #if (defined(VK_KHR_get_physical_device_properties2))
-    void getPhysicalDeviceSparseImageFormatProperties2KHR(VkPhysicalDevice physicalDevice, const VkPhysicalDeviceSparseImageFormatInfo2* pFormatInfo, uint32_t* pPropertyCount, VkSparseImageFormatProperties2* pProperties) const noexcept {
+    void getPhysicalDeviceSparseImageFormatProperties2KHR(VkPhysicalDevice physicalDevice, const VkPhysicalDeviceSparseImageFormatInfo2KHR* pFormatInfo, uint32_t* pPropertyCount, VkSparseImageFormatProperties2KHR* pProperties) const noexcept {
         fp_vkGetPhysicalDeviceSparseImageFormatProperties2KHR(physicalDevice, pFormatInfo, pPropertyCount, pProperties);
     }
 #endif
@@ -802,7 +802,7 @@ struct InstanceDispatchTable {
     }
 #endif
 #if (defined(VK_EXT_tooling_info))
-    VkResult getPhysicalDeviceToolPropertiesEXT(VkPhysicalDevice physicalDevice, uint32_t* pToolCount, VkPhysicalDeviceToolProperties* pToolProperties) const noexcept {
+    VkResult getPhysicalDeviceToolPropertiesEXT(VkPhysicalDevice physicalDevice, uint32_t* pToolCount, VkPhysicalDeviceToolPropertiesEXT* pToolProperties) const noexcept {
         return fp_vkGetPhysicalDeviceToolPropertiesEXT(physicalDevice, pToolCount, pToolProperties);
     }
 #endif
@@ -3117,7 +3117,7 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_KHR_bind_memory2))
-    VkResult bindBufferMemory2KHR(uint32_t bindInfoCount, const VkBindBufferMemoryInfo* pBindInfos) const noexcept {
+    VkResult bindBufferMemory2KHR(uint32_t bindInfoCount, const VkBindBufferMemoryInfoKHR* pBindInfos) const noexcept {
         return fp_vkBindBufferMemory2KHR(device, bindInfoCount, pBindInfos);
     }
 #endif
@@ -3135,7 +3135,7 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_KHR_bind_memory2))
-    VkResult bindImageMemory2KHR(uint32_t bindInfoCount, const VkBindImageMemoryInfo* pBindInfos) const noexcept {
+    VkResult bindImageMemory2KHR(uint32_t bindInfoCount, const VkBindImageMemoryInfoKHR* pBindInfos) const noexcept {
         return fp_vkBindImageMemory2KHR(device, bindInfoCount, pBindInfos);
     }
 #endif
@@ -3196,7 +3196,7 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_KHR_create_renderpass2))
-    void cmdBeginRenderPass2KHR(VkCommandBuffer commandBuffer, const VkRenderPassBeginInfo* pRenderPassBegin, const VkSubpassBeginInfo* pSubpassBeginInfo) const noexcept {
+    void cmdBeginRenderPass2KHR(VkCommandBuffer commandBuffer, const VkRenderPassBeginInfo* pRenderPassBegin, const VkSubpassBeginInfoKHR* pSubpassBeginInfo) const noexcept {
         fp_vkCmdBeginRenderPass2KHR(commandBuffer, pRenderPassBegin, pSubpassBeginInfo);
     }
 #endif
@@ -3206,7 +3206,7 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_KHR_dynamic_rendering))
-    void cmdBeginRenderingKHR(VkCommandBuffer commandBuffer, const VkRenderingInfo* pRenderingInfo) const noexcept {
+    void cmdBeginRenderingKHR(VkCommandBuffer commandBuffer, const VkRenderingInfoKHR* pRenderingInfo) const noexcept {
         fp_vkCmdBeginRenderingKHR(commandBuffer, pRenderingInfo);
     }
 #endif
@@ -3244,7 +3244,7 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_KHR_maintenance6))
-    void cmdBindDescriptorSets2KHR(VkCommandBuffer commandBuffer, const VkBindDescriptorSetsInfo* pBindDescriptorSetsInfo) const noexcept {
+    void cmdBindDescriptorSets2KHR(VkCommandBuffer commandBuffer, const VkBindDescriptorSetsInfoKHR* pBindDescriptorSetsInfo) const noexcept {
         fp_vkCmdBindDescriptorSets2KHR(commandBuffer, pBindDescriptorSetsInfo);
     }
 #endif
@@ -3316,7 +3316,7 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_KHR_copy_commands2))
-    void cmdBlitImage2KHR(VkCommandBuffer commandBuffer, const VkBlitImageInfo2* pBlitImageInfo) const noexcept {
+    void cmdBlitImage2KHR(VkCommandBuffer commandBuffer, const VkBlitImageInfo2KHR* pBlitImageInfo) const noexcept {
         fp_vkCmdBlitImage2KHR(commandBuffer, pBlitImageInfo);
     }
 #endif
@@ -3393,7 +3393,7 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_KHR_copy_commands2))
-    void cmdCopyBuffer2KHR(VkCommandBuffer commandBuffer, const VkCopyBufferInfo2* pCopyBufferInfo) const noexcept {
+    void cmdCopyBuffer2KHR(VkCommandBuffer commandBuffer, const VkCopyBufferInfo2KHR* pCopyBufferInfo) const noexcept {
         fp_vkCmdCopyBuffer2KHR(commandBuffer, pCopyBufferInfo);
     }
 #endif
@@ -3406,7 +3406,7 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_KHR_copy_commands2))
-    void cmdCopyBufferToImage2KHR(VkCommandBuffer commandBuffer, const VkCopyBufferToImageInfo2* pCopyBufferToImageInfo) const noexcept {
+    void cmdCopyBufferToImage2KHR(VkCommandBuffer commandBuffer, const VkCopyBufferToImageInfo2KHR* pCopyBufferToImageInfo) const noexcept {
         fp_vkCmdCopyBufferToImage2KHR(commandBuffer, pCopyBufferToImageInfo);
     }
 #endif
@@ -3419,7 +3419,7 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_KHR_copy_commands2))
-    void cmdCopyImage2KHR(VkCommandBuffer commandBuffer, const VkCopyImageInfo2* pCopyImageInfo) const noexcept {
+    void cmdCopyImage2KHR(VkCommandBuffer commandBuffer, const VkCopyImageInfo2KHR* pCopyImageInfo) const noexcept {
         fp_vkCmdCopyImage2KHR(commandBuffer, pCopyImageInfo);
     }
 #endif
@@ -3432,7 +3432,7 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_KHR_copy_commands2))
-    void cmdCopyImageToBuffer2KHR(VkCommandBuffer commandBuffer, const VkCopyImageToBufferInfo2* pCopyImageToBufferInfo) const noexcept {
+    void cmdCopyImageToBuffer2KHR(VkCommandBuffer commandBuffer, const VkCopyImageToBufferInfo2KHR* pCopyImageToBufferInfo) const noexcept {
         fp_vkCmdCopyImageToBuffer2KHR(commandBuffer, pCopyImageToBufferInfo);
     }
 #endif
@@ -3689,7 +3689,7 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_KHR_create_renderpass2))
-    void cmdEndRenderPass2KHR(VkCommandBuffer commandBuffer, const VkSubpassEndInfo* pSubpassEndInfo) const noexcept {
+    void cmdEndRenderPass2KHR(VkCommandBuffer commandBuffer, const VkSubpassEndInfoKHR* pSubpassEndInfo) const noexcept {
         fp_vkCmdEndRenderPass2KHR(commandBuffer, pSubpassEndInfo);
     }
 #endif
@@ -3753,7 +3753,7 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_KHR_create_renderpass2))
-    void cmdNextSubpass2KHR(VkCommandBuffer commandBuffer, const VkSubpassBeginInfo* pSubpassBeginInfo, const VkSubpassEndInfo* pSubpassEndInfo) const noexcept {
+    void cmdNextSubpass2KHR(VkCommandBuffer commandBuffer, const VkSubpassBeginInfoKHR* pSubpassBeginInfo, const VkSubpassEndInfoKHR* pSubpassEndInfo) const noexcept {
         fp_vkCmdNextSubpass2KHR(commandBuffer, pSubpassBeginInfo, pSubpassEndInfo);
     }
 #endif
@@ -3771,7 +3771,7 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_KHR_synchronization2))
-    void cmdPipelineBarrier2KHR(VkCommandBuffer commandBuffer, const VkDependencyInfo* pDependencyInfo) const noexcept {
+    void cmdPipelineBarrier2KHR(VkCommandBuffer commandBuffer, const VkDependencyInfoKHR* pDependencyInfo) const noexcept {
         fp_vkCmdPipelineBarrier2KHR(commandBuffer, pDependencyInfo);
     }
 #endif
@@ -3794,7 +3794,7 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_KHR_maintenance6))
-    void cmdPushConstants2KHR(VkCommandBuffer commandBuffer, const VkPushConstantsInfo* pPushConstantsInfo) const noexcept {
+    void cmdPushConstants2KHR(VkCommandBuffer commandBuffer, const VkPushConstantsInfoKHR* pPushConstantsInfo) const noexcept {
         fp_vkCmdPushConstants2KHR(commandBuffer, pPushConstantsInfo);
     }
 #endif
@@ -3809,7 +3809,7 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_KHR_maintenance6))
-    void cmdPushDescriptorSet2KHR(VkCommandBuffer commandBuffer, const VkPushDescriptorSetInfo* pPushDescriptorSetInfo) const noexcept {
+    void cmdPushDescriptorSet2KHR(VkCommandBuffer commandBuffer, const VkPushDescriptorSetInfoKHR* pPushDescriptorSetInfo) const noexcept {
         fp_vkCmdPushDescriptorSet2KHR(commandBuffer, pPushDescriptorSetInfo);
     }
 #endif
@@ -3829,12 +3829,12 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_KHR_maintenance6))
-    void cmdPushDescriptorSetWithTemplate2KHR(VkCommandBuffer commandBuffer, const VkPushDescriptorSetWithTemplateInfo* pPushDescriptorSetWithTemplateInfo) const noexcept {
+    void cmdPushDescriptorSetWithTemplate2KHR(VkCommandBuffer commandBuffer, const VkPushDescriptorSetWithTemplateInfoKHR* pPushDescriptorSetWithTemplateInfo) const noexcept {
         fp_vkCmdPushDescriptorSetWithTemplate2KHR(commandBuffer, pPushDescriptorSetWithTemplateInfo);
     }
 #endif
 #if (defined(VK_KHR_push_descriptor) || defined(VK_KHR_descriptor_update_template))
-    void cmdPushDescriptorSetWithTemplateKHR(VkCommandBuffer commandBuffer, VkDescriptorUpdateTemplate descriptorUpdateTemplate, VkPipelineLayout layout, uint32_t set, const void* pData) const noexcept {
+    void cmdPushDescriptorSetWithTemplateKHR(VkCommandBuffer commandBuffer, VkDescriptorUpdateTemplateKHR descriptorUpdateTemplate, VkPipelineLayout layout, uint32_t set, const void* pData) const noexcept {
         fp_vkCmdPushDescriptorSetWithTemplateKHR(commandBuffer, descriptorUpdateTemplate, layout, set, pData);
     }
 #endif
@@ -3863,7 +3863,7 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_KHR_copy_commands2))
-    void cmdResolveImage2KHR(VkCommandBuffer commandBuffer, const VkResolveImageInfo2* pResolveImageInfo) const noexcept {
+    void cmdResolveImage2KHR(VkCommandBuffer commandBuffer, const VkResolveImageInfo2KHR* pResolveImageInfo) const noexcept {
         fp_vkCmdResolveImage2KHR(commandBuffer, pResolveImageInfo);
     }
 #endif
@@ -4090,7 +4090,7 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_KHR_synchronization2))
-    void cmdSetEvent2KHR(VkCommandBuffer commandBuffer, VkEvent event, const VkDependencyInfo* pDependencyInfo) const noexcept {
+    void cmdSetEvent2KHR(VkCommandBuffer commandBuffer, VkEvent event, const VkDependencyInfoKHR* pDependencyInfo) const noexcept {
         fp_vkCmdSetEvent2KHR(commandBuffer, event, pDependencyInfo);
     }
 #endif
@@ -4248,7 +4248,7 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_KHR_dynamic_rendering_local_read))
-    void cmdSetRenderingAttachmentLocationsKHR(VkCommandBuffer commandBuffer, const VkRenderingAttachmentLocationInfo* pLocationInfo) const noexcept {
+    void cmdSetRenderingAttachmentLocationsKHR(VkCommandBuffer commandBuffer, const VkRenderingAttachmentLocationInfoKHR* pLocationInfo) const noexcept {
         fp_vkCmdSetRenderingAttachmentLocationsKHR(commandBuffer, pLocationInfo);
     }
 #endif
@@ -4258,7 +4258,7 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_KHR_dynamic_rendering_local_read))
-    void cmdSetRenderingInputAttachmentIndicesKHR(VkCommandBuffer commandBuffer, const VkRenderingInputAttachmentIndexInfo* pInputAttachmentIndexInfo) const noexcept {
+    void cmdSetRenderingInputAttachmentIndicesKHR(VkCommandBuffer commandBuffer, const VkRenderingInputAttachmentIndexInfoKHR* pInputAttachmentIndexInfo) const noexcept {
         fp_vkCmdSetRenderingInputAttachmentIndicesKHR(commandBuffer, pInputAttachmentIndexInfo);
     }
 #endif
@@ -4414,7 +4414,7 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_KHR_synchronization2))
-    void cmdWaitEvents2KHR(VkCommandBuffer commandBuffer, uint32_t eventCount, const VkEvent* pEvents, const VkDependencyInfo* pDependencyInfos) const noexcept {
+    void cmdWaitEvents2KHR(VkCommandBuffer commandBuffer, uint32_t eventCount, const VkEvent* pEvents, const VkDependencyInfoKHR* pDependencyInfos) const noexcept {
         fp_vkCmdWaitEvents2KHR(commandBuffer, eventCount, pEvents, pDependencyInfos);
     }
 #endif
@@ -4482,7 +4482,7 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_EXT_host_image_copy))
-    VkResult copyImageToImageEXT(const VkCopyImageToImageInfo* pCopyImageToImageInfo) const noexcept {
+    VkResult copyImageToImageEXT(const VkCopyImageToImageInfoEXT* pCopyImageToImageInfo) const noexcept {
         return fp_vkCopyImageToImageEXT(device, pCopyImageToImageInfo);
     }
 #endif
@@ -4492,7 +4492,7 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_EXT_host_image_copy))
-    VkResult copyImageToMemoryEXT(const VkCopyImageToMemoryInfo* pCopyImageToMemoryInfo) const noexcept {
+    VkResult copyImageToMemoryEXT(const VkCopyImageToMemoryInfoEXT* pCopyImageToMemoryInfo) const noexcept {
         return fp_vkCopyImageToMemoryEXT(device, pCopyImageToMemoryInfo);
     }
 #endif
@@ -4507,7 +4507,7 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_EXT_host_image_copy))
-    VkResult copyMemoryToImageEXT(const VkCopyMemoryToImageInfo* pCopyMemoryToImageInfo) const noexcept {
+    VkResult copyMemoryToImageEXT(const VkCopyMemoryToImageInfoEXT* pCopyMemoryToImageInfo) const noexcept {
         return fp_vkCopyMemoryToImageEXT(device, pCopyMemoryToImageInfo);
     }
 #endif
@@ -4600,7 +4600,7 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_KHR_descriptor_update_template))
-    VkResult createDescriptorUpdateTemplateKHR(const VkDescriptorUpdateTemplateCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDescriptorUpdateTemplate* pDescriptorUpdateTemplate) const noexcept {
+    VkResult createDescriptorUpdateTemplateKHR(const VkDescriptorUpdateTemplateCreateInfoKHR* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDescriptorUpdateTemplateKHR* pDescriptorUpdateTemplate) const noexcept {
         return fp_vkCreateDescriptorUpdateTemplateKHR(device, pCreateInfo, pAllocator, pDescriptorUpdateTemplate);
     }
 #endif
@@ -4674,7 +4674,7 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_EXT_private_data))
-    VkResult createPrivateDataSlotEXT(const VkPrivateDataSlotCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkPrivateDataSlot* pPrivateDataSlot) const noexcept {
+    VkResult createPrivateDataSlotEXT(const VkPrivateDataSlotCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkPrivateDataSlotEXT* pPrivateDataSlot) const noexcept {
         return fp_vkCreatePrivateDataSlotEXT(device, pCreateInfo, pAllocator, pPrivateDataSlot);
     }
 #endif
@@ -4700,7 +4700,7 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_KHR_create_renderpass2))
-    VkResult createRenderPass2KHR(const VkRenderPassCreateInfo2* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkRenderPass* pRenderPass) const noexcept {
+    VkResult createRenderPass2KHR(const VkRenderPassCreateInfo2KHR* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkRenderPass* pRenderPass) const noexcept {
         return fp_vkCreateRenderPass2KHR(device, pCreateInfo, pAllocator, pRenderPass);
     }
 #endif
@@ -4713,7 +4713,7 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_KHR_sampler_ycbcr_conversion))
-    VkResult createSamplerYcbcrConversionKHR(const VkSamplerYcbcrConversionCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkSamplerYcbcrConversion* pYcbcrConversion) const noexcept {
+    VkResult createSamplerYcbcrConversionKHR(const VkSamplerYcbcrConversionCreateInfoKHR* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkSamplerYcbcrConversionKHR* pYcbcrConversion) const noexcept {
         return fp_vkCreateSamplerYcbcrConversionKHR(device, pCreateInfo, pAllocator, pYcbcrConversion);
     }
 #endif
@@ -4844,7 +4844,7 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_KHR_descriptor_update_template))
-    void destroyDescriptorUpdateTemplateKHR(VkDescriptorUpdateTemplate descriptorUpdateTemplate, const VkAllocationCallbacks* pAllocator) const noexcept {
+    void destroyDescriptorUpdateTemplateKHR(VkDescriptorUpdateTemplateKHR descriptorUpdateTemplate, const VkAllocationCallbacks* pAllocator) const noexcept {
         fp_vkDestroyDescriptorUpdateTemplateKHR(device, descriptorUpdateTemplate, pAllocator);
     }
 #endif
@@ -4913,7 +4913,7 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_EXT_private_data))
-    void destroyPrivateDataSlotEXT(VkPrivateDataSlot privateDataSlot, const VkAllocationCallbacks* pAllocator) const noexcept {
+    void destroyPrivateDataSlotEXT(VkPrivateDataSlotEXT privateDataSlot, const VkAllocationCallbacks* pAllocator) const noexcept {
         fp_vkDestroyPrivateDataSlotEXT(device, privateDataSlot, pAllocator);
     }
 #endif
@@ -4932,7 +4932,7 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_KHR_sampler_ycbcr_conversion))
-    void destroySamplerYcbcrConversionKHR(VkSamplerYcbcrConversion ycbcrConversion, const VkAllocationCallbacks* pAllocator) const noexcept {
+    void destroySamplerYcbcrConversionKHR(VkSamplerYcbcrConversionKHR ycbcrConversion, const VkAllocationCallbacks* pAllocator) const noexcept {
         fp_vkDestroySamplerYcbcrConversionKHR(device, ycbcrConversion, pAllocator);
     }
 #endif
@@ -5046,12 +5046,12 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_EXT_buffer_device_address))
-    VkDeviceAddress getBufferDeviceAddressEXT(const VkBufferDeviceAddressInfo* pInfo) const noexcept {
+    VkDeviceAddress getBufferDeviceAddressEXT(const VkBufferDeviceAddressInfoEXT* pInfo) const noexcept {
         return fp_vkGetBufferDeviceAddressEXT(device, pInfo);
     }
 #endif
 #if (defined(VK_KHR_buffer_device_address))
-    VkDeviceAddress getBufferDeviceAddressKHR(const VkBufferDeviceAddressInfo* pInfo) const noexcept {
+    VkDeviceAddress getBufferDeviceAddressKHR(const VkBufferDeviceAddressInfoKHR* pInfo) const noexcept {
         return fp_vkGetBufferDeviceAddressKHR(device, pInfo);
     }
 #endif
@@ -5064,7 +5064,7 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_KHR_get_memory_requirements2))
-    void getBufferMemoryRequirements2KHR(const VkBufferMemoryRequirementsInfo2* pInfo, VkMemoryRequirements2* pMemoryRequirements) const noexcept {
+    void getBufferMemoryRequirements2KHR(const VkBufferMemoryRequirementsInfo2KHR* pInfo, VkMemoryRequirements2KHR* pMemoryRequirements) const noexcept {
         fp_vkGetBufferMemoryRequirements2KHR(device, pInfo, pMemoryRequirements);
     }
 #endif
@@ -5074,7 +5074,7 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_KHR_buffer_device_address))
-    uint64_t getBufferOpaqueCaptureAddressKHR(const VkBufferDeviceAddressInfo* pInfo) const noexcept {
+    uint64_t getBufferOpaqueCaptureAddressKHR(const VkBufferDeviceAddressInfoKHR* pInfo) const noexcept {
         return fp_vkGetBufferOpaqueCaptureAddressKHR(device, pInfo);
     }
 #endif
@@ -5084,7 +5084,7 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_EXT_calibrated_timestamps))
-    VkResult getCalibratedTimestampsEXT(uint32_t timestampCount, const VkCalibratedTimestampInfoKHR* pTimestampInfos, uint64_t* pTimestamps, uint64_t* pMaxDeviation) const noexcept {
+    VkResult getCalibratedTimestampsEXT(uint32_t timestampCount, const VkCalibratedTimestampInfoEXT* pTimestampInfos, uint64_t* pTimestamps, uint64_t* pMaxDeviation) const noexcept {
         return fp_vkGetCalibratedTimestampsEXT(device, timestampCount, pTimestampInfos, pTimestamps, pMaxDeviation);
     }
 #endif
@@ -5164,7 +5164,7 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_KHR_maintenance3))
-    void getDescriptorSetLayoutSupportKHR(const VkDescriptorSetLayoutCreateInfo* pCreateInfo, VkDescriptorSetLayoutSupport* pSupport) const noexcept {
+    void getDescriptorSetLayoutSupportKHR(const VkDescriptorSetLayoutCreateInfo* pCreateInfo, VkDescriptorSetLayoutSupportKHR* pSupport) const noexcept {
         fp_vkGetDescriptorSetLayoutSupportKHR(device, pCreateInfo, pSupport);
     }
 #endif
@@ -5179,7 +5179,7 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_KHR_maintenance4))
-    void getDeviceBufferMemoryRequirementsKHR(const VkDeviceBufferMemoryRequirements* pInfo, VkMemoryRequirements2* pMemoryRequirements) const noexcept {
+    void getDeviceBufferMemoryRequirementsKHR(const VkDeviceBufferMemoryRequirementsKHR* pInfo, VkMemoryRequirements2KHR* pMemoryRequirements) const noexcept {
         fp_vkGetDeviceBufferMemoryRequirementsKHR(device, pInfo, pMemoryRequirements);
     }
 #endif
@@ -5219,7 +5219,7 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_KHR_maintenance4))
-    void getDeviceImageMemoryRequirementsKHR(const VkDeviceImageMemoryRequirements* pInfo, VkMemoryRequirements2* pMemoryRequirements) const noexcept {
+    void getDeviceImageMemoryRequirementsKHR(const VkDeviceImageMemoryRequirementsKHR* pInfo, VkMemoryRequirements2KHR* pMemoryRequirements) const noexcept {
         fp_vkGetDeviceImageMemoryRequirementsKHR(device, pInfo, pMemoryRequirements);
     }
 #endif
@@ -5229,7 +5229,7 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_KHR_maintenance4))
-    void getDeviceImageSparseMemoryRequirementsKHR(const VkDeviceImageMemoryRequirements* pInfo, uint32_t* pSparseMemoryRequirementCount, VkSparseImageMemoryRequirements2* pSparseMemoryRequirements) const noexcept {
+    void getDeviceImageSparseMemoryRequirementsKHR(const VkDeviceImageMemoryRequirementsKHR* pInfo, uint32_t* pSparseMemoryRequirementCount, VkSparseImageMemoryRequirements2KHR* pSparseMemoryRequirements) const noexcept {
         fp_vkGetDeviceImageSparseMemoryRequirementsKHR(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
     }
 #endif
@@ -5239,7 +5239,7 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_KHR_maintenance5))
-    void getDeviceImageSubresourceLayoutKHR(const VkDeviceImageSubresourceInfo* pInfo, VkSubresourceLayout2* pLayout) const noexcept {
+    void getDeviceImageSubresourceLayoutKHR(const VkDeviceImageSubresourceInfoKHR* pInfo, VkSubresourceLayout2KHR* pLayout) const noexcept {
         fp_vkGetDeviceImageSubresourceLayoutKHR(device, pInfo, pLayout);
     }
 #endif
@@ -5252,7 +5252,7 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_KHR_buffer_device_address))
-    uint64_t getDeviceMemoryOpaqueCaptureAddressKHR(const VkDeviceMemoryOpaqueCaptureAddressInfo* pInfo) const noexcept {
+    uint64_t getDeviceMemoryOpaqueCaptureAddressKHR(const VkDeviceMemoryOpaqueCaptureAddressInfoKHR* pInfo) const noexcept {
         return fp_vkGetDeviceMemoryOpaqueCaptureAddressKHR(device, pInfo);
     }
 #endif
@@ -5349,7 +5349,7 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_KHR_get_memory_requirements2))
-    void getImageMemoryRequirements2KHR(const VkImageMemoryRequirementsInfo2* pInfo, VkMemoryRequirements2* pMemoryRequirements) const noexcept {
+    void getImageMemoryRequirements2KHR(const VkImageMemoryRequirementsInfo2KHR* pInfo, VkMemoryRequirements2KHR* pMemoryRequirements) const noexcept {
         fp_vkGetImageMemoryRequirements2KHR(device, pInfo, pMemoryRequirements);
     }
 #endif
@@ -5367,7 +5367,7 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_KHR_get_memory_requirements2))
-    void getImageSparseMemoryRequirements2KHR(const VkImageSparseMemoryRequirementsInfo2* pInfo, uint32_t* pSparseMemoryRequirementCount, VkSparseImageMemoryRequirements2* pSparseMemoryRequirements) const noexcept {
+    void getImageSparseMemoryRequirements2KHR(const VkImageSparseMemoryRequirementsInfo2KHR* pInfo, uint32_t* pSparseMemoryRequirementCount, VkSparseImageMemoryRequirements2KHR* pSparseMemoryRequirements) const noexcept {
         fp_vkGetImageSparseMemoryRequirements2KHR(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
     }
 #endif
@@ -5380,12 +5380,12 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_EXT_host_image_copy) || defined(VK_EXT_image_compression_control))
-    void getImageSubresourceLayout2EXT(VkImage image, const VkImageSubresource2* pSubresource, VkSubresourceLayout2* pLayout) const noexcept {
+    void getImageSubresourceLayout2EXT(VkImage image, const VkImageSubresource2EXT* pSubresource, VkSubresourceLayout2EXT* pLayout) const noexcept {
         fp_vkGetImageSubresourceLayout2EXT(device, image, pSubresource, pLayout);
     }
 #endif
 #if (defined(VK_KHR_maintenance5))
-    void getImageSubresourceLayout2KHR(VkImage image, const VkImageSubresource2* pSubresource, VkSubresourceLayout2* pLayout) const noexcept {
+    void getImageSubresourceLayout2KHR(VkImage image, const VkImageSubresource2KHR* pSubresource, VkSubresourceLayout2KHR* pLayout) const noexcept {
         fp_vkGetImageSubresourceLayout2KHR(device, image, pSubresource, pLayout);
     }
 #endif
@@ -5543,7 +5543,7 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_EXT_private_data))
-    void getPrivateDataEXT(VkObjectType objectType, uint64_t objectHandle, VkPrivateDataSlot privateDataSlot, uint64_t* pData) const noexcept {
+    void getPrivateDataEXT(VkObjectType objectType, uint64_t objectHandle, VkPrivateDataSlotEXT privateDataSlot, uint64_t* pData) const noexcept {
         fp_vkGetPrivateDataEXT(device, objectType, objectHandle, privateDataSlot, pData);
     }
 #endif
@@ -5594,7 +5594,7 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_KHR_maintenance5))
-    void getRenderingAreaGranularityKHR(const VkRenderingAreaInfo* pRenderingAreaInfo, VkExtent2D* pGranularity) const noexcept {
+    void getRenderingAreaGranularityKHR(const VkRenderingAreaInfoKHR* pRenderingAreaInfo, VkExtent2D* pGranularity) const noexcept {
         fp_vkGetRenderingAreaGranularityKHR(device, pRenderingAreaInfo, pGranularity);
     }
 #endif
@@ -5740,7 +5740,7 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_KHR_map_memory2))
-    VkResult mapMemory2KHR(const VkMemoryMapInfo* pMemoryMapInfo, void** ppData) const noexcept {
+    VkResult mapMemory2KHR(const VkMemoryMapInfoKHR* pMemoryMapInfo, void** ppData) const noexcept {
         return fp_vkMapMemory2KHR(device, pMemoryMapInfo, ppData);
     }
 #endif
@@ -5794,7 +5794,7 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_KHR_synchronization2))
-    VkResult queueSubmit2KHR(VkQueue queue, uint32_t submitCount, const VkSubmitInfo2* pSubmits, VkFence fence) const noexcept {
+    VkResult queueSubmit2KHR(VkQueue queue, uint32_t submitCount, const VkSubmitInfo2KHR* pSubmits, VkFence fence) const noexcept {
         return fp_vkQueueSubmit2KHR(queue, submitCount, pSubmits, fence);
     }
 #endif
@@ -5920,7 +5920,7 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_EXT_private_data))
-    VkResult setPrivateDataEXT(VkObjectType objectType, uint64_t objectHandle, VkPrivateDataSlot privateDataSlot, uint64_t data) const noexcept {
+    VkResult setPrivateDataEXT(VkObjectType objectType, uint64_t objectHandle, VkPrivateDataSlotEXT privateDataSlot, uint64_t data) const noexcept {
         return fp_vkSetPrivateDataEXT(device, objectType, objectHandle, privateDataSlot, data);
     }
 #endif
@@ -5930,7 +5930,7 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_KHR_timeline_semaphore))
-    VkResult signalSemaphoreKHR(const VkSemaphoreSignalInfo* pSignalInfo) const noexcept {
+    VkResult signalSemaphoreKHR(const VkSemaphoreSignalInfoKHR* pSignalInfo) const noexcept {
         return fp_vkSignalSemaphoreKHR(device, pSignalInfo);
     }
 #endif
@@ -5940,7 +5940,7 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_EXT_host_image_copy))
-    VkResult transitionImageLayoutEXT(uint32_t transitionCount, const VkHostImageLayoutTransitionInfo* pTransitions) const noexcept {
+    VkResult transitionImageLayoutEXT(uint32_t transitionCount, const VkHostImageLayoutTransitionInfoEXT* pTransitions) const noexcept {
         return fp_vkTransitionImageLayoutEXT(device, transitionCount, pTransitions);
     }
 #endif
@@ -5968,7 +5968,7 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_KHR_map_memory2))
-    VkResult unmapMemory2KHR(const VkMemoryUnmapInfo* pMemoryUnmapInfo) const noexcept {
+    VkResult unmapMemory2KHR(const VkMemoryUnmapInfoKHR* pMemoryUnmapInfo) const noexcept {
         return fp_vkUnmapMemory2KHR(device, pMemoryUnmapInfo);
     }
 #endif
@@ -5978,7 +5978,7 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_KHR_descriptor_update_template))
-    void updateDescriptorSetWithTemplateKHR(VkDescriptorSet descriptorSet, VkDescriptorUpdateTemplate descriptorUpdateTemplate, const void* pData) const noexcept {
+    void updateDescriptorSetWithTemplateKHR(VkDescriptorSet descriptorSet, VkDescriptorUpdateTemplateKHR descriptorUpdateTemplate, const void* pData) const noexcept {
         fp_vkUpdateDescriptorSetWithTemplateKHR(device, descriptorSet, descriptorUpdateTemplate, pData);
     }
 #endif
@@ -6019,7 +6019,7 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_KHR_timeline_semaphore))
-    VkResult waitSemaphoresKHR(const VkSemaphoreWaitInfo* pWaitInfo, uint64_t timeout) const noexcept {
+    VkResult waitSemaphoresKHR(const VkSemaphoreWaitInfoKHR* pWaitInfo, uint64_t timeout) const noexcept {
         return fp_vkWaitSemaphoresKHR(device, pWaitInfo, timeout);
     }
 #endif

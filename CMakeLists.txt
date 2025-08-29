@@ -13,6 +13,7 @@ option(VK_BOOTSTRAP_WERROR "Enable warnings as errors during compilation" OFF)
 option(VK_BOOTSTRAP_TEST "Test Vk-Bootstrap using Catch2 as well as build examples" ${PROJECT_IS_TOP_LEVEL})
 option(VK_BOOTSTRAP_INSTALL "Enable installing of vk-bootstrap" ${PROJECT_IS_TOP_LEVEL})
 
+option(VK_BOOTSTRAP_FORCE_FETCH_CONTENT "Forces Vulkan-Headers to be acquired using Fetch Content")
 set(VK_BOOTSTRAP_VULKAN_HEADER_DIR "" CACHE FILEPATH "Specify the location of the Vulkan-Headers include directory.")
 mark_as_advanced(VK_BOOTSTRAP_VULKAN_HEADER_DIR)
 
@@ -25,11 +26,15 @@ if(IS_DIRECTORY ${VK_BOOTSTRAP_VULKAN_HEADER_DIR})
     set(VK_BOOTSTRAP_INSTALL OFF)
 # Check if the target is already defined
 elseif(NOT TARGET Vulkan::Headers)
-    # Try looking for the VulkanHeaders package directly
-    find_package(VulkanHeaders CONFIG QUIET)
+    if (NOT VK_BOOTSTRAP_FORCE_FETCH_CONTENT)
+        # Try looking for the VulkanHeaders package directly
+        find_package(VulkanHeaders CONFIG QUIET)
+    endif()
     if (NOT VulkanHeaders_FOUND)
-        # Try looking using the CMake built in Vulkan support
-        find_package(Vulkan QUIET)
+        if (NOT VK_BOOTSTRAP_FORCE_FETCH_CONTENT)
+            # Try looking using the CMake built in Vulkan support
+            find_package(Vulkan QUIET)
+        endif()
 
         if(Vulkan_FOUND)
             # Older CMake versions don't contain Vulkan::Headers - create it in that case

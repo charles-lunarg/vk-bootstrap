@@ -3,8 +3,15 @@
 #include "vulkan_mock.hpp"
 #include "vulkan_mock_setup.hpp"
 
+// Because vulkan-hpp isn't clean of warnings, disable them while including it
+#if defined(__clang__) || defined(__GNUC__) || defined(__GNUG__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wconversion"
+#endif
 #include <vulkan/vulkan.hpp>
-
+#if defined(__clang__) || defined(__GNUC__) || defined(__GNUG__)
+#pragma GCC diagnostic pop
+#endif
 
 TEST_CASE("VulkanHpp Instance with surface", "[VkBootstrap.vulkan_hpp]") {
     VulkanMock& mock = get_and_setup_default();

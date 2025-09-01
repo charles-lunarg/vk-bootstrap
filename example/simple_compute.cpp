@@ -82,7 +82,7 @@ std::vector<char> readFile(const std::string& filename) {
     std::ifstream file(filename, std::ios::ate | std::ios::binary);
 
     if (!file.is_open()) {
-        throw std::runtime_error("failed to open file!");
+        throw std::runtime_error(std::string("Failed to open file ") + filename + "!");
     }
 
     size_t file_size = (size_t)file.tellg();
@@ -123,7 +123,7 @@ void create_descriptor(Init& init, Data& data) {
 }
 
 void create_compute_pipeline(Init& init, Data& data) {
-    auto spv_code = readFile(std::string(EXAMPLE_BUILD_DIRECTORY) + "/simple_compute.comp.spv");
+    auto spv_code = readFile(std::string(EXAMPLE_SOURCE_DIRECTORY) + "/example/shaders/simple_compute.comp.spv");
 
     VkShaderModuleCreateInfo create_info = {};
     create_info.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;

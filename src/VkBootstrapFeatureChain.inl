@@ -1151,6 +1151,14 @@ void merge_VkPhysicalDeviceRayTracingMaintenance1FeaturesKHR(VkPhysicalDeviceRay
     current.rayTracingMaintenance1 = current.rayTracingMaintenance1 || merge_in.rayTracingMaintenance1;
     current.rayTracingPipelineTraceRaysIndirect2 = current.rayTracingPipelineTraceRaysIndirect2 || merge_in.rayTracingPipelineTraceRaysIndirect2;
 }
+void compare_VkPhysicalDeviceShaderUntypedPointersFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceShaderUntypedPointersFeaturesKHR const& supported, VkPhysicalDeviceShaderUntypedPointersFeaturesKHR const& requested) {
+    if (requested.shaderUntypedPointers && !supported.shaderUntypedPointers) {
+        error_list.push_back("VkPhysicalDeviceShaderUntypedPointersFeaturesKHR::shaderUntypedPointers");
+    }
+}
+void merge_VkPhysicalDeviceShaderUntypedPointersFeaturesKHR(VkPhysicalDeviceShaderUntypedPointersFeaturesKHR & current, VkPhysicalDeviceShaderUntypedPointersFeaturesKHR const& merge_in) {
+    current.shaderUntypedPointers = current.shaderUntypedPointers || merge_in.shaderUntypedPointers;
+}
 void compare_VkPhysicalDeviceShaderMaximalReconvergenceFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceShaderMaximalReconvergenceFeaturesKHR const& supported, VkPhysicalDeviceShaderMaximalReconvergenceFeaturesKHR const& requested) {
     if (requested.shaderMaximalReconvergence && !supported.shaderMaximalReconvergence) {
         error_list.push_back("VkPhysicalDeviceShaderMaximalReconvergenceFeaturesKHR::shaderMaximalReconvergence");
@@ -2623,6 +2631,16 @@ void compare_VkPhysicalDeviceAntiLagFeaturesAMD(std::vector<std::string> & error
 void merge_VkPhysicalDeviceAntiLagFeaturesAMD(VkPhysicalDeviceAntiLagFeaturesAMD & current, VkPhysicalDeviceAntiLagFeaturesAMD const& merge_in) {
     current.antiLag = current.antiLag || merge_in.antiLag;
 }
+#if defined(VK_ENABLE_BETA_EXTENSIONS)
+void compare_VkPhysicalDeviceDenseGeometryFormatFeaturesAMDX(std::vector<std::string> & error_list, VkPhysicalDeviceDenseGeometryFormatFeaturesAMDX const& supported, VkPhysicalDeviceDenseGeometryFormatFeaturesAMDX const& requested) {
+    if (requested.denseGeometryFormat && !supported.denseGeometryFormat) {
+        error_list.push_back("VkPhysicalDeviceDenseGeometryFormatFeaturesAMDX::denseGeometryFormat");
+    }
+}
+void merge_VkPhysicalDeviceDenseGeometryFormatFeaturesAMDX(VkPhysicalDeviceDenseGeometryFormatFeaturesAMDX & current, VkPhysicalDeviceDenseGeometryFormatFeaturesAMDX const& merge_in) {
+    current.denseGeometryFormat = current.denseGeometryFormat || merge_in.denseGeometryFormat;
+}
+#endif // defined(VK_ENABLE_BETA_EXTENSIONS)
 void compare_VkPhysicalDeviceShaderObjectFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceShaderObjectFeaturesEXT const& supported, VkPhysicalDeviceShaderObjectFeaturesEXT const& requested) {
     if (requested.shaderObject && !supported.shaderObject) {
         error_list.push_back("VkPhysicalDeviceShaderObjectFeaturesEXT::shaderObject");
@@ -3289,6 +3307,9 @@ void compare_feature_struct(VkStructureType sType, std::vector<std::string> & er
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_MAINTENANCE_1_FEATURES_KHR):
             compare_VkPhysicalDeviceRayTracingMaintenance1FeaturesKHR(error_list, *reinterpret_cast<const VkPhysicalDeviceRayTracingMaintenance1FeaturesKHR*>(supported), *reinterpret_cast<const VkPhysicalDeviceRayTracingMaintenance1FeaturesKHR*>(requested));
             break;
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_UNTYPED_POINTERS_FEATURES_KHR):
+            compare_VkPhysicalDeviceShaderUntypedPointersFeaturesKHR(error_list, *reinterpret_cast<const VkPhysicalDeviceShaderUntypedPointersFeaturesKHR*>(supported), *reinterpret_cast<const VkPhysicalDeviceShaderUntypedPointersFeaturesKHR*>(requested));
+            break;
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MAXIMAL_RECONVERGENCE_FEATURES_KHR):
             compare_VkPhysicalDeviceShaderMaximalReconvergenceFeaturesKHR(error_list, *reinterpret_cast<const VkPhysicalDeviceShaderMaximalReconvergenceFeaturesKHR*>(supported), *reinterpret_cast<const VkPhysicalDeviceShaderMaximalReconvergenceFeaturesKHR*>(requested));
             break;
@@ -3660,6 +3681,11 @@ void compare_feature_struct(VkStructureType sType, std::vector<std::string> & er
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ANTI_LAG_FEATURES_AMD):
             compare_VkPhysicalDeviceAntiLagFeaturesAMD(error_list, *reinterpret_cast<const VkPhysicalDeviceAntiLagFeaturesAMD*>(supported), *reinterpret_cast<const VkPhysicalDeviceAntiLagFeaturesAMD*>(requested));
             break;
+#if defined(VK_ENABLE_BETA_EXTENSIONS)
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DENSE_GEOMETRY_FORMAT_FEATURES_AMDX):
+            compare_VkPhysicalDeviceDenseGeometryFormatFeaturesAMDX(error_list, *reinterpret_cast<const VkPhysicalDeviceDenseGeometryFormatFeaturesAMDX*>(supported), *reinterpret_cast<const VkPhysicalDeviceDenseGeometryFormatFeaturesAMDX*>(requested));
+            break;
+#endif // defined(VK_ENABLE_BETA_EXTENSIONS)
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_OBJECT_FEATURES_EXT):
             compare_VkPhysicalDeviceShaderObjectFeaturesEXT(error_list, *reinterpret_cast<const VkPhysicalDeviceShaderObjectFeaturesEXT*>(supported), *reinterpret_cast<const VkPhysicalDeviceShaderObjectFeaturesEXT*>(requested));
             break;
@@ -3995,6 +4021,9 @@ void merge_feature_struct(VkStructureType sType, void* current, const void* merg
             break;
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_MAINTENANCE_1_FEATURES_KHR):
             merge_VkPhysicalDeviceRayTracingMaintenance1FeaturesKHR(*reinterpret_cast<VkPhysicalDeviceRayTracingMaintenance1FeaturesKHR*>(current), *reinterpret_cast<const VkPhysicalDeviceRayTracingMaintenance1FeaturesKHR*>(merge_in));
+            break;
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_UNTYPED_POINTERS_FEATURES_KHR):
+            merge_VkPhysicalDeviceShaderUntypedPointersFeaturesKHR(*reinterpret_cast<VkPhysicalDeviceShaderUntypedPointersFeaturesKHR*>(current), *reinterpret_cast<const VkPhysicalDeviceShaderUntypedPointersFeaturesKHR*>(merge_in));
             break;
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MAXIMAL_RECONVERGENCE_FEATURES_KHR):
             merge_VkPhysicalDeviceShaderMaximalReconvergenceFeaturesKHR(*reinterpret_cast<VkPhysicalDeviceShaderMaximalReconvergenceFeaturesKHR*>(current), *reinterpret_cast<const VkPhysicalDeviceShaderMaximalReconvergenceFeaturesKHR*>(merge_in));
@@ -4367,6 +4396,11 @@ void merge_feature_struct(VkStructureType sType, void* current, const void* merg
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ANTI_LAG_FEATURES_AMD):
             merge_VkPhysicalDeviceAntiLagFeaturesAMD(*reinterpret_cast<VkPhysicalDeviceAntiLagFeaturesAMD*>(current), *reinterpret_cast<const VkPhysicalDeviceAntiLagFeaturesAMD*>(merge_in));
             break;
+#if defined(VK_ENABLE_BETA_EXTENSIONS)
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DENSE_GEOMETRY_FORMAT_FEATURES_AMDX):
+            merge_VkPhysicalDeviceDenseGeometryFormatFeaturesAMDX(*reinterpret_cast<VkPhysicalDeviceDenseGeometryFormatFeaturesAMDX*>(current), *reinterpret_cast<const VkPhysicalDeviceDenseGeometryFormatFeaturesAMDX*>(merge_in));
+            break;
+#endif // defined(VK_ENABLE_BETA_EXTENSIONS)
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_OBJECT_FEATURES_EXT):
             merge_VkPhysicalDeviceShaderObjectFeaturesEXT(*reinterpret_cast<VkPhysicalDeviceShaderObjectFeaturesEXT*>(current), *reinterpret_cast<const VkPhysicalDeviceShaderObjectFeaturesEXT*>(merge_in));
             break;

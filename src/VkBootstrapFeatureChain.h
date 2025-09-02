@@ -161,6 +161,8 @@ void compare_VkPhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR(std::vecto
 void merge_VkPhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR(VkPhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR & current, VkPhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR const& merge_in);
 void compare_VkPhysicalDeviceRayTracingMaintenance1FeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceRayTracingMaintenance1FeaturesKHR const& supported, VkPhysicalDeviceRayTracingMaintenance1FeaturesKHR const& requested);
 void merge_VkPhysicalDeviceRayTracingMaintenance1FeaturesKHR(VkPhysicalDeviceRayTracingMaintenance1FeaturesKHR & current, VkPhysicalDeviceRayTracingMaintenance1FeaturesKHR const& merge_in);
+void compare_VkPhysicalDeviceShaderUntypedPointersFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceShaderUntypedPointersFeaturesKHR const& supported, VkPhysicalDeviceShaderUntypedPointersFeaturesKHR const& requested);
+void merge_VkPhysicalDeviceShaderUntypedPointersFeaturesKHR(VkPhysicalDeviceShaderUntypedPointersFeaturesKHR & current, VkPhysicalDeviceShaderUntypedPointersFeaturesKHR const& merge_in);
 void compare_VkPhysicalDeviceShaderMaximalReconvergenceFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceShaderMaximalReconvergenceFeaturesKHR const& supported, VkPhysicalDeviceShaderMaximalReconvergenceFeaturesKHR const& requested);
 void merge_VkPhysicalDeviceShaderMaximalReconvergenceFeaturesKHR(VkPhysicalDeviceShaderMaximalReconvergenceFeaturesKHR & current, VkPhysicalDeviceShaderMaximalReconvergenceFeaturesKHR const& merge_in);
 void compare_VkPhysicalDevicePresentId2FeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDevicePresentId2FeaturesKHR const& supported, VkPhysicalDevicePresentId2FeaturesKHR const& requested);
@@ -411,6 +413,10 @@ void merge_VkPhysicalDeviceExternalFormatResolveFeaturesANDROID(VkPhysicalDevice
 #endif // defined(VK_USE_PLATFORM_ANDROID_KHR)
 void compare_VkPhysicalDeviceAntiLagFeaturesAMD(std::vector<std::string> & error_list, VkPhysicalDeviceAntiLagFeaturesAMD const& supported, VkPhysicalDeviceAntiLagFeaturesAMD const& requested);
 void merge_VkPhysicalDeviceAntiLagFeaturesAMD(VkPhysicalDeviceAntiLagFeaturesAMD & current, VkPhysicalDeviceAntiLagFeaturesAMD const& merge_in);
+#if defined(VK_ENABLE_BETA_EXTENSIONS)
+void compare_VkPhysicalDeviceDenseGeometryFormatFeaturesAMDX(std::vector<std::string> & error_list, VkPhysicalDeviceDenseGeometryFormatFeaturesAMDX const& supported, VkPhysicalDeviceDenseGeometryFormatFeaturesAMDX const& requested);
+void merge_VkPhysicalDeviceDenseGeometryFormatFeaturesAMDX(VkPhysicalDeviceDenseGeometryFormatFeaturesAMDX & current, VkPhysicalDeviceDenseGeometryFormatFeaturesAMDX const& merge_in);
+#endif // defined(VK_ENABLE_BETA_EXTENSIONS)
 void compare_VkPhysicalDeviceShaderObjectFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceShaderObjectFeaturesEXT const& supported, VkPhysicalDeviceShaderObjectFeaturesEXT const& requested);
 void merge_VkPhysicalDeviceShaderObjectFeaturesEXT(VkPhysicalDeviceShaderObjectFeaturesEXT & current, VkPhysicalDeviceShaderObjectFeaturesEXT const& merge_in);
 void compare_VkPhysicalDeviceTilePropertiesFeaturesQCOM(std::vector<std::string> & error_list, VkPhysicalDeviceTilePropertiesFeaturesQCOM const& supported, VkPhysicalDeviceTilePropertiesFeaturesQCOM const& requested);

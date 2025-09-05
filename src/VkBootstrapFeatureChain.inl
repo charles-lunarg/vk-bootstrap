@@ -27,169 +27,169 @@ namespace vkb::detail {
 
 void compare_VkPhysicalDeviceFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceFeatures const& supported, VkPhysicalDeviceFeatures const& requested) {
     if (requested.robustBufferAccess && !supported.robustBufferAccess) {
-        error_list.push_back("VkPhysicalDeviceFeatures::robustBufferAccess");
+        error_list.push_back("Missing feature VkPhysicalDeviceFeatures::robustBufferAccess");
     }
     if (requested.fullDrawIndexUint32 && !supported.fullDrawIndexUint32) {
-        error_list.push_back("VkPhysicalDeviceFeatures::fullDrawIndexUint32");
+        error_list.push_back("Missing feature VkPhysicalDeviceFeatures::fullDrawIndexUint32");
     }
     if (requested.imageCubeArray && !supported.imageCubeArray) {
-        error_list.push_back("VkPhysicalDeviceFeatures::imageCubeArray");
+        error_list.push_back("Missing feature VkPhysicalDeviceFeatures::imageCubeArray");
     }
     if (requested.independentBlend && !supported.independentBlend) {
-        error_list.push_back("VkPhysicalDeviceFeatures::independentBlend");
+        error_list.push_back("Missing feature VkPhysicalDeviceFeatures::independentBlend");
     }
     if (requested.geometryShader && !supported.geometryShader) {
-        error_list.push_back("VkPhysicalDeviceFeatures::geometryShader");
+        error_list.push_back("Missing feature VkPhysicalDeviceFeatures::geometryShader");
     }
     if (requested.tessellationShader && !supported.tessellationShader) {
-        error_list.push_back("VkPhysicalDeviceFeatures::tessellationShader");
+        error_list.push_back("Missing feature VkPhysicalDeviceFeatures::tessellationShader");
     }
     if (requested.sampleRateShading && !supported.sampleRateShading) {
-        error_list.push_back("VkPhysicalDeviceFeatures::sampleRateShading");
+        error_list.push_back("Missing feature VkPhysicalDeviceFeatures::sampleRateShading");
     }
     if (requested.dualSrcBlend && !supported.dualSrcBlend) {
-        error_list.push_back("VkPhysicalDeviceFeatures::dualSrcBlend");
+        error_list.push_back("Missing feature VkPhysicalDeviceFeatures::dualSrcBlend");
     }
     if (requested.logicOp && !supported.logicOp) {
-        error_list.push_back("VkPhysicalDeviceFeatures::logicOp");
+        error_list.push_back("Missing feature VkPhysicalDeviceFeatures::logicOp");
     }
     if (requested.multiDrawIndirect && !supported.multiDrawIndirect) {
-        error_list.push_back("VkPhysicalDeviceFeatures::multiDrawIndirect");
+        error_list.push_back("Missing feature VkPhysicalDeviceFeatures::multiDrawIndirect");
     }
     if (requested.drawIndirectFirstInstance && !supported.drawIndirectFirstInstance) {
-        error_list.push_back("VkPhysicalDeviceFeatures::drawIndirectFirstInstance");
+        error_list.push_back("Missing feature VkPhysicalDeviceFeatures::drawIndirectFirstInstance");
     }
     if (requested.depthClamp && !supported.depthClamp) {
-        error_list.push_back("VkPhysicalDeviceFeatures::depthClamp");
+        error_list.push_back("Missing feature VkPhysicalDeviceFeatures::depthClamp");
     }
     if (requested.depthBiasClamp && !supported.depthBiasClamp) {
-        error_list.push_back("VkPhysicalDeviceFeatures::depthBiasClamp");
+        error_list.push_back("Missing feature VkPhysicalDeviceFeatures::depthBiasClamp");
     }
     if (requested.fillModeNonSolid && !supported.fillModeNonSolid) {
-        error_list.push_back("VkPhysicalDeviceFeatures::fillModeNonSolid");
+        error_list.push_back("Missing feature VkPhysicalDeviceFeatures::fillModeNonSolid");
     }
     if (requested.depthBounds && !supported.depthBounds) {
-        error_list.push_back("VkPhysicalDeviceFeatures::depthBounds");
+        error_list.push_back("Missing feature VkPhysicalDeviceFeatures::depthBounds");
     }
     if (requested.wideLines && !supported.wideLines) {
-        error_list.push_back("VkPhysicalDeviceFeatures::wideLines");
+        error_list.push_back("Missing feature VkPhysicalDeviceFeatures::wideLines");
     }
     if (requested.largePoints && !supported.largePoints) {
-        error_list.push_back("VkPhysicalDeviceFeatures::largePoints");
+        error_list.push_back("Missing feature VkPhysicalDeviceFeatures::largePoints");
     }
     if (requested.alphaToOne && !supported.alphaToOne) {
-        error_list.push_back("VkPhysicalDeviceFeatures::alphaToOne");
+        error_list.push_back("Missing feature VkPhysicalDeviceFeatures::alphaToOne");
     }
     if (requested.multiViewport && !supported.multiViewport) {
-        error_list.push_back("VkPhysicalDeviceFeatures::multiViewport");
+        error_list.push_back("Missing feature VkPhysicalDeviceFeatures::multiViewport");
     }
     if (requested.samplerAnisotropy && !supported.samplerAnisotropy) {
-        error_list.push_back("VkPhysicalDeviceFeatures::samplerAnisotropy");
+        error_list.push_back("Missing feature VkPhysicalDeviceFeatures::samplerAnisotropy");
     }
     if (requested.textureCompressionETC2 && !supported.textureCompressionETC2) {
-        error_list.push_back("VkPhysicalDeviceFeatures::textureCompressionETC2");
+        error_list.push_back("Missing feature VkPhysicalDeviceFeatures::textureCompressionETC2");
     }
     if (requested.textureCompressionASTC_LDR && !supported.textureCompressionASTC_LDR) {
-        error_list.push_back("VkPhysicalDeviceFeatures::textureCompressionASTC_LDR");
+        error_list.push_back("Missing feature VkPhysicalDeviceFeatures::textureCompressionASTC_LDR");
     }
     if (requested.textureCompressionBC && !supported.textureCompressionBC) {
-        error_list.push_back("VkPhysicalDeviceFeatures::textureCompressionBC");
+        error_list.push_back("Missing feature VkPhysicalDeviceFeatures::textureCompressionBC");
     }
     if (requested.occlusionQueryPrecise && !supported.occlusionQueryPrecise) {
-        error_list.push_back("VkPhysicalDeviceFeatures::occlusionQueryPrecise");
+        error_list.push_back("Missing feature VkPhysicalDeviceFeatures::occlusionQueryPrecise");
     }
     if (requested.pipelineStatisticsQuery && !supported.pipelineStatisticsQuery) {
-        error_list.push_back("VkPhysicalDeviceFeatures::pipelineStatisticsQuery");
+        error_list.push_back("Missing feature VkPhysicalDeviceFeatures::pipelineStatisticsQuery");
     }
     if (requested.vertexPipelineStoresAndAtomics && !supported.vertexPipelineStoresAndAtomics) {
-        error_list.push_back("VkPhysicalDeviceFeatures::vertexPipelineStoresAndAtomics");
+        error_list.push_back("Missing feature VkPhysicalDeviceFeatures::vertexPipelineStoresAndAtomics");
     }
     if (requested.fragmentStoresAndAtomics && !supported.fragmentStoresAndAtomics) {
-        error_list.push_back("VkPhysicalDeviceFeatures::fragmentStoresAndAtomics");
+        error_list.push_back("Missing feature VkPhysicalDeviceFeatures::fragmentStoresAndAtomics");
     }
     if (requested.shaderTessellationAndGeometryPointSize && !supported.shaderTessellationAndGeometryPointSize) {
-        error_list.push_back("VkPhysicalDeviceFeatures::shaderTessellationAndGeometryPointSize");
+        error_list.push_back("Missing feature VkPhysicalDeviceFeatures::shaderTessellationAndGeometryPointSize");
     }
     if (requested.shaderImageGatherExtended && !supported.shaderImageGatherExtended) {
-        error_list.push_back("VkPhysicalDeviceFeatures::shaderImageGatherExtended");
+        error_list.push_back("Missing feature VkPhysicalDeviceFeatures::shaderImageGatherExtended");
     }
     if (requested.shaderStorageImageExtendedFormats && !supported.shaderStorageImageExtendedFormats) {
-        error_list.push_back("VkPhysicalDeviceFeatures::shaderStorageImageExtendedFormats");
+        error_list.push_back("Missing feature VkPhysicalDeviceFeatures::shaderStorageImageExtendedFormats");
     }
     if (requested.shaderStorageImageMultisample && !supported.shaderStorageImageMultisample) {
-        error_list.push_back("VkPhysicalDeviceFeatures::shaderStorageImageMultisample");
+        error_list.push_back("Missing feature VkPhysicalDeviceFeatures::shaderStorageImageMultisample");
     }
     if (requested.shaderStorageImageReadWithoutFormat && !supported.shaderStorageImageReadWithoutFormat) {
-        error_list.push_back("VkPhysicalDeviceFeatures::shaderStorageImageReadWithoutFormat");
+        error_list.push_back("Missing feature VkPhysicalDeviceFeatures::shaderStorageImageReadWithoutFormat");
     }
     if (requested.shaderStorageImageWriteWithoutFormat && !supported.shaderStorageImageWriteWithoutFormat) {
-        error_list.push_back("VkPhysicalDeviceFeatures::shaderStorageImageWriteWithoutFormat");
+        error_list.push_back("Missing feature VkPhysicalDeviceFeatures::shaderStorageImageWriteWithoutFormat");
     }
     if (requested.shaderUniformBufferArrayDynamicIndexing && !supported.shaderUniformBufferArrayDynamicIndexing) {
-        error_list.push_back("VkPhysicalDeviceFeatures::shaderUniformBufferArrayDynamicIndexing");
+        error_list.push_back("Missing feature VkPhysicalDeviceFeatures::shaderUniformBufferArrayDynamicIndexing");
     }
     if (requested.shaderSampledImageArrayDynamicIndexing && !supported.shaderSampledImageArrayDynamicIndexing) {
-        error_list.push_back("VkPhysicalDeviceFeatures::shaderSampledImageArrayDynamicIndexing");
+        error_list.push_back("Missing feature VkPhysicalDeviceFeatures::shaderSampledImageArrayDynamicIndexing");
     }
     if (requested.shaderStorageBufferArrayDynamicIndexing && !supported.shaderStorageBufferArrayDynamicIndexing) {
-        error_list.push_back("VkPhysicalDeviceFeatures::shaderStorageBufferArrayDynamicIndexing");
+        error_list.push_back("Missing feature VkPhysicalDeviceFeatures::shaderStorageBufferArrayDynamicIndexing");
     }
     if (requested.shaderStorageImageArrayDynamicIndexing && !supported.shaderStorageImageArrayDynamicIndexing) {
-        error_list.push_back("VkPhysicalDeviceFeatures::shaderStorageImageArrayDynamicIndexing");
+        error_list.push_back("Missing feature VkPhysicalDeviceFeatures::shaderStorageImageArrayDynamicIndexing");
     }
     if (requested.shaderClipDistance && !supported.shaderClipDistance) {
-        error_list.push_back("VkPhysicalDeviceFeatures::shaderClipDistance");
+        error_list.push_back("Missing feature VkPhysicalDeviceFeatures::shaderClipDistance");
     }
     if (requested.shaderCullDistance && !supported.shaderCullDistance) {
-        error_list.push_back("VkPhysicalDeviceFeatures::shaderCullDistance");
+        error_list.push_back("Missing feature VkPhysicalDeviceFeatures::shaderCullDistance");
     }
     if (requested.shaderFloat64 && !supported.shaderFloat64) {
-        error_list.push_back("VkPhysicalDeviceFeatures::shaderFloat64");
+        error_list.push_back("Missing feature VkPhysicalDeviceFeatures::shaderFloat64");
     }
     if (requested.shaderInt64 && !supported.shaderInt64) {
-        error_list.push_back("VkPhysicalDeviceFeatures::shaderInt64");
+        error_list.push_back("Missing feature VkPhysicalDeviceFeatures::shaderInt64");
     }
     if (requested.shaderInt16 && !supported.shaderInt16) {
-        error_list.push_back("VkPhysicalDeviceFeatures::shaderInt16");
+        error_list.push_back("Missing feature VkPhysicalDeviceFeatures::shaderInt16");
     }
     if (requested.shaderResourceResidency && !supported.shaderResourceResidency) {
-        error_list.push_back("VkPhysicalDeviceFeatures::shaderResourceResidency");
+        error_list.push_back("Missing feature VkPhysicalDeviceFeatures::shaderResourceResidency");
     }
     if (requested.shaderResourceMinLod && !supported.shaderResourceMinLod) {
-        error_list.push_back("VkPhysicalDeviceFeatures::shaderResourceMinLod");
+        error_list.push_back("Missing feature VkPhysicalDeviceFeatures::shaderResourceMinLod");
     }
     if (requested.sparseBinding && !supported.sparseBinding) {
-        error_list.push_back("VkPhysicalDeviceFeatures::sparseBinding");
+        error_list.push_back("Missing feature VkPhysicalDeviceFeatures::sparseBinding");
     }
     if (requested.sparseResidencyBuffer && !supported.sparseResidencyBuffer) {
-        error_list.push_back("VkPhysicalDeviceFeatures::sparseResidencyBuffer");
+        error_list.push_back("Missing feature VkPhysicalDeviceFeatures::sparseResidencyBuffer");
     }
     if (requested.sparseResidencyImage2D && !supported.sparseResidencyImage2D) {
-        error_list.push_back("VkPhysicalDeviceFeatures::sparseResidencyImage2D");
+        error_list.push_back("Missing feature VkPhysicalDeviceFeatures::sparseResidencyImage2D");
     }
     if (requested.sparseResidencyImage3D && !supported.sparseResidencyImage3D) {
-        error_list.push_back("VkPhysicalDeviceFeatures::sparseResidencyImage3D");
+        error_list.push_back("Missing feature VkPhysicalDeviceFeatures::sparseResidencyImage3D");
     }
     if (requested.sparseResidency2Samples && !supported.sparseResidency2Samples) {
-        error_list.push_back("VkPhysicalDeviceFeatures::sparseResidency2Samples");
+        error_list.push_back("Missing feature VkPhysicalDeviceFeatures::sparseResidency2Samples");
     }
     if (requested.sparseResidency4Samples && !supported.sparseResidency4Samples) {
-        error_list.push_back("VkPhysicalDeviceFeatures::sparseResidency4Samples");
+        error_list.push_back("Missing feature VkPhysicalDeviceFeatures::sparseResidency4Samples");
     }
     if (requested.sparseResidency8Samples && !supported.sparseResidency8Samples) {
-        error_list.push_back("VkPhysicalDeviceFeatures::sparseResidency8Samples");
+        error_list.push_back("Missing feature VkPhysicalDeviceFeatures::sparseResidency8Samples");
     }
     if (requested.sparseResidency16Samples && !supported.sparseResidency16Samples) {
-        error_list.push_back("VkPhysicalDeviceFeatures::sparseResidency16Samples");
+        error_list.push_back("Missing feature VkPhysicalDeviceFeatures::sparseResidency16Samples");
     }
     if (requested.sparseResidencyAliased && !supported.sparseResidencyAliased) {
-        error_list.push_back("VkPhysicalDeviceFeatures::sparseResidencyAliased");
+        error_list.push_back("Missing feature VkPhysicalDeviceFeatures::sparseResidencyAliased");
     }
     if (requested.variableMultisampleRate && !supported.variableMultisampleRate) {
-        error_list.push_back("VkPhysicalDeviceFeatures::variableMultisampleRate");
+        error_list.push_back("Missing feature VkPhysicalDeviceFeatures::variableMultisampleRate");
     }
     if (requested.inheritedQueries && !supported.inheritedQueries) {
-        error_list.push_back("VkPhysicalDeviceFeatures::inheritedQueries");
+        error_list.push_back("Missing feature VkPhysicalDeviceFeatures::inheritedQueries");
     }
 }
 void merge_VkPhysicalDeviceFeatures(VkPhysicalDeviceFeatures & current, VkPhysicalDeviceFeatures const& merge_in) {
@@ -251,16 +251,16 @@ void merge_VkPhysicalDeviceFeatures(VkPhysicalDeviceFeatures & current, VkPhysic
 }
 void compare_VkPhysicalDevice16BitStorageFeatures(std::vector<std::string> & error_list, VkPhysicalDevice16BitStorageFeatures const& supported, VkPhysicalDevice16BitStorageFeatures const& requested) {
     if (requested.storageBuffer16BitAccess && !supported.storageBuffer16BitAccess) {
-        error_list.push_back("VkPhysicalDevice16BitStorageFeatures::storageBuffer16BitAccess");
+        error_list.push_back("Missing feature VkPhysicalDevice16BitStorageFeatures::storageBuffer16BitAccess");
     }
     if (requested.uniformAndStorageBuffer16BitAccess && !supported.uniformAndStorageBuffer16BitAccess) {
-        error_list.push_back("VkPhysicalDevice16BitStorageFeatures::uniformAndStorageBuffer16BitAccess");
+        error_list.push_back("Missing feature VkPhysicalDevice16BitStorageFeatures::uniformAndStorageBuffer16BitAccess");
     }
     if (requested.storagePushConstant16 && !supported.storagePushConstant16) {
-        error_list.push_back("VkPhysicalDevice16BitStorageFeatures::storagePushConstant16");
+        error_list.push_back("Missing feature VkPhysicalDevice16BitStorageFeatures::storagePushConstant16");
     }
     if (requested.storageInputOutput16 && !supported.storageInputOutput16) {
-        error_list.push_back("VkPhysicalDevice16BitStorageFeatures::storageInputOutput16");
+        error_list.push_back("Missing feature VkPhysicalDevice16BitStorageFeatures::storageInputOutput16");
     }
 }
 void merge_VkPhysicalDevice16BitStorageFeatures(VkPhysicalDevice16BitStorageFeatures & current, VkPhysicalDevice16BitStorageFeatures const& merge_in) {
@@ -271,13 +271,13 @@ void merge_VkPhysicalDevice16BitStorageFeatures(VkPhysicalDevice16BitStorageFeat
 }
 void compare_VkPhysicalDeviceMultiviewFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceMultiviewFeatures const& supported, VkPhysicalDeviceMultiviewFeatures const& requested) {
     if (requested.multiview && !supported.multiview) {
-        error_list.push_back("VkPhysicalDeviceMultiviewFeatures::multiview");
+        error_list.push_back("Missing feature VkPhysicalDeviceMultiviewFeatures::multiview");
     }
     if (requested.multiviewGeometryShader && !supported.multiviewGeometryShader) {
-        error_list.push_back("VkPhysicalDeviceMultiviewFeatures::multiviewGeometryShader");
+        error_list.push_back("Missing feature VkPhysicalDeviceMultiviewFeatures::multiviewGeometryShader");
     }
     if (requested.multiviewTessellationShader && !supported.multiviewTessellationShader) {
-        error_list.push_back("VkPhysicalDeviceMultiviewFeatures::multiviewTessellationShader");
+        error_list.push_back("Missing feature VkPhysicalDeviceMultiviewFeatures::multiviewTessellationShader");
     }
 }
 void merge_VkPhysicalDeviceMultiviewFeatures(VkPhysicalDeviceMultiviewFeatures & current, VkPhysicalDeviceMultiviewFeatures const& merge_in) {
@@ -287,10 +287,10 @@ void merge_VkPhysicalDeviceMultiviewFeatures(VkPhysicalDeviceMultiviewFeatures &
 }
 void compare_VkPhysicalDeviceVariablePointersFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceVariablePointersFeatures const& supported, VkPhysicalDeviceVariablePointersFeatures const& requested) {
     if (requested.variablePointersStorageBuffer && !supported.variablePointersStorageBuffer) {
-        error_list.push_back("VkPhysicalDeviceVariablePointersFeatures::variablePointersStorageBuffer");
+        error_list.push_back("Missing feature VkPhysicalDeviceVariablePointersFeatures::variablePointersStorageBuffer");
     }
     if (requested.variablePointers && !supported.variablePointers) {
-        error_list.push_back("VkPhysicalDeviceVariablePointersFeatures::variablePointers");
+        error_list.push_back("Missing feature VkPhysicalDeviceVariablePointersFeatures::variablePointers");
     }
 }
 void merge_VkPhysicalDeviceVariablePointersFeatures(VkPhysicalDeviceVariablePointersFeatures & current, VkPhysicalDeviceVariablePointersFeatures const& merge_in) {
@@ -299,7 +299,7 @@ void merge_VkPhysicalDeviceVariablePointersFeatures(VkPhysicalDeviceVariablePoin
 }
 void compare_VkPhysicalDeviceProtectedMemoryFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceProtectedMemoryFeatures const& supported, VkPhysicalDeviceProtectedMemoryFeatures const& requested) {
     if (requested.protectedMemory && !supported.protectedMemory) {
-        error_list.push_back("VkPhysicalDeviceProtectedMemoryFeatures::protectedMemory");
+        error_list.push_back("Missing feature VkPhysicalDeviceProtectedMemoryFeatures::protectedMemory");
     }
 }
 void merge_VkPhysicalDeviceProtectedMemoryFeatures(VkPhysicalDeviceProtectedMemoryFeatures & current, VkPhysicalDeviceProtectedMemoryFeatures const& merge_in) {
@@ -307,7 +307,7 @@ void merge_VkPhysicalDeviceProtectedMemoryFeatures(VkPhysicalDeviceProtectedMemo
 }
 void compare_VkPhysicalDeviceSamplerYcbcrConversionFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceSamplerYcbcrConversionFeatures const& supported, VkPhysicalDeviceSamplerYcbcrConversionFeatures const& requested) {
     if (requested.samplerYcbcrConversion && !supported.samplerYcbcrConversion) {
-        error_list.push_back("VkPhysicalDeviceSamplerYcbcrConversionFeatures::samplerYcbcrConversion");
+        error_list.push_back("Missing feature VkPhysicalDeviceSamplerYcbcrConversionFeatures::samplerYcbcrConversion");
     }
 }
 void merge_VkPhysicalDeviceSamplerYcbcrConversionFeatures(VkPhysicalDeviceSamplerYcbcrConversionFeatures & current, VkPhysicalDeviceSamplerYcbcrConversionFeatures const& merge_in) {
@@ -315,7 +315,7 @@ void merge_VkPhysicalDeviceSamplerYcbcrConversionFeatures(VkPhysicalDeviceSample
 }
 void compare_VkPhysicalDeviceShaderDrawParametersFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceShaderDrawParametersFeatures const& supported, VkPhysicalDeviceShaderDrawParametersFeatures const& requested) {
     if (requested.shaderDrawParameters && !supported.shaderDrawParameters) {
-        error_list.push_back("VkPhysicalDeviceShaderDrawParametersFeatures::shaderDrawParameters");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderDrawParametersFeatures::shaderDrawParameters");
     }
 }
 void merge_VkPhysicalDeviceShaderDrawParametersFeatures(VkPhysicalDeviceShaderDrawParametersFeatures & current, VkPhysicalDeviceShaderDrawParametersFeatures const& merge_in) {
@@ -323,40 +323,40 @@ void merge_VkPhysicalDeviceShaderDrawParametersFeatures(VkPhysicalDeviceShaderDr
 }
 void compare_VkPhysicalDeviceVulkan11Features(std::vector<std::string> & error_list, VkPhysicalDeviceVulkan11Features const& supported, VkPhysicalDeviceVulkan11Features const& requested) {
     if (requested.storageBuffer16BitAccess && !supported.storageBuffer16BitAccess) {
-        error_list.push_back("VkPhysicalDeviceVulkan11Features::storageBuffer16BitAccess");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan11Features::storageBuffer16BitAccess");
     }
     if (requested.uniformAndStorageBuffer16BitAccess && !supported.uniformAndStorageBuffer16BitAccess) {
-        error_list.push_back("VkPhysicalDeviceVulkan11Features::uniformAndStorageBuffer16BitAccess");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan11Features::uniformAndStorageBuffer16BitAccess");
     }
     if (requested.storagePushConstant16 && !supported.storagePushConstant16) {
-        error_list.push_back("VkPhysicalDeviceVulkan11Features::storagePushConstant16");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan11Features::storagePushConstant16");
     }
     if (requested.storageInputOutput16 && !supported.storageInputOutput16) {
-        error_list.push_back("VkPhysicalDeviceVulkan11Features::storageInputOutput16");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan11Features::storageInputOutput16");
     }
     if (requested.multiview && !supported.multiview) {
-        error_list.push_back("VkPhysicalDeviceVulkan11Features::multiview");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan11Features::multiview");
     }
     if (requested.multiviewGeometryShader && !supported.multiviewGeometryShader) {
-        error_list.push_back("VkPhysicalDeviceVulkan11Features::multiviewGeometryShader");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan11Features::multiviewGeometryShader");
     }
     if (requested.multiviewTessellationShader && !supported.multiviewTessellationShader) {
-        error_list.push_back("VkPhysicalDeviceVulkan11Features::multiviewTessellationShader");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan11Features::multiviewTessellationShader");
     }
     if (requested.variablePointersStorageBuffer && !supported.variablePointersStorageBuffer) {
-        error_list.push_back("VkPhysicalDeviceVulkan11Features::variablePointersStorageBuffer");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan11Features::variablePointersStorageBuffer");
     }
     if (requested.variablePointers && !supported.variablePointers) {
-        error_list.push_back("VkPhysicalDeviceVulkan11Features::variablePointers");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan11Features::variablePointers");
     }
     if (requested.protectedMemory && !supported.protectedMemory) {
-        error_list.push_back("VkPhysicalDeviceVulkan11Features::protectedMemory");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan11Features::protectedMemory");
     }
     if (requested.samplerYcbcrConversion && !supported.samplerYcbcrConversion) {
-        error_list.push_back("VkPhysicalDeviceVulkan11Features::samplerYcbcrConversion");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan11Features::samplerYcbcrConversion");
     }
     if (requested.shaderDrawParameters && !supported.shaderDrawParameters) {
-        error_list.push_back("VkPhysicalDeviceVulkan11Features::shaderDrawParameters");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan11Features::shaderDrawParameters");
     }
 }
 void merge_VkPhysicalDeviceVulkan11Features(VkPhysicalDeviceVulkan11Features & current, VkPhysicalDeviceVulkan11Features const& merge_in) {
@@ -375,145 +375,145 @@ void merge_VkPhysicalDeviceVulkan11Features(VkPhysicalDeviceVulkan11Features & c
 }
 void compare_VkPhysicalDeviceVulkan12Features(std::vector<std::string> & error_list, VkPhysicalDeviceVulkan12Features const& supported, VkPhysicalDeviceVulkan12Features const& requested) {
     if (requested.samplerMirrorClampToEdge && !supported.samplerMirrorClampToEdge) {
-        error_list.push_back("VkPhysicalDeviceVulkan12Features::samplerMirrorClampToEdge");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan12Features::samplerMirrorClampToEdge");
     }
     if (requested.drawIndirectCount && !supported.drawIndirectCount) {
-        error_list.push_back("VkPhysicalDeviceVulkan12Features::drawIndirectCount");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan12Features::drawIndirectCount");
     }
     if (requested.storageBuffer8BitAccess && !supported.storageBuffer8BitAccess) {
-        error_list.push_back("VkPhysicalDeviceVulkan12Features::storageBuffer8BitAccess");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan12Features::storageBuffer8BitAccess");
     }
     if (requested.uniformAndStorageBuffer8BitAccess && !supported.uniformAndStorageBuffer8BitAccess) {
-        error_list.push_back("VkPhysicalDeviceVulkan12Features::uniformAndStorageBuffer8BitAccess");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan12Features::uniformAndStorageBuffer8BitAccess");
     }
     if (requested.storagePushConstant8 && !supported.storagePushConstant8) {
-        error_list.push_back("VkPhysicalDeviceVulkan12Features::storagePushConstant8");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan12Features::storagePushConstant8");
     }
     if (requested.shaderBufferInt64Atomics && !supported.shaderBufferInt64Atomics) {
-        error_list.push_back("VkPhysicalDeviceVulkan12Features::shaderBufferInt64Atomics");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan12Features::shaderBufferInt64Atomics");
     }
     if (requested.shaderSharedInt64Atomics && !supported.shaderSharedInt64Atomics) {
-        error_list.push_back("VkPhysicalDeviceVulkan12Features::shaderSharedInt64Atomics");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan12Features::shaderSharedInt64Atomics");
     }
     if (requested.shaderFloat16 && !supported.shaderFloat16) {
-        error_list.push_back("VkPhysicalDeviceVulkan12Features::shaderFloat16");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan12Features::shaderFloat16");
     }
     if (requested.shaderInt8 && !supported.shaderInt8) {
-        error_list.push_back("VkPhysicalDeviceVulkan12Features::shaderInt8");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan12Features::shaderInt8");
     }
     if (requested.descriptorIndexing && !supported.descriptorIndexing) {
-        error_list.push_back("VkPhysicalDeviceVulkan12Features::descriptorIndexing");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan12Features::descriptorIndexing");
     }
     if (requested.shaderInputAttachmentArrayDynamicIndexing && !supported.shaderInputAttachmentArrayDynamicIndexing) {
-        error_list.push_back("VkPhysicalDeviceVulkan12Features::shaderInputAttachmentArrayDynamicIndexing");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan12Features::shaderInputAttachmentArrayDynamicIndexing");
     }
     if (requested.shaderUniformTexelBufferArrayDynamicIndexing && !supported.shaderUniformTexelBufferArrayDynamicIndexing) {
-        error_list.push_back("VkPhysicalDeviceVulkan12Features::shaderUniformTexelBufferArrayDynamicIndexing");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan12Features::shaderUniformTexelBufferArrayDynamicIndexing");
     }
     if (requested.shaderStorageTexelBufferArrayDynamicIndexing && !supported.shaderStorageTexelBufferArrayDynamicIndexing) {
-        error_list.push_back("VkPhysicalDeviceVulkan12Features::shaderStorageTexelBufferArrayDynamicIndexing");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan12Features::shaderStorageTexelBufferArrayDynamicIndexing");
     }
     if (requested.shaderUniformBufferArrayNonUniformIndexing && !supported.shaderUniformBufferArrayNonUniformIndexing) {
-        error_list.push_back("VkPhysicalDeviceVulkan12Features::shaderUniformBufferArrayNonUniformIndexing");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan12Features::shaderUniformBufferArrayNonUniformIndexing");
     }
     if (requested.shaderSampledImageArrayNonUniformIndexing && !supported.shaderSampledImageArrayNonUniformIndexing) {
-        error_list.push_back("VkPhysicalDeviceVulkan12Features::shaderSampledImageArrayNonUniformIndexing");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan12Features::shaderSampledImageArrayNonUniformIndexing");
     }
     if (requested.shaderStorageBufferArrayNonUniformIndexing && !supported.shaderStorageBufferArrayNonUniformIndexing) {
-        error_list.push_back("VkPhysicalDeviceVulkan12Features::shaderStorageBufferArrayNonUniformIndexing");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan12Features::shaderStorageBufferArrayNonUniformIndexing");
     }
     if (requested.shaderStorageImageArrayNonUniformIndexing && !supported.shaderStorageImageArrayNonUniformIndexing) {
-        error_list.push_back("VkPhysicalDeviceVulkan12Features::shaderStorageImageArrayNonUniformIndexing");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan12Features::shaderStorageImageArrayNonUniformIndexing");
     }
     if (requested.shaderInputAttachmentArrayNonUniformIndexing && !supported.shaderInputAttachmentArrayNonUniformIndexing) {
-        error_list.push_back("VkPhysicalDeviceVulkan12Features::shaderInputAttachmentArrayNonUniformIndexing");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan12Features::shaderInputAttachmentArrayNonUniformIndexing");
     }
     if (requested.shaderUniformTexelBufferArrayNonUniformIndexing && !supported.shaderUniformTexelBufferArrayNonUniformIndexing) {
-        error_list.push_back("VkPhysicalDeviceVulkan12Features::shaderUniformTexelBufferArrayNonUniformIndexing");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan12Features::shaderUniformTexelBufferArrayNonUniformIndexing");
     }
     if (requested.shaderStorageTexelBufferArrayNonUniformIndexing && !supported.shaderStorageTexelBufferArrayNonUniformIndexing) {
-        error_list.push_back("VkPhysicalDeviceVulkan12Features::shaderStorageTexelBufferArrayNonUniformIndexing");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan12Features::shaderStorageTexelBufferArrayNonUniformIndexing");
     }
     if (requested.descriptorBindingUniformBufferUpdateAfterBind && !supported.descriptorBindingUniformBufferUpdateAfterBind) {
-        error_list.push_back("VkPhysicalDeviceVulkan12Features::descriptorBindingUniformBufferUpdateAfterBind");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan12Features::descriptorBindingUniformBufferUpdateAfterBind");
     }
     if (requested.descriptorBindingSampledImageUpdateAfterBind && !supported.descriptorBindingSampledImageUpdateAfterBind) {
-        error_list.push_back("VkPhysicalDeviceVulkan12Features::descriptorBindingSampledImageUpdateAfterBind");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan12Features::descriptorBindingSampledImageUpdateAfterBind");
     }
     if (requested.descriptorBindingStorageImageUpdateAfterBind && !supported.descriptorBindingStorageImageUpdateAfterBind) {
-        error_list.push_back("VkPhysicalDeviceVulkan12Features::descriptorBindingStorageImageUpdateAfterBind");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan12Features::descriptorBindingStorageImageUpdateAfterBind");
     }
     if (requested.descriptorBindingStorageBufferUpdateAfterBind && !supported.descriptorBindingStorageBufferUpdateAfterBind) {
-        error_list.push_back("VkPhysicalDeviceVulkan12Features::descriptorBindingStorageBufferUpdateAfterBind");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan12Features::descriptorBindingStorageBufferUpdateAfterBind");
     }
     if (requested.descriptorBindingUniformTexelBufferUpdateAfterBind && !supported.descriptorBindingUniformTexelBufferUpdateAfterBind) {
-        error_list.push_back("VkPhysicalDeviceVulkan12Features::descriptorBindingUniformTexelBufferUpdateAfterBind");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan12Features::descriptorBindingUniformTexelBufferUpdateAfterBind");
     }
     if (requested.descriptorBindingStorageTexelBufferUpdateAfterBind && !supported.descriptorBindingStorageTexelBufferUpdateAfterBind) {
-        error_list.push_back("VkPhysicalDeviceVulkan12Features::descriptorBindingStorageTexelBufferUpdateAfterBind");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan12Features::descriptorBindingStorageTexelBufferUpdateAfterBind");
     }
     if (requested.descriptorBindingUpdateUnusedWhilePending && !supported.descriptorBindingUpdateUnusedWhilePending) {
-        error_list.push_back("VkPhysicalDeviceVulkan12Features::descriptorBindingUpdateUnusedWhilePending");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan12Features::descriptorBindingUpdateUnusedWhilePending");
     }
     if (requested.descriptorBindingPartiallyBound && !supported.descriptorBindingPartiallyBound) {
-        error_list.push_back("VkPhysicalDeviceVulkan12Features::descriptorBindingPartiallyBound");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan12Features::descriptorBindingPartiallyBound");
     }
     if (requested.descriptorBindingVariableDescriptorCount && !supported.descriptorBindingVariableDescriptorCount) {
-        error_list.push_back("VkPhysicalDeviceVulkan12Features::descriptorBindingVariableDescriptorCount");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan12Features::descriptorBindingVariableDescriptorCount");
     }
     if (requested.runtimeDescriptorArray && !supported.runtimeDescriptorArray) {
-        error_list.push_back("VkPhysicalDeviceVulkan12Features::runtimeDescriptorArray");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan12Features::runtimeDescriptorArray");
     }
     if (requested.samplerFilterMinmax && !supported.samplerFilterMinmax) {
-        error_list.push_back("VkPhysicalDeviceVulkan12Features::samplerFilterMinmax");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan12Features::samplerFilterMinmax");
     }
     if (requested.scalarBlockLayout && !supported.scalarBlockLayout) {
-        error_list.push_back("VkPhysicalDeviceVulkan12Features::scalarBlockLayout");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan12Features::scalarBlockLayout");
     }
     if (requested.imagelessFramebuffer && !supported.imagelessFramebuffer) {
-        error_list.push_back("VkPhysicalDeviceVulkan12Features::imagelessFramebuffer");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan12Features::imagelessFramebuffer");
     }
     if (requested.uniformBufferStandardLayout && !supported.uniformBufferStandardLayout) {
-        error_list.push_back("VkPhysicalDeviceVulkan12Features::uniformBufferStandardLayout");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan12Features::uniformBufferStandardLayout");
     }
     if (requested.shaderSubgroupExtendedTypes && !supported.shaderSubgroupExtendedTypes) {
-        error_list.push_back("VkPhysicalDeviceVulkan12Features::shaderSubgroupExtendedTypes");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan12Features::shaderSubgroupExtendedTypes");
     }
     if (requested.separateDepthStencilLayouts && !supported.separateDepthStencilLayouts) {
-        error_list.push_back("VkPhysicalDeviceVulkan12Features::separateDepthStencilLayouts");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan12Features::separateDepthStencilLayouts");
     }
     if (requested.hostQueryReset && !supported.hostQueryReset) {
-        error_list.push_back("VkPhysicalDeviceVulkan12Features::hostQueryReset");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan12Features::hostQueryReset");
     }
     if (requested.timelineSemaphore && !supported.timelineSemaphore) {
-        error_list.push_back("VkPhysicalDeviceVulkan12Features::timelineSemaphore");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan12Features::timelineSemaphore");
     }
     if (requested.bufferDeviceAddress && !supported.bufferDeviceAddress) {
-        error_list.push_back("VkPhysicalDeviceVulkan12Features::bufferDeviceAddress");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan12Features::bufferDeviceAddress");
     }
     if (requested.bufferDeviceAddressCaptureReplay && !supported.bufferDeviceAddressCaptureReplay) {
-        error_list.push_back("VkPhysicalDeviceVulkan12Features::bufferDeviceAddressCaptureReplay");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan12Features::bufferDeviceAddressCaptureReplay");
     }
     if (requested.bufferDeviceAddressMultiDevice && !supported.bufferDeviceAddressMultiDevice) {
-        error_list.push_back("VkPhysicalDeviceVulkan12Features::bufferDeviceAddressMultiDevice");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan12Features::bufferDeviceAddressMultiDevice");
     }
     if (requested.vulkanMemoryModel && !supported.vulkanMemoryModel) {
-        error_list.push_back("VkPhysicalDeviceVulkan12Features::vulkanMemoryModel");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan12Features::vulkanMemoryModel");
     }
     if (requested.vulkanMemoryModelDeviceScope && !supported.vulkanMemoryModelDeviceScope) {
-        error_list.push_back("VkPhysicalDeviceVulkan12Features::vulkanMemoryModelDeviceScope");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan12Features::vulkanMemoryModelDeviceScope");
     }
     if (requested.vulkanMemoryModelAvailabilityVisibilityChains && !supported.vulkanMemoryModelAvailabilityVisibilityChains) {
-        error_list.push_back("VkPhysicalDeviceVulkan12Features::vulkanMemoryModelAvailabilityVisibilityChains");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan12Features::vulkanMemoryModelAvailabilityVisibilityChains");
     }
     if (requested.shaderOutputViewportIndex && !supported.shaderOutputViewportIndex) {
-        error_list.push_back("VkPhysicalDeviceVulkan12Features::shaderOutputViewportIndex");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan12Features::shaderOutputViewportIndex");
     }
     if (requested.shaderOutputLayer && !supported.shaderOutputLayer) {
-        error_list.push_back("VkPhysicalDeviceVulkan12Features::shaderOutputLayer");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan12Features::shaderOutputLayer");
     }
     if (requested.subgroupBroadcastDynamicId && !supported.subgroupBroadcastDynamicId) {
-        error_list.push_back("VkPhysicalDeviceVulkan12Features::subgroupBroadcastDynamicId");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan12Features::subgroupBroadcastDynamicId");
     }
 }
 void merge_VkPhysicalDeviceVulkan12Features(VkPhysicalDeviceVulkan12Features & current, VkPhysicalDeviceVulkan12Features const& merge_in) {
@@ -567,13 +567,13 @@ void merge_VkPhysicalDeviceVulkan12Features(VkPhysicalDeviceVulkan12Features & c
 }
 void compare_VkPhysicalDevice8BitStorageFeatures(std::vector<std::string> & error_list, VkPhysicalDevice8BitStorageFeatures const& supported, VkPhysicalDevice8BitStorageFeatures const& requested) {
     if (requested.storageBuffer8BitAccess && !supported.storageBuffer8BitAccess) {
-        error_list.push_back("VkPhysicalDevice8BitStorageFeatures::storageBuffer8BitAccess");
+        error_list.push_back("Missing feature VkPhysicalDevice8BitStorageFeatures::storageBuffer8BitAccess");
     }
     if (requested.uniformAndStorageBuffer8BitAccess && !supported.uniformAndStorageBuffer8BitAccess) {
-        error_list.push_back("VkPhysicalDevice8BitStorageFeatures::uniformAndStorageBuffer8BitAccess");
+        error_list.push_back("Missing feature VkPhysicalDevice8BitStorageFeatures::uniformAndStorageBuffer8BitAccess");
     }
     if (requested.storagePushConstant8 && !supported.storagePushConstant8) {
-        error_list.push_back("VkPhysicalDevice8BitStorageFeatures::storagePushConstant8");
+        error_list.push_back("Missing feature VkPhysicalDevice8BitStorageFeatures::storagePushConstant8");
     }
 }
 void merge_VkPhysicalDevice8BitStorageFeatures(VkPhysicalDevice8BitStorageFeatures & current, VkPhysicalDevice8BitStorageFeatures const& merge_in) {
@@ -583,10 +583,10 @@ void merge_VkPhysicalDevice8BitStorageFeatures(VkPhysicalDevice8BitStorageFeatur
 }
 void compare_VkPhysicalDeviceShaderAtomicInt64Features(std::vector<std::string> & error_list, VkPhysicalDeviceShaderAtomicInt64Features const& supported, VkPhysicalDeviceShaderAtomicInt64Features const& requested) {
     if (requested.shaderBufferInt64Atomics && !supported.shaderBufferInt64Atomics) {
-        error_list.push_back("VkPhysicalDeviceShaderAtomicInt64Features::shaderBufferInt64Atomics");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderAtomicInt64Features::shaderBufferInt64Atomics");
     }
     if (requested.shaderSharedInt64Atomics && !supported.shaderSharedInt64Atomics) {
-        error_list.push_back("VkPhysicalDeviceShaderAtomicInt64Features::shaderSharedInt64Atomics");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderAtomicInt64Features::shaderSharedInt64Atomics");
     }
 }
 void merge_VkPhysicalDeviceShaderAtomicInt64Features(VkPhysicalDeviceShaderAtomicInt64Features & current, VkPhysicalDeviceShaderAtomicInt64Features const& merge_in) {
@@ -595,10 +595,10 @@ void merge_VkPhysicalDeviceShaderAtomicInt64Features(VkPhysicalDeviceShaderAtomi
 }
 void compare_VkPhysicalDeviceShaderFloat16Int8Features(std::vector<std::string> & error_list, VkPhysicalDeviceShaderFloat16Int8Features const& supported, VkPhysicalDeviceShaderFloat16Int8Features const& requested) {
     if (requested.shaderFloat16 && !supported.shaderFloat16) {
-        error_list.push_back("VkPhysicalDeviceShaderFloat16Int8Features::shaderFloat16");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderFloat16Int8Features::shaderFloat16");
     }
     if (requested.shaderInt8 && !supported.shaderInt8) {
-        error_list.push_back("VkPhysicalDeviceShaderFloat16Int8Features::shaderInt8");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderFloat16Int8Features::shaderInt8");
     }
 }
 void merge_VkPhysicalDeviceShaderFloat16Int8Features(VkPhysicalDeviceShaderFloat16Int8Features & current, VkPhysicalDeviceShaderFloat16Int8Features const& merge_in) {
@@ -607,64 +607,64 @@ void merge_VkPhysicalDeviceShaderFloat16Int8Features(VkPhysicalDeviceShaderFloat
 }
 void compare_VkPhysicalDeviceDescriptorIndexingFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceDescriptorIndexingFeatures const& supported, VkPhysicalDeviceDescriptorIndexingFeatures const& requested) {
     if (requested.shaderInputAttachmentArrayDynamicIndexing && !supported.shaderInputAttachmentArrayDynamicIndexing) {
-        error_list.push_back("VkPhysicalDeviceDescriptorIndexingFeatures::shaderInputAttachmentArrayDynamicIndexing");
+        error_list.push_back("Missing feature VkPhysicalDeviceDescriptorIndexingFeatures::shaderInputAttachmentArrayDynamicIndexing");
     }
     if (requested.shaderUniformTexelBufferArrayDynamicIndexing && !supported.shaderUniformTexelBufferArrayDynamicIndexing) {
-        error_list.push_back("VkPhysicalDeviceDescriptorIndexingFeatures::shaderUniformTexelBufferArrayDynamicIndexing");
+        error_list.push_back("Missing feature VkPhysicalDeviceDescriptorIndexingFeatures::shaderUniformTexelBufferArrayDynamicIndexing");
     }
     if (requested.shaderStorageTexelBufferArrayDynamicIndexing && !supported.shaderStorageTexelBufferArrayDynamicIndexing) {
-        error_list.push_back("VkPhysicalDeviceDescriptorIndexingFeatures::shaderStorageTexelBufferArrayDynamicIndexing");
+        error_list.push_back("Missing feature VkPhysicalDeviceDescriptorIndexingFeatures::shaderStorageTexelBufferArrayDynamicIndexing");
     }
     if (requested.shaderUniformBufferArrayNonUniformIndexing && !supported.shaderUniformBufferArrayNonUniformIndexing) {
-        error_list.push_back("VkPhysicalDeviceDescriptorIndexingFeatures::shaderUniformBufferArrayNonUniformIndexing");
+        error_list.push_back("Missing feature VkPhysicalDeviceDescriptorIndexingFeatures::shaderUniformBufferArrayNonUniformIndexing");
     }
     if (requested.shaderSampledImageArrayNonUniformIndexing && !supported.shaderSampledImageArrayNonUniformIndexing) {
-        error_list.push_back("VkPhysicalDeviceDescriptorIndexingFeatures::shaderSampledImageArrayNonUniformIndexing");
+        error_list.push_back("Missing feature VkPhysicalDeviceDescriptorIndexingFeatures::shaderSampledImageArrayNonUniformIndexing");
     }
     if (requested.shaderStorageBufferArrayNonUniformIndexing && !supported.shaderStorageBufferArrayNonUniformIndexing) {
-        error_list.push_back("VkPhysicalDeviceDescriptorIndexingFeatures::shaderStorageBufferArrayNonUniformIndexing");
+        error_list.push_back("Missing feature VkPhysicalDeviceDescriptorIndexingFeatures::shaderStorageBufferArrayNonUniformIndexing");
     }
     if (requested.shaderStorageImageArrayNonUniformIndexing && !supported.shaderStorageImageArrayNonUniformIndexing) {
-        error_list.push_back("VkPhysicalDeviceDescriptorIndexingFeatures::shaderStorageImageArrayNonUniformIndexing");
+        error_list.push_back("Missing feature VkPhysicalDeviceDescriptorIndexingFeatures::shaderStorageImageArrayNonUniformIndexing");
     }
     if (requested.shaderInputAttachmentArrayNonUniformIndexing && !supported.shaderInputAttachmentArrayNonUniformIndexing) {
-        error_list.push_back("VkPhysicalDeviceDescriptorIndexingFeatures::shaderInputAttachmentArrayNonUniformIndexing");
+        error_list.push_back("Missing feature VkPhysicalDeviceDescriptorIndexingFeatures::shaderInputAttachmentArrayNonUniformIndexing");
     }
     if (requested.shaderUniformTexelBufferArrayNonUniformIndexing && !supported.shaderUniformTexelBufferArrayNonUniformIndexing) {
-        error_list.push_back("VkPhysicalDeviceDescriptorIndexingFeatures::shaderUniformTexelBufferArrayNonUniformIndexing");
+        error_list.push_back("Missing feature VkPhysicalDeviceDescriptorIndexingFeatures::shaderUniformTexelBufferArrayNonUniformIndexing");
     }
     if (requested.shaderStorageTexelBufferArrayNonUniformIndexing && !supported.shaderStorageTexelBufferArrayNonUniformIndexing) {
-        error_list.push_back("VkPhysicalDeviceDescriptorIndexingFeatures::shaderStorageTexelBufferArrayNonUniformIndexing");
+        error_list.push_back("Missing feature VkPhysicalDeviceDescriptorIndexingFeatures::shaderStorageTexelBufferArrayNonUniformIndexing");
     }
     if (requested.descriptorBindingUniformBufferUpdateAfterBind && !supported.descriptorBindingUniformBufferUpdateAfterBind) {
-        error_list.push_back("VkPhysicalDeviceDescriptorIndexingFeatures::descriptorBindingUniformBufferUpdateAfterBind");
+        error_list.push_back("Missing feature VkPhysicalDeviceDescriptorIndexingFeatures::descriptorBindingUniformBufferUpdateAfterBind");
     }
     if (requested.descriptorBindingSampledImageUpdateAfterBind && !supported.descriptorBindingSampledImageUpdateAfterBind) {
-        error_list.push_back("VkPhysicalDeviceDescriptorIndexingFeatures::descriptorBindingSampledImageUpdateAfterBind");
+        error_list.push_back("Missing feature VkPhysicalDeviceDescriptorIndexingFeatures::descriptorBindingSampledImageUpdateAfterBind");
     }
     if (requested.descriptorBindingStorageImageUpdateAfterBind && !supported.descriptorBindingStorageImageUpdateAfterBind) {
-        error_list.push_back("VkPhysicalDeviceDescriptorIndexingFeatures::descriptorBindingStorageImageUpdateAfterBind");
+        error_list.push_back("Missing feature VkPhysicalDeviceDescriptorIndexingFeatures::descriptorBindingStorageImageUpdateAfterBind");
     }
     if (requested.descriptorBindingStorageBufferUpdateAfterBind && !supported.descriptorBindingStorageBufferUpdateAfterBind) {
-        error_list.push_back("VkPhysicalDeviceDescriptorIndexingFeatures::descriptorBindingStorageBufferUpdateAfterBind");
+        error_list.push_back("Missing feature VkPhysicalDeviceDescriptorIndexingFeatures::descriptorBindingStorageBufferUpdateAfterBind");
     }
     if (requested.descriptorBindingUniformTexelBufferUpdateAfterBind && !supported.descriptorBindingUniformTexelBufferUpdateAfterBind) {
-        error_list.push_back("VkPhysicalDeviceDescriptorIndexingFeatures::descriptorBindingUniformTexelBufferUpdateAfterBind");
+        error_list.push_back("Missing feature VkPhysicalDeviceDescriptorIndexingFeatures::descriptorBindingUniformTexelBufferUpdateAfterBind");
     }
     if (requested.descriptorBindingStorageTexelBufferUpdateAfterBind && !supported.descriptorBindingStorageTexelBufferUpdateAfterBind) {
-        error_list.push_back("VkPhysicalDeviceDescriptorIndexingFeatures::descriptorBindingStorageTexelBufferUpdateAfterBind");
+        error_list.push_back("Missing feature VkPhysicalDeviceDescriptorIndexingFeatures::descriptorBindingStorageTexelBufferUpdateAfterBind");
     }
     if (requested.descriptorBindingUpdateUnusedWhilePending && !supported.descriptorBindingUpdateUnusedWhilePending) {
-        error_list.push_back("VkPhysicalDeviceDescriptorIndexingFeatures::descriptorBindingUpdateUnusedWhilePending");
+        error_list.push_back("Missing feature VkPhysicalDeviceDescriptorIndexingFeatures::descriptorBindingUpdateUnusedWhilePending");
     }
     if (requested.descriptorBindingPartiallyBound && !supported.descriptorBindingPartiallyBound) {
-        error_list.push_back("VkPhysicalDeviceDescriptorIndexingFeatures::descriptorBindingPartiallyBound");
+        error_list.push_back("Missing feature VkPhysicalDeviceDescriptorIndexingFeatures::descriptorBindingPartiallyBound");
     }
     if (requested.descriptorBindingVariableDescriptorCount && !supported.descriptorBindingVariableDescriptorCount) {
-        error_list.push_back("VkPhysicalDeviceDescriptorIndexingFeatures::descriptorBindingVariableDescriptorCount");
+        error_list.push_back("Missing feature VkPhysicalDeviceDescriptorIndexingFeatures::descriptorBindingVariableDescriptorCount");
     }
     if (requested.runtimeDescriptorArray && !supported.runtimeDescriptorArray) {
-        error_list.push_back("VkPhysicalDeviceDescriptorIndexingFeatures::runtimeDescriptorArray");
+        error_list.push_back("Missing feature VkPhysicalDeviceDescriptorIndexingFeatures::runtimeDescriptorArray");
     }
 }
 void merge_VkPhysicalDeviceDescriptorIndexingFeatures(VkPhysicalDeviceDescriptorIndexingFeatures & current, VkPhysicalDeviceDescriptorIndexingFeatures const& merge_in) {
@@ -691,7 +691,7 @@ void merge_VkPhysicalDeviceDescriptorIndexingFeatures(VkPhysicalDeviceDescriptor
 }
 void compare_VkPhysicalDeviceScalarBlockLayoutFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceScalarBlockLayoutFeatures const& supported, VkPhysicalDeviceScalarBlockLayoutFeatures const& requested) {
     if (requested.scalarBlockLayout && !supported.scalarBlockLayout) {
-        error_list.push_back("VkPhysicalDeviceScalarBlockLayoutFeatures::scalarBlockLayout");
+        error_list.push_back("Missing feature VkPhysicalDeviceScalarBlockLayoutFeatures::scalarBlockLayout");
     }
 }
 void merge_VkPhysicalDeviceScalarBlockLayoutFeatures(VkPhysicalDeviceScalarBlockLayoutFeatures & current, VkPhysicalDeviceScalarBlockLayoutFeatures const& merge_in) {
@@ -699,13 +699,13 @@ void merge_VkPhysicalDeviceScalarBlockLayoutFeatures(VkPhysicalDeviceScalarBlock
 }
 void compare_VkPhysicalDeviceVulkanMemoryModelFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceVulkanMemoryModelFeatures const& supported, VkPhysicalDeviceVulkanMemoryModelFeatures const& requested) {
     if (requested.vulkanMemoryModel && !supported.vulkanMemoryModel) {
-        error_list.push_back("VkPhysicalDeviceVulkanMemoryModelFeatures::vulkanMemoryModel");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkanMemoryModelFeatures::vulkanMemoryModel");
     }
     if (requested.vulkanMemoryModelDeviceScope && !supported.vulkanMemoryModelDeviceScope) {
-        error_list.push_back("VkPhysicalDeviceVulkanMemoryModelFeatures::vulkanMemoryModelDeviceScope");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkanMemoryModelFeatures::vulkanMemoryModelDeviceScope");
     }
     if (requested.vulkanMemoryModelAvailabilityVisibilityChains && !supported.vulkanMemoryModelAvailabilityVisibilityChains) {
-        error_list.push_back("VkPhysicalDeviceVulkanMemoryModelFeatures::vulkanMemoryModelAvailabilityVisibilityChains");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkanMemoryModelFeatures::vulkanMemoryModelAvailabilityVisibilityChains");
     }
 }
 void merge_VkPhysicalDeviceVulkanMemoryModelFeatures(VkPhysicalDeviceVulkanMemoryModelFeatures & current, VkPhysicalDeviceVulkanMemoryModelFeatures const& merge_in) {
@@ -715,7 +715,7 @@ void merge_VkPhysicalDeviceVulkanMemoryModelFeatures(VkPhysicalDeviceVulkanMemor
 }
 void compare_VkPhysicalDeviceImagelessFramebufferFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceImagelessFramebufferFeatures const& supported, VkPhysicalDeviceImagelessFramebufferFeatures const& requested) {
     if (requested.imagelessFramebuffer && !supported.imagelessFramebuffer) {
-        error_list.push_back("VkPhysicalDeviceImagelessFramebufferFeatures::imagelessFramebuffer");
+        error_list.push_back("Missing feature VkPhysicalDeviceImagelessFramebufferFeatures::imagelessFramebuffer");
     }
 }
 void merge_VkPhysicalDeviceImagelessFramebufferFeatures(VkPhysicalDeviceImagelessFramebufferFeatures & current, VkPhysicalDeviceImagelessFramebufferFeatures const& merge_in) {
@@ -723,7 +723,7 @@ void merge_VkPhysicalDeviceImagelessFramebufferFeatures(VkPhysicalDeviceImageles
 }
 void compare_VkPhysicalDeviceUniformBufferStandardLayoutFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceUniformBufferStandardLayoutFeatures const& supported, VkPhysicalDeviceUniformBufferStandardLayoutFeatures const& requested) {
     if (requested.uniformBufferStandardLayout && !supported.uniformBufferStandardLayout) {
-        error_list.push_back("VkPhysicalDeviceUniformBufferStandardLayoutFeatures::uniformBufferStandardLayout");
+        error_list.push_back("Missing feature VkPhysicalDeviceUniformBufferStandardLayoutFeatures::uniformBufferStandardLayout");
     }
 }
 void merge_VkPhysicalDeviceUniformBufferStandardLayoutFeatures(VkPhysicalDeviceUniformBufferStandardLayoutFeatures & current, VkPhysicalDeviceUniformBufferStandardLayoutFeatures const& merge_in) {
@@ -731,7 +731,7 @@ void merge_VkPhysicalDeviceUniformBufferStandardLayoutFeatures(VkPhysicalDeviceU
 }
 void compare_VkPhysicalDeviceShaderSubgroupExtendedTypesFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceShaderSubgroupExtendedTypesFeatures const& supported, VkPhysicalDeviceShaderSubgroupExtendedTypesFeatures const& requested) {
     if (requested.shaderSubgroupExtendedTypes && !supported.shaderSubgroupExtendedTypes) {
-        error_list.push_back("VkPhysicalDeviceShaderSubgroupExtendedTypesFeatures::shaderSubgroupExtendedTypes");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderSubgroupExtendedTypesFeatures::shaderSubgroupExtendedTypes");
     }
 }
 void merge_VkPhysicalDeviceShaderSubgroupExtendedTypesFeatures(VkPhysicalDeviceShaderSubgroupExtendedTypesFeatures & current, VkPhysicalDeviceShaderSubgroupExtendedTypesFeatures const& merge_in) {
@@ -739,7 +739,7 @@ void merge_VkPhysicalDeviceShaderSubgroupExtendedTypesFeatures(VkPhysicalDeviceS
 }
 void compare_VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures const& supported, VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures const& requested) {
     if (requested.separateDepthStencilLayouts && !supported.separateDepthStencilLayouts) {
-        error_list.push_back("VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures::separateDepthStencilLayouts");
+        error_list.push_back("Missing feature VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures::separateDepthStencilLayouts");
     }
 }
 void merge_VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures(VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures & current, VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures const& merge_in) {
@@ -747,7 +747,7 @@ void merge_VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures(VkPhysicalDeviceS
 }
 void compare_VkPhysicalDeviceHostQueryResetFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceHostQueryResetFeatures const& supported, VkPhysicalDeviceHostQueryResetFeatures const& requested) {
     if (requested.hostQueryReset && !supported.hostQueryReset) {
-        error_list.push_back("VkPhysicalDeviceHostQueryResetFeatures::hostQueryReset");
+        error_list.push_back("Missing feature VkPhysicalDeviceHostQueryResetFeatures::hostQueryReset");
     }
 }
 void merge_VkPhysicalDeviceHostQueryResetFeatures(VkPhysicalDeviceHostQueryResetFeatures & current, VkPhysicalDeviceHostQueryResetFeatures const& merge_in) {
@@ -755,7 +755,7 @@ void merge_VkPhysicalDeviceHostQueryResetFeatures(VkPhysicalDeviceHostQueryReset
 }
 void compare_VkPhysicalDeviceTimelineSemaphoreFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceTimelineSemaphoreFeatures const& supported, VkPhysicalDeviceTimelineSemaphoreFeatures const& requested) {
     if (requested.timelineSemaphore && !supported.timelineSemaphore) {
-        error_list.push_back("VkPhysicalDeviceTimelineSemaphoreFeatures::timelineSemaphore");
+        error_list.push_back("Missing feature VkPhysicalDeviceTimelineSemaphoreFeatures::timelineSemaphore");
     }
 }
 void merge_VkPhysicalDeviceTimelineSemaphoreFeatures(VkPhysicalDeviceTimelineSemaphoreFeatures & current, VkPhysicalDeviceTimelineSemaphoreFeatures const& merge_in) {
@@ -763,13 +763,13 @@ void merge_VkPhysicalDeviceTimelineSemaphoreFeatures(VkPhysicalDeviceTimelineSem
 }
 void compare_VkPhysicalDeviceBufferDeviceAddressFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceBufferDeviceAddressFeatures const& supported, VkPhysicalDeviceBufferDeviceAddressFeatures const& requested) {
     if (requested.bufferDeviceAddress && !supported.bufferDeviceAddress) {
-        error_list.push_back("VkPhysicalDeviceBufferDeviceAddressFeatures::bufferDeviceAddress");
+        error_list.push_back("Missing feature VkPhysicalDeviceBufferDeviceAddressFeatures::bufferDeviceAddress");
     }
     if (requested.bufferDeviceAddressCaptureReplay && !supported.bufferDeviceAddressCaptureReplay) {
-        error_list.push_back("VkPhysicalDeviceBufferDeviceAddressFeatures::bufferDeviceAddressCaptureReplay");
+        error_list.push_back("Missing feature VkPhysicalDeviceBufferDeviceAddressFeatures::bufferDeviceAddressCaptureReplay");
     }
     if (requested.bufferDeviceAddressMultiDevice && !supported.bufferDeviceAddressMultiDevice) {
-        error_list.push_back("VkPhysicalDeviceBufferDeviceAddressFeatures::bufferDeviceAddressMultiDevice");
+        error_list.push_back("Missing feature VkPhysicalDeviceBufferDeviceAddressFeatures::bufferDeviceAddressMultiDevice");
     }
 }
 void merge_VkPhysicalDeviceBufferDeviceAddressFeatures(VkPhysicalDeviceBufferDeviceAddressFeatures & current, VkPhysicalDeviceBufferDeviceAddressFeatures const& merge_in) {
@@ -779,49 +779,49 @@ void merge_VkPhysicalDeviceBufferDeviceAddressFeatures(VkPhysicalDeviceBufferDev
 }
 void compare_VkPhysicalDeviceVulkan13Features(std::vector<std::string> & error_list, VkPhysicalDeviceVulkan13Features const& supported, VkPhysicalDeviceVulkan13Features const& requested) {
     if (requested.robustImageAccess && !supported.robustImageAccess) {
-        error_list.push_back("VkPhysicalDeviceVulkan13Features::robustImageAccess");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan13Features::robustImageAccess");
     }
     if (requested.inlineUniformBlock && !supported.inlineUniformBlock) {
-        error_list.push_back("VkPhysicalDeviceVulkan13Features::inlineUniformBlock");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan13Features::inlineUniformBlock");
     }
     if (requested.descriptorBindingInlineUniformBlockUpdateAfterBind && !supported.descriptorBindingInlineUniformBlockUpdateAfterBind) {
-        error_list.push_back("VkPhysicalDeviceVulkan13Features::descriptorBindingInlineUniformBlockUpdateAfterBind");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan13Features::descriptorBindingInlineUniformBlockUpdateAfterBind");
     }
     if (requested.pipelineCreationCacheControl && !supported.pipelineCreationCacheControl) {
-        error_list.push_back("VkPhysicalDeviceVulkan13Features::pipelineCreationCacheControl");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan13Features::pipelineCreationCacheControl");
     }
     if (requested.privateData && !supported.privateData) {
-        error_list.push_back("VkPhysicalDeviceVulkan13Features::privateData");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan13Features::privateData");
     }
     if (requested.shaderDemoteToHelperInvocation && !supported.shaderDemoteToHelperInvocation) {
-        error_list.push_back("VkPhysicalDeviceVulkan13Features::shaderDemoteToHelperInvocation");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan13Features::shaderDemoteToHelperInvocation");
     }
     if (requested.shaderTerminateInvocation && !supported.shaderTerminateInvocation) {
-        error_list.push_back("VkPhysicalDeviceVulkan13Features::shaderTerminateInvocation");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan13Features::shaderTerminateInvocation");
     }
     if (requested.subgroupSizeControl && !supported.subgroupSizeControl) {
-        error_list.push_back("VkPhysicalDeviceVulkan13Features::subgroupSizeControl");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan13Features::subgroupSizeControl");
     }
     if (requested.computeFullSubgroups && !supported.computeFullSubgroups) {
-        error_list.push_back("VkPhysicalDeviceVulkan13Features::computeFullSubgroups");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan13Features::computeFullSubgroups");
     }
     if (requested.synchronization2 && !supported.synchronization2) {
-        error_list.push_back("VkPhysicalDeviceVulkan13Features::synchronization2");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan13Features::synchronization2");
     }
     if (requested.textureCompressionASTC_HDR && !supported.textureCompressionASTC_HDR) {
-        error_list.push_back("VkPhysicalDeviceVulkan13Features::textureCompressionASTC_HDR");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan13Features::textureCompressionASTC_HDR");
     }
     if (requested.shaderZeroInitializeWorkgroupMemory && !supported.shaderZeroInitializeWorkgroupMemory) {
-        error_list.push_back("VkPhysicalDeviceVulkan13Features::shaderZeroInitializeWorkgroupMemory");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan13Features::shaderZeroInitializeWorkgroupMemory");
     }
     if (requested.dynamicRendering && !supported.dynamicRendering) {
-        error_list.push_back("VkPhysicalDeviceVulkan13Features::dynamicRendering");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan13Features::dynamicRendering");
     }
     if (requested.shaderIntegerDotProduct && !supported.shaderIntegerDotProduct) {
-        error_list.push_back("VkPhysicalDeviceVulkan13Features::shaderIntegerDotProduct");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan13Features::shaderIntegerDotProduct");
     }
     if (requested.maintenance4 && !supported.maintenance4) {
-        error_list.push_back("VkPhysicalDeviceVulkan13Features::maintenance4");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan13Features::maintenance4");
     }
 }
 void merge_VkPhysicalDeviceVulkan13Features(VkPhysicalDeviceVulkan13Features & current, VkPhysicalDeviceVulkan13Features const& merge_in) {
@@ -843,7 +843,7 @@ void merge_VkPhysicalDeviceVulkan13Features(VkPhysicalDeviceVulkan13Features & c
 }
 void compare_VkPhysicalDeviceShaderTerminateInvocationFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceShaderTerminateInvocationFeatures const& supported, VkPhysicalDeviceShaderTerminateInvocationFeatures const& requested) {
     if (requested.shaderTerminateInvocation && !supported.shaderTerminateInvocation) {
-        error_list.push_back("VkPhysicalDeviceShaderTerminateInvocationFeatures::shaderTerminateInvocation");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderTerminateInvocationFeatures::shaderTerminateInvocation");
     }
 }
 void merge_VkPhysicalDeviceShaderTerminateInvocationFeatures(VkPhysicalDeviceShaderTerminateInvocationFeatures & current, VkPhysicalDeviceShaderTerminateInvocationFeatures const& merge_in) {
@@ -851,7 +851,7 @@ void merge_VkPhysicalDeviceShaderTerminateInvocationFeatures(VkPhysicalDeviceSha
 }
 void compare_VkPhysicalDeviceShaderDemoteToHelperInvocationFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceShaderDemoteToHelperInvocationFeatures const& supported, VkPhysicalDeviceShaderDemoteToHelperInvocationFeatures const& requested) {
     if (requested.shaderDemoteToHelperInvocation && !supported.shaderDemoteToHelperInvocation) {
-        error_list.push_back("VkPhysicalDeviceShaderDemoteToHelperInvocationFeatures::shaderDemoteToHelperInvocation");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderDemoteToHelperInvocationFeatures::shaderDemoteToHelperInvocation");
     }
 }
 void merge_VkPhysicalDeviceShaderDemoteToHelperInvocationFeatures(VkPhysicalDeviceShaderDemoteToHelperInvocationFeatures & current, VkPhysicalDeviceShaderDemoteToHelperInvocationFeatures const& merge_in) {
@@ -859,7 +859,7 @@ void merge_VkPhysicalDeviceShaderDemoteToHelperInvocationFeatures(VkPhysicalDevi
 }
 void compare_VkPhysicalDevicePrivateDataFeatures(std::vector<std::string> & error_list, VkPhysicalDevicePrivateDataFeatures const& supported, VkPhysicalDevicePrivateDataFeatures const& requested) {
     if (requested.privateData && !supported.privateData) {
-        error_list.push_back("VkPhysicalDevicePrivateDataFeatures::privateData");
+        error_list.push_back("Missing feature VkPhysicalDevicePrivateDataFeatures::privateData");
     }
 }
 void merge_VkPhysicalDevicePrivateDataFeatures(VkPhysicalDevicePrivateDataFeatures & current, VkPhysicalDevicePrivateDataFeatures const& merge_in) {
@@ -867,7 +867,7 @@ void merge_VkPhysicalDevicePrivateDataFeatures(VkPhysicalDevicePrivateDataFeatur
 }
 void compare_VkPhysicalDevicePipelineCreationCacheControlFeatures(std::vector<std::string> & error_list, VkPhysicalDevicePipelineCreationCacheControlFeatures const& supported, VkPhysicalDevicePipelineCreationCacheControlFeatures const& requested) {
     if (requested.pipelineCreationCacheControl && !supported.pipelineCreationCacheControl) {
-        error_list.push_back("VkPhysicalDevicePipelineCreationCacheControlFeatures::pipelineCreationCacheControl");
+        error_list.push_back("Missing feature VkPhysicalDevicePipelineCreationCacheControlFeatures::pipelineCreationCacheControl");
     }
 }
 void merge_VkPhysicalDevicePipelineCreationCacheControlFeatures(VkPhysicalDevicePipelineCreationCacheControlFeatures & current, VkPhysicalDevicePipelineCreationCacheControlFeatures const& merge_in) {
@@ -875,7 +875,7 @@ void merge_VkPhysicalDevicePipelineCreationCacheControlFeatures(VkPhysicalDevice
 }
 void compare_VkPhysicalDeviceSynchronization2Features(std::vector<std::string> & error_list, VkPhysicalDeviceSynchronization2Features const& supported, VkPhysicalDeviceSynchronization2Features const& requested) {
     if (requested.synchronization2 && !supported.synchronization2) {
-        error_list.push_back("VkPhysicalDeviceSynchronization2Features::synchronization2");
+        error_list.push_back("Missing feature VkPhysicalDeviceSynchronization2Features::synchronization2");
     }
 }
 void merge_VkPhysicalDeviceSynchronization2Features(VkPhysicalDeviceSynchronization2Features & current, VkPhysicalDeviceSynchronization2Features const& merge_in) {
@@ -883,7 +883,7 @@ void merge_VkPhysicalDeviceSynchronization2Features(VkPhysicalDeviceSynchronizat
 }
 void compare_VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeatures const& supported, VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeatures const& requested) {
     if (requested.shaderZeroInitializeWorkgroupMemory && !supported.shaderZeroInitializeWorkgroupMemory) {
-        error_list.push_back("VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeatures::shaderZeroInitializeWorkgroupMemory");
+        error_list.push_back("Missing feature VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeatures::shaderZeroInitializeWorkgroupMemory");
     }
 }
 void merge_VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeatures(VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeatures & current, VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeatures const& merge_in) {
@@ -891,7 +891,7 @@ void merge_VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeatures(VkPhysicalDevic
 }
 void compare_VkPhysicalDeviceImageRobustnessFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceImageRobustnessFeatures const& supported, VkPhysicalDeviceImageRobustnessFeatures const& requested) {
     if (requested.robustImageAccess && !supported.robustImageAccess) {
-        error_list.push_back("VkPhysicalDeviceImageRobustnessFeatures::robustImageAccess");
+        error_list.push_back("Missing feature VkPhysicalDeviceImageRobustnessFeatures::robustImageAccess");
     }
 }
 void merge_VkPhysicalDeviceImageRobustnessFeatures(VkPhysicalDeviceImageRobustnessFeatures & current, VkPhysicalDeviceImageRobustnessFeatures const& merge_in) {
@@ -899,10 +899,10 @@ void merge_VkPhysicalDeviceImageRobustnessFeatures(VkPhysicalDeviceImageRobustne
 }
 void compare_VkPhysicalDeviceSubgroupSizeControlFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceSubgroupSizeControlFeatures const& supported, VkPhysicalDeviceSubgroupSizeControlFeatures const& requested) {
     if (requested.subgroupSizeControl && !supported.subgroupSizeControl) {
-        error_list.push_back("VkPhysicalDeviceSubgroupSizeControlFeatures::subgroupSizeControl");
+        error_list.push_back("Missing feature VkPhysicalDeviceSubgroupSizeControlFeatures::subgroupSizeControl");
     }
     if (requested.computeFullSubgroups && !supported.computeFullSubgroups) {
-        error_list.push_back("VkPhysicalDeviceSubgroupSizeControlFeatures::computeFullSubgroups");
+        error_list.push_back("Missing feature VkPhysicalDeviceSubgroupSizeControlFeatures::computeFullSubgroups");
     }
 }
 void merge_VkPhysicalDeviceSubgroupSizeControlFeatures(VkPhysicalDeviceSubgroupSizeControlFeatures & current, VkPhysicalDeviceSubgroupSizeControlFeatures const& merge_in) {
@@ -911,10 +911,10 @@ void merge_VkPhysicalDeviceSubgroupSizeControlFeatures(VkPhysicalDeviceSubgroupS
 }
 void compare_VkPhysicalDeviceInlineUniformBlockFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceInlineUniformBlockFeatures const& supported, VkPhysicalDeviceInlineUniformBlockFeatures const& requested) {
     if (requested.inlineUniformBlock && !supported.inlineUniformBlock) {
-        error_list.push_back("VkPhysicalDeviceInlineUniformBlockFeatures::inlineUniformBlock");
+        error_list.push_back("Missing feature VkPhysicalDeviceInlineUniformBlockFeatures::inlineUniformBlock");
     }
     if (requested.descriptorBindingInlineUniformBlockUpdateAfterBind && !supported.descriptorBindingInlineUniformBlockUpdateAfterBind) {
-        error_list.push_back("VkPhysicalDeviceInlineUniformBlockFeatures::descriptorBindingInlineUniformBlockUpdateAfterBind");
+        error_list.push_back("Missing feature VkPhysicalDeviceInlineUniformBlockFeatures::descriptorBindingInlineUniformBlockUpdateAfterBind");
     }
 }
 void merge_VkPhysicalDeviceInlineUniformBlockFeatures(VkPhysicalDeviceInlineUniformBlockFeatures & current, VkPhysicalDeviceInlineUniformBlockFeatures const& merge_in) {
@@ -923,7 +923,7 @@ void merge_VkPhysicalDeviceInlineUniformBlockFeatures(VkPhysicalDeviceInlineUnif
 }
 void compare_VkPhysicalDeviceTextureCompressionASTCHDRFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceTextureCompressionASTCHDRFeatures const& supported, VkPhysicalDeviceTextureCompressionASTCHDRFeatures const& requested) {
     if (requested.textureCompressionASTC_HDR && !supported.textureCompressionASTC_HDR) {
-        error_list.push_back("VkPhysicalDeviceTextureCompressionASTCHDRFeatures::textureCompressionASTC_HDR");
+        error_list.push_back("Missing feature VkPhysicalDeviceTextureCompressionASTCHDRFeatures::textureCompressionASTC_HDR");
     }
 }
 void merge_VkPhysicalDeviceTextureCompressionASTCHDRFeatures(VkPhysicalDeviceTextureCompressionASTCHDRFeatures & current, VkPhysicalDeviceTextureCompressionASTCHDRFeatures const& merge_in) {
@@ -931,7 +931,7 @@ void merge_VkPhysicalDeviceTextureCompressionASTCHDRFeatures(VkPhysicalDeviceTex
 }
 void compare_VkPhysicalDeviceDynamicRenderingFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceDynamicRenderingFeatures const& supported, VkPhysicalDeviceDynamicRenderingFeatures const& requested) {
     if (requested.dynamicRendering && !supported.dynamicRendering) {
-        error_list.push_back("VkPhysicalDeviceDynamicRenderingFeatures::dynamicRendering");
+        error_list.push_back("Missing feature VkPhysicalDeviceDynamicRenderingFeatures::dynamicRendering");
     }
 }
 void merge_VkPhysicalDeviceDynamicRenderingFeatures(VkPhysicalDeviceDynamicRenderingFeatures & current, VkPhysicalDeviceDynamicRenderingFeatures const& merge_in) {
@@ -939,7 +939,7 @@ void merge_VkPhysicalDeviceDynamicRenderingFeatures(VkPhysicalDeviceDynamicRende
 }
 void compare_VkPhysicalDeviceShaderIntegerDotProductFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceShaderIntegerDotProductFeatures const& supported, VkPhysicalDeviceShaderIntegerDotProductFeatures const& requested) {
     if (requested.shaderIntegerDotProduct && !supported.shaderIntegerDotProduct) {
-        error_list.push_back("VkPhysicalDeviceShaderIntegerDotProductFeatures::shaderIntegerDotProduct");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderIntegerDotProductFeatures::shaderIntegerDotProduct");
     }
 }
 void merge_VkPhysicalDeviceShaderIntegerDotProductFeatures(VkPhysicalDeviceShaderIntegerDotProductFeatures & current, VkPhysicalDeviceShaderIntegerDotProductFeatures const& merge_in) {
@@ -947,7 +947,7 @@ void merge_VkPhysicalDeviceShaderIntegerDotProductFeatures(VkPhysicalDeviceShade
 }
 void compare_VkPhysicalDeviceMaintenance4Features(std::vector<std::string> & error_list, VkPhysicalDeviceMaintenance4Features const& supported, VkPhysicalDeviceMaintenance4Features const& requested) {
     if (requested.maintenance4 && !supported.maintenance4) {
-        error_list.push_back("VkPhysicalDeviceMaintenance4Features::maintenance4");
+        error_list.push_back("Missing feature VkPhysicalDeviceMaintenance4Features::maintenance4");
     }
 }
 void merge_VkPhysicalDeviceMaintenance4Features(VkPhysicalDeviceMaintenance4Features & current, VkPhysicalDeviceMaintenance4Features const& merge_in) {
@@ -955,67 +955,67 @@ void merge_VkPhysicalDeviceMaintenance4Features(VkPhysicalDeviceMaintenance4Feat
 }
 void compare_VkPhysicalDeviceVulkan14Features(std::vector<std::string> & error_list, VkPhysicalDeviceVulkan14Features const& supported, VkPhysicalDeviceVulkan14Features const& requested) {
     if (requested.globalPriorityQuery && !supported.globalPriorityQuery) {
-        error_list.push_back("VkPhysicalDeviceVulkan14Features::globalPriorityQuery");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan14Features::globalPriorityQuery");
     }
     if (requested.shaderSubgroupRotate && !supported.shaderSubgroupRotate) {
-        error_list.push_back("VkPhysicalDeviceVulkan14Features::shaderSubgroupRotate");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan14Features::shaderSubgroupRotate");
     }
     if (requested.shaderSubgroupRotateClustered && !supported.shaderSubgroupRotateClustered) {
-        error_list.push_back("VkPhysicalDeviceVulkan14Features::shaderSubgroupRotateClustered");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan14Features::shaderSubgroupRotateClustered");
     }
     if (requested.shaderFloatControls2 && !supported.shaderFloatControls2) {
-        error_list.push_back("VkPhysicalDeviceVulkan14Features::shaderFloatControls2");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan14Features::shaderFloatControls2");
     }
     if (requested.shaderExpectAssume && !supported.shaderExpectAssume) {
-        error_list.push_back("VkPhysicalDeviceVulkan14Features::shaderExpectAssume");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan14Features::shaderExpectAssume");
     }
     if (requested.rectangularLines && !supported.rectangularLines) {
-        error_list.push_back("VkPhysicalDeviceVulkan14Features::rectangularLines");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan14Features::rectangularLines");
     }
     if (requested.bresenhamLines && !supported.bresenhamLines) {
-        error_list.push_back("VkPhysicalDeviceVulkan14Features::bresenhamLines");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan14Features::bresenhamLines");
     }
     if (requested.smoothLines && !supported.smoothLines) {
-        error_list.push_back("VkPhysicalDeviceVulkan14Features::smoothLines");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan14Features::smoothLines");
     }
     if (requested.stippledRectangularLines && !supported.stippledRectangularLines) {
-        error_list.push_back("VkPhysicalDeviceVulkan14Features::stippledRectangularLines");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan14Features::stippledRectangularLines");
     }
     if (requested.stippledBresenhamLines && !supported.stippledBresenhamLines) {
-        error_list.push_back("VkPhysicalDeviceVulkan14Features::stippledBresenhamLines");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan14Features::stippledBresenhamLines");
     }
     if (requested.stippledSmoothLines && !supported.stippledSmoothLines) {
-        error_list.push_back("VkPhysicalDeviceVulkan14Features::stippledSmoothLines");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan14Features::stippledSmoothLines");
     }
     if (requested.vertexAttributeInstanceRateDivisor && !supported.vertexAttributeInstanceRateDivisor) {
-        error_list.push_back("VkPhysicalDeviceVulkan14Features::vertexAttributeInstanceRateDivisor");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan14Features::vertexAttributeInstanceRateDivisor");
     }
     if (requested.vertexAttributeInstanceRateZeroDivisor && !supported.vertexAttributeInstanceRateZeroDivisor) {
-        error_list.push_back("VkPhysicalDeviceVulkan14Features::vertexAttributeInstanceRateZeroDivisor");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan14Features::vertexAttributeInstanceRateZeroDivisor");
     }
     if (requested.indexTypeUint8 && !supported.indexTypeUint8) {
-        error_list.push_back("VkPhysicalDeviceVulkan14Features::indexTypeUint8");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan14Features::indexTypeUint8");
     }
     if (requested.dynamicRenderingLocalRead && !supported.dynamicRenderingLocalRead) {
-        error_list.push_back("VkPhysicalDeviceVulkan14Features::dynamicRenderingLocalRead");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan14Features::dynamicRenderingLocalRead");
     }
     if (requested.maintenance5 && !supported.maintenance5) {
-        error_list.push_back("VkPhysicalDeviceVulkan14Features::maintenance5");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan14Features::maintenance5");
     }
     if (requested.maintenance6 && !supported.maintenance6) {
-        error_list.push_back("VkPhysicalDeviceVulkan14Features::maintenance6");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan14Features::maintenance6");
     }
     if (requested.pipelineProtectedAccess && !supported.pipelineProtectedAccess) {
-        error_list.push_back("VkPhysicalDeviceVulkan14Features::pipelineProtectedAccess");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan14Features::pipelineProtectedAccess");
     }
     if (requested.pipelineRobustness && !supported.pipelineRobustness) {
-        error_list.push_back("VkPhysicalDeviceVulkan14Features::pipelineRobustness");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan14Features::pipelineRobustness");
     }
     if (requested.hostImageCopy && !supported.hostImageCopy) {
-        error_list.push_back("VkPhysicalDeviceVulkan14Features::hostImageCopy");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan14Features::hostImageCopy");
     }
     if (requested.pushDescriptor && !supported.pushDescriptor) {
-        error_list.push_back("VkPhysicalDeviceVulkan14Features::pushDescriptor");
+        error_list.push_back("Missing feature VkPhysicalDeviceVulkan14Features::pushDescriptor");
     }
 }
 void merge_VkPhysicalDeviceVulkan14Features(VkPhysicalDeviceVulkan14Features & current, VkPhysicalDeviceVulkan14Features const& merge_in) {
@@ -1043,7 +1043,7 @@ void merge_VkPhysicalDeviceVulkan14Features(VkPhysicalDeviceVulkan14Features & c
 }
 void compare_VkPhysicalDeviceGlobalPriorityQueryFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceGlobalPriorityQueryFeatures const& supported, VkPhysicalDeviceGlobalPriorityQueryFeatures const& requested) {
     if (requested.globalPriorityQuery && !supported.globalPriorityQuery) {
-        error_list.push_back("VkPhysicalDeviceGlobalPriorityQueryFeatures::globalPriorityQuery");
+        error_list.push_back("Missing feature VkPhysicalDeviceGlobalPriorityQueryFeatures::globalPriorityQuery");
     }
 }
 void merge_VkPhysicalDeviceGlobalPriorityQueryFeatures(VkPhysicalDeviceGlobalPriorityQueryFeatures & current, VkPhysicalDeviceGlobalPriorityQueryFeatures const& merge_in) {
@@ -1051,10 +1051,10 @@ void merge_VkPhysicalDeviceGlobalPriorityQueryFeatures(VkPhysicalDeviceGlobalPri
 }
 void compare_VkPhysicalDeviceShaderSubgroupRotateFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceShaderSubgroupRotateFeatures const& supported, VkPhysicalDeviceShaderSubgroupRotateFeatures const& requested) {
     if (requested.shaderSubgroupRotate && !supported.shaderSubgroupRotate) {
-        error_list.push_back("VkPhysicalDeviceShaderSubgroupRotateFeatures::shaderSubgroupRotate");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderSubgroupRotateFeatures::shaderSubgroupRotate");
     }
     if (requested.shaderSubgroupRotateClustered && !supported.shaderSubgroupRotateClustered) {
-        error_list.push_back("VkPhysicalDeviceShaderSubgroupRotateFeatures::shaderSubgroupRotateClustered");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderSubgroupRotateFeatures::shaderSubgroupRotateClustered");
     }
 }
 void merge_VkPhysicalDeviceShaderSubgroupRotateFeatures(VkPhysicalDeviceShaderSubgroupRotateFeatures & current, VkPhysicalDeviceShaderSubgroupRotateFeatures const& merge_in) {
@@ -1063,7 +1063,7 @@ void merge_VkPhysicalDeviceShaderSubgroupRotateFeatures(VkPhysicalDeviceShaderSu
 }
 void compare_VkPhysicalDeviceShaderFloatControls2Features(std::vector<std::string> & error_list, VkPhysicalDeviceShaderFloatControls2Features const& supported, VkPhysicalDeviceShaderFloatControls2Features const& requested) {
     if (requested.shaderFloatControls2 && !supported.shaderFloatControls2) {
-        error_list.push_back("VkPhysicalDeviceShaderFloatControls2Features::shaderFloatControls2");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderFloatControls2Features::shaderFloatControls2");
     }
 }
 void merge_VkPhysicalDeviceShaderFloatControls2Features(VkPhysicalDeviceShaderFloatControls2Features & current, VkPhysicalDeviceShaderFloatControls2Features const& merge_in) {
@@ -1071,7 +1071,7 @@ void merge_VkPhysicalDeviceShaderFloatControls2Features(VkPhysicalDeviceShaderFl
 }
 void compare_VkPhysicalDeviceShaderExpectAssumeFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceShaderExpectAssumeFeatures const& supported, VkPhysicalDeviceShaderExpectAssumeFeatures const& requested) {
     if (requested.shaderExpectAssume && !supported.shaderExpectAssume) {
-        error_list.push_back("VkPhysicalDeviceShaderExpectAssumeFeatures::shaderExpectAssume");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderExpectAssumeFeatures::shaderExpectAssume");
     }
 }
 void merge_VkPhysicalDeviceShaderExpectAssumeFeatures(VkPhysicalDeviceShaderExpectAssumeFeatures & current, VkPhysicalDeviceShaderExpectAssumeFeatures const& merge_in) {
@@ -1079,22 +1079,22 @@ void merge_VkPhysicalDeviceShaderExpectAssumeFeatures(VkPhysicalDeviceShaderExpe
 }
 void compare_VkPhysicalDeviceLineRasterizationFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceLineRasterizationFeatures const& supported, VkPhysicalDeviceLineRasterizationFeatures const& requested) {
     if (requested.rectangularLines && !supported.rectangularLines) {
-        error_list.push_back("VkPhysicalDeviceLineRasterizationFeatures::rectangularLines");
+        error_list.push_back("Missing feature VkPhysicalDeviceLineRasterizationFeatures::rectangularLines");
     }
     if (requested.bresenhamLines && !supported.bresenhamLines) {
-        error_list.push_back("VkPhysicalDeviceLineRasterizationFeatures::bresenhamLines");
+        error_list.push_back("Missing feature VkPhysicalDeviceLineRasterizationFeatures::bresenhamLines");
     }
     if (requested.smoothLines && !supported.smoothLines) {
-        error_list.push_back("VkPhysicalDeviceLineRasterizationFeatures::smoothLines");
+        error_list.push_back("Missing feature VkPhysicalDeviceLineRasterizationFeatures::smoothLines");
     }
     if (requested.stippledRectangularLines && !supported.stippledRectangularLines) {
-        error_list.push_back("VkPhysicalDeviceLineRasterizationFeatures::stippledRectangularLines");
+        error_list.push_back("Missing feature VkPhysicalDeviceLineRasterizationFeatures::stippledRectangularLines");
     }
     if (requested.stippledBresenhamLines && !supported.stippledBresenhamLines) {
-        error_list.push_back("VkPhysicalDeviceLineRasterizationFeatures::stippledBresenhamLines");
+        error_list.push_back("Missing feature VkPhysicalDeviceLineRasterizationFeatures::stippledBresenhamLines");
     }
     if (requested.stippledSmoothLines && !supported.stippledSmoothLines) {
-        error_list.push_back("VkPhysicalDeviceLineRasterizationFeatures::stippledSmoothLines");
+        error_list.push_back("Missing feature VkPhysicalDeviceLineRasterizationFeatures::stippledSmoothLines");
     }
 }
 void merge_VkPhysicalDeviceLineRasterizationFeatures(VkPhysicalDeviceLineRasterizationFeatures & current, VkPhysicalDeviceLineRasterizationFeatures const& merge_in) {
@@ -1107,10 +1107,10 @@ void merge_VkPhysicalDeviceLineRasterizationFeatures(VkPhysicalDeviceLineRasteri
 }
 void compare_VkPhysicalDeviceVertexAttributeDivisorFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceVertexAttributeDivisorFeatures const& supported, VkPhysicalDeviceVertexAttributeDivisorFeatures const& requested) {
     if (requested.vertexAttributeInstanceRateDivisor && !supported.vertexAttributeInstanceRateDivisor) {
-        error_list.push_back("VkPhysicalDeviceVertexAttributeDivisorFeatures::vertexAttributeInstanceRateDivisor");
+        error_list.push_back("Missing feature VkPhysicalDeviceVertexAttributeDivisorFeatures::vertexAttributeInstanceRateDivisor");
     }
     if (requested.vertexAttributeInstanceRateZeroDivisor && !supported.vertexAttributeInstanceRateZeroDivisor) {
-        error_list.push_back("VkPhysicalDeviceVertexAttributeDivisorFeatures::vertexAttributeInstanceRateZeroDivisor");
+        error_list.push_back("Missing feature VkPhysicalDeviceVertexAttributeDivisorFeatures::vertexAttributeInstanceRateZeroDivisor");
     }
 }
 void merge_VkPhysicalDeviceVertexAttributeDivisorFeatures(VkPhysicalDeviceVertexAttributeDivisorFeatures & current, VkPhysicalDeviceVertexAttributeDivisorFeatures const& merge_in) {
@@ -1119,7 +1119,7 @@ void merge_VkPhysicalDeviceVertexAttributeDivisorFeatures(VkPhysicalDeviceVertex
 }
 void compare_VkPhysicalDeviceIndexTypeUint8Features(std::vector<std::string> & error_list, VkPhysicalDeviceIndexTypeUint8Features const& supported, VkPhysicalDeviceIndexTypeUint8Features const& requested) {
     if (requested.indexTypeUint8 && !supported.indexTypeUint8) {
-        error_list.push_back("VkPhysicalDeviceIndexTypeUint8Features::indexTypeUint8");
+        error_list.push_back("Missing feature VkPhysicalDeviceIndexTypeUint8Features::indexTypeUint8");
     }
 }
 void merge_VkPhysicalDeviceIndexTypeUint8Features(VkPhysicalDeviceIndexTypeUint8Features & current, VkPhysicalDeviceIndexTypeUint8Features const& merge_in) {
@@ -1127,7 +1127,7 @@ void merge_VkPhysicalDeviceIndexTypeUint8Features(VkPhysicalDeviceIndexTypeUint8
 }
 void compare_VkPhysicalDeviceMaintenance5Features(std::vector<std::string> & error_list, VkPhysicalDeviceMaintenance5Features const& supported, VkPhysicalDeviceMaintenance5Features const& requested) {
     if (requested.maintenance5 && !supported.maintenance5) {
-        error_list.push_back("VkPhysicalDeviceMaintenance5Features::maintenance5");
+        error_list.push_back("Missing feature VkPhysicalDeviceMaintenance5Features::maintenance5");
     }
 }
 void merge_VkPhysicalDeviceMaintenance5Features(VkPhysicalDeviceMaintenance5Features & current, VkPhysicalDeviceMaintenance5Features const& merge_in) {
@@ -1135,7 +1135,7 @@ void merge_VkPhysicalDeviceMaintenance5Features(VkPhysicalDeviceMaintenance5Feat
 }
 void compare_VkPhysicalDeviceDynamicRenderingLocalReadFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceDynamicRenderingLocalReadFeatures const& supported, VkPhysicalDeviceDynamicRenderingLocalReadFeatures const& requested) {
     if (requested.dynamicRenderingLocalRead && !supported.dynamicRenderingLocalRead) {
-        error_list.push_back("VkPhysicalDeviceDynamicRenderingLocalReadFeatures::dynamicRenderingLocalRead");
+        error_list.push_back("Missing feature VkPhysicalDeviceDynamicRenderingLocalReadFeatures::dynamicRenderingLocalRead");
     }
 }
 void merge_VkPhysicalDeviceDynamicRenderingLocalReadFeatures(VkPhysicalDeviceDynamicRenderingLocalReadFeatures & current, VkPhysicalDeviceDynamicRenderingLocalReadFeatures const& merge_in) {
@@ -1143,7 +1143,7 @@ void merge_VkPhysicalDeviceDynamicRenderingLocalReadFeatures(VkPhysicalDeviceDyn
 }
 void compare_VkPhysicalDeviceMaintenance6Features(std::vector<std::string> & error_list, VkPhysicalDeviceMaintenance6Features const& supported, VkPhysicalDeviceMaintenance6Features const& requested) {
     if (requested.maintenance6 && !supported.maintenance6) {
-        error_list.push_back("VkPhysicalDeviceMaintenance6Features::maintenance6");
+        error_list.push_back("Missing feature VkPhysicalDeviceMaintenance6Features::maintenance6");
     }
 }
 void merge_VkPhysicalDeviceMaintenance6Features(VkPhysicalDeviceMaintenance6Features & current, VkPhysicalDeviceMaintenance6Features const& merge_in) {
@@ -1151,7 +1151,7 @@ void merge_VkPhysicalDeviceMaintenance6Features(VkPhysicalDeviceMaintenance6Feat
 }
 void compare_VkPhysicalDevicePipelineProtectedAccessFeatures(std::vector<std::string> & error_list, VkPhysicalDevicePipelineProtectedAccessFeatures const& supported, VkPhysicalDevicePipelineProtectedAccessFeatures const& requested) {
     if (requested.pipelineProtectedAccess && !supported.pipelineProtectedAccess) {
-        error_list.push_back("VkPhysicalDevicePipelineProtectedAccessFeatures::pipelineProtectedAccess");
+        error_list.push_back("Missing feature VkPhysicalDevicePipelineProtectedAccessFeatures::pipelineProtectedAccess");
     }
 }
 void merge_VkPhysicalDevicePipelineProtectedAccessFeatures(VkPhysicalDevicePipelineProtectedAccessFeatures & current, VkPhysicalDevicePipelineProtectedAccessFeatures const& merge_in) {
@@ -1159,7 +1159,7 @@ void merge_VkPhysicalDevicePipelineProtectedAccessFeatures(VkPhysicalDevicePipel
 }
 void compare_VkPhysicalDevicePipelineRobustnessFeatures(std::vector<std::string> & error_list, VkPhysicalDevicePipelineRobustnessFeatures const& supported, VkPhysicalDevicePipelineRobustnessFeatures const& requested) {
     if (requested.pipelineRobustness && !supported.pipelineRobustness) {
-        error_list.push_back("VkPhysicalDevicePipelineRobustnessFeatures::pipelineRobustness");
+        error_list.push_back("Missing feature VkPhysicalDevicePipelineRobustnessFeatures::pipelineRobustness");
     }
 }
 void merge_VkPhysicalDevicePipelineRobustnessFeatures(VkPhysicalDevicePipelineRobustnessFeatures & current, VkPhysicalDevicePipelineRobustnessFeatures const& merge_in) {
@@ -1167,7 +1167,7 @@ void merge_VkPhysicalDevicePipelineRobustnessFeatures(VkPhysicalDevicePipelineRo
 }
 void compare_VkPhysicalDeviceHostImageCopyFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceHostImageCopyFeatures const& supported, VkPhysicalDeviceHostImageCopyFeatures const& requested) {
     if (requested.hostImageCopy && !supported.hostImageCopy) {
-        error_list.push_back("VkPhysicalDeviceHostImageCopyFeatures::hostImageCopy");
+        error_list.push_back("Missing feature VkPhysicalDeviceHostImageCopyFeatures::hostImageCopy");
     }
 }
 void merge_VkPhysicalDeviceHostImageCopyFeatures(VkPhysicalDeviceHostImageCopyFeatures & current, VkPhysicalDeviceHostImageCopyFeatures const& merge_in) {
@@ -1175,10 +1175,10 @@ void merge_VkPhysicalDeviceHostImageCopyFeatures(VkPhysicalDeviceHostImageCopyFe
 }
 void compare_VkPhysicalDevicePerformanceQueryFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDevicePerformanceQueryFeaturesKHR const& supported, VkPhysicalDevicePerformanceQueryFeaturesKHR const& requested) {
     if (requested.performanceCounterQueryPools && !supported.performanceCounterQueryPools) {
-        error_list.push_back("VkPhysicalDevicePerformanceQueryFeaturesKHR::performanceCounterQueryPools");
+        error_list.push_back("Missing feature VkPhysicalDevicePerformanceQueryFeaturesKHR::performanceCounterQueryPools");
     }
     if (requested.performanceCounterMultipleQueryPools && !supported.performanceCounterMultipleQueryPools) {
-        error_list.push_back("VkPhysicalDevicePerformanceQueryFeaturesKHR::performanceCounterMultipleQueryPools");
+        error_list.push_back("Missing feature VkPhysicalDevicePerformanceQueryFeaturesKHR::performanceCounterMultipleQueryPools");
     }
 }
 void merge_VkPhysicalDevicePerformanceQueryFeaturesKHR(VkPhysicalDevicePerformanceQueryFeaturesKHR & current, VkPhysicalDevicePerformanceQueryFeaturesKHR const& merge_in) {
@@ -1187,13 +1187,13 @@ void merge_VkPhysicalDevicePerformanceQueryFeaturesKHR(VkPhysicalDevicePerforman
 }
 void compare_VkPhysicalDeviceShaderBfloat16FeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceShaderBfloat16FeaturesKHR const& supported, VkPhysicalDeviceShaderBfloat16FeaturesKHR const& requested) {
     if (requested.shaderBFloat16Type && !supported.shaderBFloat16Type) {
-        error_list.push_back("VkPhysicalDeviceShaderBfloat16FeaturesKHR::shaderBFloat16Type");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderBfloat16FeaturesKHR::shaderBFloat16Type");
     }
     if (requested.shaderBFloat16DotProduct && !supported.shaderBFloat16DotProduct) {
-        error_list.push_back("VkPhysicalDeviceShaderBfloat16FeaturesKHR::shaderBFloat16DotProduct");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderBfloat16FeaturesKHR::shaderBFloat16DotProduct");
     }
     if (requested.shaderBFloat16CooperativeMatrix && !supported.shaderBFloat16CooperativeMatrix) {
-        error_list.push_back("VkPhysicalDeviceShaderBfloat16FeaturesKHR::shaderBFloat16CooperativeMatrix");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderBfloat16FeaturesKHR::shaderBFloat16CooperativeMatrix");
     }
 }
 void merge_VkPhysicalDeviceShaderBfloat16FeaturesKHR(VkPhysicalDeviceShaderBfloat16FeaturesKHR & current, VkPhysicalDeviceShaderBfloat16FeaturesKHR const& merge_in) {
@@ -1204,49 +1204,49 @@ void merge_VkPhysicalDeviceShaderBfloat16FeaturesKHR(VkPhysicalDeviceShaderBfloa
 #if defined(VK_ENABLE_BETA_EXTENSIONS)
 void compare_VkPhysicalDevicePortabilitySubsetFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDevicePortabilitySubsetFeaturesKHR const& supported, VkPhysicalDevicePortabilitySubsetFeaturesKHR const& requested) {
     if (requested.constantAlphaColorBlendFactors && !supported.constantAlphaColorBlendFactors) {
-        error_list.push_back("VkPhysicalDevicePortabilitySubsetFeaturesKHR::constantAlphaColorBlendFactors");
+        error_list.push_back("Missing feature VkPhysicalDevicePortabilitySubsetFeaturesKHR::constantAlphaColorBlendFactors");
     }
     if (requested.events && !supported.events) {
-        error_list.push_back("VkPhysicalDevicePortabilitySubsetFeaturesKHR::events");
+        error_list.push_back("Missing feature VkPhysicalDevicePortabilitySubsetFeaturesKHR::events");
     }
     if (requested.imageViewFormatReinterpretation && !supported.imageViewFormatReinterpretation) {
-        error_list.push_back("VkPhysicalDevicePortabilitySubsetFeaturesKHR::imageViewFormatReinterpretation");
+        error_list.push_back("Missing feature VkPhysicalDevicePortabilitySubsetFeaturesKHR::imageViewFormatReinterpretation");
     }
     if (requested.imageViewFormatSwizzle && !supported.imageViewFormatSwizzle) {
-        error_list.push_back("VkPhysicalDevicePortabilitySubsetFeaturesKHR::imageViewFormatSwizzle");
+        error_list.push_back("Missing feature VkPhysicalDevicePortabilitySubsetFeaturesKHR::imageViewFormatSwizzle");
     }
     if (requested.imageView2DOn3DImage && !supported.imageView2DOn3DImage) {
-        error_list.push_back("VkPhysicalDevicePortabilitySubsetFeaturesKHR::imageView2DOn3DImage");
+        error_list.push_back("Missing feature VkPhysicalDevicePortabilitySubsetFeaturesKHR::imageView2DOn3DImage");
     }
     if (requested.multisampleArrayImage && !supported.multisampleArrayImage) {
-        error_list.push_back("VkPhysicalDevicePortabilitySubsetFeaturesKHR::multisampleArrayImage");
+        error_list.push_back("Missing feature VkPhysicalDevicePortabilitySubsetFeaturesKHR::multisampleArrayImage");
     }
     if (requested.mutableComparisonSamplers && !supported.mutableComparisonSamplers) {
-        error_list.push_back("VkPhysicalDevicePortabilitySubsetFeaturesKHR::mutableComparisonSamplers");
+        error_list.push_back("Missing feature VkPhysicalDevicePortabilitySubsetFeaturesKHR::mutableComparisonSamplers");
     }
     if (requested.pointPolygons && !supported.pointPolygons) {
-        error_list.push_back("VkPhysicalDevicePortabilitySubsetFeaturesKHR::pointPolygons");
+        error_list.push_back("Missing feature VkPhysicalDevicePortabilitySubsetFeaturesKHR::pointPolygons");
     }
     if (requested.samplerMipLodBias && !supported.samplerMipLodBias) {
-        error_list.push_back("VkPhysicalDevicePortabilitySubsetFeaturesKHR::samplerMipLodBias");
+        error_list.push_back("Missing feature VkPhysicalDevicePortabilitySubsetFeaturesKHR::samplerMipLodBias");
     }
     if (requested.separateStencilMaskRef && !supported.separateStencilMaskRef) {
-        error_list.push_back("VkPhysicalDevicePortabilitySubsetFeaturesKHR::separateStencilMaskRef");
+        error_list.push_back("Missing feature VkPhysicalDevicePortabilitySubsetFeaturesKHR::separateStencilMaskRef");
     }
     if (requested.shaderSampleRateInterpolationFunctions && !supported.shaderSampleRateInterpolationFunctions) {
-        error_list.push_back("VkPhysicalDevicePortabilitySubsetFeaturesKHR::shaderSampleRateInterpolationFunctions");
+        error_list.push_back("Missing feature VkPhysicalDevicePortabilitySubsetFeaturesKHR::shaderSampleRateInterpolationFunctions");
     }
     if (requested.tessellationIsolines && !supported.tessellationIsolines) {
-        error_list.push_back("VkPhysicalDevicePortabilitySubsetFeaturesKHR::tessellationIsolines");
+        error_list.push_back("Missing feature VkPhysicalDevicePortabilitySubsetFeaturesKHR::tessellationIsolines");
     }
     if (requested.tessellationPointMode && !supported.tessellationPointMode) {
-        error_list.push_back("VkPhysicalDevicePortabilitySubsetFeaturesKHR::tessellationPointMode");
+        error_list.push_back("Missing feature VkPhysicalDevicePortabilitySubsetFeaturesKHR::tessellationPointMode");
     }
     if (requested.triangleFans && !supported.triangleFans) {
-        error_list.push_back("VkPhysicalDevicePortabilitySubsetFeaturesKHR::triangleFans");
+        error_list.push_back("Missing feature VkPhysicalDevicePortabilitySubsetFeaturesKHR::triangleFans");
     }
     if (requested.vertexAttributeAccessBeyondStride && !supported.vertexAttributeAccessBeyondStride) {
-        error_list.push_back("VkPhysicalDevicePortabilitySubsetFeaturesKHR::vertexAttributeAccessBeyondStride");
+        error_list.push_back("Missing feature VkPhysicalDevicePortabilitySubsetFeaturesKHR::vertexAttributeAccessBeyondStride");
     }
 }
 void merge_VkPhysicalDevicePortabilitySubsetFeaturesKHR(VkPhysicalDevicePortabilitySubsetFeaturesKHR & current, VkPhysicalDevicePortabilitySubsetFeaturesKHR const& merge_in) {
@@ -1269,10 +1269,10 @@ void merge_VkPhysicalDevicePortabilitySubsetFeaturesKHR(VkPhysicalDevicePortabil
 #endif // defined(VK_ENABLE_BETA_EXTENSIONS)
 void compare_VkPhysicalDeviceShaderClockFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceShaderClockFeaturesKHR const& supported, VkPhysicalDeviceShaderClockFeaturesKHR const& requested) {
     if (requested.shaderSubgroupClock && !supported.shaderSubgroupClock) {
-        error_list.push_back("VkPhysicalDeviceShaderClockFeaturesKHR::shaderSubgroupClock");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderClockFeaturesKHR::shaderSubgroupClock");
     }
     if (requested.shaderDeviceClock && !supported.shaderDeviceClock) {
-        error_list.push_back("VkPhysicalDeviceShaderClockFeaturesKHR::shaderDeviceClock");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderClockFeaturesKHR::shaderDeviceClock");
     }
 }
 void merge_VkPhysicalDeviceShaderClockFeaturesKHR(VkPhysicalDeviceShaderClockFeaturesKHR & current, VkPhysicalDeviceShaderClockFeaturesKHR const& merge_in) {
@@ -1281,13 +1281,13 @@ void merge_VkPhysicalDeviceShaderClockFeaturesKHR(VkPhysicalDeviceShaderClockFea
 }
 void compare_VkPhysicalDeviceFragmentShadingRateFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceFragmentShadingRateFeaturesKHR const& supported, VkPhysicalDeviceFragmentShadingRateFeaturesKHR const& requested) {
     if (requested.pipelineFragmentShadingRate && !supported.pipelineFragmentShadingRate) {
-        error_list.push_back("VkPhysicalDeviceFragmentShadingRateFeaturesKHR::pipelineFragmentShadingRate");
+        error_list.push_back("Missing feature VkPhysicalDeviceFragmentShadingRateFeaturesKHR::pipelineFragmentShadingRate");
     }
     if (requested.primitiveFragmentShadingRate && !supported.primitiveFragmentShadingRate) {
-        error_list.push_back("VkPhysicalDeviceFragmentShadingRateFeaturesKHR::primitiveFragmentShadingRate");
+        error_list.push_back("Missing feature VkPhysicalDeviceFragmentShadingRateFeaturesKHR::primitiveFragmentShadingRate");
     }
     if (requested.attachmentFragmentShadingRate && !supported.attachmentFragmentShadingRate) {
-        error_list.push_back("VkPhysicalDeviceFragmentShadingRateFeaturesKHR::attachmentFragmentShadingRate");
+        error_list.push_back("Missing feature VkPhysicalDeviceFragmentShadingRateFeaturesKHR::attachmentFragmentShadingRate");
     }
 }
 void merge_VkPhysicalDeviceFragmentShadingRateFeaturesKHR(VkPhysicalDeviceFragmentShadingRateFeaturesKHR & current, VkPhysicalDeviceFragmentShadingRateFeaturesKHR const& merge_in) {
@@ -1297,7 +1297,7 @@ void merge_VkPhysicalDeviceFragmentShadingRateFeaturesKHR(VkPhysicalDeviceFragme
 }
 void compare_VkPhysicalDeviceShaderQuadControlFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceShaderQuadControlFeaturesKHR const& supported, VkPhysicalDeviceShaderQuadControlFeaturesKHR const& requested) {
     if (requested.shaderQuadControl && !supported.shaderQuadControl) {
-        error_list.push_back("VkPhysicalDeviceShaderQuadControlFeaturesKHR::shaderQuadControl");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderQuadControlFeaturesKHR::shaderQuadControl");
     }
 }
 void merge_VkPhysicalDeviceShaderQuadControlFeaturesKHR(VkPhysicalDeviceShaderQuadControlFeaturesKHR & current, VkPhysicalDeviceShaderQuadControlFeaturesKHR const& merge_in) {
@@ -1305,7 +1305,7 @@ void merge_VkPhysicalDeviceShaderQuadControlFeaturesKHR(VkPhysicalDeviceShaderQu
 }
 void compare_VkPhysicalDevicePresentWaitFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDevicePresentWaitFeaturesKHR const& supported, VkPhysicalDevicePresentWaitFeaturesKHR const& requested) {
     if (requested.presentWait && !supported.presentWait) {
-        error_list.push_back("VkPhysicalDevicePresentWaitFeaturesKHR::presentWait");
+        error_list.push_back("Missing feature VkPhysicalDevicePresentWaitFeaturesKHR::presentWait");
     }
 }
 void merge_VkPhysicalDevicePresentWaitFeaturesKHR(VkPhysicalDevicePresentWaitFeaturesKHR & current, VkPhysicalDevicePresentWaitFeaturesKHR const& merge_in) {
@@ -1313,7 +1313,7 @@ void merge_VkPhysicalDevicePresentWaitFeaturesKHR(VkPhysicalDevicePresentWaitFea
 }
 void compare_VkPhysicalDevicePipelineExecutablePropertiesFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDevicePipelineExecutablePropertiesFeaturesKHR const& supported, VkPhysicalDevicePipelineExecutablePropertiesFeaturesKHR const& requested) {
     if (requested.pipelineExecutableInfo && !supported.pipelineExecutableInfo) {
-        error_list.push_back("VkPhysicalDevicePipelineExecutablePropertiesFeaturesKHR::pipelineExecutableInfo");
+        error_list.push_back("Missing feature VkPhysicalDevicePipelineExecutablePropertiesFeaturesKHR::pipelineExecutableInfo");
     }
 }
 void merge_VkPhysicalDevicePipelineExecutablePropertiesFeaturesKHR(VkPhysicalDevicePipelineExecutablePropertiesFeaturesKHR & current, VkPhysicalDevicePipelineExecutablePropertiesFeaturesKHR const& merge_in) {
@@ -1321,7 +1321,7 @@ void merge_VkPhysicalDevicePipelineExecutablePropertiesFeaturesKHR(VkPhysicalDev
 }
 void compare_VkPhysicalDevicePresentIdFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDevicePresentIdFeaturesKHR const& supported, VkPhysicalDevicePresentIdFeaturesKHR const& requested) {
     if (requested.presentId && !supported.presentId) {
-        error_list.push_back("VkPhysicalDevicePresentIdFeaturesKHR::presentId");
+        error_list.push_back("Missing feature VkPhysicalDevicePresentIdFeaturesKHR::presentId");
     }
 }
 void merge_VkPhysicalDevicePresentIdFeaturesKHR(VkPhysicalDevicePresentIdFeaturesKHR & current, VkPhysicalDevicePresentIdFeaturesKHR const& merge_in) {
@@ -1329,7 +1329,7 @@ void merge_VkPhysicalDevicePresentIdFeaturesKHR(VkPhysicalDevicePresentIdFeature
 }
 void compare_VkPhysicalDeviceFragmentShaderBarycentricFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceFragmentShaderBarycentricFeaturesKHR const& supported, VkPhysicalDeviceFragmentShaderBarycentricFeaturesKHR const& requested) {
     if (requested.fragmentShaderBarycentric && !supported.fragmentShaderBarycentric) {
-        error_list.push_back("VkPhysicalDeviceFragmentShaderBarycentricFeaturesKHR::fragmentShaderBarycentric");
+        error_list.push_back("Missing feature VkPhysicalDeviceFragmentShaderBarycentricFeaturesKHR::fragmentShaderBarycentric");
     }
 }
 void merge_VkPhysicalDeviceFragmentShaderBarycentricFeaturesKHR(VkPhysicalDeviceFragmentShaderBarycentricFeaturesKHR & current, VkPhysicalDeviceFragmentShaderBarycentricFeaturesKHR const& merge_in) {
@@ -1337,7 +1337,7 @@ void merge_VkPhysicalDeviceFragmentShaderBarycentricFeaturesKHR(VkPhysicalDevice
 }
 void compare_VkPhysicalDeviceShaderSubgroupUniformControlFlowFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceShaderSubgroupUniformControlFlowFeaturesKHR const& supported, VkPhysicalDeviceShaderSubgroupUniformControlFlowFeaturesKHR const& requested) {
     if (requested.shaderSubgroupUniformControlFlow && !supported.shaderSubgroupUniformControlFlow) {
-        error_list.push_back("VkPhysicalDeviceShaderSubgroupUniformControlFlowFeaturesKHR::shaderSubgroupUniformControlFlow");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderSubgroupUniformControlFlowFeaturesKHR::shaderSubgroupUniformControlFlow");
     }
 }
 void merge_VkPhysicalDeviceShaderSubgroupUniformControlFlowFeaturesKHR(VkPhysicalDeviceShaderSubgroupUniformControlFlowFeaturesKHR & current, VkPhysicalDeviceShaderSubgroupUniformControlFlowFeaturesKHR const& merge_in) {
@@ -1345,16 +1345,16 @@ void merge_VkPhysicalDeviceShaderSubgroupUniformControlFlowFeaturesKHR(VkPhysica
 }
 void compare_VkPhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR const& supported, VkPhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR const& requested) {
     if (requested.workgroupMemoryExplicitLayout && !supported.workgroupMemoryExplicitLayout) {
-        error_list.push_back("VkPhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR::workgroupMemoryExplicitLayout");
+        error_list.push_back("Missing feature VkPhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR::workgroupMemoryExplicitLayout");
     }
     if (requested.workgroupMemoryExplicitLayoutScalarBlockLayout && !supported.workgroupMemoryExplicitLayoutScalarBlockLayout) {
-        error_list.push_back("VkPhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR::workgroupMemoryExplicitLayoutScalarBlockLayout");
+        error_list.push_back("Missing feature VkPhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR::workgroupMemoryExplicitLayoutScalarBlockLayout");
     }
     if (requested.workgroupMemoryExplicitLayout8BitAccess && !supported.workgroupMemoryExplicitLayout8BitAccess) {
-        error_list.push_back("VkPhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR::workgroupMemoryExplicitLayout8BitAccess");
+        error_list.push_back("Missing feature VkPhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR::workgroupMemoryExplicitLayout8BitAccess");
     }
     if (requested.workgroupMemoryExplicitLayout16BitAccess && !supported.workgroupMemoryExplicitLayout16BitAccess) {
-        error_list.push_back("VkPhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR::workgroupMemoryExplicitLayout16BitAccess");
+        error_list.push_back("Missing feature VkPhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR::workgroupMemoryExplicitLayout16BitAccess");
     }
 }
 void merge_VkPhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR(VkPhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR & current, VkPhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR const& merge_in) {
@@ -1365,10 +1365,10 @@ void merge_VkPhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR(VkPhysicalDe
 }
 void compare_VkPhysicalDeviceRayTracingMaintenance1FeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceRayTracingMaintenance1FeaturesKHR const& supported, VkPhysicalDeviceRayTracingMaintenance1FeaturesKHR const& requested) {
     if (requested.rayTracingMaintenance1 && !supported.rayTracingMaintenance1) {
-        error_list.push_back("VkPhysicalDeviceRayTracingMaintenance1FeaturesKHR::rayTracingMaintenance1");
+        error_list.push_back("Missing feature VkPhysicalDeviceRayTracingMaintenance1FeaturesKHR::rayTracingMaintenance1");
     }
     if (requested.rayTracingPipelineTraceRaysIndirect2 && !supported.rayTracingPipelineTraceRaysIndirect2) {
-        error_list.push_back("VkPhysicalDeviceRayTracingMaintenance1FeaturesKHR::rayTracingPipelineTraceRaysIndirect2");
+        error_list.push_back("Missing feature VkPhysicalDeviceRayTracingMaintenance1FeaturesKHR::rayTracingPipelineTraceRaysIndirect2");
     }
 }
 void merge_VkPhysicalDeviceRayTracingMaintenance1FeaturesKHR(VkPhysicalDeviceRayTracingMaintenance1FeaturesKHR & current, VkPhysicalDeviceRayTracingMaintenance1FeaturesKHR const& merge_in) {
@@ -1377,7 +1377,7 @@ void merge_VkPhysicalDeviceRayTracingMaintenance1FeaturesKHR(VkPhysicalDeviceRay
 }
 void compare_VkPhysicalDeviceShaderUntypedPointersFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceShaderUntypedPointersFeaturesKHR const& supported, VkPhysicalDeviceShaderUntypedPointersFeaturesKHR const& requested) {
     if (requested.shaderUntypedPointers && !supported.shaderUntypedPointers) {
-        error_list.push_back("VkPhysicalDeviceShaderUntypedPointersFeaturesKHR::shaderUntypedPointers");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderUntypedPointersFeaturesKHR::shaderUntypedPointers");
     }
 }
 void merge_VkPhysicalDeviceShaderUntypedPointersFeaturesKHR(VkPhysicalDeviceShaderUntypedPointersFeaturesKHR & current, VkPhysicalDeviceShaderUntypedPointersFeaturesKHR const& merge_in) {
@@ -1385,7 +1385,7 @@ void merge_VkPhysicalDeviceShaderUntypedPointersFeaturesKHR(VkPhysicalDeviceShad
 }
 void compare_VkPhysicalDeviceShaderMaximalReconvergenceFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceShaderMaximalReconvergenceFeaturesKHR const& supported, VkPhysicalDeviceShaderMaximalReconvergenceFeaturesKHR const& requested) {
     if (requested.shaderMaximalReconvergence && !supported.shaderMaximalReconvergence) {
-        error_list.push_back("VkPhysicalDeviceShaderMaximalReconvergenceFeaturesKHR::shaderMaximalReconvergence");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderMaximalReconvergenceFeaturesKHR::shaderMaximalReconvergence");
     }
 }
 void merge_VkPhysicalDeviceShaderMaximalReconvergenceFeaturesKHR(VkPhysicalDeviceShaderMaximalReconvergenceFeaturesKHR & current, VkPhysicalDeviceShaderMaximalReconvergenceFeaturesKHR const& merge_in) {
@@ -1393,7 +1393,7 @@ void merge_VkPhysicalDeviceShaderMaximalReconvergenceFeaturesKHR(VkPhysicalDevic
 }
 void compare_VkPhysicalDevicePresentId2FeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDevicePresentId2FeaturesKHR const& supported, VkPhysicalDevicePresentId2FeaturesKHR const& requested) {
     if (requested.presentId2 && !supported.presentId2) {
-        error_list.push_back("VkPhysicalDevicePresentId2FeaturesKHR::presentId2");
+        error_list.push_back("Missing feature VkPhysicalDevicePresentId2FeaturesKHR::presentId2");
     }
 }
 void merge_VkPhysicalDevicePresentId2FeaturesKHR(VkPhysicalDevicePresentId2FeaturesKHR & current, VkPhysicalDevicePresentId2FeaturesKHR const& merge_in) {
@@ -1401,7 +1401,7 @@ void merge_VkPhysicalDevicePresentId2FeaturesKHR(VkPhysicalDevicePresentId2Featu
 }
 void compare_VkPhysicalDevicePresentWait2FeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDevicePresentWait2FeaturesKHR const& supported, VkPhysicalDevicePresentWait2FeaturesKHR const& requested) {
     if (requested.presentWait2 && !supported.presentWait2) {
-        error_list.push_back("VkPhysicalDevicePresentWait2FeaturesKHR::presentWait2");
+        error_list.push_back("Missing feature VkPhysicalDevicePresentWait2FeaturesKHR::presentWait2");
     }
 }
 void merge_VkPhysicalDevicePresentWait2FeaturesKHR(VkPhysicalDevicePresentWait2FeaturesKHR & current, VkPhysicalDevicePresentWait2FeaturesKHR const& merge_in) {
@@ -1409,7 +1409,7 @@ void merge_VkPhysicalDevicePresentWait2FeaturesKHR(VkPhysicalDevicePresentWait2F
 }
 void compare_VkPhysicalDeviceRayTracingPositionFetchFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceRayTracingPositionFetchFeaturesKHR const& supported, VkPhysicalDeviceRayTracingPositionFetchFeaturesKHR const& requested) {
     if (requested.rayTracingPositionFetch && !supported.rayTracingPositionFetch) {
-        error_list.push_back("VkPhysicalDeviceRayTracingPositionFetchFeaturesKHR::rayTracingPositionFetch");
+        error_list.push_back("Missing feature VkPhysicalDeviceRayTracingPositionFetchFeaturesKHR::rayTracingPositionFetch");
     }
 }
 void merge_VkPhysicalDeviceRayTracingPositionFetchFeaturesKHR(VkPhysicalDeviceRayTracingPositionFetchFeaturesKHR & current, VkPhysicalDeviceRayTracingPositionFetchFeaturesKHR const& merge_in) {
@@ -1417,7 +1417,7 @@ void merge_VkPhysicalDeviceRayTracingPositionFetchFeaturesKHR(VkPhysicalDeviceRa
 }
 void compare_VkPhysicalDevicePipelineBinaryFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDevicePipelineBinaryFeaturesKHR const& supported, VkPhysicalDevicePipelineBinaryFeaturesKHR const& requested) {
     if (requested.pipelineBinaries && !supported.pipelineBinaries) {
-        error_list.push_back("VkPhysicalDevicePipelineBinaryFeaturesKHR::pipelineBinaries");
+        error_list.push_back("Missing feature VkPhysicalDevicePipelineBinaryFeaturesKHR::pipelineBinaries");
     }
 }
 void merge_VkPhysicalDevicePipelineBinaryFeaturesKHR(VkPhysicalDevicePipelineBinaryFeaturesKHR & current, VkPhysicalDevicePipelineBinaryFeaturesKHR const& merge_in) {
@@ -1425,7 +1425,7 @@ void merge_VkPhysicalDevicePipelineBinaryFeaturesKHR(VkPhysicalDevicePipelineBin
 }
 void compare_VkPhysicalDeviceSwapchainMaintenance1FeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceSwapchainMaintenance1FeaturesKHR const& supported, VkPhysicalDeviceSwapchainMaintenance1FeaturesKHR const& requested) {
     if (requested.swapchainMaintenance1 && !supported.swapchainMaintenance1) {
-        error_list.push_back("VkPhysicalDeviceSwapchainMaintenance1FeaturesKHR::swapchainMaintenance1");
+        error_list.push_back("Missing feature VkPhysicalDeviceSwapchainMaintenance1FeaturesKHR::swapchainMaintenance1");
     }
 }
 void merge_VkPhysicalDeviceSwapchainMaintenance1FeaturesKHR(VkPhysicalDeviceSwapchainMaintenance1FeaturesKHR & current, VkPhysicalDeviceSwapchainMaintenance1FeaturesKHR const& merge_in) {
@@ -1433,10 +1433,10 @@ void merge_VkPhysicalDeviceSwapchainMaintenance1FeaturesKHR(VkPhysicalDeviceSwap
 }
 void compare_VkPhysicalDeviceCooperativeMatrixFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceCooperativeMatrixFeaturesKHR const& supported, VkPhysicalDeviceCooperativeMatrixFeaturesKHR const& requested) {
     if (requested.cooperativeMatrix && !supported.cooperativeMatrix) {
-        error_list.push_back("VkPhysicalDeviceCooperativeMatrixFeaturesKHR::cooperativeMatrix");
+        error_list.push_back("Missing feature VkPhysicalDeviceCooperativeMatrixFeaturesKHR::cooperativeMatrix");
     }
     if (requested.cooperativeMatrixRobustBufferAccess && !supported.cooperativeMatrixRobustBufferAccess) {
-        error_list.push_back("VkPhysicalDeviceCooperativeMatrixFeaturesKHR::cooperativeMatrixRobustBufferAccess");
+        error_list.push_back("Missing feature VkPhysicalDeviceCooperativeMatrixFeaturesKHR::cooperativeMatrixRobustBufferAccess");
     }
 }
 void merge_VkPhysicalDeviceCooperativeMatrixFeaturesKHR(VkPhysicalDeviceCooperativeMatrixFeaturesKHR & current, VkPhysicalDeviceCooperativeMatrixFeaturesKHR const& merge_in) {
@@ -1445,10 +1445,10 @@ void merge_VkPhysicalDeviceCooperativeMatrixFeaturesKHR(VkPhysicalDeviceCooperat
 }
 void compare_VkPhysicalDeviceComputeShaderDerivativesFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceComputeShaderDerivativesFeaturesKHR const& supported, VkPhysicalDeviceComputeShaderDerivativesFeaturesKHR const& requested) {
     if (requested.computeDerivativeGroupQuads && !supported.computeDerivativeGroupQuads) {
-        error_list.push_back("VkPhysicalDeviceComputeShaderDerivativesFeaturesKHR::computeDerivativeGroupQuads");
+        error_list.push_back("Missing feature VkPhysicalDeviceComputeShaderDerivativesFeaturesKHR::computeDerivativeGroupQuads");
     }
     if (requested.computeDerivativeGroupLinear && !supported.computeDerivativeGroupLinear) {
-        error_list.push_back("VkPhysicalDeviceComputeShaderDerivativesFeaturesKHR::computeDerivativeGroupLinear");
+        error_list.push_back("Missing feature VkPhysicalDeviceComputeShaderDerivativesFeaturesKHR::computeDerivativeGroupLinear");
     }
 }
 void merge_VkPhysicalDeviceComputeShaderDerivativesFeaturesKHR(VkPhysicalDeviceComputeShaderDerivativesFeaturesKHR & current, VkPhysicalDeviceComputeShaderDerivativesFeaturesKHR const& merge_in) {
@@ -1457,7 +1457,7 @@ void merge_VkPhysicalDeviceComputeShaderDerivativesFeaturesKHR(VkPhysicalDeviceC
 }
 void compare_VkPhysicalDeviceVideoEncodeAV1FeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceVideoEncodeAV1FeaturesKHR const& supported, VkPhysicalDeviceVideoEncodeAV1FeaturesKHR const& requested) {
     if (requested.videoEncodeAV1 && !supported.videoEncodeAV1) {
-        error_list.push_back("VkPhysicalDeviceVideoEncodeAV1FeaturesKHR::videoEncodeAV1");
+        error_list.push_back("Missing feature VkPhysicalDeviceVideoEncodeAV1FeaturesKHR::videoEncodeAV1");
     }
 }
 void merge_VkPhysicalDeviceVideoEncodeAV1FeaturesKHR(VkPhysicalDeviceVideoEncodeAV1FeaturesKHR & current, VkPhysicalDeviceVideoEncodeAV1FeaturesKHR const& merge_in) {
@@ -1465,7 +1465,7 @@ void merge_VkPhysicalDeviceVideoEncodeAV1FeaturesKHR(VkPhysicalDeviceVideoEncode
 }
 void compare_VkPhysicalDeviceVideoDecodeVP9FeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceVideoDecodeVP9FeaturesKHR const& supported, VkPhysicalDeviceVideoDecodeVP9FeaturesKHR const& requested) {
     if (requested.videoDecodeVP9 && !supported.videoDecodeVP9) {
-        error_list.push_back("VkPhysicalDeviceVideoDecodeVP9FeaturesKHR::videoDecodeVP9");
+        error_list.push_back("Missing feature VkPhysicalDeviceVideoDecodeVP9FeaturesKHR::videoDecodeVP9");
     }
 }
 void merge_VkPhysicalDeviceVideoDecodeVP9FeaturesKHR(VkPhysicalDeviceVideoDecodeVP9FeaturesKHR & current, VkPhysicalDeviceVideoDecodeVP9FeaturesKHR const& merge_in) {
@@ -1473,7 +1473,7 @@ void merge_VkPhysicalDeviceVideoDecodeVP9FeaturesKHR(VkPhysicalDeviceVideoDecode
 }
 void compare_VkPhysicalDeviceVideoMaintenance1FeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceVideoMaintenance1FeaturesKHR const& supported, VkPhysicalDeviceVideoMaintenance1FeaturesKHR const& requested) {
     if (requested.videoMaintenance1 && !supported.videoMaintenance1) {
-        error_list.push_back("VkPhysicalDeviceVideoMaintenance1FeaturesKHR::videoMaintenance1");
+        error_list.push_back("Missing feature VkPhysicalDeviceVideoMaintenance1FeaturesKHR::videoMaintenance1");
     }
 }
 void merge_VkPhysicalDeviceVideoMaintenance1FeaturesKHR(VkPhysicalDeviceVideoMaintenance1FeaturesKHR & current, VkPhysicalDeviceVideoMaintenance1FeaturesKHR const& merge_in) {
@@ -1481,10 +1481,10 @@ void merge_VkPhysicalDeviceVideoMaintenance1FeaturesKHR(VkPhysicalDeviceVideoMai
 }
 void compare_VkPhysicalDeviceUnifiedImageLayoutsFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceUnifiedImageLayoutsFeaturesKHR const& supported, VkPhysicalDeviceUnifiedImageLayoutsFeaturesKHR const& requested) {
     if (requested.unifiedImageLayouts && !supported.unifiedImageLayouts) {
-        error_list.push_back("VkPhysicalDeviceUnifiedImageLayoutsFeaturesKHR::unifiedImageLayouts");
+        error_list.push_back("Missing feature VkPhysicalDeviceUnifiedImageLayoutsFeaturesKHR::unifiedImageLayouts");
     }
     if (requested.unifiedImageLayoutsVideo && !supported.unifiedImageLayoutsVideo) {
-        error_list.push_back("VkPhysicalDeviceUnifiedImageLayoutsFeaturesKHR::unifiedImageLayoutsVideo");
+        error_list.push_back("Missing feature VkPhysicalDeviceUnifiedImageLayoutsFeaturesKHR::unifiedImageLayoutsVideo");
     }
 }
 void merge_VkPhysicalDeviceUnifiedImageLayoutsFeaturesKHR(VkPhysicalDeviceUnifiedImageLayoutsFeaturesKHR & current, VkPhysicalDeviceUnifiedImageLayoutsFeaturesKHR const& merge_in) {
@@ -1493,7 +1493,7 @@ void merge_VkPhysicalDeviceUnifiedImageLayoutsFeaturesKHR(VkPhysicalDeviceUnifie
 }
 void compare_VkPhysicalDeviceVideoEncodeIntraRefreshFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceVideoEncodeIntraRefreshFeaturesKHR const& supported, VkPhysicalDeviceVideoEncodeIntraRefreshFeaturesKHR const& requested) {
     if (requested.videoEncodeIntraRefresh && !supported.videoEncodeIntraRefresh) {
-        error_list.push_back("VkPhysicalDeviceVideoEncodeIntraRefreshFeaturesKHR::videoEncodeIntraRefresh");
+        error_list.push_back("Missing feature VkPhysicalDeviceVideoEncodeIntraRefreshFeaturesKHR::videoEncodeIntraRefresh");
     }
 }
 void merge_VkPhysicalDeviceVideoEncodeIntraRefreshFeaturesKHR(VkPhysicalDeviceVideoEncodeIntraRefreshFeaturesKHR & current, VkPhysicalDeviceVideoEncodeIntraRefreshFeaturesKHR const& merge_in) {
@@ -1501,7 +1501,7 @@ void merge_VkPhysicalDeviceVideoEncodeIntraRefreshFeaturesKHR(VkPhysicalDeviceVi
 }
 void compare_VkPhysicalDeviceVideoEncodeQuantizationMapFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceVideoEncodeQuantizationMapFeaturesKHR const& supported, VkPhysicalDeviceVideoEncodeQuantizationMapFeaturesKHR const& requested) {
     if (requested.videoEncodeQuantizationMap && !supported.videoEncodeQuantizationMap) {
-        error_list.push_back("VkPhysicalDeviceVideoEncodeQuantizationMapFeaturesKHR::videoEncodeQuantizationMap");
+        error_list.push_back("Missing feature VkPhysicalDeviceVideoEncodeQuantizationMapFeaturesKHR::videoEncodeQuantizationMap");
     }
 }
 void merge_VkPhysicalDeviceVideoEncodeQuantizationMapFeaturesKHR(VkPhysicalDeviceVideoEncodeQuantizationMapFeaturesKHR & current, VkPhysicalDeviceVideoEncodeQuantizationMapFeaturesKHR const& merge_in) {
@@ -1509,7 +1509,7 @@ void merge_VkPhysicalDeviceVideoEncodeQuantizationMapFeaturesKHR(VkPhysicalDevic
 }
 void compare_VkPhysicalDeviceShaderRelaxedExtendedInstructionFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceShaderRelaxedExtendedInstructionFeaturesKHR const& supported, VkPhysicalDeviceShaderRelaxedExtendedInstructionFeaturesKHR const& requested) {
     if (requested.shaderRelaxedExtendedInstruction && !supported.shaderRelaxedExtendedInstruction) {
-        error_list.push_back("VkPhysicalDeviceShaderRelaxedExtendedInstructionFeaturesKHR::shaderRelaxedExtendedInstruction");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderRelaxedExtendedInstructionFeaturesKHR::shaderRelaxedExtendedInstruction");
     }
 }
 void merge_VkPhysicalDeviceShaderRelaxedExtendedInstructionFeaturesKHR(VkPhysicalDeviceShaderRelaxedExtendedInstructionFeaturesKHR & current, VkPhysicalDeviceShaderRelaxedExtendedInstructionFeaturesKHR const& merge_in) {
@@ -1517,7 +1517,7 @@ void merge_VkPhysicalDeviceShaderRelaxedExtendedInstructionFeaturesKHR(VkPhysica
 }
 void compare_VkPhysicalDeviceMaintenance7FeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceMaintenance7FeaturesKHR const& supported, VkPhysicalDeviceMaintenance7FeaturesKHR const& requested) {
     if (requested.maintenance7 && !supported.maintenance7) {
-        error_list.push_back("VkPhysicalDeviceMaintenance7FeaturesKHR::maintenance7");
+        error_list.push_back("Missing feature VkPhysicalDeviceMaintenance7FeaturesKHR::maintenance7");
     }
 }
 void merge_VkPhysicalDeviceMaintenance7FeaturesKHR(VkPhysicalDeviceMaintenance7FeaturesKHR & current, VkPhysicalDeviceMaintenance7FeaturesKHR const& merge_in) {
@@ -1525,7 +1525,7 @@ void merge_VkPhysicalDeviceMaintenance7FeaturesKHR(VkPhysicalDeviceMaintenance7F
 }
 void compare_VkPhysicalDeviceMaintenance8FeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceMaintenance8FeaturesKHR const& supported, VkPhysicalDeviceMaintenance8FeaturesKHR const& requested) {
     if (requested.maintenance8 && !supported.maintenance8) {
-        error_list.push_back("VkPhysicalDeviceMaintenance8FeaturesKHR::maintenance8");
+        error_list.push_back("Missing feature VkPhysicalDeviceMaintenance8FeaturesKHR::maintenance8");
     }
 }
 void merge_VkPhysicalDeviceMaintenance8FeaturesKHR(VkPhysicalDeviceMaintenance8FeaturesKHR & current, VkPhysicalDeviceMaintenance8FeaturesKHR const& merge_in) {
@@ -1533,7 +1533,7 @@ void merge_VkPhysicalDeviceMaintenance8FeaturesKHR(VkPhysicalDeviceMaintenance8F
 }
 void compare_VkPhysicalDeviceMaintenance9FeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceMaintenance9FeaturesKHR const& supported, VkPhysicalDeviceMaintenance9FeaturesKHR const& requested) {
     if (requested.maintenance9 && !supported.maintenance9) {
-        error_list.push_back("VkPhysicalDeviceMaintenance9FeaturesKHR::maintenance9");
+        error_list.push_back("Missing feature VkPhysicalDeviceMaintenance9FeaturesKHR::maintenance9");
     }
 }
 void merge_VkPhysicalDeviceMaintenance9FeaturesKHR(VkPhysicalDeviceMaintenance9FeaturesKHR & current, VkPhysicalDeviceMaintenance9FeaturesKHR const& merge_in) {
@@ -1541,7 +1541,7 @@ void merge_VkPhysicalDeviceMaintenance9FeaturesKHR(VkPhysicalDeviceMaintenance9F
 }
 void compare_VkPhysicalDeviceVideoMaintenance2FeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceVideoMaintenance2FeaturesKHR const& supported, VkPhysicalDeviceVideoMaintenance2FeaturesKHR const& requested) {
     if (requested.videoMaintenance2 && !supported.videoMaintenance2) {
-        error_list.push_back("VkPhysicalDeviceVideoMaintenance2FeaturesKHR::videoMaintenance2");
+        error_list.push_back("Missing feature VkPhysicalDeviceVideoMaintenance2FeaturesKHR::videoMaintenance2");
     }
 }
 void merge_VkPhysicalDeviceVideoMaintenance2FeaturesKHR(VkPhysicalDeviceVideoMaintenance2FeaturesKHR & current, VkPhysicalDeviceVideoMaintenance2FeaturesKHR const& merge_in) {
@@ -1549,7 +1549,7 @@ void merge_VkPhysicalDeviceVideoMaintenance2FeaturesKHR(VkPhysicalDeviceVideoMai
 }
 void compare_VkPhysicalDeviceDepthClampZeroOneFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceDepthClampZeroOneFeaturesKHR const& supported, VkPhysicalDeviceDepthClampZeroOneFeaturesKHR const& requested) {
     if (requested.depthClampZeroOne && !supported.depthClampZeroOne) {
-        error_list.push_back("VkPhysicalDeviceDepthClampZeroOneFeaturesKHR::depthClampZeroOne");
+        error_list.push_back("Missing feature VkPhysicalDeviceDepthClampZeroOneFeaturesKHR::depthClampZeroOne");
     }
 }
 void merge_VkPhysicalDeviceDepthClampZeroOneFeaturesKHR(VkPhysicalDeviceDepthClampZeroOneFeaturesKHR & current, VkPhysicalDeviceDepthClampZeroOneFeaturesKHR const& merge_in) {
@@ -1557,13 +1557,13 @@ void merge_VkPhysicalDeviceDepthClampZeroOneFeaturesKHR(VkPhysicalDeviceDepthCla
 }
 void compare_VkPhysicalDeviceRobustness2FeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceRobustness2FeaturesKHR const& supported, VkPhysicalDeviceRobustness2FeaturesKHR const& requested) {
     if (requested.robustBufferAccess2 && !supported.robustBufferAccess2) {
-        error_list.push_back("VkPhysicalDeviceRobustness2FeaturesKHR::robustBufferAccess2");
+        error_list.push_back("Missing feature VkPhysicalDeviceRobustness2FeaturesKHR::robustBufferAccess2");
     }
     if (requested.robustImageAccess2 && !supported.robustImageAccess2) {
-        error_list.push_back("VkPhysicalDeviceRobustness2FeaturesKHR::robustImageAccess2");
+        error_list.push_back("Missing feature VkPhysicalDeviceRobustness2FeaturesKHR::robustImageAccess2");
     }
     if (requested.nullDescriptor && !supported.nullDescriptor) {
-        error_list.push_back("VkPhysicalDeviceRobustness2FeaturesKHR::nullDescriptor");
+        error_list.push_back("Missing feature VkPhysicalDeviceRobustness2FeaturesKHR::nullDescriptor");
     }
 }
 void merge_VkPhysicalDeviceRobustness2FeaturesKHR(VkPhysicalDeviceRobustness2FeaturesKHR & current, VkPhysicalDeviceRobustness2FeaturesKHR const& merge_in) {
@@ -1573,7 +1573,7 @@ void merge_VkPhysicalDeviceRobustness2FeaturesKHR(VkPhysicalDeviceRobustness2Fea
 }
 void compare_VkPhysicalDevicePresentModeFifoLatestReadyFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDevicePresentModeFifoLatestReadyFeaturesKHR const& supported, VkPhysicalDevicePresentModeFifoLatestReadyFeaturesKHR const& requested) {
     if (requested.presentModeFifoLatestReady && !supported.presentModeFifoLatestReady) {
-        error_list.push_back("VkPhysicalDevicePresentModeFifoLatestReadyFeaturesKHR::presentModeFifoLatestReady");
+        error_list.push_back("Missing feature VkPhysicalDevicePresentModeFifoLatestReadyFeaturesKHR::presentModeFifoLatestReady");
     }
 }
 void merge_VkPhysicalDevicePresentModeFifoLatestReadyFeaturesKHR(VkPhysicalDevicePresentModeFifoLatestReadyFeaturesKHR & current, VkPhysicalDevicePresentModeFifoLatestReadyFeaturesKHR const& merge_in) {
@@ -1581,10 +1581,10 @@ void merge_VkPhysicalDevicePresentModeFifoLatestReadyFeaturesKHR(VkPhysicalDevic
 }
 void compare_VkPhysicalDeviceTransformFeedbackFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceTransformFeedbackFeaturesEXT const& supported, VkPhysicalDeviceTransformFeedbackFeaturesEXT const& requested) {
     if (requested.transformFeedback && !supported.transformFeedback) {
-        error_list.push_back("VkPhysicalDeviceTransformFeedbackFeaturesEXT::transformFeedback");
+        error_list.push_back("Missing feature VkPhysicalDeviceTransformFeedbackFeaturesEXT::transformFeedback");
     }
     if (requested.geometryStreams && !supported.geometryStreams) {
-        error_list.push_back("VkPhysicalDeviceTransformFeedbackFeaturesEXT::geometryStreams");
+        error_list.push_back("Missing feature VkPhysicalDeviceTransformFeedbackFeaturesEXT::geometryStreams");
     }
 }
 void merge_VkPhysicalDeviceTransformFeedbackFeaturesEXT(VkPhysicalDeviceTransformFeedbackFeaturesEXT & current, VkPhysicalDeviceTransformFeedbackFeaturesEXT const& merge_in) {
@@ -1593,7 +1593,7 @@ void merge_VkPhysicalDeviceTransformFeedbackFeaturesEXT(VkPhysicalDeviceTransfor
 }
 void compare_VkPhysicalDeviceCornerSampledImageFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceCornerSampledImageFeaturesNV const& supported, VkPhysicalDeviceCornerSampledImageFeaturesNV const& requested) {
     if (requested.cornerSampledImage && !supported.cornerSampledImage) {
-        error_list.push_back("VkPhysicalDeviceCornerSampledImageFeaturesNV::cornerSampledImage");
+        error_list.push_back("Missing feature VkPhysicalDeviceCornerSampledImageFeaturesNV::cornerSampledImage");
     }
 }
 void merge_VkPhysicalDeviceCornerSampledImageFeaturesNV(VkPhysicalDeviceCornerSampledImageFeaturesNV & current, VkPhysicalDeviceCornerSampledImageFeaturesNV const& merge_in) {
@@ -1601,7 +1601,7 @@ void merge_VkPhysicalDeviceCornerSampledImageFeaturesNV(VkPhysicalDeviceCornerSa
 }
 void compare_VkPhysicalDeviceASTCDecodeFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceASTCDecodeFeaturesEXT const& supported, VkPhysicalDeviceASTCDecodeFeaturesEXT const& requested) {
     if (requested.decodeModeSharedExponent && !supported.decodeModeSharedExponent) {
-        error_list.push_back("VkPhysicalDeviceASTCDecodeFeaturesEXT::decodeModeSharedExponent");
+        error_list.push_back("Missing feature VkPhysicalDeviceASTCDecodeFeaturesEXT::decodeModeSharedExponent");
     }
 }
 void merge_VkPhysicalDeviceASTCDecodeFeaturesEXT(VkPhysicalDeviceASTCDecodeFeaturesEXT & current, VkPhysicalDeviceASTCDecodeFeaturesEXT const& merge_in) {
@@ -1609,10 +1609,10 @@ void merge_VkPhysicalDeviceASTCDecodeFeaturesEXT(VkPhysicalDeviceASTCDecodeFeatu
 }
 void compare_VkPhysicalDeviceConditionalRenderingFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceConditionalRenderingFeaturesEXT const& supported, VkPhysicalDeviceConditionalRenderingFeaturesEXT const& requested) {
     if (requested.conditionalRendering && !supported.conditionalRendering) {
-        error_list.push_back("VkPhysicalDeviceConditionalRenderingFeaturesEXT::conditionalRendering");
+        error_list.push_back("Missing feature VkPhysicalDeviceConditionalRenderingFeaturesEXT::conditionalRendering");
     }
     if (requested.inheritedConditionalRendering && !supported.inheritedConditionalRendering) {
-        error_list.push_back("VkPhysicalDeviceConditionalRenderingFeaturesEXT::inheritedConditionalRendering");
+        error_list.push_back("Missing feature VkPhysicalDeviceConditionalRenderingFeaturesEXT::inheritedConditionalRendering");
     }
 }
 void merge_VkPhysicalDeviceConditionalRenderingFeaturesEXT(VkPhysicalDeviceConditionalRenderingFeaturesEXT & current, VkPhysicalDeviceConditionalRenderingFeaturesEXT const& merge_in) {
@@ -1621,7 +1621,7 @@ void merge_VkPhysicalDeviceConditionalRenderingFeaturesEXT(VkPhysicalDeviceCondi
 }
 void compare_VkPhysicalDeviceDepthClipEnableFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceDepthClipEnableFeaturesEXT const& supported, VkPhysicalDeviceDepthClipEnableFeaturesEXT const& requested) {
     if (requested.depthClipEnable && !supported.depthClipEnable) {
-        error_list.push_back("VkPhysicalDeviceDepthClipEnableFeaturesEXT::depthClipEnable");
+        error_list.push_back("Missing feature VkPhysicalDeviceDepthClipEnableFeaturesEXT::depthClipEnable");
     }
 }
 void merge_VkPhysicalDeviceDepthClipEnableFeaturesEXT(VkPhysicalDeviceDepthClipEnableFeaturesEXT & current, VkPhysicalDeviceDepthClipEnableFeaturesEXT const& merge_in) {
@@ -1629,7 +1629,7 @@ void merge_VkPhysicalDeviceDepthClipEnableFeaturesEXT(VkPhysicalDeviceDepthClipE
 }
 void compare_VkPhysicalDeviceRelaxedLineRasterizationFeaturesIMG(std::vector<std::string> & error_list, VkPhysicalDeviceRelaxedLineRasterizationFeaturesIMG const& supported, VkPhysicalDeviceRelaxedLineRasterizationFeaturesIMG const& requested) {
     if (requested.relaxedLineRasterization && !supported.relaxedLineRasterization) {
-        error_list.push_back("VkPhysicalDeviceRelaxedLineRasterizationFeaturesIMG::relaxedLineRasterization");
+        error_list.push_back("Missing feature VkPhysicalDeviceRelaxedLineRasterizationFeaturesIMG::relaxedLineRasterization");
     }
 }
 void merge_VkPhysicalDeviceRelaxedLineRasterizationFeaturesIMG(VkPhysicalDeviceRelaxedLineRasterizationFeaturesIMG & current, VkPhysicalDeviceRelaxedLineRasterizationFeaturesIMG const& merge_in) {
@@ -1638,10 +1638,10 @@ void merge_VkPhysicalDeviceRelaxedLineRasterizationFeaturesIMG(VkPhysicalDeviceR
 #if defined(VK_ENABLE_BETA_EXTENSIONS)
 void compare_VkPhysicalDeviceShaderEnqueueFeaturesAMDX(std::vector<std::string> & error_list, VkPhysicalDeviceShaderEnqueueFeaturesAMDX const& supported, VkPhysicalDeviceShaderEnqueueFeaturesAMDX const& requested) {
     if (requested.shaderEnqueue && !supported.shaderEnqueue) {
-        error_list.push_back("VkPhysicalDeviceShaderEnqueueFeaturesAMDX::shaderEnqueue");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderEnqueueFeaturesAMDX::shaderEnqueue");
     }
     if (requested.shaderMeshEnqueue && !supported.shaderMeshEnqueue) {
-        error_list.push_back("VkPhysicalDeviceShaderEnqueueFeaturesAMDX::shaderMeshEnqueue");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderEnqueueFeaturesAMDX::shaderMeshEnqueue");
     }
 }
 void merge_VkPhysicalDeviceShaderEnqueueFeaturesAMDX(VkPhysicalDeviceShaderEnqueueFeaturesAMDX & current, VkPhysicalDeviceShaderEnqueueFeaturesAMDX const& merge_in) {
@@ -1651,7 +1651,7 @@ void merge_VkPhysicalDeviceShaderEnqueueFeaturesAMDX(VkPhysicalDeviceShaderEnque
 #endif // defined(VK_ENABLE_BETA_EXTENSIONS)
 void compare_VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT const& supported, VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT const& requested) {
     if (requested.advancedBlendCoherentOperations && !supported.advancedBlendCoherentOperations) {
-        error_list.push_back("VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT::advancedBlendCoherentOperations");
+        error_list.push_back("Missing feature VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT::advancedBlendCoherentOperations");
     }
 }
 void merge_VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT(VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT & current, VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT const& merge_in) {
@@ -1659,7 +1659,7 @@ void merge_VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT(VkPhysicalDeviceBle
 }
 void compare_VkPhysicalDeviceShaderSMBuiltinsFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceShaderSMBuiltinsFeaturesNV const& supported, VkPhysicalDeviceShaderSMBuiltinsFeaturesNV const& requested) {
     if (requested.shaderSMBuiltins && !supported.shaderSMBuiltins) {
-        error_list.push_back("VkPhysicalDeviceShaderSMBuiltinsFeaturesNV::shaderSMBuiltins");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderSMBuiltinsFeaturesNV::shaderSMBuiltins");
     }
 }
 void merge_VkPhysicalDeviceShaderSMBuiltinsFeaturesNV(VkPhysicalDeviceShaderSMBuiltinsFeaturesNV & current, VkPhysicalDeviceShaderSMBuiltinsFeaturesNV const& merge_in) {
@@ -1667,10 +1667,10 @@ void merge_VkPhysicalDeviceShaderSMBuiltinsFeaturesNV(VkPhysicalDeviceShaderSMBu
 }
 void compare_VkPhysicalDeviceShadingRateImageFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceShadingRateImageFeaturesNV const& supported, VkPhysicalDeviceShadingRateImageFeaturesNV const& requested) {
     if (requested.shadingRateImage && !supported.shadingRateImage) {
-        error_list.push_back("VkPhysicalDeviceShadingRateImageFeaturesNV::shadingRateImage");
+        error_list.push_back("Missing feature VkPhysicalDeviceShadingRateImageFeaturesNV::shadingRateImage");
     }
     if (requested.shadingRateCoarseSampleOrder && !supported.shadingRateCoarseSampleOrder) {
-        error_list.push_back("VkPhysicalDeviceShadingRateImageFeaturesNV::shadingRateCoarseSampleOrder");
+        error_list.push_back("Missing feature VkPhysicalDeviceShadingRateImageFeaturesNV::shadingRateCoarseSampleOrder");
     }
 }
 void merge_VkPhysicalDeviceShadingRateImageFeaturesNV(VkPhysicalDeviceShadingRateImageFeaturesNV & current, VkPhysicalDeviceShadingRateImageFeaturesNV const& merge_in) {
@@ -1679,7 +1679,7 @@ void merge_VkPhysicalDeviceShadingRateImageFeaturesNV(VkPhysicalDeviceShadingRat
 }
 void compare_VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV const& supported, VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV const& requested) {
     if (requested.representativeFragmentTest && !supported.representativeFragmentTest) {
-        error_list.push_back("VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV::representativeFragmentTest");
+        error_list.push_back("Missing feature VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV::representativeFragmentTest");
     }
 }
 void merge_VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV(VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV & current, VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV const& merge_in) {
@@ -1687,10 +1687,10 @@ void merge_VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV(VkPhysicalDevice
 }
 void compare_VkPhysicalDeviceMeshShaderFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceMeshShaderFeaturesNV const& supported, VkPhysicalDeviceMeshShaderFeaturesNV const& requested) {
     if (requested.taskShader && !supported.taskShader) {
-        error_list.push_back("VkPhysicalDeviceMeshShaderFeaturesNV::taskShader");
+        error_list.push_back("Missing feature VkPhysicalDeviceMeshShaderFeaturesNV::taskShader");
     }
     if (requested.meshShader && !supported.meshShader) {
-        error_list.push_back("VkPhysicalDeviceMeshShaderFeaturesNV::meshShader");
+        error_list.push_back("Missing feature VkPhysicalDeviceMeshShaderFeaturesNV::meshShader");
     }
 }
 void merge_VkPhysicalDeviceMeshShaderFeaturesNV(VkPhysicalDeviceMeshShaderFeaturesNV & current, VkPhysicalDeviceMeshShaderFeaturesNV const& merge_in) {
@@ -1699,7 +1699,7 @@ void merge_VkPhysicalDeviceMeshShaderFeaturesNV(VkPhysicalDeviceMeshShaderFeatur
 }
 void compare_VkPhysicalDeviceShaderImageFootprintFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceShaderImageFootprintFeaturesNV const& supported, VkPhysicalDeviceShaderImageFootprintFeaturesNV const& requested) {
     if (requested.imageFootprint && !supported.imageFootprint) {
-        error_list.push_back("VkPhysicalDeviceShaderImageFootprintFeaturesNV::imageFootprint");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderImageFootprintFeaturesNV::imageFootprint");
     }
 }
 void merge_VkPhysicalDeviceShaderImageFootprintFeaturesNV(VkPhysicalDeviceShaderImageFootprintFeaturesNV & current, VkPhysicalDeviceShaderImageFootprintFeaturesNV const& merge_in) {
@@ -1707,7 +1707,7 @@ void merge_VkPhysicalDeviceShaderImageFootprintFeaturesNV(VkPhysicalDeviceShader
 }
 void compare_VkPhysicalDeviceExclusiveScissorFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceExclusiveScissorFeaturesNV const& supported, VkPhysicalDeviceExclusiveScissorFeaturesNV const& requested) {
     if (requested.exclusiveScissor && !supported.exclusiveScissor) {
-        error_list.push_back("VkPhysicalDeviceExclusiveScissorFeaturesNV::exclusiveScissor");
+        error_list.push_back("Missing feature VkPhysicalDeviceExclusiveScissorFeaturesNV::exclusiveScissor");
     }
 }
 void merge_VkPhysicalDeviceExclusiveScissorFeaturesNV(VkPhysicalDeviceExclusiveScissorFeaturesNV & current, VkPhysicalDeviceExclusiveScissorFeaturesNV const& merge_in) {
@@ -1715,7 +1715,7 @@ void merge_VkPhysicalDeviceExclusiveScissorFeaturesNV(VkPhysicalDeviceExclusiveS
 }
 void compare_VkPhysicalDeviceShaderIntegerFunctions2FeaturesINTEL(std::vector<std::string> & error_list, VkPhysicalDeviceShaderIntegerFunctions2FeaturesINTEL const& supported, VkPhysicalDeviceShaderIntegerFunctions2FeaturesINTEL const& requested) {
     if (requested.shaderIntegerFunctions2 && !supported.shaderIntegerFunctions2) {
-        error_list.push_back("VkPhysicalDeviceShaderIntegerFunctions2FeaturesINTEL::shaderIntegerFunctions2");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderIntegerFunctions2FeaturesINTEL::shaderIntegerFunctions2");
     }
 }
 void merge_VkPhysicalDeviceShaderIntegerFunctions2FeaturesINTEL(VkPhysicalDeviceShaderIntegerFunctions2FeaturesINTEL & current, VkPhysicalDeviceShaderIntegerFunctions2FeaturesINTEL const& merge_in) {
@@ -1723,13 +1723,13 @@ void merge_VkPhysicalDeviceShaderIntegerFunctions2FeaturesINTEL(VkPhysicalDevice
 }
 void compare_VkPhysicalDeviceFragmentDensityMapFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceFragmentDensityMapFeaturesEXT const& supported, VkPhysicalDeviceFragmentDensityMapFeaturesEXT const& requested) {
     if (requested.fragmentDensityMap && !supported.fragmentDensityMap) {
-        error_list.push_back("VkPhysicalDeviceFragmentDensityMapFeaturesEXT::fragmentDensityMap");
+        error_list.push_back("Missing feature VkPhysicalDeviceFragmentDensityMapFeaturesEXT::fragmentDensityMap");
     }
     if (requested.fragmentDensityMapDynamic && !supported.fragmentDensityMapDynamic) {
-        error_list.push_back("VkPhysicalDeviceFragmentDensityMapFeaturesEXT::fragmentDensityMapDynamic");
+        error_list.push_back("Missing feature VkPhysicalDeviceFragmentDensityMapFeaturesEXT::fragmentDensityMapDynamic");
     }
     if (requested.fragmentDensityMapNonSubsampledImages && !supported.fragmentDensityMapNonSubsampledImages) {
-        error_list.push_back("VkPhysicalDeviceFragmentDensityMapFeaturesEXT::fragmentDensityMapNonSubsampledImages");
+        error_list.push_back("Missing feature VkPhysicalDeviceFragmentDensityMapFeaturesEXT::fragmentDensityMapNonSubsampledImages");
     }
 }
 void merge_VkPhysicalDeviceFragmentDensityMapFeaturesEXT(VkPhysicalDeviceFragmentDensityMapFeaturesEXT & current, VkPhysicalDeviceFragmentDensityMapFeaturesEXT const& merge_in) {
@@ -1739,7 +1739,7 @@ void merge_VkPhysicalDeviceFragmentDensityMapFeaturesEXT(VkPhysicalDeviceFragmen
 }
 void compare_VkPhysicalDeviceCoherentMemoryFeaturesAMD(std::vector<std::string> & error_list, VkPhysicalDeviceCoherentMemoryFeaturesAMD const& supported, VkPhysicalDeviceCoherentMemoryFeaturesAMD const& requested) {
     if (requested.deviceCoherentMemory && !supported.deviceCoherentMemory) {
-        error_list.push_back("VkPhysicalDeviceCoherentMemoryFeaturesAMD::deviceCoherentMemory");
+        error_list.push_back("Missing feature VkPhysicalDeviceCoherentMemoryFeaturesAMD::deviceCoherentMemory");
     }
 }
 void merge_VkPhysicalDeviceCoherentMemoryFeaturesAMD(VkPhysicalDeviceCoherentMemoryFeaturesAMD & current, VkPhysicalDeviceCoherentMemoryFeaturesAMD const& merge_in) {
@@ -1747,10 +1747,10 @@ void merge_VkPhysicalDeviceCoherentMemoryFeaturesAMD(VkPhysicalDeviceCoherentMem
 }
 void compare_VkPhysicalDeviceShaderImageAtomicInt64FeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceShaderImageAtomicInt64FeaturesEXT const& supported, VkPhysicalDeviceShaderImageAtomicInt64FeaturesEXT const& requested) {
     if (requested.shaderImageInt64Atomics && !supported.shaderImageInt64Atomics) {
-        error_list.push_back("VkPhysicalDeviceShaderImageAtomicInt64FeaturesEXT::shaderImageInt64Atomics");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderImageAtomicInt64FeaturesEXT::shaderImageInt64Atomics");
     }
     if (requested.sparseImageInt64Atomics && !supported.sparseImageInt64Atomics) {
-        error_list.push_back("VkPhysicalDeviceShaderImageAtomicInt64FeaturesEXT::sparseImageInt64Atomics");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderImageAtomicInt64FeaturesEXT::sparseImageInt64Atomics");
     }
 }
 void merge_VkPhysicalDeviceShaderImageAtomicInt64FeaturesEXT(VkPhysicalDeviceShaderImageAtomicInt64FeaturesEXT & current, VkPhysicalDeviceShaderImageAtomicInt64FeaturesEXT const& merge_in) {
@@ -1759,7 +1759,7 @@ void merge_VkPhysicalDeviceShaderImageAtomicInt64FeaturesEXT(VkPhysicalDeviceSha
 }
 void compare_VkPhysicalDeviceMemoryPriorityFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceMemoryPriorityFeaturesEXT const& supported, VkPhysicalDeviceMemoryPriorityFeaturesEXT const& requested) {
     if (requested.memoryPriority && !supported.memoryPriority) {
-        error_list.push_back("VkPhysicalDeviceMemoryPriorityFeaturesEXT::memoryPriority");
+        error_list.push_back("Missing feature VkPhysicalDeviceMemoryPriorityFeaturesEXT::memoryPriority");
     }
 }
 void merge_VkPhysicalDeviceMemoryPriorityFeaturesEXT(VkPhysicalDeviceMemoryPriorityFeaturesEXT & current, VkPhysicalDeviceMemoryPriorityFeaturesEXT const& merge_in) {
@@ -1767,7 +1767,7 @@ void merge_VkPhysicalDeviceMemoryPriorityFeaturesEXT(VkPhysicalDeviceMemoryPrior
 }
 void compare_VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV const& supported, VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV const& requested) {
     if (requested.dedicatedAllocationImageAliasing && !supported.dedicatedAllocationImageAliasing) {
-        error_list.push_back("VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV::dedicatedAllocationImageAliasing");
+        error_list.push_back("Missing feature VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV::dedicatedAllocationImageAliasing");
     }
 }
 void merge_VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV(VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV & current, VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV const& merge_in) {
@@ -1775,13 +1775,13 @@ void merge_VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV(VkPhysical
 }
 void compare_VkPhysicalDeviceBufferDeviceAddressFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceBufferDeviceAddressFeaturesEXT const& supported, VkPhysicalDeviceBufferDeviceAddressFeaturesEXT const& requested) {
     if (requested.bufferDeviceAddress && !supported.bufferDeviceAddress) {
-        error_list.push_back("VkPhysicalDeviceBufferDeviceAddressFeaturesEXT::bufferDeviceAddress");
+        error_list.push_back("Missing feature VkPhysicalDeviceBufferDeviceAddressFeaturesEXT::bufferDeviceAddress");
     }
     if (requested.bufferDeviceAddressCaptureReplay && !supported.bufferDeviceAddressCaptureReplay) {
-        error_list.push_back("VkPhysicalDeviceBufferDeviceAddressFeaturesEXT::bufferDeviceAddressCaptureReplay");
+        error_list.push_back("Missing feature VkPhysicalDeviceBufferDeviceAddressFeaturesEXT::bufferDeviceAddressCaptureReplay");
     }
     if (requested.bufferDeviceAddressMultiDevice && !supported.bufferDeviceAddressMultiDevice) {
-        error_list.push_back("VkPhysicalDeviceBufferDeviceAddressFeaturesEXT::bufferDeviceAddressMultiDevice");
+        error_list.push_back("Missing feature VkPhysicalDeviceBufferDeviceAddressFeaturesEXT::bufferDeviceAddressMultiDevice");
     }
 }
 void merge_VkPhysicalDeviceBufferDeviceAddressFeaturesEXT(VkPhysicalDeviceBufferDeviceAddressFeaturesEXT & current, VkPhysicalDeviceBufferDeviceAddressFeaturesEXT const& merge_in) {
@@ -1791,10 +1791,10 @@ void merge_VkPhysicalDeviceBufferDeviceAddressFeaturesEXT(VkPhysicalDeviceBuffer
 }
 void compare_VkPhysicalDeviceCooperativeMatrixFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceCooperativeMatrixFeaturesNV const& supported, VkPhysicalDeviceCooperativeMatrixFeaturesNV const& requested) {
     if (requested.cooperativeMatrix && !supported.cooperativeMatrix) {
-        error_list.push_back("VkPhysicalDeviceCooperativeMatrixFeaturesNV::cooperativeMatrix");
+        error_list.push_back("Missing feature VkPhysicalDeviceCooperativeMatrixFeaturesNV::cooperativeMatrix");
     }
     if (requested.cooperativeMatrixRobustBufferAccess && !supported.cooperativeMatrixRobustBufferAccess) {
-        error_list.push_back("VkPhysicalDeviceCooperativeMatrixFeaturesNV::cooperativeMatrixRobustBufferAccess");
+        error_list.push_back("Missing feature VkPhysicalDeviceCooperativeMatrixFeaturesNV::cooperativeMatrixRobustBufferAccess");
     }
 }
 void merge_VkPhysicalDeviceCooperativeMatrixFeaturesNV(VkPhysicalDeviceCooperativeMatrixFeaturesNV & current, VkPhysicalDeviceCooperativeMatrixFeaturesNV const& merge_in) {
@@ -1803,7 +1803,7 @@ void merge_VkPhysicalDeviceCooperativeMatrixFeaturesNV(VkPhysicalDeviceCooperati
 }
 void compare_VkPhysicalDeviceCoverageReductionModeFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceCoverageReductionModeFeaturesNV const& supported, VkPhysicalDeviceCoverageReductionModeFeaturesNV const& requested) {
     if (requested.coverageReductionMode && !supported.coverageReductionMode) {
-        error_list.push_back("VkPhysicalDeviceCoverageReductionModeFeaturesNV::coverageReductionMode");
+        error_list.push_back("Missing feature VkPhysicalDeviceCoverageReductionModeFeaturesNV::coverageReductionMode");
     }
 }
 void merge_VkPhysicalDeviceCoverageReductionModeFeaturesNV(VkPhysicalDeviceCoverageReductionModeFeaturesNV & current, VkPhysicalDeviceCoverageReductionModeFeaturesNV const& merge_in) {
@@ -1811,13 +1811,13 @@ void merge_VkPhysicalDeviceCoverageReductionModeFeaturesNV(VkPhysicalDeviceCover
 }
 void compare_VkPhysicalDeviceFragmentShaderInterlockFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceFragmentShaderInterlockFeaturesEXT const& supported, VkPhysicalDeviceFragmentShaderInterlockFeaturesEXT const& requested) {
     if (requested.fragmentShaderSampleInterlock && !supported.fragmentShaderSampleInterlock) {
-        error_list.push_back("VkPhysicalDeviceFragmentShaderInterlockFeaturesEXT::fragmentShaderSampleInterlock");
+        error_list.push_back("Missing feature VkPhysicalDeviceFragmentShaderInterlockFeaturesEXT::fragmentShaderSampleInterlock");
     }
     if (requested.fragmentShaderPixelInterlock && !supported.fragmentShaderPixelInterlock) {
-        error_list.push_back("VkPhysicalDeviceFragmentShaderInterlockFeaturesEXT::fragmentShaderPixelInterlock");
+        error_list.push_back("Missing feature VkPhysicalDeviceFragmentShaderInterlockFeaturesEXT::fragmentShaderPixelInterlock");
     }
     if (requested.fragmentShaderShadingRateInterlock && !supported.fragmentShaderShadingRateInterlock) {
-        error_list.push_back("VkPhysicalDeviceFragmentShaderInterlockFeaturesEXT::fragmentShaderShadingRateInterlock");
+        error_list.push_back("Missing feature VkPhysicalDeviceFragmentShaderInterlockFeaturesEXT::fragmentShaderShadingRateInterlock");
     }
 }
 void merge_VkPhysicalDeviceFragmentShaderInterlockFeaturesEXT(VkPhysicalDeviceFragmentShaderInterlockFeaturesEXT & current, VkPhysicalDeviceFragmentShaderInterlockFeaturesEXT const& merge_in) {
@@ -1827,7 +1827,7 @@ void merge_VkPhysicalDeviceFragmentShaderInterlockFeaturesEXT(VkPhysicalDeviceFr
 }
 void compare_VkPhysicalDeviceYcbcrImageArraysFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceYcbcrImageArraysFeaturesEXT const& supported, VkPhysicalDeviceYcbcrImageArraysFeaturesEXT const& requested) {
     if (requested.ycbcrImageArrays && !supported.ycbcrImageArrays) {
-        error_list.push_back("VkPhysicalDeviceYcbcrImageArraysFeaturesEXT::ycbcrImageArrays");
+        error_list.push_back("Missing feature VkPhysicalDeviceYcbcrImageArraysFeaturesEXT::ycbcrImageArrays");
     }
 }
 void merge_VkPhysicalDeviceYcbcrImageArraysFeaturesEXT(VkPhysicalDeviceYcbcrImageArraysFeaturesEXT & current, VkPhysicalDeviceYcbcrImageArraysFeaturesEXT const& merge_in) {
@@ -1835,10 +1835,10 @@ void merge_VkPhysicalDeviceYcbcrImageArraysFeaturesEXT(VkPhysicalDeviceYcbcrImag
 }
 void compare_VkPhysicalDeviceProvokingVertexFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceProvokingVertexFeaturesEXT const& supported, VkPhysicalDeviceProvokingVertexFeaturesEXT const& requested) {
     if (requested.provokingVertexLast && !supported.provokingVertexLast) {
-        error_list.push_back("VkPhysicalDeviceProvokingVertexFeaturesEXT::provokingVertexLast");
+        error_list.push_back("Missing feature VkPhysicalDeviceProvokingVertexFeaturesEXT::provokingVertexLast");
     }
     if (requested.transformFeedbackPreservesProvokingVertex && !supported.transformFeedbackPreservesProvokingVertex) {
-        error_list.push_back("VkPhysicalDeviceProvokingVertexFeaturesEXT::transformFeedbackPreservesProvokingVertex");
+        error_list.push_back("Missing feature VkPhysicalDeviceProvokingVertexFeaturesEXT::transformFeedbackPreservesProvokingVertex");
     }
 }
 void merge_VkPhysicalDeviceProvokingVertexFeaturesEXT(VkPhysicalDeviceProvokingVertexFeaturesEXT & current, VkPhysicalDeviceProvokingVertexFeaturesEXT const& merge_in) {
@@ -1847,40 +1847,40 @@ void merge_VkPhysicalDeviceProvokingVertexFeaturesEXT(VkPhysicalDeviceProvokingV
 }
 void compare_VkPhysicalDeviceShaderAtomicFloatFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceShaderAtomicFloatFeaturesEXT const& supported, VkPhysicalDeviceShaderAtomicFloatFeaturesEXT const& requested) {
     if (requested.shaderBufferFloat32Atomics && !supported.shaderBufferFloat32Atomics) {
-        error_list.push_back("VkPhysicalDeviceShaderAtomicFloatFeaturesEXT::shaderBufferFloat32Atomics");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderAtomicFloatFeaturesEXT::shaderBufferFloat32Atomics");
     }
     if (requested.shaderBufferFloat32AtomicAdd && !supported.shaderBufferFloat32AtomicAdd) {
-        error_list.push_back("VkPhysicalDeviceShaderAtomicFloatFeaturesEXT::shaderBufferFloat32AtomicAdd");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderAtomicFloatFeaturesEXT::shaderBufferFloat32AtomicAdd");
     }
     if (requested.shaderBufferFloat64Atomics && !supported.shaderBufferFloat64Atomics) {
-        error_list.push_back("VkPhysicalDeviceShaderAtomicFloatFeaturesEXT::shaderBufferFloat64Atomics");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderAtomicFloatFeaturesEXT::shaderBufferFloat64Atomics");
     }
     if (requested.shaderBufferFloat64AtomicAdd && !supported.shaderBufferFloat64AtomicAdd) {
-        error_list.push_back("VkPhysicalDeviceShaderAtomicFloatFeaturesEXT::shaderBufferFloat64AtomicAdd");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderAtomicFloatFeaturesEXT::shaderBufferFloat64AtomicAdd");
     }
     if (requested.shaderSharedFloat32Atomics && !supported.shaderSharedFloat32Atomics) {
-        error_list.push_back("VkPhysicalDeviceShaderAtomicFloatFeaturesEXT::shaderSharedFloat32Atomics");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderAtomicFloatFeaturesEXT::shaderSharedFloat32Atomics");
     }
     if (requested.shaderSharedFloat32AtomicAdd && !supported.shaderSharedFloat32AtomicAdd) {
-        error_list.push_back("VkPhysicalDeviceShaderAtomicFloatFeaturesEXT::shaderSharedFloat32AtomicAdd");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderAtomicFloatFeaturesEXT::shaderSharedFloat32AtomicAdd");
     }
     if (requested.shaderSharedFloat64Atomics && !supported.shaderSharedFloat64Atomics) {
-        error_list.push_back("VkPhysicalDeviceShaderAtomicFloatFeaturesEXT::shaderSharedFloat64Atomics");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderAtomicFloatFeaturesEXT::shaderSharedFloat64Atomics");
     }
     if (requested.shaderSharedFloat64AtomicAdd && !supported.shaderSharedFloat64AtomicAdd) {
-        error_list.push_back("VkPhysicalDeviceShaderAtomicFloatFeaturesEXT::shaderSharedFloat64AtomicAdd");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderAtomicFloatFeaturesEXT::shaderSharedFloat64AtomicAdd");
     }
     if (requested.shaderImageFloat32Atomics && !supported.shaderImageFloat32Atomics) {
-        error_list.push_back("VkPhysicalDeviceShaderAtomicFloatFeaturesEXT::shaderImageFloat32Atomics");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderAtomicFloatFeaturesEXT::shaderImageFloat32Atomics");
     }
     if (requested.shaderImageFloat32AtomicAdd && !supported.shaderImageFloat32AtomicAdd) {
-        error_list.push_back("VkPhysicalDeviceShaderAtomicFloatFeaturesEXT::shaderImageFloat32AtomicAdd");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderAtomicFloatFeaturesEXT::shaderImageFloat32AtomicAdd");
     }
     if (requested.sparseImageFloat32Atomics && !supported.sparseImageFloat32Atomics) {
-        error_list.push_back("VkPhysicalDeviceShaderAtomicFloatFeaturesEXT::sparseImageFloat32Atomics");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderAtomicFloatFeaturesEXT::sparseImageFloat32Atomics");
     }
     if (requested.sparseImageFloat32AtomicAdd && !supported.sparseImageFloat32AtomicAdd) {
-        error_list.push_back("VkPhysicalDeviceShaderAtomicFloatFeaturesEXT::sparseImageFloat32AtomicAdd");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderAtomicFloatFeaturesEXT::sparseImageFloat32AtomicAdd");
     }
 }
 void merge_VkPhysicalDeviceShaderAtomicFloatFeaturesEXT(VkPhysicalDeviceShaderAtomicFloatFeaturesEXT & current, VkPhysicalDeviceShaderAtomicFloatFeaturesEXT const& merge_in) {
@@ -1899,7 +1899,7 @@ void merge_VkPhysicalDeviceShaderAtomicFloatFeaturesEXT(VkPhysicalDeviceShaderAt
 }
 void compare_VkPhysicalDeviceExtendedDynamicStateFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceExtendedDynamicStateFeaturesEXT const& supported, VkPhysicalDeviceExtendedDynamicStateFeaturesEXT const& requested) {
     if (requested.extendedDynamicState && !supported.extendedDynamicState) {
-        error_list.push_back("VkPhysicalDeviceExtendedDynamicStateFeaturesEXT::extendedDynamicState");
+        error_list.push_back("Missing feature VkPhysicalDeviceExtendedDynamicStateFeaturesEXT::extendedDynamicState");
     }
 }
 void merge_VkPhysicalDeviceExtendedDynamicStateFeaturesEXT(VkPhysicalDeviceExtendedDynamicStateFeaturesEXT & current, VkPhysicalDeviceExtendedDynamicStateFeaturesEXT const& merge_in) {
@@ -1907,13 +1907,13 @@ void merge_VkPhysicalDeviceExtendedDynamicStateFeaturesEXT(VkPhysicalDeviceExten
 }
 void compare_VkPhysicalDeviceMapMemoryPlacedFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceMapMemoryPlacedFeaturesEXT const& supported, VkPhysicalDeviceMapMemoryPlacedFeaturesEXT const& requested) {
     if (requested.memoryMapPlaced && !supported.memoryMapPlaced) {
-        error_list.push_back("VkPhysicalDeviceMapMemoryPlacedFeaturesEXT::memoryMapPlaced");
+        error_list.push_back("Missing feature VkPhysicalDeviceMapMemoryPlacedFeaturesEXT::memoryMapPlaced");
     }
     if (requested.memoryMapRangePlaced && !supported.memoryMapRangePlaced) {
-        error_list.push_back("VkPhysicalDeviceMapMemoryPlacedFeaturesEXT::memoryMapRangePlaced");
+        error_list.push_back("Missing feature VkPhysicalDeviceMapMemoryPlacedFeaturesEXT::memoryMapRangePlaced");
     }
     if (requested.memoryUnmapReserve && !supported.memoryUnmapReserve) {
-        error_list.push_back("VkPhysicalDeviceMapMemoryPlacedFeaturesEXT::memoryUnmapReserve");
+        error_list.push_back("Missing feature VkPhysicalDeviceMapMemoryPlacedFeaturesEXT::memoryUnmapReserve");
     }
 }
 void merge_VkPhysicalDeviceMapMemoryPlacedFeaturesEXT(VkPhysicalDeviceMapMemoryPlacedFeaturesEXT & current, VkPhysicalDeviceMapMemoryPlacedFeaturesEXT const& merge_in) {
@@ -1923,40 +1923,40 @@ void merge_VkPhysicalDeviceMapMemoryPlacedFeaturesEXT(VkPhysicalDeviceMapMemoryP
 }
 void compare_VkPhysicalDeviceShaderAtomicFloat2FeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceShaderAtomicFloat2FeaturesEXT const& supported, VkPhysicalDeviceShaderAtomicFloat2FeaturesEXT const& requested) {
     if (requested.shaderBufferFloat16Atomics && !supported.shaderBufferFloat16Atomics) {
-        error_list.push_back("VkPhysicalDeviceShaderAtomicFloat2FeaturesEXT::shaderBufferFloat16Atomics");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderAtomicFloat2FeaturesEXT::shaderBufferFloat16Atomics");
     }
     if (requested.shaderBufferFloat16AtomicAdd && !supported.shaderBufferFloat16AtomicAdd) {
-        error_list.push_back("VkPhysicalDeviceShaderAtomicFloat2FeaturesEXT::shaderBufferFloat16AtomicAdd");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderAtomicFloat2FeaturesEXT::shaderBufferFloat16AtomicAdd");
     }
     if (requested.shaderBufferFloat16AtomicMinMax && !supported.shaderBufferFloat16AtomicMinMax) {
-        error_list.push_back("VkPhysicalDeviceShaderAtomicFloat2FeaturesEXT::shaderBufferFloat16AtomicMinMax");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderAtomicFloat2FeaturesEXT::shaderBufferFloat16AtomicMinMax");
     }
     if (requested.shaderBufferFloat32AtomicMinMax && !supported.shaderBufferFloat32AtomicMinMax) {
-        error_list.push_back("VkPhysicalDeviceShaderAtomicFloat2FeaturesEXT::shaderBufferFloat32AtomicMinMax");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderAtomicFloat2FeaturesEXT::shaderBufferFloat32AtomicMinMax");
     }
     if (requested.shaderBufferFloat64AtomicMinMax && !supported.shaderBufferFloat64AtomicMinMax) {
-        error_list.push_back("VkPhysicalDeviceShaderAtomicFloat2FeaturesEXT::shaderBufferFloat64AtomicMinMax");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderAtomicFloat2FeaturesEXT::shaderBufferFloat64AtomicMinMax");
     }
     if (requested.shaderSharedFloat16Atomics && !supported.shaderSharedFloat16Atomics) {
-        error_list.push_back("VkPhysicalDeviceShaderAtomicFloat2FeaturesEXT::shaderSharedFloat16Atomics");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderAtomicFloat2FeaturesEXT::shaderSharedFloat16Atomics");
     }
     if (requested.shaderSharedFloat16AtomicAdd && !supported.shaderSharedFloat16AtomicAdd) {
-        error_list.push_back("VkPhysicalDeviceShaderAtomicFloat2FeaturesEXT::shaderSharedFloat16AtomicAdd");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderAtomicFloat2FeaturesEXT::shaderSharedFloat16AtomicAdd");
     }
     if (requested.shaderSharedFloat16AtomicMinMax && !supported.shaderSharedFloat16AtomicMinMax) {
-        error_list.push_back("VkPhysicalDeviceShaderAtomicFloat2FeaturesEXT::shaderSharedFloat16AtomicMinMax");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderAtomicFloat2FeaturesEXT::shaderSharedFloat16AtomicMinMax");
     }
     if (requested.shaderSharedFloat32AtomicMinMax && !supported.shaderSharedFloat32AtomicMinMax) {
-        error_list.push_back("VkPhysicalDeviceShaderAtomicFloat2FeaturesEXT::shaderSharedFloat32AtomicMinMax");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderAtomicFloat2FeaturesEXT::shaderSharedFloat32AtomicMinMax");
     }
     if (requested.shaderSharedFloat64AtomicMinMax && !supported.shaderSharedFloat64AtomicMinMax) {
-        error_list.push_back("VkPhysicalDeviceShaderAtomicFloat2FeaturesEXT::shaderSharedFloat64AtomicMinMax");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderAtomicFloat2FeaturesEXT::shaderSharedFloat64AtomicMinMax");
     }
     if (requested.shaderImageFloat32AtomicMinMax && !supported.shaderImageFloat32AtomicMinMax) {
-        error_list.push_back("VkPhysicalDeviceShaderAtomicFloat2FeaturesEXT::shaderImageFloat32AtomicMinMax");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderAtomicFloat2FeaturesEXT::shaderImageFloat32AtomicMinMax");
     }
     if (requested.sparseImageFloat32AtomicMinMax && !supported.sparseImageFloat32AtomicMinMax) {
-        error_list.push_back("VkPhysicalDeviceShaderAtomicFloat2FeaturesEXT::sparseImageFloat32AtomicMinMax");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderAtomicFloat2FeaturesEXT::sparseImageFloat32AtomicMinMax");
     }
 }
 void merge_VkPhysicalDeviceShaderAtomicFloat2FeaturesEXT(VkPhysicalDeviceShaderAtomicFloat2FeaturesEXT & current, VkPhysicalDeviceShaderAtomicFloat2FeaturesEXT const& merge_in) {
@@ -1975,7 +1975,7 @@ void merge_VkPhysicalDeviceShaderAtomicFloat2FeaturesEXT(VkPhysicalDeviceShaderA
 }
 void compare_VkPhysicalDeviceDeviceGeneratedCommandsFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceDeviceGeneratedCommandsFeaturesNV const& supported, VkPhysicalDeviceDeviceGeneratedCommandsFeaturesNV const& requested) {
     if (requested.deviceGeneratedCommands && !supported.deviceGeneratedCommands) {
-        error_list.push_back("VkPhysicalDeviceDeviceGeneratedCommandsFeaturesNV::deviceGeneratedCommands");
+        error_list.push_back("Missing feature VkPhysicalDeviceDeviceGeneratedCommandsFeaturesNV::deviceGeneratedCommands");
     }
 }
 void merge_VkPhysicalDeviceDeviceGeneratedCommandsFeaturesNV(VkPhysicalDeviceDeviceGeneratedCommandsFeaturesNV & current, VkPhysicalDeviceDeviceGeneratedCommandsFeaturesNV const& merge_in) {
@@ -1983,7 +1983,7 @@ void merge_VkPhysicalDeviceDeviceGeneratedCommandsFeaturesNV(VkPhysicalDeviceDev
 }
 void compare_VkPhysicalDeviceInheritedViewportScissorFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceInheritedViewportScissorFeaturesNV const& supported, VkPhysicalDeviceInheritedViewportScissorFeaturesNV const& requested) {
     if (requested.inheritedViewportScissor2D && !supported.inheritedViewportScissor2D) {
-        error_list.push_back("VkPhysicalDeviceInheritedViewportScissorFeaturesNV::inheritedViewportScissor2D");
+        error_list.push_back("Missing feature VkPhysicalDeviceInheritedViewportScissorFeaturesNV::inheritedViewportScissor2D");
     }
 }
 void merge_VkPhysicalDeviceInheritedViewportScissorFeaturesNV(VkPhysicalDeviceInheritedViewportScissorFeaturesNV & current, VkPhysicalDeviceInheritedViewportScissorFeaturesNV const& merge_in) {
@@ -1991,7 +1991,7 @@ void merge_VkPhysicalDeviceInheritedViewportScissorFeaturesNV(VkPhysicalDeviceIn
 }
 void compare_VkPhysicalDeviceTexelBufferAlignmentFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceTexelBufferAlignmentFeaturesEXT const& supported, VkPhysicalDeviceTexelBufferAlignmentFeaturesEXT const& requested) {
     if (requested.texelBufferAlignment && !supported.texelBufferAlignment) {
-        error_list.push_back("VkPhysicalDeviceTexelBufferAlignmentFeaturesEXT::texelBufferAlignment");
+        error_list.push_back("Missing feature VkPhysicalDeviceTexelBufferAlignmentFeaturesEXT::texelBufferAlignment");
     }
 }
 void merge_VkPhysicalDeviceTexelBufferAlignmentFeaturesEXT(VkPhysicalDeviceTexelBufferAlignmentFeaturesEXT & current, VkPhysicalDeviceTexelBufferAlignmentFeaturesEXT const& merge_in) {
@@ -1999,16 +1999,16 @@ void merge_VkPhysicalDeviceTexelBufferAlignmentFeaturesEXT(VkPhysicalDeviceTexel
 }
 void compare_VkPhysicalDeviceDepthBiasControlFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceDepthBiasControlFeaturesEXT const& supported, VkPhysicalDeviceDepthBiasControlFeaturesEXT const& requested) {
     if (requested.depthBiasControl && !supported.depthBiasControl) {
-        error_list.push_back("VkPhysicalDeviceDepthBiasControlFeaturesEXT::depthBiasControl");
+        error_list.push_back("Missing feature VkPhysicalDeviceDepthBiasControlFeaturesEXT::depthBiasControl");
     }
     if (requested.leastRepresentableValueForceUnormRepresentation && !supported.leastRepresentableValueForceUnormRepresentation) {
-        error_list.push_back("VkPhysicalDeviceDepthBiasControlFeaturesEXT::leastRepresentableValueForceUnormRepresentation");
+        error_list.push_back("Missing feature VkPhysicalDeviceDepthBiasControlFeaturesEXT::leastRepresentableValueForceUnormRepresentation");
     }
     if (requested.floatRepresentation && !supported.floatRepresentation) {
-        error_list.push_back("VkPhysicalDeviceDepthBiasControlFeaturesEXT::floatRepresentation");
+        error_list.push_back("Missing feature VkPhysicalDeviceDepthBiasControlFeaturesEXT::floatRepresentation");
     }
     if (requested.depthBiasExact && !supported.depthBiasExact) {
-        error_list.push_back("VkPhysicalDeviceDepthBiasControlFeaturesEXT::depthBiasExact");
+        error_list.push_back("Missing feature VkPhysicalDeviceDepthBiasControlFeaturesEXT::depthBiasExact");
     }
 }
 void merge_VkPhysicalDeviceDepthBiasControlFeaturesEXT(VkPhysicalDeviceDepthBiasControlFeaturesEXT & current, VkPhysicalDeviceDepthBiasControlFeaturesEXT const& merge_in) {
@@ -2019,7 +2019,7 @@ void merge_VkPhysicalDeviceDepthBiasControlFeaturesEXT(VkPhysicalDeviceDepthBias
 }
 void compare_VkPhysicalDeviceDeviceMemoryReportFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceDeviceMemoryReportFeaturesEXT const& supported, VkPhysicalDeviceDeviceMemoryReportFeaturesEXT const& requested) {
     if (requested.deviceMemoryReport && !supported.deviceMemoryReport) {
-        error_list.push_back("VkPhysicalDeviceDeviceMemoryReportFeaturesEXT::deviceMemoryReport");
+        error_list.push_back("Missing feature VkPhysicalDeviceDeviceMemoryReportFeaturesEXT::deviceMemoryReport");
     }
 }
 void merge_VkPhysicalDeviceDeviceMemoryReportFeaturesEXT(VkPhysicalDeviceDeviceMemoryReportFeaturesEXT & current, VkPhysicalDeviceDeviceMemoryReportFeaturesEXT const& merge_in) {
@@ -2027,10 +2027,10 @@ void merge_VkPhysicalDeviceDeviceMemoryReportFeaturesEXT(VkPhysicalDeviceDeviceM
 }
 void compare_VkPhysicalDeviceCustomBorderColorFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceCustomBorderColorFeaturesEXT const& supported, VkPhysicalDeviceCustomBorderColorFeaturesEXT const& requested) {
     if (requested.customBorderColors && !supported.customBorderColors) {
-        error_list.push_back("VkPhysicalDeviceCustomBorderColorFeaturesEXT::customBorderColors");
+        error_list.push_back("Missing feature VkPhysicalDeviceCustomBorderColorFeaturesEXT::customBorderColors");
     }
     if (requested.customBorderColorWithoutFormat && !supported.customBorderColorWithoutFormat) {
-        error_list.push_back("VkPhysicalDeviceCustomBorderColorFeaturesEXT::customBorderColorWithoutFormat");
+        error_list.push_back("Missing feature VkPhysicalDeviceCustomBorderColorFeaturesEXT::customBorderColorWithoutFormat");
     }
 }
 void merge_VkPhysicalDeviceCustomBorderColorFeaturesEXT(VkPhysicalDeviceCustomBorderColorFeaturesEXT & current, VkPhysicalDeviceCustomBorderColorFeaturesEXT const& merge_in) {
@@ -2039,7 +2039,7 @@ void merge_VkPhysicalDeviceCustomBorderColorFeaturesEXT(VkPhysicalDeviceCustomBo
 }
 void compare_VkPhysicalDevicePresentBarrierFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDevicePresentBarrierFeaturesNV const& supported, VkPhysicalDevicePresentBarrierFeaturesNV const& requested) {
     if (requested.presentBarrier && !supported.presentBarrier) {
-        error_list.push_back("VkPhysicalDevicePresentBarrierFeaturesNV::presentBarrier");
+        error_list.push_back("Missing feature VkPhysicalDevicePresentBarrierFeaturesNV::presentBarrier");
     }
 }
 void merge_VkPhysicalDevicePresentBarrierFeaturesNV(VkPhysicalDevicePresentBarrierFeaturesNV & current, VkPhysicalDevicePresentBarrierFeaturesNV const& merge_in) {
@@ -2047,7 +2047,7 @@ void merge_VkPhysicalDevicePresentBarrierFeaturesNV(VkPhysicalDevicePresentBarri
 }
 void compare_VkPhysicalDeviceDiagnosticsConfigFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceDiagnosticsConfigFeaturesNV const& supported, VkPhysicalDeviceDiagnosticsConfigFeaturesNV const& requested) {
     if (requested.diagnosticsConfig && !supported.diagnosticsConfig) {
-        error_list.push_back("VkPhysicalDeviceDiagnosticsConfigFeaturesNV::diagnosticsConfig");
+        error_list.push_back("Missing feature VkPhysicalDeviceDiagnosticsConfigFeaturesNV::diagnosticsConfig");
     }
 }
 void merge_VkPhysicalDeviceDiagnosticsConfigFeaturesNV(VkPhysicalDeviceDiagnosticsConfigFeaturesNV & current, VkPhysicalDeviceDiagnosticsConfigFeaturesNV const& merge_in) {
@@ -2056,7 +2056,7 @@ void merge_VkPhysicalDeviceDiagnosticsConfigFeaturesNV(VkPhysicalDeviceDiagnosti
 #if defined(VK_ENABLE_BETA_EXTENSIONS)
 void compare_VkPhysicalDeviceCudaKernelLaunchFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceCudaKernelLaunchFeaturesNV const& supported, VkPhysicalDeviceCudaKernelLaunchFeaturesNV const& requested) {
     if (requested.cudaKernelLaunchFeatures && !supported.cudaKernelLaunchFeatures) {
-        error_list.push_back("VkPhysicalDeviceCudaKernelLaunchFeaturesNV::cudaKernelLaunchFeatures");
+        error_list.push_back("Missing feature VkPhysicalDeviceCudaKernelLaunchFeaturesNV::cudaKernelLaunchFeatures");
     }
 }
 void merge_VkPhysicalDeviceCudaKernelLaunchFeaturesNV(VkPhysicalDeviceCudaKernelLaunchFeaturesNV & current, VkPhysicalDeviceCudaKernelLaunchFeaturesNV const& merge_in) {
@@ -2065,46 +2065,46 @@ void merge_VkPhysicalDeviceCudaKernelLaunchFeaturesNV(VkPhysicalDeviceCudaKernel
 #endif // defined(VK_ENABLE_BETA_EXTENSIONS)
 void compare_VkPhysicalDeviceTileShadingFeaturesQCOM(std::vector<std::string> & error_list, VkPhysicalDeviceTileShadingFeaturesQCOM const& supported, VkPhysicalDeviceTileShadingFeaturesQCOM const& requested) {
     if (requested.tileShading && !supported.tileShading) {
-        error_list.push_back("VkPhysicalDeviceTileShadingFeaturesQCOM::tileShading");
+        error_list.push_back("Missing feature VkPhysicalDeviceTileShadingFeaturesQCOM::tileShading");
     }
     if (requested.tileShadingFragmentStage && !supported.tileShadingFragmentStage) {
-        error_list.push_back("VkPhysicalDeviceTileShadingFeaturesQCOM::tileShadingFragmentStage");
+        error_list.push_back("Missing feature VkPhysicalDeviceTileShadingFeaturesQCOM::tileShadingFragmentStage");
     }
     if (requested.tileShadingColorAttachments && !supported.tileShadingColorAttachments) {
-        error_list.push_back("VkPhysicalDeviceTileShadingFeaturesQCOM::tileShadingColorAttachments");
+        error_list.push_back("Missing feature VkPhysicalDeviceTileShadingFeaturesQCOM::tileShadingColorAttachments");
     }
     if (requested.tileShadingDepthAttachments && !supported.tileShadingDepthAttachments) {
-        error_list.push_back("VkPhysicalDeviceTileShadingFeaturesQCOM::tileShadingDepthAttachments");
+        error_list.push_back("Missing feature VkPhysicalDeviceTileShadingFeaturesQCOM::tileShadingDepthAttachments");
     }
     if (requested.tileShadingStencilAttachments && !supported.tileShadingStencilAttachments) {
-        error_list.push_back("VkPhysicalDeviceTileShadingFeaturesQCOM::tileShadingStencilAttachments");
+        error_list.push_back("Missing feature VkPhysicalDeviceTileShadingFeaturesQCOM::tileShadingStencilAttachments");
     }
     if (requested.tileShadingInputAttachments && !supported.tileShadingInputAttachments) {
-        error_list.push_back("VkPhysicalDeviceTileShadingFeaturesQCOM::tileShadingInputAttachments");
+        error_list.push_back("Missing feature VkPhysicalDeviceTileShadingFeaturesQCOM::tileShadingInputAttachments");
     }
     if (requested.tileShadingSampledAttachments && !supported.tileShadingSampledAttachments) {
-        error_list.push_back("VkPhysicalDeviceTileShadingFeaturesQCOM::tileShadingSampledAttachments");
+        error_list.push_back("Missing feature VkPhysicalDeviceTileShadingFeaturesQCOM::tileShadingSampledAttachments");
     }
     if (requested.tileShadingPerTileDraw && !supported.tileShadingPerTileDraw) {
-        error_list.push_back("VkPhysicalDeviceTileShadingFeaturesQCOM::tileShadingPerTileDraw");
+        error_list.push_back("Missing feature VkPhysicalDeviceTileShadingFeaturesQCOM::tileShadingPerTileDraw");
     }
     if (requested.tileShadingPerTileDispatch && !supported.tileShadingPerTileDispatch) {
-        error_list.push_back("VkPhysicalDeviceTileShadingFeaturesQCOM::tileShadingPerTileDispatch");
+        error_list.push_back("Missing feature VkPhysicalDeviceTileShadingFeaturesQCOM::tileShadingPerTileDispatch");
     }
     if (requested.tileShadingDispatchTile && !supported.tileShadingDispatchTile) {
-        error_list.push_back("VkPhysicalDeviceTileShadingFeaturesQCOM::tileShadingDispatchTile");
+        error_list.push_back("Missing feature VkPhysicalDeviceTileShadingFeaturesQCOM::tileShadingDispatchTile");
     }
     if (requested.tileShadingApron && !supported.tileShadingApron) {
-        error_list.push_back("VkPhysicalDeviceTileShadingFeaturesQCOM::tileShadingApron");
+        error_list.push_back("Missing feature VkPhysicalDeviceTileShadingFeaturesQCOM::tileShadingApron");
     }
     if (requested.tileShadingAnisotropicApron && !supported.tileShadingAnisotropicApron) {
-        error_list.push_back("VkPhysicalDeviceTileShadingFeaturesQCOM::tileShadingAnisotropicApron");
+        error_list.push_back("Missing feature VkPhysicalDeviceTileShadingFeaturesQCOM::tileShadingAnisotropicApron");
     }
     if (requested.tileShadingAtomicOps && !supported.tileShadingAtomicOps) {
-        error_list.push_back("VkPhysicalDeviceTileShadingFeaturesQCOM::tileShadingAtomicOps");
+        error_list.push_back("Missing feature VkPhysicalDeviceTileShadingFeaturesQCOM::tileShadingAtomicOps");
     }
     if (requested.tileShadingImageProcessing && !supported.tileShadingImageProcessing) {
-        error_list.push_back("VkPhysicalDeviceTileShadingFeaturesQCOM::tileShadingImageProcessing");
+        error_list.push_back("Missing feature VkPhysicalDeviceTileShadingFeaturesQCOM::tileShadingImageProcessing");
     }
 }
 void merge_VkPhysicalDeviceTileShadingFeaturesQCOM(VkPhysicalDeviceTileShadingFeaturesQCOM & current, VkPhysicalDeviceTileShadingFeaturesQCOM const& merge_in) {
@@ -2125,16 +2125,16 @@ void merge_VkPhysicalDeviceTileShadingFeaturesQCOM(VkPhysicalDeviceTileShadingFe
 }
 void compare_VkPhysicalDeviceDescriptorBufferFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceDescriptorBufferFeaturesEXT const& supported, VkPhysicalDeviceDescriptorBufferFeaturesEXT const& requested) {
     if (requested.descriptorBuffer && !supported.descriptorBuffer) {
-        error_list.push_back("VkPhysicalDeviceDescriptorBufferFeaturesEXT::descriptorBuffer");
+        error_list.push_back("Missing feature VkPhysicalDeviceDescriptorBufferFeaturesEXT::descriptorBuffer");
     }
     if (requested.descriptorBufferCaptureReplay && !supported.descriptorBufferCaptureReplay) {
-        error_list.push_back("VkPhysicalDeviceDescriptorBufferFeaturesEXT::descriptorBufferCaptureReplay");
+        error_list.push_back("Missing feature VkPhysicalDeviceDescriptorBufferFeaturesEXT::descriptorBufferCaptureReplay");
     }
     if (requested.descriptorBufferImageLayoutIgnored && !supported.descriptorBufferImageLayoutIgnored) {
-        error_list.push_back("VkPhysicalDeviceDescriptorBufferFeaturesEXT::descriptorBufferImageLayoutIgnored");
+        error_list.push_back("Missing feature VkPhysicalDeviceDescriptorBufferFeaturesEXT::descriptorBufferImageLayoutIgnored");
     }
     if (requested.descriptorBufferPushDescriptors && !supported.descriptorBufferPushDescriptors) {
-        error_list.push_back("VkPhysicalDeviceDescriptorBufferFeaturesEXT::descriptorBufferPushDescriptors");
+        error_list.push_back("Missing feature VkPhysicalDeviceDescriptorBufferFeaturesEXT::descriptorBufferPushDescriptors");
     }
 }
 void merge_VkPhysicalDeviceDescriptorBufferFeaturesEXT(VkPhysicalDeviceDescriptorBufferFeaturesEXT & current, VkPhysicalDeviceDescriptorBufferFeaturesEXT const& merge_in) {
@@ -2145,7 +2145,7 @@ void merge_VkPhysicalDeviceDescriptorBufferFeaturesEXT(VkPhysicalDeviceDescripto
 }
 void compare_VkPhysicalDeviceGraphicsPipelineLibraryFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceGraphicsPipelineLibraryFeaturesEXT const& supported, VkPhysicalDeviceGraphicsPipelineLibraryFeaturesEXT const& requested) {
     if (requested.graphicsPipelineLibrary && !supported.graphicsPipelineLibrary) {
-        error_list.push_back("VkPhysicalDeviceGraphicsPipelineLibraryFeaturesEXT::graphicsPipelineLibrary");
+        error_list.push_back("Missing feature VkPhysicalDeviceGraphicsPipelineLibraryFeaturesEXT::graphicsPipelineLibrary");
     }
 }
 void merge_VkPhysicalDeviceGraphicsPipelineLibraryFeaturesEXT(VkPhysicalDeviceGraphicsPipelineLibraryFeaturesEXT & current, VkPhysicalDeviceGraphicsPipelineLibraryFeaturesEXT const& merge_in) {
@@ -2153,7 +2153,7 @@ void merge_VkPhysicalDeviceGraphicsPipelineLibraryFeaturesEXT(VkPhysicalDeviceGr
 }
 void compare_VkPhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD(std::vector<std::string> & error_list, VkPhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD const& supported, VkPhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD const& requested) {
     if (requested.shaderEarlyAndLateFragmentTests && !supported.shaderEarlyAndLateFragmentTests) {
-        error_list.push_back("VkPhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD::shaderEarlyAndLateFragmentTests");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD::shaderEarlyAndLateFragmentTests");
     }
 }
 void merge_VkPhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD(VkPhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD & current, VkPhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD const& merge_in) {
@@ -2161,13 +2161,13 @@ void merge_VkPhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD(VkPhysical
 }
 void compare_VkPhysicalDeviceFragmentShadingRateEnumsFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceFragmentShadingRateEnumsFeaturesNV const& supported, VkPhysicalDeviceFragmentShadingRateEnumsFeaturesNV const& requested) {
     if (requested.fragmentShadingRateEnums && !supported.fragmentShadingRateEnums) {
-        error_list.push_back("VkPhysicalDeviceFragmentShadingRateEnumsFeaturesNV::fragmentShadingRateEnums");
+        error_list.push_back("Missing feature VkPhysicalDeviceFragmentShadingRateEnumsFeaturesNV::fragmentShadingRateEnums");
     }
     if (requested.supersampleFragmentShadingRates && !supported.supersampleFragmentShadingRates) {
-        error_list.push_back("VkPhysicalDeviceFragmentShadingRateEnumsFeaturesNV::supersampleFragmentShadingRates");
+        error_list.push_back("Missing feature VkPhysicalDeviceFragmentShadingRateEnumsFeaturesNV::supersampleFragmentShadingRates");
     }
     if (requested.noInvocationFragmentShadingRates && !supported.noInvocationFragmentShadingRates) {
-        error_list.push_back("VkPhysicalDeviceFragmentShadingRateEnumsFeaturesNV::noInvocationFragmentShadingRates");
+        error_list.push_back("Missing feature VkPhysicalDeviceFragmentShadingRateEnumsFeaturesNV::noInvocationFragmentShadingRates");
     }
 }
 void merge_VkPhysicalDeviceFragmentShadingRateEnumsFeaturesNV(VkPhysicalDeviceFragmentShadingRateEnumsFeaturesNV & current, VkPhysicalDeviceFragmentShadingRateEnumsFeaturesNV const& merge_in) {
@@ -2177,10 +2177,10 @@ void merge_VkPhysicalDeviceFragmentShadingRateEnumsFeaturesNV(VkPhysicalDeviceFr
 }
 void compare_VkPhysicalDeviceRayTracingMotionBlurFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceRayTracingMotionBlurFeaturesNV const& supported, VkPhysicalDeviceRayTracingMotionBlurFeaturesNV const& requested) {
     if (requested.rayTracingMotionBlur && !supported.rayTracingMotionBlur) {
-        error_list.push_back("VkPhysicalDeviceRayTracingMotionBlurFeaturesNV::rayTracingMotionBlur");
+        error_list.push_back("Missing feature VkPhysicalDeviceRayTracingMotionBlurFeaturesNV::rayTracingMotionBlur");
     }
     if (requested.rayTracingMotionBlurPipelineTraceRaysIndirect && !supported.rayTracingMotionBlurPipelineTraceRaysIndirect) {
-        error_list.push_back("VkPhysicalDeviceRayTracingMotionBlurFeaturesNV::rayTracingMotionBlurPipelineTraceRaysIndirect");
+        error_list.push_back("Missing feature VkPhysicalDeviceRayTracingMotionBlurFeaturesNV::rayTracingMotionBlurPipelineTraceRaysIndirect");
     }
 }
 void merge_VkPhysicalDeviceRayTracingMotionBlurFeaturesNV(VkPhysicalDeviceRayTracingMotionBlurFeaturesNV & current, VkPhysicalDeviceRayTracingMotionBlurFeaturesNV const& merge_in) {
@@ -2189,7 +2189,7 @@ void merge_VkPhysicalDeviceRayTracingMotionBlurFeaturesNV(VkPhysicalDeviceRayTra
 }
 void compare_VkPhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT const& supported, VkPhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT const& requested) {
     if (requested.ycbcr2plane444Formats && !supported.ycbcr2plane444Formats) {
-        error_list.push_back("VkPhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT::ycbcr2plane444Formats");
+        error_list.push_back("Missing feature VkPhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT::ycbcr2plane444Formats");
     }
 }
 void merge_VkPhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT(VkPhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT & current, VkPhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT const& merge_in) {
@@ -2197,7 +2197,7 @@ void merge_VkPhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT(VkPhysicalDeviceYcbc
 }
 void compare_VkPhysicalDeviceFragmentDensityMap2FeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceFragmentDensityMap2FeaturesEXT const& supported, VkPhysicalDeviceFragmentDensityMap2FeaturesEXT const& requested) {
     if (requested.fragmentDensityMapDeferred && !supported.fragmentDensityMapDeferred) {
-        error_list.push_back("VkPhysicalDeviceFragmentDensityMap2FeaturesEXT::fragmentDensityMapDeferred");
+        error_list.push_back("Missing feature VkPhysicalDeviceFragmentDensityMap2FeaturesEXT::fragmentDensityMapDeferred");
     }
 }
 void merge_VkPhysicalDeviceFragmentDensityMap2FeaturesEXT(VkPhysicalDeviceFragmentDensityMap2FeaturesEXT & current, VkPhysicalDeviceFragmentDensityMap2FeaturesEXT const& merge_in) {
@@ -2205,7 +2205,7 @@ void merge_VkPhysicalDeviceFragmentDensityMap2FeaturesEXT(VkPhysicalDeviceFragme
 }
 void compare_VkPhysicalDeviceImageCompressionControlFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceImageCompressionControlFeaturesEXT const& supported, VkPhysicalDeviceImageCompressionControlFeaturesEXT const& requested) {
     if (requested.imageCompressionControl && !supported.imageCompressionControl) {
-        error_list.push_back("VkPhysicalDeviceImageCompressionControlFeaturesEXT::imageCompressionControl");
+        error_list.push_back("Missing feature VkPhysicalDeviceImageCompressionControlFeaturesEXT::imageCompressionControl");
     }
 }
 void merge_VkPhysicalDeviceImageCompressionControlFeaturesEXT(VkPhysicalDeviceImageCompressionControlFeaturesEXT & current, VkPhysicalDeviceImageCompressionControlFeaturesEXT const& merge_in) {
@@ -2213,7 +2213,7 @@ void merge_VkPhysicalDeviceImageCompressionControlFeaturesEXT(VkPhysicalDeviceIm
 }
 void compare_VkPhysicalDeviceAttachmentFeedbackLoopLayoutFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceAttachmentFeedbackLoopLayoutFeaturesEXT const& supported, VkPhysicalDeviceAttachmentFeedbackLoopLayoutFeaturesEXT const& requested) {
     if (requested.attachmentFeedbackLoopLayout && !supported.attachmentFeedbackLoopLayout) {
-        error_list.push_back("VkPhysicalDeviceAttachmentFeedbackLoopLayoutFeaturesEXT::attachmentFeedbackLoopLayout");
+        error_list.push_back("Missing feature VkPhysicalDeviceAttachmentFeedbackLoopLayoutFeaturesEXT::attachmentFeedbackLoopLayout");
     }
 }
 void merge_VkPhysicalDeviceAttachmentFeedbackLoopLayoutFeaturesEXT(VkPhysicalDeviceAttachmentFeedbackLoopLayoutFeaturesEXT & current, VkPhysicalDeviceAttachmentFeedbackLoopLayoutFeaturesEXT const& merge_in) {
@@ -2221,10 +2221,10 @@ void merge_VkPhysicalDeviceAttachmentFeedbackLoopLayoutFeaturesEXT(VkPhysicalDev
 }
 void compare_VkPhysicalDevice4444FormatsFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDevice4444FormatsFeaturesEXT const& supported, VkPhysicalDevice4444FormatsFeaturesEXT const& requested) {
     if (requested.formatA4R4G4B4 && !supported.formatA4R4G4B4) {
-        error_list.push_back("VkPhysicalDevice4444FormatsFeaturesEXT::formatA4R4G4B4");
+        error_list.push_back("Missing feature VkPhysicalDevice4444FormatsFeaturesEXT::formatA4R4G4B4");
     }
     if (requested.formatA4B4G4R4 && !supported.formatA4B4G4R4) {
-        error_list.push_back("VkPhysicalDevice4444FormatsFeaturesEXT::formatA4B4G4R4");
+        error_list.push_back("Missing feature VkPhysicalDevice4444FormatsFeaturesEXT::formatA4B4G4R4");
     }
 }
 void merge_VkPhysicalDevice4444FormatsFeaturesEXT(VkPhysicalDevice4444FormatsFeaturesEXT & current, VkPhysicalDevice4444FormatsFeaturesEXT const& merge_in) {
@@ -2233,10 +2233,10 @@ void merge_VkPhysicalDevice4444FormatsFeaturesEXT(VkPhysicalDevice4444FormatsFea
 }
 void compare_VkPhysicalDeviceFaultFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceFaultFeaturesEXT const& supported, VkPhysicalDeviceFaultFeaturesEXT const& requested) {
     if (requested.deviceFault && !supported.deviceFault) {
-        error_list.push_back("VkPhysicalDeviceFaultFeaturesEXT::deviceFault");
+        error_list.push_back("Missing feature VkPhysicalDeviceFaultFeaturesEXT::deviceFault");
     }
     if (requested.deviceFaultVendorBinary && !supported.deviceFaultVendorBinary) {
-        error_list.push_back("VkPhysicalDeviceFaultFeaturesEXT::deviceFaultVendorBinary");
+        error_list.push_back("Missing feature VkPhysicalDeviceFaultFeaturesEXT::deviceFaultVendorBinary");
     }
 }
 void merge_VkPhysicalDeviceFaultFeaturesEXT(VkPhysicalDeviceFaultFeaturesEXT & current, VkPhysicalDeviceFaultFeaturesEXT const& merge_in) {
@@ -2245,13 +2245,13 @@ void merge_VkPhysicalDeviceFaultFeaturesEXT(VkPhysicalDeviceFaultFeaturesEXT & c
 }
 void compare_VkPhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT const& supported, VkPhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT const& requested) {
     if (requested.rasterizationOrderColorAttachmentAccess && !supported.rasterizationOrderColorAttachmentAccess) {
-        error_list.push_back("VkPhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT::rasterizationOrderColorAttachmentAccess");
+        error_list.push_back("Missing feature VkPhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT::rasterizationOrderColorAttachmentAccess");
     }
     if (requested.rasterizationOrderDepthAttachmentAccess && !supported.rasterizationOrderDepthAttachmentAccess) {
-        error_list.push_back("VkPhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT::rasterizationOrderDepthAttachmentAccess");
+        error_list.push_back("Missing feature VkPhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT::rasterizationOrderDepthAttachmentAccess");
     }
     if (requested.rasterizationOrderStencilAttachmentAccess && !supported.rasterizationOrderStencilAttachmentAccess) {
-        error_list.push_back("VkPhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT::rasterizationOrderStencilAttachmentAccess");
+        error_list.push_back("Missing feature VkPhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT::rasterizationOrderStencilAttachmentAccess");
     }
 }
 void merge_VkPhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT(VkPhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT & current, VkPhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT const& merge_in) {
@@ -2261,7 +2261,7 @@ void merge_VkPhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT(VkPhysi
 }
 void compare_VkPhysicalDeviceRGBA10X6FormatsFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceRGBA10X6FormatsFeaturesEXT const& supported, VkPhysicalDeviceRGBA10X6FormatsFeaturesEXT const& requested) {
     if (requested.formatRgba10x6WithoutYCbCrSampler && !supported.formatRgba10x6WithoutYCbCrSampler) {
-        error_list.push_back("VkPhysicalDeviceRGBA10X6FormatsFeaturesEXT::formatRgba10x6WithoutYCbCrSampler");
+        error_list.push_back("Missing feature VkPhysicalDeviceRGBA10X6FormatsFeaturesEXT::formatRgba10x6WithoutYCbCrSampler");
     }
 }
 void merge_VkPhysicalDeviceRGBA10X6FormatsFeaturesEXT(VkPhysicalDeviceRGBA10X6FormatsFeaturesEXT & current, VkPhysicalDeviceRGBA10X6FormatsFeaturesEXT const& merge_in) {
@@ -2269,7 +2269,7 @@ void merge_VkPhysicalDeviceRGBA10X6FormatsFeaturesEXT(VkPhysicalDeviceRGBA10X6Fo
 }
 void compare_VkPhysicalDeviceMutableDescriptorTypeFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceMutableDescriptorTypeFeaturesEXT const& supported, VkPhysicalDeviceMutableDescriptorTypeFeaturesEXT const& requested) {
     if (requested.mutableDescriptorType && !supported.mutableDescriptorType) {
-        error_list.push_back("VkPhysicalDeviceMutableDescriptorTypeFeaturesEXT::mutableDescriptorType");
+        error_list.push_back("Missing feature VkPhysicalDeviceMutableDescriptorTypeFeaturesEXT::mutableDescriptorType");
     }
 }
 void merge_VkPhysicalDeviceMutableDescriptorTypeFeaturesEXT(VkPhysicalDeviceMutableDescriptorTypeFeaturesEXT & current, VkPhysicalDeviceMutableDescriptorTypeFeaturesEXT const& merge_in) {
@@ -2277,7 +2277,7 @@ void merge_VkPhysicalDeviceMutableDescriptorTypeFeaturesEXT(VkPhysicalDeviceMuta
 }
 void compare_VkPhysicalDeviceVertexInputDynamicStateFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceVertexInputDynamicStateFeaturesEXT const& supported, VkPhysicalDeviceVertexInputDynamicStateFeaturesEXT const& requested) {
     if (requested.vertexInputDynamicState && !supported.vertexInputDynamicState) {
-        error_list.push_back("VkPhysicalDeviceVertexInputDynamicStateFeaturesEXT::vertexInputDynamicState");
+        error_list.push_back("Missing feature VkPhysicalDeviceVertexInputDynamicStateFeaturesEXT::vertexInputDynamicState");
     }
 }
 void merge_VkPhysicalDeviceVertexInputDynamicStateFeaturesEXT(VkPhysicalDeviceVertexInputDynamicStateFeaturesEXT & current, VkPhysicalDeviceVertexInputDynamicStateFeaturesEXT const& merge_in) {
@@ -2285,7 +2285,7 @@ void merge_VkPhysicalDeviceVertexInputDynamicStateFeaturesEXT(VkPhysicalDeviceVe
 }
 void compare_VkPhysicalDeviceAddressBindingReportFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceAddressBindingReportFeaturesEXT const& supported, VkPhysicalDeviceAddressBindingReportFeaturesEXT const& requested) {
     if (requested.reportAddressBinding && !supported.reportAddressBinding) {
-        error_list.push_back("VkPhysicalDeviceAddressBindingReportFeaturesEXT::reportAddressBinding");
+        error_list.push_back("Missing feature VkPhysicalDeviceAddressBindingReportFeaturesEXT::reportAddressBinding");
     }
 }
 void merge_VkPhysicalDeviceAddressBindingReportFeaturesEXT(VkPhysicalDeviceAddressBindingReportFeaturesEXT & current, VkPhysicalDeviceAddressBindingReportFeaturesEXT const& merge_in) {
@@ -2293,7 +2293,7 @@ void merge_VkPhysicalDeviceAddressBindingReportFeaturesEXT(VkPhysicalDeviceAddre
 }
 void compare_VkPhysicalDeviceDepthClipControlFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceDepthClipControlFeaturesEXT const& supported, VkPhysicalDeviceDepthClipControlFeaturesEXT const& requested) {
     if (requested.depthClipControl && !supported.depthClipControl) {
-        error_list.push_back("VkPhysicalDeviceDepthClipControlFeaturesEXT::depthClipControl");
+        error_list.push_back("Missing feature VkPhysicalDeviceDepthClipControlFeaturesEXT::depthClipControl");
     }
 }
 void merge_VkPhysicalDeviceDepthClipControlFeaturesEXT(VkPhysicalDeviceDepthClipControlFeaturesEXT & current, VkPhysicalDeviceDepthClipControlFeaturesEXT const& merge_in) {
@@ -2301,10 +2301,10 @@ void merge_VkPhysicalDeviceDepthClipControlFeaturesEXT(VkPhysicalDeviceDepthClip
 }
 void compare_VkPhysicalDevicePrimitiveTopologyListRestartFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDevicePrimitiveTopologyListRestartFeaturesEXT const& supported, VkPhysicalDevicePrimitiveTopologyListRestartFeaturesEXT const& requested) {
     if (requested.primitiveTopologyListRestart && !supported.primitiveTopologyListRestart) {
-        error_list.push_back("VkPhysicalDevicePrimitiveTopologyListRestartFeaturesEXT::primitiveTopologyListRestart");
+        error_list.push_back("Missing feature VkPhysicalDevicePrimitiveTopologyListRestartFeaturesEXT::primitiveTopologyListRestart");
     }
     if (requested.primitiveTopologyPatchListRestart && !supported.primitiveTopologyPatchListRestart) {
-        error_list.push_back("VkPhysicalDevicePrimitiveTopologyListRestartFeaturesEXT::primitiveTopologyPatchListRestart");
+        error_list.push_back("Missing feature VkPhysicalDevicePrimitiveTopologyListRestartFeaturesEXT::primitiveTopologyPatchListRestart");
     }
 }
 void merge_VkPhysicalDevicePrimitiveTopologyListRestartFeaturesEXT(VkPhysicalDevicePrimitiveTopologyListRestartFeaturesEXT & current, VkPhysicalDevicePrimitiveTopologyListRestartFeaturesEXT const& merge_in) {
@@ -2313,7 +2313,7 @@ void merge_VkPhysicalDevicePrimitiveTopologyListRestartFeaturesEXT(VkPhysicalDev
 }
 void compare_VkPhysicalDeviceSubpassShadingFeaturesHUAWEI(std::vector<std::string> & error_list, VkPhysicalDeviceSubpassShadingFeaturesHUAWEI const& supported, VkPhysicalDeviceSubpassShadingFeaturesHUAWEI const& requested) {
     if (requested.subpassShading && !supported.subpassShading) {
-        error_list.push_back("VkPhysicalDeviceSubpassShadingFeaturesHUAWEI::subpassShading");
+        error_list.push_back("Missing feature VkPhysicalDeviceSubpassShadingFeaturesHUAWEI::subpassShading");
     }
 }
 void merge_VkPhysicalDeviceSubpassShadingFeaturesHUAWEI(VkPhysicalDeviceSubpassShadingFeaturesHUAWEI & current, VkPhysicalDeviceSubpassShadingFeaturesHUAWEI const& merge_in) {
@@ -2321,7 +2321,7 @@ void merge_VkPhysicalDeviceSubpassShadingFeaturesHUAWEI(VkPhysicalDeviceSubpassS
 }
 void compare_VkPhysicalDeviceInvocationMaskFeaturesHUAWEI(std::vector<std::string> & error_list, VkPhysicalDeviceInvocationMaskFeaturesHUAWEI const& supported, VkPhysicalDeviceInvocationMaskFeaturesHUAWEI const& requested) {
     if (requested.invocationMask && !supported.invocationMask) {
-        error_list.push_back("VkPhysicalDeviceInvocationMaskFeaturesHUAWEI::invocationMask");
+        error_list.push_back("Missing feature VkPhysicalDeviceInvocationMaskFeaturesHUAWEI::invocationMask");
     }
 }
 void merge_VkPhysicalDeviceInvocationMaskFeaturesHUAWEI(VkPhysicalDeviceInvocationMaskFeaturesHUAWEI & current, VkPhysicalDeviceInvocationMaskFeaturesHUAWEI const& merge_in) {
@@ -2329,7 +2329,7 @@ void merge_VkPhysicalDeviceInvocationMaskFeaturesHUAWEI(VkPhysicalDeviceInvocati
 }
 void compare_VkPhysicalDeviceExternalMemoryRDMAFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceExternalMemoryRDMAFeaturesNV const& supported, VkPhysicalDeviceExternalMemoryRDMAFeaturesNV const& requested) {
     if (requested.externalMemoryRDMA && !supported.externalMemoryRDMA) {
-        error_list.push_back("VkPhysicalDeviceExternalMemoryRDMAFeaturesNV::externalMemoryRDMA");
+        error_list.push_back("Missing feature VkPhysicalDeviceExternalMemoryRDMAFeaturesNV::externalMemoryRDMA");
     }
 }
 void merge_VkPhysicalDeviceExternalMemoryRDMAFeaturesNV(VkPhysicalDeviceExternalMemoryRDMAFeaturesNV & current, VkPhysicalDeviceExternalMemoryRDMAFeaturesNV const& merge_in) {
@@ -2337,7 +2337,7 @@ void merge_VkPhysicalDeviceExternalMemoryRDMAFeaturesNV(VkPhysicalDeviceExternal
 }
 void compare_VkPhysicalDevicePipelinePropertiesFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDevicePipelinePropertiesFeaturesEXT const& supported, VkPhysicalDevicePipelinePropertiesFeaturesEXT const& requested) {
     if (requested.pipelinePropertiesIdentifier && !supported.pipelinePropertiesIdentifier) {
-        error_list.push_back("VkPhysicalDevicePipelinePropertiesFeaturesEXT::pipelinePropertiesIdentifier");
+        error_list.push_back("Missing feature VkPhysicalDevicePipelinePropertiesFeaturesEXT::pipelinePropertiesIdentifier");
     }
 }
 void merge_VkPhysicalDevicePipelinePropertiesFeaturesEXT(VkPhysicalDevicePipelinePropertiesFeaturesEXT & current, VkPhysicalDevicePipelinePropertiesFeaturesEXT const& merge_in) {
@@ -2345,7 +2345,7 @@ void merge_VkPhysicalDevicePipelinePropertiesFeaturesEXT(VkPhysicalDevicePipelin
 }
 void compare_VkPhysicalDeviceFrameBoundaryFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceFrameBoundaryFeaturesEXT const& supported, VkPhysicalDeviceFrameBoundaryFeaturesEXT const& requested) {
     if (requested.frameBoundary && !supported.frameBoundary) {
-        error_list.push_back("VkPhysicalDeviceFrameBoundaryFeaturesEXT::frameBoundary");
+        error_list.push_back("Missing feature VkPhysicalDeviceFrameBoundaryFeaturesEXT::frameBoundary");
     }
 }
 void merge_VkPhysicalDeviceFrameBoundaryFeaturesEXT(VkPhysicalDeviceFrameBoundaryFeaturesEXT & current, VkPhysicalDeviceFrameBoundaryFeaturesEXT const& merge_in) {
@@ -2353,7 +2353,7 @@ void merge_VkPhysicalDeviceFrameBoundaryFeaturesEXT(VkPhysicalDeviceFrameBoundar
 }
 void compare_VkPhysicalDeviceMultisampledRenderToSingleSampledFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceMultisampledRenderToSingleSampledFeaturesEXT const& supported, VkPhysicalDeviceMultisampledRenderToSingleSampledFeaturesEXT const& requested) {
     if (requested.multisampledRenderToSingleSampled && !supported.multisampledRenderToSingleSampled) {
-        error_list.push_back("VkPhysicalDeviceMultisampledRenderToSingleSampledFeaturesEXT::multisampledRenderToSingleSampled");
+        error_list.push_back("Missing feature VkPhysicalDeviceMultisampledRenderToSingleSampledFeaturesEXT::multisampledRenderToSingleSampled");
     }
 }
 void merge_VkPhysicalDeviceMultisampledRenderToSingleSampledFeaturesEXT(VkPhysicalDeviceMultisampledRenderToSingleSampledFeaturesEXT & current, VkPhysicalDeviceMultisampledRenderToSingleSampledFeaturesEXT const& merge_in) {
@@ -2361,13 +2361,13 @@ void merge_VkPhysicalDeviceMultisampledRenderToSingleSampledFeaturesEXT(VkPhysic
 }
 void compare_VkPhysicalDeviceExtendedDynamicState2FeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceExtendedDynamicState2FeaturesEXT const& supported, VkPhysicalDeviceExtendedDynamicState2FeaturesEXT const& requested) {
     if (requested.extendedDynamicState2 && !supported.extendedDynamicState2) {
-        error_list.push_back("VkPhysicalDeviceExtendedDynamicState2FeaturesEXT::extendedDynamicState2");
+        error_list.push_back("Missing feature VkPhysicalDeviceExtendedDynamicState2FeaturesEXT::extendedDynamicState2");
     }
     if (requested.extendedDynamicState2LogicOp && !supported.extendedDynamicState2LogicOp) {
-        error_list.push_back("VkPhysicalDeviceExtendedDynamicState2FeaturesEXT::extendedDynamicState2LogicOp");
+        error_list.push_back("Missing feature VkPhysicalDeviceExtendedDynamicState2FeaturesEXT::extendedDynamicState2LogicOp");
     }
     if (requested.extendedDynamicState2PatchControlPoints && !supported.extendedDynamicState2PatchControlPoints) {
-        error_list.push_back("VkPhysicalDeviceExtendedDynamicState2FeaturesEXT::extendedDynamicState2PatchControlPoints");
+        error_list.push_back("Missing feature VkPhysicalDeviceExtendedDynamicState2FeaturesEXT::extendedDynamicState2PatchControlPoints");
     }
 }
 void merge_VkPhysicalDeviceExtendedDynamicState2FeaturesEXT(VkPhysicalDeviceExtendedDynamicState2FeaturesEXT & current, VkPhysicalDeviceExtendedDynamicState2FeaturesEXT const& merge_in) {
@@ -2377,7 +2377,7 @@ void merge_VkPhysicalDeviceExtendedDynamicState2FeaturesEXT(VkPhysicalDeviceExte
 }
 void compare_VkPhysicalDeviceColorWriteEnableFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceColorWriteEnableFeaturesEXT const& supported, VkPhysicalDeviceColorWriteEnableFeaturesEXT const& requested) {
     if (requested.colorWriteEnable && !supported.colorWriteEnable) {
-        error_list.push_back("VkPhysicalDeviceColorWriteEnableFeaturesEXT::colorWriteEnable");
+        error_list.push_back("Missing feature VkPhysicalDeviceColorWriteEnableFeaturesEXT::colorWriteEnable");
     }
 }
 void merge_VkPhysicalDeviceColorWriteEnableFeaturesEXT(VkPhysicalDeviceColorWriteEnableFeaturesEXT & current, VkPhysicalDeviceColorWriteEnableFeaturesEXT const& merge_in) {
@@ -2385,13 +2385,13 @@ void merge_VkPhysicalDeviceColorWriteEnableFeaturesEXT(VkPhysicalDeviceColorWrit
 }
 void compare_VkPhysicalDevicePrimitivesGeneratedQueryFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDevicePrimitivesGeneratedQueryFeaturesEXT const& supported, VkPhysicalDevicePrimitivesGeneratedQueryFeaturesEXT const& requested) {
     if (requested.primitivesGeneratedQuery && !supported.primitivesGeneratedQuery) {
-        error_list.push_back("VkPhysicalDevicePrimitivesGeneratedQueryFeaturesEXT::primitivesGeneratedQuery");
+        error_list.push_back("Missing feature VkPhysicalDevicePrimitivesGeneratedQueryFeaturesEXT::primitivesGeneratedQuery");
     }
     if (requested.primitivesGeneratedQueryWithRasterizerDiscard && !supported.primitivesGeneratedQueryWithRasterizerDiscard) {
-        error_list.push_back("VkPhysicalDevicePrimitivesGeneratedQueryFeaturesEXT::primitivesGeneratedQueryWithRasterizerDiscard");
+        error_list.push_back("Missing feature VkPhysicalDevicePrimitivesGeneratedQueryFeaturesEXT::primitivesGeneratedQueryWithRasterizerDiscard");
     }
     if (requested.primitivesGeneratedQueryWithNonZeroStreams && !supported.primitivesGeneratedQueryWithNonZeroStreams) {
-        error_list.push_back("VkPhysicalDevicePrimitivesGeneratedQueryFeaturesEXT::primitivesGeneratedQueryWithNonZeroStreams");
+        error_list.push_back("Missing feature VkPhysicalDevicePrimitivesGeneratedQueryFeaturesEXT::primitivesGeneratedQueryWithNonZeroStreams");
     }
 }
 void merge_VkPhysicalDevicePrimitivesGeneratedQueryFeaturesEXT(VkPhysicalDevicePrimitivesGeneratedQueryFeaturesEXT & current, VkPhysicalDevicePrimitivesGeneratedQueryFeaturesEXT const& merge_in) {
@@ -2401,7 +2401,7 @@ void merge_VkPhysicalDevicePrimitivesGeneratedQueryFeaturesEXT(VkPhysicalDeviceP
 }
 void compare_VkPhysicalDeviceImageViewMinLodFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceImageViewMinLodFeaturesEXT const& supported, VkPhysicalDeviceImageViewMinLodFeaturesEXT const& requested) {
     if (requested.minLod && !supported.minLod) {
-        error_list.push_back("VkPhysicalDeviceImageViewMinLodFeaturesEXT::minLod");
+        error_list.push_back("Missing feature VkPhysicalDeviceImageViewMinLodFeaturesEXT::minLod");
     }
 }
 void merge_VkPhysicalDeviceImageViewMinLodFeaturesEXT(VkPhysicalDeviceImageViewMinLodFeaturesEXT & current, VkPhysicalDeviceImageViewMinLodFeaturesEXT const& merge_in) {
@@ -2409,7 +2409,7 @@ void merge_VkPhysicalDeviceImageViewMinLodFeaturesEXT(VkPhysicalDeviceImageViewM
 }
 void compare_VkPhysicalDeviceMultiDrawFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceMultiDrawFeaturesEXT const& supported, VkPhysicalDeviceMultiDrawFeaturesEXT const& requested) {
     if (requested.multiDraw && !supported.multiDraw) {
-        error_list.push_back("VkPhysicalDeviceMultiDrawFeaturesEXT::multiDraw");
+        error_list.push_back("Missing feature VkPhysicalDeviceMultiDrawFeaturesEXT::multiDraw");
     }
 }
 void merge_VkPhysicalDeviceMultiDrawFeaturesEXT(VkPhysicalDeviceMultiDrawFeaturesEXT & current, VkPhysicalDeviceMultiDrawFeaturesEXT const& merge_in) {
@@ -2417,10 +2417,10 @@ void merge_VkPhysicalDeviceMultiDrawFeaturesEXT(VkPhysicalDeviceMultiDrawFeature
 }
 void compare_VkPhysicalDeviceImage2DViewOf3DFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceImage2DViewOf3DFeaturesEXT const& supported, VkPhysicalDeviceImage2DViewOf3DFeaturesEXT const& requested) {
     if (requested.image2DViewOf3D && !supported.image2DViewOf3D) {
-        error_list.push_back("VkPhysicalDeviceImage2DViewOf3DFeaturesEXT::image2DViewOf3D");
+        error_list.push_back("Missing feature VkPhysicalDeviceImage2DViewOf3DFeaturesEXT::image2DViewOf3D");
     }
     if (requested.sampler2DViewOf3D && !supported.sampler2DViewOf3D) {
-        error_list.push_back("VkPhysicalDeviceImage2DViewOf3DFeaturesEXT::sampler2DViewOf3D");
+        error_list.push_back("Missing feature VkPhysicalDeviceImage2DViewOf3DFeaturesEXT::sampler2DViewOf3D");
     }
 }
 void merge_VkPhysicalDeviceImage2DViewOf3DFeaturesEXT(VkPhysicalDeviceImage2DViewOf3DFeaturesEXT & current, VkPhysicalDeviceImage2DViewOf3DFeaturesEXT const& merge_in) {
@@ -2429,13 +2429,13 @@ void merge_VkPhysicalDeviceImage2DViewOf3DFeaturesEXT(VkPhysicalDeviceImage2DVie
 }
 void compare_VkPhysicalDeviceShaderTileImageFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceShaderTileImageFeaturesEXT const& supported, VkPhysicalDeviceShaderTileImageFeaturesEXT const& requested) {
     if (requested.shaderTileImageColorReadAccess && !supported.shaderTileImageColorReadAccess) {
-        error_list.push_back("VkPhysicalDeviceShaderTileImageFeaturesEXT::shaderTileImageColorReadAccess");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderTileImageFeaturesEXT::shaderTileImageColorReadAccess");
     }
     if (requested.shaderTileImageDepthReadAccess && !supported.shaderTileImageDepthReadAccess) {
-        error_list.push_back("VkPhysicalDeviceShaderTileImageFeaturesEXT::shaderTileImageDepthReadAccess");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderTileImageFeaturesEXT::shaderTileImageDepthReadAccess");
     }
     if (requested.shaderTileImageStencilReadAccess && !supported.shaderTileImageStencilReadAccess) {
-        error_list.push_back("VkPhysicalDeviceShaderTileImageFeaturesEXT::shaderTileImageStencilReadAccess");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderTileImageFeaturesEXT::shaderTileImageStencilReadAccess");
     }
 }
 void merge_VkPhysicalDeviceShaderTileImageFeaturesEXT(VkPhysicalDeviceShaderTileImageFeaturesEXT & current, VkPhysicalDeviceShaderTileImageFeaturesEXT const& merge_in) {
@@ -2445,13 +2445,13 @@ void merge_VkPhysicalDeviceShaderTileImageFeaturesEXT(VkPhysicalDeviceShaderTile
 }
 void compare_VkPhysicalDeviceOpacityMicromapFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceOpacityMicromapFeaturesEXT const& supported, VkPhysicalDeviceOpacityMicromapFeaturesEXT const& requested) {
     if (requested.micromap && !supported.micromap) {
-        error_list.push_back("VkPhysicalDeviceOpacityMicromapFeaturesEXT::micromap");
+        error_list.push_back("Missing feature VkPhysicalDeviceOpacityMicromapFeaturesEXT::micromap");
     }
     if (requested.micromapCaptureReplay && !supported.micromapCaptureReplay) {
-        error_list.push_back("VkPhysicalDeviceOpacityMicromapFeaturesEXT::micromapCaptureReplay");
+        error_list.push_back("Missing feature VkPhysicalDeviceOpacityMicromapFeaturesEXT::micromapCaptureReplay");
     }
     if (requested.micromapHostCommands && !supported.micromapHostCommands) {
-        error_list.push_back("VkPhysicalDeviceOpacityMicromapFeaturesEXT::micromapHostCommands");
+        error_list.push_back("Missing feature VkPhysicalDeviceOpacityMicromapFeaturesEXT::micromapHostCommands");
     }
 }
 void merge_VkPhysicalDeviceOpacityMicromapFeaturesEXT(VkPhysicalDeviceOpacityMicromapFeaturesEXT & current, VkPhysicalDeviceOpacityMicromapFeaturesEXT const& merge_in) {
@@ -2462,7 +2462,7 @@ void merge_VkPhysicalDeviceOpacityMicromapFeaturesEXT(VkPhysicalDeviceOpacityMic
 #if defined(VK_ENABLE_BETA_EXTENSIONS)
 void compare_VkPhysicalDeviceDisplacementMicromapFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceDisplacementMicromapFeaturesNV const& supported, VkPhysicalDeviceDisplacementMicromapFeaturesNV const& requested) {
     if (requested.displacementMicromap && !supported.displacementMicromap) {
-        error_list.push_back("VkPhysicalDeviceDisplacementMicromapFeaturesNV::displacementMicromap");
+        error_list.push_back("Missing feature VkPhysicalDeviceDisplacementMicromapFeaturesNV::displacementMicromap");
     }
 }
 void merge_VkPhysicalDeviceDisplacementMicromapFeaturesNV(VkPhysicalDeviceDisplacementMicromapFeaturesNV & current, VkPhysicalDeviceDisplacementMicromapFeaturesNV const& merge_in) {
@@ -2471,10 +2471,10 @@ void merge_VkPhysicalDeviceDisplacementMicromapFeaturesNV(VkPhysicalDeviceDispla
 #endif // defined(VK_ENABLE_BETA_EXTENSIONS)
 void compare_VkPhysicalDeviceClusterCullingShaderFeaturesHUAWEI(std::vector<std::string> & error_list, VkPhysicalDeviceClusterCullingShaderFeaturesHUAWEI const& supported, VkPhysicalDeviceClusterCullingShaderFeaturesHUAWEI const& requested) {
     if (requested.clustercullingShader && !supported.clustercullingShader) {
-        error_list.push_back("VkPhysicalDeviceClusterCullingShaderFeaturesHUAWEI::clustercullingShader");
+        error_list.push_back("Missing feature VkPhysicalDeviceClusterCullingShaderFeaturesHUAWEI::clustercullingShader");
     }
     if (requested.multiviewClusterCullingShader && !supported.multiviewClusterCullingShader) {
-        error_list.push_back("VkPhysicalDeviceClusterCullingShaderFeaturesHUAWEI::multiviewClusterCullingShader");
+        error_list.push_back("Missing feature VkPhysicalDeviceClusterCullingShaderFeaturesHUAWEI::multiviewClusterCullingShader");
     }
 }
 void merge_VkPhysicalDeviceClusterCullingShaderFeaturesHUAWEI(VkPhysicalDeviceClusterCullingShaderFeaturesHUAWEI & current, VkPhysicalDeviceClusterCullingShaderFeaturesHUAWEI const& merge_in) {
@@ -2483,10 +2483,10 @@ void merge_VkPhysicalDeviceClusterCullingShaderFeaturesHUAWEI(VkPhysicalDeviceCl
 }
 void compare_VkPhysicalDeviceBorderColorSwizzleFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceBorderColorSwizzleFeaturesEXT const& supported, VkPhysicalDeviceBorderColorSwizzleFeaturesEXT const& requested) {
     if (requested.borderColorSwizzle && !supported.borderColorSwizzle) {
-        error_list.push_back("VkPhysicalDeviceBorderColorSwizzleFeaturesEXT::borderColorSwizzle");
+        error_list.push_back("Missing feature VkPhysicalDeviceBorderColorSwizzleFeaturesEXT::borderColorSwizzle");
     }
     if (requested.borderColorSwizzleFromImage && !supported.borderColorSwizzleFromImage) {
-        error_list.push_back("VkPhysicalDeviceBorderColorSwizzleFeaturesEXT::borderColorSwizzleFromImage");
+        error_list.push_back("Missing feature VkPhysicalDeviceBorderColorSwizzleFeaturesEXT::borderColorSwizzleFromImage");
     }
 }
 void merge_VkPhysicalDeviceBorderColorSwizzleFeaturesEXT(VkPhysicalDeviceBorderColorSwizzleFeaturesEXT & current, VkPhysicalDeviceBorderColorSwizzleFeaturesEXT const& merge_in) {
@@ -2495,7 +2495,7 @@ void merge_VkPhysicalDeviceBorderColorSwizzleFeaturesEXT(VkPhysicalDeviceBorderC
 }
 void compare_VkPhysicalDevicePageableDeviceLocalMemoryFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDevicePageableDeviceLocalMemoryFeaturesEXT const& supported, VkPhysicalDevicePageableDeviceLocalMemoryFeaturesEXT const& requested) {
     if (requested.pageableDeviceLocalMemory && !supported.pageableDeviceLocalMemory) {
-        error_list.push_back("VkPhysicalDevicePageableDeviceLocalMemoryFeaturesEXT::pageableDeviceLocalMemory");
+        error_list.push_back("Missing feature VkPhysicalDevicePageableDeviceLocalMemoryFeaturesEXT::pageableDeviceLocalMemory");
     }
 }
 void merge_VkPhysicalDevicePageableDeviceLocalMemoryFeaturesEXT(VkPhysicalDevicePageableDeviceLocalMemoryFeaturesEXT & current, VkPhysicalDevicePageableDeviceLocalMemoryFeaturesEXT const& merge_in) {
@@ -2503,7 +2503,7 @@ void merge_VkPhysicalDevicePageableDeviceLocalMemoryFeaturesEXT(VkPhysicalDevice
 }
 void compare_VkPhysicalDeviceSchedulingControlsFeaturesARM(std::vector<std::string> & error_list, VkPhysicalDeviceSchedulingControlsFeaturesARM const& supported, VkPhysicalDeviceSchedulingControlsFeaturesARM const& requested) {
     if (requested.schedulingControls && !supported.schedulingControls) {
-        error_list.push_back("VkPhysicalDeviceSchedulingControlsFeaturesARM::schedulingControls");
+        error_list.push_back("Missing feature VkPhysicalDeviceSchedulingControlsFeaturesARM::schedulingControls");
     }
 }
 void merge_VkPhysicalDeviceSchedulingControlsFeaturesARM(VkPhysicalDeviceSchedulingControlsFeaturesARM & current, VkPhysicalDeviceSchedulingControlsFeaturesARM const& merge_in) {
@@ -2511,7 +2511,7 @@ void merge_VkPhysicalDeviceSchedulingControlsFeaturesARM(VkPhysicalDeviceSchedul
 }
 void compare_VkPhysicalDeviceImageSlicedViewOf3DFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceImageSlicedViewOf3DFeaturesEXT const& supported, VkPhysicalDeviceImageSlicedViewOf3DFeaturesEXT const& requested) {
     if (requested.imageSlicedViewOf3D && !supported.imageSlicedViewOf3D) {
-        error_list.push_back("VkPhysicalDeviceImageSlicedViewOf3DFeaturesEXT::imageSlicedViewOf3D");
+        error_list.push_back("Missing feature VkPhysicalDeviceImageSlicedViewOf3DFeaturesEXT::imageSlicedViewOf3D");
     }
 }
 void merge_VkPhysicalDeviceImageSlicedViewOf3DFeaturesEXT(VkPhysicalDeviceImageSlicedViewOf3DFeaturesEXT & current, VkPhysicalDeviceImageSlicedViewOf3DFeaturesEXT const& merge_in) {
@@ -2519,7 +2519,7 @@ void merge_VkPhysicalDeviceImageSlicedViewOf3DFeaturesEXT(VkPhysicalDeviceImageS
 }
 void compare_VkPhysicalDeviceDescriptorSetHostMappingFeaturesVALVE(std::vector<std::string> & error_list, VkPhysicalDeviceDescriptorSetHostMappingFeaturesVALVE const& supported, VkPhysicalDeviceDescriptorSetHostMappingFeaturesVALVE const& requested) {
     if (requested.descriptorSetHostMapping && !supported.descriptorSetHostMapping) {
-        error_list.push_back("VkPhysicalDeviceDescriptorSetHostMappingFeaturesVALVE::descriptorSetHostMapping");
+        error_list.push_back("Missing feature VkPhysicalDeviceDescriptorSetHostMappingFeaturesVALVE::descriptorSetHostMapping");
     }
 }
 void merge_VkPhysicalDeviceDescriptorSetHostMappingFeaturesVALVE(VkPhysicalDeviceDescriptorSetHostMappingFeaturesVALVE & current, VkPhysicalDeviceDescriptorSetHostMappingFeaturesVALVE const& merge_in) {
@@ -2527,7 +2527,7 @@ void merge_VkPhysicalDeviceDescriptorSetHostMappingFeaturesVALVE(VkPhysicalDevic
 }
 void compare_VkPhysicalDeviceNonSeamlessCubeMapFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceNonSeamlessCubeMapFeaturesEXT const& supported, VkPhysicalDeviceNonSeamlessCubeMapFeaturesEXT const& requested) {
     if (requested.nonSeamlessCubeMap && !supported.nonSeamlessCubeMap) {
-        error_list.push_back("VkPhysicalDeviceNonSeamlessCubeMapFeaturesEXT::nonSeamlessCubeMap");
+        error_list.push_back("Missing feature VkPhysicalDeviceNonSeamlessCubeMapFeaturesEXT::nonSeamlessCubeMap");
     }
 }
 void merge_VkPhysicalDeviceNonSeamlessCubeMapFeaturesEXT(VkPhysicalDeviceNonSeamlessCubeMapFeaturesEXT & current, VkPhysicalDeviceNonSeamlessCubeMapFeaturesEXT const& merge_in) {
@@ -2535,7 +2535,7 @@ void merge_VkPhysicalDeviceNonSeamlessCubeMapFeaturesEXT(VkPhysicalDeviceNonSeam
 }
 void compare_VkPhysicalDeviceRenderPassStripedFeaturesARM(std::vector<std::string> & error_list, VkPhysicalDeviceRenderPassStripedFeaturesARM const& supported, VkPhysicalDeviceRenderPassStripedFeaturesARM const& requested) {
     if (requested.renderPassStriped && !supported.renderPassStriped) {
-        error_list.push_back("VkPhysicalDeviceRenderPassStripedFeaturesARM::renderPassStriped");
+        error_list.push_back("Missing feature VkPhysicalDeviceRenderPassStripedFeaturesARM::renderPassStriped");
     }
 }
 void merge_VkPhysicalDeviceRenderPassStripedFeaturesARM(VkPhysicalDeviceRenderPassStripedFeaturesARM & current, VkPhysicalDeviceRenderPassStripedFeaturesARM const& merge_in) {
@@ -2543,7 +2543,7 @@ void merge_VkPhysicalDeviceRenderPassStripedFeaturesARM(VkPhysicalDeviceRenderPa
 }
 void compare_VkPhysicalDeviceFragmentDensityMapOffsetFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceFragmentDensityMapOffsetFeaturesEXT const& supported, VkPhysicalDeviceFragmentDensityMapOffsetFeaturesEXT const& requested) {
     if (requested.fragmentDensityMapOffset && !supported.fragmentDensityMapOffset) {
-        error_list.push_back("VkPhysicalDeviceFragmentDensityMapOffsetFeaturesEXT::fragmentDensityMapOffset");
+        error_list.push_back("Missing feature VkPhysicalDeviceFragmentDensityMapOffsetFeaturesEXT::fragmentDensityMapOffset");
     }
 }
 void merge_VkPhysicalDeviceFragmentDensityMapOffsetFeaturesEXT(VkPhysicalDeviceFragmentDensityMapOffsetFeaturesEXT & current, VkPhysicalDeviceFragmentDensityMapOffsetFeaturesEXT const& merge_in) {
@@ -2551,7 +2551,7 @@ void merge_VkPhysicalDeviceFragmentDensityMapOffsetFeaturesEXT(VkPhysicalDeviceF
 }
 void compare_VkPhysicalDeviceCopyMemoryIndirectFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceCopyMemoryIndirectFeaturesNV const& supported, VkPhysicalDeviceCopyMemoryIndirectFeaturesNV const& requested) {
     if (requested.indirectCopy && !supported.indirectCopy) {
-        error_list.push_back("VkPhysicalDeviceCopyMemoryIndirectFeaturesNV::indirectCopy");
+        error_list.push_back("Missing feature VkPhysicalDeviceCopyMemoryIndirectFeaturesNV::indirectCopy");
     }
 }
 void merge_VkPhysicalDeviceCopyMemoryIndirectFeaturesNV(VkPhysicalDeviceCopyMemoryIndirectFeaturesNV & current, VkPhysicalDeviceCopyMemoryIndirectFeaturesNV const& merge_in) {
@@ -2559,7 +2559,7 @@ void merge_VkPhysicalDeviceCopyMemoryIndirectFeaturesNV(VkPhysicalDeviceCopyMemo
 }
 void compare_VkPhysicalDeviceMemoryDecompressionFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceMemoryDecompressionFeaturesNV const& supported, VkPhysicalDeviceMemoryDecompressionFeaturesNV const& requested) {
     if (requested.memoryDecompression && !supported.memoryDecompression) {
-        error_list.push_back("VkPhysicalDeviceMemoryDecompressionFeaturesNV::memoryDecompression");
+        error_list.push_back("Missing feature VkPhysicalDeviceMemoryDecompressionFeaturesNV::memoryDecompression");
     }
 }
 void merge_VkPhysicalDeviceMemoryDecompressionFeaturesNV(VkPhysicalDeviceMemoryDecompressionFeaturesNV & current, VkPhysicalDeviceMemoryDecompressionFeaturesNV const& merge_in) {
@@ -2567,13 +2567,13 @@ void merge_VkPhysicalDeviceMemoryDecompressionFeaturesNV(VkPhysicalDeviceMemoryD
 }
 void compare_VkPhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV const& supported, VkPhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV const& requested) {
     if (requested.deviceGeneratedCompute && !supported.deviceGeneratedCompute) {
-        error_list.push_back("VkPhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV::deviceGeneratedCompute");
+        error_list.push_back("Missing feature VkPhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV::deviceGeneratedCompute");
     }
     if (requested.deviceGeneratedComputePipelines && !supported.deviceGeneratedComputePipelines) {
-        error_list.push_back("VkPhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV::deviceGeneratedComputePipelines");
+        error_list.push_back("Missing feature VkPhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV::deviceGeneratedComputePipelines");
     }
     if (requested.deviceGeneratedComputeCaptureReplay && !supported.deviceGeneratedComputeCaptureReplay) {
-        error_list.push_back("VkPhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV::deviceGeneratedComputeCaptureReplay");
+        error_list.push_back("Missing feature VkPhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV::deviceGeneratedComputeCaptureReplay");
     }
 }
 void merge_VkPhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV(VkPhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV & current, VkPhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV const& merge_in) {
@@ -2583,10 +2583,10 @@ void merge_VkPhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV(VkPhysicalDe
 }
 void compare_VkPhysicalDeviceRayTracingLinearSweptSpheresFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceRayTracingLinearSweptSpheresFeaturesNV const& supported, VkPhysicalDeviceRayTracingLinearSweptSpheresFeaturesNV const& requested) {
     if (requested.spheres && !supported.spheres) {
-        error_list.push_back("VkPhysicalDeviceRayTracingLinearSweptSpheresFeaturesNV::spheres");
+        error_list.push_back("Missing feature VkPhysicalDeviceRayTracingLinearSweptSpheresFeaturesNV::spheres");
     }
     if (requested.linearSweptSpheres && !supported.linearSweptSpheres) {
-        error_list.push_back("VkPhysicalDeviceRayTracingLinearSweptSpheresFeaturesNV::linearSweptSpheres");
+        error_list.push_back("Missing feature VkPhysicalDeviceRayTracingLinearSweptSpheresFeaturesNV::linearSweptSpheres");
     }
 }
 void merge_VkPhysicalDeviceRayTracingLinearSweptSpheresFeaturesNV(VkPhysicalDeviceRayTracingLinearSweptSpheresFeaturesNV & current, VkPhysicalDeviceRayTracingLinearSweptSpheresFeaturesNV const& merge_in) {
@@ -2595,7 +2595,7 @@ void merge_VkPhysicalDeviceRayTracingLinearSweptSpheresFeaturesNV(VkPhysicalDevi
 }
 void compare_VkPhysicalDeviceLinearColorAttachmentFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceLinearColorAttachmentFeaturesNV const& supported, VkPhysicalDeviceLinearColorAttachmentFeaturesNV const& requested) {
     if (requested.linearColorAttachment && !supported.linearColorAttachment) {
-        error_list.push_back("VkPhysicalDeviceLinearColorAttachmentFeaturesNV::linearColorAttachment");
+        error_list.push_back("Missing feature VkPhysicalDeviceLinearColorAttachmentFeaturesNV::linearColorAttachment");
     }
 }
 void merge_VkPhysicalDeviceLinearColorAttachmentFeaturesNV(VkPhysicalDeviceLinearColorAttachmentFeaturesNV & current, VkPhysicalDeviceLinearColorAttachmentFeaturesNV const& merge_in) {
@@ -2603,7 +2603,7 @@ void merge_VkPhysicalDeviceLinearColorAttachmentFeaturesNV(VkPhysicalDeviceLinea
 }
 void compare_VkPhysicalDeviceImageCompressionControlSwapchainFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceImageCompressionControlSwapchainFeaturesEXT const& supported, VkPhysicalDeviceImageCompressionControlSwapchainFeaturesEXT const& requested) {
     if (requested.imageCompressionControlSwapchain && !supported.imageCompressionControlSwapchain) {
-        error_list.push_back("VkPhysicalDeviceImageCompressionControlSwapchainFeaturesEXT::imageCompressionControlSwapchain");
+        error_list.push_back("Missing feature VkPhysicalDeviceImageCompressionControlSwapchainFeaturesEXT::imageCompressionControlSwapchain");
     }
 }
 void merge_VkPhysicalDeviceImageCompressionControlSwapchainFeaturesEXT(VkPhysicalDeviceImageCompressionControlSwapchainFeaturesEXT & current, VkPhysicalDeviceImageCompressionControlSwapchainFeaturesEXT const& merge_in) {
@@ -2611,13 +2611,13 @@ void merge_VkPhysicalDeviceImageCompressionControlSwapchainFeaturesEXT(VkPhysica
 }
 void compare_VkPhysicalDeviceImageProcessingFeaturesQCOM(std::vector<std::string> & error_list, VkPhysicalDeviceImageProcessingFeaturesQCOM const& supported, VkPhysicalDeviceImageProcessingFeaturesQCOM const& requested) {
     if (requested.textureSampleWeighted && !supported.textureSampleWeighted) {
-        error_list.push_back("VkPhysicalDeviceImageProcessingFeaturesQCOM::textureSampleWeighted");
+        error_list.push_back("Missing feature VkPhysicalDeviceImageProcessingFeaturesQCOM::textureSampleWeighted");
     }
     if (requested.textureBoxFilter && !supported.textureBoxFilter) {
-        error_list.push_back("VkPhysicalDeviceImageProcessingFeaturesQCOM::textureBoxFilter");
+        error_list.push_back("Missing feature VkPhysicalDeviceImageProcessingFeaturesQCOM::textureBoxFilter");
     }
     if (requested.textureBlockMatch && !supported.textureBlockMatch) {
-        error_list.push_back("VkPhysicalDeviceImageProcessingFeaturesQCOM::textureBlockMatch");
+        error_list.push_back("Missing feature VkPhysicalDeviceImageProcessingFeaturesQCOM::textureBlockMatch");
     }
 }
 void merge_VkPhysicalDeviceImageProcessingFeaturesQCOM(VkPhysicalDeviceImageProcessingFeaturesQCOM & current, VkPhysicalDeviceImageProcessingFeaturesQCOM const& merge_in) {
@@ -2627,13 +2627,13 @@ void merge_VkPhysicalDeviceImageProcessingFeaturesQCOM(VkPhysicalDeviceImageProc
 }
 void compare_VkPhysicalDeviceNestedCommandBufferFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceNestedCommandBufferFeaturesEXT const& supported, VkPhysicalDeviceNestedCommandBufferFeaturesEXT const& requested) {
     if (requested.nestedCommandBuffer && !supported.nestedCommandBuffer) {
-        error_list.push_back("VkPhysicalDeviceNestedCommandBufferFeaturesEXT::nestedCommandBuffer");
+        error_list.push_back("Missing feature VkPhysicalDeviceNestedCommandBufferFeaturesEXT::nestedCommandBuffer");
     }
     if (requested.nestedCommandBufferRendering && !supported.nestedCommandBufferRendering) {
-        error_list.push_back("VkPhysicalDeviceNestedCommandBufferFeaturesEXT::nestedCommandBufferRendering");
+        error_list.push_back("Missing feature VkPhysicalDeviceNestedCommandBufferFeaturesEXT::nestedCommandBufferRendering");
     }
     if (requested.nestedCommandBufferSimultaneousUse && !supported.nestedCommandBufferSimultaneousUse) {
-        error_list.push_back("VkPhysicalDeviceNestedCommandBufferFeaturesEXT::nestedCommandBufferSimultaneousUse");
+        error_list.push_back("Missing feature VkPhysicalDeviceNestedCommandBufferFeaturesEXT::nestedCommandBufferSimultaneousUse");
     }
 }
 void merge_VkPhysicalDeviceNestedCommandBufferFeaturesEXT(VkPhysicalDeviceNestedCommandBufferFeaturesEXT & current, VkPhysicalDeviceNestedCommandBufferFeaturesEXT const& merge_in) {
@@ -2643,97 +2643,97 @@ void merge_VkPhysicalDeviceNestedCommandBufferFeaturesEXT(VkPhysicalDeviceNested
 }
 void compare_VkPhysicalDeviceExtendedDynamicState3FeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceExtendedDynamicState3FeaturesEXT const& supported, VkPhysicalDeviceExtendedDynamicState3FeaturesEXT const& requested) {
     if (requested.extendedDynamicState3TessellationDomainOrigin && !supported.extendedDynamicState3TessellationDomainOrigin) {
-        error_list.push_back("VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3TessellationDomainOrigin");
+        error_list.push_back("Missing feature VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3TessellationDomainOrigin");
     }
     if (requested.extendedDynamicState3DepthClampEnable && !supported.extendedDynamicState3DepthClampEnable) {
-        error_list.push_back("VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3DepthClampEnable");
+        error_list.push_back("Missing feature VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3DepthClampEnable");
     }
     if (requested.extendedDynamicState3PolygonMode && !supported.extendedDynamicState3PolygonMode) {
-        error_list.push_back("VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3PolygonMode");
+        error_list.push_back("Missing feature VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3PolygonMode");
     }
     if (requested.extendedDynamicState3RasterizationSamples && !supported.extendedDynamicState3RasterizationSamples) {
-        error_list.push_back("VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3RasterizationSamples");
+        error_list.push_back("Missing feature VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3RasterizationSamples");
     }
     if (requested.extendedDynamicState3SampleMask && !supported.extendedDynamicState3SampleMask) {
-        error_list.push_back("VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3SampleMask");
+        error_list.push_back("Missing feature VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3SampleMask");
     }
     if (requested.extendedDynamicState3AlphaToCoverageEnable && !supported.extendedDynamicState3AlphaToCoverageEnable) {
-        error_list.push_back("VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3AlphaToCoverageEnable");
+        error_list.push_back("Missing feature VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3AlphaToCoverageEnable");
     }
     if (requested.extendedDynamicState3AlphaToOneEnable && !supported.extendedDynamicState3AlphaToOneEnable) {
-        error_list.push_back("VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3AlphaToOneEnable");
+        error_list.push_back("Missing feature VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3AlphaToOneEnable");
     }
     if (requested.extendedDynamicState3LogicOpEnable && !supported.extendedDynamicState3LogicOpEnable) {
-        error_list.push_back("VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3LogicOpEnable");
+        error_list.push_back("Missing feature VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3LogicOpEnable");
     }
     if (requested.extendedDynamicState3ColorBlendEnable && !supported.extendedDynamicState3ColorBlendEnable) {
-        error_list.push_back("VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3ColorBlendEnable");
+        error_list.push_back("Missing feature VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3ColorBlendEnable");
     }
     if (requested.extendedDynamicState3ColorBlendEquation && !supported.extendedDynamicState3ColorBlendEquation) {
-        error_list.push_back("VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3ColorBlendEquation");
+        error_list.push_back("Missing feature VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3ColorBlendEquation");
     }
     if (requested.extendedDynamicState3ColorWriteMask && !supported.extendedDynamicState3ColorWriteMask) {
-        error_list.push_back("VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3ColorWriteMask");
+        error_list.push_back("Missing feature VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3ColorWriteMask");
     }
     if (requested.extendedDynamicState3RasterizationStream && !supported.extendedDynamicState3RasterizationStream) {
-        error_list.push_back("VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3RasterizationStream");
+        error_list.push_back("Missing feature VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3RasterizationStream");
     }
     if (requested.extendedDynamicState3ConservativeRasterizationMode && !supported.extendedDynamicState3ConservativeRasterizationMode) {
-        error_list.push_back("VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3ConservativeRasterizationMode");
+        error_list.push_back("Missing feature VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3ConservativeRasterizationMode");
     }
     if (requested.extendedDynamicState3ExtraPrimitiveOverestimationSize && !supported.extendedDynamicState3ExtraPrimitiveOverestimationSize) {
-        error_list.push_back("VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3ExtraPrimitiveOverestimationSize");
+        error_list.push_back("Missing feature VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3ExtraPrimitiveOverestimationSize");
     }
     if (requested.extendedDynamicState3DepthClipEnable && !supported.extendedDynamicState3DepthClipEnable) {
-        error_list.push_back("VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3DepthClipEnable");
+        error_list.push_back("Missing feature VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3DepthClipEnable");
     }
     if (requested.extendedDynamicState3SampleLocationsEnable && !supported.extendedDynamicState3SampleLocationsEnable) {
-        error_list.push_back("VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3SampleLocationsEnable");
+        error_list.push_back("Missing feature VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3SampleLocationsEnable");
     }
     if (requested.extendedDynamicState3ColorBlendAdvanced && !supported.extendedDynamicState3ColorBlendAdvanced) {
-        error_list.push_back("VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3ColorBlendAdvanced");
+        error_list.push_back("Missing feature VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3ColorBlendAdvanced");
     }
     if (requested.extendedDynamicState3ProvokingVertexMode && !supported.extendedDynamicState3ProvokingVertexMode) {
-        error_list.push_back("VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3ProvokingVertexMode");
+        error_list.push_back("Missing feature VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3ProvokingVertexMode");
     }
     if (requested.extendedDynamicState3LineRasterizationMode && !supported.extendedDynamicState3LineRasterizationMode) {
-        error_list.push_back("VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3LineRasterizationMode");
+        error_list.push_back("Missing feature VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3LineRasterizationMode");
     }
     if (requested.extendedDynamicState3LineStippleEnable && !supported.extendedDynamicState3LineStippleEnable) {
-        error_list.push_back("VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3LineStippleEnable");
+        error_list.push_back("Missing feature VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3LineStippleEnable");
     }
     if (requested.extendedDynamicState3DepthClipNegativeOneToOne && !supported.extendedDynamicState3DepthClipNegativeOneToOne) {
-        error_list.push_back("VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3DepthClipNegativeOneToOne");
+        error_list.push_back("Missing feature VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3DepthClipNegativeOneToOne");
     }
     if (requested.extendedDynamicState3ViewportWScalingEnable && !supported.extendedDynamicState3ViewportWScalingEnable) {
-        error_list.push_back("VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3ViewportWScalingEnable");
+        error_list.push_back("Missing feature VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3ViewportWScalingEnable");
     }
     if (requested.extendedDynamicState3ViewportSwizzle && !supported.extendedDynamicState3ViewportSwizzle) {
-        error_list.push_back("VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3ViewportSwizzle");
+        error_list.push_back("Missing feature VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3ViewportSwizzle");
     }
     if (requested.extendedDynamicState3CoverageToColorEnable && !supported.extendedDynamicState3CoverageToColorEnable) {
-        error_list.push_back("VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3CoverageToColorEnable");
+        error_list.push_back("Missing feature VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3CoverageToColorEnable");
     }
     if (requested.extendedDynamicState3CoverageToColorLocation && !supported.extendedDynamicState3CoverageToColorLocation) {
-        error_list.push_back("VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3CoverageToColorLocation");
+        error_list.push_back("Missing feature VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3CoverageToColorLocation");
     }
     if (requested.extendedDynamicState3CoverageModulationMode && !supported.extendedDynamicState3CoverageModulationMode) {
-        error_list.push_back("VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3CoverageModulationMode");
+        error_list.push_back("Missing feature VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3CoverageModulationMode");
     }
     if (requested.extendedDynamicState3CoverageModulationTableEnable && !supported.extendedDynamicState3CoverageModulationTableEnable) {
-        error_list.push_back("VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3CoverageModulationTableEnable");
+        error_list.push_back("Missing feature VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3CoverageModulationTableEnable");
     }
     if (requested.extendedDynamicState3CoverageModulationTable && !supported.extendedDynamicState3CoverageModulationTable) {
-        error_list.push_back("VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3CoverageModulationTable");
+        error_list.push_back("Missing feature VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3CoverageModulationTable");
     }
     if (requested.extendedDynamicState3CoverageReductionMode && !supported.extendedDynamicState3CoverageReductionMode) {
-        error_list.push_back("VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3CoverageReductionMode");
+        error_list.push_back("Missing feature VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3CoverageReductionMode");
     }
     if (requested.extendedDynamicState3RepresentativeFragmentTestEnable && !supported.extendedDynamicState3RepresentativeFragmentTestEnable) {
-        error_list.push_back("VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3RepresentativeFragmentTestEnable");
+        error_list.push_back("Missing feature VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3RepresentativeFragmentTestEnable");
     }
     if (requested.extendedDynamicState3ShadingRateImageEnable && !supported.extendedDynamicState3ShadingRateImageEnable) {
-        error_list.push_back("VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3ShadingRateImageEnable");
+        error_list.push_back("Missing feature VkPhysicalDeviceExtendedDynamicState3FeaturesEXT::extendedDynamicState3ShadingRateImageEnable");
     }
 }
 void merge_VkPhysicalDeviceExtendedDynamicState3FeaturesEXT(VkPhysicalDeviceExtendedDynamicState3FeaturesEXT & current, VkPhysicalDeviceExtendedDynamicState3FeaturesEXT const& merge_in) {
@@ -2771,7 +2771,7 @@ void merge_VkPhysicalDeviceExtendedDynamicState3FeaturesEXT(VkPhysicalDeviceExte
 }
 void compare_VkPhysicalDeviceSubpassMergeFeedbackFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceSubpassMergeFeedbackFeaturesEXT const& supported, VkPhysicalDeviceSubpassMergeFeedbackFeaturesEXT const& requested) {
     if (requested.subpassMergeFeedback && !supported.subpassMergeFeedback) {
-        error_list.push_back("VkPhysicalDeviceSubpassMergeFeedbackFeaturesEXT::subpassMergeFeedback");
+        error_list.push_back("Missing feature VkPhysicalDeviceSubpassMergeFeedbackFeaturesEXT::subpassMergeFeedback");
     }
 }
 void merge_VkPhysicalDeviceSubpassMergeFeedbackFeaturesEXT(VkPhysicalDeviceSubpassMergeFeedbackFeaturesEXT & current, VkPhysicalDeviceSubpassMergeFeedbackFeaturesEXT const& merge_in) {
@@ -2779,22 +2779,22 @@ void merge_VkPhysicalDeviceSubpassMergeFeedbackFeaturesEXT(VkPhysicalDeviceSubpa
 }
 void compare_VkPhysicalDeviceTensorFeaturesARM(std::vector<std::string> & error_list, VkPhysicalDeviceTensorFeaturesARM const& supported, VkPhysicalDeviceTensorFeaturesARM const& requested) {
     if (requested.tensorNonPacked && !supported.tensorNonPacked) {
-        error_list.push_back("VkPhysicalDeviceTensorFeaturesARM::tensorNonPacked");
+        error_list.push_back("Missing feature VkPhysicalDeviceTensorFeaturesARM::tensorNonPacked");
     }
     if (requested.shaderTensorAccess && !supported.shaderTensorAccess) {
-        error_list.push_back("VkPhysicalDeviceTensorFeaturesARM::shaderTensorAccess");
+        error_list.push_back("Missing feature VkPhysicalDeviceTensorFeaturesARM::shaderTensorAccess");
     }
     if (requested.shaderStorageTensorArrayDynamicIndexing && !supported.shaderStorageTensorArrayDynamicIndexing) {
-        error_list.push_back("VkPhysicalDeviceTensorFeaturesARM::shaderStorageTensorArrayDynamicIndexing");
+        error_list.push_back("Missing feature VkPhysicalDeviceTensorFeaturesARM::shaderStorageTensorArrayDynamicIndexing");
     }
     if (requested.shaderStorageTensorArrayNonUniformIndexing && !supported.shaderStorageTensorArrayNonUniformIndexing) {
-        error_list.push_back("VkPhysicalDeviceTensorFeaturesARM::shaderStorageTensorArrayNonUniformIndexing");
+        error_list.push_back("Missing feature VkPhysicalDeviceTensorFeaturesARM::shaderStorageTensorArrayNonUniformIndexing");
     }
     if (requested.descriptorBindingStorageTensorUpdateAfterBind && !supported.descriptorBindingStorageTensorUpdateAfterBind) {
-        error_list.push_back("VkPhysicalDeviceTensorFeaturesARM::descriptorBindingStorageTensorUpdateAfterBind");
+        error_list.push_back("Missing feature VkPhysicalDeviceTensorFeaturesARM::descriptorBindingStorageTensorUpdateAfterBind");
     }
     if (requested.tensors && !supported.tensors) {
-        error_list.push_back("VkPhysicalDeviceTensorFeaturesARM::tensors");
+        error_list.push_back("Missing feature VkPhysicalDeviceTensorFeaturesARM::tensors");
     }
 }
 void merge_VkPhysicalDeviceTensorFeaturesARM(VkPhysicalDeviceTensorFeaturesARM & current, VkPhysicalDeviceTensorFeaturesARM const& merge_in) {
@@ -2807,7 +2807,7 @@ void merge_VkPhysicalDeviceTensorFeaturesARM(VkPhysicalDeviceTensorFeaturesARM &
 }
 void compare_VkPhysicalDeviceDescriptorBufferTensorFeaturesARM(std::vector<std::string> & error_list, VkPhysicalDeviceDescriptorBufferTensorFeaturesARM const& supported, VkPhysicalDeviceDescriptorBufferTensorFeaturesARM const& requested) {
     if (requested.descriptorBufferTensorDescriptors && !supported.descriptorBufferTensorDescriptors) {
-        error_list.push_back("VkPhysicalDeviceDescriptorBufferTensorFeaturesARM::descriptorBufferTensorDescriptors");
+        error_list.push_back("Missing feature VkPhysicalDeviceDescriptorBufferTensorFeaturesARM::descriptorBufferTensorDescriptors");
     }
 }
 void merge_VkPhysicalDeviceDescriptorBufferTensorFeaturesARM(VkPhysicalDeviceDescriptorBufferTensorFeaturesARM & current, VkPhysicalDeviceDescriptorBufferTensorFeaturesARM const& merge_in) {
@@ -2815,7 +2815,7 @@ void merge_VkPhysicalDeviceDescriptorBufferTensorFeaturesARM(VkPhysicalDeviceDes
 }
 void compare_VkPhysicalDeviceShaderModuleIdentifierFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceShaderModuleIdentifierFeaturesEXT const& supported, VkPhysicalDeviceShaderModuleIdentifierFeaturesEXT const& requested) {
     if (requested.shaderModuleIdentifier && !supported.shaderModuleIdentifier) {
-        error_list.push_back("VkPhysicalDeviceShaderModuleIdentifierFeaturesEXT::shaderModuleIdentifier");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderModuleIdentifierFeaturesEXT::shaderModuleIdentifier");
     }
 }
 void merge_VkPhysicalDeviceShaderModuleIdentifierFeaturesEXT(VkPhysicalDeviceShaderModuleIdentifierFeaturesEXT & current, VkPhysicalDeviceShaderModuleIdentifierFeaturesEXT const& merge_in) {
@@ -2823,7 +2823,7 @@ void merge_VkPhysicalDeviceShaderModuleIdentifierFeaturesEXT(VkPhysicalDeviceSha
 }
 void compare_VkPhysicalDeviceOpticalFlowFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceOpticalFlowFeaturesNV const& supported, VkPhysicalDeviceOpticalFlowFeaturesNV const& requested) {
     if (requested.opticalFlow && !supported.opticalFlow) {
-        error_list.push_back("VkPhysicalDeviceOpticalFlowFeaturesNV::opticalFlow");
+        error_list.push_back("Missing feature VkPhysicalDeviceOpticalFlowFeaturesNV::opticalFlow");
     }
 }
 void merge_VkPhysicalDeviceOpticalFlowFeaturesNV(VkPhysicalDeviceOpticalFlowFeaturesNV & current, VkPhysicalDeviceOpticalFlowFeaturesNV const& merge_in) {
@@ -2831,7 +2831,7 @@ void merge_VkPhysicalDeviceOpticalFlowFeaturesNV(VkPhysicalDeviceOpticalFlowFeat
 }
 void compare_VkPhysicalDeviceLegacyDitheringFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceLegacyDitheringFeaturesEXT const& supported, VkPhysicalDeviceLegacyDitheringFeaturesEXT const& requested) {
     if (requested.legacyDithering && !supported.legacyDithering) {
-        error_list.push_back("VkPhysicalDeviceLegacyDitheringFeaturesEXT::legacyDithering");
+        error_list.push_back("Missing feature VkPhysicalDeviceLegacyDitheringFeaturesEXT::legacyDithering");
     }
 }
 void merge_VkPhysicalDeviceLegacyDitheringFeaturesEXT(VkPhysicalDeviceLegacyDitheringFeaturesEXT & current, VkPhysicalDeviceLegacyDitheringFeaturesEXT const& merge_in) {
@@ -2840,7 +2840,7 @@ void merge_VkPhysicalDeviceLegacyDitheringFeaturesEXT(VkPhysicalDeviceLegacyDith
 #if defined(VK_USE_PLATFORM_ANDROID_KHR)
 void compare_VkPhysicalDeviceExternalFormatResolveFeaturesANDROID(std::vector<std::string> & error_list, VkPhysicalDeviceExternalFormatResolveFeaturesANDROID const& supported, VkPhysicalDeviceExternalFormatResolveFeaturesANDROID const& requested) {
     if (requested.externalFormatResolve && !supported.externalFormatResolve) {
-        error_list.push_back("VkPhysicalDeviceExternalFormatResolveFeaturesANDROID::externalFormatResolve");
+        error_list.push_back("Missing feature VkPhysicalDeviceExternalFormatResolveFeaturesANDROID::externalFormatResolve");
     }
 }
 void merge_VkPhysicalDeviceExternalFormatResolveFeaturesANDROID(VkPhysicalDeviceExternalFormatResolveFeaturesANDROID & current, VkPhysicalDeviceExternalFormatResolveFeaturesANDROID const& merge_in) {
@@ -2849,7 +2849,7 @@ void merge_VkPhysicalDeviceExternalFormatResolveFeaturesANDROID(VkPhysicalDevice
 #endif // defined(VK_USE_PLATFORM_ANDROID_KHR)
 void compare_VkPhysicalDeviceAntiLagFeaturesAMD(std::vector<std::string> & error_list, VkPhysicalDeviceAntiLagFeaturesAMD const& supported, VkPhysicalDeviceAntiLagFeaturesAMD const& requested) {
     if (requested.antiLag && !supported.antiLag) {
-        error_list.push_back("VkPhysicalDeviceAntiLagFeaturesAMD::antiLag");
+        error_list.push_back("Missing feature VkPhysicalDeviceAntiLagFeaturesAMD::antiLag");
     }
 }
 void merge_VkPhysicalDeviceAntiLagFeaturesAMD(VkPhysicalDeviceAntiLagFeaturesAMD & current, VkPhysicalDeviceAntiLagFeaturesAMD const& merge_in) {
@@ -2858,7 +2858,7 @@ void merge_VkPhysicalDeviceAntiLagFeaturesAMD(VkPhysicalDeviceAntiLagFeaturesAMD
 #if defined(VK_ENABLE_BETA_EXTENSIONS)
 void compare_VkPhysicalDeviceDenseGeometryFormatFeaturesAMDX(std::vector<std::string> & error_list, VkPhysicalDeviceDenseGeometryFormatFeaturesAMDX const& supported, VkPhysicalDeviceDenseGeometryFormatFeaturesAMDX const& requested) {
     if (requested.denseGeometryFormat && !supported.denseGeometryFormat) {
-        error_list.push_back("VkPhysicalDeviceDenseGeometryFormatFeaturesAMDX::denseGeometryFormat");
+        error_list.push_back("Missing feature VkPhysicalDeviceDenseGeometryFormatFeaturesAMDX::denseGeometryFormat");
     }
 }
 void merge_VkPhysicalDeviceDenseGeometryFormatFeaturesAMDX(VkPhysicalDeviceDenseGeometryFormatFeaturesAMDX & current, VkPhysicalDeviceDenseGeometryFormatFeaturesAMDX const& merge_in) {
@@ -2867,7 +2867,7 @@ void merge_VkPhysicalDeviceDenseGeometryFormatFeaturesAMDX(VkPhysicalDeviceDense
 #endif // defined(VK_ENABLE_BETA_EXTENSIONS)
 void compare_VkPhysicalDeviceShaderObjectFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceShaderObjectFeaturesEXT const& supported, VkPhysicalDeviceShaderObjectFeaturesEXT const& requested) {
     if (requested.shaderObject && !supported.shaderObject) {
-        error_list.push_back("VkPhysicalDeviceShaderObjectFeaturesEXT::shaderObject");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderObjectFeaturesEXT::shaderObject");
     }
 }
 void merge_VkPhysicalDeviceShaderObjectFeaturesEXT(VkPhysicalDeviceShaderObjectFeaturesEXT & current, VkPhysicalDeviceShaderObjectFeaturesEXT const& merge_in) {
@@ -2875,7 +2875,7 @@ void merge_VkPhysicalDeviceShaderObjectFeaturesEXT(VkPhysicalDeviceShaderObjectF
 }
 void compare_VkPhysicalDeviceTilePropertiesFeaturesQCOM(std::vector<std::string> & error_list, VkPhysicalDeviceTilePropertiesFeaturesQCOM const& supported, VkPhysicalDeviceTilePropertiesFeaturesQCOM const& requested) {
     if (requested.tileProperties && !supported.tileProperties) {
-        error_list.push_back("VkPhysicalDeviceTilePropertiesFeaturesQCOM::tileProperties");
+        error_list.push_back("Missing feature VkPhysicalDeviceTilePropertiesFeaturesQCOM::tileProperties");
     }
 }
 void merge_VkPhysicalDeviceTilePropertiesFeaturesQCOM(VkPhysicalDeviceTilePropertiesFeaturesQCOM & current, VkPhysicalDeviceTilePropertiesFeaturesQCOM const& merge_in) {
@@ -2883,7 +2883,7 @@ void merge_VkPhysicalDeviceTilePropertiesFeaturesQCOM(VkPhysicalDeviceTileProper
 }
 void compare_VkPhysicalDeviceAmigoProfilingFeaturesSEC(std::vector<std::string> & error_list, VkPhysicalDeviceAmigoProfilingFeaturesSEC const& supported, VkPhysicalDeviceAmigoProfilingFeaturesSEC const& requested) {
     if (requested.amigoProfiling && !supported.amigoProfiling) {
-        error_list.push_back("VkPhysicalDeviceAmigoProfilingFeaturesSEC::amigoProfiling");
+        error_list.push_back("Missing feature VkPhysicalDeviceAmigoProfilingFeaturesSEC::amigoProfiling");
     }
 }
 void merge_VkPhysicalDeviceAmigoProfilingFeaturesSEC(VkPhysicalDeviceAmigoProfilingFeaturesSEC & current, VkPhysicalDeviceAmigoProfilingFeaturesSEC const& merge_in) {
@@ -2891,7 +2891,7 @@ void merge_VkPhysicalDeviceAmigoProfilingFeaturesSEC(VkPhysicalDeviceAmigoProfil
 }
 void compare_VkPhysicalDeviceMultiviewPerViewViewportsFeaturesQCOM(std::vector<std::string> & error_list, VkPhysicalDeviceMultiviewPerViewViewportsFeaturesQCOM const& supported, VkPhysicalDeviceMultiviewPerViewViewportsFeaturesQCOM const& requested) {
     if (requested.multiviewPerViewViewports && !supported.multiviewPerViewViewports) {
-        error_list.push_back("VkPhysicalDeviceMultiviewPerViewViewportsFeaturesQCOM::multiviewPerViewViewports");
+        error_list.push_back("Missing feature VkPhysicalDeviceMultiviewPerViewViewportsFeaturesQCOM::multiviewPerViewViewports");
     }
 }
 void merge_VkPhysicalDeviceMultiviewPerViewViewportsFeaturesQCOM(VkPhysicalDeviceMultiviewPerViewViewportsFeaturesQCOM & current, VkPhysicalDeviceMultiviewPerViewViewportsFeaturesQCOM const& merge_in) {
@@ -2899,7 +2899,7 @@ void merge_VkPhysicalDeviceMultiviewPerViewViewportsFeaturesQCOM(VkPhysicalDevic
 }
 void compare_VkPhysicalDeviceRayTracingInvocationReorderFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceRayTracingInvocationReorderFeaturesNV const& supported, VkPhysicalDeviceRayTracingInvocationReorderFeaturesNV const& requested) {
     if (requested.rayTracingInvocationReorder && !supported.rayTracingInvocationReorder) {
-        error_list.push_back("VkPhysicalDeviceRayTracingInvocationReorderFeaturesNV::rayTracingInvocationReorder");
+        error_list.push_back("Missing feature VkPhysicalDeviceRayTracingInvocationReorderFeaturesNV::rayTracingInvocationReorder");
     }
 }
 void merge_VkPhysicalDeviceRayTracingInvocationReorderFeaturesNV(VkPhysicalDeviceRayTracingInvocationReorderFeaturesNV & current, VkPhysicalDeviceRayTracingInvocationReorderFeaturesNV const& merge_in) {
@@ -2907,10 +2907,10 @@ void merge_VkPhysicalDeviceRayTracingInvocationReorderFeaturesNV(VkPhysicalDevic
 }
 void compare_VkPhysicalDeviceCooperativeVectorFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceCooperativeVectorFeaturesNV const& supported, VkPhysicalDeviceCooperativeVectorFeaturesNV const& requested) {
     if (requested.cooperativeVector && !supported.cooperativeVector) {
-        error_list.push_back("VkPhysicalDeviceCooperativeVectorFeaturesNV::cooperativeVector");
+        error_list.push_back("Missing feature VkPhysicalDeviceCooperativeVectorFeaturesNV::cooperativeVector");
     }
     if (requested.cooperativeVectorTraining && !supported.cooperativeVectorTraining) {
-        error_list.push_back("VkPhysicalDeviceCooperativeVectorFeaturesNV::cooperativeVectorTraining");
+        error_list.push_back("Missing feature VkPhysicalDeviceCooperativeVectorFeaturesNV::cooperativeVectorTraining");
     }
 }
 void merge_VkPhysicalDeviceCooperativeVectorFeaturesNV(VkPhysicalDeviceCooperativeVectorFeaturesNV & current, VkPhysicalDeviceCooperativeVectorFeaturesNV const& merge_in) {
@@ -2919,7 +2919,7 @@ void merge_VkPhysicalDeviceCooperativeVectorFeaturesNV(VkPhysicalDeviceCooperati
 }
 void compare_VkPhysicalDeviceExtendedSparseAddressSpaceFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceExtendedSparseAddressSpaceFeaturesNV const& supported, VkPhysicalDeviceExtendedSparseAddressSpaceFeaturesNV const& requested) {
     if (requested.extendedSparseAddressSpace && !supported.extendedSparseAddressSpace) {
-        error_list.push_back("VkPhysicalDeviceExtendedSparseAddressSpaceFeaturesNV::extendedSparseAddressSpace");
+        error_list.push_back("Missing feature VkPhysicalDeviceExtendedSparseAddressSpaceFeaturesNV::extendedSparseAddressSpace");
     }
 }
 void merge_VkPhysicalDeviceExtendedSparseAddressSpaceFeaturesNV(VkPhysicalDeviceExtendedSparseAddressSpaceFeaturesNV & current, VkPhysicalDeviceExtendedSparseAddressSpaceFeaturesNV const& merge_in) {
@@ -2927,7 +2927,7 @@ void merge_VkPhysicalDeviceExtendedSparseAddressSpaceFeaturesNV(VkPhysicalDevice
 }
 void compare_VkPhysicalDeviceLegacyVertexAttributesFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceLegacyVertexAttributesFeaturesEXT const& supported, VkPhysicalDeviceLegacyVertexAttributesFeaturesEXT const& requested) {
     if (requested.legacyVertexAttributes && !supported.legacyVertexAttributes) {
-        error_list.push_back("VkPhysicalDeviceLegacyVertexAttributesFeaturesEXT::legacyVertexAttributes");
+        error_list.push_back("Missing feature VkPhysicalDeviceLegacyVertexAttributesFeaturesEXT::legacyVertexAttributes");
     }
 }
 void merge_VkPhysicalDeviceLegacyVertexAttributesFeaturesEXT(VkPhysicalDeviceLegacyVertexAttributesFeaturesEXT & current, VkPhysicalDeviceLegacyVertexAttributesFeaturesEXT const& merge_in) {
@@ -2935,7 +2935,7 @@ void merge_VkPhysicalDeviceLegacyVertexAttributesFeaturesEXT(VkPhysicalDeviceLeg
 }
 void compare_VkPhysicalDeviceShaderCoreBuiltinsFeaturesARM(std::vector<std::string> & error_list, VkPhysicalDeviceShaderCoreBuiltinsFeaturesARM const& supported, VkPhysicalDeviceShaderCoreBuiltinsFeaturesARM const& requested) {
     if (requested.shaderCoreBuiltins && !supported.shaderCoreBuiltins) {
-        error_list.push_back("VkPhysicalDeviceShaderCoreBuiltinsFeaturesARM::shaderCoreBuiltins");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderCoreBuiltinsFeaturesARM::shaderCoreBuiltins");
     }
 }
 void merge_VkPhysicalDeviceShaderCoreBuiltinsFeaturesARM(VkPhysicalDeviceShaderCoreBuiltinsFeaturesARM & current, VkPhysicalDeviceShaderCoreBuiltinsFeaturesARM const& merge_in) {
@@ -2943,7 +2943,7 @@ void merge_VkPhysicalDeviceShaderCoreBuiltinsFeaturesARM(VkPhysicalDeviceShaderC
 }
 void compare_VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT const& supported, VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT const& requested) {
     if (requested.pipelineLibraryGroupHandles && !supported.pipelineLibraryGroupHandles) {
-        error_list.push_back("VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT::pipelineLibraryGroupHandles");
+        error_list.push_back("Missing feature VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT::pipelineLibraryGroupHandles");
     }
 }
 void merge_VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT(VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT & current, VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT const& merge_in) {
@@ -2951,7 +2951,7 @@ void merge_VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT(VkPhysicalDevi
 }
 void compare_VkPhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT const& supported, VkPhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT const& requested) {
     if (requested.dynamicRenderingUnusedAttachments && !supported.dynamicRenderingUnusedAttachments) {
-        error_list.push_back("VkPhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT::dynamicRenderingUnusedAttachments");
+        error_list.push_back("Missing feature VkPhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT::dynamicRenderingUnusedAttachments");
     }
 }
 void merge_VkPhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT(VkPhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT & current, VkPhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT const& merge_in) {
@@ -2959,19 +2959,19 @@ void merge_VkPhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT(VkPhysic
 }
 void compare_VkPhysicalDeviceDataGraphFeaturesARM(std::vector<std::string> & error_list, VkPhysicalDeviceDataGraphFeaturesARM const& supported, VkPhysicalDeviceDataGraphFeaturesARM const& requested) {
     if (requested.dataGraph && !supported.dataGraph) {
-        error_list.push_back("VkPhysicalDeviceDataGraphFeaturesARM::dataGraph");
+        error_list.push_back("Missing feature VkPhysicalDeviceDataGraphFeaturesARM::dataGraph");
     }
     if (requested.dataGraphUpdateAfterBind && !supported.dataGraphUpdateAfterBind) {
-        error_list.push_back("VkPhysicalDeviceDataGraphFeaturesARM::dataGraphUpdateAfterBind");
+        error_list.push_back("Missing feature VkPhysicalDeviceDataGraphFeaturesARM::dataGraphUpdateAfterBind");
     }
     if (requested.dataGraphSpecializationConstants && !supported.dataGraphSpecializationConstants) {
-        error_list.push_back("VkPhysicalDeviceDataGraphFeaturesARM::dataGraphSpecializationConstants");
+        error_list.push_back("Missing feature VkPhysicalDeviceDataGraphFeaturesARM::dataGraphSpecializationConstants");
     }
     if (requested.dataGraphDescriptorBuffer && !supported.dataGraphDescriptorBuffer) {
-        error_list.push_back("VkPhysicalDeviceDataGraphFeaturesARM::dataGraphDescriptorBuffer");
+        error_list.push_back("Missing feature VkPhysicalDeviceDataGraphFeaturesARM::dataGraphDescriptorBuffer");
     }
     if (requested.dataGraphShaderModule && !supported.dataGraphShaderModule) {
-        error_list.push_back("VkPhysicalDeviceDataGraphFeaturesARM::dataGraphShaderModule");
+        error_list.push_back("Missing feature VkPhysicalDeviceDataGraphFeaturesARM::dataGraphShaderModule");
     }
 }
 void merge_VkPhysicalDeviceDataGraphFeaturesARM(VkPhysicalDeviceDataGraphFeaturesARM & current, VkPhysicalDeviceDataGraphFeaturesARM const& merge_in) {
@@ -2983,7 +2983,7 @@ void merge_VkPhysicalDeviceDataGraphFeaturesARM(VkPhysicalDeviceDataGraphFeature
 }
 void compare_VkPhysicalDeviceMultiviewPerViewRenderAreasFeaturesQCOM(std::vector<std::string> & error_list, VkPhysicalDeviceMultiviewPerViewRenderAreasFeaturesQCOM const& supported, VkPhysicalDeviceMultiviewPerViewRenderAreasFeaturesQCOM const& requested) {
     if (requested.multiviewPerViewRenderAreas && !supported.multiviewPerViewRenderAreas) {
-        error_list.push_back("VkPhysicalDeviceMultiviewPerViewRenderAreasFeaturesQCOM::multiviewPerViewRenderAreas");
+        error_list.push_back("Missing feature VkPhysicalDeviceMultiviewPerViewRenderAreasFeaturesQCOM::multiviewPerViewRenderAreas");
     }
 }
 void merge_VkPhysicalDeviceMultiviewPerViewRenderAreasFeaturesQCOM(VkPhysicalDeviceMultiviewPerViewRenderAreasFeaturesQCOM & current, VkPhysicalDeviceMultiviewPerViewRenderAreasFeaturesQCOM const& merge_in) {
@@ -2991,10 +2991,10 @@ void merge_VkPhysicalDeviceMultiviewPerViewRenderAreasFeaturesQCOM(VkPhysicalDev
 }
 void compare_VkPhysicalDevicePerStageDescriptorSetFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDevicePerStageDescriptorSetFeaturesNV const& supported, VkPhysicalDevicePerStageDescriptorSetFeaturesNV const& requested) {
     if (requested.perStageDescriptorSet && !supported.perStageDescriptorSet) {
-        error_list.push_back("VkPhysicalDevicePerStageDescriptorSetFeaturesNV::perStageDescriptorSet");
+        error_list.push_back("Missing feature VkPhysicalDevicePerStageDescriptorSetFeaturesNV::perStageDescriptorSet");
     }
     if (requested.dynamicPipelineLayout && !supported.dynamicPipelineLayout) {
-        error_list.push_back("VkPhysicalDevicePerStageDescriptorSetFeaturesNV::dynamicPipelineLayout");
+        error_list.push_back("Missing feature VkPhysicalDevicePerStageDescriptorSetFeaturesNV::dynamicPipelineLayout");
     }
 }
 void merge_VkPhysicalDevicePerStageDescriptorSetFeaturesNV(VkPhysicalDevicePerStageDescriptorSetFeaturesNV & current, VkPhysicalDevicePerStageDescriptorSetFeaturesNV const& merge_in) {
@@ -3003,7 +3003,7 @@ void merge_VkPhysicalDevicePerStageDescriptorSetFeaturesNV(VkPhysicalDevicePerSt
 }
 void compare_VkPhysicalDeviceImageProcessing2FeaturesQCOM(std::vector<std::string> & error_list, VkPhysicalDeviceImageProcessing2FeaturesQCOM const& supported, VkPhysicalDeviceImageProcessing2FeaturesQCOM const& requested) {
     if (requested.textureBlockMatch2 && !supported.textureBlockMatch2) {
-        error_list.push_back("VkPhysicalDeviceImageProcessing2FeaturesQCOM::textureBlockMatch2");
+        error_list.push_back("Missing feature VkPhysicalDeviceImageProcessing2FeaturesQCOM::textureBlockMatch2");
     }
 }
 void merge_VkPhysicalDeviceImageProcessing2FeaturesQCOM(VkPhysicalDeviceImageProcessing2FeaturesQCOM & current, VkPhysicalDeviceImageProcessing2FeaturesQCOM const& merge_in) {
@@ -3011,7 +3011,7 @@ void merge_VkPhysicalDeviceImageProcessing2FeaturesQCOM(VkPhysicalDeviceImagePro
 }
 void compare_VkPhysicalDeviceCubicWeightsFeaturesQCOM(std::vector<std::string> & error_list, VkPhysicalDeviceCubicWeightsFeaturesQCOM const& supported, VkPhysicalDeviceCubicWeightsFeaturesQCOM const& requested) {
     if (requested.selectableCubicWeights && !supported.selectableCubicWeights) {
-        error_list.push_back("VkPhysicalDeviceCubicWeightsFeaturesQCOM::selectableCubicWeights");
+        error_list.push_back("Missing feature VkPhysicalDeviceCubicWeightsFeaturesQCOM::selectableCubicWeights");
     }
 }
 void merge_VkPhysicalDeviceCubicWeightsFeaturesQCOM(VkPhysicalDeviceCubicWeightsFeaturesQCOM & current, VkPhysicalDeviceCubicWeightsFeaturesQCOM const& merge_in) {
@@ -3019,7 +3019,7 @@ void merge_VkPhysicalDeviceCubicWeightsFeaturesQCOM(VkPhysicalDeviceCubicWeights
 }
 void compare_VkPhysicalDeviceYcbcrDegammaFeaturesQCOM(std::vector<std::string> & error_list, VkPhysicalDeviceYcbcrDegammaFeaturesQCOM const& supported, VkPhysicalDeviceYcbcrDegammaFeaturesQCOM const& requested) {
     if (requested.ycbcrDegamma && !supported.ycbcrDegamma) {
-        error_list.push_back("VkPhysicalDeviceYcbcrDegammaFeaturesQCOM::ycbcrDegamma");
+        error_list.push_back("Missing feature VkPhysicalDeviceYcbcrDegammaFeaturesQCOM::ycbcrDegamma");
     }
 }
 void merge_VkPhysicalDeviceYcbcrDegammaFeaturesQCOM(VkPhysicalDeviceYcbcrDegammaFeaturesQCOM & current, VkPhysicalDeviceYcbcrDegammaFeaturesQCOM const& merge_in) {
@@ -3027,7 +3027,7 @@ void merge_VkPhysicalDeviceYcbcrDegammaFeaturesQCOM(VkPhysicalDeviceYcbcrDegamma
 }
 void compare_VkPhysicalDeviceCubicClampFeaturesQCOM(std::vector<std::string> & error_list, VkPhysicalDeviceCubicClampFeaturesQCOM const& supported, VkPhysicalDeviceCubicClampFeaturesQCOM const& requested) {
     if (requested.cubicRangeClamp && !supported.cubicRangeClamp) {
-        error_list.push_back("VkPhysicalDeviceCubicClampFeaturesQCOM::cubicRangeClamp");
+        error_list.push_back("Missing feature VkPhysicalDeviceCubicClampFeaturesQCOM::cubicRangeClamp");
     }
 }
 void merge_VkPhysicalDeviceCubicClampFeaturesQCOM(VkPhysicalDeviceCubicClampFeaturesQCOM & current, VkPhysicalDeviceCubicClampFeaturesQCOM const& merge_in) {
@@ -3035,7 +3035,7 @@ void merge_VkPhysicalDeviceCubicClampFeaturesQCOM(VkPhysicalDeviceCubicClampFeat
 }
 void compare_VkPhysicalDeviceAttachmentFeedbackLoopDynamicStateFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceAttachmentFeedbackLoopDynamicStateFeaturesEXT const& supported, VkPhysicalDeviceAttachmentFeedbackLoopDynamicStateFeaturesEXT const& requested) {
     if (requested.attachmentFeedbackLoopDynamicState && !supported.attachmentFeedbackLoopDynamicState) {
-        error_list.push_back("VkPhysicalDeviceAttachmentFeedbackLoopDynamicStateFeaturesEXT::attachmentFeedbackLoopDynamicState");
+        error_list.push_back("Missing feature VkPhysicalDeviceAttachmentFeedbackLoopDynamicStateFeaturesEXT::attachmentFeedbackLoopDynamicState");
     }
 }
 void merge_VkPhysicalDeviceAttachmentFeedbackLoopDynamicStateFeaturesEXT(VkPhysicalDeviceAttachmentFeedbackLoopDynamicStateFeaturesEXT & current, VkPhysicalDeviceAttachmentFeedbackLoopDynamicStateFeaturesEXT const& merge_in) {
@@ -3044,7 +3044,7 @@ void merge_VkPhysicalDeviceAttachmentFeedbackLoopDynamicStateFeaturesEXT(VkPhysi
 #if defined(VK_USE_PLATFORM_SCREEN_QNX)
 void compare_VkPhysicalDeviceExternalMemoryScreenBufferFeaturesQNX(std::vector<std::string> & error_list, VkPhysicalDeviceExternalMemoryScreenBufferFeaturesQNX const& supported, VkPhysicalDeviceExternalMemoryScreenBufferFeaturesQNX const& requested) {
     if (requested.screenBufferImport && !supported.screenBufferImport) {
-        error_list.push_back("VkPhysicalDeviceExternalMemoryScreenBufferFeaturesQNX::screenBufferImport");
+        error_list.push_back("Missing feature VkPhysicalDeviceExternalMemoryScreenBufferFeaturesQNX::screenBufferImport");
     }
 }
 void merge_VkPhysicalDeviceExternalMemoryScreenBufferFeaturesQNX(VkPhysicalDeviceExternalMemoryScreenBufferFeaturesQNX & current, VkPhysicalDeviceExternalMemoryScreenBufferFeaturesQNX const& merge_in) {
@@ -3053,7 +3053,7 @@ void merge_VkPhysicalDeviceExternalMemoryScreenBufferFeaturesQNX(VkPhysicalDevic
 #endif // defined(VK_USE_PLATFORM_SCREEN_QNX)
 void compare_VkPhysicalDeviceDescriptorPoolOverallocationFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceDescriptorPoolOverallocationFeaturesNV const& supported, VkPhysicalDeviceDescriptorPoolOverallocationFeaturesNV const& requested) {
     if (requested.descriptorPoolOverallocation && !supported.descriptorPoolOverallocation) {
-        error_list.push_back("VkPhysicalDeviceDescriptorPoolOverallocationFeaturesNV::descriptorPoolOverallocation");
+        error_list.push_back("Missing feature VkPhysicalDeviceDescriptorPoolOverallocationFeaturesNV::descriptorPoolOverallocation");
     }
 }
 void merge_VkPhysicalDeviceDescriptorPoolOverallocationFeaturesNV(VkPhysicalDeviceDescriptorPoolOverallocationFeaturesNV & current, VkPhysicalDeviceDescriptorPoolOverallocationFeaturesNV const& merge_in) {
@@ -3061,7 +3061,7 @@ void merge_VkPhysicalDeviceDescriptorPoolOverallocationFeaturesNV(VkPhysicalDevi
 }
 void compare_VkPhysicalDeviceTileMemoryHeapFeaturesQCOM(std::vector<std::string> & error_list, VkPhysicalDeviceTileMemoryHeapFeaturesQCOM const& supported, VkPhysicalDeviceTileMemoryHeapFeaturesQCOM const& requested) {
     if (requested.tileMemoryHeap && !supported.tileMemoryHeap) {
-        error_list.push_back("VkPhysicalDeviceTileMemoryHeapFeaturesQCOM::tileMemoryHeap");
+        error_list.push_back("Missing feature VkPhysicalDeviceTileMemoryHeapFeaturesQCOM::tileMemoryHeap");
     }
 }
 void merge_VkPhysicalDeviceTileMemoryHeapFeaturesQCOM(VkPhysicalDeviceTileMemoryHeapFeaturesQCOM & current, VkPhysicalDeviceTileMemoryHeapFeaturesQCOM const& merge_in) {
@@ -3069,7 +3069,7 @@ void merge_VkPhysicalDeviceTileMemoryHeapFeaturesQCOM(VkPhysicalDeviceTileMemory
 }
 void compare_VkPhysicalDeviceRawAccessChainsFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceRawAccessChainsFeaturesNV const& supported, VkPhysicalDeviceRawAccessChainsFeaturesNV const& requested) {
     if (requested.shaderRawAccessChains && !supported.shaderRawAccessChains) {
-        error_list.push_back("VkPhysicalDeviceRawAccessChainsFeaturesNV::shaderRawAccessChains");
+        error_list.push_back("Missing feature VkPhysicalDeviceRawAccessChainsFeaturesNV::shaderRawAccessChains");
     }
 }
 void merge_VkPhysicalDeviceRawAccessChainsFeaturesNV(VkPhysicalDeviceRawAccessChainsFeaturesNV & current, VkPhysicalDeviceRawAccessChainsFeaturesNV const& merge_in) {
@@ -3077,7 +3077,7 @@ void merge_VkPhysicalDeviceRawAccessChainsFeaturesNV(VkPhysicalDeviceRawAccessCh
 }
 void compare_VkPhysicalDeviceCommandBufferInheritanceFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceCommandBufferInheritanceFeaturesNV const& supported, VkPhysicalDeviceCommandBufferInheritanceFeaturesNV const& requested) {
     if (requested.commandBufferInheritance && !supported.commandBufferInheritance) {
-        error_list.push_back("VkPhysicalDeviceCommandBufferInheritanceFeaturesNV::commandBufferInheritance");
+        error_list.push_back("Missing feature VkPhysicalDeviceCommandBufferInheritanceFeaturesNV::commandBufferInheritance");
     }
 }
 void merge_VkPhysicalDeviceCommandBufferInheritanceFeaturesNV(VkPhysicalDeviceCommandBufferInheritanceFeaturesNV & current, VkPhysicalDeviceCommandBufferInheritanceFeaturesNV const& merge_in) {
@@ -3085,7 +3085,7 @@ void merge_VkPhysicalDeviceCommandBufferInheritanceFeaturesNV(VkPhysicalDeviceCo
 }
 void compare_VkPhysicalDeviceShaderAtomicFloat16VectorFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceShaderAtomicFloat16VectorFeaturesNV const& supported, VkPhysicalDeviceShaderAtomicFloat16VectorFeaturesNV const& requested) {
     if (requested.shaderFloat16VectorAtomics && !supported.shaderFloat16VectorAtomics) {
-        error_list.push_back("VkPhysicalDeviceShaderAtomicFloat16VectorFeaturesNV::shaderFloat16VectorAtomics");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderAtomicFloat16VectorFeaturesNV::shaderFloat16VectorAtomics");
     }
 }
 void merge_VkPhysicalDeviceShaderAtomicFloat16VectorFeaturesNV(VkPhysicalDeviceShaderAtomicFloat16VectorFeaturesNV & current, VkPhysicalDeviceShaderAtomicFloat16VectorFeaturesNV const& merge_in) {
@@ -3093,7 +3093,7 @@ void merge_VkPhysicalDeviceShaderAtomicFloat16VectorFeaturesNV(VkPhysicalDeviceS
 }
 void compare_VkPhysicalDeviceShaderReplicatedCompositesFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceShaderReplicatedCompositesFeaturesEXT const& supported, VkPhysicalDeviceShaderReplicatedCompositesFeaturesEXT const& requested) {
     if (requested.shaderReplicatedComposites && !supported.shaderReplicatedComposites) {
-        error_list.push_back("VkPhysicalDeviceShaderReplicatedCompositesFeaturesEXT::shaderReplicatedComposites");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderReplicatedCompositesFeaturesEXT::shaderReplicatedComposites");
     }
 }
 void merge_VkPhysicalDeviceShaderReplicatedCompositesFeaturesEXT(VkPhysicalDeviceShaderReplicatedCompositesFeaturesEXT & current, VkPhysicalDeviceShaderReplicatedCompositesFeaturesEXT const& merge_in) {
@@ -3101,10 +3101,10 @@ void merge_VkPhysicalDeviceShaderReplicatedCompositesFeaturesEXT(VkPhysicalDevic
 }
 void compare_VkPhysicalDeviceShaderFloat8FeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceShaderFloat8FeaturesEXT const& supported, VkPhysicalDeviceShaderFloat8FeaturesEXT const& requested) {
     if (requested.shaderFloat8 && !supported.shaderFloat8) {
-        error_list.push_back("VkPhysicalDeviceShaderFloat8FeaturesEXT::shaderFloat8");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderFloat8FeaturesEXT::shaderFloat8");
     }
     if (requested.shaderFloat8CooperativeMatrix && !supported.shaderFloat8CooperativeMatrix) {
-        error_list.push_back("VkPhysicalDeviceShaderFloat8FeaturesEXT::shaderFloat8CooperativeMatrix");
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderFloat8FeaturesEXT::shaderFloat8CooperativeMatrix");
     }
 }
 void merge_VkPhysicalDeviceShaderFloat8FeaturesEXT(VkPhysicalDeviceShaderFloat8FeaturesEXT & current, VkPhysicalDeviceShaderFloat8FeaturesEXT const& merge_in) {
@@ -3113,7 +3113,7 @@ void merge_VkPhysicalDeviceShaderFloat8FeaturesEXT(VkPhysicalDeviceShaderFloat8F
 }
 void compare_VkPhysicalDeviceRayTracingValidationFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceRayTracingValidationFeaturesNV const& supported, VkPhysicalDeviceRayTracingValidationFeaturesNV const& requested) {
     if (requested.rayTracingValidation && !supported.rayTracingValidation) {
-        error_list.push_back("VkPhysicalDeviceRayTracingValidationFeaturesNV::rayTracingValidation");
+        error_list.push_back("Missing feature VkPhysicalDeviceRayTracingValidationFeaturesNV::rayTracingValidation");
     }
 }
 void merge_VkPhysicalDeviceRayTracingValidationFeaturesNV(VkPhysicalDeviceRayTracingValidationFeaturesNV & current, VkPhysicalDeviceRayTracingValidationFeaturesNV const& merge_in) {
@@ -3121,7 +3121,7 @@ void merge_VkPhysicalDeviceRayTracingValidationFeaturesNV(VkPhysicalDeviceRayTra
 }
 void compare_VkPhysicalDeviceClusterAccelerationStructureFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceClusterAccelerationStructureFeaturesNV const& supported, VkPhysicalDeviceClusterAccelerationStructureFeaturesNV const& requested) {
     if (requested.clusterAccelerationStructure && !supported.clusterAccelerationStructure) {
-        error_list.push_back("VkPhysicalDeviceClusterAccelerationStructureFeaturesNV::clusterAccelerationStructure");
+        error_list.push_back("Missing feature VkPhysicalDeviceClusterAccelerationStructureFeaturesNV::clusterAccelerationStructure");
     }
 }
 void merge_VkPhysicalDeviceClusterAccelerationStructureFeaturesNV(VkPhysicalDeviceClusterAccelerationStructureFeaturesNV & current, VkPhysicalDeviceClusterAccelerationStructureFeaturesNV const& merge_in) {
@@ -3129,7 +3129,7 @@ void merge_VkPhysicalDeviceClusterAccelerationStructureFeaturesNV(VkPhysicalDevi
 }
 void compare_VkPhysicalDevicePartitionedAccelerationStructureFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDevicePartitionedAccelerationStructureFeaturesNV const& supported, VkPhysicalDevicePartitionedAccelerationStructureFeaturesNV const& requested) {
     if (requested.partitionedAccelerationStructure && !supported.partitionedAccelerationStructure) {
-        error_list.push_back("VkPhysicalDevicePartitionedAccelerationStructureFeaturesNV::partitionedAccelerationStructure");
+        error_list.push_back("Missing feature VkPhysicalDevicePartitionedAccelerationStructureFeaturesNV::partitionedAccelerationStructure");
     }
 }
 void merge_VkPhysicalDevicePartitionedAccelerationStructureFeaturesNV(VkPhysicalDevicePartitionedAccelerationStructureFeaturesNV & current, VkPhysicalDevicePartitionedAccelerationStructureFeaturesNV const& merge_in) {
@@ -3137,10 +3137,10 @@ void merge_VkPhysicalDevicePartitionedAccelerationStructureFeaturesNV(VkPhysical
 }
 void compare_VkPhysicalDeviceDeviceGeneratedCommandsFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceDeviceGeneratedCommandsFeaturesEXT const& supported, VkPhysicalDeviceDeviceGeneratedCommandsFeaturesEXT const& requested) {
     if (requested.deviceGeneratedCommands && !supported.deviceGeneratedCommands) {
-        error_list.push_back("VkPhysicalDeviceDeviceGeneratedCommandsFeaturesEXT::deviceGeneratedCommands");
+        error_list.push_back("Missing feature VkPhysicalDeviceDeviceGeneratedCommandsFeaturesEXT::deviceGeneratedCommands");
     }
     if (requested.dynamicGeneratedPipelineLayout && !supported.dynamicGeneratedPipelineLayout) {
-        error_list.push_back("VkPhysicalDeviceDeviceGeneratedCommandsFeaturesEXT::dynamicGeneratedPipelineLayout");
+        error_list.push_back("Missing feature VkPhysicalDeviceDeviceGeneratedCommandsFeaturesEXT::dynamicGeneratedPipelineLayout");
     }
 }
 void merge_VkPhysicalDeviceDeviceGeneratedCommandsFeaturesEXT(VkPhysicalDeviceDeviceGeneratedCommandsFeaturesEXT & current, VkPhysicalDeviceDeviceGeneratedCommandsFeaturesEXT const& merge_in) {
@@ -3149,7 +3149,7 @@ void merge_VkPhysicalDeviceDeviceGeneratedCommandsFeaturesEXT(VkPhysicalDeviceDe
 }
 void compare_VkPhysicalDeviceImageAlignmentControlFeaturesMESA(std::vector<std::string> & error_list, VkPhysicalDeviceImageAlignmentControlFeaturesMESA const& supported, VkPhysicalDeviceImageAlignmentControlFeaturesMESA const& requested) {
     if (requested.imageAlignmentControl && !supported.imageAlignmentControl) {
-        error_list.push_back("VkPhysicalDeviceImageAlignmentControlFeaturesMESA::imageAlignmentControl");
+        error_list.push_back("Missing feature VkPhysicalDeviceImageAlignmentControlFeaturesMESA::imageAlignmentControl");
     }
 }
 void merge_VkPhysicalDeviceImageAlignmentControlFeaturesMESA(VkPhysicalDeviceImageAlignmentControlFeaturesMESA & current, VkPhysicalDeviceImageAlignmentControlFeaturesMESA const& merge_in) {
@@ -3157,7 +3157,7 @@ void merge_VkPhysicalDeviceImageAlignmentControlFeaturesMESA(VkPhysicalDeviceIma
 }
 void compare_VkPhysicalDeviceDepthClampControlFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceDepthClampControlFeaturesEXT const& supported, VkPhysicalDeviceDepthClampControlFeaturesEXT const& requested) {
     if (requested.depthClampControl && !supported.depthClampControl) {
-        error_list.push_back("VkPhysicalDeviceDepthClampControlFeaturesEXT::depthClampControl");
+        error_list.push_back("Missing feature VkPhysicalDeviceDepthClampControlFeaturesEXT::depthClampControl");
     }
 }
 void merge_VkPhysicalDeviceDepthClampControlFeaturesEXT(VkPhysicalDeviceDepthClampControlFeaturesEXT & current, VkPhysicalDeviceDepthClampControlFeaturesEXT const& merge_in) {
@@ -3165,7 +3165,7 @@ void merge_VkPhysicalDeviceDepthClampControlFeaturesEXT(VkPhysicalDeviceDepthCla
 }
 void compare_VkPhysicalDeviceHdrVividFeaturesHUAWEI(std::vector<std::string> & error_list, VkPhysicalDeviceHdrVividFeaturesHUAWEI const& supported, VkPhysicalDeviceHdrVividFeaturesHUAWEI const& requested) {
     if (requested.hdrVivid && !supported.hdrVivid) {
-        error_list.push_back("VkPhysicalDeviceHdrVividFeaturesHUAWEI::hdrVivid");
+        error_list.push_back("Missing feature VkPhysicalDeviceHdrVividFeaturesHUAWEI::hdrVivid");
     }
 }
 void merge_VkPhysicalDeviceHdrVividFeaturesHUAWEI(VkPhysicalDeviceHdrVividFeaturesHUAWEI & current, VkPhysicalDeviceHdrVividFeaturesHUAWEI const& merge_in) {
@@ -3173,25 +3173,25 @@ void merge_VkPhysicalDeviceHdrVividFeaturesHUAWEI(VkPhysicalDeviceHdrVividFeatur
 }
 void compare_VkPhysicalDeviceCooperativeMatrix2FeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceCooperativeMatrix2FeaturesNV const& supported, VkPhysicalDeviceCooperativeMatrix2FeaturesNV const& requested) {
     if (requested.cooperativeMatrixWorkgroupScope && !supported.cooperativeMatrixWorkgroupScope) {
-        error_list.push_back("VkPhysicalDeviceCooperativeMatrix2FeaturesNV::cooperativeMatrixWorkgroupScope");
+        error_list.push_back("Missing feature VkPhysicalDeviceCooperativeMatrix2FeaturesNV::cooperativeMatrixWorkgroupScope");
     }
     if (requested.cooperativeMatrixFlexibleDimensions && !supported.cooperativeMatrixFlexibleDimensions) {
-        error_list.push_back("VkPhysicalDeviceCooperativeMatrix2FeaturesNV::cooperativeMatrixFlexibleDimensions");
+        error_list.push_back("Missing feature VkPhysicalDeviceCooperativeMatrix2FeaturesNV::cooperativeMatrixFlexibleDimensions");
     }
     if (requested.cooperativeMatrixReductions && !supported.cooperativeMatrixReductions) {
-        error_list.push_back("VkPhysicalDeviceCooperativeMatrix2FeaturesNV::cooperativeMatrixReductions");
+        error_list.push_back("Missing feature VkPhysicalDeviceCooperativeMatrix2FeaturesNV::cooperativeMatrixReductions");
     }
     if (requested.cooperativeMatrixConversions && !supported.cooperativeMatrixConversions) {
-        error_list.push_back("VkPhysicalDeviceCooperativeMatrix2FeaturesNV::cooperativeMatrixConversions");
+        error_list.push_back("Missing feature VkPhysicalDeviceCooperativeMatrix2FeaturesNV::cooperativeMatrixConversions");
     }
     if (requested.cooperativeMatrixPerElementOperations && !supported.cooperativeMatrixPerElementOperations) {
-        error_list.push_back("VkPhysicalDeviceCooperativeMatrix2FeaturesNV::cooperativeMatrixPerElementOperations");
+        error_list.push_back("Missing feature VkPhysicalDeviceCooperativeMatrix2FeaturesNV::cooperativeMatrixPerElementOperations");
     }
     if (requested.cooperativeMatrixTensorAddressing && !supported.cooperativeMatrixTensorAddressing) {
-        error_list.push_back("VkPhysicalDeviceCooperativeMatrix2FeaturesNV::cooperativeMatrixTensorAddressing");
+        error_list.push_back("Missing feature VkPhysicalDeviceCooperativeMatrix2FeaturesNV::cooperativeMatrixTensorAddressing");
     }
     if (requested.cooperativeMatrixBlockLoads && !supported.cooperativeMatrixBlockLoads) {
-        error_list.push_back("VkPhysicalDeviceCooperativeMatrix2FeaturesNV::cooperativeMatrixBlockLoads");
+        error_list.push_back("Missing feature VkPhysicalDeviceCooperativeMatrix2FeaturesNV::cooperativeMatrixBlockLoads");
     }
 }
 void merge_VkPhysicalDeviceCooperativeMatrix2FeaturesNV(VkPhysicalDeviceCooperativeMatrix2FeaturesNV & current, VkPhysicalDeviceCooperativeMatrix2FeaturesNV const& merge_in) {
@@ -3205,7 +3205,7 @@ void merge_VkPhysicalDeviceCooperativeMatrix2FeaturesNV(VkPhysicalDeviceCooperat
 }
 void compare_VkPhysicalDevicePipelineOpacityMicromapFeaturesARM(std::vector<std::string> & error_list, VkPhysicalDevicePipelineOpacityMicromapFeaturesARM const& supported, VkPhysicalDevicePipelineOpacityMicromapFeaturesARM const& requested) {
     if (requested.pipelineOpacityMicromap && !supported.pipelineOpacityMicromap) {
-        error_list.push_back("VkPhysicalDevicePipelineOpacityMicromapFeaturesARM::pipelineOpacityMicromap");
+        error_list.push_back("Missing feature VkPhysicalDevicePipelineOpacityMicromapFeaturesARM::pipelineOpacityMicromap");
     }
 }
 void merge_VkPhysicalDevicePipelineOpacityMicromapFeaturesARM(VkPhysicalDevicePipelineOpacityMicromapFeaturesARM & current, VkPhysicalDevicePipelineOpacityMicromapFeaturesARM const& merge_in) {
@@ -3213,7 +3213,7 @@ void merge_VkPhysicalDevicePipelineOpacityMicromapFeaturesARM(VkPhysicalDevicePi
 }
 void compare_VkPhysicalDeviceVertexAttributeRobustnessFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceVertexAttributeRobustnessFeaturesEXT const& supported, VkPhysicalDeviceVertexAttributeRobustnessFeaturesEXT const& requested) {
     if (requested.vertexAttributeRobustness && !supported.vertexAttributeRobustness) {
-        error_list.push_back("VkPhysicalDeviceVertexAttributeRobustnessFeaturesEXT::vertexAttributeRobustness");
+        error_list.push_back("Missing feature VkPhysicalDeviceVertexAttributeRobustnessFeaturesEXT::vertexAttributeRobustness");
     }
 }
 void merge_VkPhysicalDeviceVertexAttributeRobustnessFeaturesEXT(VkPhysicalDeviceVertexAttributeRobustnessFeaturesEXT & current, VkPhysicalDeviceVertexAttributeRobustnessFeaturesEXT const& merge_in) {
@@ -3221,7 +3221,7 @@ void merge_VkPhysicalDeviceVertexAttributeRobustnessFeaturesEXT(VkPhysicalDevice
 }
 void compare_VkPhysicalDeviceFormatPackFeaturesARM(std::vector<std::string> & error_list, VkPhysicalDeviceFormatPackFeaturesARM const& supported, VkPhysicalDeviceFormatPackFeaturesARM const& requested) {
     if (requested.formatPack && !supported.formatPack) {
-        error_list.push_back("VkPhysicalDeviceFormatPackFeaturesARM::formatPack");
+        error_list.push_back("Missing feature VkPhysicalDeviceFormatPackFeaturesARM::formatPack");
     }
 }
 void merge_VkPhysicalDeviceFormatPackFeaturesARM(VkPhysicalDeviceFormatPackFeaturesARM & current, VkPhysicalDeviceFormatPackFeaturesARM const& merge_in) {
@@ -3229,7 +3229,7 @@ void merge_VkPhysicalDeviceFormatPackFeaturesARM(VkPhysicalDeviceFormatPackFeatu
 }
 void compare_VkPhysicalDeviceFragmentDensityMapLayeredFeaturesVALVE(std::vector<std::string> & error_list, VkPhysicalDeviceFragmentDensityMapLayeredFeaturesVALVE const& supported, VkPhysicalDeviceFragmentDensityMapLayeredFeaturesVALVE const& requested) {
     if (requested.fragmentDensityMapLayered && !supported.fragmentDensityMapLayered) {
-        error_list.push_back("VkPhysicalDeviceFragmentDensityMapLayeredFeaturesVALVE::fragmentDensityMapLayered");
+        error_list.push_back("Missing feature VkPhysicalDeviceFragmentDensityMapLayeredFeaturesVALVE::fragmentDensityMapLayered");
     }
 }
 void merge_VkPhysicalDeviceFragmentDensityMapLayeredFeaturesVALVE(VkPhysicalDeviceFragmentDensityMapLayeredFeaturesVALVE & current, VkPhysicalDeviceFragmentDensityMapLayeredFeaturesVALVE const& merge_in) {
@@ -3238,7 +3238,7 @@ void merge_VkPhysicalDeviceFragmentDensityMapLayeredFeaturesVALVE(VkPhysicalDevi
 #if defined(VK_ENABLE_BETA_EXTENSIONS)
 void compare_VkPhysicalDevicePresentMeteringFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDevicePresentMeteringFeaturesNV const& supported, VkPhysicalDevicePresentMeteringFeaturesNV const& requested) {
     if (requested.presentMetering && !supported.presentMetering) {
-        error_list.push_back("VkPhysicalDevicePresentMeteringFeaturesNV::presentMetering");
+        error_list.push_back("Missing feature VkPhysicalDevicePresentMeteringFeaturesNV::presentMetering");
     }
 }
 void merge_VkPhysicalDevicePresentMeteringFeaturesNV(VkPhysicalDevicePresentMeteringFeaturesNV & current, VkPhysicalDevicePresentMeteringFeaturesNV const& merge_in) {
@@ -3247,7 +3247,7 @@ void merge_VkPhysicalDevicePresentMeteringFeaturesNV(VkPhysicalDevicePresentMete
 #endif // defined(VK_ENABLE_BETA_EXTENSIONS)
 void compare_VkPhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT const& supported, VkPhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT const& requested) {
     if (requested.zeroInitializeDeviceMemory && !supported.zeroInitializeDeviceMemory) {
-        error_list.push_back("VkPhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT::zeroInitializeDeviceMemory");
+        error_list.push_back("Missing feature VkPhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT::zeroInitializeDeviceMemory");
     }
 }
 void merge_VkPhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT(VkPhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT & current, VkPhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT const& merge_in) {
@@ -3255,7 +3255,7 @@ void merge_VkPhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT(VkPhysicalDevic
 }
 void compare_VkPhysicalDevicePipelineCacheIncrementalModeFeaturesSEC(std::vector<std::string> & error_list, VkPhysicalDevicePipelineCacheIncrementalModeFeaturesSEC const& supported, VkPhysicalDevicePipelineCacheIncrementalModeFeaturesSEC const& requested) {
     if (requested.pipelineCacheIncrementalMode && !supported.pipelineCacheIncrementalMode) {
-        error_list.push_back("VkPhysicalDevicePipelineCacheIncrementalModeFeaturesSEC::pipelineCacheIncrementalMode");
+        error_list.push_back("Missing feature VkPhysicalDevicePipelineCacheIncrementalModeFeaturesSEC::pipelineCacheIncrementalMode");
     }
 }
 void merge_VkPhysicalDevicePipelineCacheIncrementalModeFeaturesSEC(VkPhysicalDevicePipelineCacheIncrementalModeFeaturesSEC & current, VkPhysicalDevicePipelineCacheIncrementalModeFeaturesSEC const& merge_in) {
@@ -3263,19 +3263,19 @@ void merge_VkPhysicalDevicePipelineCacheIncrementalModeFeaturesSEC(VkPhysicalDev
 }
 void compare_VkPhysicalDeviceAccelerationStructureFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceAccelerationStructureFeaturesKHR const& supported, VkPhysicalDeviceAccelerationStructureFeaturesKHR const& requested) {
     if (requested.accelerationStructure && !supported.accelerationStructure) {
-        error_list.push_back("VkPhysicalDeviceAccelerationStructureFeaturesKHR::accelerationStructure");
+        error_list.push_back("Missing feature VkPhysicalDeviceAccelerationStructureFeaturesKHR::accelerationStructure");
     }
     if (requested.accelerationStructureCaptureReplay && !supported.accelerationStructureCaptureReplay) {
-        error_list.push_back("VkPhysicalDeviceAccelerationStructureFeaturesKHR::accelerationStructureCaptureReplay");
+        error_list.push_back("Missing feature VkPhysicalDeviceAccelerationStructureFeaturesKHR::accelerationStructureCaptureReplay");
     }
     if (requested.accelerationStructureIndirectBuild && !supported.accelerationStructureIndirectBuild) {
-        error_list.push_back("VkPhysicalDeviceAccelerationStructureFeaturesKHR::accelerationStructureIndirectBuild");
+        error_list.push_back("Missing feature VkPhysicalDeviceAccelerationStructureFeaturesKHR::accelerationStructureIndirectBuild");
     }
     if (requested.accelerationStructureHostCommands && !supported.accelerationStructureHostCommands) {
-        error_list.push_back("VkPhysicalDeviceAccelerationStructureFeaturesKHR::accelerationStructureHostCommands");
+        error_list.push_back("Missing feature VkPhysicalDeviceAccelerationStructureFeaturesKHR::accelerationStructureHostCommands");
     }
     if (requested.descriptorBindingAccelerationStructureUpdateAfterBind && !supported.descriptorBindingAccelerationStructureUpdateAfterBind) {
-        error_list.push_back("VkPhysicalDeviceAccelerationStructureFeaturesKHR::descriptorBindingAccelerationStructureUpdateAfterBind");
+        error_list.push_back("Missing feature VkPhysicalDeviceAccelerationStructureFeaturesKHR::descriptorBindingAccelerationStructureUpdateAfterBind");
     }
 }
 void merge_VkPhysicalDeviceAccelerationStructureFeaturesKHR(VkPhysicalDeviceAccelerationStructureFeaturesKHR & current, VkPhysicalDeviceAccelerationStructureFeaturesKHR const& merge_in) {
@@ -3287,19 +3287,19 @@ void merge_VkPhysicalDeviceAccelerationStructureFeaturesKHR(VkPhysicalDeviceAcce
 }
 void compare_VkPhysicalDeviceRayTracingPipelineFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceRayTracingPipelineFeaturesKHR const& supported, VkPhysicalDeviceRayTracingPipelineFeaturesKHR const& requested) {
     if (requested.rayTracingPipeline && !supported.rayTracingPipeline) {
-        error_list.push_back("VkPhysicalDeviceRayTracingPipelineFeaturesKHR::rayTracingPipeline");
+        error_list.push_back("Missing feature VkPhysicalDeviceRayTracingPipelineFeaturesKHR::rayTracingPipeline");
     }
     if (requested.rayTracingPipelineShaderGroupHandleCaptureReplay && !supported.rayTracingPipelineShaderGroupHandleCaptureReplay) {
-        error_list.push_back("VkPhysicalDeviceRayTracingPipelineFeaturesKHR::rayTracingPipelineShaderGroupHandleCaptureReplay");
+        error_list.push_back("Missing feature VkPhysicalDeviceRayTracingPipelineFeaturesKHR::rayTracingPipelineShaderGroupHandleCaptureReplay");
     }
     if (requested.rayTracingPipelineShaderGroupHandleCaptureReplayMixed && !supported.rayTracingPipelineShaderGroupHandleCaptureReplayMixed) {
-        error_list.push_back("VkPhysicalDeviceRayTracingPipelineFeaturesKHR::rayTracingPipelineShaderGroupHandleCaptureReplayMixed");
+        error_list.push_back("Missing feature VkPhysicalDeviceRayTracingPipelineFeaturesKHR::rayTracingPipelineShaderGroupHandleCaptureReplayMixed");
     }
     if (requested.rayTracingPipelineTraceRaysIndirect && !supported.rayTracingPipelineTraceRaysIndirect) {
-        error_list.push_back("VkPhysicalDeviceRayTracingPipelineFeaturesKHR::rayTracingPipelineTraceRaysIndirect");
+        error_list.push_back("Missing feature VkPhysicalDeviceRayTracingPipelineFeaturesKHR::rayTracingPipelineTraceRaysIndirect");
     }
     if (requested.rayTraversalPrimitiveCulling && !supported.rayTraversalPrimitiveCulling) {
-        error_list.push_back("VkPhysicalDeviceRayTracingPipelineFeaturesKHR::rayTraversalPrimitiveCulling");
+        error_list.push_back("Missing feature VkPhysicalDeviceRayTracingPipelineFeaturesKHR::rayTraversalPrimitiveCulling");
     }
 }
 void merge_VkPhysicalDeviceRayTracingPipelineFeaturesKHR(VkPhysicalDeviceRayTracingPipelineFeaturesKHR & current, VkPhysicalDeviceRayTracingPipelineFeaturesKHR const& merge_in) {
@@ -3311,7 +3311,7 @@ void merge_VkPhysicalDeviceRayTracingPipelineFeaturesKHR(VkPhysicalDeviceRayTrac
 }
 void compare_VkPhysicalDeviceRayQueryFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceRayQueryFeaturesKHR const& supported, VkPhysicalDeviceRayQueryFeaturesKHR const& requested) {
     if (requested.rayQuery && !supported.rayQuery) {
-        error_list.push_back("VkPhysicalDeviceRayQueryFeaturesKHR::rayQuery");
+        error_list.push_back("Missing feature VkPhysicalDeviceRayQueryFeaturesKHR::rayQuery");
     }
 }
 void merge_VkPhysicalDeviceRayQueryFeaturesKHR(VkPhysicalDeviceRayQueryFeaturesKHR & current, VkPhysicalDeviceRayQueryFeaturesKHR const& merge_in) {
@@ -3319,19 +3319,19 @@ void merge_VkPhysicalDeviceRayQueryFeaturesKHR(VkPhysicalDeviceRayQueryFeaturesK
 }
 void compare_VkPhysicalDeviceMeshShaderFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceMeshShaderFeaturesEXT const& supported, VkPhysicalDeviceMeshShaderFeaturesEXT const& requested) {
     if (requested.taskShader && !supported.taskShader) {
-        error_list.push_back("VkPhysicalDeviceMeshShaderFeaturesEXT::taskShader");
+        error_list.push_back("Missing feature VkPhysicalDeviceMeshShaderFeaturesEXT::taskShader");
     }
     if (requested.meshShader && !supported.meshShader) {
-        error_list.push_back("VkPhysicalDeviceMeshShaderFeaturesEXT::meshShader");
+        error_list.push_back("Missing feature VkPhysicalDeviceMeshShaderFeaturesEXT::meshShader");
     }
     if (requested.multiviewMeshShader && !supported.multiviewMeshShader) {
-        error_list.push_back("VkPhysicalDeviceMeshShaderFeaturesEXT::multiviewMeshShader");
+        error_list.push_back("Missing feature VkPhysicalDeviceMeshShaderFeaturesEXT::multiviewMeshShader");
     }
     if (requested.primitiveFragmentShadingRateMeshShader && !supported.primitiveFragmentShadingRateMeshShader) {
-        error_list.push_back("VkPhysicalDeviceMeshShaderFeaturesEXT::primitiveFragmentShadingRateMeshShader");
+        error_list.push_back("Missing feature VkPhysicalDeviceMeshShaderFeaturesEXT::primitiveFragmentShadingRateMeshShader");
     }
     if (requested.meshShaderQueries && !supported.meshShaderQueries) {
-        error_list.push_back("VkPhysicalDeviceMeshShaderFeaturesEXT::meshShaderQueries");
+        error_list.push_back("Missing feature VkPhysicalDeviceMeshShaderFeaturesEXT::meshShaderQueries");
     }
 }
 void merge_VkPhysicalDeviceMeshShaderFeaturesEXT(VkPhysicalDeviceMeshShaderFeaturesEXT & current, VkPhysicalDeviceMeshShaderFeaturesEXT const& merge_in) {

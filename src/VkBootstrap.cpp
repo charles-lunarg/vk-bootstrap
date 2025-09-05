@@ -1088,18 +1088,17 @@ PhysicalDevice::Suitable PhysicalDeviceSelector::is_device_suitable(
     PhysicalDevice::Suitable suitable = PhysicalDevice::Suitable::yes;
 
     if (criteria.name.size() > 0 && criteria.name != pd.properties.deviceName) {
-        unsuitability_reasons.push_back("deviceName doesn't match");
+        unsuitability_reasons.push_back(
+            "VkPhysicalDeviceProperties::deviceName doesn't match requested name \"" + criteria.name + "\"");
         return PhysicalDevice::Suitable::no;
     }
 
     if (criteria.required_version > pd.properties.apiVersion) {
         unsuitability_reasons.push_back(
             "VkPhysicalDeviceProperties::apiVersion " + std::to_string(VK_API_VERSION_MAJOR(pd.properties.apiVersion)) +
-            "." + std::to_string(VK_API_VERSION_MINOR(pd.properties.apiVersion)) + "." +
-            std::to_string(VK_API_VERSION_PATCH(pd.properties.apiVersion)) + " lower than required version " +
+            "." + std::to_string(VK_API_VERSION_MINOR(pd.properties.apiVersion)) + " lower than required version " +
             std::to_string(VK_API_VERSION_MAJOR(criteria.required_version)) + "." +
-            std::to_string(VK_API_VERSION_MINOR(criteria.required_version)) + "." +
-            std::to_string(VK_API_VERSION_PATCH(criteria.required_version)));
+            std::to_string(VK_API_VERSION_MINOR(criteria.required_version)));
         return PhysicalDevice::Suitable::no;
     }
 
@@ -1138,7 +1137,7 @@ PhysicalDevice::Suitable PhysicalDeviceSelector::is_device_suitable(
     auto unsupported_extensions = detail::find_unsupported_extensions_in_list(pd.available_extensions, criteria.required_extensions);
     if (unsupported_extensions.size() > 0) {
         for (auto const& unsupported_ext : unsupported_extensions) {
-            unsuitability_reasons.push_back("Device extensions " + unsupported_ext + " not supported");
+            unsuitability_reasons.push_back("Device extension " + unsupported_ext + " not supported");
         }
         return PhysicalDevice::Suitable::no;
     }
@@ -1263,7 +1262,7 @@ Result<std::vector<PhysicalDevice>> PhysicalDeviceSelector::select_devices() con
         } else {
             for (auto const& reason : gpu_unsuitability_reasons) {
                 unsuitability_reasons.push_back(
-                    std::string("Physical Device ") + phys_dev.properties.deviceName + " unsuitable due to: " + reason);
+                    std::string("Physical Device ") + phys_dev.properties.deviceName + " not selected due to: " + reason);
             }
         }
     }

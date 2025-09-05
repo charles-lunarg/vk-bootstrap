@@ -105,7 +105,7 @@ def create_feature_chain_definitions():
     for member in vk.structs['VkPhysicalDeviceFeatures'].members:
         if member.name in ['sType', 'pNext']:
             continue
-        out += f'    if (requested.{member.name} && !supported.{member.name}) {{\n        error_list.push_back("VkPhysicalDeviceFeatures::{member.name}");\n    }}\n'
+        out += f'    if (requested.{member.name} && !supported.{member.name}) {{\n        error_list.push_back("Missing feature VkPhysicalDeviceFeatures::{member.name}");\n    }}\n'
     out += '}\n'
     out += 'void merge_VkPhysicalDeviceFeatures(VkPhysicalDeviceFeatures & current, VkPhysicalDeviceFeatures const& merge_in) {\n'
     for member in vk.structs['VkPhysicalDeviceFeatures'].members:
@@ -122,7 +122,7 @@ def create_feature_chain_definitions():
         for member in feature.members:
             if member.name in ['sType', 'pNext']:
                 continue
-            out += f'    if (requested.{member.name} && !supported.{member.name}) {{\n        error_list.push_back("{feature.name}::{member.name}");\n    }}\n'
+            out += f'    if (requested.{member.name} && !supported.{member.name}) {{\n        error_list.push_back("Missing feature {feature.name}::{member.name}");\n    }}\n'
 
         out += '}\n'
         out += f'void merge_{feature.name}({feature.name} & current, {feature.name} const& merge_in) {{\n'

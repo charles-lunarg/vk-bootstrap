@@ -61,6 +61,7 @@ namespace vkb {
 struct Error {
     std::error_code type;
     VkResult vk_result = VK_SUCCESS; // optional error value if a vulkan call failed
+    std::vector<std::string> detailed_failure_reasons; // optional list of reasons why the operation failed - mainly used to return why VkPhysicalDevices failed to be selected
 };
 
 template <typename T> class Result {
@@ -71,7 +72,10 @@ template <typename T> class Result {
     Result(Error error) noexcept : m_data{ error } {}
 
     Result(std::error_code error_code, VkResult result = VK_SUCCESS) noexcept
-    : m_data{ Error{ error_code, result } } {}
+    : m_data{ Error{ error_code, result, {} } } {}
+
+    Result(std::error_code error_code, std::vector<std::string> const& detailed_failure_reasons) noexcept
+    : m_data{ Error{ error_code, VK_SUCCESS, detailed_failure_reasons } } {}
 
     Result& operator=(const T& expect) noexcept {
         m_data = expect;
@@ -86,7 +90,7 @@ template <typename T> class Result {
         return *this;
     }
     Result& operator=(Error&& error) noexcept {
-        m_data = error;
+        m_data = std::move(error);
         return *this;
     }
     // clang-format off
@@ -105,6 +109,8 @@ template <typename T> class Result {
     VkResult vk_result() const { return std::get<Error>(m_data).vk_result; }
     // Returns the struct that holds the std::error_code and VkResult
     Error full_error() const { return std::get<Error>(m_data); }
+    // Returns the detailed error list that contributed to the error. Example: Reasons why VkPhysicalDevices failed to be selected
+    std::vector<std::string> const& detailed_failure_reasons() const  { return std::get<Error>(m_data).detailed_failure_reasons; }
     // clang-format on
 
     // check if the result has an error that matches a specific error case
@@ -673,8 +679,6 @@ class PhysicalDeviceSelector {
 
     PhysicalDevice::Suitable is_device_suitable(
         PhysicalDevice const& phys_device, std::vector<std::string>& unsuitability_reasons) const;
-
-    Result<std::vector<PhysicalDevice>> select_impl() const;
 };
 
 // ---- Queue ---- //

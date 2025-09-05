@@ -25,6 +25,230 @@
 
 namespace vkb {
 
+void compare_VkPhysicalDeviceFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceFeatures const& supported, VkPhysicalDeviceFeatures const& requested) {
+    if (requested.robustBufferAccess && !supported.robustBufferAccess) {
+        error_list.push_back("VkPhysicalDeviceFeatures::robustBufferAccess");
+    }
+    if (requested.fullDrawIndexUint32 && !supported.fullDrawIndexUint32) {
+        error_list.push_back("VkPhysicalDeviceFeatures::fullDrawIndexUint32");
+    }
+    if (requested.imageCubeArray && !supported.imageCubeArray) {
+        error_list.push_back("VkPhysicalDeviceFeatures::imageCubeArray");
+    }
+    if (requested.independentBlend && !supported.independentBlend) {
+        error_list.push_back("VkPhysicalDeviceFeatures::independentBlend");
+    }
+    if (requested.geometryShader && !supported.geometryShader) {
+        error_list.push_back("VkPhysicalDeviceFeatures::geometryShader");
+    }
+    if (requested.tessellationShader && !supported.tessellationShader) {
+        error_list.push_back("VkPhysicalDeviceFeatures::tessellationShader");
+    }
+    if (requested.sampleRateShading && !supported.sampleRateShading) {
+        error_list.push_back("VkPhysicalDeviceFeatures::sampleRateShading");
+    }
+    if (requested.dualSrcBlend && !supported.dualSrcBlend) {
+        error_list.push_back("VkPhysicalDeviceFeatures::dualSrcBlend");
+    }
+    if (requested.logicOp && !supported.logicOp) {
+        error_list.push_back("VkPhysicalDeviceFeatures::logicOp");
+    }
+    if (requested.multiDrawIndirect && !supported.multiDrawIndirect) {
+        error_list.push_back("VkPhysicalDeviceFeatures::multiDrawIndirect");
+    }
+    if (requested.drawIndirectFirstInstance && !supported.drawIndirectFirstInstance) {
+        error_list.push_back("VkPhysicalDeviceFeatures::drawIndirectFirstInstance");
+    }
+    if (requested.depthClamp && !supported.depthClamp) {
+        error_list.push_back("VkPhysicalDeviceFeatures::depthClamp");
+    }
+    if (requested.depthBiasClamp && !supported.depthBiasClamp) {
+        error_list.push_back("VkPhysicalDeviceFeatures::depthBiasClamp");
+    }
+    if (requested.fillModeNonSolid && !supported.fillModeNonSolid) {
+        error_list.push_back("VkPhysicalDeviceFeatures::fillModeNonSolid");
+    }
+    if (requested.depthBounds && !supported.depthBounds) {
+        error_list.push_back("VkPhysicalDeviceFeatures::depthBounds");
+    }
+    if (requested.wideLines && !supported.wideLines) {
+        error_list.push_back("VkPhysicalDeviceFeatures::wideLines");
+    }
+    if (requested.largePoints && !supported.largePoints) {
+        error_list.push_back("VkPhysicalDeviceFeatures::largePoints");
+    }
+    if (requested.alphaToOne && !supported.alphaToOne) {
+        error_list.push_back("VkPhysicalDeviceFeatures::alphaToOne");
+    }
+    if (requested.multiViewport && !supported.multiViewport) {
+        error_list.push_back("VkPhysicalDeviceFeatures::multiViewport");
+    }
+    if (requested.samplerAnisotropy && !supported.samplerAnisotropy) {
+        error_list.push_back("VkPhysicalDeviceFeatures::samplerAnisotropy");
+    }
+    if (requested.textureCompressionETC2 && !supported.textureCompressionETC2) {
+        error_list.push_back("VkPhysicalDeviceFeatures::textureCompressionETC2");
+    }
+    if (requested.textureCompressionASTC_LDR && !supported.textureCompressionASTC_LDR) {
+        error_list.push_back("VkPhysicalDeviceFeatures::textureCompressionASTC_LDR");
+    }
+    if (requested.textureCompressionBC && !supported.textureCompressionBC) {
+        error_list.push_back("VkPhysicalDeviceFeatures::textureCompressionBC");
+    }
+    if (requested.occlusionQueryPrecise && !supported.occlusionQueryPrecise) {
+        error_list.push_back("VkPhysicalDeviceFeatures::occlusionQueryPrecise");
+    }
+    if (requested.pipelineStatisticsQuery && !supported.pipelineStatisticsQuery) {
+        error_list.push_back("VkPhysicalDeviceFeatures::pipelineStatisticsQuery");
+    }
+    if (requested.vertexPipelineStoresAndAtomics && !supported.vertexPipelineStoresAndAtomics) {
+        error_list.push_back("VkPhysicalDeviceFeatures::vertexPipelineStoresAndAtomics");
+    }
+    if (requested.fragmentStoresAndAtomics && !supported.fragmentStoresAndAtomics) {
+        error_list.push_back("VkPhysicalDeviceFeatures::fragmentStoresAndAtomics");
+    }
+    if (requested.shaderTessellationAndGeometryPointSize && !supported.shaderTessellationAndGeometryPointSize) {
+        error_list.push_back("VkPhysicalDeviceFeatures::shaderTessellationAndGeometryPointSize");
+    }
+    if (requested.shaderImageGatherExtended && !supported.shaderImageGatherExtended) {
+        error_list.push_back("VkPhysicalDeviceFeatures::shaderImageGatherExtended");
+    }
+    if (requested.shaderStorageImageExtendedFormats && !supported.shaderStorageImageExtendedFormats) {
+        error_list.push_back("VkPhysicalDeviceFeatures::shaderStorageImageExtendedFormats");
+    }
+    if (requested.shaderStorageImageMultisample && !supported.shaderStorageImageMultisample) {
+        error_list.push_back("VkPhysicalDeviceFeatures::shaderStorageImageMultisample");
+    }
+    if (requested.shaderStorageImageReadWithoutFormat && !supported.shaderStorageImageReadWithoutFormat) {
+        error_list.push_back("VkPhysicalDeviceFeatures::shaderStorageImageReadWithoutFormat");
+    }
+    if (requested.shaderStorageImageWriteWithoutFormat && !supported.shaderStorageImageWriteWithoutFormat) {
+        error_list.push_back("VkPhysicalDeviceFeatures::shaderStorageImageWriteWithoutFormat");
+    }
+    if (requested.shaderUniformBufferArrayDynamicIndexing && !supported.shaderUniformBufferArrayDynamicIndexing) {
+        error_list.push_back("VkPhysicalDeviceFeatures::shaderUniformBufferArrayDynamicIndexing");
+    }
+    if (requested.shaderSampledImageArrayDynamicIndexing && !supported.shaderSampledImageArrayDynamicIndexing) {
+        error_list.push_back("VkPhysicalDeviceFeatures::shaderSampledImageArrayDynamicIndexing");
+    }
+    if (requested.shaderStorageBufferArrayDynamicIndexing && !supported.shaderStorageBufferArrayDynamicIndexing) {
+        error_list.push_back("VkPhysicalDeviceFeatures::shaderStorageBufferArrayDynamicIndexing");
+    }
+    if (requested.shaderStorageImageArrayDynamicIndexing && !supported.shaderStorageImageArrayDynamicIndexing) {
+        error_list.push_back("VkPhysicalDeviceFeatures::shaderStorageImageArrayDynamicIndexing");
+    }
+    if (requested.shaderClipDistance && !supported.shaderClipDistance) {
+        error_list.push_back("VkPhysicalDeviceFeatures::shaderClipDistance");
+    }
+    if (requested.shaderCullDistance && !supported.shaderCullDistance) {
+        error_list.push_back("VkPhysicalDeviceFeatures::shaderCullDistance");
+    }
+    if (requested.shaderFloat64 && !supported.shaderFloat64) {
+        error_list.push_back("VkPhysicalDeviceFeatures::shaderFloat64");
+    }
+    if (requested.shaderInt64 && !supported.shaderInt64) {
+        error_list.push_back("VkPhysicalDeviceFeatures::shaderInt64");
+    }
+    if (requested.shaderInt16 && !supported.shaderInt16) {
+        error_list.push_back("VkPhysicalDeviceFeatures::shaderInt16");
+    }
+    if (requested.shaderResourceResidency && !supported.shaderResourceResidency) {
+        error_list.push_back("VkPhysicalDeviceFeatures::shaderResourceResidency");
+    }
+    if (requested.shaderResourceMinLod && !supported.shaderResourceMinLod) {
+        error_list.push_back("VkPhysicalDeviceFeatures::shaderResourceMinLod");
+    }
+    if (requested.sparseBinding && !supported.sparseBinding) {
+        error_list.push_back("VkPhysicalDeviceFeatures::sparseBinding");
+    }
+    if (requested.sparseResidencyBuffer && !supported.sparseResidencyBuffer) {
+        error_list.push_back("VkPhysicalDeviceFeatures::sparseResidencyBuffer");
+    }
+    if (requested.sparseResidencyImage2D && !supported.sparseResidencyImage2D) {
+        error_list.push_back("VkPhysicalDeviceFeatures::sparseResidencyImage2D");
+    }
+    if (requested.sparseResidencyImage3D && !supported.sparseResidencyImage3D) {
+        error_list.push_back("VkPhysicalDeviceFeatures::sparseResidencyImage3D");
+    }
+    if (requested.sparseResidency2Samples && !supported.sparseResidency2Samples) {
+        error_list.push_back("VkPhysicalDeviceFeatures::sparseResidency2Samples");
+    }
+    if (requested.sparseResidency4Samples && !supported.sparseResidency4Samples) {
+        error_list.push_back("VkPhysicalDeviceFeatures::sparseResidency4Samples");
+    }
+    if (requested.sparseResidency8Samples && !supported.sparseResidency8Samples) {
+        error_list.push_back("VkPhysicalDeviceFeatures::sparseResidency8Samples");
+    }
+    if (requested.sparseResidency16Samples && !supported.sparseResidency16Samples) {
+        error_list.push_back("VkPhysicalDeviceFeatures::sparseResidency16Samples");
+    }
+    if (requested.sparseResidencyAliased && !supported.sparseResidencyAliased) {
+        error_list.push_back("VkPhysicalDeviceFeatures::sparseResidencyAliased");
+    }
+    if (requested.variableMultisampleRate && !supported.variableMultisampleRate) {
+        error_list.push_back("VkPhysicalDeviceFeatures::variableMultisampleRate");
+    }
+    if (requested.inheritedQueries && !supported.inheritedQueries) {
+        error_list.push_back("VkPhysicalDeviceFeatures::inheritedQueries");
+    }
+}
+void merge_VkPhysicalDeviceFeatures(VkPhysicalDeviceFeatures & current, VkPhysicalDeviceFeatures const& merge_in) {
+    current.robustBufferAccess = current.robustBufferAccess || merge_in.robustBufferAccess;
+    current.fullDrawIndexUint32 = current.fullDrawIndexUint32 || merge_in.fullDrawIndexUint32;
+    current.imageCubeArray = current.imageCubeArray || merge_in.imageCubeArray;
+    current.independentBlend = current.independentBlend || merge_in.independentBlend;
+    current.geometryShader = current.geometryShader || merge_in.geometryShader;
+    current.tessellationShader = current.tessellationShader || merge_in.tessellationShader;
+    current.sampleRateShading = current.sampleRateShading || merge_in.sampleRateShading;
+    current.dualSrcBlend = current.dualSrcBlend || merge_in.dualSrcBlend;
+    current.logicOp = current.logicOp || merge_in.logicOp;
+    current.multiDrawIndirect = current.multiDrawIndirect || merge_in.multiDrawIndirect;
+    current.drawIndirectFirstInstance = current.drawIndirectFirstInstance || merge_in.drawIndirectFirstInstance;
+    current.depthClamp = current.depthClamp || merge_in.depthClamp;
+    current.depthBiasClamp = current.depthBiasClamp || merge_in.depthBiasClamp;
+    current.fillModeNonSolid = current.fillModeNonSolid || merge_in.fillModeNonSolid;
+    current.depthBounds = current.depthBounds || merge_in.depthBounds;
+    current.wideLines = current.wideLines || merge_in.wideLines;
+    current.largePoints = current.largePoints || merge_in.largePoints;
+    current.alphaToOne = current.alphaToOne || merge_in.alphaToOne;
+    current.multiViewport = current.multiViewport || merge_in.multiViewport;
+    current.samplerAnisotropy = current.samplerAnisotropy || merge_in.samplerAnisotropy;
+    current.textureCompressionETC2 = current.textureCompressionETC2 || merge_in.textureCompressionETC2;
+    current.textureCompressionASTC_LDR = current.textureCompressionASTC_LDR || merge_in.textureCompressionASTC_LDR;
+    current.textureCompressionBC = current.textureCompressionBC || merge_in.textureCompressionBC;
+    current.occlusionQueryPrecise = current.occlusionQueryPrecise || merge_in.occlusionQueryPrecise;
+    current.pipelineStatisticsQuery = current.pipelineStatisticsQuery || merge_in.pipelineStatisticsQuery;
+    current.vertexPipelineStoresAndAtomics = current.vertexPipelineStoresAndAtomics || merge_in.vertexPipelineStoresAndAtomics;
+    current.fragmentStoresAndAtomics = current.fragmentStoresAndAtomics || merge_in.fragmentStoresAndAtomics;
+    current.shaderTessellationAndGeometryPointSize = current.shaderTessellationAndGeometryPointSize || merge_in.shaderTessellationAndGeometryPointSize;
+    current.shaderImageGatherExtended = current.shaderImageGatherExtended || merge_in.shaderImageGatherExtended;
+    current.shaderStorageImageExtendedFormats = current.shaderStorageImageExtendedFormats || merge_in.shaderStorageImageExtendedFormats;
+    current.shaderStorageImageMultisample = current.shaderStorageImageMultisample || merge_in.shaderStorageImageMultisample;
+    current.shaderStorageImageReadWithoutFormat = current.shaderStorageImageReadWithoutFormat || merge_in.shaderStorageImageReadWithoutFormat;
+    current.shaderStorageImageWriteWithoutFormat = current.shaderStorageImageWriteWithoutFormat || merge_in.shaderStorageImageWriteWithoutFormat;
+    current.shaderUniformBufferArrayDynamicIndexing = current.shaderUniformBufferArrayDynamicIndexing || merge_in.shaderUniformBufferArrayDynamicIndexing;
+    current.shaderSampledImageArrayDynamicIndexing = current.shaderSampledImageArrayDynamicIndexing || merge_in.shaderSampledImageArrayDynamicIndexing;
+    current.shaderStorageBufferArrayDynamicIndexing = current.shaderStorageBufferArrayDynamicIndexing || merge_in.shaderStorageBufferArrayDynamicIndexing;
+    current.shaderStorageImageArrayDynamicIndexing = current.shaderStorageImageArrayDynamicIndexing || merge_in.shaderStorageImageArrayDynamicIndexing;
+    current.shaderClipDistance = current.shaderClipDistance || merge_in.shaderClipDistance;
+    current.shaderCullDistance = current.shaderCullDistance || merge_in.shaderCullDistance;
+    current.shaderFloat64 = current.shaderFloat64 || merge_in.shaderFloat64;
+    current.shaderInt64 = current.shaderInt64 || merge_in.shaderInt64;
+    current.shaderInt16 = current.shaderInt16 || merge_in.shaderInt16;
+    current.shaderResourceResidency = current.shaderResourceResidency || merge_in.shaderResourceResidency;
+    current.shaderResourceMinLod = current.shaderResourceMinLod || merge_in.shaderResourceMinLod;
+    current.sparseBinding = current.sparseBinding || merge_in.sparseBinding;
+    current.sparseResidencyBuffer = current.sparseResidencyBuffer || merge_in.sparseResidencyBuffer;
+    current.sparseResidencyImage2D = current.sparseResidencyImage2D || merge_in.sparseResidencyImage2D;
+    current.sparseResidencyImage3D = current.sparseResidencyImage3D || merge_in.sparseResidencyImage3D;
+    current.sparseResidency2Samples = current.sparseResidency2Samples || merge_in.sparseResidency2Samples;
+    current.sparseResidency4Samples = current.sparseResidency4Samples || merge_in.sparseResidency4Samples;
+    current.sparseResidency8Samples = current.sparseResidency8Samples || merge_in.sparseResidency8Samples;
+    current.sparseResidency16Samples = current.sparseResidency16Samples || merge_in.sparseResidency16Samples;
+    current.sparseResidencyAliased = current.sparseResidencyAliased || merge_in.sparseResidencyAliased;
+    current.variableMultisampleRate = current.variableMultisampleRate || merge_in.variableMultisampleRate;
+    current.inheritedQueries = current.inheritedQueries || merge_in.inheritedQueries;
+}
 void compare_VkPhysicalDevice16BitStorageFeatures(std::vector<std::string> & error_list, VkPhysicalDevice16BitStorageFeatures const& supported, VkPhysicalDevice16BitStorageFeatures const& requested) {
     if (requested.storageBuffer16BitAccess && !supported.storageBuffer16BitAccess) {
         error_list.push_back("VkPhysicalDevice16BitStorageFeatures::storageBuffer16BitAccess");

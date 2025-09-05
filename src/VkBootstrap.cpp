@@ -1136,7 +1136,7 @@ PhysicalDevice::Suitable PhysicalDeviceSelector::is_device_suitable(PhysicalDevi
         suitable = PhysicalDevice::Suitable::partial;
     }
     std::vector<std::string> unsuitability_reasons;
-    compare_VkPhysicalDeviceFeatures(unsuitability_reasons, pd.features, criteria.required_features);
+    detail::compare_VkPhysicalDeviceFeatures(unsuitability_reasons, pd.features, criteria.required_features);
     pd.extended_features_chain.match_all(unsuitability_reasons, criteria.extended_features_chain);
     if (!unsuitability_reasons.empty()) {
         return PhysicalDevice::Suitable::no;
@@ -1330,7 +1330,7 @@ PhysicalDeviceSelector& PhysicalDeviceSelector::disable_portability_subset() {
 }
 
 PhysicalDeviceSelector& PhysicalDeviceSelector::set_required_features(VkPhysicalDeviceFeatures const& features) {
-    merge_VkPhysicalDeviceFeatures(criteria.required_features, features);
+    detail::merge_VkPhysicalDeviceFeatures(criteria.required_features, features);
     return *this;
 }
 #if defined(VKB_VK_API_VERSION_1_2)
@@ -1423,9 +1423,9 @@ bool PhysicalDevice::enable_features_if_present(const VkPhysicalDeviceFeatures& 
     detail::vulkan_functions().fp_vkGetPhysicalDeviceFeatures(physical_device, &actual_pdf);
 
     std::vector<std::string> unsupported_features;
-    compare_VkPhysicalDeviceFeatures(unsupported_features, actual_pdf, features_to_enable);
+    detail::compare_VkPhysicalDeviceFeatures(unsupported_features, actual_pdf, features_to_enable);
     if (unsupported_features.empty()) {
-        merge_VkPhysicalDeviceFeatures(features, features_to_enable);
+        detail::merge_VkPhysicalDeviceFeatures(features, features_to_enable);
         return true;
     }
     return false;
@@ -1446,7 +1446,7 @@ bool PhysicalDevice::enable_features_struct_if_present(
         }
 
         std::vector<std::string> error_list;
-        compare_feature_struct(sType, error_list, query_struct, features_struct);
+        detail::compare_feature_struct(sType, error_list, query_struct, features_struct);
 
         if (error_list.size() == 0) {
             extended_features_chain.add_structure(sType, struct_size, features_struct);

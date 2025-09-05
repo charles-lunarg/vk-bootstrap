@@ -22,9 +22,6 @@
 #include <string>
 #include <vector>
 #include <vulkan/vulkan_core.h>
-#if defined(VK_ENABLE_BETA_EXTENSIONS)
-#include <vulkan/vulkan_beta.h>
-#endif // defined(VK_ENABLE_BETA_EXTENSIONS)
 #if defined(VK_USE_PLATFORM_ANDROID_KHR)
 #include <vulkan/vulkan_android.h>
 #endif // defined(VK_USE_PLATFORM_ANDROID_KHR)
@@ -32,9 +29,14 @@
 #include <screen/screen.h>
 #include <vulkan/vulkan_screen.h>
 #endif // defined(VK_USE_PLATFORM_SCREEN_QNX)
+#if defined(VK_ENABLE_BETA_EXTENSIONS)
+#include <vulkan/vulkan_beta.h>
+#endif // defined(VK_ENABLE_BETA_EXTENSIONS)
 
 namespace vkb {
 
+void compare_VkPhysicalDeviceFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceFeatures const& supported, VkPhysicalDeviceFeatures const& requested);
+void merge_VkPhysicalDeviceFeatures(VkPhysicalDeviceFeatures & current, VkPhysicalDeviceFeatures const& merge_in);
 void compare_VkPhysicalDevice16BitStorageFeatures(std::vector<std::string> & error_list, VkPhysicalDevice16BitStorageFeatures const& supported, VkPhysicalDevice16BitStorageFeatures const& requested);
 void merge_VkPhysicalDevice16BitStorageFeatures(VkPhysicalDevice16BitStorageFeatures & current, VkPhysicalDevice16BitStorageFeatures const& merge_in);
 void compare_VkPhysicalDeviceMultiviewFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceMultiviewFeatures const& supported, VkPhysicalDeviceMultiviewFeatures const& requested);

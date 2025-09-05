@@ -33,7 +33,7 @@
 #include <vulkan/vulkan_android.h>
 #endif // defined(VK_USE_PLATFORM_ANDROID_KHR)
 
-namespace vkb {
+namespace vkb::detail {
 
 void compare_VkPhysicalDeviceFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceFeatures const& supported, VkPhysicalDeviceFeatures const& requested);
 void merge_VkPhysicalDeviceFeatures(VkPhysicalDeviceFeatures & current, VkPhysicalDeviceFeatures const& merge_in);

@@ -82,6 +82,8 @@ def print_required_platform_defines():
 
 def create_feature_chain_declarations():
     out = ''
+    out += 'void compare_VkPhysicalDeviceFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceFeatures const& supported, VkPhysicalDeviceFeatures const& requested);\n'
+    out += 'void merge_VkPhysicalDeviceFeatures(VkPhysicalDeviceFeatures & current, VkPhysicalDeviceFeatures const& merge_in);\n'
 
     for feature in [x for x in vk.structs.values() if x.extends is not None and 'VkPhysicalDeviceFeatures2' in x.extends]:
         if feature.protect:
@@ -98,6 +100,19 @@ def create_feature_chain_declarations():
 
 def create_feature_chain_definitions():
     out = ''
+
+    out += 'void compare_VkPhysicalDeviceFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceFeatures const& supported, VkPhysicalDeviceFeatures const& requested) {\n'
+    for member in vk.structs['VkPhysicalDeviceFeatures'].members:
+        if member.name in ['sType', 'pNext']:
+            continue
+        out += f'    if (requested.{member.name} && !supported.{member.name}) {{\n        error_list.push_back("VkPhysicalDeviceFeatures::{member.name}");\n    }}\n'
+    out += '}\n'
+    out += 'void merge_VkPhysicalDeviceFeatures(VkPhysicalDeviceFeatures & current, VkPhysicalDeviceFeatures const& merge_in) {\n'
+    for member in vk.structs['VkPhysicalDeviceFeatures'].members:
+        if member.name in ['sType', 'pNext']:
+            continue
+        out += f'    current.{member.name} = current.{member.name} || merge_in.{member.name};\n'
+    out += '}\n'
 
     for feature in [x for x in vk.structs.values() if x.extends is not None and 'VkPhysicalDeviceFeatures2' in x.extends]:
         if feature.protect:

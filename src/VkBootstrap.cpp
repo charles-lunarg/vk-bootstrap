@@ -973,145 +973,18 @@ void destroy_debug_messenger(VkInstance const instance, VkDebugUtilsMessengerEXT
 
 namespace detail {
 
-std::vector<std::string> check_device_extension_support(
+std::vector<std::string> find_unsupported_extensions_in_list(
     std::vector<std::string> const& available_extensions, std::vector<std::string> const& required_extensions) {
-    std::vector<std::string> extensions_to_enable;
-    for (const auto& avail_ext : available_extensions) {
-        for (auto& req_ext : required_extensions) {
-            if (avail_ext == req_ext) {
-                extensions_to_enable.push_back(req_ext);
-                break;
-            }
+    std::vector<std::string> unavailable_extensions;
+
+    for (auto& req_ext : required_extensions) {
+        if (available_extensions.end() == std::find(available_extensions.begin(), available_extensions.end(), req_ext)) {
+            unavailable_extensions.push_back(req_ext);
         }
     }
-    return extensions_to_enable;
+    return unavailable_extensions;
 }
 
-// clang-format off
-void combine_features(VkPhysicalDeviceFeatures& dest, VkPhysicalDeviceFeatures src){
-    dest.robustBufferAccess = dest.robustBufferAccess || src.robustBufferAccess;
-	dest.fullDrawIndexUint32 = dest.fullDrawIndexUint32 || src.fullDrawIndexUint32;
-	dest.imageCubeArray = dest.imageCubeArray || src.imageCubeArray;
-	dest.independentBlend = dest.independentBlend || src.independentBlend;
-	dest.geometryShader = dest.geometryShader || src.geometryShader;
-	dest.tessellationShader = dest.tessellationShader || src.tessellationShader;
-	dest.sampleRateShading = dest.sampleRateShading || src.sampleRateShading;
-	dest.dualSrcBlend = dest.dualSrcBlend || src.dualSrcBlend;
-	dest.logicOp = dest.logicOp || src.logicOp;
-	dest.multiDrawIndirect = dest.multiDrawIndirect || src.multiDrawIndirect;
-	dest.drawIndirectFirstInstance = dest.drawIndirectFirstInstance || src.drawIndirectFirstInstance;
-	dest.depthClamp = dest.depthClamp || src.depthClamp;
-	dest.depthBiasClamp = dest.depthBiasClamp || src.depthBiasClamp;
-	dest.fillModeNonSolid = dest.fillModeNonSolid || src.fillModeNonSolid;
-	dest.depthBounds = dest.depthBounds || src.depthBounds;
-	dest.wideLines = dest.wideLines || src.wideLines;
-	dest.largePoints = dest.largePoints || src.largePoints;
-	dest.alphaToOne = dest.alphaToOne || src.alphaToOne;
-	dest.multiViewport = dest.multiViewport || src.multiViewport;
-	dest.samplerAnisotropy = dest.samplerAnisotropy || src.samplerAnisotropy;
-	dest.textureCompressionETC2 = dest.textureCompressionETC2 || src.textureCompressionETC2;
-	dest.textureCompressionASTC_LDR = dest.textureCompressionASTC_LDR || src.textureCompressionASTC_LDR;
-	dest.textureCompressionBC = dest.textureCompressionBC || src.textureCompressionBC;
-	dest.occlusionQueryPrecise = dest.occlusionQueryPrecise || src.occlusionQueryPrecise;
-	dest.pipelineStatisticsQuery = dest.pipelineStatisticsQuery || src.pipelineStatisticsQuery;
-	dest.vertexPipelineStoresAndAtomics = dest.vertexPipelineStoresAndAtomics || src.vertexPipelineStoresAndAtomics;
-	dest.fragmentStoresAndAtomics = dest.fragmentStoresAndAtomics || src.fragmentStoresAndAtomics;
-	dest.shaderTessellationAndGeometryPointSize = dest.shaderTessellationAndGeometryPointSize || src.shaderTessellationAndGeometryPointSize;
-	dest.shaderImageGatherExtended = dest.shaderImageGatherExtended || src.shaderImageGatherExtended;
-	dest.shaderStorageImageExtendedFormats = dest.shaderStorageImageExtendedFormats || src.shaderStorageImageExtendedFormats;
-	dest.shaderStorageImageMultisample = dest.shaderStorageImageMultisample || src.shaderStorageImageMultisample;
-	dest.shaderStorageImageReadWithoutFormat = dest.shaderStorageImageReadWithoutFormat || src.shaderStorageImageReadWithoutFormat;
-	dest.shaderStorageImageWriteWithoutFormat = dest.shaderStorageImageWriteWithoutFormat || src.shaderStorageImageWriteWithoutFormat;
-	dest.shaderUniformBufferArrayDynamicIndexing = dest.shaderUniformBufferArrayDynamicIndexing || src.shaderUniformBufferArrayDynamicIndexing;
-	dest.shaderSampledImageArrayDynamicIndexing = dest.shaderSampledImageArrayDynamicIndexing || src.shaderSampledImageArrayDynamicIndexing;
-	dest.shaderStorageBufferArrayDynamicIndexing = dest.shaderStorageBufferArrayDynamicIndexing || src.shaderStorageBufferArrayDynamicIndexing;
-	dest.shaderStorageImageArrayDynamicIndexing = dest.shaderStorageImageArrayDynamicIndexing || src.shaderStorageImageArrayDynamicIndexing;
-	dest.shaderClipDistance = dest.shaderClipDistance || src.shaderClipDistance;
-	dest.shaderCullDistance = dest.shaderCullDistance || src.shaderCullDistance;
-	dest.shaderFloat64 = dest.shaderFloat64 || src.shaderFloat64;
-	dest.shaderInt64 = dest.shaderInt64 || src.shaderInt64;
-	dest.shaderInt16 = dest.shaderInt16 || src.shaderInt16;
-	dest.shaderResourceResidency = dest.shaderResourceResidency || src.shaderResourceResidency;
-	dest.shaderResourceMinLod = dest.shaderResourceMinLod || src.shaderResourceMinLod;
-	dest.sparseBinding = dest.sparseBinding || src.sparseBinding;
-	dest.sparseResidencyBuffer = dest.sparseResidencyBuffer || src.sparseResidencyBuffer;
-	dest.sparseResidencyImage2D = dest.sparseResidencyImage2D || src.sparseResidencyImage2D;
-	dest.sparseResidencyImage3D = dest.sparseResidencyImage3D || src.sparseResidencyImage3D;
-	dest.sparseResidency2Samples = dest.sparseResidency2Samples || src.sparseResidency2Samples;
-	dest.sparseResidency4Samples = dest.sparseResidency4Samples || src.sparseResidency4Samples;
-	dest.sparseResidency8Samples = dest.sparseResidency8Samples || src.sparseResidency8Samples;
-	dest.sparseResidency16Samples = dest.sparseResidency16Samples || src.sparseResidency16Samples;
-	dest.sparseResidencyAliased = dest.sparseResidencyAliased || src.sparseResidencyAliased;
-	dest.variableMultisampleRate = dest.variableMultisampleRate || src.variableMultisampleRate;
-	dest.inheritedQueries = dest.inheritedQueries || src.inheritedQueries;
-}
-
-std::vector<std::string> supports_features(const VkPhysicalDeviceFeatures& supported,
-					   const VkPhysicalDeviceFeatures& requested,
-					   const FeaturesChain& extension_supported,
-					   const FeaturesChain& extension_requested) {
-    std::vector<std::string> error_list;
-
-	if (requested.robustBufferAccess && !supported.robustBufferAccess) { error_list.push_back("VkPhysicalDeviceFeatures::robustBufferAccess"); }
-	if (requested.fullDrawIndexUint32 && !supported.fullDrawIndexUint32) { error_list.push_back("VkPhysicalDeviceFeatures::fullDrawIndexUint32"); }
-	if (requested.imageCubeArray && !supported.imageCubeArray) { error_list.push_back("VkPhysicalDeviceFeatures::imageCubeArray"); }
-	if (requested.independentBlend && !supported.independentBlend) { error_list.push_back("VkPhysicalDeviceFeatures::independentBlend"); }
-	if (requested.geometryShader && !supported.geometryShader) { error_list.push_back("VkPhysicalDeviceFeatures::geometryShader"); }
-	if (requested.tessellationShader && !supported.tessellationShader) { error_list.push_back("VkPhysicalDeviceFeatures::tessellationShader"); }
-	if (requested.sampleRateShading && !supported.sampleRateShading) { error_list.push_back("VkPhysicalDeviceFeatures::sampleRateShading"); }
-	if (requested.dualSrcBlend && !supported.dualSrcBlend) { error_list.push_back("VkPhysicalDeviceFeatures::dualSrcBlend"); }
-	if (requested.logicOp && !supported.logicOp) { error_list.push_back("VkPhysicalDeviceFeatures::logicOp"); }
-	if (requested.multiDrawIndirect && !supported.multiDrawIndirect) { error_list.push_back("VkPhysicalDeviceFeatures::multiDrawIndirect"); }
-	if (requested.drawIndirectFirstInstance && !supported.drawIndirectFirstInstance) { error_list.push_back("VkPhysicalDeviceFeatures::drawIndirectFirstInstance"); }
-	if (requested.depthClamp && !supported.depthClamp) { error_list.push_back("VkPhysicalDeviceFeatures::depthClamp"); }
-	if (requested.depthBiasClamp && !supported.depthBiasClamp) { error_list.push_back("VkPhysicalDeviceFeatures::depthBiasClamp"); }
-	if (requested.fillModeNonSolid && !supported.fillModeNonSolid) { error_list.push_back("VkPhysicalDeviceFeatures::fillModeNonSolid"); }
-	if (requested.depthBounds && !supported.depthBounds) { error_list.push_back("VkPhysicalDeviceFeatures::depthBounds"); }
-	if (requested.wideLines && !supported.wideLines) { error_list.push_back("VkPhysicalDeviceFeatures::wideLines"); }
-	if (requested.largePoints && !supported.largePoints) { error_list.push_back("VkPhysicalDeviceFeatures::largePoints"); }
-	if (requested.alphaToOne && !supported.alphaToOne) { error_list.push_back("VkPhysicalDeviceFeatures::alphaToOne"); }
-	if (requested.multiViewport && !supported.multiViewport) { error_list.push_back("VkPhysicalDeviceFeatures::multiViewport"); }
-	if (requested.samplerAnisotropy && !supported.samplerAnisotropy) { error_list.push_back("VkPhysicalDeviceFeatures::samplerAnisotropy"); }
-	if (requested.textureCompressionETC2 && !supported.textureCompressionETC2) { error_list.push_back("VkPhysicalDeviceFeatures::textureCompressionETC2"); }
-	if (requested.textureCompressionASTC_LDR && !supported.textureCompressionASTC_LDR) { error_list.push_back("VkPhysicalDeviceFeatures::textureCompressionASTC_LDR"); }
-	if (requested.textureCompressionBC && !supported.textureCompressionBC) { error_list.push_back("VkPhysicalDeviceFeatures::textureCompressionBC"); }
-	if (requested.occlusionQueryPrecise && !supported.occlusionQueryPrecise) { error_list.push_back("VkPhysicalDeviceFeatures::occlusionQueryPrecise"); }
-	if (requested.pipelineStatisticsQuery && !supported.pipelineStatisticsQuery) { error_list.push_back("VkPhysicalDeviceFeatures::pipelineStatisticsQuery"); }
-	if (requested.vertexPipelineStoresAndAtomics && !supported.vertexPipelineStoresAndAtomics) { error_list.push_back("VkPhysicalDeviceFeatures::vertexPipelineStoresAndAtomics"); }
-	if (requested.fragmentStoresAndAtomics && !supported.fragmentStoresAndAtomics) { error_list.push_back("VkPhysicalDeviceFeatures::fragmentStoresAndAtomics"); }
-	if (requested.shaderTessellationAndGeometryPointSize && !supported.shaderTessellationAndGeometryPointSize) { error_list.push_back("VkPhysicalDeviceFeatures::shaderTessellationAndGeometryPointSize"); }
-	if (requested.shaderImageGatherExtended && !supported.shaderImageGatherExtended) { error_list.push_back("VkPhysicalDeviceFeatures::shaderImageGatherExtended"); }
-	if (requested.shaderStorageImageExtendedFormats && !supported.shaderStorageImageExtendedFormats) { error_list.push_back("VkPhysicalDeviceFeatures::shaderStorageImageExtendedFormats"); }
-	if (requested.shaderStorageImageMultisample && !supported.shaderStorageImageMultisample) { error_list.push_back("VkPhysicalDeviceFeatures::shaderStorageImageMultisample"); }
-	if (requested.shaderStorageImageReadWithoutFormat && !supported.shaderStorageImageReadWithoutFormat) { error_list.push_back("VkPhysicalDeviceFeatures::shaderStorageImageReadWithoutFormat"); }
-	if (requested.shaderStorageImageWriteWithoutFormat && !supported.shaderStorageImageWriteWithoutFormat) { error_list.push_back("VkPhysicalDeviceFeatures::shaderStorageImageWriteWithoutFormat"); }
-	if (requested.shaderUniformBufferArrayDynamicIndexing && !supported.shaderUniformBufferArrayDynamicIndexing) { error_list.push_back("VkPhysicalDeviceFeatures::shaderUniformBufferArrayDynamicIndexing"); }
-	if (requested.shaderSampledImageArrayDynamicIndexing && !supported.shaderSampledImageArrayDynamicIndexing) { error_list.push_back("VkPhysicalDeviceFeatures::shaderSampledImageArrayDynamicIndexing"); }
-	if (requested.shaderStorageBufferArrayDynamicIndexing && !supported.shaderStorageBufferArrayDynamicIndexing) { error_list.push_back("VkPhysicalDeviceFeatures::shaderStorageBufferArrayDynamicIndexing"); }
-	if (requested.shaderStorageImageArrayDynamicIndexing && !supported.shaderStorageImageArrayDynamicIndexing) { error_list.push_back("VkPhysicalDeviceFeatures::shaderStorageImageArrayDynamicIndexing"); }
-	if (requested.shaderClipDistance && !supported.shaderClipDistance) { error_list.push_back("VkPhysicalDeviceFeatures::shaderClipDistance"); }
-	if (requested.shaderCullDistance && !supported.shaderCullDistance) { error_list.push_back("VkPhysicalDeviceFeatures::shaderCullDistance"); }
-	if (requested.shaderFloat64 && !supported.shaderFloat64) { error_list.push_back("VkPhysicalDeviceFeatures::shaderFloat64"); }
-	if (requested.shaderInt64 && !supported.shaderInt64) { error_list.push_back("VkPhysicalDeviceFeatures::shaderInt64"); }
-	if (requested.shaderInt16 && !supported.shaderInt16) { error_list.push_back("VkPhysicalDeviceFeatures::shaderInt16"); }
-	if (requested.shaderResourceResidency && !supported.shaderResourceResidency) { error_list.push_back("VkPhysicalDeviceFeatures::shaderResourceResidency"); }
-	if (requested.shaderResourceMinLod && !supported.shaderResourceMinLod) { error_list.push_back("VkPhysicalDeviceFeatures::shaderResourceMinLod"); }
-	if (requested.sparseBinding && !supported.sparseBinding) { error_list.push_back("VkPhysicalDeviceFeatures::sparseBinding"); }
-	if (requested.sparseResidencyBuffer && !supported.sparseResidencyBuffer) { error_list.push_back("VkPhysicalDeviceFeatures::sparseResidencyBuffer"); }
-	if (requested.sparseResidencyImage2D && !supported.sparseResidencyImage2D) { error_list.push_back("VkPhysicalDeviceFeatures::sparseResidencyImage2D"); }
-	if (requested.sparseResidencyImage3D && !supported.sparseResidencyImage3D) { error_list.push_back("VkPhysicalDeviceFeatures::sparseResidencyImage3D"); }
-	if (requested.sparseResidency2Samples && !supported.sparseResidency2Samples) { error_list.push_back("VkPhysicalDeviceFeatures::sparseResidency2Samples"); }
-	if (requested.sparseResidency4Samples && !supported.sparseResidency4Samples) { error_list.push_back("VkPhysicalDeviceFeatures::sparseResidency4Samples"); }
-	if (requested.sparseResidency8Samples && !supported.sparseResidency8Samples) { error_list.push_back("VkPhysicalDeviceFeatures::sparseResidency8Samples"); }
-	if (requested.sparseResidency16Samples && !supported.sparseResidency16Samples) { error_list.push_back("VkPhysicalDeviceFeatures::sparseResidency16Samples"); }
-	if (requested.sparseResidencyAliased && !supported.sparseResidencyAliased) { error_list.push_back("VkPhysicalDeviceFeatures::sparseResidencyAliased"); }
-	if (requested.variableMultisampleRate && !supported.variableMultisampleRate) { error_list.push_back("VkPhysicalDeviceFeatures::variableMultisampleRate"); }
-	if (requested.inheritedQueries && !supported.inheritedQueries) { error_list.push_back("VkPhysicalDeviceFeatures::inheritedQueries"); }
-
-	extension_supported.match_all(error_list, extension_requested);
-    return error_list;
-}
-// clang-format on
 // Finds the first queue which supports the desired operations. Returns QUEUE_INDEX_MAX_VALUE if none is found
 uint32_t get_first_queue_index(std::vector<VkQueueFamilyProperties> const& families, VkQueueFlags desired_flags) {
     for (uint32_t i = 0; i < static_cast<uint32_t>(families.size()); i++) {
@@ -1187,6 +1060,8 @@ PhysicalDevice PhysicalDeviceSelector::populate_device_details(
     for (const auto& ext : available_extensions) {
         physical_device.available_extensions.push_back(&ext.extensionName[0]);
     }
+    // Lets us quickly find extensions as this list can be 300+ elements long
+    std::sort(physical_device.available_extensions.begin(), physical_device.available_extensions.end());
 
     physical_device.properties2_ext_enabled = instance_info.properties2_ext_enabled;
 
@@ -1208,12 +1083,24 @@ PhysicalDevice PhysicalDeviceSelector::populate_device_details(
     return physical_device;
 }
 
-PhysicalDevice::Suitable PhysicalDeviceSelector::is_device_suitable(PhysicalDevice const& pd) const {
+PhysicalDevice::Suitable PhysicalDeviceSelector::is_device_suitable(
+    PhysicalDevice const& pd, std::vector<std::string>& unsuitability_reasons) const {
     PhysicalDevice::Suitable suitable = PhysicalDevice::Suitable::yes;
 
-    if (criteria.name.size() > 0 && criteria.name != pd.properties.deviceName) return PhysicalDevice::Suitable::no;
+    if (criteria.name.size() > 0 && criteria.name != pd.properties.deviceName) {
+        unsuitability_reasons.push_back(
+            "VkPhysicalDeviceProperties::deviceName doesn't match requested name \"" + criteria.name + "\"");
+        return PhysicalDevice::Suitable::no;
+    }
 
-    if (criteria.required_version > pd.properties.apiVersion) return PhysicalDevice::Suitable::no;
+    if (criteria.required_version > pd.properties.apiVersion) {
+        unsuitability_reasons.push_back(
+            "VkPhysicalDeviceProperties::apiVersion " + std::to_string(VK_API_VERSION_MAJOR(pd.properties.apiVersion)) +
+            "." + std::to_string(VK_API_VERSION_MINOR(pd.properties.apiVersion)) + " lower than required version " +
+            std::to_string(VK_API_VERSION_MAJOR(criteria.required_version)) + "." +
+            std::to_string(VK_API_VERSION_MINOR(criteria.required_version)));
+        return PhysicalDevice::Suitable::no;
+    }
 
     bool dedicated_compute = detail::get_dedicated_queue_index(pd.queue_families, VK_QUEUE_COMPUTE_BIT, VK_QUEUE_TRANSFER_BIT) !=
                              detail::QUEUE_INDEX_MAX_VALUE;
@@ -1227,18 +1114,33 @@ PhysicalDevice::Suitable PhysicalDeviceSelector::is_device_suitable(PhysicalDevi
     bool present_queue = detail::get_present_queue_index(pd.physical_device, instance_info.surface, pd.queue_families) !=
                          detail::QUEUE_INDEX_MAX_VALUE;
 
-    if (criteria.require_dedicated_compute_queue && !dedicated_compute) return PhysicalDevice::Suitable::no;
-    if (criteria.require_dedicated_transfer_queue && !dedicated_transfer) return PhysicalDevice::Suitable::no;
-    if (criteria.require_separate_compute_queue && !separate_compute) return PhysicalDevice::Suitable::no;
-    if (criteria.require_separate_transfer_queue && !separate_transfer) return PhysicalDevice::Suitable::no;
-    if (criteria.require_present && !present_queue && !criteria.defer_surface_initialization)
+    if (criteria.require_dedicated_compute_queue && !dedicated_compute) {
+        unsuitability_reasons.push_back("No dedicated compute queue");
         return PhysicalDevice::Suitable::no;
-
-    auto required_extensions_supported =
-        detail::check_device_extension_support(pd.available_extensions, criteria.required_extensions);
-    if (required_extensions_supported.size() != criteria.required_extensions.size())
+    }
+    if (criteria.require_dedicated_transfer_queue && !dedicated_transfer) {
+        unsuitability_reasons.push_back("No dedicated transfer queue");
         return PhysicalDevice::Suitable::no;
-
+    }
+    if (criteria.require_separate_compute_queue && !separate_compute) {
+        unsuitability_reasons.push_back("No separate compute queue");
+        return PhysicalDevice::Suitable::no;
+    }
+    if (criteria.require_separate_transfer_queue && !separate_transfer) {
+        unsuitability_reasons.push_back("No separate transfer queue");
+        return PhysicalDevice::Suitable::no;
+    }
+    if (criteria.require_present && !present_queue && !criteria.defer_surface_initialization) {
+        unsuitability_reasons.push_back("No queue capable of present operations");
+        return PhysicalDevice::Suitable::no;
+    }
+    auto unsupported_extensions = detail::find_unsupported_extensions_in_list(pd.available_extensions, criteria.required_extensions);
+    if (unsupported_extensions.size() > 0) {
+        for (auto const& unsupported_ext : unsupported_extensions) {
+            unsuitability_reasons.push_back("Device extension " + unsupported_ext + " not supported");
+        }
+        return PhysicalDevice::Suitable::no;
+    }
     if (!criteria.defer_surface_initialization && criteria.require_present) {
         std::vector<VkSurfaceFormatKHR> formats;
         std::vector<VkPresentModeKHR> present_modes;
@@ -1253,6 +1155,21 @@ PhysicalDevice::Suitable PhysicalDeviceSelector::is_device_suitable(PhysicalDevi
             instance_info.surface);
 
         if (formats_ret != VK_SUCCESS || present_modes_ret != VK_SUCCESS || formats.empty() || present_modes.empty()) {
+            if (formats_ret != VK_SUCCESS) {
+                unsuitability_reasons.push_back(
+                    "vkGetPhysicalDeviceSurfaceFormatsKHR returned error code " + std::to_string(formats_ret));
+            }
+            if (present_modes_ret != VK_SUCCESS) {
+                unsuitability_reasons.push_back(
+                    "vkGetPhysicalDeviceSurfacePresentModesKHR returned error code " + std::to_string(present_modes_ret));
+            }
+            if (formats.empty()) {
+                unsuitability_reasons.push_back("vkGetPhysicalDeviceSurfaceFormatsKHR returned zero surface formats");
+            }
+            if (present_modes.empty()) {
+                unsuitability_reasons.push_back(
+                    "vkGetPhysicalDeviceSurfacePresentModesKHR returned zero present modes");
+            }
             return PhysicalDevice::Suitable::no;
         }
     }
@@ -1261,13 +1178,16 @@ PhysicalDevice::Suitable PhysicalDeviceSelector::is_device_suitable(PhysicalDevi
         suitable = PhysicalDevice::Suitable::partial;
     }
 
-    auto unsupported_features = detail::supports_features(
-        pd.features, criteria.required_features, pd.extended_features_chain, criteria.extended_features_chain);
-    if (!unsupported_features.empty()) return PhysicalDevice::Suitable::no;
+    detail::compare_VkPhysicalDeviceFeatures(unsuitability_reasons, pd.features, criteria.required_features);
+    pd.extended_features_chain.match_all(unsuitability_reasons, criteria.extended_features_chain);
+    if (!unsuitability_reasons.empty()) {
+        return PhysicalDevice::Suitable::no;
+    }
 
     for (uint32_t i = 0; i < pd.memory_properties.memoryHeapCount; i++) {
         if (pd.memory_properties.memoryHeaps[i].flags & VK_MEMORY_HEAP_DEVICE_LOCAL_BIT) {
             if (pd.memory_properties.memoryHeaps[i].size < criteria.required_mem_size) {
+                unsuitability_reasons.push_back("Did not contain a Device Local memory heap with enough size");
                 return PhysicalDevice::Suitable::no;
             }
         }
@@ -1288,7 +1208,8 @@ PhysicalDeviceSelector::PhysicalDeviceSelector(Instance const& instance, VkSurfa
     criteria.required_version = instance.api_version;
 }
 
-Result<std::vector<PhysicalDevice>> PhysicalDeviceSelector::select_impl() const {
+// Return all devices which are considered suitable - intended for applications which want to let the user pick the physical device
+Result<std::vector<PhysicalDevice>> PhysicalDeviceSelector::select_devices() const {
     if (criteria.require_present && !criteria.defer_surface_initialization) {
         if (instance_info.surface == VK_NULL_HANDLE)
             return Result<std::vector<PhysicalDevice>>{ PhysicalDeviceError::no_surface_provided };
@@ -1314,7 +1235,6 @@ Result<std::vector<PhysicalDevice>> PhysicalDeviceSelector::select_impl() const 
             if (criteria.enable_portability_subset && ext == "VK_KHR_portability_subset")
                 portability_ext_available = true;
 
-
         phys_dev.extensions_to_enable.clear();
         phys_dev.extensions_to_enable.insert(
             phys_dev.extensions_to_enable.end(), criteria.required_extensions.begin(), criteria.required_extensions.end());
@@ -1331,13 +1251,25 @@ Result<std::vector<PhysicalDevice>> PhysicalDeviceSelector::select_impl() const 
     }
 
     // Populate their details and check their suitability
+    std::vector<std::string> unsuitability_reasons;
     std::vector<PhysicalDevice> physical_devices;
     for (auto& vk_physical_device : vk_physical_devices) {
         PhysicalDevice phys_dev = populate_device_details(vk_physical_device, criteria.extended_features_chain);
-        phys_dev.suitable = is_device_suitable(phys_dev);
+        std::vector<std::string> gpu_unsuitability_reasons;
+        phys_dev.suitable = is_device_suitable(phys_dev, gpu_unsuitability_reasons);
         if (phys_dev.suitable != PhysicalDevice::Suitable::no) {
             physical_devices.push_back(phys_dev);
+        } else {
+            for (auto const& reason : gpu_unsuitability_reasons) {
+                unsuitability_reasons.push_back(
+                    std::string("Physical Device ") + phys_dev.properties.deviceName + " not selected due to: " + reason);
+            }
         }
+    }
+
+    // No suitable devices found, return an error which contains the list of reason why it wasn't suitable
+    if (physical_devices.size() == 0) {
+        return Result<std::vector<PhysicalDevice>>{ PhysicalDeviceError::no_suitable_device, unsuitability_reasons };
     }
 
     // sort the list into fully and partially suitable devices. use stable_partition to maintain relative order
@@ -1354,32 +1286,16 @@ Result<std::vector<PhysicalDevice>> PhysicalDeviceSelector::select_impl() const 
 }
 
 Result<PhysicalDevice> PhysicalDeviceSelector::select() const {
-    auto const selected_devices = select_impl();
+    auto const selected_devices = select_devices();
 
-    if (!selected_devices) return Result<PhysicalDevice>{ selected_devices.error() };
-    if (selected_devices.value().size() == 0) {
-        return Result<PhysicalDevice>{ PhysicalDeviceError::no_suitable_device };
-    }
-
+    if (!selected_devices) return Result<PhysicalDevice>{ selected_devices.full_error() };
     return selected_devices.value().at(0);
 }
 
-// Return all devices which are considered suitable - intended for applications which want to let the user pick the physical device
-Result<std::vector<PhysicalDevice>> PhysicalDeviceSelector::select_devices() const {
-    auto const selected_devices = select_impl();
-    if (!selected_devices) return Result<std::vector<PhysicalDevice>>{ selected_devices.error() };
-    if (selected_devices.value().size() == 0) {
-        return Result<std::vector<PhysicalDevice>>{ PhysicalDeviceError::no_suitable_device };
-    }
-    return selected_devices.value();
-}
-
 Result<std::vector<std::string>> PhysicalDeviceSelector::select_device_names() const {
-    auto const selected_devices = select_impl();
-    if (!selected_devices) return Result<std::vector<std::string>>{ selected_devices.error() };
-    if (selected_devices.value().size() == 0) {
-        return Result<std::vector<std::string>>{ PhysicalDeviceError::no_suitable_device };
-    }
+    auto const selected_devices = select_devices();
+    if (!selected_devices) return Result<std::vector<std::string>>{ selected_devices.full_error() };
+
     std::vector<std::string> names;
     for (const auto& pd : selected_devices.value()) {
         names.push_back(pd.name);
@@ -1453,7 +1369,7 @@ PhysicalDeviceSelector& PhysicalDeviceSelector::disable_portability_subset() {
 }
 
 PhysicalDeviceSelector& PhysicalDeviceSelector::set_required_features(VkPhysicalDeviceFeatures const& features) {
-    detail::combine_features(criteria.required_features, features);
+    detail::merge_VkPhysicalDeviceFeatures(criteria.required_features, features);
     return *this;
 }
 #if defined(VKB_VK_API_VERSION_1_2)
@@ -1545,9 +1461,10 @@ bool PhysicalDevice::enable_features_if_present(const VkPhysicalDeviceFeatures& 
     VkPhysicalDeviceFeatures actual_pdf{};
     detail::vulkan_functions().fp_vkGetPhysicalDeviceFeatures(physical_device, &actual_pdf);
 
-    auto unsupported_features = detail::supports_features(actual_pdf, features_to_enable, {}, {});
+    std::vector<std::string> unsupported_features;
+    detail::compare_VkPhysicalDeviceFeatures(unsupported_features, actual_pdf, features_to_enable);
     if (unsupported_features.empty()) {
-        detail::combine_features(features, features_to_enable);
+        detail::merge_VkPhysicalDeviceFeatures(features, features_to_enable);
         return true;
     }
     return false;
@@ -1568,7 +1485,7 @@ bool PhysicalDevice::enable_features_struct_if_present(
         }
 
         std::vector<std::string> error_list;
-        compare_feature_struct(sType, error_list, query_struct, features_struct);
+        detail::compare_feature_struct(sType, error_list, query_struct, features_struct);
 
         if (error_list.size() == 0) {
             extended_features_chain.add_structure(sType, struct_size, features_struct);
@@ -1929,7 +1846,7 @@ SwapchainBuilder::SwapchainBuilder(VkPhysicalDevice const physical_device,
 }
 Result<Swapchain> SwapchainBuilder::build() const {
     if (info.surface == VK_NULL_HANDLE) {
-        return Error{ SwapchainError::surface_handle_not_provided };
+        return Result<Swapchain>{ SwapchainError::surface_handle_not_provided };
     }
 
     auto desired_formats = info.desired_formats;
@@ -1939,7 +1856,7 @@ Result<Swapchain> SwapchainBuilder::build() const {
 
     auto surface_support_ret = detail::query_surface_support_details(info.physical_device, info.surface);
     if (!surface_support_ret.has_value())
-        return Error{ SwapchainError::failed_query_surface_support_details, surface_support_ret.vk_result() };
+        return Result<Swapchain>{ SwapchainError::failed_query_surface_support_details, surface_support_ret.vk_result() };
     auto surface_support = surface_support_ret.value();
 
     uint32_t image_count = info.min_image_count;
@@ -1982,7 +1899,7 @@ Result<Swapchain> SwapchainBuilder::build() const {
 
     if (is_unextended_present_mode(present_mode) &&
         (info.image_usage_flags & surface_support.capabilities.supportedUsageFlags) != info.image_usage_flags) {
-        return Error{ SwapchainError::required_usage_not_supported };
+        return Result<Swapchain>{ SwapchainError::required_usage_not_supported };
     }
 
     VkSurfaceTransformFlagBitsKHR pre_transform = info.pre_transform;
@@ -2021,7 +1938,7 @@ Result<Swapchain> SwapchainBuilder::build() const {
     auto res = swapchain_create_proc(info.device, &swapchain_create_info, info.allocation_callbacks, &swapchain.swapchain);
 
     if (res != VK_SUCCESS) {
-        return Error{ SwapchainError::failed_create_swapchain, res };
+        return Result<Swapchain>{ SwapchainError::failed_create_swapchain, res };
     }
     swapchain.device = info.device;
     swapchain.image_format = surface_format.format;
@@ -2036,7 +1953,7 @@ Result<Swapchain> SwapchainBuilder::build() const {
         info.device, swapchain.internal_table.fp_vkDestroySwapchainKHR, "vkDestroySwapchainKHR");
     auto images = swapchain.get_images();
     if (!images) {
-        return Error{ SwapchainError::failed_get_swapchain_images };
+        return Result<Swapchain>{ SwapchainError::failed_get_swapchain_images };
     }
     swapchain.requested_min_image_count = image_count;
     swapchain.present_mode = present_mode;
@@ -2051,7 +1968,7 @@ Result<std::vector<VkImage>> Swapchain::get_images() {
     auto swapchain_images_ret =
         detail::get_vector<VkImage>(swapchain_images, internal_table.fp_vkGetSwapchainImagesKHR, device, swapchain);
     if (swapchain_images_ret != VK_SUCCESS) {
-        return Error{ SwapchainError::failed_get_swapchain_images, swapchain_images_ret };
+        return Result<std::vector<VkImage>>{ SwapchainError::failed_get_swapchain_images, swapchain_images_ret };
     }
     return swapchain_images;
 }
@@ -2097,7 +2014,8 @@ Result<std::vector<VkImageView>> Swapchain::get_image_views(const void* pNext) {
         createInfo.subresourceRange.baseArrayLayer = 0;
         createInfo.subresourceRange.layerCount = 1;
         VkResult res = internal_table.fp_vkCreateImageView(device, &createInfo, allocation_callbacks, &views[i]);
-        if (res != VK_SUCCESS) return Error{ SwapchainError::failed_create_swapchain_image_views, res };
+        if (res != VK_SUCCESS)
+            return Result<std::vector<VkImageView>>{ SwapchainError::failed_create_swapchain_image_views, res };
     }
     return views;
 }

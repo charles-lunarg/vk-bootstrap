@@ -57,10 +57,19 @@
 
 namespace vkb {
 
+// Currently GCC gets tripped up by using the Error in our custom Result<T> implementation. Silence it for the meantime.
+#if defined(__GNUC__) || defined(__GNUG__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+#endif
 struct Error {
     std::error_code type;
     VkResult vk_result = VK_SUCCESS; // optional error value if a vulkan call failed
+    std::vector<std::string> detailed_failure_reasons; // optional list of reasons why the operation failed - mainly used to return why VkPhysicalDevices failed to be selected
 };
+#if defined(__GNUC__) || defined(__GNUG__)
+#pragma GCC diagnostic pop
+#endif
 
 template <typename T> class Result {
     public:
@@ -70,14 +79,17 @@ template <typename T> class Result {
     Result(Error error) noexcept : m_error{ error }, m_init{ false } {}
 
     Result(std::error_code error_code, VkResult result = VK_SUCCESS) noexcept
-    : m_error{ error_code, result }, m_init{ false } {}
+    : m_error{ error_code, result, {} }, m_init{ false } {}
+
+    Result(std::error_code error_code, std::vector<std::string> const& detailed_failure_reasons) noexcept
+    : m_error{ error_code, VK_SUCCESS, detailed_failure_reasons }, m_init{ false } {}
 
     ~Result() noexcept { destroy(); }
-    Result(Result const& expected) noexcept : m_init(expected.m_init) {
+    Result(Result const& result) noexcept : m_init(result.m_init) {
         if (m_init)
-            new (&m_value) T{ expected.m_value };
+            new (&m_value) T{ result.m_value };
         else
-            m_error = expected.m_error;
+            new (&m_error) Error{ result.m_error };
     }
     Result& operator=(Result const& result) noexcept {
         destroy();
@@ -85,14 +97,14 @@ template <typename T> class Result {
         if (m_init)
             new (&m_value) T{ result.m_value };
         else
-            m_error = result.m_error;
+            new (&m_error) Error{ result.m_error };
         return *this;
     }
-    Result(Result&& expected) noexcept : m_init(expected.m_init) {
+    Result(Result&& result) noexcept : m_init(result.m_init) {
         if (m_init)
-            new (&m_value) T{ std::move(expected.m_value) };
+            new (&m_value) T{ std::move(result.m_value) };
         else
-            m_error = std::move(expected.m_error);
+            new (&m_error) Error{ std::move(result.m_error) };
     }
     Result& operator=(Result&& result) noexcept {
         destroy();
@@ -100,7 +112,7 @@ template <typename T> class Result {
         if (m_init)
             new (&m_value) T{ std::move(result.m_value) };
         else
-            m_error = std::move(result.m_error);
+            new (&m_error) Error{ std::move(result.m_error) };
         return *this;
     }
     Result& operator=(const T& expect) noexcept {
@@ -118,19 +130,19 @@ template <typename T> class Result {
     Result& operator=(const Error& error) noexcept {
         destroy();
         m_init = false;
-        m_error = error;
+        new (&m_error) Error{ error };
         return *this;
     }
     Result& operator=(Error&& error) noexcept {
         destroy();
         m_init = false;
-        m_error = error;
+        new (&m_error) Error{ std::move(error) };
         return *this;
     }
     // clang-format off
 	const T* operator-> () const noexcept { assert (m_init); return &m_value; }
 	T*       operator-> ()       noexcept { assert (m_init); return &m_value; }
-	const T& operator* () const& noexcept { assert (m_init);	return m_value; }
+	const T& operator* () const& noexcept { assert (m_init); return m_value; }
 	T&       operator* () &      noexcept { assert (m_init); return m_value; }
 	T        operator* () &&	 noexcept { assert (m_init); return std::move (m_value); }
 	const T&  value () const&    noexcept { assert (m_init); return m_value; }
@@ -138,24 +150,30 @@ template <typename T> class Result {
 	T         value () &&        noexcept { assert (m_init); return std::move (m_value); }
 
     // std::error_code associated with the error
-    std::error_code error() const { assert (!m_init); return m_error.type; }
+    std::error_code error() const noexcept { assert (!m_init); return m_error.type; }
     // optional VkResult that could of been produced due to the error
-    VkResult vk_result() const { assert (!m_init); return m_error.vk_result; }
+    VkResult vk_result() const noexcept { assert (!m_init); return m_error.vk_result; }
     // Returns the struct that holds the std::error_code and VkResult
-    Error full_error() const { assert (!m_init); return m_error; }
+    Error full_error() const noexcept { assert (!m_init); return m_error; }
+    // Returns the detailed error list that contributed to the error. Example: Reasons why VkPhysicalDevices failed to be selected
+    std::vector<std::string> const& detailed_failure_reasons() const noexcept { assert (!m_init); return m_error.detailed_failure_reasons; }
     // clang-format on
 
     // check if the result has an error that matches a specific error case
-    template <typename E> bool matches_error(E error_enum_value) const {
+    template <typename E> bool matches_error(E error_enum_value) const noexcept {
         return !m_init && static_cast<E>(m_error.type.value()) == error_enum_value;
     }
 
-    bool has_value() const { return m_init; }
+    bool has_value() const noexcept { return m_init; }
     explicit operator bool() const { return m_init; }
 
     private:
-    void destroy() {
-        if (m_init) m_value.~T();
+    void destroy() noexcept {
+        if (m_init) {
+            m_value.~T();
+        } else {
+            m_error.~Error();
+        }
     }
     union {
         T m_value;
@@ -716,9 +734,8 @@ class PhysicalDeviceSelector {
 
     PhysicalDevice populate_device_details(VkPhysicalDevice phys_device, detail::FeaturesChain const& src_extended_features_chain) const;
 
-    PhysicalDevice::Suitable is_device_suitable(PhysicalDevice const& phys_device) const;
-
-    Result<std::vector<PhysicalDevice>> select_impl() const;
+    PhysicalDevice::Suitable is_device_suitable(
+        PhysicalDevice const& phys_device, std::vector<std::string>& unsuitability_reasons) const;
 };
 
 // ---- Queue ---- //

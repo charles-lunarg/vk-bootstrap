@@ -91,14 +91,23 @@ int device_initialization(Init& init) {
     init.surface = create_surface_glfw(init.instance, init.window);
 
     vkb::PhysicalDeviceSelector phys_device_selector(init.instance);
+
     auto phys_device_ret = phys_device_selector.set_surface(init.surface).select();
     if (!phys_device_ret) {
         std::cout << phys_device_ret.error().message() << "\n";
+        const auto& detailed_reasons = phys_device_ret.detailed_failure_reasons();
+        if (!detailed_reasons.empty()) {
+            std::cerr << "GPU Selection failure reasons\n";
+            for (const std::string& reason : detailed_reasons) {
+                std::cerr << reason << "\n";
+            }
+        }
         return -1;
     }
     vkb::PhysicalDevice physical_device = phys_device_ret.value();
 
     vkb::DeviceBuilder device_builder{ physical_device };
+
     auto device_ret = device_builder.build();
     if (!device_ret) {
         std::cout << device_ret.error().message() << "\n";

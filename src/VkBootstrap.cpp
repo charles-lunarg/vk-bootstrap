@@ -1209,7 +1209,8 @@ PhysicalDeviceSelector::PhysicalDeviceSelector(Instance const& instance, VkSurfa
     criteria.required_version = instance.api_version;
 }
 
-Result<std::vector<PhysicalDevice>> PhysicalDeviceSelector::select_impl() const {
+// Return all devices which are considered suitable - intended for applications which want to let the user pick the physical device
+Result<std::vector<PhysicalDevice>> PhysicalDeviceSelector::select_devices() const {
     if (criteria.require_present && !criteria.defer_surface_initialization) {
         if (instance_info.surface == VK_NULL_HANDLE)
             return Result<std::vector<PhysicalDevice>>{ PhysicalDeviceError::no_surface_provided };
@@ -1251,23 +1252,25 @@ Result<std::vector<PhysicalDevice>> PhysicalDeviceSelector::select_impl() const 
     }
 
     // Populate their details and check their suitability
+    std::vector<std::string> unsuitability_reasons;
     std::vector<PhysicalDevice> physical_devices;
     for (auto& vk_physical_device : vk_physical_devices) {
         PhysicalDevice phys_dev = populate_device_details(vk_physical_device, criteria.extended_features_chain);
-        std::vector<std::string> unsuitability_reasons;
-        phys_dev.suitable = is_device_suitable(phys_dev, unsuitability_reasons);
+        std::vector<std::string> gpu_unsuitability_reasons;
+        phys_dev.suitable = is_device_suitable(phys_dev, gpu_unsuitability_reasons);
         if (phys_dev.suitable != PhysicalDevice::Suitable::no) {
             physical_devices.push_back(phys_dev);
         } else {
-            for (auto& reason : unsuitability_reasons) {
-                reason.insert(0, std::string("Physical Device ") + phys_dev.properties.deviceName + " unsuitable due to: ");
+            for (auto const& reason : gpu_unsuitability_reasons) {
+                unsuitability_reasons.push_back(
+                    std::string("Physical Device ") + phys_dev.properties.deviceName + " unsuitable due to: " + reason);
             }
         }
     }
 
     // No suitable devices found, return an error which contains the list of reason why it wasn't suitable
     if (physical_devices.size() == 0) {
-        return Result<std::vector<PhysicalDevice>>{ PhysicalDeviceError::no_suitable_device };
+        return Result<std::vector<PhysicalDevice>>{ PhysicalDeviceError::no_suitable_device, unsuitability_reasons };
     }
 
     // sort the list into fully and partially suitable devices. use stable_partition to maintain relative order
@@ -1284,32 +1287,16 @@ Result<std::vector<PhysicalDevice>> PhysicalDeviceSelector::select_impl() const 
 }
 
 Result<PhysicalDevice> PhysicalDeviceSelector::select() const {
-    auto const selected_devices = select_impl();
+    auto const selected_devices = select_devices();
 
-    if (!selected_devices) return Result<PhysicalDevice>{ selected_devices.error() };
-    if (selected_devices.value().size() == 0) {
-        return Result<PhysicalDevice>{ PhysicalDeviceError::no_suitable_device };
-    }
-
+    if (!selected_devices) return Result<PhysicalDevice>{ selected_devices.full_error() };
     return selected_devices.value().at(0);
 }
 
-// Return all devices which are considered suitable - intended for applications which want to let the user pick the physical device
-Result<std::vector<PhysicalDevice>> PhysicalDeviceSelector::select_devices() const {
-    auto const selected_devices = select_impl();
-    if (!selected_devices) return Result<std::vector<PhysicalDevice>>{ selected_devices.error() };
-    if (selected_devices.value().size() == 0) {
-        return Result<std::vector<PhysicalDevice>>{ PhysicalDeviceError::no_suitable_device };
-    }
-    return selected_devices.value();
-}
-
 Result<std::vector<std::string>> PhysicalDeviceSelector::select_device_names() const {
-    auto const selected_devices = select_impl();
-    if (!selected_devices) return Result<std::vector<std::string>>{ selected_devices.error() };
-    if (selected_devices.value().size() == 0) {
-        return Result<std::vector<std::string>>{ PhysicalDeviceError::no_suitable_device };
-    }
+    auto const selected_devices = select_devices();
+    if (!selected_devices) return Result<std::vector<std::string>>{ selected_devices.full_error() };
+
     std::vector<std::string> names;
     for (const auto& pd : selected_devices.value()) {
         names.push_back(pd.name);

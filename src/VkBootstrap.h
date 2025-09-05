@@ -671,7 +671,8 @@ class PhysicalDeviceSelector {
 
     PhysicalDevice populate_device_details(VkPhysicalDevice phys_device, detail::FeaturesChain const& src_extended_features_chain) const;
 
-    PhysicalDevice::Suitable is_device_suitable(PhysicalDevice const& phys_device) const;
+    PhysicalDevice::Suitable is_device_suitable(
+        PhysicalDevice const& phys_device, std::vector<std::string>& unsuitability_reasons) const;
 
     Result<std::vector<PhysicalDevice>> select_impl() const;
 };

@@ -57,11 +57,19 @@
 
 namespace vkb {
 
+// Currently GCC gets tripped up by using the Error in our custom Result<T> implementation. Silence it for the meantime.
+#if defined(__GNUC__) || defined(__GNUG__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+#endif
 struct Error {
     std::error_code type;
     VkResult vk_result = VK_SUCCESS; // optional error value if a vulkan call failed
     std::vector<std::string> detailed_failure_reasons; // optional list of reasons why the operation failed - mainly used to return why VkPhysicalDevices failed to be selected
 };
+#if defined(__GNUC__) || defined(__GNUG__)
+#pragma GCC diagnostic pop
+#endif
 
 template <typename T> class Result {
     public:

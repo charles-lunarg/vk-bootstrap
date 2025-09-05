@@ -55,7 +55,7 @@ header = '''/*
 '''
 
 namespace_decl = '''
-namespace vkb {
+namespace vkb::detail {
 
 '''
 

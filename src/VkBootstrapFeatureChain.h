@@ -33,7 +33,7 @@
 #include <vulkan/vulkan_beta.h>
 #endif // defined(VK_ENABLE_BETA_EXTENSIONS)
 
-namespace vkb {
+namespace vkb::detail {
 
 void compare_VkPhysicalDeviceFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceFeatures const& supported, VkPhysicalDeviceFeatures const& requested);
 void merge_VkPhysicalDeviceFeatures(VkPhysicalDeviceFeatures & current, VkPhysicalDeviceFeatures const& merge_in);

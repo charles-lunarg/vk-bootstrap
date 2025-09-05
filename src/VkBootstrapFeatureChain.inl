@@ -23,7 +23,7 @@
 #include <vector>
 #include <vulkan/vulkan_core.h>
 
-namespace vkb {
+namespace vkb::detail {
 
 void compare_VkPhysicalDeviceFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceFeatures const& supported, VkPhysicalDeviceFeatures const& requested) {
     if (requested.robustBufferAccess && !supported.robustBufferAccess) {

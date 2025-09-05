@@ -973,18 +973,16 @@ void destroy_debug_messenger(VkInstance const instance, VkDebugUtilsMessengerEXT
 
 namespace detail {
 
-std::vector<std::string> check_device_extension_support(
+std::vector<std::string> find_unsupported_extensions_in_list(
     std::vector<std::string> const& available_extensions, std::vector<std::string> const& required_extensions) {
-    std::vector<std::string> extensions_to_enable;
-    for (const auto& avail_ext : available_extensions) {
-        for (auto& req_ext : required_extensions) {
-            if (avail_ext == req_ext) {
-                extensions_to_enable.push_back(req_ext);
-                break;
-            }
+    std::vector<std::string> unavailable_extensions;
+
+    for (auto& req_ext : required_extensions) {
+        if (available_extensions.end() == std::find(available_extensions.begin(), available_extensions.end(), req_ext)) {
+            unavailable_extensions.push_back(req_ext);
         }
     }
-    return extensions_to_enable;
+    return unavailable_extensions;
 }
 
 // Finds the first queue which supports the desired operations. Returns QUEUE_INDEX_MAX_VALUE if none is found
@@ -1062,6 +1060,8 @@ PhysicalDevice PhysicalDeviceSelector::populate_device_details(
     for (const auto& ext : available_extensions) {
         physical_device.available_extensions.push_back(&ext.extensionName[0]);
     }
+    // Lets us quickly find extensions as this list can be 300+ elements long
+    std::sort(physical_device.available_extensions.begin(), physical_device.available_extensions.end());
 
     physical_device.properties2_ext_enabled = instance_info.properties2_ext_enabled;
 
@@ -1083,12 +1083,25 @@ PhysicalDevice PhysicalDeviceSelector::populate_device_details(
     return physical_device;
 }
 
-PhysicalDevice::Suitable PhysicalDeviceSelector::is_device_suitable(PhysicalDevice const& pd) const {
+PhysicalDevice::Suitable PhysicalDeviceSelector::is_device_suitable(
+    PhysicalDevice const& pd, std::vector<std::string>& unsuitability_reasons) const {
     PhysicalDevice::Suitable suitable = PhysicalDevice::Suitable::yes;
 
-    if (criteria.name.size() > 0 && criteria.name != pd.properties.deviceName) return PhysicalDevice::Suitable::no;
+    if (criteria.name.size() > 0 && criteria.name != pd.properties.deviceName) {
+        unsuitability_reasons.push_back("deviceName doesn't match");
+        return PhysicalDevice::Suitable::no;
+    }
 
-    if (criteria.required_version > pd.properties.apiVersion) return PhysicalDevice::Suitable::no;
+    if (criteria.required_version > pd.properties.apiVersion) {
+        unsuitability_reasons.push_back(
+            "VkPhysicalDeviceProperties::apiVersion " + std::to_string(VK_API_VERSION_MAJOR(pd.properties.apiVersion)) +
+            "." + std::to_string(VK_API_VERSION_MINOR(pd.properties.apiVersion)) + "." +
+            std::to_string(VK_API_VERSION_PATCH(pd.properties.apiVersion)) + " lower than required version " +
+            std::to_string(VK_API_VERSION_MAJOR(criteria.required_version)) + "." +
+            std::to_string(VK_API_VERSION_MINOR(criteria.required_version)) + "." +
+            std::to_string(VK_API_VERSION_PATCH(criteria.required_version)));
+        return PhysicalDevice::Suitable::no;
+    }
 
     bool dedicated_compute = detail::get_dedicated_queue_index(pd.queue_families, VK_QUEUE_COMPUTE_BIT, VK_QUEUE_TRANSFER_BIT) !=
                              detail::QUEUE_INDEX_MAX_VALUE;
@@ -1102,18 +1115,33 @@ PhysicalDevice::Suitable PhysicalDeviceSelector::is_device_suitable(PhysicalDevi
     bool present_queue = detail::get_present_queue_index(pd.physical_device, instance_info.surface, pd.queue_families) !=
                          detail::QUEUE_INDEX_MAX_VALUE;
 
-    if (criteria.require_dedicated_compute_queue && !dedicated_compute) return PhysicalDevice::Suitable::no;
-    if (criteria.require_dedicated_transfer_queue && !dedicated_transfer) return PhysicalDevice::Suitable::no;
-    if (criteria.require_separate_compute_queue && !separate_compute) return PhysicalDevice::Suitable::no;
-    if (criteria.require_separate_transfer_queue && !separate_transfer) return PhysicalDevice::Suitable::no;
-    if (criteria.require_present && !present_queue && !criteria.defer_surface_initialization)
+    if (criteria.require_dedicated_compute_queue && !dedicated_compute) {
+        unsuitability_reasons.push_back("No dedicated compute queue");
         return PhysicalDevice::Suitable::no;
-
-    auto required_extensions_supported =
-        detail::check_device_extension_support(pd.available_extensions, criteria.required_extensions);
-    if (required_extensions_supported.size() != criteria.required_extensions.size())
+    }
+    if (criteria.require_dedicated_transfer_queue && !dedicated_transfer) {
+        unsuitability_reasons.push_back("No dedicated transfer queue");
         return PhysicalDevice::Suitable::no;
-
+    }
+    if (criteria.require_separate_compute_queue && !separate_compute) {
+        unsuitability_reasons.push_back("No separate compute queue");
+        return PhysicalDevice::Suitable::no;
+    }
+    if (criteria.require_separate_transfer_queue && !separate_transfer) {
+        unsuitability_reasons.push_back("No separate transfer queue");
+        return PhysicalDevice::Suitable::no;
+    }
+    if (criteria.require_present && !present_queue && !criteria.defer_surface_initialization) {
+        unsuitability_reasons.push_back("No queue capable of present operations");
+        return PhysicalDevice::Suitable::no;
+    }
+    auto unsupported_extensions = detail::find_unsupported_extensions_in_list(pd.available_extensions, criteria.required_extensions);
+    if (unsupported_extensions.size() > 0) {
+        for (auto const& unsupported_ext : unsupported_extensions) {
+            unsuitability_reasons.push_back("Device extensions " + unsupported_ext + " not supported");
+        }
+        return PhysicalDevice::Suitable::no;
+    }
     if (!criteria.defer_surface_initialization && criteria.require_present) {
         std::vector<VkSurfaceFormatKHR> formats;
         std::vector<VkPresentModeKHR> present_modes;
@@ -1128,6 +1156,21 @@ PhysicalDevice::Suitable PhysicalDeviceSelector::is_device_suitable(PhysicalDevi
             instance_info.surface);
 
         if (formats_ret != VK_SUCCESS || present_modes_ret != VK_SUCCESS || formats.empty() || present_modes.empty()) {
+            if (formats_ret != VK_SUCCESS) {
+                unsuitability_reasons.push_back(
+                    "vkGetPhysicalDeviceSurfaceFormatsKHR returned error code " + std::to_string(formats_ret));
+            }
+            if (present_modes_ret != VK_SUCCESS) {
+                unsuitability_reasons.push_back(
+                    "vkGetPhysicalDeviceSurfacePresentModesKHR returned error code " + std::to_string(present_modes_ret));
+            }
+            if (formats.empty()) {
+                unsuitability_reasons.push_back("vkGetPhysicalDeviceSurfaceFormatsKHR returned zero surface formats");
+            }
+            if (present_modes.empty()) {
+                unsuitability_reasons.push_back(
+                    "vkGetPhysicalDeviceSurfacePresentModesKHR returned zero present modes");
+            }
             return PhysicalDevice::Suitable::no;
         }
     }
@@ -1135,7 +1178,7 @@ PhysicalDevice::Suitable PhysicalDeviceSelector::is_device_suitable(PhysicalDevi
     if (!criteria.allow_any_type && pd.properties.deviceType != static_cast<VkPhysicalDeviceType>(criteria.preferred_type)) {
         suitable = PhysicalDevice::Suitable::partial;
     }
-    std::vector<std::string> unsuitability_reasons;
+
     detail::compare_VkPhysicalDeviceFeatures(unsuitability_reasons, pd.features, criteria.required_features);
     pd.extended_features_chain.match_all(unsuitability_reasons, criteria.extended_features_chain);
     if (!unsuitability_reasons.empty()) {
@@ -1145,6 +1188,7 @@ PhysicalDevice::Suitable PhysicalDeviceSelector::is_device_suitable(PhysicalDevi
     for (uint32_t i = 0; i < pd.memory_properties.memoryHeapCount; i++) {
         if (pd.memory_properties.memoryHeaps[i].flags & VK_MEMORY_HEAP_DEVICE_LOCAL_BIT) {
             if (pd.memory_properties.memoryHeaps[i].size < criteria.required_mem_size) {
+                unsuitability_reasons.push_back("Did not contain a Device Local memory heap with enough size");
                 return PhysicalDevice::Suitable::no;
             }
         }
@@ -1191,7 +1235,6 @@ Result<std::vector<PhysicalDevice>> PhysicalDeviceSelector::select_impl() const 
             if (criteria.enable_portability_subset && ext == "VK_KHR_portability_subset")
                 portability_ext_available = true;
 
-
         phys_dev.extensions_to_enable.clear();
         phys_dev.extensions_to_enable.insert(
             phys_dev.extensions_to_enable.end(), criteria.required_extensions.begin(), criteria.required_extensions.end());
@@ -1211,10 +1254,20 @@ Result<std::vector<PhysicalDevice>> PhysicalDeviceSelector::select_impl() const 
     std::vector<PhysicalDevice> physical_devices;
     for (auto& vk_physical_device : vk_physical_devices) {
         PhysicalDevice phys_dev = populate_device_details(vk_physical_device, criteria.extended_features_chain);
-        phys_dev.suitable = is_device_suitable(phys_dev);
+        std::vector<std::string> unsuitability_reasons;
+        phys_dev.suitable = is_device_suitable(phys_dev, unsuitability_reasons);
         if (phys_dev.suitable != PhysicalDevice::Suitable::no) {
             physical_devices.push_back(phys_dev);
+        } else {
+            for (auto& reason : unsuitability_reasons) {
+                reason.insert(0, std::string("Physical Device ") + phys_dev.properties.deviceName + " unsuitable due to: ");
+            }
         }
+    }
+
+    // No suitable devices found, return an error which contains the list of reason why it wasn't suitable
+    if (physical_devices.size() == 0) {
+        return Result<std::vector<PhysicalDevice>>{ PhysicalDeviceError::no_suitable_device };
     }
 
     // sort the list into fully and partially suitable devices. use stable_partition to maintain relative order

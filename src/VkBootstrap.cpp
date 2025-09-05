@@ -1860,7 +1860,7 @@ SwapchainBuilder::SwapchainBuilder(VkPhysicalDevice const physical_device,
 }
 Result<Swapchain> SwapchainBuilder::build() const {
     if (info.surface == VK_NULL_HANDLE) {
-        return Error{ SwapchainError::surface_handle_not_provided };
+        return Result<Swapchain>{ SwapchainError::surface_handle_not_provided };
     }
 
     auto desired_formats = info.desired_formats;
@@ -1870,7 +1870,7 @@ Result<Swapchain> SwapchainBuilder::build() const {
 
     auto surface_support_ret = detail::query_surface_support_details(info.physical_device, info.surface);
     if (!surface_support_ret.has_value())
-        return Error{ SwapchainError::failed_query_surface_support_details, surface_support_ret.vk_result() };
+        return Result<Swapchain>{ SwapchainError::failed_query_surface_support_details, surface_support_ret.vk_result() };
     auto surface_support = surface_support_ret.value();
 
     uint32_t image_count = info.min_image_count;
@@ -1913,7 +1913,7 @@ Result<Swapchain> SwapchainBuilder::build() const {
 
     if (is_unextended_present_mode(present_mode) &&
         (info.image_usage_flags & surface_support.capabilities.supportedUsageFlags) != info.image_usage_flags) {
-        return Error{ SwapchainError::required_usage_not_supported };
+        return Result<Swapchain>{ SwapchainError::required_usage_not_supported };
     }
 
     VkSurfaceTransformFlagBitsKHR pre_transform = info.pre_transform;
@@ -1952,7 +1952,7 @@ Result<Swapchain> SwapchainBuilder::build() const {
     auto res = swapchain_create_proc(info.device, &swapchain_create_info, info.allocation_callbacks, &swapchain.swapchain);
 
     if (res != VK_SUCCESS) {
-        return Error{ SwapchainError::failed_create_swapchain, res };
+        return Result<Swapchain>{ SwapchainError::failed_create_swapchain, res };
     }
     swapchain.device = info.device;
     swapchain.image_format = surface_format.format;
@@ -1967,7 +1967,7 @@ Result<Swapchain> SwapchainBuilder::build() const {
         info.device, swapchain.internal_table.fp_vkDestroySwapchainKHR, "vkDestroySwapchainKHR");
     auto images = swapchain.get_images();
     if (!images) {
-        return Error{ SwapchainError::failed_get_swapchain_images };
+        return Result<Swapchain>{ SwapchainError::failed_get_swapchain_images };
     }
     swapchain.requested_min_image_count = image_count;
     swapchain.present_mode = present_mode;
@@ -1982,7 +1982,7 @@ Result<std::vector<VkImage>> Swapchain::get_images() {
     auto swapchain_images_ret =
         detail::get_vector<VkImage>(swapchain_images, internal_table.fp_vkGetSwapchainImagesKHR, device, swapchain);
     if (swapchain_images_ret != VK_SUCCESS) {
-        return Error{ SwapchainError::failed_get_swapchain_images, swapchain_images_ret };
+        return Result<std::vector<VkImage>>{ SwapchainError::failed_get_swapchain_images, swapchain_images_ret };
     }
     return swapchain_images;
 }
@@ -2028,7 +2028,8 @@ Result<std::vector<VkImageView>> Swapchain::get_image_views(const void* pNext) {
         createInfo.subresourceRange.baseArrayLayer = 0;
         createInfo.subresourceRange.layerCount = 1;
         VkResult res = internal_table.fp_vkCreateImageView(device, &createInfo, allocation_callbacks, &views[i]);
-        if (res != VK_SUCCESS) return Error{ SwapchainError::failed_create_swapchain_image_views, res };
+        if (res != VK_SUCCESS)
+            return Result<std::vector<VkImageView>>{ SwapchainError::failed_create_swapchain_image_views, res };
     }
     return views;
 }

@@ -497,6 +497,7 @@ TEST_CASE("InstanceBuilder Loading Vulkan Manually", "[VkBootstrap.loading]") {
     REQUIRE(vk_lib.vkGetInstanceProcAddr);
     vkb::InstanceBuilder builder{ vk_lib.vkGetInstanceProcAddr };
     auto ret = builder.build();
+    REQUIRE(ret);
     vk_lib.close();
 }
 TEST_CASE("ReLoading Vulkan Automatically", "[VkBootstrap.loading]") {

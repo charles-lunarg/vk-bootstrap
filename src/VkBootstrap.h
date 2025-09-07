@@ -90,21 +90,21 @@ template <typename T> class Result {
         return *this;
     }
     // clang-format off
-    const T* operator-> () const noexcept { assert (has_value()); return &std::get<T>(m_data); }
-    T*       operator-> ()       noexcept { assert (has_value()); return &std::get<T>(m_data); }
-    const T& operator* () const& noexcept { assert (has_value()); return std::get<T>(m_data); }
-    T&       operator* () &      noexcept { assert (has_value()); return std::get<T>(m_data); }
-    T        operator* () &&     noexcept { assert (has_value()); return std::move(std::get<T>(m_data)); }
-    const T&  value () const&    noexcept { assert (has_value()); return std::get<T>(m_data); }
-    T&        value () &         noexcept { assert (has_value()); return std::get<T>(m_data); }
-    T         value () &&        noexcept { assert (has_value()); return std::move(std::get<T>(m_data)); }
+    const T* operator-> () const { return &std::get<T>(m_data); }
+    T*       operator-> ()       { return &std::get<T>(m_data); }
+    const T& operator* () const& { return std::get<T>(m_data); }
+    T&       operator* () &      { return std::get<T>(m_data); }
+    T        operator* () &&     { return std::move(std::get<T>(m_data)); }
+    const T&  value () const&    { return std::get<T>(m_data); }
+    T&        value () &         { return std::get<T>(m_data); }
+    T         value () &&        { return std::move(std::get<T>(m_data)); }
 
     // std::error_code associated with the error
-    std::error_code error() const { assert (!has_value()); return std::get<Error>(m_data).type; }
+    std::error_code error() const { return std::get<Error>(m_data).type; }
     // optional VkResult that could of been produced due to the error
-    VkResult vk_result() const { assert (!has_value()); return std::get<Error>(m_data).vk_result; }
+    VkResult vk_result() const { return std::get<Error>(m_data).vk_result; }
     // Returns the struct that holds the std::error_code and VkResult
-    Error full_error() const { assert (!has_value()); return std::get<Error>(m_data); }
+    Error full_error() const { return std::get<Error>(m_data); }
     // clang-format on
 
     // check if the result has an error that matches a specific error case

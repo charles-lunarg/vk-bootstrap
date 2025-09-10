@@ -1027,6 +1027,28 @@ TEST_CASE("Check vkb::Result", "[VkBootstrap.Result]") {
         vkb::Result<Sample> d(Sample{});
         d = c;
     }
+
+    REQUIRE_NOTHROW(vkb::Result<Sample>(Sample{})->operator=(Sample{}));
+    REQUIRE_NOTHROW((*vkb::Result<Sample>(Sample{})).operator=(Sample{}));
+    REQUIRE_NOTHROW(vkb::Result<Sample>(Sample{}).value());
+    REQUIRE_THROWS_AS(vkb::Result<Sample>(Sample{}).error(), std::bad_variant_access);
+    REQUIRE_THROWS_AS(vkb::Result<Sample>(Sample{}).vk_result(), std::bad_variant_access);
+    REQUIRE_THROWS_AS(vkb::Result<Sample>(Sample{}).full_error(), std::bad_variant_access);
+    REQUIRE(!vkb::Result<Sample>(Sample{}).matches_error<int>(0));
+    REQUIRE(!vkb::Result<Sample>(Sample{}).matches_error<int>(1));
+    REQUIRE(vkb::Result<Sample>(Sample{}).has_value());
+    REQUIRE(vkb::Result<Sample>(Sample{}));
+
+    REQUIRE_THROWS_AS(vkb::Result<Sample>(vkb::Error{})->operator=(Sample{}), std::bad_variant_access);
+    REQUIRE_THROWS_AS((*vkb::Result<Sample>(vkb::Error{})).operator=(Sample{}), std::bad_variant_access);
+    REQUIRE_THROWS_AS(vkb::Result<Sample>(vkb::Error{}).value(), std::bad_variant_access);
+    REQUIRE_NOTHROW(vkb::Result<Sample>(vkb::Error{}).error());
+    REQUIRE_NOTHROW(vkb::Result<Sample>(vkb::Error{}).vk_result());
+    REQUIRE_NOTHROW(vkb::Result<Sample>(vkb::Error{}).full_error());
+    REQUIRE(vkb::Result<Sample>(vkb::Error{}).matches_error<int>(0));
+    REQUIRE(!vkb::Result<Sample>(vkb::Error{}).matches_error<int>(1));
+    REQUIRE(!vkb::Result<Sample>(vkb::Error{}).has_value());
+    REQUIRE(!vkb::Result<Sample>(vkb::Error{}));
 }
 
 TEST_CASE("Test VK_EXT_layer_settings", "[VkBoostrap.LayerSettings]") {

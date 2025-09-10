@@ -978,7 +978,7 @@ std::vector<std::string> find_unsupported_extensions_in_list(
     std::vector<std::string> unavailable_extensions;
 
     for (auto& req_ext : required_extensions) {
-        if (available_extensions.end() == std::find(available_extensions.begin(), available_extensions.end(), req_ext)) {
+        if (!std::binary_search(available_extensions.begin(), available_extensions.end(), req_ext)) {
             unavailable_extensions.push_back(req_ext);
         }
     }
@@ -1134,7 +1134,8 @@ PhysicalDevice::Suitable PhysicalDeviceSelector::is_device_suitable(
         unsuitability_reasons.push_back("No queue capable of present operations");
         return PhysicalDevice::Suitable::no;
     }
-    auto unsupported_extensions = detail::find_unsupported_extensions_in_list(pd.available_extensions, criteria.required_extensions);
+    const auto unsupported_extensions =
+        detail::find_unsupported_extensions_in_list(pd.available_extensions, criteria.required_extensions);
     if (unsupported_extensions.size() > 0) {
         for (auto const& unsupported_ext : unsupported_extensions) {
             unsuitability_reasons.push_back("Device extension " + unsupported_ext + " not supported");
@@ -1230,10 +1231,10 @@ Result<std::vector<PhysicalDevice>> PhysicalDeviceSelector::select_devices() con
     auto fill_out_phys_dev_with_criteria = [&](PhysicalDevice& phys_dev) {
         phys_dev.features = criteria.required_features;
         phys_dev.extended_features_chain = criteria.extended_features_chain;
-        bool portability_ext_available = false;
-        for (const auto& ext : phys_dev.available_extensions)
-            if (criteria.enable_portability_subset && ext == "VK_KHR_portability_subset")
-                portability_ext_available = true;
+
+        bool portability_ext_available =
+            criteria.enable_portability_subset &&
+            std::binary_search(phys_dev.available_extensions.begin(), phys_dev.available_extensions.end(), "VK_KHR_portability_subset");
 
         phys_dev.extensions_to_enable.clear();
         phys_dev.extensions_to_enable.insert(
@@ -1241,6 +1242,8 @@ Result<std::vector<PhysicalDevice>> PhysicalDeviceSelector::select_devices() con
         if (portability_ext_available) {
             phys_dev.extensions_to_enable.push_back("VK_KHR_portability_subset");
         }
+        // Lets us quickly find extensions as this list can be 300+ elements long
+        std::sort(phys_dev.extensions_to_enable.begin(), phys_dev.extensions_to_enable.end());
     };
 
     // if this option is set, always return only the first physical device found
@@ -1431,29 +1434,26 @@ std::vector<VkQueueFamilyProperties> PhysicalDevice::get_queue_families() const 
 std::vector<std::string> PhysicalDevice::get_extensions() const { return extensions_to_enable; }
 std::vector<std::string> PhysicalDevice::get_available_extensions() const { return available_extensions; }
 bool PhysicalDevice::is_extension_present(const char* ext) const {
-    return std::find_if(std::begin(available_extensions), std::end(available_extensions), [ext](std::string const& ext_name) {
-        return ext_name == ext;
-    }) != std::end(available_extensions);
+    return std::binary_search(std::begin(available_extensions), std::end(available_extensions), ext);
 }
 bool PhysicalDevice::enable_extension_if_present(const char* extension) {
-    auto it = std::find_if(std::begin(available_extensions),
-        std::end(available_extensions),
-        [extension](std::string const& ext_name) { return ext_name == extension; });
-    if (it != std::end(available_extensions)) {
-        extensions_to_enable.push_back(extension);
+    if (std::binary_search(std::begin(available_extensions), std::end(available_extensions), extension)) {
+        extensions_to_enable.insert(
+            std::upper_bound(std::begin(extensions_to_enable), std::end(extensions_to_enable), extension), extension);
         return true;
     }
     return false;
 }
 bool PhysicalDevice::enable_extensions_if_present(const std::vector<const char*>& extensions) {
     for (const auto extension : extensions) {
-        auto it = std::find_if(std::begin(available_extensions),
-            std::end(available_extensions),
-            [extension](std::string const& ext_name) { return ext_name == extension; });
-        if (it == std::end(available_extensions)) return false;
+        if (!std::binary_search(std::begin(available_extensions), std::end(available_extensions), extension)) {
+            return false;
+        }
     }
-    for (const auto extension : extensions)
-        extensions_to_enable.push_back(extension);
+    for (const auto extension : extensions) {
+        extensions_to_enable.insert(
+            std::upper_bound(std::begin(extensions_to_enable), std::end(extensions_to_enable), extension), extension);
+    }
     return true;
 }
 

@@ -89,7 +89,7 @@ bool FeaturesChain::match(VkStructureType sType, const void* structure) const {
     if (found != structure_infos.end()) {
         std::vector<std::string> error_list;
         compare_feature_struct(sType, error_list, &(structures.at(found->starting_location)), structure);
-        return error_list.size() == 0;
+        return error_list.empty();
     } else {
         return false;
     }
@@ -1223,7 +1223,7 @@ Result<std::vector<PhysicalDevice>> PhysicalDeviceSelector::select_devices() con
     if (vk_physical_devices_ret != VK_SUCCESS) {
         return Result<std::vector<PhysicalDevice>>{ PhysicalDeviceError::failed_enumerate_physical_devices, vk_physical_devices_ret };
     }
-    if (vk_physical_devices.size() == 0) {
+    if (vk_physical_devices.empty()) {
         return Result<std::vector<PhysicalDevice>>{ PhysicalDeviceError::no_physical_devices_found };
     }
 
@@ -1268,7 +1268,7 @@ Result<std::vector<PhysicalDevice>> PhysicalDeviceSelector::select_devices() con
     }
 
     // No suitable devices found, return an error which contains the list of reason why it wasn't suitable
-    if (physical_devices.size() == 0) {
+    if (physical_devices.empty()) {
         return Result<std::vector<PhysicalDevice>>{ PhysicalDeviceError::no_suitable_device, unsuitability_reasons };
     }
 
@@ -1487,7 +1487,7 @@ bool PhysicalDevice::enable_features_struct_if_present(
         std::vector<std::string> error_list;
         detail::compare_feature_struct(sType, error_list, query_struct, features_struct);
 
-        if (error_list.size() == 0) {
+        if (error_list.empty()) {
             extended_features_chain.add_structure(sType, struct_size, features_struct);
             return true;
         }
@@ -1850,9 +1850,9 @@ Result<Swapchain> SwapchainBuilder::build() const {
     }
 
     auto desired_formats = info.desired_formats;
-    if (desired_formats.size() == 0) add_desired_formats(desired_formats);
+    if (desired_formats.empty()) add_desired_formats(desired_formats);
     auto desired_present_modes = info.desired_present_modes;
-    if (desired_present_modes.size() == 0) add_desired_present_modes(desired_present_modes);
+    if (desired_present_modes.empty()) add_desired_present_modes(desired_present_modes);
 
     auto surface_support_ret = detail::query_surface_support_details(info.physical_device, info.surface);
     if (!surface_support_ret.has_value())

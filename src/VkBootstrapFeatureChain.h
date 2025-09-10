@@ -22,16 +22,16 @@
 #include <string>
 #include <vector>
 #include <vulkan/vulkan_core.h>
-#if defined(VK_USE_PLATFORM_SCREEN_QNX)
-#include <screen/screen.h>
-#include <vulkan/vulkan_screen.h>
-#endif // defined(VK_USE_PLATFORM_SCREEN_QNX)
 #if defined(VK_ENABLE_BETA_EXTENSIONS)
 #include <vulkan/vulkan_beta.h>
 #endif // defined(VK_ENABLE_BETA_EXTENSIONS)
 #if defined(VK_USE_PLATFORM_ANDROID_KHR)
 #include <vulkan/vulkan_android.h>
 #endif // defined(VK_USE_PLATFORM_ANDROID_KHR)
+#if defined(VK_USE_PLATFORM_SCREEN_QNX)
+#include <screen/screen.h>
+#include <vulkan/vulkan_screen.h>
+#endif // defined(VK_USE_PLATFORM_SCREEN_QNX)
 
 namespace vkb::detail {
 

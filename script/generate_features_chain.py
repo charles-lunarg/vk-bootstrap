@@ -65,6 +65,7 @@ def print_required_platform_defines():
         if feature.protect:
             required_platforms.add(feature.protect)
 
+    required_platforms = sorted(required_platforms)
     out = ''
     for required_platform in required_platforms:
         out += f'#if defined({required_platform})\n'

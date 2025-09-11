@@ -638,6 +638,68 @@ TEST_CASE("Querying Required Extension Features", "[VkBootstrap.select_features]
         vkb::destroy_instance(instance);
     }
 }
+TEST_CASE("Error from Required Extension Features", "[VkBootstrap.missing_features]") {
+    VulkanMock& mock = get_and_setup_default();
+    add_basic_physical_device(mock); // add two devices
+    mock.instance_extensions.push_back(get_extension_properties("VK_KHR_get_physical_device_properties2"));
+    std::string gpu_name_0 = "Doesn't do Squat (for good reason)";
+    std::copy_n(gpu_name_0.c_str(), gpu_name_0.size(), mock.physical_devices_details[0].properties.deviceName);
+    std::string gpu_name_1 = "Fake GPU Electric Buckaroo";
+    std::copy_n(gpu_name_1.c_str(), gpu_name_1.size(), mock.physical_devices_details[1].properties.deviceName);
+    mock.physical_devices_details[0].extensions.push_back(get_extension_properties("VK_EXT_descriptor_indexing"));
+    mock.physical_devices_details[1].extensions.push_back(get_extension_properties("VK_KHR_maintenance3"));
+    auto mock_descriptor_indexing_features_0 = VkPhysicalDeviceDescriptorIndexingFeaturesEXT{};
+    mock_descriptor_indexing_features_0.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT;
+    mock_descriptor_indexing_features_0.runtimeDescriptorArray = true;
+    mock_descriptor_indexing_features_0.descriptorBindingPartiallyBound = true;
+    mock.physical_devices_details[0].add_features_pNext_struct(mock_descriptor_indexing_features_0);
+    auto mock_descriptor_indexing_features_1 = VkPhysicalDeviceDescriptorIndexingFeaturesEXT{};
+    mock_descriptor_indexing_features_1.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT;
+    mock_descriptor_indexing_features_1.descriptorBindingSampledImageUpdateAfterBind = true;
+    mock_descriptor_indexing_features_1.descriptorBindingStorageBufferUpdateAfterBind = true;
+    mock.physical_devices_details[1].add_features_pNext_struct(mock_descriptor_indexing_features_1);
+    GIVEN("A working instance") {
+        auto instance = get_headless_instance();
+        {
+            VkPhysicalDeviceDescriptorIndexingFeaturesEXT descriptor_indexing_features{};
+            descriptor_indexing_features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT;
+            descriptor_indexing_features.runtimeDescriptorArray = true;
+            descriptor_indexing_features.descriptorBindingSampledImageUpdateAfterBind = true;
+            vkb::PhysicalDeviceSelector selector(instance);
+            auto phys_dev_ret = selector.add_required_extension(VK_EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME)
+                                    .add_required_extension(VK_KHR_MAINTENANCE3_EXTENSION_NAME)
+                                    .add_required_extension_features(descriptor_indexing_features)
+                                    .select();
+            REQUIRE(!phys_dev_ret.has_value());
+            auto reasons = phys_dev_ret.detailed_failure_reasons();
+            // Only reports the missing extensions
+            REQUIRE(reasons.size() == 2);
+            REQUIRE(reasons.at(0) == "Physical Device " + gpu_name_0 +
+                                         " not selected due to: Device extension VK_KHR_maintenance3 not supported");
+            REQUIRE(reasons.at(1) == "Physical Device " + gpu_name_1 + " not selected due to: Device extension VK_EXT_descriptor_indexing not supported");
+        }
+        {
+            VkPhysicalDeviceDescriptorIndexingFeaturesEXT descriptor_indexing_features{};
+            descriptor_indexing_features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT;
+            descriptor_indexing_features.runtimeDescriptorArray = true;
+            descriptor_indexing_features.descriptorBindingSampledImageUpdateAfterBind = true;
+            vkb::PhysicalDeviceSelector selector(instance);
+            auto phys_dev_ret = selector.add_required_extension_features(descriptor_indexing_features).select();
+            REQUIRE(!phys_dev_ret.has_value());
+            auto reasons = phys_dev_ret.detailed_failure_reasons();
+            // Reports the missing features
+            REQUIRE(reasons.size() == 2);
+            REQUIRE(reasons.at(0) ==
+                    "Physical Device " + gpu_name_0 +
+                        " not selected due to: Missing feature "
+                        "VkPhysicalDeviceDescriptorIndexingFeatures::descriptorBindingSampledImageUpdateAfterBind");
+            REQUIRE(reasons.at(1) == "Physical Device " + gpu_name_1 +
+                                         " not selected due to: Missing feature "
+                                         "VkPhysicalDeviceDescriptorIndexingFeatures::runtimeDescriptorArray");
+        }
+        vkb::destroy_instance(instance);
+    }
+}
 
 TEST_CASE("Adding Optional Extension Features", "[VkBootstrap.enable_features_if_present]") {
     VulkanMock& mock = get_and_setup_default();

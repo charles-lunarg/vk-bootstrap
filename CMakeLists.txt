@@ -125,7 +125,7 @@ if (VK_BOOTSTRAP_INSTALL)
     include(GNUInstallDirs)
     include(CMakePackageConfigHelpers)
 
-    install(FILES src/VkBootstrap.h src/VkBootstrapDispatch.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+    install(FILES src/VkBootstrap.h src/VkBootstrapDispatch.h src/VkBootstrapFeatureChain.h src/VkBootstrapFeatureChain.inl DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
     install(
         TARGETS vk-bootstrap vk-bootstrap-compiler-warnings

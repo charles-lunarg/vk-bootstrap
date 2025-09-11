@@ -28,11 +28,13 @@ bool init_vulkan() {
     auto phys_ret = selector.set_surface(surface).select();
     if (!phys_ret) {
         std::cerr << "Failed to select Vulkan Physical Device. Error: " << phys_ret.error().message() << "\n";
-        const auto& detailed_reasons = phys_ret.detailed_failure_reasons();
-        if (!detailed_reasons.empty()) {
-            std::cerr << "GPU Selection failure reasons\n";
-            for (const std::string& reason : detailed_reasons) {
-                std::cerr << reason << "\n";
+        if (phys_ret.error() == vkb::PhysicalDeviceError::no_suitable_device) {
+            const auto& detailed_reasons = phys_ret.detailed_failure_reasons();
+            if (!detailed_reasons.empty()) {
+                std::cerr << "GPU Selection failure reasons:\n";
+                for (const std::string& reason : detailed_reasons) {
+                    std::cerr << reason << "\n";
+                }
             }
         }
         return false;

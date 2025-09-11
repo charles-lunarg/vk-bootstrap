@@ -95,11 +95,13 @@ int device_initialization(Init& init) {
     auto phys_device_ret = phys_device_selector.set_surface(init.surface).select();
     if (!phys_device_ret) {
         std::cout << phys_device_ret.error().message() << "\n";
-        const auto& detailed_reasons = phys_device_ret.detailed_failure_reasons();
-        if (!detailed_reasons.empty()) {
-            std::cerr << "GPU Selection failure reasons\n";
-            for (const std::string& reason : detailed_reasons) {
-                std::cerr << reason << "\n";
+        if (phys_device_ret.error() == vkb::PhysicalDeviceError::no_suitable_device) {
+            const auto& detailed_reasons = phys_device_ret.detailed_failure_reasons();
+            if (!detailed_reasons.empty()) {
+                std::cerr << "GPU Selection failure reasons:\n";
+                for (const std::string& reason : detailed_reasons) {
+                    std::cerr << reason << "\n";
+                }
             }
         }
         return -1;

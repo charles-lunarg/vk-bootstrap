@@ -123,7 +123,20 @@ vkb::PhysicalDeviceSelector phys_device_selector(vkb_instance);
 // select() grabs a PhysicalDevice
 // By default, this will prefer a discrete GPU.
 auto physical_device_selector_return = phys_device_selector.require_things().select();
-if (!physical_device_selector_return) { /* Handle error */ }
+if (!physical_device_selector_return) {
+
+    // If no suitable devices were found, detailed_failure_reasons() will contain a list of reasons why.
+    if (physical_device_selector_return.error() == vkb::PhysicalDeviceError::no_suitable_device) {
+        const auto& detailed_reasons = physical_device_selector_return.detailed_failure_reasons();
+        if (!detailed_reasons.empty()) {
+            std::cerr << "GPU Selection failure reasons:\n";
+            for (const std::string& reason : detailed_reasons) {
+                std::cerr << reason << "\n";
+            }
+        }
+    }
+    /* handle error */
+}
 ```
 
 The `vkb::PhysicalDeviceSelector` will look for the first device in the list that satisfied all the specified criteria, and if none is found, will return the first device that partially satisfies the criteria.

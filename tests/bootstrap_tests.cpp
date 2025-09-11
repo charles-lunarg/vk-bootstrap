@@ -210,8 +210,8 @@ TEST_CASE("Select all Physical Devices", "[VkBootstrap.bootstrap]") {
     VulkanMock& mock = get_and_setup_default();
     mock.api_version = VK_API_VERSION_1_1;
     mock.physical_devices_details[0].properties.apiVersion = VK_API_VERSION_1_1;
-    const char* message = "mocking_gpus_for_fun_and_profit";
-    std::copy_n(message, sizeof(message) + 1, mock.physical_devices_details[0].properties.deviceName);
+    std::string message = "mocking_gpus_for_fun_and_profit";
+    std::copy_n(message.c_str(), message.size(), mock.physical_devices_details[0].properties.deviceName);
 
     auto instance = get_instance(1);
     auto surface = mock.get_new_surface(get_basic_surface_details());
@@ -578,6 +578,7 @@ TEST_CASE("Querying Required Extension Features but with 1.0", "[VkBootstrap.sel
     mock.physical_devices_details[0].extensions.push_back(get_extension_properties("VK_EXT_descriptor_indexing"));
     mock.physical_devices_details[0].extensions.push_back(get_extension_properties("VK_KHR_maintenance3"));
     auto mock_descriptor_indexing_features = VkPhysicalDeviceDescriptorIndexingFeaturesEXT{};
+    mock_descriptor_indexing_features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT;
     mock_descriptor_indexing_features.runtimeDescriptorArray = true;
     mock.physical_devices_details[0].add_features_pNext_struct(mock_descriptor_indexing_features);
     GIVEN("A working instance") {
@@ -609,6 +610,7 @@ TEST_CASE("Querying Required Extension Features", "[VkBootstrap.select_features]
     mock.physical_devices_details[0].extensions.push_back(get_extension_properties("VK_EXT_descriptor_indexing"));
     mock.physical_devices_details[0].extensions.push_back(get_extension_properties("VK_KHR_maintenance3"));
     auto mock_descriptor_indexing_features = VkPhysicalDeviceDescriptorIndexingFeaturesEXT{};
+    mock_descriptor_indexing_features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT;
     mock_descriptor_indexing_features.runtimeDescriptorArray = true;
     mock.physical_devices_details[0].add_features_pNext_struct(mock_descriptor_indexing_features);
     GIVEN("A working instance") {
@@ -652,7 +654,7 @@ TEST_CASE("Adding Optional Extension Features", "[VkBootstrap.enable_features_if
     mock.physical_devices_details[0].add_features_pNext_struct(vulkan_11_features);
 
     auto vulkan_12_features = VkPhysicalDeviceVulkan12Features{};
-    // Forget to set this sType - let vk-bootstrap deal with it
+    vulkan_12_features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES;
     vulkan_12_features.bufferDeviceAddress = true;
     mock.physical_devices_details[0].add_features_pNext_struct(vulkan_12_features);
 
@@ -763,6 +765,7 @@ TEST_CASE("Querying Required Extension Features in 1.1", "[VkBootstrap.version]"
     mock.physical_devices_details[0].extensions.push_back(get_extension_properties("VK_EXT_descriptor_indexing"));
     mock.physical_devices_details[0].extensions.push_back(get_extension_properties("VK_KHR_maintenance3"));
     auto mock_descriptor_indexing_features = VkPhysicalDeviceDescriptorIndexingFeaturesEXT{};
+    mock_descriptor_indexing_features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES;
     mock_descriptor_indexing_features.runtimeDescriptorArray = true;
     mock.physical_devices_details[0].add_features_pNext_struct(mock_descriptor_indexing_features);
     GIVEN("A working instance") {
@@ -860,10 +863,12 @@ TEST_CASE("Querying Vulkan 1.1 and 1.2 features", "[VkBootstrap.version]") {
     mock.physical_devices_details[0].properties.apiVersion = VK_API_VERSION_1_2;
 
     auto mock_vulkan_11_features = VkPhysicalDeviceVulkan11Features{};
+    mock_vulkan_11_features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES;
     mock_vulkan_11_features.multiview = true;
     mock.physical_devices_details[0].add_features_pNext_struct(mock_vulkan_11_features);
 
     auto mock_vulkan_12_features = VkPhysicalDeviceVulkan12Features{};
+    mock_vulkan_12_features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES;
     mock_vulkan_12_features.bufferDeviceAddress = true;
     mock.physical_devices_details[0].add_features_pNext_struct(mock_vulkan_12_features);
 
@@ -946,6 +951,7 @@ TEST_CASE("Add required extension features in multiple calls", "[VkBootstrap.req
     mock.physical_devices_details[0].properties.apiVersion = VK_API_VERSION_1_2;
 
     auto mock_vulkan_11_features = VkPhysicalDeviceVulkan11Features{};
+    mock_vulkan_11_features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES;
     mock_vulkan_11_features.multiview = true;
     mock_vulkan_11_features.samplerYcbcrConversion = true;
     mock.physical_devices_details[0].add_features_pNext_struct(mock_vulkan_11_features);

@@ -5,6 +5,7 @@
 
 #include <memory>
 #include <utility>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -90,6 +91,10 @@ struct VulkanMock {
         std::vector<CreatedDeviceDetails> created_device_details;
 
         template <typename T> void add_features_pNext_struct(T features) {
+            if (features.sType == 0) {
+                throw std::runtime_error(
+                    "add_features_pNext_struct being passed in a struct without setting the sType!");
+            }
             std::vector<char> new_struct;
             new_struct.resize(sizeof(T));
             memcpy(new_struct.data(), &features, new_struct.size());

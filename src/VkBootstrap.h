@@ -77,7 +77,8 @@ template <typename T> class Result {
     Result(const T& value) noexcept : m_data{ value } {}
     Result(T&& value) noexcept : m_data{ std::move(value) } {}
 
-    Result(Error error) noexcept : m_data{ error } {}
+    Result(const Error& error) noexcept : m_data{ error } {}
+    Result(Error&& error) noexcept : m_data{ std::move(error) } {}
 
     Result(std::error_code error_code, VkResult result = VK_SUCCESS) noexcept
     : m_data{ Error{ error_code, result, {} } } {}

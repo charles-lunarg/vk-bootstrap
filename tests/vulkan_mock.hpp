@@ -14,45 +14,30 @@
 
 using SerializedStruct = std::vector<char>;
 
-inline SerializedStruct create_serialized_struct_from_pointer(const void* input_data, size_t input_size) {
-    if (static_cast<const VkBaseOutStructure*>(input_data)->sType == 0) {
-        throw std::runtime_error(
-            "create_serialized_struct_from_pointer being passed in a struct without setting the sType!");
-    }
-    SerializedStruct new_struct(input_size);
-    std::memcpy(new_struct.data(), input_data, new_struct.size());
-    return new_struct;
-}
-
 template <typename T> SerializedStruct create_serialized_struct_from_object(const T& object) {
     if (object.sType == 0) {
         throw std::runtime_error(
             "create_serialized_struct_from_object being passed in a struct without setting the sType!");
     }
-    return create_serialized_struct_from_pointer(&object, sizeof(T));
+    SerializedStruct new_struct(sizeof(object));
+    std::memcpy(new_struct.data(), &object, new_struct.size());
+    return new_struct;
 }
 
-// Helper function to return the size of the sType if it is a known features struct, otherwise return 0
 // Hand written, must be updated to include any used struct.
-inline size_t check_if_features2_struct(VkStructureType type) {
+inline SerializedStruct create_serialized_struct_from_features2_struct(const void* input_data, VkStructureType type) {
     switch (type) {
         case (VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES):
-            return sizeof(VkPhysicalDeviceDescriptorIndexingFeatures);
+            return create_serialized_struct_from_object(*static_cast<const VkPhysicalDeviceDescriptorIndexingFeatures*>(input_data));
         case (VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES):
-            return sizeof(VkPhysicalDeviceVulkan11Features);
+            return create_serialized_struct_from_object(*static_cast<const VkPhysicalDeviceVulkan11Features*>(input_data));
         case (VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES):
-            return sizeof(VkPhysicalDeviceVulkan12Features);
+            return create_serialized_struct_from_object(*static_cast<const VkPhysicalDeviceVulkan12Features*>(input_data));
         case (VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_SIZE_CONTROL_FEATURES):
-            return sizeof(VkPhysicalDeviceSubgroupSizeControlFeatures);
+            return create_serialized_struct_from_object(*static_cast<const VkPhysicalDeviceSubgroupSizeControlFeatures*>(input_data));
         default:
-            return 0;
+            return SerializedStruct{};
     }
-}
-
-inline size_t get_pnext_chain_struct_size(VkStructureType type) {
-    auto size = check_if_features2_struct(type);
-    assert(size > 0 && "Must update get_pnext_chain_struct_size(VkStructureType type) to add type!");
-    return size;
 }
 
 template <typename T> T get_handle(size_t value) { return reinterpret_cast<T>(value); }

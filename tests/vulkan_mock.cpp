@@ -192,8 +192,9 @@ VKAPI_ATTR VkResult VKAPI_CALL shim_vkCreateDevice(VkPhysicalDevice physicalDevi
     while (pNext_chain) {
         const auto* chain = static_cast<const VkBaseOutStructure*>(pNext_chain);
         const void* next = chain->pNext;
-        if (check_if_features2_struct(chain->sType) > 0) {
-            new_chain.emplace_back(create_serialized_struct_from_pointer(pNext_chain, get_pnext_chain_struct_size(chain->sType)));
+        SerializedStruct new_struct = create_serialized_struct_from_features2_struct(pNext_chain, chain->sType);
+        if (!new_struct.empty()) {
+            new_chain.emplace_back(new_struct);
         }
         if (chain->sType == VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2) {
             new_feats = static_cast<const VkPhysicalDeviceFeatures2*>(pNext_chain)->features;

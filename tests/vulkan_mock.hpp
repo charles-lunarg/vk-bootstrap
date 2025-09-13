@@ -25,7 +25,7 @@ inline SerializedStruct create_serialized_struct_from_pointer(const void* input_
     return new_struct;
 }
 
-template <typename T> SerializedStruct create_serialized_struct_from_object(T object) {
+template <typename T> SerializedStruct create_serialized_struct_from_object(const T& object) {
     if (object.sType == 0) {
         throw std::runtime_error(
             "create_serialized_struct_from_object being passed in a struct without setting the sType!");

@@ -25,13 +25,13 @@ TEST_CASE("VulkanHpp Instance with surface", "[VkBootstrap.vulkan_hpp]") {
     physical_device_descriptor_indexing_features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES;
     physical_device_descriptor_indexing_features.runtimeDescriptorArray = true;
     physical_device_descriptor_indexing_features.descriptorBindingPartiallyBound = true;
-    mock.physical_devices_details[0].add_features_pNext_struct(physical_device_descriptor_indexing_features);
+    mock.physical_devices_details[0].features_pNextChain.emplace_back(create_serialized_struct_from_object(physical_device_descriptor_indexing_features));
     mock.physical_devices_details[0].extensions.push_back(get_extension_properties("VK_EXT_subgroup_size_control"));
     VkPhysicalDeviceSubgroupSizeControlFeatures physical_device_subgroup_size_control_features{};
     physical_device_subgroup_size_control_features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_SIZE_CONTROL_FEATURES;
     physical_device_subgroup_size_control_features.subgroupSizeControl = true;
     physical_device_subgroup_size_control_features.computeFullSubgroups = true;
-    mock.physical_devices_details[0].add_features_pNext_struct(physical_device_subgroup_size_control_features);
+    mock.physical_devices_details[0].features_pNextChain.emplace_back(create_serialized_struct_from_object(physical_device_subgroup_size_control_features));
 
     auto surface = mock.get_new_surface(get_basic_surface_details());
     vk::SurfaceKHR hpp_surface{ surface };

@@ -8,7 +8,7 @@
 
 TEST_CASE("Instance with surface", "[VkBootstrap.bootstrap]") {
     VulkanMock& mock = get_and_setup_default();
-    mock.api_version = VK_API_VERSION_1_1;
+    mock.instance_api_version = VK_API_VERSION_1_1;
     mock.physical_devices_details[0].properties.apiVersion = VK_API_VERSION_1_1;
     mock.physical_devices_details[0].extensions.push_back(get_extension_properties("VK_KHR_multiview"));
     mock.physical_devices_details[0].extensions.push_back(get_extension_properties("VK_KHR_driver_properties"));
@@ -146,7 +146,7 @@ TEST_CASE("Headless Vulkan", "[VkBootstrap.bootstrap]") {
 
 TEST_CASE("Device Configuration", "[VkBootstrap.bootstrap]") {
     VulkanMock& mock = get_and_setup_default();
-    mock.api_version = VK_API_VERSION_1_1;
+    mock.instance_api_version = VK_API_VERSION_1_1;
     mock.physical_devices_details[0].properties.apiVersion = VK_API_VERSION_1_1;
     auto instance = get_instance(1);
     auto surface = mock.get_new_surface(get_basic_surface_details());
@@ -208,7 +208,7 @@ TEST_CASE("Device Configuration", "[VkBootstrap.bootstrap]") {
 
 TEST_CASE("Select all Physical Devices", "[VkBootstrap.bootstrap]") {
     VulkanMock& mock = get_and_setup_default();
-    mock.api_version = VK_API_VERSION_1_1;
+    mock.instance_api_version = VK_API_VERSION_1_1;
     mock.physical_devices_details[0].properties.apiVersion = VK_API_VERSION_1_1;
     std::string message = "mocking_gpus_for_fun_and_profit";
     std::copy_n(message.c_str(), message.size(), mock.physical_devices_details[0].properties.deviceName);
@@ -270,7 +270,7 @@ TEST_CASE("Loading Dispatch Table", "[VkBootstrap.bootstrap]") {
 
 TEST_CASE("Swapchain", "[VkBootstrap.bootstrap]") {
     VulkanMock& mock = get_and_setup_default();
-    mock.api_version = VK_API_VERSION_1_1;
+    mock.instance_api_version = VK_API_VERSION_1_1;
     mock.physical_devices_details[0].properties.apiVersion = VK_API_VERSION_1_1;
     auto surface = mock.get_new_surface(get_basic_surface_details());
     GIVEN("A working instance, window, surface, and device") {
@@ -455,7 +455,7 @@ TEST_CASE("SystemInfo Loading Vulkan Automatically", "[VkBootstrap.loading]") {
 
 TEST_CASE("SystemInfo Check Instance API Version", "[VkBootstrap.instance_api_version]") {
     VulkanMock& mock = get_and_setup_default();
-    mock.api_version = VK_API_VERSION_1_2;
+    mock.instance_api_version = VK_API_VERSION_1_2;
     auto info_ret = vkb::SystemInfo::get_system_info();
     REQUIRE(info_ret);
     auto system_info = info_ret.value();
@@ -536,7 +536,7 @@ TEST_CASE("ReLoading Vulkan Manually", "[VkBootstrap.loading]") {
 
 TEST_CASE("Minimum instance API version", "[VkBootstrap.api_version]") {
     VulkanMock& mock = get_and_setup_default();
-    mock.api_version = VK_API_VERSION_1_2;
+    mock.instance_api_version = VK_API_VERSION_1_2;
     mock.physical_devices_details[0].properties.apiVersion = VK_API_VERSION_1_3;
     mock.physical_devices_details[0].properties.deviceID = 1;
     add_basic_physical_device(mock).properties.apiVersion = VK_API_VERSION_1_4;
@@ -562,7 +562,7 @@ TEST_CASE("Minimum instance API version", "[VkBootstrap.api_version]") {
 }
 TEST_CASE("Minimum instance API version lower than VkPhysicalDevice", "[VkBootstrap.api_version]") {
     VulkanMock& mock = get_and_setup_default();
-    mock.api_version = VK_API_VERSION_1_2;
+    mock.instance_api_version = VK_API_VERSION_1_2;
     mock.physical_devices_details[0].properties.apiVersion = VK_API_VERSION_1_3;
     mock.physical_devices_details[0].properties.deviceID = 1;
     {
@@ -703,7 +703,7 @@ TEST_CASE("Error from Required Extension Features", "[VkBootstrap.missing_featur
 
 TEST_CASE("Adding Optional Extension Features", "[VkBootstrap.enable_features_if_present]") {
     VulkanMock& mock = get_and_setup_default();
-    mock.api_version = VK_API_VERSION_1_1;
+    mock.instance_api_version = VK_API_VERSION_1_1;
     mock.physical_devices_details[0].properties.apiVersion = VK_API_VERSION_1_1;
     mock.instance_extensions.push_back(get_extension_properties("VK_KHR_get_physical_device_properties2"));
     auto vulkan_10_features = VkPhysicalDeviceFeatures{};
@@ -921,7 +921,7 @@ TEST_CASE("Querying Required Extension Features in 1.1", "[VkBootstrap.version]"
 
 TEST_CASE("Querying Vulkan 1.1 and 1.2 features", "[VkBootstrap.version]") {
     VulkanMock& mock = get_and_setup_default();
-    mock.api_version = VK_API_VERSION_1_2;
+    mock.instance_api_version = VK_API_VERSION_1_2;
     mock.physical_devices_details[0].properties.apiVersion = VK_API_VERSION_1_2;
 
     auto mock_vulkan_11_features = VkPhysicalDeviceVulkan11Features{};
@@ -960,7 +960,7 @@ TEST_CASE("Querying Vulkan 1.1 and 1.2 features", "[VkBootstrap.version]") {
 
             vkb::destroy_device(device_ret.value());
         }
-        mock.api_version = VK_API_VERSION_1_1;
+        mock.instance_api_version = VK_API_VERSION_1_1;
         mock.physical_devices_details[0].properties.apiVersion = VK_API_VERSION_1_1;
         SECTION("protectedMemory should NOT be supported") {
             VkPhysicalDeviceVulkan11Features features_11{};
@@ -977,7 +977,7 @@ TEST_CASE("Querying Vulkan 1.1 and 1.2 features", "[VkBootstrap.version]") {
 
 TEST_CASE("Add required features in multiple calls", "[VkBootstrap.required_features]") {
     VulkanMock& mock = get_and_setup_default();
-    mock.api_version = VK_API_VERSION_1_2;
+    mock.instance_api_version = VK_API_VERSION_1_2;
     mock.physical_devices_details[0].properties.apiVersion = VK_API_VERSION_1_2;
     mock.physical_devices_details[0].features.independentBlend = true;
     mock.physical_devices_details[0].features.shaderInt64 = true;
@@ -1009,7 +1009,7 @@ TEST_CASE("Add required features in multiple calls", "[VkBootstrap.required_feat
 
 TEST_CASE("Add required extension features in multiple calls", "[VkBootstrap.required_features]") {
     VulkanMock& mock = get_and_setup_default();
-    mock.api_version = VK_API_VERSION_1_2;
+    mock.instance_api_version = VK_API_VERSION_1_2;
     mock.physical_devices_details[0].properties.apiVersion = VK_API_VERSION_1_2;
 
     auto mock_vulkan_11_features = VkPhysicalDeviceVulkan11Features{};

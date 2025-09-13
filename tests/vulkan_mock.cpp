@@ -2,8 +2,6 @@
 
 #include "vulkan_mock.hpp"
 
-#include <cstring>
-
 #include <algorithm>
 
 #define GPA_IMPL(x)                                                                                                    \
@@ -185,7 +183,7 @@ VKAPI_ATTR VkResult VKAPI_CALL shim_vkCreateDevice(VkPhysicalDevice physicalDevi
     if (pCreateInfo->pEnabledFeatures) {
         new_feats = *pCreateInfo->pEnabledFeatures;
     }
-    std::vector<std::vector<char>> new_chain;
+    std::vector<SerializedStruct> new_chain;
     std::vector<const char*> created_extensions;
     for (uint32_t i = 0; i < pCreateInfo->enabledExtensionCount; i++) {
         created_extensions.push_back(pCreateInfo->ppEnabledExtensionNames[i]);
@@ -195,10 +193,7 @@ VKAPI_ATTR VkResult VKAPI_CALL shim_vkCreateDevice(VkPhysicalDevice physicalDevi
         const auto* chain = static_cast<const VkBaseOutStructure*>(pNext_chain);
         const void* next = chain->pNext;
         if (check_if_features2_struct(chain->sType) > 0) {
-            std::vector<char> new_node;
-            new_node.resize(get_pnext_chain_struct_size(chain->sType));
-            std::memcpy(new_node.data(), pNext_chain, new_node.size());
-            new_chain.push_back(new_node);
+            new_chain.emplace_back(create_serialized_struct_from_pointer(pNext_chain, get_pnext_chain_struct_size(chain->sType)));
         }
         if (chain->sType == VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2) {
             new_feats = static_cast<const VkPhysicalDeviceFeatures2*>(pNext_chain)->features;

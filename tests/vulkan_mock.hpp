@@ -2,6 +2,7 @@
 
 #include <assert.h>
 #include <cstdint>
+#include <cstring>
 
 #include <memory>
 #include <utility>
@@ -10,6 +11,27 @@
 #include <vector>
 
 #include <vulkan/vulkan_core.h>
+
+typedef std::vector<char> SerializedStruct;
+
+inline SerializedStruct create_serialized_struct_from_pointer(const void *input_data, size_t input_size) {
+    if (static_cast<const VkBaseOutStructure*>(input_data)->sType == 0) {
+        throw std::runtime_error(
+            "create_serialized_struct_from_pointer being passed in a struct without setting the sType!");
+    }
+    SerializedStruct new_struct;
+    new_struct.resize(input_size);
+    std::memcpy(new_struct.data(), input_data, new_struct.size());
+    return new_struct;
+}
+
+template <typename T> SerializedStruct create_serialized_struct_from_object(T object) {
+    if (object.sType == 0) {
+        throw std::runtime_error(
+            "create_serialized_struct_from_object being passed in a struct without setting the sType!");
+    }
+    return create_serialized_struct_from_pointer(&object, sizeof(T));
+}
 
 // Helper function to return the size of the sType if it is a known features struct, otherwise return 0
 // Hand written, must be updated to include any used struct.
@@ -76,7 +98,7 @@ struct VulkanMock {
     struct CreatedDeviceDetails {
         VkPhysicalDeviceFeatures features{};
         std::vector<const char*> extensions;
-        std::vector<std::vector<char>> features_pNextChain;
+        std::vector<SerializedStruct> features_pNextChain;
     };
 
     struct PhysicalDeviceDetails {
@@ -85,21 +107,10 @@ struct VulkanMock {
         VkPhysicalDeviceMemoryProperties memory_properties{};
         std::vector<VkExtensionProperties> extensions;
         std::vector<VkQueueFamilyProperties> queue_family_properties;
-        std::vector<std::vector<char>> features_pNextChain;
+        std::vector<SerializedStruct> features_pNextChain;
 
         std::vector<VkDevice> created_device_handles;
         std::vector<CreatedDeviceDetails> created_device_details;
-
-        template <typename T> void add_features_pNext_struct(T features) {
-            if (features.sType == 0) {
-                throw std::runtime_error(
-                    "add_features_pNext_struct being passed in a struct without setting the sType!");
-            }
-            std::vector<char> new_struct;
-            new_struct.resize(sizeof(T));
-            memcpy(new_struct.data(), &features, new_struct.size());
-            features_pNextChain.push_back(new_struct);
-        }
     };
 
     std::vector<VkPhysicalDevice> physical_device_handles;

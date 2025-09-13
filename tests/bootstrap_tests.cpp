@@ -594,7 +594,7 @@ TEST_CASE("Querying Required Extension Features but with 1.0", "[VkBootstrap.sel
     auto mock_descriptor_indexing_features = VkPhysicalDeviceDescriptorIndexingFeaturesEXT{};
     mock_descriptor_indexing_features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT;
     mock_descriptor_indexing_features.runtimeDescriptorArray = true;
-    mock.physical_devices_details[0].add_features_pNext_struct(mock_descriptor_indexing_features);
+    mock.physical_devices_details[0].features_pNextChain.emplace_back(create_serialized_struct_from_object(mock_descriptor_indexing_features));
     GIVEN("A working instance") {
         auto instance = get_headless_instance();
         // Requires a device that supports runtime descriptor arrays via descriptor indexing extension.
@@ -626,7 +626,7 @@ TEST_CASE("Querying Required Extension Features", "[VkBootstrap.select_features]
     auto mock_descriptor_indexing_features = VkPhysicalDeviceDescriptorIndexingFeaturesEXT{};
     mock_descriptor_indexing_features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT;
     mock_descriptor_indexing_features.runtimeDescriptorArray = true;
-    mock.physical_devices_details[0].add_features_pNext_struct(mock_descriptor_indexing_features);
+    mock.physical_devices_details[0].features_pNextChain.emplace_back(create_serialized_struct_from_object(mock_descriptor_indexing_features));
     GIVEN("A working instance") {
         auto instance = get_headless_instance();
         // Requires a device that supports runtime descriptor arrays via descriptor indexing extension.
@@ -666,12 +666,12 @@ TEST_CASE("Error from Required Extension Features", "[VkBootstrap.missing_featur
     mock_descriptor_indexing_features_0.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT;
     mock_descriptor_indexing_features_0.runtimeDescriptorArray = true;
     mock_descriptor_indexing_features_0.descriptorBindingPartiallyBound = true;
-    mock.physical_devices_details[0].add_features_pNext_struct(mock_descriptor_indexing_features_0);
+    mock.physical_devices_details[0].features_pNextChain.emplace_back(create_serialized_struct_from_object(mock_descriptor_indexing_features_0));
     auto mock_descriptor_indexing_features_1 = VkPhysicalDeviceDescriptorIndexingFeaturesEXT{};
     mock_descriptor_indexing_features_1.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT;
     mock_descriptor_indexing_features_1.descriptorBindingSampledImageUpdateAfterBind = true;
     mock_descriptor_indexing_features_1.descriptorBindingStorageBufferUpdateAfterBind = true;
-    mock.physical_devices_details[1].add_features_pNext_struct(mock_descriptor_indexing_features_1);
+    mock.physical_devices_details[1].features_pNextChain.emplace_back(create_serialized_struct_from_object(mock_descriptor_indexing_features_1));
     GIVEN("A working instance") {
         auto instance = get_headless_instance();
         {
@@ -727,12 +727,12 @@ TEST_CASE("Adding Optional Extension Features", "[VkBootstrap.enable_features_if
     auto vulkan_11_features = VkPhysicalDeviceVulkan11Features{};
     vulkan_11_features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES;
     vulkan_11_features.shaderDrawParameters = true;
-    mock.physical_devices_details[0].add_features_pNext_struct(vulkan_11_features);
+    mock.physical_devices_details[0].features_pNextChain.emplace_back(create_serialized_struct_from_object(vulkan_11_features));
 
     auto vulkan_12_features = VkPhysicalDeviceVulkan12Features{};
     vulkan_12_features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES;
     vulkan_12_features.bufferDeviceAddress = true;
-    mock.physical_devices_details[0].add_features_pNext_struct(vulkan_12_features);
+    mock.physical_devices_details[0].features_pNextChain.emplace_back(create_serialized_struct_from_object(vulkan_12_features));
 
 
     GIVEN("A working instance and physical device which has a VkPhysicalDeviceVulkan12Features in its features pNext "
@@ -843,7 +843,7 @@ TEST_CASE("Querying Required Extension Features in 1.1", "[VkBootstrap.version]"
     auto mock_descriptor_indexing_features = VkPhysicalDeviceDescriptorIndexingFeaturesEXT{};
     mock_descriptor_indexing_features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES;
     mock_descriptor_indexing_features.runtimeDescriptorArray = true;
-    mock.physical_devices_details[0].add_features_pNext_struct(mock_descriptor_indexing_features);
+    mock.physical_devices_details[0].features_pNextChain.emplace_back(create_serialized_struct_from_object(mock_descriptor_indexing_features));
     GIVEN("A working instance") {
         auto instance = get_headless_instance();
         SECTION("Requires a device that supports runtime descriptor arrays via descriptor indexing extension.") {
@@ -941,12 +941,12 @@ TEST_CASE("Querying Vulkan 1.1 and 1.2 features", "[VkBootstrap.version]") {
     auto mock_vulkan_11_features = VkPhysicalDeviceVulkan11Features{};
     mock_vulkan_11_features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES;
     mock_vulkan_11_features.multiview = true;
-    mock.physical_devices_details[0].add_features_pNext_struct(mock_vulkan_11_features);
+    mock.physical_devices_details[0].features_pNextChain.emplace_back(create_serialized_struct_from_object(mock_vulkan_11_features));
 
     auto mock_vulkan_12_features = VkPhysicalDeviceVulkan12Features{};
     mock_vulkan_12_features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES;
     mock_vulkan_12_features.bufferDeviceAddress = true;
-    mock.physical_devices_details[0].add_features_pNext_struct(mock_vulkan_12_features);
+    mock.physical_devices_details[0].features_pNextChain.emplace_back(create_serialized_struct_from_object(mock_vulkan_12_features));
 
     GIVEN("A working instance") {
         auto instance = get_headless_instance(2); // make sure we use 1.2
@@ -1030,7 +1030,7 @@ TEST_CASE("Add required extension features in multiple calls", "[VkBootstrap.req
     mock_vulkan_11_features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES;
     mock_vulkan_11_features.multiview = true;
     mock_vulkan_11_features.samplerYcbcrConversion = true;
-    mock.physical_devices_details[0].add_features_pNext_struct(mock_vulkan_11_features);
+    mock.physical_devices_details[0].features_pNextChain.emplace_back(create_serialized_struct_from_object(mock_vulkan_11_features));
 
     GIVEN("A working instance") {
         auto instance = get_headless_instance(1); // make sure we use 1.1

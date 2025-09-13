@@ -12,7 +12,7 @@
 
 #include <vulkan/vulkan_core.h>
 
-typedef std::vector<char> SerializedStruct;
+using SerializedStruct = std::vector<char>;
 
 inline SerializedStruct create_serialized_struct_from_pointer(const void* input_data, size_t input_size) {
     if (static_cast<const VkBaseOutStructure*>(input_data)->sType == 0) {

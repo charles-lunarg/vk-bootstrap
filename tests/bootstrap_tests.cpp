@@ -456,6 +456,9 @@ TEST_CASE("SystemInfo Loading Vulkan Automatically in Multiple Threads", "[VkBoo
     [[maybe_unused]] VulkanMock& mock = get_and_setup_default();
     const size_t number_of_threads = 16;
     std::vector<vkb::Result<vkb::SystemInfo>> info_rets(number_of_threads, vkb::Error{});
+    for (size_t i = 0; i < number_of_threads; ++i) {
+        REQUIRE(!info_rets[i]);
+    }
     std::vector<std::thread> threads;
     for (size_t i = 0; i < number_of_threads; ++i) {
         threads.emplace_back(std::thread([&info_ret = info_rets[i]] {

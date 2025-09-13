@@ -19,8 +19,7 @@ inline SerializedStruct create_serialized_struct_from_pointer(const void* input_
         throw std::runtime_error(
             "create_serialized_struct_from_pointer being passed in a struct without setting the sType!");
     }
-    SerializedStruct new_struct;
-    new_struct.resize(input_size);
+    SerializedStruct new_struct(input_size);
     std::memcpy(new_struct.data(), input_data, new_struct.size());
     return new_struct;
 }

@@ -49,7 +49,7 @@ template <typename T> T get_uint64_handle(uint64_t value) { return reinterpret_c
 #endif
 
 struct VulkanMock {
-    uint32_t api_version = VK_API_VERSION_1_3;
+    uint32_t instance_api_version = VK_API_VERSION_1_3;
     std::vector<VkExtensionProperties> instance_extensions;
     std::vector<VkLayerProperties> instance_layers;
     std::vector<std::vector<VkExtensionProperties>> per_layer_instance_extension_properties;
@@ -104,6 +104,9 @@ struct VulkanMock {
         physical_device_handles.push_back(get_handle<VkPhysicalDevice>(0x22334455U + physical_device_handles.size()));
         physical_devices_details.emplace_back(std::move(details));
     }
+
+    // Values set by various Vulkan API calls
+    uint32_t api_version_set_by_vkCreateInstance = 0;
 };
 
 extern "C" {

@@ -48,7 +48,7 @@ VKAPI_ATTR VkResult VKAPI_CALL shim_vkEnumerateInstanceVersion(uint32_t* pApiVer
     if (pApiVersion == nullptr) {
         return VK_ERROR_DEVICE_LOST;
     }
-    *pApiVersion = mock.api_version;
+    *pApiVersion = mock.instance_api_version;
     return VK_SUCCESS;
 }
 
@@ -70,13 +70,16 @@ VKAPI_ATTR VkResult VKAPI_CALL shim_vkEnumerateInstanceLayerProperties(uint32_t*
     return fill_out_count_pointer_pair(mock.instance_layers, pPropertyCount, pProperties);
 }
 
-VKAPI_ATTR VkResult VKAPI_CALL shim_vkCreateInstance([[maybe_unused]] const VkInstanceCreateInfo* pCreateInfo,
-    [[maybe_unused]] const VkAllocationCallbacks* pAllocator,
-    VkInstance* pInstance) {
+VKAPI_ATTR VkResult VKAPI_CALL shim_vkCreateInstance(
+    const VkInstanceCreateInfo* pCreateInfo, [[maybe_unused]] const VkAllocationCallbacks* pAllocator, VkInstance* pInstance) {
     if (pInstance == nullptr) {
         return VK_ERROR_INITIALIZATION_FAILED;
     }
     *pInstance = get_handle<VkInstance>(0x0000ABCDU);
+
+    if (pCreateInfo && pCreateInfo->pApplicationInfo) {
+        mock.api_version_set_by_vkCreateInstance = pCreateInfo->pApplicationInfo->apiVersion;
+    }
     return VK_SUCCESS;
 }
 VKAPI_ATTR void VKAPI_CALL shim_vkDestroyInstance(

@@ -15,7 +15,7 @@
 
 TEST_CASE("VulkanHpp Instance with surface", "[VkBootstrap.vulkan_hpp]") {
     VulkanMock& mock = get_and_setup_default();
-    mock.api_version = VK_API_VERSION_1_1;
+    mock.instance_api_version = VK_API_VERSION_1_1;
     mock.physical_devices_details[0].properties.apiVersion = VK_API_VERSION_1_1;
     mock.physical_devices_details[0].extensions.push_back(get_extension_properties("VK_KHR_multiview"));
     mock.physical_devices_details[0].extensions.push_back(get_extension_properties("VK_KHR_driver_properties"));

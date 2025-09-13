@@ -652,25 +652,35 @@ Result<Instance> InstanceBuilder::build() const {
         if (pfn_vkEnumerateInstanceVersion != nullptr) {
             VkResult res = pfn_vkEnumerateInstanceVersion(&instance_version);
             // Should always return VK_SUCCESS
-            if (res != VK_SUCCESS && info.required_api_version > 0)
+            if (res != VK_SUCCESS && (info.required_api_version > 0 || info.minimum_instance_version > 0)) {
                 return make_error_code(InstanceError::vulkan_version_unavailable);
+            }
         }
-        if (pfn_vkEnumerateInstanceVersion == nullptr || instance_version < info.minimum_instance_version ||
+        if (pfn_vkEnumerateInstanceVersion == nullptr ||
+            (info.minimum_instance_version > 0 && instance_version < info.minimum_instance_version) ||
             (info.minimum_instance_version == 0 && instance_version < info.required_api_version)) {
-            if (VK_VERSION_MINOR(info.required_api_version) == 4)
+
+            uint32_t version_error = info.minimum_instance_version == 0 ? info.required_api_version : info.minimum_instance_version;
+            if (VK_VERSION_MINOR(version_error) == 4)
                 return make_error_code(InstanceError::vulkan_version_1_4_unavailable);
-            else if (VK_VERSION_MINOR(info.required_api_version) == 3)
+            else if (VK_VERSION_MINOR(version_error) == 3)
                 return make_error_code(InstanceError::vulkan_version_1_3_unavailable);
-            else if (VK_VERSION_MINOR(info.required_api_version) == 2)
+            else if (VK_VERSION_MINOR(version_error) == 2)
                 return make_error_code(InstanceError::vulkan_version_1_2_unavailable);
-            else if (VK_VERSION_MINOR(info.required_api_version))
+            else if (VK_VERSION_MINOR(version_error) == 1)
                 return make_error_code(InstanceError::vulkan_version_1_1_unavailable);
             else
                 return make_error_code(InstanceError::vulkan_version_unavailable);
         }
     }
 
-    uint32_t api_version = instance_version < VKB_VK_API_VERSION_1_1 ? instance_version : info.required_api_version;
+    // The API version to use is set by required_api_version, unless it isn't set, then it comes from minimum_instance_version
+    uint32_t api_version = VKB_VK_API_VERSION_1_0;
+    if (info.required_api_version > VKB_VK_API_VERSION_1_0) {
+        api_version = info.required_api_version;
+    } else if (info.minimum_instance_version > 0) {
+        api_version = info.minimum_instance_version;
+    }
 
     VkApplicationInfo app_info = {};
     app_info.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;

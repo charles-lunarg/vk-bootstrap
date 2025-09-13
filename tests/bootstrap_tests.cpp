@@ -539,11 +539,14 @@ TEST_CASE("Minimum instance API version", "[VkBootstrap.api_version]") {
     mock.instance_api_version = VK_API_VERSION_1_2;
     mock.physical_devices_details[0].properties.apiVersion = VK_API_VERSION_1_3;
     mock.physical_devices_details[0].properties.deviceID = 1;
-    add_basic_physical_device(mock).properties.apiVersion = VK_API_VERSION_1_4;
+    add_basic_physical_device(mock);
+    mock.physical_devices_details[1].properties.apiVersion = VK_API_VERSION_1_4;
     mock.physical_devices_details[1].properties.deviceID = 2;
     {
         auto ret = vkb::InstanceBuilder{}.set_headless().require_api_version(1, 4).set_minimum_instance_version(1, 2).build();
         REQUIRE(ret);
+        REQUIRE(mock.api_version_set_by_vkCreateInstance == VK_API_VERSION_1_4);
+        mock.api_version_set_by_vkCreateInstance = 0;
         auto pd_ret = vkb::PhysicalDeviceSelector{ ret.value() }.select();
         REQUIRE(pd_ret);
         REQUIRE(pd_ret.value().properties.deviceID == 2);
@@ -555,11 +558,68 @@ TEST_CASE("Minimum instance API version", "[VkBootstrap.api_version]") {
                        .set_minimum_instance_version(VK_MAKE_API_VERSION(0, 1, 2, 0))
                        .build();
         REQUIRE(ret);
+        REQUIRE(mock.api_version_set_by_vkCreateInstance == VK_API_VERSION_1_4);
+        mock.api_version_set_by_vkCreateInstance = 0;
         auto pd_ret = vkb::PhysicalDeviceSelector{ ret.value() }.select();
         REQUIRE(pd_ret);
         REQUIRE(pd_ret.value().properties.deviceID == 2);
     }
 }
+TEST_CASE("Required Instance API version error codes", "[VkBootstrap.required_api_version]") {
+    VulkanMock& mock = get_and_setup_default();
+    mock.instance_api_version = VK_API_VERSION_1_0;
+
+    auto ret_1_0 = vkb::InstanceBuilder{}.set_headless().require_api_version(1, 0).build();
+    REQUIRE(ret_1_0);
+
+    auto ret_1_1 = vkb::InstanceBuilder{}.set_headless().require_api_version(1, 1).build();
+    REQUIRE(ret_1_1.error() == vkb::InstanceError::vulkan_version_1_1_unavailable);
+
+    auto ret_1_2 = vkb::InstanceBuilder{}.set_headless().require_api_version(1, 2).build();
+    REQUIRE(ret_1_2.error() == vkb::InstanceError::vulkan_version_1_2_unavailable);
+
+    auto ret_1_3 = vkb::InstanceBuilder{}.set_headless().require_api_version(1, 3).build();
+    REQUIRE(ret_1_3.error() == vkb::InstanceError::vulkan_version_1_3_unavailable);
+
+    auto ret_1_4 = vkb::InstanceBuilder{}.set_headless().require_api_version(1, 4).build();
+    REQUIRE(ret_1_4.error() == vkb::InstanceError::vulkan_version_1_4_unavailable);
+}
+TEST_CASE("Minimum instance API version without required api version", "[VkBootstrap.set_minimum_instance_version]") {
+    VulkanMock& mock = get_and_setup_default();
+    mock.instance_api_version = VK_API_VERSION_1_2;
+
+    auto ret = vkb::InstanceBuilder{}.set_headless().set_minimum_instance_version(1, 2).build();
+    REQUIRE(ret);
+    REQUIRE(mock.api_version_set_by_vkCreateInstance == VK_API_VERSION_1_2);
+    mock.api_version_set_by_vkCreateInstance = 0;
+}
+TEST_CASE("Too low instance API version without required api version too ", "[VkBootstrap.set_minimum_instance_version_too_low]") {
+    VulkanMock& mock = get_and_setup_default();
+    mock.instance_api_version = VK_API_VERSION_1_1;
+
+    auto ret = vkb::InstanceBuilder{}.set_headless().set_minimum_instance_version(1, 2).build();
+    REQUIRE(!ret.has_value());
+}
+TEST_CASE("Instance API version error codes", "[VkBootstrap.set_minimum_instance_version_error_codes]") {
+    VulkanMock& mock = get_and_setup_default();
+    mock.instance_api_version = VK_API_VERSION_1_0;
+
+    auto ret_1_0 = vkb::InstanceBuilder{}.set_headless().set_minimum_instance_version(1, 0).build();
+    REQUIRE(ret_1_0);
+
+    auto ret_1_1 = vkb::InstanceBuilder{}.set_headless().set_minimum_instance_version(1, 1).build();
+    REQUIRE(ret_1_1.error() == vkb::InstanceError::vulkan_version_1_1_unavailable);
+
+    auto ret_1_2 = vkb::InstanceBuilder{}.set_headless().set_minimum_instance_version(1, 2).build();
+    REQUIRE(ret_1_2.error() == vkb::InstanceError::vulkan_version_1_2_unavailable);
+
+    auto ret_1_3 = vkb::InstanceBuilder{}.set_headless().set_minimum_instance_version(1, 3).build();
+    REQUIRE(ret_1_3.error() == vkb::InstanceError::vulkan_version_1_3_unavailable);
+
+    auto ret_1_4 = vkb::InstanceBuilder{}.set_headless().set_minimum_instance_version(1, 4).build();
+    REQUIRE(ret_1_4.error() == vkb::InstanceError::vulkan_version_1_4_unavailable);
+}
+
 TEST_CASE("Minimum instance API version lower than VkPhysicalDevice", "[VkBootstrap.api_version]") {
     VulkanMock& mock = get_and_setup_default();
     mock.instance_api_version = VK_API_VERSION_1_2;

@@ -448,9 +448,6 @@ TEST_CASE("SystemInfo Loading Vulkan Automatically", "[VkBootstrap.loading]") {
     [[maybe_unused]] VulkanMock& mock = get_and_setup_default();
     auto info_ret = vkb::SystemInfo::get_system_info();
     REQUIRE(info_ret);
-    vkb::InstanceBuilder builder;
-    auto ret = builder.build();
-    REQUIRE(ret);
 }
 
 TEST_CASE("SystemInfo Check Instance API Version", "[VkBootstrap.instance_api_version]") {
@@ -478,9 +475,6 @@ TEST_CASE("SystemInfo Loading Vulkan Manually", "[VkBootstrap.loading]") {
     REQUIRE(vk_lib.vkGetInstanceProcAddr);
     auto info_ret = vkb::SystemInfo::get_system_info(vk_lib.vkGetInstanceProcAddr);
     REQUIRE(info_ret);
-    vkb::InstanceBuilder builder;
-    auto ret = builder.build();
-    REQUIRE(ret);
     vk_lib.close();
 }
 

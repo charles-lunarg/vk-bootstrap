@@ -3,6 +3,8 @@
 #include "vulkan_mock.hpp"
 #include "vulkan_mock_setup.hpp"
 
+#include <thread>
+
 // TODO
 // changing present modes and/or image formats
 
@@ -448,6 +450,24 @@ TEST_CASE("SystemInfo Loading Vulkan Automatically", "[VkBootstrap.loading]") {
     [[maybe_unused]] VulkanMock& mock = get_and_setup_default();
     auto info_ret = vkb::SystemInfo::get_system_info();
     REQUIRE(info_ret);
+}
+
+TEST_CASE("SystemInfo Loading Vulkan Automatically in Multiple Threads", "[VkBootstrap.loading]") {
+    [[maybe_unused]] VulkanMock& mock = get_and_setup_default();
+    const size_t number_of_threads = 16;
+    std::vector<vkb::Result<vkb::SystemInfo>> info_rets(number_of_threads, vkb::Error{});
+    std::vector<std::thread> threads;
+    for (size_t i = 0; i < number_of_threads; ++i) {
+        threads.emplace_back(std::thread([&info_ret = info_rets[i]] {
+            info_ret = vkb::SystemInfo::get_system_info();
+        }));
+    }
+    for (size_t i = 0; i < number_of_threads; ++i) {
+        threads[i].join();
+    }
+    for (size_t i = 0; i < number_of_threads; ++i) {
+        REQUIRE(info_rets[i]);
+    }
 }
 
 TEST_CASE("SystemInfo Check Instance API Version", "[VkBootstrap.instance_api_version]") {

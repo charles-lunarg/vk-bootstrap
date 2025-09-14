@@ -54,7 +54,7 @@ auto instance_ret = instance_builder
 
 // simple error checking and helpful error messages
 if (!instance_ret) {
-    std::cerr << "Failed to create Vulkan instance. Error: " << instance_builder_return.error().message() << "\n";
+    std::cerr << "Failed to create Vulkan instance. Error: " << instance_ret.error().message() << "\n";
     return -1;
 }
 

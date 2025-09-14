@@ -473,6 +473,26 @@ TEST_CASE("SystemInfo Loading Vulkan Automatically in Multiple Threads", "[VkBoo
     }
 }
 
+TEST_CASE("Instance Creation Loading Vulkan Automatically in Multiple Threads", "[VkBootstrap.loading]") {
+    [[maybe_unused]] VulkanMock& mock = get_and_setup_default();
+    const size_t number_of_threads = 16;
+    std::vector<vkb::Result<vkb::Instance>> instance_rets(number_of_threads, vkb::Error{});
+    for (size_t i = 0; i < number_of_threads; ++i) {
+        REQUIRE(!instance_rets[i]);
+    }
+    std::vector<std::thread> threads;
+    for (size_t i = 0; i < number_of_threads; ++i) {
+        threads.emplace_back(
+            std::thread([&instance_ret = instance_rets[i]] { instance_ret = vkb::InstanceBuilder{}.build(); }));
+    }
+    for (size_t i = 0; i < number_of_threads; ++i) {
+        threads[i].join();
+    }
+    for (size_t i = 0; i < number_of_threads; ++i) {
+        REQUIRE(instance_rets[i]);
+    }
+}
+
 TEST_CASE("SystemInfo Check Instance API Version", "[VkBootstrap.instance_api_version]") {
     VulkanMock& mock = get_and_setup_default();
     mock.api_version = VK_API_VERSION_1_2;

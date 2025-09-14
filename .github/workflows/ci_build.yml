@@ -62,6 +62,35 @@ jobs:
               working-directory: ./build
               run: ctest --output-on-failure -C ${{matrix.type}}
 
+    linux-thread-sanitizer:
+        name: Linux with Thread Sanitizer
+        runs-on: ubuntu-latest
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name != github.event.pull_request.base.repo.full_name
+
+        steps:
+            - uses: actions/checkout@v5
+            - uses: lukka/get-cmake@latest
+              with:
+                cmakeVersion: 3.22
+
+            - name: Install build dependencies
+              run: |
+                sudo apt-get update
+                sudo apt-get install -y xorg-dev
+
+            - name: CMake Configure
+              run: cmake -S. -B build -DCMAKE_BUILD_TYPE=Release -DVK_BOOTSTRAP_WERROR=ON -DVK_BOOTSTRAP_TEST=ON -DENABLE_THREAD_SANITIZER=ON
+
+            - name: CMake Build
+              run: cmake --build build
+
+            - name: Install
+              run: cmake --install build --prefix build/install
+
+            - name: Run tests
+              working-directory: ./build
+              run: ctest --output-on-failure -C Release
+
     windows:
         name: Windows
         runs-on: windows-latest

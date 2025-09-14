@@ -142,6 +142,10 @@ std::vector<vkb::detail::FeaturesChain::StructInfo>::const_iterator FeaturesChai
 class VulkanFunctions {
     private:
     std::mutex init_mutex;
+    bool initialized = false;
+
+    std::mutex instance_functions_mutex;
+    bool instance_functions_initialized = false;
 
 #if defined(__linux__) || defined(__APPLE__) || defined(__FreeBSD__)
     void* library = nullptr;
@@ -186,11 +190,16 @@ class VulkanFunctions {
         FreeLibrary(library);
 #endif
         library = 0;
+        initialized = false;
+        instance_functions_initialized = false;
     }
 
     public:
     bool init_vulkan_funcs(PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr = nullptr) {
         std::lock_guard<std::mutex> lg(init_mutex);
+        if (initialized) {
+            return true;
+        }
         if (fp_vkGetInstanceProcAddr != nullptr) {
             ptr_vkGetInstanceProcAddr = fp_vkGetInstanceProcAddr;
         } else {
@@ -206,6 +215,7 @@ class VulkanFunctions {
             ptr_vkGetInstanceProcAddr(VK_NULL_HANDLE, "vkEnumerateInstanceVersion"));
         fp_vkCreateInstance =
             reinterpret_cast<PFN_vkCreateInstance>(ptr_vkGetInstanceProcAddr(VK_NULL_HANDLE, "vkCreateInstance"));
+        initialized = true;
         return true;
     }
 
@@ -248,6 +258,8 @@ class VulkanFunctions {
     PFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR fp_vkGetPhysicalDeviceSurfaceCapabilitiesKHR = nullptr;
 
     void init_instance_funcs(VkInstance inst) {
+        std::lock_guard<std::mutex> lg(instance_functions_mutex);
+        if (instance_functions_initialized) return;
         instance = inst;
         get_inst_proc_addr(fp_vkDestroyInstance, "vkDestroyInstance");
         get_inst_proc_addr(fp_vkCreateDebugUtilsMessengerEXT, "vkCreateDebugUtilsMessengerEXT");
@@ -270,6 +282,7 @@ class VulkanFunctions {
         get_inst_proc_addr(fp_vkGetPhysicalDeviceSurfaceFormatsKHR, "vkGetPhysicalDeviceSurfaceFormatsKHR");
         get_inst_proc_addr(fp_vkGetPhysicalDeviceSurfacePresentModesKHR, "vkGetPhysicalDeviceSurfacePresentModesKHR");
         get_inst_proc_addr(fp_vkGetPhysicalDeviceSurfaceCapabilitiesKHR, "vkGetPhysicalDeviceSurfaceCapabilitiesKHR");
+        instance_functions_initialized = true;
     }
 };
 

@@ -8,6 +8,7 @@
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wconversion"
 #endif
+#define VULKAN_HPP_NO_SPACESHIP_OPERATOR 
 #include <vulkan/vulkan.hpp>
 #if defined(__clang__) || defined(__GNUC__) || defined(__GNUG__)
 #pragma GCC diagnostic pop

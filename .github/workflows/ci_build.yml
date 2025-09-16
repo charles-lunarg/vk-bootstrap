@@ -66,6 +66,16 @@ jobs:
         name: Linux with Thread Sanitizer
         runs-on: ubuntu-latest
         if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name != github.event.pull_request.base.repo.full_name
+        strategy:
+            fail-fast: false
+            matrix:
+              cc: ["gcc", "clang"]
+              cxx: ["g++", "clang++"]
+              exclude:
+                  - cc: gcc
+                    cxx: clang++
+                  - cc: clang
+                    cxx: g++
 
         steps:
             - uses: actions/checkout@v5
@@ -79,7 +89,7 @@ jobs:
                 sudo apt-get install -y xorg-dev
 
             - name: CMake Configure
-              run: cmake -S. -B build -DCMAKE_BUILD_TYPE=Release -DVK_BOOTSTRAP_WERROR=ON -DVK_BOOTSTRAP_TEST=ON -DENABLE_THREAD_SANITIZER=ON
+              run: cmake -S. -B build -DCMAKE_BUILD_TYPE=Release  -DCMAKE_C_COMPILER=${{matrix.cc}} -DCMAKE_CXX_COMPILER=${{matrix.cxx}} -DVK_BOOTSTRAP_WERROR=ON -DVK_BOOTSTRAP_TEST=ON -DENABLE_THREAD_SANITIZER=ON
 
             - name: CMake Build
               run: cmake --build build

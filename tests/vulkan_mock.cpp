@@ -77,7 +77,7 @@ VKAPI_ATTR VkResult VKAPI_CALL shim_vkCreateInstance(
     }
     *pInstance = get_handle<VkInstance>(0x0000ABCDU);
 
-    if (pCreateInfo && pCreateInfo->pApplicationInfo) {
+    if (pCreateInfo && pCreateInfo->pApplicationInfo && mock.should_save_api_version) {
         mock.api_version_set_by_vkCreateInstance = pCreateInfo->pApplicationInfo->apiVersion;
     }
     return VK_SUCCESS;

@@ -622,6 +622,7 @@ TEST_CASE("ReLoading Vulkan Manually", "[VkBootstrap.loading]") {
 
 TEST_CASE("Minimum instance API version", "[VkBootstrap.api_version]") {
     VulkanMock& mock = get_and_setup_default();
+    mock.should_save_api_version = true;
     mock.instance_api_version = VK_API_VERSION_1_2;
     mock.physical_devices_details[0].properties.apiVersion = VK_API_VERSION_1_3;
     mock.physical_devices_details[0].properties.deviceID = 1;
@@ -640,6 +641,7 @@ TEST_CASE("Minimum instance API version", "[VkBootstrap.api_version]") {
 }
 TEST_CASE("Minimum instance API version using macros", "[VkBootstrap.api_version_using_macros]") {
     VulkanMock& mock = get_and_setup_default();
+    mock.should_save_api_version = true;
     mock.instance_api_version = VK_API_VERSION_1_2;
     mock.physical_devices_details[0].properties.apiVersion = VK_API_VERSION_1_3;
     mock.physical_devices_details[0].properties.deviceID = 1;
@@ -681,6 +683,7 @@ TEST_CASE("Required Instance API version error codes", "[VkBootstrap.required_ap
 }
 TEST_CASE("Minimum instance API version without required api version", "[VkBootstrap.set_minimum_instance_version]") {
     VulkanMock& mock = get_and_setup_default();
+    mock.should_save_api_version = true;
     mock.instance_api_version = VK_API_VERSION_1_2;
 
     auto ret = vkb::InstanceBuilder{}.set_headless().set_minimum_instance_version(1, 2).build();

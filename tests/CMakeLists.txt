@@ -13,7 +13,7 @@ target_link_libraries(VulkanMock
     PRIVATE
         vk-bootstrap-compiler-warnings
 )
-target_compile_features(VulkanMock PUBLIC cxx_std_17)
+target_compile_features(VulkanMock PUBLIC cxx_std_20)
 target_compile_definitions(VulkanMock PUBLIC VK_NO_PROTOTYPES COMPILING_DLL)
 if(WIN32)
     if (CMAKE_CXX_COMPILER_ID MATCHES "MSVC" OR CMAKE_CXX_COMPILER_FRONTEND_VARIANT MATCHES "MSVC")

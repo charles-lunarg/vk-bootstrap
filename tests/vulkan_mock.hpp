@@ -105,7 +105,11 @@ struct VulkanMock {
         physical_devices_details.emplace_back(std::move(details));
     }
 
-    // Values set by various Vulkan API calls
+    // Values set by various Vulkan API calls by the mock. Useful for checking that vk-bootstrap passed the correct
+    // information "into" the API.
+    // Because thread sanitizer yells when the mock writes to api_version_set_by_vkCreateInstance in
+    // multiple threads, only enable writing when needed (aka non-threading tests)
+    bool should_save_api_version = false;
     uint32_t api_version_set_by_vkCreateInstance = 0;
 };
 

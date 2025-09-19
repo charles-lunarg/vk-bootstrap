@@ -370,6 +370,13 @@ TEST_CASE("Swapchain", "[VkBootstrap.bootstrap]") {
                 REQUIRE(image_views.value().size() > 0);
                 swapchain.destroy_image_views(image_views.value());
             }
+            AND_THEN("Doesn't leak image views when it fails") {
+                mock.fail_image_creation_on_iteration = 2;
+                REQUIRE(mock.created_image_view_count == 0);
+                auto image_views = swapchain.get_image_views();
+                REQUIRE(image_views.error());
+                REQUIRE(mock.created_image_view_count == 0);
+            }
 
             vkb::destroy_swapchain(swapchain_ret.value());
         }
@@ -1354,8 +1361,18 @@ TEST_CASE("Test span functions", "[VkBootstrap.cpp20]") {
     auto swapchain_ret = swapchain_builder.build();
     REQUIRE(swapchain_ret.value());
     SECTION("destroy_image_views") {
+        auto image_views_ret = swapchain_ret.value().get_image_views();
+        REQUIRE(image_views_ret.has_value());
+        auto image_view_vec = image_views_ret.value();
         std::array<VkImageView, 3> image_views{};
+        for (size_t i = 0; i < 3; i++)
+            image_views[i] = image_view_vec[i];
         swapchain_ret.value().destroy_image_views(image_views);
-        swapchain_ret.value().destroy_image_views(2, image_views.data());
+    }
+    SECTION("destroy_image_views with count & data pointer") {
+        auto image_views_ret = swapchain_ret.value().get_image_views();
+        REQUIRE(image_views_ret.has_value());
+        auto image_view_vec = image_views_ret.value();
+        swapchain_ret.value().destroy_image_views(3, image_view_vec.data());
     }
 }

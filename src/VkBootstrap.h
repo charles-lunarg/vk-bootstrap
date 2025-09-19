@@ -21,6 +21,9 @@
 #include <cstring>
 
 #if __cplusplus >= 202002L
+#include <version>
+#endif
+#if defined(__cpp_lib_span)
 #define VKB_SPAN_OVERLOADS 1
 #elif !defined(VKB_SPAN_OVERLOADS)
 #define VKB_SPAN_OVERLOADS 0

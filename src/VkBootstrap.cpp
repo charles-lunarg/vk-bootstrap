@@ -2038,8 +2038,11 @@ Result<std::vector<VkImageView>> Swapchain::get_image_views(const void* pNext) {
         createInfo.subresourceRange.baseArrayLayer = 0;
         createInfo.subresourceRange.layerCount = 1;
         VkResult res = internal_table.fp_vkCreateImageView(device, &createInfo, allocation_callbacks, &views[i]);
-        if (res != VK_SUCCESS)
+        if (res != VK_SUCCESS) {
+            // Cleanup already created image views
+            destroy_image_views(i, views.data());
             return Result<std::vector<VkImageView>>{ SwapchainError::failed_create_swapchain_image_views, res };
+        }
     }
     return views;
 }

@@ -42,6 +42,7 @@ target_link_libraries(vk-bootstrap-test
     VulkanMock
     Catch2::Catch2WithMain
 )
+target_compile_features(vk-bootstrap-test PUBLIC cxx_std_20)
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     target_compile_options(vk-bootstrap-test PRIVATE -Wno-error=deprecated-declarations)

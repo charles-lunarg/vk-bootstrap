@@ -3,6 +3,7 @@
 #include "vulkan_mock.hpp"
 #include "vulkan_mock_setup.hpp"
 
+#include <array>
 #include <thread>
 
 // TODO
@@ -510,9 +511,7 @@ TEST_CASE("SystemInfo Loading Vulkan Automatically in Multiple Threads", "[VkBoo
     }
     std::vector<std::thread> threads;
     for (size_t i = 0; i < number_of_threads; ++i) {
-        threads.emplace_back(std::thread([&info_ret = info_rets[i]] {
-            info_ret = vkb::SystemInfo::get_system_info();
-        }));
+        threads.emplace_back(std::thread([&info_ret = info_rets[i]] { info_ret = vkb::SystemInfo::get_system_info(); }));
     }
     for (size_t i = 0; i < number_of_threads; ++i) {
         threads[i].join();
@@ -739,7 +738,8 @@ TEST_CASE("Querying Required Extension Features but with 1.0", "[VkBootstrap.sel
     auto mock_descriptor_indexing_features = VkPhysicalDeviceDescriptorIndexingFeaturesEXT{};
     mock_descriptor_indexing_features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT;
     mock_descriptor_indexing_features.runtimeDescriptorArray = true;
-    mock.physical_devices_details[0].features_pNextChain.emplace_back(create_serialized_struct_from_object(mock_descriptor_indexing_features));
+    mock.physical_devices_details[0].features_pNextChain.emplace_back(
+        create_serialized_struct_from_object(mock_descriptor_indexing_features));
     GIVEN("A working instance") {
         auto instance = get_headless_instance();
         // Requires a device that supports runtime descriptor arrays via descriptor indexing extension.
@@ -771,7 +771,8 @@ TEST_CASE("Querying Required Extension Features", "[VkBootstrap.select_features]
     auto mock_descriptor_indexing_features = VkPhysicalDeviceDescriptorIndexingFeaturesEXT{};
     mock_descriptor_indexing_features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT;
     mock_descriptor_indexing_features.runtimeDescriptorArray = true;
-    mock.physical_devices_details[0].features_pNextChain.emplace_back(create_serialized_struct_from_object(mock_descriptor_indexing_features));
+    mock.physical_devices_details[0].features_pNextChain.emplace_back(
+        create_serialized_struct_from_object(mock_descriptor_indexing_features));
     GIVEN("A working instance") {
         auto instance = get_headless_instance();
         // Requires a device that supports runtime descriptor arrays via descriptor indexing extension.
@@ -811,12 +812,14 @@ TEST_CASE("Error from Required Extension Features", "[VkBootstrap.missing_featur
     mock_descriptor_indexing_features_0.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT;
     mock_descriptor_indexing_features_0.runtimeDescriptorArray = true;
     mock_descriptor_indexing_features_0.descriptorBindingPartiallyBound = true;
-    mock.physical_devices_details[0].features_pNextChain.emplace_back(create_serialized_struct_from_object(mock_descriptor_indexing_features_0));
+    mock.physical_devices_details[0].features_pNextChain.emplace_back(
+        create_serialized_struct_from_object(mock_descriptor_indexing_features_0));
     auto mock_descriptor_indexing_features_1 = VkPhysicalDeviceDescriptorIndexingFeaturesEXT{};
     mock_descriptor_indexing_features_1.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT;
     mock_descriptor_indexing_features_1.descriptorBindingSampledImageUpdateAfterBind = true;
     mock_descriptor_indexing_features_1.descriptorBindingStorageBufferUpdateAfterBind = true;
-    mock.physical_devices_details[1].features_pNextChain.emplace_back(create_serialized_struct_from_object(mock_descriptor_indexing_features_1));
+    mock.physical_devices_details[1].features_pNextChain.emplace_back(
+        create_serialized_struct_from_object(mock_descriptor_indexing_features_1));
     GIVEN("A working instance") {
         auto instance = get_headless_instance();
         {
@@ -988,7 +991,8 @@ TEST_CASE("Querying Required Extension Features in 1.1", "[VkBootstrap.version]"
     auto mock_descriptor_indexing_features = VkPhysicalDeviceDescriptorIndexingFeaturesEXT{};
     mock_descriptor_indexing_features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES;
     mock_descriptor_indexing_features.runtimeDescriptorArray = true;
-    mock.physical_devices_details[0].features_pNextChain.emplace_back(create_serialized_struct_from_object(mock_descriptor_indexing_features));
+    mock.physical_devices_details[0].features_pNextChain.emplace_back(
+        create_serialized_struct_from_object(mock_descriptor_indexing_features));
     GIVEN("A working instance") {
         auto instance = get_headless_instance();
         SECTION("Requires a device that supports runtime descriptor arrays via descriptor indexing extension.") {
@@ -1301,5 +1305,57 @@ TEST_CASE("Test VK_EXT_layer_settings", "[VkBoostrap.LayerSettings]") {
 
         auto ret = vkb::InstanceBuilder{}.set_headless().add_layer_setting(layer_setting).build();
         REQUIRE(ret);
+    }
+}
+TEST_CASE("Test span functions", "[VkBootstrap.cpp20]") {
+    VulkanMock& mock = get_and_setup_default();
+    auto surface = mock.get_new_surface(get_basic_surface_details());
+
+    mock.instance_extensions.push_back(get_extension_properties("VK_EXT_debug_utils"));
+    mock.instance_extensions.push_back(get_extension_properties("VK_KHR_surface"));
+    mock.instance_extensions.push_back(get_extension_properties("VK_KHR_get_physical_device_properties2"));
+    mock.physical_devices_details[0].extensions.push_back(get_extension_properties("PhysDevExt0"));
+    mock.physical_devices_details[0].extensions.push_back(get_extension_properties("PhysDevExt1"));
+    mock.physical_devices_details[0].extensions.push_back(get_extension_properties("PhysDevExt2"));
+    mock.physical_devices_details[0].extensions.push_back(get_extension_properties("PhysDevExt3"));
+    vkb::InstanceBuilder builder;
+    SECTION("InstanceBuilder::enable_extension") {
+        std::array exts = { "VK_EXT_debug_utils", "VK_KHR_surface", "VK_KHR_get_physical_device_properties2" };
+        builder.enable_extensions(exts);
+        builder.enable_extensions(3, exts.data());
+    }
+    auto instance_ret = builder.build();
+    REQUIRE(instance_ret.has_value());
+    vkb::PhysicalDeviceSelector selector(instance_ret.value());
+    SECTION("PhysicalDeviceSelector::add_required_extensions") {
+        std::array exts1 = { "PhysDevExt0", "PhysDevExt1" };
+        selector.add_required_extensions(exts1);
+        selector.add_required_extensions(2, exts1.data());
+    }
+    auto physical_device_ret = selector.set_surface(surface).select();
+    REQUIRE(physical_device_ret.has_value());
+    auto physical_device = physical_device_ret.value();
+    SECTION("PhysicalDevice::enable_extensions_if_present") {
+        std::array exts2 = { "PhysDevExt2", "PhysDevExt3" };
+        physical_device.enable_extensions_if_present(exts2);
+        physical_device.enable_extensions_if_present(2, exts2.data());
+    }
+
+    vkb::DeviceBuilder device_builder{ physical_device };
+    SECTION("CustomQueueDescription and custom_queue_setup") {
+        vkb::CustomQueueDescription cqd{ 4, { 1.0, 2.0, 3.0, 4.0 } };
+        std::array cqds = { cqd, vkb::CustomQueueDescription{ 3, { 4.0, 3.0, 2.0 } } };
+        device_builder.custom_queue_setup(cqds);
+        device_builder.custom_queue_setup(2, cqds.data());
+    }
+    auto device_ret = device_builder.build();
+    REQUIRE(device_ret.has_value());
+    vkb::SwapchainBuilder swapchain_builder{ device_ret.value() };
+    auto swapchain_ret = swapchain_builder.build();
+    REQUIRE(swapchain_ret.value());
+    SECTION("destroy_image_views") {
+        std::array<VkImageView, 3> image_views{};
+        swapchain_ret.value().destroy_image_views(image_views);
+        swapchain_ret.value().destroy_image_views(2, image_views.data());
     }
 }

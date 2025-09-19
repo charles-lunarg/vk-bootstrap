@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <cstring>
 
+#include <limits>
 #include <memory>
 #include <utility>
 #include <stdexcept>
@@ -105,6 +106,8 @@ struct VulkanMock {
         physical_devices_details.emplace_back(std::move(details));
     }
 
+    uint32_t created_image_view_count = 0;
+    uint32_t fail_image_creation_on_iteration = std::numeric_limits<uint32_t>::max(); // max int means do not fail instance creation
     // Values set by various Vulkan API calls by the mock. Useful for checking that vk-bootstrap passed the correct
     // information "into" the API.
     // Because thread sanitizer yells when the mock writes to api_version_set_by_vkCreateInstance in

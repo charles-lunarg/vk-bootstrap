@@ -273,13 +273,24 @@ VKAPI_ATTR VkResult VKAPI_CALL shim_vkCreateImageView([[maybe_unused]] VkDevice 
     [[maybe_unused]] const VkImageViewCreateInfo* pCreateInfo,
     [[maybe_unused]] const VkAllocationCallbacks* pAllocator,
     VkImageView* pView) {
+    if (mock.fail_image_creation_on_iteration != std::numeric_limits<uint32_t>::max() &&
+        mock.fail_image_creation_on_iteration == mock.created_image_view_count) {
+        return VK_ERROR_INITIALIZATION_FAILED;
+    }
+
     if (pView) *pView = get_uint64_handle<VkImageView>(0x0000CCCEU);
+    mock.created_image_view_count++;
     return VK_SUCCESS;
 }
 
 VKAPI_ATTR void VKAPI_CALL shim_vkDestroyImageView([[maybe_unused]] VkDevice device,
     [[maybe_unused]] VkImageView imageView,
-    [[maybe_unused]] const VkAllocationCallbacks* pAllocator) {}
+    [[maybe_unused]] const VkAllocationCallbacks* pAllocator) {
+    if (mock.created_image_view_count == 0) {
+        throw std::runtime_error("no created image views to destroy!");
+    }
+    mock.created_image_view_count--;
+}
 
 VKAPI_ATTR void VKAPI_CALL shim_vkDestroySwapchainKHR([[maybe_unused]] VkDevice device,
     [[maybe_unused]] VkSwapchainKHR swapchain,

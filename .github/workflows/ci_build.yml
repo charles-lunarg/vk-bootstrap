@@ -112,9 +112,12 @@ jobs:
 
         steps:
             - uses: actions/checkout@v5
+            - uses: TheMrMilchmann/setup-msvc-dev@v4
+              with:
+                arch: ${{matrix.arch}}
 
             - name: CMake Configure
-              run: cmake -S. -B build -D CMAKE_BUILD_TYPE=${{matrix.config}} -D VK_BOOTSTRAP_WERROR=ON -D VK_BOOTSTRAP_TEST=ON -A ${{matrix.arch}}
+              run: cmake -S. -B build -D CMAKE_BUILD_TYPE=${{matrix.config}} -D VK_BOOTSTRAP_WERROR=ON -D VK_BOOTSTRAP_TEST=ON -D ENABLE_ADDRESS_SANITIZER=ON -A ${{matrix.arch}}
 
             - name: CMake Build
               run: cmake --build build

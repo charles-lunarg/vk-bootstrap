@@ -192,7 +192,7 @@ class VulkanFunctions {
 #elif defined(_WIN32)
         FreeLibrary(library);
 #endif
-        library = 0;
+        library = nullptr;
     }
 
     public:

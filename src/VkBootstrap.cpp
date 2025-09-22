@@ -219,7 +219,6 @@ class VulkanFunctions {
         return true;
     }
 
-    public:
     template <typename T> void get_inst_proc_addr(T& out_ptr, const char* func_name) {
         out_ptr = reinterpret_cast<T>(ptr_vkGetInstanceProcAddr(instance, func_name));
     }

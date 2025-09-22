@@ -284,6 +284,22 @@ class VulkanFunctions {
         get_inst_proc_addr(fp_vkGetPhysicalDeviceSurfaceCapabilitiesKHR, "vkGetPhysicalDeviceSurfaceCapabilitiesKHR");
         instance_functions_initialized = true;
     }
+
+    void deinit_all() {
+        {
+            std::lock_guard<std::mutex> lg(instance_functions_mutex);
+            if (instance_functions_initialized) {
+                instance_functions_initialized = false;
+            }
+        }
+        {
+            std::lock_guard<std::mutex> lg(init_mutex);
+            if (initialized) {
+                unload_vulkan_library();
+                initialized = false;
+            }
+        }
+    }
 };
 
 static VulkanFunctions& vulkan_functions() {

@@ -183,15 +183,16 @@ class VulkanFunctions {
         func_dest = reinterpret_cast<T>(reinterpret_cast<void*>(GetProcAddress(library, func_name)));
 #endif
     }
-    void close() {
+    void unload_vulkan_library() {
+        if (!library) {
+            return;
+        }
 #if defined(__linux__) || defined(__APPLE__) || defined(__FreeBSD__)
         dlclose(library);
 #elif defined(_WIN32)
         FreeLibrary(library);
 #endif
         library = 0;
-        initialized = false;
-        instance_functions_initialized = false;
     }
 
     public:

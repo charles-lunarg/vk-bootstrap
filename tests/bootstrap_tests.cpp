@@ -293,6 +293,34 @@ TEST_CASE("Select all Physical Devices", "[VkBootstrap.bootstrap]") {
     REQUIRE(dispatch_table.fp_vkCreateCommandPool);
 }
 
+TEST_CASE("Select Physical Devices by type", "[VkBootstrap.sort_physical_devices]") {
+    VulkanMock& mock = get_and_setup_default();
+    for (int i = 0; i < 4; i++) {
+        add_basic_physical_device(mock);
+    }
+    for (uint32_t i = 0; i < 5; i++) {
+        mock.physical_devices_details[i].properties.deviceID = i;
+        mock.physical_devices_details[i].properties.deviceType = static_cast<VkPhysicalDeviceType>(i);
+    }
+
+    auto instance = get_instance(0);
+    auto surface = mock.get_new_surface(get_basic_surface_details());
+
+    for (uint32_t i = 0; i < 5; i++) {
+        vkb::PhysicalDeviceSelector phys_device_selector(instance, surface);
+        auto phys_dev_ret = phys_device_selector.prefer_gpu_device_type(static_cast<vkb::PreferredDeviceType>(i)).select();
+        REQUIRE(phys_dev_ret.has_value());
+        auto phys_dev = phys_dev_ret.value();
+        REQUIRE(phys_dev.properties.deviceID == i);
+
+        auto vector_ret = phys_device_selector.prefer_gpu_device_type(static_cast<vkb::PreferredDeviceType>(i)).select_devices();
+        REQUIRE(vector_ret.has_value());
+        auto vector = vector_ret.value();
+        REQUIRE(vector.size() == 5);
+        REQUIRE(vector[0].properties.deviceID == i);
+    }
+}
+
 TEST_CASE("Loading Dispatch Table", "[VkBootstrap.bootstrap]") {
     [[maybe_unused]] VulkanMock& mock = get_and_setup_default();
     auto instance = get_headless_instance(0);

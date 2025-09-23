@@ -1208,8 +1208,12 @@ PhysicalDevice::Suitable PhysicalDeviceSelector::is_device_suitable(
         }
     }
 
-    if (!criteria.allow_any_type && pd.properties.deviceType != static_cast<VkPhysicalDeviceType>(criteria.preferred_type)) {
-        suitable = PhysicalDevice::Suitable::partial;
+    if (pd.properties.deviceType != static_cast<VkPhysicalDeviceType>(criteria.preferred_type)) {
+        if (criteria.allow_any_type) {
+            suitable = PhysicalDevice::Suitable::partial;
+        } else {
+            suitable = PhysicalDevice::Suitable::no;
+        }
     }
 
     detail::compare_VkPhysicalDeviceFeatures(unsuitability_reasons, pd.features, criteria.required_features);

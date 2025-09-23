@@ -885,6 +885,10 @@ void merge_VkPhysicalDeviceColorWriteEnableFeaturesEXT(VkPhysicalDeviceColorWrit
 void compare_VkPhysicalDevicePrimitivesGeneratedQueryFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDevicePrimitivesGeneratedQueryFeaturesEXT const& supported, VkPhysicalDevicePrimitivesGeneratedQueryFeaturesEXT const& requested);
 void merge_VkPhysicalDevicePrimitivesGeneratedQueryFeaturesEXT(VkPhysicalDevicePrimitivesGeneratedQueryFeaturesEXT & current, VkPhysicalDevicePrimitivesGeneratedQueryFeaturesEXT const& merge_in);
 #endif //(defined(VK_EXT_primitives_generated_query))
+#if (defined(VK_VALVE_video_encode_rgb_conversion))
+void compare_VkPhysicalDeviceVideoEncodeRgbConversionFeaturesVALVE(std::vector<std::string> & error_list, VkPhysicalDeviceVideoEncodeRgbConversionFeaturesVALVE const& supported, VkPhysicalDeviceVideoEncodeRgbConversionFeaturesVALVE const& requested);
+void merge_VkPhysicalDeviceVideoEncodeRgbConversionFeaturesVALVE(VkPhysicalDeviceVideoEncodeRgbConversionFeaturesVALVE & current, VkPhysicalDeviceVideoEncodeRgbConversionFeaturesVALVE const& merge_in);
+#endif //(defined(VK_VALVE_video_encode_rgb_conversion))
 #if (defined(VK_EXT_image_view_min_lod))
 void compare_VkPhysicalDeviceImageViewMinLodFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceImageViewMinLodFeaturesEXT const& supported, VkPhysicalDeviceImageViewMinLodFeaturesEXT const& requested);
 void merge_VkPhysicalDeviceImageViewMinLodFeaturesEXT(VkPhysicalDeviceImageViewMinLodFeaturesEXT & current, VkPhysicalDeviceImageViewMinLodFeaturesEXT const& merge_in);

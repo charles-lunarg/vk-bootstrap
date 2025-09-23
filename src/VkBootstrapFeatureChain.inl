@@ -3529,6 +3529,16 @@ void merge_VkPhysicalDevicePrimitivesGeneratedQueryFeaturesEXT(VkPhysicalDeviceP
     current.primitivesGeneratedQueryWithNonZeroStreams = current.primitivesGeneratedQueryWithNonZeroStreams || merge_in.primitivesGeneratedQueryWithNonZeroStreams;
 }
 #endif //(defined(VK_EXT_primitives_generated_query))
+#if (defined(VK_VALVE_video_encode_rgb_conversion))
+void compare_VkPhysicalDeviceVideoEncodeRgbConversionFeaturesVALVE(std::vector<std::string> & error_list, VkPhysicalDeviceVideoEncodeRgbConversionFeaturesVALVE const& supported, VkPhysicalDeviceVideoEncodeRgbConversionFeaturesVALVE const& requested) {
+    if (requested.videoEncodeRgbConversion && !supported.videoEncodeRgbConversion) {
+        error_list.push_back("Missing feature VkPhysicalDeviceVideoEncodeRgbConversionFeaturesVALVE::videoEncodeRgbConversion");
+    }
+}
+void merge_VkPhysicalDeviceVideoEncodeRgbConversionFeaturesVALVE(VkPhysicalDeviceVideoEncodeRgbConversionFeaturesVALVE & current, VkPhysicalDeviceVideoEncodeRgbConversionFeaturesVALVE const& merge_in) {
+    current.videoEncodeRgbConversion = current.videoEncodeRgbConversion || merge_in.videoEncodeRgbConversion;
+}
+#endif //(defined(VK_VALVE_video_encode_rgb_conversion))
 #if (defined(VK_EXT_image_view_min_lod))
 void compare_VkPhysicalDeviceImageViewMinLodFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceImageViewMinLodFeaturesEXT const& supported, VkPhysicalDeviceImageViewMinLodFeaturesEXT const& requested) {
     if (requested.minLod && !supported.minLod) {
@@ -5631,6 +5641,11 @@ void compare_feature_struct(VkStructureType sType, std::vector<std::string> & er
             compare_VkPhysicalDevicePrimitivesGeneratedQueryFeaturesEXT(error_list, *reinterpret_cast<const VkPhysicalDevicePrimitivesGeneratedQueryFeaturesEXT*>(supported), *reinterpret_cast<const VkPhysicalDevicePrimitivesGeneratedQueryFeaturesEXT*>(requested));
             break;
 #endif
+#if (defined(VK_VALVE_video_encode_rgb_conversion))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VIDEO_ENCODE_RGB_CONVERSION_FEATURES_VALVE):
+            compare_VkPhysicalDeviceVideoEncodeRgbConversionFeaturesVALVE(error_list, *reinterpret_cast<const VkPhysicalDeviceVideoEncodeRgbConversionFeaturesVALVE*>(supported), *reinterpret_cast<const VkPhysicalDeviceVideoEncodeRgbConversionFeaturesVALVE*>(requested));
+            break;
+#endif
 #if (defined(VK_EXT_image_view_min_lod))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_VIEW_MIN_LOD_FEATURES_EXT):
             compare_VkPhysicalDeviceImageViewMinLodFeaturesEXT(error_list, *reinterpret_cast<const VkPhysicalDeviceImageViewMinLodFeaturesEXT*>(supported), *reinterpret_cast<const VkPhysicalDeviceImageViewMinLodFeaturesEXT*>(requested));
@@ -7034,6 +7049,11 @@ void merge_feature_struct(VkStructureType sType, void* current, const void* merg
 #if (defined(VK_EXT_primitives_generated_query))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIMITIVES_GENERATED_QUERY_FEATURES_EXT):
             merge_VkPhysicalDevicePrimitivesGeneratedQueryFeaturesEXT(*reinterpret_cast<VkPhysicalDevicePrimitivesGeneratedQueryFeaturesEXT*>(current), *reinterpret_cast<const VkPhysicalDevicePrimitivesGeneratedQueryFeaturesEXT*>(merge_in));
+            break;
+#endif
+#if (defined(VK_VALVE_video_encode_rgb_conversion))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VIDEO_ENCODE_RGB_CONVERSION_FEATURES_VALVE):
+            merge_VkPhysicalDeviceVideoEncodeRgbConversionFeaturesVALVE(*reinterpret_cast<VkPhysicalDeviceVideoEncodeRgbConversionFeaturesVALVE*>(current), *reinterpret_cast<const VkPhysicalDeviceVideoEncodeRgbConversionFeaturesVALVE*>(merge_in));
             break;
 #endif
 #if (defined(VK_EXT_image_view_min_lod))

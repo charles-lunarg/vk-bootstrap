@@ -125,3 +125,67 @@ jobs:
             - name: Run  tests
               working-directory: ./build
               run: ctest --output-on-failure -C ${{matrix.config}}
+
+    macos:
+        name: macOS
+        runs-on: macos-latest
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name != github.event.pull_request.base.repo.full_name
+        strategy:
+            fail-fast: false
+            matrix:
+                type: ["Debug", "Release"]
+
+        steps:
+            - uses: actions/checkout@v5
+            - uses: lukka/get-cmake@latest
+              with:
+                cmakeVersion: 3.22
+
+            - name: Install build dependencies
+              run: |
+                brew update
+                brew install xorg-server
+
+            - name: CMake Configure
+              run: cmake -S. -B build -DCMAKE_BUILD_TYPE=${{matrix.type}} -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DVK_BOOTSTRAP_WERROR=ON -DVK_BOOTSTRAP_TEST=ON -DENABLE_ADDRESS_SANITIZER=ON
+
+            - name: CMake Build
+              run: cmake --build build
+
+            - name: Install
+              run: cmake --install build --prefix build/install
+
+            - name: Run tests
+              working-directory: ./build
+              run: ctest --output-on-failure -C ${{matrix.type}}
+
+    macos-thread-sanitizer:
+        name: macOS with Thread Sanitizer
+        runs-on: macos-latest
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name != github.event.pull_request.base.repo.full_name
+        strategy:
+            fail-fast: false
+
+        steps:
+            - uses: actions/checkout@v5
+            - uses: lukka/get-cmake@latest
+              with:
+                cmakeVersion: 3.22
+
+            - name: Install build dependencies
+              run: |
+                brew update
+                brew install xorg-server
+
+            - name: CMake Configure
+              run: cmake -S. -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DVK_BOOTSTRAP_WERROR=ON -DVK_BOOTSTRAP_TEST=ON -DENABLE_THREAD_SANITIZER=ON
+
+            - name: CMake Build
+              run: cmake --build build
+
+            - name: Install
+              run: cmake --install build --prefix build/install
+
+            - name: Run tests
+              working-directory: ./build
+              run: ctest --output-on-failure -C Release

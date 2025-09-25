@@ -69,6 +69,7 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
+              type: ["Release"]
               cc: ["gcc", "clang"]
               cxx: ["g++", "clang++"]
               exclude:
@@ -89,17 +90,17 @@ jobs:
                 sudo apt-get install -y xorg-dev
 
             - name: CMake Configure
-              run: cmake -S. -B build -DCMAKE_BUILD_TYPE=Release  -DCMAKE_C_COMPILER=${{matrix.cc}} -DCMAKE_CXX_COMPILER=${{matrix.cxx}} -DVK_BOOTSTRAP_WERROR=ON -DVK_BOOTSTRAP_TEST=ON -DENABLE_THREAD_SANITIZER=ON
+              run: cmake -S. -B build -DCMAKE_BUILD_TYPE=${{matrix.type}}  -DCMAKE_C_COMPILER=${{matrix.cc}} -DCMAKE_CXX_COMPILER=${{matrix.cxx}} -DVK_BOOTSTRAP_WERROR=ON -DVK_BOOTSTRAP_TEST=ON -DENABLE_THREAD_SANITIZER=ON
 
             - name: CMake Build
-              run: cmake --build build --config Release
+              run: cmake --build build --config ${{matrix.type}}
 
             - name: Install
               run: cmake --install build --prefix build/install
 
             - name: Run tests
               working-directory: ./build
-              run: ctest --output-on-failure -C Release
+              run: ctest --output-on-failure -C ${{matrix.type}}
 
     windows:
         name: Windows
@@ -165,6 +166,8 @@ jobs:
         if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name != github.event.pull_request.base.repo.full_name
         strategy:
             fail-fast: false
+            matrix:
+                type: ["Release"]
 
         steps:
             - uses: actions/checkout@v5
@@ -178,14 +181,14 @@ jobs:
                 brew install xorg-server
 
             - name: CMake Configure
-              run: cmake -S. -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DVK_BOOTSTRAP_WERROR=ON -DVK_BOOTSTRAP_TEST=ON -DENABLE_THREAD_SANITIZER=ON
+              run: cmake -S. -B build -DCMAKE_BUILD_TYPE=${{matrix.type}} -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DVK_BOOTSTRAP_WERROR=ON -DVK_BOOTSTRAP_TEST=ON -DENABLE_THREAD_SANITIZER=ON
 
             - name: CMake Build
-              run: cmake --build build --config Release
+              run: cmake --build build --config ${{matrix.type}}
 
             - name: Install
               run: cmake --install build --prefix build/install
 
             - name: Run tests
               working-directory: ./build
-              run: ctest --output-on-failure -C Release
+              run: ctest --output-on-failure -C ${{matrix.type}}

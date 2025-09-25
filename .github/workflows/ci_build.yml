@@ -135,6 +135,8 @@ jobs:
             fail-fast: false
             matrix:
                 type: ["Debug", "Release"]
+                cc: ["clang"]
+                cxx: ["clang++"]
 
         steps:
             - uses: actions/checkout@v5
@@ -148,7 +150,7 @@ jobs:
                 brew install xorg-server
 
             - name: CMake Configure
-              run: cmake -S. -B build -DCMAKE_BUILD_TYPE=${{matrix.type}} -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DVK_BOOTSTRAP_WERROR=ON -DVK_BOOTSTRAP_TEST=ON -DENABLE_ADDRESS_SANITIZER=ON
+              run: cmake -S. -B build -DCMAKE_BUILD_TYPE=${{matrix.type}} -DCMAKE_C_COMPILER=${{matrix.cc}} -DCMAKE_CXX_COMPILER=${{matrix.cxx}} -DVK_BOOTSTRAP_WERROR=ON -DVK_BOOTSTRAP_TEST=ON -DENABLE_ADDRESS_SANITIZER=ON
 
             - name: CMake Build
               run: cmake --build build --config ${{matrix.type}}
@@ -168,6 +170,8 @@ jobs:
             fail-fast: false
             matrix:
                 type: ["Release"]
+                cc: ["clang"]
+                cxx: ["clang++"]
 
         steps:
             - uses: actions/checkout@v5
@@ -181,7 +185,7 @@ jobs:
                 brew install xorg-server
 
             - name: CMake Configure
-              run: cmake -S. -B build -DCMAKE_BUILD_TYPE=${{matrix.type}} -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DVK_BOOTSTRAP_WERROR=ON -DVK_BOOTSTRAP_TEST=ON -DENABLE_THREAD_SANITIZER=ON
+              run: cmake -S. -B build -DCMAKE_BUILD_TYPE=${{matrix.type}} -DCMAKE_C_COMPILER=${{matrix.cc}} -DCMAKE_CXX_COMPILER=${{matrix.cxx}} -DVK_BOOTSTRAP_WERROR=ON -DVK_BOOTSTRAP_TEST=ON -DENABLE_THREAD_SANITIZER=ON
 
             - name: CMake Build
               run: cmake --build build --config ${{matrix.type}}

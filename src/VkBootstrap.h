@@ -327,16 +327,16 @@ void destroy_instance(Instance const& instance); // release instance resources
 
 #if defined(_WIN32)
     VK_KHR_win32_surface
+#elif defined(__ANDROID__)
+    VK_KHR_android_surface
+#elif defined(_DIRECT2DISPLAY)
+    VK_KHR_display
 #elif defined(__linux__) || defined(__FreeBSD__)
     VK_KHR_xcb_surface
     VK_KHR_xlib_surface
     VK_KHR_wayland_surface
 #elif defined(__APPLE__)
     VK_EXT_metal_surface
-#elif defined(__ANDROID__)
-    VK_KHR_android_surface
-#elif defined(_DIRECT2DISPLAY)
-    VK_KHR_display
 #endif
 
 Use `InstanceBuilder::enable_extension()` to add new extensions without altering the default behavior

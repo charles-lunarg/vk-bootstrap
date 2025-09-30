@@ -2387,6 +2387,20 @@ void merge_VkPhysicalDeviceUnifiedImageLayoutsFeaturesKHR(VkPhysicalDeviceUnifie
     current.unifiedImageLayoutsVideo = current.unifiedImageLayoutsVideo || merge_in.unifiedImageLayoutsVideo;
 }
 #endif //(defined(VK_KHR_unified_image_layouts))
+#if (defined(VK_KHR_copy_memory_indirect))
+void compare_VkPhysicalDeviceCopyMemoryIndirectFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceCopyMemoryIndirectFeaturesKHR const& supported, VkPhysicalDeviceCopyMemoryIndirectFeaturesKHR const& requested) {
+    if (requested.indirectMemoryCopy && !supported.indirectMemoryCopy) {
+        error_list.push_back("Missing feature VkPhysicalDeviceCopyMemoryIndirectFeaturesKHR::indirectMemoryCopy");
+    }
+    if (requested.indirectMemoryToImageCopy && !supported.indirectMemoryToImageCopy) {
+        error_list.push_back("Missing feature VkPhysicalDeviceCopyMemoryIndirectFeaturesKHR::indirectMemoryToImageCopy");
+    }
+}
+void merge_VkPhysicalDeviceCopyMemoryIndirectFeaturesKHR(VkPhysicalDeviceCopyMemoryIndirectFeaturesKHR & current, VkPhysicalDeviceCopyMemoryIndirectFeaturesKHR const& merge_in) {
+    current.indirectMemoryCopy = current.indirectMemoryCopy || merge_in.indirectMemoryCopy;
+    current.indirectMemoryToImageCopy = current.indirectMemoryToImageCopy || merge_in.indirectMemoryToImageCopy;
+}
+#endif //(defined(VK_KHR_copy_memory_indirect))
 #if (defined(VK_KHR_video_encode_intra_refresh))
 void compare_VkPhysicalDeviceVideoEncodeIntraRefreshFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceVideoEncodeIntraRefreshFeaturesKHR const& supported, VkPhysicalDeviceVideoEncodeIntraRefreshFeaturesKHR const& requested) {
     if (requested.videoEncodeIntraRefresh && !supported.videoEncodeIntraRefresh) {
@@ -5232,6 +5246,11 @@ void compare_feature_struct(VkStructureType sType, std::vector<std::string> & er
             compare_VkPhysicalDeviceUnifiedImageLayoutsFeaturesKHR(error_list, *reinterpret_cast<const VkPhysicalDeviceUnifiedImageLayoutsFeaturesKHR*>(supported), *reinterpret_cast<const VkPhysicalDeviceUnifiedImageLayoutsFeaturesKHR*>(requested));
             break;
 #endif
+#if (defined(VK_KHR_copy_memory_indirect))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COPY_MEMORY_INDIRECT_FEATURES_KHR):
+            compare_VkPhysicalDeviceCopyMemoryIndirectFeaturesKHR(error_list, *reinterpret_cast<const VkPhysicalDeviceCopyMemoryIndirectFeaturesKHR*>(supported), *reinterpret_cast<const VkPhysicalDeviceCopyMemoryIndirectFeaturesKHR*>(requested));
+            break;
+#endif
 #if (defined(VK_KHR_video_encode_intra_refresh))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VIDEO_ENCODE_INTRA_REFRESH_FEATURES_KHR):
             compare_VkPhysicalDeviceVideoEncodeIntraRefreshFeaturesKHR(error_list, *reinterpret_cast<const VkPhysicalDeviceVideoEncodeIntraRefreshFeaturesKHR*>(supported), *reinterpret_cast<const VkPhysicalDeviceVideoEncodeIntraRefreshFeaturesKHR*>(requested));
@@ -6640,6 +6659,11 @@ void merge_feature_struct(VkStructureType sType, void* current, const void* merg
 #if (defined(VK_KHR_unified_image_layouts))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_UNIFIED_IMAGE_LAYOUTS_FEATURES_KHR):
             merge_VkPhysicalDeviceUnifiedImageLayoutsFeaturesKHR(*reinterpret_cast<VkPhysicalDeviceUnifiedImageLayoutsFeaturesKHR*>(current), *reinterpret_cast<const VkPhysicalDeviceUnifiedImageLayoutsFeaturesKHR*>(merge_in));
+            break;
+#endif
+#if (defined(VK_KHR_copy_memory_indirect))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COPY_MEMORY_INDIRECT_FEATURES_KHR):
+            merge_VkPhysicalDeviceCopyMemoryIndirectFeaturesKHR(*reinterpret_cast<VkPhysicalDeviceCopyMemoryIndirectFeaturesKHR*>(current), *reinterpret_cast<const VkPhysicalDeviceCopyMemoryIndirectFeaturesKHR*>(merge_in));
             break;
 #endif
 #if (defined(VK_KHR_video_encode_intra_refresh))

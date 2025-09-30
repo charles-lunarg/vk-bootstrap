@@ -553,6 +553,10 @@ void merge_VkPhysicalDeviceVideoMaintenance1FeaturesKHR(VkPhysicalDeviceVideoMai
 void compare_VkPhysicalDeviceUnifiedImageLayoutsFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceUnifiedImageLayoutsFeaturesKHR const& supported, VkPhysicalDeviceUnifiedImageLayoutsFeaturesKHR const& requested);
 void merge_VkPhysicalDeviceUnifiedImageLayoutsFeaturesKHR(VkPhysicalDeviceUnifiedImageLayoutsFeaturesKHR & current, VkPhysicalDeviceUnifiedImageLayoutsFeaturesKHR const& merge_in);
 #endif //(defined(VK_KHR_unified_image_layouts))
+#if (defined(VK_KHR_copy_memory_indirect))
+void compare_VkPhysicalDeviceCopyMemoryIndirectFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceCopyMemoryIndirectFeaturesKHR const& supported, VkPhysicalDeviceCopyMemoryIndirectFeaturesKHR const& requested);
+void merge_VkPhysicalDeviceCopyMemoryIndirectFeaturesKHR(VkPhysicalDeviceCopyMemoryIndirectFeaturesKHR & current, VkPhysicalDeviceCopyMemoryIndirectFeaturesKHR const& merge_in);
+#endif //(defined(VK_KHR_copy_memory_indirect))
 #if (defined(VK_KHR_video_encode_intra_refresh))
 void compare_VkPhysicalDeviceVideoEncodeIntraRefreshFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceVideoEncodeIntraRefreshFeaturesKHR const& supported, VkPhysicalDeviceVideoEncodeIntraRefreshFeaturesKHR const& requested);
 void merge_VkPhysicalDeviceVideoEncodeIntraRefreshFeaturesKHR(VkPhysicalDeviceVideoEncodeIntraRefreshFeaturesKHR & current, VkPhysicalDeviceVideoEncodeIntraRefreshFeaturesKHR const& merge_in);

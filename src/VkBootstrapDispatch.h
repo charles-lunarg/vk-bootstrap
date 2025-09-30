@@ -1581,11 +1581,17 @@ struct DispatchTable {
 #if (defined(VK_KHR_copy_commands2))
         fp_vkCmdCopyImageToBuffer2KHR = reinterpret_cast<PFN_vkCmdCopyImageToBuffer2KHR>(procAddr(device, "vkCmdCopyImageToBuffer2KHR"));
 #endif
+#if (defined(VK_KHR_copy_memory_indirect))
+        fp_vkCmdCopyMemoryIndirectKHR = reinterpret_cast<PFN_vkCmdCopyMemoryIndirectKHR>(procAddr(device, "vkCmdCopyMemoryIndirectKHR"));
+#endif
 #if (defined(VK_NV_copy_memory_indirect))
         fp_vkCmdCopyMemoryIndirectNV = reinterpret_cast<PFN_vkCmdCopyMemoryIndirectNV>(procAddr(device, "vkCmdCopyMemoryIndirectNV"));
 #endif
 #if (defined(VK_KHR_acceleration_structure))
         fp_vkCmdCopyMemoryToAccelerationStructureKHR = reinterpret_cast<PFN_vkCmdCopyMemoryToAccelerationStructureKHR>(procAddr(device, "vkCmdCopyMemoryToAccelerationStructureKHR"));
+#endif
+#if (defined(VK_KHR_copy_memory_indirect))
+        fp_vkCmdCopyMemoryToImageIndirectKHR = reinterpret_cast<PFN_vkCmdCopyMemoryToImageIndirectKHR>(procAddr(device, "vkCmdCopyMemoryToImageIndirectKHR"));
 #endif
 #if (defined(VK_NV_copy_memory_indirect))
         fp_vkCmdCopyMemoryToImageIndirectNV = reinterpret_cast<PFN_vkCmdCopyMemoryToImageIndirectNV>(procAddr(device, "vkCmdCopyMemoryToImageIndirectNV"));
@@ -3436,6 +3442,11 @@ struct DispatchTable {
         fp_vkCmdCopyImageToBuffer2KHR(commandBuffer, pCopyImageToBufferInfo);
     }
 #endif
+#if (defined(VK_KHR_copy_memory_indirect))
+    void cmdCopyMemoryIndirectKHR(VkCommandBuffer commandBuffer, const VkCopyMemoryIndirectInfoKHR* pCopyMemoryIndirectInfo) const noexcept {
+        fp_vkCmdCopyMemoryIndirectKHR(commandBuffer, pCopyMemoryIndirectInfo);
+    }
+#endif
 #if (defined(VK_NV_copy_memory_indirect))
     void cmdCopyMemoryIndirectNV(VkCommandBuffer commandBuffer, VkDeviceAddress copyBufferAddress, uint32_t copyCount, uint32_t stride) const noexcept {
         fp_vkCmdCopyMemoryIndirectNV(commandBuffer, copyBufferAddress, copyCount, stride);
@@ -3444,6 +3455,11 @@ struct DispatchTable {
 #if (defined(VK_KHR_acceleration_structure))
     void cmdCopyMemoryToAccelerationStructureKHR(VkCommandBuffer commandBuffer, const VkCopyMemoryToAccelerationStructureInfoKHR* pInfo) const noexcept {
         fp_vkCmdCopyMemoryToAccelerationStructureKHR(commandBuffer, pInfo);
+    }
+#endif
+#if (defined(VK_KHR_copy_memory_indirect))
+    void cmdCopyMemoryToImageIndirectKHR(VkCommandBuffer commandBuffer, const VkCopyMemoryToImageIndirectInfoKHR* pCopyMemoryToImageIndirectInfo) const noexcept {
+        fp_vkCmdCopyMemoryToImageIndirectKHR(commandBuffer, pCopyMemoryToImageIndirectInfo);
     }
 #endif
 #if (defined(VK_NV_copy_memory_indirect))
@@ -6368,6 +6384,11 @@ struct DispatchTable {
 #else
     void * fp_vkCmdCopyImageToBuffer2KHR{};
 #endif
+#if (defined(VK_KHR_copy_memory_indirect))
+    PFN_vkCmdCopyMemoryIndirectKHR fp_vkCmdCopyMemoryIndirectKHR = nullptr;
+#else
+    void * fp_vkCmdCopyMemoryIndirectKHR{};
+#endif
 #if (defined(VK_NV_copy_memory_indirect))
     PFN_vkCmdCopyMemoryIndirectNV fp_vkCmdCopyMemoryIndirectNV = nullptr;
 #else
@@ -6377,6 +6398,11 @@ struct DispatchTable {
     PFN_vkCmdCopyMemoryToAccelerationStructureKHR fp_vkCmdCopyMemoryToAccelerationStructureKHR = nullptr;
 #else
     void * fp_vkCmdCopyMemoryToAccelerationStructureKHR{};
+#endif
+#if (defined(VK_KHR_copy_memory_indirect))
+    PFN_vkCmdCopyMemoryToImageIndirectKHR fp_vkCmdCopyMemoryToImageIndirectKHR = nullptr;
+#else
+    void * fp_vkCmdCopyMemoryToImageIndirectKHR{};
 #endif
 #if (defined(VK_NV_copy_memory_indirect))
     PFN_vkCmdCopyMemoryToImageIndirectNV fp_vkCmdCopyMemoryToImageIndirectNV = nullptr;

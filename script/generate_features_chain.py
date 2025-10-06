@@ -66,7 +66,8 @@ def setup_feature_struct_aliases():
         type_list = [feature.name] + feature.aliases
         for type_name in type_list:
             for ext in feature.extensions:
-                if vk.extensions[ext].vendorTag is not None and type_name.endswith(vk.extensions[ext].vendorTag):
+                ext_vendor = vk.extensions[ext].name.split('_')[1]
+                if type_name.endswith(ext_vendor):
                     feature_struct_ext_map[type_name] = ext
                     for sTypes in vk.extensions[ext].enumFields['VkStructureType']:
                         if sTypes.name == feature.sType and type_name is not feature.name:

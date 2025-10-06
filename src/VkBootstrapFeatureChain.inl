@@ -1821,7 +1821,7 @@ void merge_VkPhysicalDeviceVertexAttributeDivisorFeaturesKHR(VkPhysicalDeviceVer
     current.vertexAttributeInstanceRateZeroDivisor = current.vertexAttributeInstanceRateZeroDivisor || merge_in.vertexAttributeInstanceRateZeroDivisor;
 }
 #endif //(defined(VK_VERSION_1_4) || defined(VK_KHR_vertex_attribute_divisor))
-#if (defined(VK_VERSION_1_4) || defined(VK_KHR_vertex_attribute_divisor) || defined(VK_EXT_vertex_attribute_divisor))
+#if (defined(VK_VERSION_1_4) || defined(VK_EXT_vertex_attribute_divisor))
 void compare_VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT const& supported, VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT const& requested) {
     if (requested.vertexAttributeInstanceRateDivisor && !supported.vertexAttributeInstanceRateDivisor) {
         error_list.push_back("Missing feature VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT::vertexAttributeInstanceRateDivisor");
@@ -1834,7 +1834,7 @@ void merge_VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT(VkPhysicalDeviceVer
     current.vertexAttributeInstanceRateDivisor = current.vertexAttributeInstanceRateDivisor || merge_in.vertexAttributeInstanceRateDivisor;
     current.vertexAttributeInstanceRateZeroDivisor = current.vertexAttributeInstanceRateZeroDivisor || merge_in.vertexAttributeInstanceRateZeroDivisor;
 }
-#endif //(defined(VK_VERSION_1_4) || defined(VK_KHR_vertex_attribute_divisor) || defined(VK_EXT_vertex_attribute_divisor))
+#endif //(defined(VK_VERSION_1_4) || defined(VK_EXT_vertex_attribute_divisor))
 #if (defined(VK_VERSION_1_4) || defined(VK_KHR_index_type_uint8) || defined(VK_EXT_index_type_uint8))
 void compare_VkPhysicalDeviceIndexTypeUint8Features(std::vector<std::string> & error_list, VkPhysicalDeviceIndexTypeUint8Features const& supported, VkPhysicalDeviceIndexTypeUint8Features const& requested) {
     if (requested.indexTypeUint8 && !supported.indexTypeUint8) {
@@ -3327,7 +3327,7 @@ void merge_VkPhysicalDeviceFaultFeaturesEXT(VkPhysicalDeviceFaultFeaturesEXT & c
     current.deviceFaultVendorBinary = current.deviceFaultVendorBinary || merge_in.deviceFaultVendorBinary;
 }
 #endif //(defined(VK_EXT_device_fault))
-#if (defined(VK_ARM_rasterization_order_attachment_access) || defined(VK_EXT_rasterization_order_attachment_access))
+#if (defined(VK_EXT_rasterization_order_attachment_access))
 void compare_VkPhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT const& supported, VkPhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT const& requested) {
     if (requested.rasterizationOrderColorAttachmentAccess && !supported.rasterizationOrderColorAttachmentAccess) {
         error_list.push_back("Missing feature VkPhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT::rasterizationOrderColorAttachmentAccess");
@@ -3344,7 +3344,7 @@ void merge_VkPhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT(VkPhysi
     current.rasterizationOrderDepthAttachmentAccess = current.rasterizationOrderDepthAttachmentAccess || merge_in.rasterizationOrderDepthAttachmentAccess;
     current.rasterizationOrderStencilAttachmentAccess = current.rasterizationOrderStencilAttachmentAccess || merge_in.rasterizationOrderStencilAttachmentAccess;
 }
-#endif //(defined(VK_ARM_rasterization_order_attachment_access) || defined(VK_EXT_rasterization_order_attachment_access))
+#endif //(defined(VK_EXT_rasterization_order_attachment_access))
 #if (defined(VK_ARM_rasterization_order_attachment_access))
 void compare_VkPhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM(std::vector<std::string> & error_list, VkPhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM const& supported, VkPhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM const& requested) {
     if (requested.rasterizationOrderColorAttachmentAccess && !supported.rasterizationOrderColorAttachmentAccess) {
@@ -4759,7 +4759,7 @@ void compare_feature_struct(VkStructureType sType, std::vector<std::string> & er
             compare_VkPhysicalDeviceDescriptorIndexingFeatures(error_list, *reinterpret_cast<const VkPhysicalDeviceDescriptorIndexingFeatures*>(supported), *reinterpret_cast<const VkPhysicalDeviceDescriptorIndexingFeatures*>(requested));
             break;
 #elif (defined(VK_VERSION_1_2) || defined(VK_EXT_descriptor_indexing))
-        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES):
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT):
             compare_VkPhysicalDeviceDescriptorIndexingFeaturesEXT(error_list, *reinterpret_cast<const VkPhysicalDeviceDescriptorIndexingFeaturesEXT*>(supported), *reinterpret_cast<const VkPhysicalDeviceDescriptorIndexingFeaturesEXT*>(requested));
             break;
 #endif
@@ -4872,7 +4872,7 @@ void compare_feature_struct(VkStructureType sType, std::vector<std::string> & er
             compare_VkPhysicalDevicePrivateDataFeatures(error_list, *reinterpret_cast<const VkPhysicalDevicePrivateDataFeatures*>(supported), *reinterpret_cast<const VkPhysicalDevicePrivateDataFeatures*>(requested));
             break;
 #elif (defined(VK_VERSION_1_3) || defined(VK_EXT_private_data))
-        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIVATE_DATA_FEATURES):
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIVATE_DATA_FEATURES_EXT):
             compare_VkPhysicalDevicePrivateDataFeaturesEXT(error_list, *reinterpret_cast<const VkPhysicalDevicePrivateDataFeaturesEXT*>(supported), *reinterpret_cast<const VkPhysicalDevicePrivateDataFeaturesEXT*>(requested));
             break;
 #endif
@@ -4881,7 +4881,7 @@ void compare_feature_struct(VkStructureType sType, std::vector<std::string> & er
             compare_VkPhysicalDevicePipelineCreationCacheControlFeatures(error_list, *reinterpret_cast<const VkPhysicalDevicePipelineCreationCacheControlFeatures*>(supported), *reinterpret_cast<const VkPhysicalDevicePipelineCreationCacheControlFeatures*>(requested));
             break;
 #elif (defined(VK_VERSION_1_3) || defined(VK_EXT_pipeline_creation_cache_control))
-        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CREATION_CACHE_CONTROL_FEATURES):
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CREATION_CACHE_CONTROL_FEATURES_EXT):
             compare_VkPhysicalDevicePipelineCreationCacheControlFeaturesEXT(error_list, *reinterpret_cast<const VkPhysicalDevicePipelineCreationCacheControlFeaturesEXT*>(supported), *reinterpret_cast<const VkPhysicalDevicePipelineCreationCacheControlFeaturesEXT*>(requested));
             break;
 #endif
@@ -4935,7 +4935,7 @@ void compare_feature_struct(VkStructureType sType, std::vector<std::string> & er
             compare_VkPhysicalDeviceTextureCompressionASTCHDRFeatures(error_list, *reinterpret_cast<const VkPhysicalDeviceTextureCompressionASTCHDRFeatures*>(supported), *reinterpret_cast<const VkPhysicalDeviceTextureCompressionASTCHDRFeatures*>(requested));
             break;
 #elif (defined(VK_VERSION_1_3) || defined(VK_EXT_texture_compression_astc_hdr))
-        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXTURE_COMPRESSION_ASTC_HDR_FEATURES):
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXTURE_COMPRESSION_ASTC_HDR_FEATURES_EXT):
             compare_VkPhysicalDeviceTextureCompressionASTCHDRFeaturesEXT(error_list, *reinterpret_cast<const VkPhysicalDeviceTextureCompressionASTCHDRFeaturesEXT*>(supported), *reinterpret_cast<const VkPhysicalDeviceTextureCompressionASTCHDRFeaturesEXT*>(requested));
             break;
 #endif
@@ -5032,8 +5032,8 @@ void compare_feature_struct(VkStructureType sType, std::vector<std::string> & er
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_FEATURES_EXT):
             compare_VkPhysicalDeviceVertexAttributeDivisorFeaturesKHR(error_list, *reinterpret_cast<const VkPhysicalDeviceVertexAttributeDivisorFeaturesKHR*>(supported), *reinterpret_cast<const VkPhysicalDeviceVertexAttributeDivisorFeaturesKHR*>(requested));
             break;
-#elif (defined(VK_VERSION_1_4) || defined(VK_KHR_vertex_attribute_divisor) || defined(VK_EXT_vertex_attribute_divisor))
-        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_FEATURES):
+#elif (defined(VK_VERSION_1_4) || defined(VK_EXT_vertex_attribute_divisor))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_FEATURES_EXT):
             compare_VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT(error_list, *reinterpret_cast<const VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT*>(supported), *reinterpret_cast<const VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT*>(requested));
             break;
 #endif
@@ -5064,7 +5064,7 @@ void compare_feature_struct(VkStructureType sType, std::vector<std::string> & er
             compare_VkPhysicalDeviceDynamicRenderingLocalReadFeatures(error_list, *reinterpret_cast<const VkPhysicalDeviceDynamicRenderingLocalReadFeatures*>(supported), *reinterpret_cast<const VkPhysicalDeviceDynamicRenderingLocalReadFeatures*>(requested));
             break;
 #elif (defined(VK_VERSION_1_4) || defined(VK_KHR_dynamic_rendering_local_read))
-        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_LOCAL_READ_FEATURES):
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_LOCAL_READ_FEATURES_KHR):
             compare_VkPhysicalDeviceDynamicRenderingLocalReadFeaturesKHR(error_list, *reinterpret_cast<const VkPhysicalDeviceDynamicRenderingLocalReadFeaturesKHR*>(supported), *reinterpret_cast<const VkPhysicalDeviceDynamicRenderingLocalReadFeaturesKHR*>(requested));
             break;
 #endif
@@ -5091,7 +5091,7 @@ void compare_feature_struct(VkStructureType sType, std::vector<std::string> & er
             compare_VkPhysicalDevicePipelineRobustnessFeatures(error_list, *reinterpret_cast<const VkPhysicalDevicePipelineRobustnessFeatures*>(supported), *reinterpret_cast<const VkPhysicalDevicePipelineRobustnessFeatures*>(requested));
             break;
 #elif (defined(VK_VERSION_1_4) || defined(VK_EXT_pipeline_robustness))
-        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_ROBUSTNESS_FEATURES):
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_ROBUSTNESS_FEATURES_EXT):
             compare_VkPhysicalDevicePipelineRobustnessFeaturesEXT(error_list, *reinterpret_cast<const VkPhysicalDevicePipelineRobustnessFeaturesEXT*>(supported), *reinterpret_cast<const VkPhysicalDevicePipelineRobustnessFeaturesEXT*>(requested));
             break;
 #endif
@@ -5418,7 +5418,7 @@ void compare_feature_struct(VkStructureType sType, std::vector<std::string> & er
             compare_VkPhysicalDeviceBufferDeviceAddressFeaturesEXT(error_list, *reinterpret_cast<const VkPhysicalDeviceBufferDeviceAddressFeaturesEXT*>(supported), *reinterpret_cast<const VkPhysicalDeviceBufferDeviceAddressFeaturesEXT*>(requested));
             break;
 #elif (defined(VK_EXT_buffer_device_address))
-        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES_EXT):
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_ADDRESS_FEATURES_EXT):
             compare_VkPhysicalDeviceBufferAddressFeaturesEXT(error_list, *reinterpret_cast<const VkPhysicalDeviceBufferAddressFeaturesEXT*>(supported), *reinterpret_cast<const VkPhysicalDeviceBufferAddressFeaturesEXT*>(requested));
             break;
 #endif
@@ -5572,7 +5572,7 @@ void compare_feature_struct(VkStructureType sType, std::vector<std::string> & er
             compare_VkPhysicalDeviceFaultFeaturesEXT(error_list, *reinterpret_cast<const VkPhysicalDeviceFaultFeaturesEXT*>(supported), *reinterpret_cast<const VkPhysicalDeviceFaultFeaturesEXT*>(requested));
             break;
 #endif
-#if (defined(VK_ARM_rasterization_order_attachment_access) || defined(VK_EXT_rasterization_order_attachment_access))
+#if (defined(VK_EXT_rasterization_order_attachment_access))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_FEATURES_EXT):
             compare_VkPhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT(error_list, *reinterpret_cast<const VkPhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT*>(supported), *reinterpret_cast<const VkPhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT*>(requested));
             break;
@@ -6174,7 +6174,7 @@ void merge_feature_struct(VkStructureType sType, void* current, const void* merg
             merge_VkPhysicalDeviceDescriptorIndexingFeatures(*reinterpret_cast<VkPhysicalDeviceDescriptorIndexingFeatures*>(current), *reinterpret_cast<const VkPhysicalDeviceDescriptorIndexingFeatures*>(merge_in));
             break;
 #elif (defined(VK_VERSION_1_2) || defined(VK_EXT_descriptor_indexing))
-        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES):
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT):
             merge_VkPhysicalDeviceDescriptorIndexingFeaturesEXT(*reinterpret_cast<VkPhysicalDeviceDescriptorIndexingFeaturesEXT*>(current), *reinterpret_cast<const VkPhysicalDeviceDescriptorIndexingFeaturesEXT*>(merge_in));
             break;
 #endif
@@ -6287,7 +6287,7 @@ void merge_feature_struct(VkStructureType sType, void* current, const void* merg
             merge_VkPhysicalDevicePrivateDataFeatures(*reinterpret_cast<VkPhysicalDevicePrivateDataFeatures*>(current), *reinterpret_cast<const VkPhysicalDevicePrivateDataFeatures*>(merge_in));
             break;
 #elif (defined(VK_VERSION_1_3) || defined(VK_EXT_private_data))
-        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIVATE_DATA_FEATURES):
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIVATE_DATA_FEATURES_EXT):
             merge_VkPhysicalDevicePrivateDataFeaturesEXT(*reinterpret_cast<VkPhysicalDevicePrivateDataFeaturesEXT*>(current), *reinterpret_cast<const VkPhysicalDevicePrivateDataFeaturesEXT*>(merge_in));
             break;
 #endif
@@ -6296,7 +6296,7 @@ void merge_feature_struct(VkStructureType sType, void* current, const void* merg
             merge_VkPhysicalDevicePipelineCreationCacheControlFeatures(*reinterpret_cast<VkPhysicalDevicePipelineCreationCacheControlFeatures*>(current), *reinterpret_cast<const VkPhysicalDevicePipelineCreationCacheControlFeatures*>(merge_in));
             break;
 #elif (defined(VK_VERSION_1_3) || defined(VK_EXT_pipeline_creation_cache_control))
-        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CREATION_CACHE_CONTROL_FEATURES):
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CREATION_CACHE_CONTROL_FEATURES_EXT):
             merge_VkPhysicalDevicePipelineCreationCacheControlFeaturesEXT(*reinterpret_cast<VkPhysicalDevicePipelineCreationCacheControlFeaturesEXT*>(current), *reinterpret_cast<const VkPhysicalDevicePipelineCreationCacheControlFeaturesEXT*>(merge_in));
             break;
 #endif
@@ -6350,7 +6350,7 @@ void merge_feature_struct(VkStructureType sType, void* current, const void* merg
             merge_VkPhysicalDeviceTextureCompressionASTCHDRFeatures(*reinterpret_cast<VkPhysicalDeviceTextureCompressionASTCHDRFeatures*>(current), *reinterpret_cast<const VkPhysicalDeviceTextureCompressionASTCHDRFeatures*>(merge_in));
             break;
 #elif (defined(VK_VERSION_1_3) || defined(VK_EXT_texture_compression_astc_hdr))
-        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXTURE_COMPRESSION_ASTC_HDR_FEATURES):
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXTURE_COMPRESSION_ASTC_HDR_FEATURES_EXT):
             merge_VkPhysicalDeviceTextureCompressionASTCHDRFeaturesEXT(*reinterpret_cast<VkPhysicalDeviceTextureCompressionASTCHDRFeaturesEXT*>(current), *reinterpret_cast<const VkPhysicalDeviceTextureCompressionASTCHDRFeaturesEXT*>(merge_in));
             break;
 #endif
@@ -6447,8 +6447,8 @@ void merge_feature_struct(VkStructureType sType, void* current, const void* merg
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_FEATURES_EXT):
             merge_VkPhysicalDeviceVertexAttributeDivisorFeaturesKHR(*reinterpret_cast<VkPhysicalDeviceVertexAttributeDivisorFeaturesKHR*>(current), *reinterpret_cast<const VkPhysicalDeviceVertexAttributeDivisorFeaturesKHR*>(merge_in));
             break;
-#elif (defined(VK_VERSION_1_4) || defined(VK_KHR_vertex_attribute_divisor) || defined(VK_EXT_vertex_attribute_divisor))
-        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_FEATURES):
+#elif (defined(VK_VERSION_1_4) || defined(VK_EXT_vertex_attribute_divisor))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_FEATURES_EXT):
             merge_VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT(*reinterpret_cast<VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT*>(current), *reinterpret_cast<const VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT*>(merge_in));
             break;
 #endif
@@ -6479,7 +6479,7 @@ void merge_feature_struct(VkStructureType sType, void* current, const void* merg
             merge_VkPhysicalDeviceDynamicRenderingLocalReadFeatures(*reinterpret_cast<VkPhysicalDeviceDynamicRenderingLocalReadFeatures*>(current), *reinterpret_cast<const VkPhysicalDeviceDynamicRenderingLocalReadFeatures*>(merge_in));
             break;
 #elif (defined(VK_VERSION_1_4) || defined(VK_KHR_dynamic_rendering_local_read))
-        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_LOCAL_READ_FEATURES):
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_LOCAL_READ_FEATURES_KHR):
             merge_VkPhysicalDeviceDynamicRenderingLocalReadFeaturesKHR(*reinterpret_cast<VkPhysicalDeviceDynamicRenderingLocalReadFeaturesKHR*>(current), *reinterpret_cast<const VkPhysicalDeviceDynamicRenderingLocalReadFeaturesKHR*>(merge_in));
             break;
 #endif
@@ -6506,7 +6506,7 @@ void merge_feature_struct(VkStructureType sType, void* current, const void* merg
             merge_VkPhysicalDevicePipelineRobustnessFeatures(*reinterpret_cast<VkPhysicalDevicePipelineRobustnessFeatures*>(current), *reinterpret_cast<const VkPhysicalDevicePipelineRobustnessFeatures*>(merge_in));
             break;
 #elif (defined(VK_VERSION_1_4) || defined(VK_EXT_pipeline_robustness))
-        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_ROBUSTNESS_FEATURES):
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_ROBUSTNESS_FEATURES_EXT):
             merge_VkPhysicalDevicePipelineRobustnessFeaturesEXT(*reinterpret_cast<VkPhysicalDevicePipelineRobustnessFeaturesEXT*>(current), *reinterpret_cast<const VkPhysicalDevicePipelineRobustnessFeaturesEXT*>(merge_in));
             break;
 #endif
@@ -6833,7 +6833,7 @@ void merge_feature_struct(VkStructureType sType, void* current, const void* merg
             merge_VkPhysicalDeviceBufferDeviceAddressFeaturesEXT(*reinterpret_cast<VkPhysicalDeviceBufferDeviceAddressFeaturesEXT*>(current), *reinterpret_cast<const VkPhysicalDeviceBufferDeviceAddressFeaturesEXT*>(merge_in));
             break;
 #elif (defined(VK_EXT_buffer_device_address))
-        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES_EXT):
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_ADDRESS_FEATURES_EXT):
             merge_VkPhysicalDeviceBufferAddressFeaturesEXT(*reinterpret_cast<VkPhysicalDeviceBufferAddressFeaturesEXT*>(current), *reinterpret_cast<const VkPhysicalDeviceBufferAddressFeaturesEXT*>(merge_in));
             break;
 #endif
@@ -6987,7 +6987,7 @@ void merge_feature_struct(VkStructureType sType, void* current, const void* merg
             merge_VkPhysicalDeviceFaultFeaturesEXT(*reinterpret_cast<VkPhysicalDeviceFaultFeaturesEXT*>(current), *reinterpret_cast<const VkPhysicalDeviceFaultFeaturesEXT*>(merge_in));
             break;
 #endif
-#if (defined(VK_ARM_rasterization_order_attachment_access) || defined(VK_EXT_rasterization_order_attachment_access))
+#if (defined(VK_EXT_rasterization_order_attachment_access))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_FEATURES_EXT):
             merge_VkPhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT(*reinterpret_cast<VkPhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT*>(current), *reinterpret_cast<const VkPhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT*>(merge_in));
             break;

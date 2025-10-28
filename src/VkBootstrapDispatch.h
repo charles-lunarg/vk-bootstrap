@@ -1375,6 +1375,9 @@ struct DispatchTable {
 #if (defined(VK_EXT_full_screen_exclusive))
         fp_vkAcquireFullScreenExclusiveModeEXT = reinterpret_cast<PFN_vkAcquireFullScreenExclusiveModeEXT>(procAddr(device, "vkAcquireFullScreenExclusiveModeEXT"));
 #endif
+#if (defined(VK_OHOS_native_buffer))
+        fp_vkAcquireImageOHOS = reinterpret_cast<PFN_vkAcquireImageOHOS>(procAddr(device, "vkAcquireImageOHOS"));
+#endif
 #if (defined(VK_KHR_swapchain) || defined(VK_KHR_device_group))
         fp_vkAcquireNextImage2KHR = reinterpret_cast<PFN_vkAcquireNextImage2KHR>(procAddr(device, "vkAcquireNextImage2KHR"));
 #endif
@@ -1627,6 +1630,12 @@ struct DispatchTable {
 #if (defined(VK_KHR_video_decode_queue))
         fp_vkCmdDecodeVideoKHR = reinterpret_cast<PFN_vkCmdDecodeVideoKHR>(procAddr(device, "vkCmdDecodeVideoKHR"));
 #endif
+#if (defined(VK_EXT_memory_decompression))
+        fp_vkCmdDecompressMemoryEXT = reinterpret_cast<PFN_vkCmdDecompressMemoryEXT>(procAddr(device, "vkCmdDecompressMemoryEXT"));
+#endif
+#if (defined(VK_EXT_memory_decompression))
+        fp_vkCmdDecompressMemoryIndirectCountEXT = reinterpret_cast<PFN_vkCmdDecompressMemoryIndirectCountEXT>(procAddr(device, "vkCmdDecompressMemoryIndirectCountEXT"));
+#endif
 #if (defined(VK_NV_memory_decompression))
         fp_vkCmdDecompressMemoryIndirectCountNV = reinterpret_cast<PFN_vkCmdDecompressMemoryIndirectCountNV>(procAddr(device, "vkCmdDecompressMemoryIndirectCountNV"));
 #endif
@@ -1739,6 +1748,9 @@ struct DispatchTable {
 #endif
 #if (defined(VK_EXT_fragment_density_map_offset))
         fp_vkCmdEndRendering2EXT = reinterpret_cast<PFN_vkCmdEndRendering2EXT>(procAddr(device, "vkCmdEndRendering2EXT"));
+#endif
+#if (defined(VK_KHR_maintenance10))
+        fp_vkCmdEndRendering2KHR = reinterpret_cast<PFN_vkCmdEndRendering2KHR>(procAddr(device, "vkCmdEndRendering2KHR"));
 #endif
 #if (defined(VK_KHR_dynamic_rendering))
         fp_vkCmdEndRenderingKHR = reinterpret_cast<PFN_vkCmdEndRenderingKHR>(procAddr(device, "vkCmdEndRenderingKHR"));
@@ -2853,6 +2865,9 @@ struct DispatchTable {
 #if (defined(VK_EXT_display_control))
         fp_vkGetSwapchainCounterEXT = reinterpret_cast<PFN_vkGetSwapchainCounterEXT>(procAddr(device, "vkGetSwapchainCounterEXT"));
 #endif
+#if (defined(VK_OHOS_native_buffer))
+        fp_vkGetSwapchainGrallocUsageOHOS = reinterpret_cast<PFN_vkGetSwapchainGrallocUsageOHOS>(procAddr(device, "vkGetSwapchainGrallocUsageOHOS"));
+#endif
 #if (defined(VK_KHR_swapchain))
         fp_vkGetSwapchainImagesKHR = reinterpret_cast<PFN_vkGetSwapchainImagesKHR>(procAddr(device, "vkGetSwapchainImagesKHR"));
 #endif
@@ -2925,6 +2940,9 @@ struct DispatchTable {
 #endif
 #if (defined(VK_INTEL_performance_query))
         fp_vkQueueSetPerformanceConfigurationINTEL = reinterpret_cast<PFN_vkQueueSetPerformanceConfigurationINTEL>(procAddr(device, "vkQueueSetPerformanceConfigurationINTEL"));
+#endif
+#if (defined(VK_OHOS_native_buffer))
+        fp_vkQueueSignalReleaseImageOHOS = reinterpret_cast<PFN_vkQueueSignalReleaseImageOHOS>(procAddr(device, "vkQueueSignalReleaseImageOHOS"));
 #endif
         fp_vkQueueSubmit = reinterpret_cast<PFN_vkQueueSubmit>(procAddr(device, "vkQueueSubmit"));
 #if (defined(VK_VERSION_1_3))
@@ -3070,6 +3088,11 @@ struct DispatchTable {
 #if (defined(VK_EXT_full_screen_exclusive))
     VkResult acquireFullScreenExclusiveModeEXT(VkSwapchainKHR swapchain) const noexcept {
         return fp_vkAcquireFullScreenExclusiveModeEXT(device, swapchain);
+    }
+#endif
+#if (defined(VK_OHOS_native_buffer))
+    VkResult acquireImageOHOS(VkImage image, int32_t nativeFenceFd, VkSemaphore semaphore, VkFence fence) const noexcept {
+        return fp_vkAcquireImageOHOS(device, image, nativeFenceFd, semaphore, fence);
     }
 #endif
 #if (defined(VK_KHR_swapchain) || defined(VK_KHR_device_group))
@@ -3520,6 +3543,16 @@ struct DispatchTable {
         fp_vkCmdDecodeVideoKHR(commandBuffer, pDecodeInfo);
     }
 #endif
+#if (defined(VK_EXT_memory_decompression))
+    void cmdDecompressMemoryEXT(VkCommandBuffer commandBuffer, const VkDecompressMemoryInfoEXT* pDecompressMemoryInfoEXT) const noexcept {
+        fp_vkCmdDecompressMemoryEXT(commandBuffer, pDecompressMemoryInfoEXT);
+    }
+#endif
+#if (defined(VK_EXT_memory_decompression))
+    void cmdDecompressMemoryIndirectCountEXT(VkCommandBuffer commandBuffer, VkMemoryDecompressionMethodFlagsEXT decompressionMethod, VkDeviceAddress indirectCommandsAddress, VkDeviceAddress indirectCommandsCountAddress, uint32_t maxDecompressionCount, uint32_t stride) const noexcept {
+        fp_vkCmdDecompressMemoryIndirectCountEXT(commandBuffer, decompressionMethod, indirectCommandsAddress, indirectCommandsCountAddress, maxDecompressionCount, stride);
+    }
+#endif
 #if (defined(VK_NV_memory_decompression))
     void cmdDecompressMemoryIndirectCountNV(VkCommandBuffer commandBuffer, VkDeviceAddress indirectCommandsAddress, VkDeviceAddress indirectCommandsCountAddress, uint32_t stride) const noexcept {
         fp_vkCmdDecompressMemoryIndirectCountNV(commandBuffer, indirectCommandsAddress, indirectCommandsCountAddress, stride);
@@ -3717,6 +3750,11 @@ struct DispatchTable {
 #if (defined(VK_EXT_fragment_density_map_offset))
     void cmdEndRendering2EXT(VkCommandBuffer commandBuffer, const VkRenderingEndInfoEXT* pRenderingEndInfo) const noexcept {
         fp_vkCmdEndRendering2EXT(commandBuffer, pRenderingEndInfo);
+    }
+#endif
+#if (defined(VK_KHR_maintenance10))
+    void cmdEndRendering2KHR(VkCommandBuffer commandBuffer, const VkRenderingEndInfoKHR* pRenderingEndInfo) const noexcept {
+        fp_vkCmdEndRendering2KHR(commandBuffer, pRenderingEndInfo);
     }
 #endif
 #if (defined(VK_KHR_dynamic_rendering))
@@ -5674,6 +5712,11 @@ struct DispatchTable {
         return fp_vkGetSwapchainCounterEXT(device, swapchain, counter, pCounterValue);
     }
 #endif
+#if (defined(VK_OHOS_native_buffer))
+    VkResult getSwapchainGrallocUsageOHOS(VkFormat format, VkImageUsageFlags imageUsage, uint64_t* grallocUsage) const noexcept {
+        return fp_vkGetSwapchainGrallocUsageOHOS(device, format, imageUsage, grallocUsage);
+    }
+#endif
 #if (defined(VK_KHR_swapchain))
     VkResult getSwapchainImagesKHR(VkSwapchainKHR swapchain, uint32_t* pSwapchainImageCount, VkImage* pSwapchainImages) const noexcept {
         return fp_vkGetSwapchainImagesKHR(device, swapchain, pSwapchainImageCount, pSwapchainImages);
@@ -5799,6 +5842,11 @@ struct DispatchTable {
 #if (defined(VK_INTEL_performance_query))
     VkResult queueSetPerformanceConfigurationINTEL(VkQueue queue, VkPerformanceConfigurationINTEL configuration) const noexcept {
         return fp_vkQueueSetPerformanceConfigurationINTEL(queue, configuration);
+    }
+#endif
+#if (defined(VK_OHOS_native_buffer))
+    VkResult queueSignalReleaseImageOHOS(VkQueue queue, uint32_t waitSemaphoreCount, const VkSemaphore* pWaitSemaphores, VkImage image, int32_t* pNativeFenceFd) const noexcept {
+        return fp_vkQueueSignalReleaseImageOHOS(queue, waitSemaphoreCount, pWaitSemaphores, image, pNativeFenceFd);
     }
 #endif
     VkResult queueSubmit(VkQueue queue, uint32_t submitCount, const VkSubmitInfo* pSubmits, VkFence fence) const noexcept {
@@ -6053,6 +6101,11 @@ struct DispatchTable {
     PFN_vkAcquireFullScreenExclusiveModeEXT fp_vkAcquireFullScreenExclusiveModeEXT = nullptr;
 #else
     void * fp_vkAcquireFullScreenExclusiveModeEXT{};
+#endif
+#if (defined(VK_OHOS_native_buffer))
+    PFN_vkAcquireImageOHOS fp_vkAcquireImageOHOS = nullptr;
+#else
+    void * fp_vkAcquireImageOHOS{};
 #endif
 #if (defined(VK_KHR_swapchain) || defined(VK_KHR_device_group))
     PFN_vkAcquireNextImage2KHR fp_vkAcquireNextImage2KHR = nullptr;
@@ -6460,6 +6513,16 @@ struct DispatchTable {
 #else
     void * fp_vkCmdDecodeVideoKHR{};
 #endif
+#if (defined(VK_EXT_memory_decompression))
+    PFN_vkCmdDecompressMemoryEXT fp_vkCmdDecompressMemoryEXT = nullptr;
+#else
+    void * fp_vkCmdDecompressMemoryEXT{};
+#endif
+#if (defined(VK_EXT_memory_decompression))
+    PFN_vkCmdDecompressMemoryIndirectCountEXT fp_vkCmdDecompressMemoryIndirectCountEXT = nullptr;
+#else
+    void * fp_vkCmdDecompressMemoryIndirectCountEXT{};
+#endif
 #if (defined(VK_NV_memory_decompression))
     PFN_vkCmdDecompressMemoryIndirectCountNV fp_vkCmdDecompressMemoryIndirectCountNV = nullptr;
 #else
@@ -6642,6 +6705,11 @@ struct DispatchTable {
     PFN_vkCmdEndRendering2EXT fp_vkCmdEndRendering2EXT = nullptr;
 #else
     void * fp_vkCmdEndRendering2EXT{};
+#endif
+#if (defined(VK_KHR_maintenance10))
+    PFN_vkCmdEndRendering2KHR fp_vkCmdEndRendering2KHR = nullptr;
+#else
+    void * fp_vkCmdEndRendering2KHR{};
 #endif
 #if (defined(VK_KHR_dynamic_rendering))
     PFN_vkCmdEndRenderingKHR fp_vkCmdEndRenderingKHR = nullptr;
@@ -8448,6 +8516,11 @@ struct DispatchTable {
 #else
     void * fp_vkGetSwapchainCounterEXT{};
 #endif
+#if (defined(VK_OHOS_native_buffer))
+    PFN_vkGetSwapchainGrallocUsageOHOS fp_vkGetSwapchainGrallocUsageOHOS = nullptr;
+#else
+    void * fp_vkGetSwapchainGrallocUsageOHOS{};
+#endif
 #if (defined(VK_KHR_swapchain))
     PFN_vkGetSwapchainImagesKHR fp_vkGetSwapchainImagesKHR = nullptr;
 #else
@@ -8566,6 +8639,11 @@ struct DispatchTable {
     PFN_vkQueueSetPerformanceConfigurationINTEL fp_vkQueueSetPerformanceConfigurationINTEL = nullptr;
 #else
     void * fp_vkQueueSetPerformanceConfigurationINTEL{};
+#endif
+#if (defined(VK_OHOS_native_buffer))
+    PFN_vkQueueSignalReleaseImageOHOS fp_vkQueueSignalReleaseImageOHOS = nullptr;
+#else
+    void * fp_vkQueueSignalReleaseImageOHOS{};
 #endif
     PFN_vkQueueSubmit fp_vkQueueSubmit = nullptr;
 #if (defined(VK_VERSION_1_3))

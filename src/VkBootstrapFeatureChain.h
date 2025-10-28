@@ -37,6 +37,10 @@ namespace vkb::detail {
 
 void compare_VkPhysicalDeviceFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceFeatures const& supported, VkPhysicalDeviceFeatures const& requested);
 void merge_VkPhysicalDeviceFeatures(VkPhysicalDeviceFeatures & current, VkPhysicalDeviceFeatures const& merge_in);
+#if (defined(VK_VERSION_1_1))
+void compare_VkPhysicalDeviceProtectedMemoryFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceProtectedMemoryFeatures const& supported, VkPhysicalDeviceProtectedMemoryFeatures const& requested);
+void merge_VkPhysicalDeviceProtectedMemoryFeatures(VkPhysicalDeviceProtectedMemoryFeatures & current, VkPhysicalDeviceProtectedMemoryFeatures const& merge_in);
+#endif //(defined(VK_VERSION_1_1))
 #if (defined(VK_VERSION_1_1) || defined(VK_KHR_16bit_storage))
 void compare_VkPhysicalDevice16BitStorageFeatures(std::vector<std::string> & error_list, VkPhysicalDevice16BitStorageFeatures const& supported, VkPhysicalDevice16BitStorageFeatures const& requested);
 void merge_VkPhysicalDevice16BitStorageFeatures(VkPhysicalDevice16BitStorageFeatures & current, VkPhysicalDevice16BitStorageFeatures const& merge_in);
@@ -45,14 +49,6 @@ void merge_VkPhysicalDevice16BitStorageFeatures(VkPhysicalDevice16BitStorageFeat
 void compare_VkPhysicalDevice16BitStorageFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDevice16BitStorageFeaturesKHR const& supported, VkPhysicalDevice16BitStorageFeaturesKHR const& requested);
 void merge_VkPhysicalDevice16BitStorageFeaturesKHR(VkPhysicalDevice16BitStorageFeaturesKHR & current, VkPhysicalDevice16BitStorageFeaturesKHR const& merge_in);
 #endif //(defined(VK_VERSION_1_1) || defined(VK_KHR_16bit_storage))
-#if (defined(VK_VERSION_1_1) || defined(VK_KHR_multiview))
-void compare_VkPhysicalDeviceMultiviewFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceMultiviewFeatures const& supported, VkPhysicalDeviceMultiviewFeatures const& requested);
-void merge_VkPhysicalDeviceMultiviewFeatures(VkPhysicalDeviceMultiviewFeatures & current, VkPhysicalDeviceMultiviewFeatures const& merge_in);
-#endif //(defined(VK_VERSION_1_1) || defined(VK_KHR_multiview))
-#if (defined(VK_VERSION_1_1) || defined(VK_KHR_multiview))
-void compare_VkPhysicalDeviceMultiviewFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceMultiviewFeaturesKHR const& supported, VkPhysicalDeviceMultiviewFeaturesKHR const& requested);
-void merge_VkPhysicalDeviceMultiviewFeaturesKHR(VkPhysicalDeviceMultiviewFeaturesKHR & current, VkPhysicalDeviceMultiviewFeaturesKHR const& merge_in);
-#endif //(defined(VK_VERSION_1_1) || defined(VK_KHR_multiview))
 #if (defined(VK_VERSION_1_1) || defined(VK_KHR_variable_pointers))
 void compare_VkPhysicalDeviceVariablePointersFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceVariablePointersFeatures const& supported, VkPhysicalDeviceVariablePointersFeatures const& requested);
 void merge_VkPhysicalDeviceVariablePointersFeatures(VkPhysicalDeviceVariablePointersFeatures & current, VkPhysicalDeviceVariablePointersFeatures const& merge_in);
@@ -69,10 +65,6 @@ void merge_VkPhysicalDeviceVariablePointerFeaturesKHR(VkPhysicalDeviceVariablePo
 void compare_VkPhysicalDeviceVariablePointersFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceVariablePointersFeaturesKHR const& supported, VkPhysicalDeviceVariablePointersFeaturesKHR const& requested);
 void merge_VkPhysicalDeviceVariablePointersFeaturesKHR(VkPhysicalDeviceVariablePointersFeaturesKHR & current, VkPhysicalDeviceVariablePointersFeaturesKHR const& merge_in);
 #endif //(defined(VK_VERSION_1_1) || defined(VK_KHR_variable_pointers))
-#if (defined(VK_VERSION_1_1))
-void compare_VkPhysicalDeviceProtectedMemoryFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceProtectedMemoryFeatures const& supported, VkPhysicalDeviceProtectedMemoryFeatures const& requested);
-void merge_VkPhysicalDeviceProtectedMemoryFeatures(VkPhysicalDeviceProtectedMemoryFeatures & current, VkPhysicalDeviceProtectedMemoryFeatures const& merge_in);
-#endif //(defined(VK_VERSION_1_1))
 #if (defined(VK_VERSION_1_1) || defined(VK_KHR_sampler_ycbcr_conversion))
 void compare_VkPhysicalDeviceSamplerYcbcrConversionFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceSamplerYcbcrConversionFeatures const& supported, VkPhysicalDeviceSamplerYcbcrConversionFeatures const& requested);
 void merge_VkPhysicalDeviceSamplerYcbcrConversionFeatures(VkPhysicalDeviceSamplerYcbcrConversionFeatures & current, VkPhysicalDeviceSamplerYcbcrConversionFeatures const& merge_in);
@@ -81,6 +73,14 @@ void merge_VkPhysicalDeviceSamplerYcbcrConversionFeatures(VkPhysicalDeviceSample
 void compare_VkPhysicalDeviceSamplerYcbcrConversionFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceSamplerYcbcrConversionFeaturesKHR const& supported, VkPhysicalDeviceSamplerYcbcrConversionFeaturesKHR const& requested);
 void merge_VkPhysicalDeviceSamplerYcbcrConversionFeaturesKHR(VkPhysicalDeviceSamplerYcbcrConversionFeaturesKHR & current, VkPhysicalDeviceSamplerYcbcrConversionFeaturesKHR const& merge_in);
 #endif //(defined(VK_VERSION_1_1) || defined(VK_KHR_sampler_ycbcr_conversion))
+#if (defined(VK_VERSION_1_1) || defined(VK_KHR_multiview))
+void compare_VkPhysicalDeviceMultiviewFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceMultiviewFeatures const& supported, VkPhysicalDeviceMultiviewFeatures const& requested);
+void merge_VkPhysicalDeviceMultiviewFeatures(VkPhysicalDeviceMultiviewFeatures & current, VkPhysicalDeviceMultiviewFeatures const& merge_in);
+#endif //(defined(VK_VERSION_1_1) || defined(VK_KHR_multiview))
+#if (defined(VK_VERSION_1_1) || defined(VK_KHR_multiview))
+void compare_VkPhysicalDeviceMultiviewFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceMultiviewFeaturesKHR const& supported, VkPhysicalDeviceMultiviewFeaturesKHR const& requested);
+void merge_VkPhysicalDeviceMultiviewFeaturesKHR(VkPhysicalDeviceMultiviewFeaturesKHR & current, VkPhysicalDeviceMultiviewFeaturesKHR const& merge_in);
+#endif //(defined(VK_VERSION_1_1) || defined(VK_KHR_multiview))
 #if (defined(VK_VERSION_1_1))
 void compare_VkPhysicalDeviceShaderDrawParametersFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceShaderDrawParametersFeatures const& supported, VkPhysicalDeviceShaderDrawParametersFeatures const& requested);
 void merge_VkPhysicalDeviceShaderDrawParametersFeatures(VkPhysicalDeviceShaderDrawParametersFeatures & current, VkPhysicalDeviceShaderDrawParametersFeatures const& merge_in);
@@ -97,6 +97,38 @@ void merge_VkPhysicalDeviceVulkan11Features(VkPhysicalDeviceVulkan11Features & c
 void compare_VkPhysicalDeviceVulkan12Features(std::vector<std::string> & error_list, VkPhysicalDeviceVulkan12Features const& supported, VkPhysicalDeviceVulkan12Features const& requested);
 void merge_VkPhysicalDeviceVulkan12Features(VkPhysicalDeviceVulkan12Features & current, VkPhysicalDeviceVulkan12Features const& merge_in);
 #endif //(defined(VK_VERSION_1_2))
+#if (defined(VK_VERSION_1_2) || defined(VK_KHR_vulkan_memory_model))
+void compare_VkPhysicalDeviceVulkanMemoryModelFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceVulkanMemoryModelFeatures const& supported, VkPhysicalDeviceVulkanMemoryModelFeatures const& requested);
+void merge_VkPhysicalDeviceVulkanMemoryModelFeatures(VkPhysicalDeviceVulkanMemoryModelFeatures & current, VkPhysicalDeviceVulkanMemoryModelFeatures const& merge_in);
+#endif //(defined(VK_VERSION_1_2) || defined(VK_KHR_vulkan_memory_model))
+#if (defined(VK_VERSION_1_2) || defined(VK_KHR_vulkan_memory_model))
+void compare_VkPhysicalDeviceVulkanMemoryModelFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceVulkanMemoryModelFeaturesKHR const& supported, VkPhysicalDeviceVulkanMemoryModelFeaturesKHR const& requested);
+void merge_VkPhysicalDeviceVulkanMemoryModelFeaturesKHR(VkPhysicalDeviceVulkanMemoryModelFeaturesKHR & current, VkPhysicalDeviceVulkanMemoryModelFeaturesKHR const& merge_in);
+#endif //(defined(VK_VERSION_1_2) || defined(VK_KHR_vulkan_memory_model))
+#if (defined(VK_VERSION_1_2) || defined(VK_EXT_host_query_reset))
+void compare_VkPhysicalDeviceHostQueryResetFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceHostQueryResetFeatures const& supported, VkPhysicalDeviceHostQueryResetFeatures const& requested);
+void merge_VkPhysicalDeviceHostQueryResetFeatures(VkPhysicalDeviceHostQueryResetFeatures & current, VkPhysicalDeviceHostQueryResetFeatures const& merge_in);
+#endif //(defined(VK_VERSION_1_2) || defined(VK_EXT_host_query_reset))
+#if (defined(VK_VERSION_1_2) || defined(VK_EXT_host_query_reset))
+void compare_VkPhysicalDeviceHostQueryResetFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceHostQueryResetFeaturesEXT const& supported, VkPhysicalDeviceHostQueryResetFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceHostQueryResetFeaturesEXT(VkPhysicalDeviceHostQueryResetFeaturesEXT & current, VkPhysicalDeviceHostQueryResetFeaturesEXT const& merge_in);
+#endif //(defined(VK_VERSION_1_2) || defined(VK_EXT_host_query_reset))
+#if (defined(VK_VERSION_1_2) || defined(VK_KHR_timeline_semaphore))
+void compare_VkPhysicalDeviceTimelineSemaphoreFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceTimelineSemaphoreFeatures const& supported, VkPhysicalDeviceTimelineSemaphoreFeatures const& requested);
+void merge_VkPhysicalDeviceTimelineSemaphoreFeatures(VkPhysicalDeviceTimelineSemaphoreFeatures & current, VkPhysicalDeviceTimelineSemaphoreFeatures const& merge_in);
+#endif //(defined(VK_VERSION_1_2) || defined(VK_KHR_timeline_semaphore))
+#if (defined(VK_VERSION_1_2) || defined(VK_KHR_timeline_semaphore))
+void compare_VkPhysicalDeviceTimelineSemaphoreFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceTimelineSemaphoreFeaturesKHR const& supported, VkPhysicalDeviceTimelineSemaphoreFeaturesKHR const& requested);
+void merge_VkPhysicalDeviceTimelineSemaphoreFeaturesKHR(VkPhysicalDeviceTimelineSemaphoreFeaturesKHR & current, VkPhysicalDeviceTimelineSemaphoreFeaturesKHR const& merge_in);
+#endif //(defined(VK_VERSION_1_2) || defined(VK_KHR_timeline_semaphore))
+#if (defined(VK_VERSION_1_2) || defined(VK_KHR_buffer_device_address))
+void compare_VkPhysicalDeviceBufferDeviceAddressFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceBufferDeviceAddressFeatures const& supported, VkPhysicalDeviceBufferDeviceAddressFeatures const& requested);
+void merge_VkPhysicalDeviceBufferDeviceAddressFeatures(VkPhysicalDeviceBufferDeviceAddressFeatures & current, VkPhysicalDeviceBufferDeviceAddressFeatures const& merge_in);
+#endif //(defined(VK_VERSION_1_2) || defined(VK_KHR_buffer_device_address))
+#if (defined(VK_VERSION_1_2) || defined(VK_KHR_buffer_device_address))
+void compare_VkPhysicalDeviceBufferDeviceAddressFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceBufferDeviceAddressFeaturesKHR const& supported, VkPhysicalDeviceBufferDeviceAddressFeaturesKHR const& requested);
+void merge_VkPhysicalDeviceBufferDeviceAddressFeaturesKHR(VkPhysicalDeviceBufferDeviceAddressFeaturesKHR & current, VkPhysicalDeviceBufferDeviceAddressFeaturesKHR const& merge_in);
+#endif //(defined(VK_VERSION_1_2) || defined(VK_KHR_buffer_device_address))
 #if (defined(VK_VERSION_1_2) || defined(VK_KHR_8bit_storage))
 void compare_VkPhysicalDevice8BitStorageFeatures(std::vector<std::string> & error_list, VkPhysicalDevice8BitStorageFeatures const& supported, VkPhysicalDevice8BitStorageFeatures const& requested);
 void merge_VkPhysicalDevice8BitStorageFeatures(VkPhysicalDevice8BitStorageFeatures & current, VkPhysicalDevice8BitStorageFeatures const& merge_in);
@@ -141,22 +173,6 @@ void merge_VkPhysicalDeviceScalarBlockLayoutFeatures(VkPhysicalDeviceScalarBlock
 void compare_VkPhysicalDeviceScalarBlockLayoutFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceScalarBlockLayoutFeaturesEXT const& supported, VkPhysicalDeviceScalarBlockLayoutFeaturesEXT const& requested);
 void merge_VkPhysicalDeviceScalarBlockLayoutFeaturesEXT(VkPhysicalDeviceScalarBlockLayoutFeaturesEXT & current, VkPhysicalDeviceScalarBlockLayoutFeaturesEXT const& merge_in);
 #endif //(defined(VK_VERSION_1_2) || defined(VK_EXT_scalar_block_layout))
-#if (defined(VK_VERSION_1_2) || defined(VK_KHR_vulkan_memory_model))
-void compare_VkPhysicalDeviceVulkanMemoryModelFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceVulkanMemoryModelFeatures const& supported, VkPhysicalDeviceVulkanMemoryModelFeatures const& requested);
-void merge_VkPhysicalDeviceVulkanMemoryModelFeatures(VkPhysicalDeviceVulkanMemoryModelFeatures & current, VkPhysicalDeviceVulkanMemoryModelFeatures const& merge_in);
-#endif //(defined(VK_VERSION_1_2) || defined(VK_KHR_vulkan_memory_model))
-#if (defined(VK_VERSION_1_2) || defined(VK_KHR_vulkan_memory_model))
-void compare_VkPhysicalDeviceVulkanMemoryModelFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceVulkanMemoryModelFeaturesKHR const& supported, VkPhysicalDeviceVulkanMemoryModelFeaturesKHR const& requested);
-void merge_VkPhysicalDeviceVulkanMemoryModelFeaturesKHR(VkPhysicalDeviceVulkanMemoryModelFeaturesKHR & current, VkPhysicalDeviceVulkanMemoryModelFeaturesKHR const& merge_in);
-#endif //(defined(VK_VERSION_1_2) || defined(VK_KHR_vulkan_memory_model))
-#if (defined(VK_VERSION_1_2) || defined(VK_KHR_imageless_framebuffer))
-void compare_VkPhysicalDeviceImagelessFramebufferFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceImagelessFramebufferFeatures const& supported, VkPhysicalDeviceImagelessFramebufferFeatures const& requested);
-void merge_VkPhysicalDeviceImagelessFramebufferFeatures(VkPhysicalDeviceImagelessFramebufferFeatures & current, VkPhysicalDeviceImagelessFramebufferFeatures const& merge_in);
-#endif //(defined(VK_VERSION_1_2) || defined(VK_KHR_imageless_framebuffer))
-#if (defined(VK_VERSION_1_2) || defined(VK_KHR_imageless_framebuffer))
-void compare_VkPhysicalDeviceImagelessFramebufferFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceImagelessFramebufferFeaturesKHR const& supported, VkPhysicalDeviceImagelessFramebufferFeaturesKHR const& requested);
-void merge_VkPhysicalDeviceImagelessFramebufferFeaturesKHR(VkPhysicalDeviceImagelessFramebufferFeaturesKHR & current, VkPhysicalDeviceImagelessFramebufferFeaturesKHR const& merge_in);
-#endif //(defined(VK_VERSION_1_2) || defined(VK_KHR_imageless_framebuffer))
 #if (defined(VK_VERSION_1_2) || defined(VK_KHR_uniform_buffer_standard_layout))
 void compare_VkPhysicalDeviceUniformBufferStandardLayoutFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceUniformBufferStandardLayoutFeatures const& supported, VkPhysicalDeviceUniformBufferStandardLayoutFeatures const& requested);
 void merge_VkPhysicalDeviceUniformBufferStandardLayoutFeatures(VkPhysicalDeviceUniformBufferStandardLayoutFeatures & current, VkPhysicalDeviceUniformBufferStandardLayoutFeatures const& merge_in);
@@ -173,6 +189,14 @@ void merge_VkPhysicalDeviceShaderSubgroupExtendedTypesFeatures(VkPhysicalDeviceS
 void compare_VkPhysicalDeviceShaderSubgroupExtendedTypesFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceShaderSubgroupExtendedTypesFeaturesKHR const& supported, VkPhysicalDeviceShaderSubgroupExtendedTypesFeaturesKHR const& requested);
 void merge_VkPhysicalDeviceShaderSubgroupExtendedTypesFeaturesKHR(VkPhysicalDeviceShaderSubgroupExtendedTypesFeaturesKHR & current, VkPhysicalDeviceShaderSubgroupExtendedTypesFeaturesKHR const& merge_in);
 #endif //(defined(VK_VERSION_1_2) || defined(VK_KHR_shader_subgroup_extended_types))
+#if (defined(VK_VERSION_1_2) || defined(VK_KHR_imageless_framebuffer))
+void compare_VkPhysicalDeviceImagelessFramebufferFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceImagelessFramebufferFeatures const& supported, VkPhysicalDeviceImagelessFramebufferFeatures const& requested);
+void merge_VkPhysicalDeviceImagelessFramebufferFeatures(VkPhysicalDeviceImagelessFramebufferFeatures & current, VkPhysicalDeviceImagelessFramebufferFeatures const& merge_in);
+#endif //(defined(VK_VERSION_1_2) || defined(VK_KHR_imageless_framebuffer))
+#if (defined(VK_VERSION_1_2) || defined(VK_KHR_imageless_framebuffer))
+void compare_VkPhysicalDeviceImagelessFramebufferFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceImagelessFramebufferFeaturesKHR const& supported, VkPhysicalDeviceImagelessFramebufferFeaturesKHR const& requested);
+void merge_VkPhysicalDeviceImagelessFramebufferFeaturesKHR(VkPhysicalDeviceImagelessFramebufferFeaturesKHR & current, VkPhysicalDeviceImagelessFramebufferFeaturesKHR const& merge_in);
+#endif //(defined(VK_VERSION_1_2) || defined(VK_KHR_imageless_framebuffer))
 #if (defined(VK_VERSION_1_2) || defined(VK_KHR_separate_depth_stencil_layouts))
 void compare_VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures const& supported, VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures const& requested);
 void merge_VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures(VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures & current, VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures const& merge_in);
@@ -181,34 +205,42 @@ void merge_VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures(VkPhysicalDeviceS
 void compare_VkPhysicalDeviceSeparateDepthStencilLayoutsFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceSeparateDepthStencilLayoutsFeaturesKHR const& supported, VkPhysicalDeviceSeparateDepthStencilLayoutsFeaturesKHR const& requested);
 void merge_VkPhysicalDeviceSeparateDepthStencilLayoutsFeaturesKHR(VkPhysicalDeviceSeparateDepthStencilLayoutsFeaturesKHR & current, VkPhysicalDeviceSeparateDepthStencilLayoutsFeaturesKHR const& merge_in);
 #endif //(defined(VK_VERSION_1_2) || defined(VK_KHR_separate_depth_stencil_layouts))
-#if (defined(VK_VERSION_1_2) || defined(VK_EXT_host_query_reset))
-void compare_VkPhysicalDeviceHostQueryResetFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceHostQueryResetFeatures const& supported, VkPhysicalDeviceHostQueryResetFeatures const& requested);
-void merge_VkPhysicalDeviceHostQueryResetFeatures(VkPhysicalDeviceHostQueryResetFeatures & current, VkPhysicalDeviceHostQueryResetFeatures const& merge_in);
-#endif //(defined(VK_VERSION_1_2) || defined(VK_EXT_host_query_reset))
-#if (defined(VK_VERSION_1_2) || defined(VK_EXT_host_query_reset))
-void compare_VkPhysicalDeviceHostQueryResetFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceHostQueryResetFeaturesEXT const& supported, VkPhysicalDeviceHostQueryResetFeaturesEXT const& requested);
-void merge_VkPhysicalDeviceHostQueryResetFeaturesEXT(VkPhysicalDeviceHostQueryResetFeaturesEXT & current, VkPhysicalDeviceHostQueryResetFeaturesEXT const& merge_in);
-#endif //(defined(VK_VERSION_1_2) || defined(VK_EXT_host_query_reset))
-#if (defined(VK_VERSION_1_2) || defined(VK_KHR_timeline_semaphore))
-void compare_VkPhysicalDeviceTimelineSemaphoreFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceTimelineSemaphoreFeatures const& supported, VkPhysicalDeviceTimelineSemaphoreFeatures const& requested);
-void merge_VkPhysicalDeviceTimelineSemaphoreFeatures(VkPhysicalDeviceTimelineSemaphoreFeatures & current, VkPhysicalDeviceTimelineSemaphoreFeatures const& merge_in);
-#endif //(defined(VK_VERSION_1_2) || defined(VK_KHR_timeline_semaphore))
-#if (defined(VK_VERSION_1_2) || defined(VK_KHR_timeline_semaphore))
-void compare_VkPhysicalDeviceTimelineSemaphoreFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceTimelineSemaphoreFeaturesKHR const& supported, VkPhysicalDeviceTimelineSemaphoreFeaturesKHR const& requested);
-void merge_VkPhysicalDeviceTimelineSemaphoreFeaturesKHR(VkPhysicalDeviceTimelineSemaphoreFeaturesKHR & current, VkPhysicalDeviceTimelineSemaphoreFeaturesKHR const& merge_in);
-#endif //(defined(VK_VERSION_1_2) || defined(VK_KHR_timeline_semaphore))
-#if (defined(VK_VERSION_1_2) || defined(VK_KHR_buffer_device_address))
-void compare_VkPhysicalDeviceBufferDeviceAddressFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceBufferDeviceAddressFeatures const& supported, VkPhysicalDeviceBufferDeviceAddressFeatures const& requested);
-void merge_VkPhysicalDeviceBufferDeviceAddressFeatures(VkPhysicalDeviceBufferDeviceAddressFeatures & current, VkPhysicalDeviceBufferDeviceAddressFeatures const& merge_in);
-#endif //(defined(VK_VERSION_1_2) || defined(VK_KHR_buffer_device_address))
-#if (defined(VK_VERSION_1_2) || defined(VK_KHR_buffer_device_address))
-void compare_VkPhysicalDeviceBufferDeviceAddressFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceBufferDeviceAddressFeaturesKHR const& supported, VkPhysicalDeviceBufferDeviceAddressFeaturesKHR const& requested);
-void merge_VkPhysicalDeviceBufferDeviceAddressFeaturesKHR(VkPhysicalDeviceBufferDeviceAddressFeaturesKHR & current, VkPhysicalDeviceBufferDeviceAddressFeaturesKHR const& merge_in);
-#endif //(defined(VK_VERSION_1_2) || defined(VK_KHR_buffer_device_address))
 #if (defined(VK_VERSION_1_3))
 void compare_VkPhysicalDeviceVulkan13Features(std::vector<std::string> & error_list, VkPhysicalDeviceVulkan13Features const& supported, VkPhysicalDeviceVulkan13Features const& requested);
 void merge_VkPhysicalDeviceVulkan13Features(VkPhysicalDeviceVulkan13Features & current, VkPhysicalDeviceVulkan13Features const& merge_in);
 #endif //(defined(VK_VERSION_1_3))
+#if (defined(VK_VERSION_1_3) || defined(VK_EXT_private_data))
+void compare_VkPhysicalDevicePrivateDataFeatures(std::vector<std::string> & error_list, VkPhysicalDevicePrivateDataFeatures const& supported, VkPhysicalDevicePrivateDataFeatures const& requested);
+void merge_VkPhysicalDevicePrivateDataFeatures(VkPhysicalDevicePrivateDataFeatures & current, VkPhysicalDevicePrivateDataFeatures const& merge_in);
+#endif //(defined(VK_VERSION_1_3) || defined(VK_EXT_private_data))
+#if (defined(VK_VERSION_1_3) || defined(VK_EXT_private_data))
+void compare_VkPhysicalDevicePrivateDataFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDevicePrivateDataFeaturesEXT const& supported, VkPhysicalDevicePrivateDataFeaturesEXT const& requested);
+void merge_VkPhysicalDevicePrivateDataFeaturesEXT(VkPhysicalDevicePrivateDataFeaturesEXT & current, VkPhysicalDevicePrivateDataFeaturesEXT const& merge_in);
+#endif //(defined(VK_VERSION_1_3) || defined(VK_EXT_private_data))
+#if (defined(VK_VERSION_1_3) || defined(VK_KHR_synchronization2))
+void compare_VkPhysicalDeviceSynchronization2Features(std::vector<std::string> & error_list, VkPhysicalDeviceSynchronization2Features const& supported, VkPhysicalDeviceSynchronization2Features const& requested);
+void merge_VkPhysicalDeviceSynchronization2Features(VkPhysicalDeviceSynchronization2Features & current, VkPhysicalDeviceSynchronization2Features const& merge_in);
+#endif //(defined(VK_VERSION_1_3) || defined(VK_KHR_synchronization2))
+#if (defined(VK_VERSION_1_3) || defined(VK_KHR_synchronization2))
+void compare_VkPhysicalDeviceSynchronization2FeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceSynchronization2FeaturesKHR const& supported, VkPhysicalDeviceSynchronization2FeaturesKHR const& requested);
+void merge_VkPhysicalDeviceSynchronization2FeaturesKHR(VkPhysicalDeviceSynchronization2FeaturesKHR & current, VkPhysicalDeviceSynchronization2FeaturesKHR const& merge_in);
+#endif //(defined(VK_VERSION_1_3) || defined(VK_KHR_synchronization2))
+#if (defined(VK_VERSION_1_3) || defined(VK_EXT_texture_compression_astc_hdr))
+void compare_VkPhysicalDeviceTextureCompressionASTCHDRFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceTextureCompressionASTCHDRFeatures const& supported, VkPhysicalDeviceTextureCompressionASTCHDRFeatures const& requested);
+void merge_VkPhysicalDeviceTextureCompressionASTCHDRFeatures(VkPhysicalDeviceTextureCompressionASTCHDRFeatures & current, VkPhysicalDeviceTextureCompressionASTCHDRFeatures const& merge_in);
+#endif //(defined(VK_VERSION_1_3) || defined(VK_EXT_texture_compression_astc_hdr))
+#if (defined(VK_VERSION_1_3) || defined(VK_EXT_texture_compression_astc_hdr))
+void compare_VkPhysicalDeviceTextureCompressionASTCHDRFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceTextureCompressionASTCHDRFeaturesEXT const& supported, VkPhysicalDeviceTextureCompressionASTCHDRFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceTextureCompressionASTCHDRFeaturesEXT(VkPhysicalDeviceTextureCompressionASTCHDRFeaturesEXT & current, VkPhysicalDeviceTextureCompressionASTCHDRFeaturesEXT const& merge_in);
+#endif //(defined(VK_VERSION_1_3) || defined(VK_EXT_texture_compression_astc_hdr))
+#if (defined(VK_VERSION_1_3) || defined(VK_KHR_maintenance4))
+void compare_VkPhysicalDeviceMaintenance4Features(std::vector<std::string> & error_list, VkPhysicalDeviceMaintenance4Features const& supported, VkPhysicalDeviceMaintenance4Features const& requested);
+void merge_VkPhysicalDeviceMaintenance4Features(VkPhysicalDeviceMaintenance4Features & current, VkPhysicalDeviceMaintenance4Features const& merge_in);
+#endif //(defined(VK_VERSION_1_3) || defined(VK_KHR_maintenance4))
+#if (defined(VK_VERSION_1_3) || defined(VK_KHR_maintenance4))
+void compare_VkPhysicalDeviceMaintenance4FeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceMaintenance4FeaturesKHR const& supported, VkPhysicalDeviceMaintenance4FeaturesKHR const& requested);
+void merge_VkPhysicalDeviceMaintenance4FeaturesKHR(VkPhysicalDeviceMaintenance4FeaturesKHR & current, VkPhysicalDeviceMaintenance4FeaturesKHR const& merge_in);
+#endif //(defined(VK_VERSION_1_3) || defined(VK_KHR_maintenance4))
 #if (defined(VK_VERSION_1_3) || defined(VK_KHR_shader_terminate_invocation))
 void compare_VkPhysicalDeviceShaderTerminateInvocationFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceShaderTerminateInvocationFeatures const& supported, VkPhysicalDeviceShaderTerminateInvocationFeatures const& requested);
 void merge_VkPhysicalDeviceShaderTerminateInvocationFeatures(VkPhysicalDeviceShaderTerminateInvocationFeatures & current, VkPhysicalDeviceShaderTerminateInvocationFeatures const& merge_in);
@@ -225,14 +257,6 @@ void merge_VkPhysicalDeviceShaderDemoteToHelperInvocationFeatures(VkPhysicalDevi
 void compare_VkPhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT const& supported, VkPhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT const& requested);
 void merge_VkPhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT(VkPhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT & current, VkPhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT const& merge_in);
 #endif //(defined(VK_VERSION_1_3) || defined(VK_EXT_shader_demote_to_helper_invocation))
-#if (defined(VK_VERSION_1_3) || defined(VK_EXT_private_data))
-void compare_VkPhysicalDevicePrivateDataFeatures(std::vector<std::string> & error_list, VkPhysicalDevicePrivateDataFeatures const& supported, VkPhysicalDevicePrivateDataFeatures const& requested);
-void merge_VkPhysicalDevicePrivateDataFeatures(VkPhysicalDevicePrivateDataFeatures & current, VkPhysicalDevicePrivateDataFeatures const& merge_in);
-#endif //(defined(VK_VERSION_1_3) || defined(VK_EXT_private_data))
-#if (defined(VK_VERSION_1_3) || defined(VK_EXT_private_data))
-void compare_VkPhysicalDevicePrivateDataFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDevicePrivateDataFeaturesEXT const& supported, VkPhysicalDevicePrivateDataFeaturesEXT const& requested);
-void merge_VkPhysicalDevicePrivateDataFeaturesEXT(VkPhysicalDevicePrivateDataFeaturesEXT & current, VkPhysicalDevicePrivateDataFeaturesEXT const& merge_in);
-#endif //(defined(VK_VERSION_1_3) || defined(VK_EXT_private_data))
 #if (defined(VK_VERSION_1_3) || defined(VK_EXT_pipeline_creation_cache_control))
 void compare_VkPhysicalDevicePipelineCreationCacheControlFeatures(std::vector<std::string> & error_list, VkPhysicalDevicePipelineCreationCacheControlFeatures const& supported, VkPhysicalDevicePipelineCreationCacheControlFeatures const& requested);
 void merge_VkPhysicalDevicePipelineCreationCacheControlFeatures(VkPhysicalDevicePipelineCreationCacheControlFeatures & current, VkPhysicalDevicePipelineCreationCacheControlFeatures const& merge_in);
@@ -241,14 +265,6 @@ void merge_VkPhysicalDevicePipelineCreationCacheControlFeatures(VkPhysicalDevice
 void compare_VkPhysicalDevicePipelineCreationCacheControlFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDevicePipelineCreationCacheControlFeaturesEXT const& supported, VkPhysicalDevicePipelineCreationCacheControlFeaturesEXT const& requested);
 void merge_VkPhysicalDevicePipelineCreationCacheControlFeaturesEXT(VkPhysicalDevicePipelineCreationCacheControlFeaturesEXT & current, VkPhysicalDevicePipelineCreationCacheControlFeaturesEXT const& merge_in);
 #endif //(defined(VK_VERSION_1_3) || defined(VK_EXT_pipeline_creation_cache_control))
-#if (defined(VK_VERSION_1_3) || defined(VK_KHR_synchronization2))
-void compare_VkPhysicalDeviceSynchronization2Features(std::vector<std::string> & error_list, VkPhysicalDeviceSynchronization2Features const& supported, VkPhysicalDeviceSynchronization2Features const& requested);
-void merge_VkPhysicalDeviceSynchronization2Features(VkPhysicalDeviceSynchronization2Features & current, VkPhysicalDeviceSynchronization2Features const& merge_in);
-#endif //(defined(VK_VERSION_1_3) || defined(VK_KHR_synchronization2))
-#if (defined(VK_VERSION_1_3) || defined(VK_KHR_synchronization2))
-void compare_VkPhysicalDeviceSynchronization2FeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceSynchronization2FeaturesKHR const& supported, VkPhysicalDeviceSynchronization2FeaturesKHR const& requested);
-void merge_VkPhysicalDeviceSynchronization2FeaturesKHR(VkPhysicalDeviceSynchronization2FeaturesKHR & current, VkPhysicalDeviceSynchronization2FeaturesKHR const& merge_in);
-#endif //(defined(VK_VERSION_1_3) || defined(VK_KHR_synchronization2))
 #if (defined(VK_VERSION_1_3) || defined(VK_KHR_zero_initialize_workgroup_memory))
 void compare_VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeatures const& supported, VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeatures const& requested);
 void merge_VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeatures(VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeatures & current, VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeatures const& merge_in);
@@ -281,22 +297,6 @@ void merge_VkPhysicalDeviceInlineUniformBlockFeatures(VkPhysicalDeviceInlineUnif
 void compare_VkPhysicalDeviceInlineUniformBlockFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceInlineUniformBlockFeaturesEXT const& supported, VkPhysicalDeviceInlineUniformBlockFeaturesEXT const& requested);
 void merge_VkPhysicalDeviceInlineUniformBlockFeaturesEXT(VkPhysicalDeviceInlineUniformBlockFeaturesEXT & current, VkPhysicalDeviceInlineUniformBlockFeaturesEXT const& merge_in);
 #endif //(defined(VK_VERSION_1_3) || defined(VK_EXT_inline_uniform_block))
-#if (defined(VK_VERSION_1_3) || defined(VK_EXT_texture_compression_astc_hdr))
-void compare_VkPhysicalDeviceTextureCompressionASTCHDRFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceTextureCompressionASTCHDRFeatures const& supported, VkPhysicalDeviceTextureCompressionASTCHDRFeatures const& requested);
-void merge_VkPhysicalDeviceTextureCompressionASTCHDRFeatures(VkPhysicalDeviceTextureCompressionASTCHDRFeatures & current, VkPhysicalDeviceTextureCompressionASTCHDRFeatures const& merge_in);
-#endif //(defined(VK_VERSION_1_3) || defined(VK_EXT_texture_compression_astc_hdr))
-#if (defined(VK_VERSION_1_3) || defined(VK_EXT_texture_compression_astc_hdr))
-void compare_VkPhysicalDeviceTextureCompressionASTCHDRFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceTextureCompressionASTCHDRFeaturesEXT const& supported, VkPhysicalDeviceTextureCompressionASTCHDRFeaturesEXT const& requested);
-void merge_VkPhysicalDeviceTextureCompressionASTCHDRFeaturesEXT(VkPhysicalDeviceTextureCompressionASTCHDRFeaturesEXT & current, VkPhysicalDeviceTextureCompressionASTCHDRFeaturesEXT const& merge_in);
-#endif //(defined(VK_VERSION_1_3) || defined(VK_EXT_texture_compression_astc_hdr))
-#if (defined(VK_VERSION_1_3) || defined(VK_KHR_dynamic_rendering))
-void compare_VkPhysicalDeviceDynamicRenderingFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceDynamicRenderingFeatures const& supported, VkPhysicalDeviceDynamicRenderingFeatures const& requested);
-void merge_VkPhysicalDeviceDynamicRenderingFeatures(VkPhysicalDeviceDynamicRenderingFeatures & current, VkPhysicalDeviceDynamicRenderingFeatures const& merge_in);
-#endif //(defined(VK_VERSION_1_3) || defined(VK_KHR_dynamic_rendering))
-#if (defined(VK_VERSION_1_3) || defined(VK_KHR_dynamic_rendering))
-void compare_VkPhysicalDeviceDynamicRenderingFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceDynamicRenderingFeaturesKHR const& supported, VkPhysicalDeviceDynamicRenderingFeaturesKHR const& requested);
-void merge_VkPhysicalDeviceDynamicRenderingFeaturesKHR(VkPhysicalDeviceDynamicRenderingFeaturesKHR & current, VkPhysicalDeviceDynamicRenderingFeaturesKHR const& merge_in);
-#endif //(defined(VK_VERSION_1_3) || defined(VK_KHR_dynamic_rendering))
 #if (defined(VK_VERSION_1_3) || defined(VK_KHR_shader_integer_dot_product))
 void compare_VkPhysicalDeviceShaderIntegerDotProductFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceShaderIntegerDotProductFeatures const& supported, VkPhysicalDeviceShaderIntegerDotProductFeatures const& requested);
 void merge_VkPhysicalDeviceShaderIntegerDotProductFeatures(VkPhysicalDeviceShaderIntegerDotProductFeatures & current, VkPhysicalDeviceShaderIntegerDotProductFeatures const& merge_in);
@@ -305,14 +305,14 @@ void merge_VkPhysicalDeviceShaderIntegerDotProductFeatures(VkPhysicalDeviceShade
 void compare_VkPhysicalDeviceShaderIntegerDotProductFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceShaderIntegerDotProductFeaturesKHR const& supported, VkPhysicalDeviceShaderIntegerDotProductFeaturesKHR const& requested);
 void merge_VkPhysicalDeviceShaderIntegerDotProductFeaturesKHR(VkPhysicalDeviceShaderIntegerDotProductFeaturesKHR & current, VkPhysicalDeviceShaderIntegerDotProductFeaturesKHR const& merge_in);
 #endif //(defined(VK_VERSION_1_3) || defined(VK_KHR_shader_integer_dot_product))
-#if (defined(VK_VERSION_1_3) || defined(VK_KHR_maintenance4))
-void compare_VkPhysicalDeviceMaintenance4Features(std::vector<std::string> & error_list, VkPhysicalDeviceMaintenance4Features const& supported, VkPhysicalDeviceMaintenance4Features const& requested);
-void merge_VkPhysicalDeviceMaintenance4Features(VkPhysicalDeviceMaintenance4Features & current, VkPhysicalDeviceMaintenance4Features const& merge_in);
-#endif //(defined(VK_VERSION_1_3) || defined(VK_KHR_maintenance4))
-#if (defined(VK_VERSION_1_3) || defined(VK_KHR_maintenance4))
-void compare_VkPhysicalDeviceMaintenance4FeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceMaintenance4FeaturesKHR const& supported, VkPhysicalDeviceMaintenance4FeaturesKHR const& requested);
-void merge_VkPhysicalDeviceMaintenance4FeaturesKHR(VkPhysicalDeviceMaintenance4FeaturesKHR & current, VkPhysicalDeviceMaintenance4FeaturesKHR const& merge_in);
-#endif //(defined(VK_VERSION_1_3) || defined(VK_KHR_maintenance4))
+#if (defined(VK_VERSION_1_3) || defined(VK_KHR_dynamic_rendering))
+void compare_VkPhysicalDeviceDynamicRenderingFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceDynamicRenderingFeatures const& supported, VkPhysicalDeviceDynamicRenderingFeatures const& requested);
+void merge_VkPhysicalDeviceDynamicRenderingFeatures(VkPhysicalDeviceDynamicRenderingFeatures & current, VkPhysicalDeviceDynamicRenderingFeatures const& merge_in);
+#endif //(defined(VK_VERSION_1_3) || defined(VK_KHR_dynamic_rendering))
+#if (defined(VK_VERSION_1_3) || defined(VK_KHR_dynamic_rendering))
+void compare_VkPhysicalDeviceDynamicRenderingFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceDynamicRenderingFeaturesKHR const& supported, VkPhysicalDeviceDynamicRenderingFeaturesKHR const& requested);
+void merge_VkPhysicalDeviceDynamicRenderingFeaturesKHR(VkPhysicalDeviceDynamicRenderingFeaturesKHR & current, VkPhysicalDeviceDynamicRenderingFeaturesKHR const& merge_in);
+#endif //(defined(VK_VERSION_1_3) || defined(VK_KHR_dynamic_rendering))
 #if (defined(VK_VERSION_1_4))
 void compare_VkPhysicalDeviceVulkan14Features(std::vector<std::string> & error_list, VkPhysicalDeviceVulkan14Features const& supported, VkPhysicalDeviceVulkan14Features const& requested);
 void merge_VkPhysicalDeviceVulkan14Features(VkPhysicalDeviceVulkan14Features & current, VkPhysicalDeviceVulkan14Features const& merge_in);
@@ -329,6 +329,42 @@ void merge_VkPhysicalDeviceGlobalPriorityQueryFeaturesKHR(VkPhysicalDeviceGlobal
 void compare_VkPhysicalDeviceGlobalPriorityQueryFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceGlobalPriorityQueryFeaturesEXT const& supported, VkPhysicalDeviceGlobalPriorityQueryFeaturesEXT const& requested);
 void merge_VkPhysicalDeviceGlobalPriorityQueryFeaturesEXT(VkPhysicalDeviceGlobalPriorityQueryFeaturesEXT & current, VkPhysicalDeviceGlobalPriorityQueryFeaturesEXT const& merge_in);
 #endif //(defined(VK_VERSION_1_4) || defined(VK_EXT_global_priority_query))
+#if (defined(VK_VERSION_1_4) || defined(VK_KHR_index_type_uint8) || defined(VK_EXT_index_type_uint8))
+void compare_VkPhysicalDeviceIndexTypeUint8Features(std::vector<std::string> & error_list, VkPhysicalDeviceIndexTypeUint8Features const& supported, VkPhysicalDeviceIndexTypeUint8Features const& requested);
+void merge_VkPhysicalDeviceIndexTypeUint8Features(VkPhysicalDeviceIndexTypeUint8Features & current, VkPhysicalDeviceIndexTypeUint8Features const& merge_in);
+#endif //(defined(VK_VERSION_1_4) || defined(VK_KHR_index_type_uint8) || defined(VK_EXT_index_type_uint8))
+#if (defined(VK_VERSION_1_4) || defined(VK_KHR_index_type_uint8))
+void compare_VkPhysicalDeviceIndexTypeUint8FeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceIndexTypeUint8FeaturesKHR const& supported, VkPhysicalDeviceIndexTypeUint8FeaturesKHR const& requested);
+void merge_VkPhysicalDeviceIndexTypeUint8FeaturesKHR(VkPhysicalDeviceIndexTypeUint8FeaturesKHR & current, VkPhysicalDeviceIndexTypeUint8FeaturesKHR const& merge_in);
+#endif //(defined(VK_VERSION_1_4) || defined(VK_KHR_index_type_uint8))
+#if (defined(VK_VERSION_1_4) || defined(VK_EXT_index_type_uint8))
+void compare_VkPhysicalDeviceIndexTypeUint8FeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceIndexTypeUint8FeaturesEXT const& supported, VkPhysicalDeviceIndexTypeUint8FeaturesEXT const& requested);
+void merge_VkPhysicalDeviceIndexTypeUint8FeaturesEXT(VkPhysicalDeviceIndexTypeUint8FeaturesEXT & current, VkPhysicalDeviceIndexTypeUint8FeaturesEXT const& merge_in);
+#endif //(defined(VK_VERSION_1_4) || defined(VK_EXT_index_type_uint8))
+#if (defined(VK_VERSION_1_4) || defined(VK_KHR_maintenance5))
+void compare_VkPhysicalDeviceMaintenance5Features(std::vector<std::string> & error_list, VkPhysicalDeviceMaintenance5Features const& supported, VkPhysicalDeviceMaintenance5Features const& requested);
+void merge_VkPhysicalDeviceMaintenance5Features(VkPhysicalDeviceMaintenance5Features & current, VkPhysicalDeviceMaintenance5Features const& merge_in);
+#endif //(defined(VK_VERSION_1_4) || defined(VK_KHR_maintenance5))
+#if (defined(VK_VERSION_1_4) || defined(VK_KHR_maintenance5))
+void compare_VkPhysicalDeviceMaintenance5FeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceMaintenance5FeaturesKHR const& supported, VkPhysicalDeviceMaintenance5FeaturesKHR const& requested);
+void merge_VkPhysicalDeviceMaintenance5FeaturesKHR(VkPhysicalDeviceMaintenance5FeaturesKHR & current, VkPhysicalDeviceMaintenance5FeaturesKHR const& merge_in);
+#endif //(defined(VK_VERSION_1_4) || defined(VK_KHR_maintenance5))
+#if (defined(VK_VERSION_1_4) || defined(VK_KHR_maintenance6))
+void compare_VkPhysicalDeviceMaintenance6Features(std::vector<std::string> & error_list, VkPhysicalDeviceMaintenance6Features const& supported, VkPhysicalDeviceMaintenance6Features const& requested);
+void merge_VkPhysicalDeviceMaintenance6Features(VkPhysicalDeviceMaintenance6Features & current, VkPhysicalDeviceMaintenance6Features const& merge_in);
+#endif //(defined(VK_VERSION_1_4) || defined(VK_KHR_maintenance6))
+#if (defined(VK_VERSION_1_4) || defined(VK_KHR_maintenance6))
+void compare_VkPhysicalDeviceMaintenance6FeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceMaintenance6FeaturesKHR const& supported, VkPhysicalDeviceMaintenance6FeaturesKHR const& requested);
+void merge_VkPhysicalDeviceMaintenance6FeaturesKHR(VkPhysicalDeviceMaintenance6FeaturesKHR & current, VkPhysicalDeviceMaintenance6FeaturesKHR const& merge_in);
+#endif //(defined(VK_VERSION_1_4) || defined(VK_KHR_maintenance6))
+#if (defined(VK_VERSION_1_4) || defined(VK_EXT_host_image_copy))
+void compare_VkPhysicalDeviceHostImageCopyFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceHostImageCopyFeatures const& supported, VkPhysicalDeviceHostImageCopyFeatures const& requested);
+void merge_VkPhysicalDeviceHostImageCopyFeatures(VkPhysicalDeviceHostImageCopyFeatures & current, VkPhysicalDeviceHostImageCopyFeatures const& merge_in);
+#endif //(defined(VK_VERSION_1_4) || defined(VK_EXT_host_image_copy))
+#if (defined(VK_VERSION_1_4) || defined(VK_EXT_host_image_copy))
+void compare_VkPhysicalDeviceHostImageCopyFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceHostImageCopyFeaturesEXT const& supported, VkPhysicalDeviceHostImageCopyFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceHostImageCopyFeaturesEXT(VkPhysicalDeviceHostImageCopyFeaturesEXT & current, VkPhysicalDeviceHostImageCopyFeaturesEXT const& merge_in);
+#endif //(defined(VK_VERSION_1_4) || defined(VK_EXT_host_image_copy))
 #if (defined(VK_VERSION_1_4) || defined(VK_KHR_shader_subgroup_rotate))
 void compare_VkPhysicalDeviceShaderSubgroupRotateFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceShaderSubgroupRotateFeatures const& supported, VkPhysicalDeviceShaderSubgroupRotateFeatures const& requested);
 void merge_VkPhysicalDeviceShaderSubgroupRotateFeatures(VkPhysicalDeviceShaderSubgroupRotateFeatures & current, VkPhysicalDeviceShaderSubgroupRotateFeatures const& merge_in);
@@ -353,6 +389,22 @@ void merge_VkPhysicalDeviceShaderExpectAssumeFeatures(VkPhysicalDeviceShaderExpe
 void compare_VkPhysicalDeviceShaderExpectAssumeFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceShaderExpectAssumeFeaturesKHR const& supported, VkPhysicalDeviceShaderExpectAssumeFeaturesKHR const& requested);
 void merge_VkPhysicalDeviceShaderExpectAssumeFeaturesKHR(VkPhysicalDeviceShaderExpectAssumeFeaturesKHR & current, VkPhysicalDeviceShaderExpectAssumeFeaturesKHR const& merge_in);
 #endif //(defined(VK_VERSION_1_4) || defined(VK_KHR_shader_expect_assume))
+#if (defined(VK_VERSION_1_4) || defined(VK_EXT_pipeline_protected_access))
+void compare_VkPhysicalDevicePipelineProtectedAccessFeatures(std::vector<std::string> & error_list, VkPhysicalDevicePipelineProtectedAccessFeatures const& supported, VkPhysicalDevicePipelineProtectedAccessFeatures const& requested);
+void merge_VkPhysicalDevicePipelineProtectedAccessFeatures(VkPhysicalDevicePipelineProtectedAccessFeatures & current, VkPhysicalDevicePipelineProtectedAccessFeatures const& merge_in);
+#endif //(defined(VK_VERSION_1_4) || defined(VK_EXT_pipeline_protected_access))
+#if (defined(VK_VERSION_1_4) || defined(VK_EXT_pipeline_protected_access))
+void compare_VkPhysicalDevicePipelineProtectedAccessFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDevicePipelineProtectedAccessFeaturesEXT const& supported, VkPhysicalDevicePipelineProtectedAccessFeaturesEXT const& requested);
+void merge_VkPhysicalDevicePipelineProtectedAccessFeaturesEXT(VkPhysicalDevicePipelineProtectedAccessFeaturesEXT & current, VkPhysicalDevicePipelineProtectedAccessFeaturesEXT const& merge_in);
+#endif //(defined(VK_VERSION_1_4) || defined(VK_EXT_pipeline_protected_access))
+#if (defined(VK_VERSION_1_4) || defined(VK_EXT_pipeline_robustness))
+void compare_VkPhysicalDevicePipelineRobustnessFeatures(std::vector<std::string> & error_list, VkPhysicalDevicePipelineRobustnessFeatures const& supported, VkPhysicalDevicePipelineRobustnessFeatures const& requested);
+void merge_VkPhysicalDevicePipelineRobustnessFeatures(VkPhysicalDevicePipelineRobustnessFeatures & current, VkPhysicalDevicePipelineRobustnessFeatures const& merge_in);
+#endif //(defined(VK_VERSION_1_4) || defined(VK_EXT_pipeline_robustness))
+#if (defined(VK_VERSION_1_4) || defined(VK_EXT_pipeline_robustness))
+void compare_VkPhysicalDevicePipelineRobustnessFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDevicePipelineRobustnessFeaturesEXT const& supported, VkPhysicalDevicePipelineRobustnessFeaturesEXT const& requested);
+void merge_VkPhysicalDevicePipelineRobustnessFeaturesEXT(VkPhysicalDevicePipelineRobustnessFeaturesEXT & current, VkPhysicalDevicePipelineRobustnessFeaturesEXT const& merge_in);
+#endif //(defined(VK_VERSION_1_4) || defined(VK_EXT_pipeline_robustness))
 #if (defined(VK_VERSION_1_4) || defined(VK_KHR_line_rasterization) || defined(VK_EXT_line_rasterization))
 void compare_VkPhysicalDeviceLineRasterizationFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceLineRasterizationFeatures const& supported, VkPhysicalDeviceLineRasterizationFeatures const& requested);
 void merge_VkPhysicalDeviceLineRasterizationFeatures(VkPhysicalDeviceLineRasterizationFeatures & current, VkPhysicalDeviceLineRasterizationFeatures const& merge_in);
@@ -377,26 +429,6 @@ void merge_VkPhysicalDeviceVertexAttributeDivisorFeaturesKHR(VkPhysicalDeviceVer
 void compare_VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT const& supported, VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT const& requested);
 void merge_VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT(VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT & current, VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT const& merge_in);
 #endif //(defined(VK_VERSION_1_4) || defined(VK_EXT_vertex_attribute_divisor))
-#if (defined(VK_VERSION_1_4) || defined(VK_KHR_index_type_uint8) || defined(VK_EXT_index_type_uint8))
-void compare_VkPhysicalDeviceIndexTypeUint8Features(std::vector<std::string> & error_list, VkPhysicalDeviceIndexTypeUint8Features const& supported, VkPhysicalDeviceIndexTypeUint8Features const& requested);
-void merge_VkPhysicalDeviceIndexTypeUint8Features(VkPhysicalDeviceIndexTypeUint8Features & current, VkPhysicalDeviceIndexTypeUint8Features const& merge_in);
-#endif //(defined(VK_VERSION_1_4) || defined(VK_KHR_index_type_uint8) || defined(VK_EXT_index_type_uint8))
-#if (defined(VK_VERSION_1_4) || defined(VK_KHR_index_type_uint8))
-void compare_VkPhysicalDeviceIndexTypeUint8FeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceIndexTypeUint8FeaturesKHR const& supported, VkPhysicalDeviceIndexTypeUint8FeaturesKHR const& requested);
-void merge_VkPhysicalDeviceIndexTypeUint8FeaturesKHR(VkPhysicalDeviceIndexTypeUint8FeaturesKHR & current, VkPhysicalDeviceIndexTypeUint8FeaturesKHR const& merge_in);
-#endif //(defined(VK_VERSION_1_4) || defined(VK_KHR_index_type_uint8))
-#if (defined(VK_VERSION_1_4) || defined(VK_EXT_index_type_uint8))
-void compare_VkPhysicalDeviceIndexTypeUint8FeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceIndexTypeUint8FeaturesEXT const& supported, VkPhysicalDeviceIndexTypeUint8FeaturesEXT const& requested);
-void merge_VkPhysicalDeviceIndexTypeUint8FeaturesEXT(VkPhysicalDeviceIndexTypeUint8FeaturesEXT & current, VkPhysicalDeviceIndexTypeUint8FeaturesEXT const& merge_in);
-#endif //(defined(VK_VERSION_1_4) || defined(VK_EXT_index_type_uint8))
-#if (defined(VK_VERSION_1_4) || defined(VK_KHR_maintenance5))
-void compare_VkPhysicalDeviceMaintenance5Features(std::vector<std::string> & error_list, VkPhysicalDeviceMaintenance5Features const& supported, VkPhysicalDeviceMaintenance5Features const& requested);
-void merge_VkPhysicalDeviceMaintenance5Features(VkPhysicalDeviceMaintenance5Features & current, VkPhysicalDeviceMaintenance5Features const& merge_in);
-#endif //(defined(VK_VERSION_1_4) || defined(VK_KHR_maintenance5))
-#if (defined(VK_VERSION_1_4) || defined(VK_KHR_maintenance5))
-void compare_VkPhysicalDeviceMaintenance5FeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceMaintenance5FeaturesKHR const& supported, VkPhysicalDeviceMaintenance5FeaturesKHR const& requested);
-void merge_VkPhysicalDeviceMaintenance5FeaturesKHR(VkPhysicalDeviceMaintenance5FeaturesKHR & current, VkPhysicalDeviceMaintenance5FeaturesKHR const& merge_in);
-#endif //(defined(VK_VERSION_1_4) || defined(VK_KHR_maintenance5))
 #if (defined(VK_VERSION_1_4) || defined(VK_KHR_dynamic_rendering_local_read))
 void compare_VkPhysicalDeviceDynamicRenderingLocalReadFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceDynamicRenderingLocalReadFeatures const& supported, VkPhysicalDeviceDynamicRenderingLocalReadFeatures const& requested);
 void merge_VkPhysicalDeviceDynamicRenderingLocalReadFeatures(VkPhysicalDeviceDynamicRenderingLocalReadFeatures & current, VkPhysicalDeviceDynamicRenderingLocalReadFeatures const& merge_in);
@@ -405,38 +437,6 @@ void merge_VkPhysicalDeviceDynamicRenderingLocalReadFeatures(VkPhysicalDeviceDyn
 void compare_VkPhysicalDeviceDynamicRenderingLocalReadFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceDynamicRenderingLocalReadFeaturesKHR const& supported, VkPhysicalDeviceDynamicRenderingLocalReadFeaturesKHR const& requested);
 void merge_VkPhysicalDeviceDynamicRenderingLocalReadFeaturesKHR(VkPhysicalDeviceDynamicRenderingLocalReadFeaturesKHR & current, VkPhysicalDeviceDynamicRenderingLocalReadFeaturesKHR const& merge_in);
 #endif //(defined(VK_VERSION_1_4) || defined(VK_KHR_dynamic_rendering_local_read))
-#if (defined(VK_VERSION_1_4) || defined(VK_KHR_maintenance6))
-void compare_VkPhysicalDeviceMaintenance6Features(std::vector<std::string> & error_list, VkPhysicalDeviceMaintenance6Features const& supported, VkPhysicalDeviceMaintenance6Features const& requested);
-void merge_VkPhysicalDeviceMaintenance6Features(VkPhysicalDeviceMaintenance6Features & current, VkPhysicalDeviceMaintenance6Features const& merge_in);
-#endif //(defined(VK_VERSION_1_4) || defined(VK_KHR_maintenance6))
-#if (defined(VK_VERSION_1_4) || defined(VK_KHR_maintenance6))
-void compare_VkPhysicalDeviceMaintenance6FeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceMaintenance6FeaturesKHR const& supported, VkPhysicalDeviceMaintenance6FeaturesKHR const& requested);
-void merge_VkPhysicalDeviceMaintenance6FeaturesKHR(VkPhysicalDeviceMaintenance6FeaturesKHR & current, VkPhysicalDeviceMaintenance6FeaturesKHR const& merge_in);
-#endif //(defined(VK_VERSION_1_4) || defined(VK_KHR_maintenance6))
-#if (defined(VK_VERSION_1_4) || defined(VK_EXT_pipeline_protected_access))
-void compare_VkPhysicalDevicePipelineProtectedAccessFeatures(std::vector<std::string> & error_list, VkPhysicalDevicePipelineProtectedAccessFeatures const& supported, VkPhysicalDevicePipelineProtectedAccessFeatures const& requested);
-void merge_VkPhysicalDevicePipelineProtectedAccessFeatures(VkPhysicalDevicePipelineProtectedAccessFeatures & current, VkPhysicalDevicePipelineProtectedAccessFeatures const& merge_in);
-#endif //(defined(VK_VERSION_1_4) || defined(VK_EXT_pipeline_protected_access))
-#if (defined(VK_VERSION_1_4) || defined(VK_EXT_pipeline_protected_access))
-void compare_VkPhysicalDevicePipelineProtectedAccessFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDevicePipelineProtectedAccessFeaturesEXT const& supported, VkPhysicalDevicePipelineProtectedAccessFeaturesEXT const& requested);
-void merge_VkPhysicalDevicePipelineProtectedAccessFeaturesEXT(VkPhysicalDevicePipelineProtectedAccessFeaturesEXT & current, VkPhysicalDevicePipelineProtectedAccessFeaturesEXT const& merge_in);
-#endif //(defined(VK_VERSION_1_4) || defined(VK_EXT_pipeline_protected_access))
-#if (defined(VK_VERSION_1_4) || defined(VK_EXT_pipeline_robustness))
-void compare_VkPhysicalDevicePipelineRobustnessFeatures(std::vector<std::string> & error_list, VkPhysicalDevicePipelineRobustnessFeatures const& supported, VkPhysicalDevicePipelineRobustnessFeatures const& requested);
-void merge_VkPhysicalDevicePipelineRobustnessFeatures(VkPhysicalDevicePipelineRobustnessFeatures & current, VkPhysicalDevicePipelineRobustnessFeatures const& merge_in);
-#endif //(defined(VK_VERSION_1_4) || defined(VK_EXT_pipeline_robustness))
-#if (defined(VK_VERSION_1_4) || defined(VK_EXT_pipeline_robustness))
-void compare_VkPhysicalDevicePipelineRobustnessFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDevicePipelineRobustnessFeaturesEXT const& supported, VkPhysicalDevicePipelineRobustnessFeaturesEXT const& requested);
-void merge_VkPhysicalDevicePipelineRobustnessFeaturesEXT(VkPhysicalDevicePipelineRobustnessFeaturesEXT & current, VkPhysicalDevicePipelineRobustnessFeaturesEXT const& merge_in);
-#endif //(defined(VK_VERSION_1_4) || defined(VK_EXT_pipeline_robustness))
-#if (defined(VK_VERSION_1_4) || defined(VK_EXT_host_image_copy))
-void compare_VkPhysicalDeviceHostImageCopyFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceHostImageCopyFeatures const& supported, VkPhysicalDeviceHostImageCopyFeatures const& requested);
-void merge_VkPhysicalDeviceHostImageCopyFeatures(VkPhysicalDeviceHostImageCopyFeatures & current, VkPhysicalDeviceHostImageCopyFeatures const& merge_in);
-#endif //(defined(VK_VERSION_1_4) || defined(VK_EXT_host_image_copy))
-#if (defined(VK_VERSION_1_4) || defined(VK_EXT_host_image_copy))
-void compare_VkPhysicalDeviceHostImageCopyFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceHostImageCopyFeaturesEXT const& supported, VkPhysicalDeviceHostImageCopyFeaturesEXT const& requested);
-void merge_VkPhysicalDeviceHostImageCopyFeaturesEXT(VkPhysicalDeviceHostImageCopyFeaturesEXT & current, VkPhysicalDeviceHostImageCopyFeaturesEXT const& merge_in);
-#endif //(defined(VK_VERSION_1_4) || defined(VK_EXT_host_image_copy))
 #if (defined(VK_KHR_performance_query))
 void compare_VkPhysicalDevicePerformanceQueryFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDevicePerformanceQueryFeaturesKHR const& supported, VkPhysicalDevicePerformanceQueryFeaturesKHR const& requested);
 void merge_VkPhysicalDevicePerformanceQueryFeaturesKHR(VkPhysicalDevicePerformanceQueryFeaturesKHR & current, VkPhysicalDevicePerformanceQueryFeaturesKHR const& merge_in);
@@ -613,6 +613,10 @@ void merge_VkPhysicalDevicePresentModeFifoLatestReadyFeaturesKHR(VkPhysicalDevic
 void compare_VkPhysicalDevicePresentModeFifoLatestReadyFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDevicePresentModeFifoLatestReadyFeaturesEXT const& supported, VkPhysicalDevicePresentModeFifoLatestReadyFeaturesEXT const& requested);
 void merge_VkPhysicalDevicePresentModeFifoLatestReadyFeaturesEXT(VkPhysicalDevicePresentModeFifoLatestReadyFeaturesEXT & current, VkPhysicalDevicePresentModeFifoLatestReadyFeaturesEXT const& merge_in);
 #endif //(defined(VK_EXT_present_mode_fifo_latest_ready))
+#if (defined(VK_KHR_maintenance10))
+void compare_VkPhysicalDeviceMaintenance10FeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceMaintenance10FeaturesKHR const& supported, VkPhysicalDeviceMaintenance10FeaturesKHR const& requested);
+void merge_VkPhysicalDeviceMaintenance10FeaturesKHR(VkPhysicalDeviceMaintenance10FeaturesKHR & current, VkPhysicalDeviceMaintenance10FeaturesKHR const& merge_in);
+#endif //(defined(VK_KHR_maintenance10))
 #if (defined(VK_EXT_transform_feedback))
 void compare_VkPhysicalDeviceTransformFeedbackFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceTransformFeedbackFeaturesEXT const& supported, VkPhysicalDeviceTransformFeedbackFeaturesEXT const& requested);
 void merge_VkPhysicalDeviceTransformFeedbackFeaturesEXT(VkPhysicalDeviceTransformFeedbackFeaturesEXT & current, VkPhysicalDeviceTransformFeedbackFeaturesEXT const& merge_in);
@@ -965,6 +969,10 @@ void merge_VkPhysicalDeviceFragmentDensityMapOffsetFeaturesQCOM(VkPhysicalDevice
 void compare_VkPhysicalDeviceCopyMemoryIndirectFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceCopyMemoryIndirectFeaturesNV const& supported, VkPhysicalDeviceCopyMemoryIndirectFeaturesNV const& requested);
 void merge_VkPhysicalDeviceCopyMemoryIndirectFeaturesNV(VkPhysicalDeviceCopyMemoryIndirectFeaturesNV & current, VkPhysicalDeviceCopyMemoryIndirectFeaturesNV const& merge_in);
 #endif //(defined(VK_NV_copy_memory_indirect))
+#if (defined(VK_EXT_memory_decompression))
+void compare_VkPhysicalDeviceMemoryDecompressionFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceMemoryDecompressionFeaturesEXT const& supported, VkPhysicalDeviceMemoryDecompressionFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceMemoryDecompressionFeaturesEXT(VkPhysicalDeviceMemoryDecompressionFeaturesEXT & current, VkPhysicalDeviceMemoryDecompressionFeaturesEXT const& merge_in);
+#endif //(defined(VK_EXT_memory_decompression))
 #if (defined(VK_NV_memory_decompression))
 void compare_VkPhysicalDeviceMemoryDecompressionFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceMemoryDecompressionFeaturesNV const& supported, VkPhysicalDeviceMemoryDecompressionFeaturesNV const& requested);
 void merge_VkPhysicalDeviceMemoryDecompressionFeaturesNV(VkPhysicalDeviceMemoryDecompressionFeaturesNV & current, VkPhysicalDeviceMemoryDecompressionFeaturesNV const& merge_in);
@@ -1197,10 +1205,18 @@ void merge_VkPhysicalDevicePresentMeteringFeaturesNV(VkPhysicalDevicePresentMete
 void compare_VkPhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT const& supported, VkPhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT const& requested);
 void merge_VkPhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT(VkPhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT & current, VkPhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT const& merge_in);
 #endif //(defined(VK_EXT_zero_initialize_device_memory))
+#if (defined(VK_EXT_shader_64bit_indexing))
+void compare_VkPhysicalDeviceShader64BitIndexingFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceShader64BitIndexingFeaturesEXT const& supported, VkPhysicalDeviceShader64BitIndexingFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceShader64BitIndexingFeaturesEXT(VkPhysicalDeviceShader64BitIndexingFeaturesEXT & current, VkPhysicalDeviceShader64BitIndexingFeaturesEXT const& merge_in);
+#endif //(defined(VK_EXT_shader_64bit_indexing))
 #if (defined(VK_SEC_pipeline_cache_incremental_mode))
 void compare_VkPhysicalDevicePipelineCacheIncrementalModeFeaturesSEC(std::vector<std::string> & error_list, VkPhysicalDevicePipelineCacheIncrementalModeFeaturesSEC const& supported, VkPhysicalDevicePipelineCacheIncrementalModeFeaturesSEC const& requested);
 void merge_VkPhysicalDevicePipelineCacheIncrementalModeFeaturesSEC(VkPhysicalDevicePipelineCacheIncrementalModeFeaturesSEC & current, VkPhysicalDevicePipelineCacheIncrementalModeFeaturesSEC const& merge_in);
 #endif //(defined(VK_SEC_pipeline_cache_incremental_mode))
+#if (defined(VK_EXT_shader_uniform_buffer_unsized_array))
+void compare_VkPhysicalDeviceShaderUniformBufferUnsizedArrayFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceShaderUniformBufferUnsizedArrayFeaturesEXT const& supported, VkPhysicalDeviceShaderUniformBufferUnsizedArrayFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceShaderUniformBufferUnsizedArrayFeaturesEXT(VkPhysicalDeviceShaderUniformBufferUnsizedArrayFeaturesEXT & current, VkPhysicalDeviceShaderUniformBufferUnsizedArrayFeaturesEXT const& merge_in);
+#endif //(defined(VK_EXT_shader_uniform_buffer_unsized_array))
 #if (defined(VK_KHR_acceleration_structure))
 void compare_VkPhysicalDeviceAccelerationStructureFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceAccelerationStructureFeaturesKHR const& supported, VkPhysicalDeviceAccelerationStructureFeaturesKHR const& requested);
 void merge_VkPhysicalDeviceAccelerationStructureFeaturesKHR(VkPhysicalDeviceAccelerationStructureFeaturesKHR & current, VkPhysicalDeviceAccelerationStructureFeaturesKHR const& merge_in);

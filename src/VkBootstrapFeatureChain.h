@@ -1185,6 +1185,10 @@ void merge_VkPhysicalDeviceCooperativeMatrix2FeaturesNV(VkPhysicalDeviceCooperat
 void compare_VkPhysicalDevicePipelineOpacityMicromapFeaturesARM(std::vector<std::string> & error_list, VkPhysicalDevicePipelineOpacityMicromapFeaturesARM const& supported, VkPhysicalDevicePipelineOpacityMicromapFeaturesARM const& requested);
 void merge_VkPhysicalDevicePipelineOpacityMicromapFeaturesARM(VkPhysicalDevicePipelineOpacityMicromapFeaturesARM & current, VkPhysicalDevicePipelineOpacityMicromapFeaturesARM const& merge_in);
 #endif //(defined(VK_ARM_pipeline_opacity_micromap))
+#if (defined(VK_ARM_performance_counters_by_region))
+void compare_VkPhysicalDevicePerformanceCountersByRegionFeaturesARM(std::vector<std::string> & error_list, VkPhysicalDevicePerformanceCountersByRegionFeaturesARM const& supported, VkPhysicalDevicePerformanceCountersByRegionFeaturesARM const& requested);
+void merge_VkPhysicalDevicePerformanceCountersByRegionFeaturesARM(VkPhysicalDevicePerformanceCountersByRegionFeaturesARM & current, VkPhysicalDevicePerformanceCountersByRegionFeaturesARM const& merge_in);
+#endif //(defined(VK_ARM_performance_counters_by_region))
 #if (defined(VK_EXT_vertex_attribute_robustness))
 void compare_VkPhysicalDeviceVertexAttributeRobustnessFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceVertexAttributeRobustnessFeaturesEXT const& supported, VkPhysicalDeviceVertexAttributeRobustnessFeaturesEXT const& requested);
 void merge_VkPhysicalDeviceVertexAttributeRobustnessFeaturesEXT(VkPhysicalDeviceVertexAttributeRobustnessFeaturesEXT & current, VkPhysicalDeviceVertexAttributeRobustnessFeaturesEXT const& merge_in);
@@ -1209,6 +1213,10 @@ void merge_VkPhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT(VkPhysicalDevic
 void compare_VkPhysicalDeviceShader64BitIndexingFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceShader64BitIndexingFeaturesEXT const& supported, VkPhysicalDeviceShader64BitIndexingFeaturesEXT const& requested);
 void merge_VkPhysicalDeviceShader64BitIndexingFeaturesEXT(VkPhysicalDeviceShader64BitIndexingFeaturesEXT & current, VkPhysicalDeviceShader64BitIndexingFeaturesEXT const& merge_in);
 #endif //(defined(VK_EXT_shader_64bit_indexing))
+#if (defined(VK_QCOM_data_graph_model))
+void compare_VkPhysicalDeviceDataGraphModelFeaturesQCOM(std::vector<std::string> & error_list, VkPhysicalDeviceDataGraphModelFeaturesQCOM const& supported, VkPhysicalDeviceDataGraphModelFeaturesQCOM const& requested);
+void merge_VkPhysicalDeviceDataGraphModelFeaturesQCOM(VkPhysicalDeviceDataGraphModelFeaturesQCOM & current, VkPhysicalDeviceDataGraphModelFeaturesQCOM const& merge_in);
+#endif //(defined(VK_QCOM_data_graph_model))
 #if (defined(VK_SEC_pipeline_cache_incremental_mode))
 void compare_VkPhysicalDevicePipelineCacheIncrementalModeFeaturesSEC(std::vector<std::string> & error_list, VkPhysicalDevicePipelineCacheIncrementalModeFeaturesSEC const& supported, VkPhysicalDevicePipelineCacheIncrementalModeFeaturesSEC const& requested);
 void merge_VkPhysicalDevicePipelineCacheIncrementalModeFeaturesSEC(VkPhysicalDevicePipelineCacheIncrementalModeFeaturesSEC & current, VkPhysicalDevicePipelineCacheIncrementalModeFeaturesSEC const& merge_in);

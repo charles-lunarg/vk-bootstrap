@@ -4543,6 +4543,16 @@ void merge_VkPhysicalDevicePipelineOpacityMicromapFeaturesARM(VkPhysicalDevicePi
     current.pipelineOpacityMicromap = current.pipelineOpacityMicromap || merge_in.pipelineOpacityMicromap;
 }
 #endif //(defined(VK_ARM_pipeline_opacity_micromap))
+#if (defined(VK_ARM_performance_counters_by_region))
+void compare_VkPhysicalDevicePerformanceCountersByRegionFeaturesARM(std::vector<std::string> & error_list, VkPhysicalDevicePerformanceCountersByRegionFeaturesARM const& supported, VkPhysicalDevicePerformanceCountersByRegionFeaturesARM const& requested) {
+    if (requested.performanceCountersByRegion && !supported.performanceCountersByRegion) {
+        error_list.push_back("Missing feature VkPhysicalDevicePerformanceCountersByRegionFeaturesARM::performanceCountersByRegion");
+    }
+}
+void merge_VkPhysicalDevicePerformanceCountersByRegionFeaturesARM(VkPhysicalDevicePerformanceCountersByRegionFeaturesARM & current, VkPhysicalDevicePerformanceCountersByRegionFeaturesARM const& merge_in) {
+    current.performanceCountersByRegion = current.performanceCountersByRegion || merge_in.performanceCountersByRegion;
+}
+#endif //(defined(VK_ARM_performance_counters_by_region))
 #if (defined(VK_EXT_vertex_attribute_robustness))
 void compare_VkPhysicalDeviceVertexAttributeRobustnessFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceVertexAttributeRobustnessFeaturesEXT const& supported, VkPhysicalDeviceVertexAttributeRobustnessFeaturesEXT const& requested) {
     if (requested.vertexAttributeRobustness && !supported.vertexAttributeRobustness) {
@@ -4603,6 +4613,16 @@ void merge_VkPhysicalDeviceShader64BitIndexingFeaturesEXT(VkPhysicalDeviceShader
     current.shader64BitIndexing = current.shader64BitIndexing || merge_in.shader64BitIndexing;
 }
 #endif //(defined(VK_EXT_shader_64bit_indexing))
+#if (defined(VK_QCOM_data_graph_model))
+void compare_VkPhysicalDeviceDataGraphModelFeaturesQCOM(std::vector<std::string> & error_list, VkPhysicalDeviceDataGraphModelFeaturesQCOM const& supported, VkPhysicalDeviceDataGraphModelFeaturesQCOM const& requested) {
+    if (requested.dataGraphModel && !supported.dataGraphModel) {
+        error_list.push_back("Missing feature VkPhysicalDeviceDataGraphModelFeaturesQCOM::dataGraphModel");
+    }
+}
+void merge_VkPhysicalDeviceDataGraphModelFeaturesQCOM(VkPhysicalDeviceDataGraphModelFeaturesQCOM & current, VkPhysicalDeviceDataGraphModelFeaturesQCOM const& merge_in) {
+    current.dataGraphModel = current.dataGraphModel || merge_in.dataGraphModel;
+}
+#endif //(defined(VK_QCOM_data_graph_model))
 #if (defined(VK_SEC_pipeline_cache_incremental_mode))
 void compare_VkPhysicalDevicePipelineCacheIncrementalModeFeaturesSEC(std::vector<std::string> & error_list, VkPhysicalDevicePipelineCacheIncrementalModeFeaturesSEC const& supported, VkPhysicalDevicePipelineCacheIncrementalModeFeaturesSEC const& requested) {
     if (requested.pipelineCacheIncrementalMode && !supported.pipelineCacheIncrementalMode) {
@@ -6086,6 +6106,11 @@ void compare_feature_struct(VkStructureType sType, std::vector<std::string> & er
             compare_VkPhysicalDevicePipelineOpacityMicromapFeaturesARM(error_list, *reinterpret_cast<const VkPhysicalDevicePipelineOpacityMicromapFeaturesARM*>(supported), *reinterpret_cast<const VkPhysicalDevicePipelineOpacityMicromapFeaturesARM*>(requested));
             break;
 #endif
+#if (defined(VK_ARM_performance_counters_by_region))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PERFORMANCE_COUNTERS_BY_REGION_FEATURES_ARM):
+            compare_VkPhysicalDevicePerformanceCountersByRegionFeaturesARM(error_list, *reinterpret_cast<const VkPhysicalDevicePerformanceCountersByRegionFeaturesARM*>(supported), *reinterpret_cast<const VkPhysicalDevicePerformanceCountersByRegionFeaturesARM*>(requested));
+            break;
+#endif
 #if (defined(VK_EXT_vertex_attribute_robustness))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_ROBUSTNESS_FEATURES_EXT):
             compare_VkPhysicalDeviceVertexAttributeRobustnessFeaturesEXT(error_list, *reinterpret_cast<const VkPhysicalDeviceVertexAttributeRobustnessFeaturesEXT*>(supported), *reinterpret_cast<const VkPhysicalDeviceVertexAttributeRobustnessFeaturesEXT*>(requested));
@@ -6114,6 +6139,11 @@ void compare_feature_struct(VkStructureType sType, std::vector<std::string> & er
 #if (defined(VK_EXT_shader_64bit_indexing))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_64_BIT_INDEXING_FEATURES_EXT):
             compare_VkPhysicalDeviceShader64BitIndexingFeaturesEXT(error_list, *reinterpret_cast<const VkPhysicalDeviceShader64BitIndexingFeaturesEXT*>(supported), *reinterpret_cast<const VkPhysicalDeviceShader64BitIndexingFeaturesEXT*>(requested));
+            break;
+#endif
+#if (defined(VK_QCOM_data_graph_model))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DATA_GRAPH_MODEL_FEATURES_QCOM):
+            compare_VkPhysicalDeviceDataGraphModelFeaturesQCOM(error_list, *reinterpret_cast<const VkPhysicalDeviceDataGraphModelFeaturesQCOM*>(supported), *reinterpret_cast<const VkPhysicalDeviceDataGraphModelFeaturesQCOM*>(requested));
             break;
 #endif
 #if (defined(VK_SEC_pipeline_cache_incremental_mode))
@@ -7525,6 +7555,11 @@ void merge_feature_struct(VkStructureType sType, void* current, const void* merg
             merge_VkPhysicalDevicePipelineOpacityMicromapFeaturesARM(*reinterpret_cast<VkPhysicalDevicePipelineOpacityMicromapFeaturesARM*>(current), *reinterpret_cast<const VkPhysicalDevicePipelineOpacityMicromapFeaturesARM*>(merge_in));
             break;
 #endif
+#if (defined(VK_ARM_performance_counters_by_region))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PERFORMANCE_COUNTERS_BY_REGION_FEATURES_ARM):
+            merge_VkPhysicalDevicePerformanceCountersByRegionFeaturesARM(*reinterpret_cast<VkPhysicalDevicePerformanceCountersByRegionFeaturesARM*>(current), *reinterpret_cast<const VkPhysicalDevicePerformanceCountersByRegionFeaturesARM*>(merge_in));
+            break;
+#endif
 #if (defined(VK_EXT_vertex_attribute_robustness))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_ROBUSTNESS_FEATURES_EXT):
             merge_VkPhysicalDeviceVertexAttributeRobustnessFeaturesEXT(*reinterpret_cast<VkPhysicalDeviceVertexAttributeRobustnessFeaturesEXT*>(current), *reinterpret_cast<const VkPhysicalDeviceVertexAttributeRobustnessFeaturesEXT*>(merge_in));
@@ -7553,6 +7588,11 @@ void merge_feature_struct(VkStructureType sType, void* current, const void* merg
 #if (defined(VK_EXT_shader_64bit_indexing))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_64_BIT_INDEXING_FEATURES_EXT):
             merge_VkPhysicalDeviceShader64BitIndexingFeaturesEXT(*reinterpret_cast<VkPhysicalDeviceShader64BitIndexingFeaturesEXT*>(current), *reinterpret_cast<const VkPhysicalDeviceShader64BitIndexingFeaturesEXT*>(merge_in));
+            break;
+#endif
+#if (defined(VK_QCOM_data_graph_model))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DATA_GRAPH_MODEL_FEATURES_QCOM):
+            merge_VkPhysicalDeviceDataGraphModelFeaturesQCOM(*reinterpret_cast<VkPhysicalDeviceDataGraphModelFeaturesQCOM*>(current), *reinterpret_cast<const VkPhysicalDeviceDataGraphModelFeaturesQCOM*>(merge_in));
             break;
 #endif
 #if (defined(VK_SEC_pipeline_cache_incremental_mode))

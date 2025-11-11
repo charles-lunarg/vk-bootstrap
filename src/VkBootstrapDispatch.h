@@ -115,6 +115,9 @@ struct InstanceDispatchTable {
 #if (defined(VK_KHR_device_group_creation))
         fp_vkEnumeratePhysicalDeviceGroupsKHR = reinterpret_cast<PFN_vkEnumeratePhysicalDeviceGroupsKHR>(procAddr(instance, "vkEnumeratePhysicalDeviceGroupsKHR"));
 #endif
+#if (defined(VK_ARM_performance_counters_by_region))
+        fp_vkEnumeratePhysicalDeviceQueueFamilyPerformanceCountersByRegionARM = reinterpret_cast<PFN_vkEnumeratePhysicalDeviceQueueFamilyPerformanceCountersByRegionARM>(procAddr(instance, "vkEnumeratePhysicalDeviceQueueFamilyPerformanceCountersByRegionARM"));
+#endif
 #if (defined(VK_KHR_performance_query))
         fp_vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR = reinterpret_cast<PFN_vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR>(procAddr(instance, "vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR"));
 #endif
@@ -482,6 +485,11 @@ struct InstanceDispatchTable {
 #if (defined(VK_KHR_device_group_creation))
     VkResult enumeratePhysicalDeviceGroupsKHR(uint32_t* pPhysicalDeviceGroupCount, VkPhysicalDeviceGroupPropertiesKHR* pPhysicalDeviceGroupProperties) const noexcept {
         return fp_vkEnumeratePhysicalDeviceGroupsKHR(instance, pPhysicalDeviceGroupCount, pPhysicalDeviceGroupProperties);
+    }
+#endif
+#if (defined(VK_ARM_performance_counters_by_region))
+    VkResult enumeratePhysicalDeviceQueueFamilyPerformanceCountersByRegionARM(VkPhysicalDevice physicalDevice, uint32_t queueFamilyIndex, uint32_t* pCounterCount, VkPerformanceCounterARM* pCounters, VkPerformanceCounterDescriptionARM* pCounterDescriptions) const noexcept {
+        return fp_vkEnumeratePhysicalDeviceQueueFamilyPerformanceCountersByRegionARM(physicalDevice, queueFamilyIndex, pCounterCount, pCounters, pCounterDescriptions);
     }
 #endif
 #if (defined(VK_KHR_performance_query))
@@ -1003,6 +1011,11 @@ struct InstanceDispatchTable {
     PFN_vkEnumeratePhysicalDeviceGroupsKHR fp_vkEnumeratePhysicalDeviceGroupsKHR = nullptr;
 #else
     void * fp_vkEnumeratePhysicalDeviceGroupsKHR{};
+#endif
+#if (defined(VK_ARM_performance_counters_by_region))
+    PFN_vkEnumeratePhysicalDeviceQueueFamilyPerformanceCountersByRegionARM fp_vkEnumeratePhysicalDeviceQueueFamilyPerformanceCountersByRegionARM = nullptr;
+#else
+    void * fp_vkEnumeratePhysicalDeviceQueueFamilyPerformanceCountersByRegionARM{};
 #endif
 #if (defined(VK_KHR_performance_query))
     PFN_vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR fp_vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR = nullptr;
@@ -2739,6 +2752,9 @@ struct DispatchTable {
 #if (defined(VK_EXT_external_memory_metal))
         fp_vkGetMemoryMetalHandlePropertiesEXT = reinterpret_cast<PFN_vkGetMemoryMetalHandlePropertiesEXT>(procAddr(device, "vkGetMemoryMetalHandlePropertiesEXT"));
 #endif
+#if (defined(VK_OHOS_external_memory))
+        fp_vkGetMemoryNativeBufferOHOS = reinterpret_cast<PFN_vkGetMemoryNativeBufferOHOS>(procAddr(device, "vkGetMemoryNativeBufferOHOS"));
+#endif
 #if (defined(VK_NV_external_memory_rdma))
         fp_vkGetMemoryRemoteAddressNV = reinterpret_cast<PFN_vkGetMemoryRemoteAddressNV>(procAddr(device, "vkGetMemoryRemoteAddressNV"));
 #endif
@@ -2759,6 +2775,9 @@ struct DispatchTable {
 #endif
 #if (defined(VK_EXT_opacity_micromap))
         fp_vkGetMicromapBuildSizesEXT = reinterpret_cast<PFN_vkGetMicromapBuildSizesEXT>(procAddr(device, "vkGetMicromapBuildSizesEXT"));
+#endif
+#if (defined(VK_OHOS_external_memory))
+        fp_vkGetNativeBufferPropertiesOHOS = reinterpret_cast<PFN_vkGetNativeBufferPropertiesOHOS>(procAddr(device, "vkGetNativeBufferPropertiesOHOS"));
 #endif
 #if (defined(VK_NV_partitioned_acceleration_structure))
         fp_vkGetPartitionedAccelerationStructuresBuildSizesNV = reinterpret_cast<PFN_vkGetPartitionedAccelerationStructuresBuildSizesNV>(procAddr(device, "vkGetPartitionedAccelerationStructuresBuildSizesNV"));
@@ -5498,6 +5517,11 @@ struct DispatchTable {
         return fp_vkGetMemoryMetalHandlePropertiesEXT(device, handleType, pHandle, pMemoryMetalHandleProperties);
     }
 #endif
+#if (defined(VK_OHOS_external_memory))
+    VkResult getMemoryNativeBufferOHOS(const VkMemoryGetNativeBufferInfoOHOS* pInfo, struct OH_NativeBuffer** pBuffer) const noexcept {
+        return fp_vkGetMemoryNativeBufferOHOS(device, pInfo, pBuffer);
+    }
+#endif
 #if (defined(VK_NV_external_memory_rdma))
     VkResult getMemoryRemoteAddressNV(const VkMemoryGetRemoteAddressInfoNV* pMemoryGetRemoteAddressInfo, VkRemoteAddressNV* pAddress) const noexcept {
         return fp_vkGetMemoryRemoteAddressNV(device, pMemoryGetRemoteAddressInfo, pAddress);
@@ -5531,6 +5555,11 @@ struct DispatchTable {
 #if (defined(VK_EXT_opacity_micromap))
     void getMicromapBuildSizesEXT(VkAccelerationStructureBuildTypeKHR buildType, const VkMicromapBuildInfoEXT* pBuildInfo, VkMicromapBuildSizesInfoEXT* pSizeInfo) const noexcept {
         fp_vkGetMicromapBuildSizesEXT(device, buildType, pBuildInfo, pSizeInfo);
+    }
+#endif
+#if (defined(VK_OHOS_external_memory))
+    VkResult getNativeBufferPropertiesOHOS(const struct OH_NativeBuffer* buffer, VkNativeBufferPropertiesOHOS* pProperties) const noexcept {
+        return fp_vkGetNativeBufferPropertiesOHOS(device, buffer, pProperties);
     }
 #endif
 #if (defined(VK_NV_partitioned_acceleration_structure))
@@ -8308,6 +8337,11 @@ struct DispatchTable {
 #else
     void * fp_vkGetMemoryMetalHandlePropertiesEXT{};
 #endif
+#if (defined(VK_OHOS_external_memory))
+    PFN_vkGetMemoryNativeBufferOHOS fp_vkGetMemoryNativeBufferOHOS = nullptr;
+#else
+    void * fp_vkGetMemoryNativeBufferOHOS{};
+#endif
 #if (defined(VK_NV_external_memory_rdma))
     PFN_vkGetMemoryRemoteAddressNV fp_vkGetMemoryRemoteAddressNV = nullptr;
 #else
@@ -8342,6 +8376,11 @@ struct DispatchTable {
     PFN_vkGetMicromapBuildSizesEXT fp_vkGetMicromapBuildSizesEXT = nullptr;
 #else
     void * fp_vkGetMicromapBuildSizesEXT{};
+#endif
+#if (defined(VK_OHOS_external_memory))
+    PFN_vkGetNativeBufferPropertiesOHOS fp_vkGetNativeBufferPropertiesOHOS = nullptr;
+#else
+    void * fp_vkGetNativeBufferPropertiesOHOS{};
 #endif
 #if (defined(VK_NV_partitioned_acceleration_structure))
     PFN_vkGetPartitionedAccelerationStructuresBuildSizesNV fp_vkGetPartitionedAccelerationStructuresBuildSizesNV = nullptr;

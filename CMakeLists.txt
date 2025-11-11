@@ -7,6 +7,9 @@ project(VulkanBootstrap
     DESCRIPTION "A Vulkan utility library to ease the initialization steps in Vulkan"
     VERSION ${VK_BOOTSTRAP_SOURCE_HEADER_VERSION})
 
+# Occasionally Options DO NOT WORK since they don't get updated in the cached cmake files
+# To fix this, you need to fully reload cmake by destroying the cache and reloading it
+
 option(VK_BOOTSTRAP_DISABLE_WARNINGS "Disable warnings during compilation" OFF)
 option(VK_BOOTSTRAP_WERROR "Enable warnings as errors during compilation" OFF)
 
@@ -14,6 +17,9 @@ option(VK_BOOTSTRAP_TEST "Test Vk-Bootstrap using Catch2 as well as build exampl
 option(VK_BOOTSTRAP_INSTALL "Enable installing of vk-bootstrap" ${PROJECT_IS_TOP_LEVEL})
 
 option(VK_BOOTSTRAP_FORCE_FETCH_CONTENT "Forces Vulkan-Headers to be acquired using Fetch Content")
+
+option(VK_BOOTSTRAP_SHARED "Compile Vk Bootstrap as a Shared Library" OFF)
+
 set(VK_BOOTSTRAP_VULKAN_HEADER_DIR "" CACHE FILEPATH "Specify the location of the Vulkan-Headers include directory.")
 mark_as_advanced(VK_BOOTSTRAP_VULKAN_HEADER_DIR)
 
@@ -87,8 +93,16 @@ if(NOT VK_BOOTSTRAP_DISABLE_WARNINGS)
     endif()
 endif()
 
-add_library(vk-bootstrap STATIC src/VkBootstrap.h src/VkBootstrap.cpp src/VkBootstrapDispatch.h src/VkBootstrapFeatureChain.h src/VkBootstrapFeatureChain.inl)
-add_library(vk-bootstrap::vk-bootstrap ALIAS vk-bootstrap)
+if(VK_BOOTSTRAP_SHARED)
+    add_library(vk-bootstrap SHARED src/VkBootstrap.h src/VkBootstrap.cpp src/VkBootstrapDispatch.h src/VkBootstrapFeatureChain.h src/VkBootstrapFeatureChain.inl)
+    add_library(vk-bootstrap::vk-bootstrap ALIAS vk-bootstrap)
+
+    # Tell Code that we are a shared library
+    target_compile_definitions(vk-bootstrap PUBLIC VK_SHARED)
+else()
+    add_library(vk-bootstrap STATIC src/VkBootstrap.h src/VkBootstrap.cpp src/VkBootstrapDispatch.h src/VkBootstrapFeatureChain.h src/VkBootstrapFeatureChain.inl)
+    add_library(vk-bootstrap::vk-bootstrap ALIAS vk-bootstrap)
+endif()
 
 target_include_directories(vk-bootstrap PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>

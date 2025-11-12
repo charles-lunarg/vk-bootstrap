@@ -47,3 +47,11 @@ configure_file (
     "${PROJECT_SOURCE_DIR}/example/example_config.h.in"
     "${CMAKE_CURRENT_BINARY_DIR}/example_config.h"
 )
+
+
+
+add_library(shared_library_usage SHARED shared_library_usage.cpp)
+target_link_libraries(shared_library_usage vk-bootstrap::vk-bootstrap)
+
+add_executable(shared_library_test shared_library_test.cpp)
+target_link_libraries(shared_library_test shared_library_usage vk-bootstrap::vk-bootstrap)

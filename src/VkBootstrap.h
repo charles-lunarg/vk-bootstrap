@@ -181,6 +181,158 @@ class FeaturesChain {
     std::vector<void*> get_pNext_chain_members();
 };
 
+struct GlobalVulkanFunctions {
+    PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr = nullptr;
+    PFN_vkEnumerateInstanceExtensionProperties fp_vkEnumerateInstanceExtensionProperties = nullptr;
+    PFN_vkEnumerateInstanceLayerProperties fp_vkEnumerateInstanceLayerProperties = nullptr;
+    PFN_vkEnumerateInstanceVersion fp_vkEnumerateInstanceVersion = nullptr;
+    PFN_vkCreateInstance fp_vkCreateInstance = nullptr;
+
+    explicit GlobalVulkanFunctions(PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr);
+
+    template <typename T> void get_proc_addr(T& out_ptr, const char* func_name) {
+        out_ptr = reinterpret_cast<T>(fp_vkGetInstanceProcAddr(VK_NULL_HANDLE, func_name));
+    }
+};
+
+struct InstanceFunctions {
+    InstanceFunctions() = default;
+    explicit InstanceFunctions(VkInstance instance, PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr);
+
+    template <typename T> void get_inst_proc_addr(T& out_ptr, const char* func_name) {
+        out_ptr = reinterpret_cast<T>(fp_vkGetInstanceProcAddr(instance, func_name));
+    }
+    VkInstance instance = nullptr;
+    PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr = nullptr;
+    PFN_vkDestroyDebugUtilsMessengerEXT fp_vkDestroyDebugUtilsMessengerEXT = nullptr;
+    PFN_vkDestroySurfaceKHR fp_vkDestroySurfaceKHR = nullptr;
+    PFN_vkDestroyInstance fp_vkDestroyInstance = nullptr;
+};
+
+
+struct PhysicalDeviceSelectorFunctions {
+    PhysicalDeviceSelectorFunctions() = default;
+    explicit PhysicalDeviceSelectorFunctions(VkInstance instance, PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr);
+
+    template <typename T> void get_inst_proc_addr(T& out_ptr, const char* func_name) {
+        out_ptr = reinterpret_cast<T>(fp_vkGetInstanceProcAddr(instance, func_name));
+    }
+
+    VkInstance instance = nullptr;
+    PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr = nullptr;
+
+    PFN_vkEnumeratePhysicalDevices fp_vkEnumeratePhysicalDevices = nullptr;
+    PFN_vkGetPhysicalDeviceFeatures fp_vkGetPhysicalDeviceFeatures = nullptr;
+    PFN_vkGetPhysicalDeviceFeatures2 fp_vkGetPhysicalDeviceFeatures2 = nullptr;
+    PFN_vkGetPhysicalDeviceFeatures2KHR fp_vkGetPhysicalDeviceFeatures2KHR = nullptr;
+    PFN_vkGetPhysicalDeviceProperties fp_vkGetPhysicalDeviceProperties = nullptr;
+    PFN_vkGetPhysicalDeviceQueueFamilyProperties fp_vkGetPhysicalDeviceQueueFamilyProperties = nullptr;
+    PFN_vkGetPhysicalDeviceMemoryProperties fp_vkGetPhysicalDeviceMemoryProperties = nullptr;
+    PFN_vkEnumerateDeviceExtensionProperties fp_vkEnumerateDeviceExtensionProperties = nullptr;
+
+    PFN_vkGetPhysicalDeviceSurfaceSupportKHR fp_vkGetPhysicalDeviceSurfaceSupportKHR = nullptr;
+    PFN_vkGetPhysicalDeviceSurfaceFormatsKHR fp_vkGetPhysicalDeviceSurfaceFormatsKHR = nullptr;
+    PFN_vkGetPhysicalDeviceSurfacePresentModesKHR fp_vkGetPhysicalDeviceSurfacePresentModesKHR = nullptr;
+    PFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR fp_vkGetPhysicalDeviceSurfaceCapabilitiesKHR = nullptr;
+};
+
+struct PhysicalDeviceFunctions {
+    PhysicalDeviceFunctions() = default;
+    explicit PhysicalDeviceFunctions(PhysicalDeviceSelectorFunctions const& physical_device_selector_functions);
+
+    template <typename T> void get_inst_proc_addr(T& out_ptr, const char* func_name) {
+        out_ptr = reinterpret_cast<T>(fp_vkGetInstanceProcAddr(instance, func_name));
+    }
+
+    VkInstance instance = nullptr;
+    PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr = nullptr;
+
+    PFN_vkGetPhysicalDeviceFeatures fp_vkGetPhysicalDeviceFeatures = nullptr;
+    PFN_vkGetPhysicalDeviceFeatures2 fp_vkGetPhysicalDeviceFeatures2 = nullptr;
+    PFN_vkGetPhysicalDeviceFeatures2KHR fp_vkGetPhysicalDeviceFeatures2KHR = nullptr;
+
+    PFN_vkCreateDevice fp_vkCreateDevice = nullptr;
+    PFN_vkGetDeviceProcAddr fp_vkGetDeviceProcAddr = nullptr;
+};
+
+struct DeviceBuilderFunctions {
+    DeviceBuilderFunctions() = default;
+
+    explicit DeviceBuilderFunctions(PhysicalDeviceFunctions const& physical_device_functions);
+
+    template <typename T> void get_inst_proc_addr(T& out_ptr, const char* func_name) {
+        out_ptr = reinterpret_cast<T>(fp_vkGetInstanceProcAddr(instance, func_name));
+    }
+
+    VkInstance instance = nullptr;
+    PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr = nullptr;
+    PFN_vkGetDeviceProcAddr fp_vkGetDeviceProcAddr = nullptr;
+    PFN_vkGetPhysicalDeviceSurfaceSupportKHR fp_vkGetPhysicalDeviceSurfaceSupportKHR = nullptr;
+
+    PFN_vkCreateDevice fp_vkCreateDevice = nullptr;
+};
+
+struct DeviceFunctions {
+    DeviceFunctions() = default;
+
+    explicit DeviceFunctions(DeviceBuilderFunctions const& device_builder_functions, VkDevice device);
+
+    template <typename T> void get_inst_proc_addr(T& out_ptr, const char* func_name) {
+        out_ptr = reinterpret_cast<T>(fp_vkGetInstanceProcAddr(instance, func_name));
+    }
+
+    template <typename T> void get_device_proc_addr(T& out_ptr, const char* func_name) {
+        out_ptr = reinterpret_cast<T>(fp_vkGetDeviceProcAddr(device, func_name));
+    }
+
+    VkInstance instance = nullptr;
+    PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr = nullptr;
+    VkDevice device = nullptr;
+    PFN_vkGetDeviceProcAddr fp_vkGetDeviceProcAddr = nullptr;
+    PFN_vkGetPhysicalDeviceSurfaceSupportKHR fp_vkGetPhysicalDeviceSurfaceSupportKHR = nullptr;
+    PFN_vkGetDeviceQueue fp_vkGetDeviceQueue = nullptr;
+    PFN_vkDestroyDevice fp_vkDestroyDevice = nullptr;
+};
+struct SwapchainBuilderFunctions {
+    SwapchainBuilderFunctions() = default;
+
+    explicit SwapchainBuilderFunctions(DeviceFunctions const& device_functions);
+    explicit SwapchainBuilderFunctions(VkInstance const instance, VkDevice const device);
+
+    template <typename T> void get_inst_proc_addr(T& out_ptr, const char* func_name) {
+        out_ptr = reinterpret_cast<T>(fp_vkGetInstanceProcAddr(instance, func_name));
+    }
+    template <typename T> void get_device_proc_addr(T& out_ptr, const char* func_name) {
+        out_ptr = reinterpret_cast<T>(fp_vkGetDeviceProcAddr(device, func_name));
+    }
+
+    VkInstance instance = nullptr;
+    PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr = nullptr;
+    VkDevice device = nullptr;
+    PFN_vkGetDeviceProcAddr fp_vkGetDeviceProcAddr = nullptr;
+    PFN_vkGetPhysicalDeviceSurfaceSupportKHR fp_vkGetPhysicalDeviceSurfaceSupportKHR = nullptr;
+    PFN_vkGetPhysicalDeviceSurfaceFormatsKHR fp_vkGetPhysicalDeviceSurfaceFormatsKHR = nullptr;
+    PFN_vkGetPhysicalDeviceSurfacePresentModesKHR fp_vkGetPhysicalDeviceSurfacePresentModesKHR = nullptr;
+    PFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR fp_vkGetPhysicalDeviceSurfaceCapabilitiesKHR = nullptr;
+    PFN_vkGetPhysicalDeviceQueueFamilyProperties fp_vkGetPhysicalDeviceQueueFamilyProperties = nullptr;
+    PFN_vkCreateSwapchainKHR fp_vkCreateSwapchainKHR = nullptr;
+};
+struct SwapchainFunctions {
+    SwapchainFunctions() = default;
+
+    explicit SwapchainFunctions(SwapchainBuilderFunctions const& swapchain_builder_functions);
+    template <typename T> void get_device_proc_addr(T& out_ptr, const char* func_name) {
+        out_ptr = reinterpret_cast<T>(fp_vkGetDeviceProcAddr(device, func_name));
+    }
+
+    VkDevice device = nullptr;
+    PFN_vkGetDeviceProcAddr fp_vkGetDeviceProcAddr = nullptr;
+    PFN_vkGetSwapchainImagesKHR fp_vkGetSwapchainImagesKHR = nullptr;
+    PFN_vkCreateImageView fp_vkCreateImageView = nullptr;
+    PFN_vkDestroyImageView fp_vkDestroyImageView = nullptr;
+    PFN_vkDestroySwapchainKHR fp_vkDestroySwapchainKHR = nullptr;
+};
+
 } // namespace detail
 
 enum class InstanceError {
@@ -239,12 +391,14 @@ const char* to_string(QueueError err);
 const char* to_string(DeviceError err);
 const char* to_string(SwapchainError err);
 
+class InstanceBuilder;
+
 // Gathers useful information about the available vulkan capabilities, like layers and instance
 // extensions. Use this for enabling features conditionally, ie if you would like an extension but
 // can use a fallback if it isn't supported but need to know if support is available first.
 struct SystemInfo {
     private:
-    SystemInfo();
+    SystemInfo(PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr);
 
     public:
     // Use get_system_info to create a SystemInfo struct. This is because loading vulkan could fail.
@@ -267,6 +421,10 @@ struct SystemInfo {
     bool debug_utils_available = false;
 
     uint32_t instance_api_version = VKB_VK_API_VERSION_1_0;
+
+    private:
+    friend class InstanceBuilder;
+    detail::GlobalVulkanFunctions functions;
 };
 
 // Forward declared - check VkBoostrap.cpp for implementations
@@ -311,9 +469,13 @@ struct Instance {
     // Return a loaded instance dispatch table
     InstanceDispatchTable make_table() const;
 
+    void destroy_surface(VkSurfaceKHR surface) const; // release surface handle
+    void destroy_instance() const;                    // release this instances resources
+
     private:
     bool headless = false;
     bool properties2_ext_enabled = false;
+    detail::InstanceFunctions functions;
 
     friend class InstanceBuilder;
     friend class PhysicalDeviceSelector;
@@ -579,6 +741,9 @@ struct PhysicalDevice {
     bool properties2_ext_enabled = false;
     enum class Suitable { yes, partial, no };
     Suitable suitable = Suitable::yes;
+
+    detail::PhysicalDeviceFunctions functions;
+
     friend class PhysicalDeviceSelector;
     friend class DeviceBuilder;
 
@@ -693,6 +858,8 @@ class PhysicalDeviceSelector {
     PhysicalDeviceSelector& select_first_device_unconditionally(bool unconditionally = true);
 
     private:
+    detail::PhysicalDeviceSelectorFunctions functions;
+
     struct InstanceInfo {
         VkInstance instance = VK_NULL_HANDLE;
         VkSurfaceKHR surface = VK_NULL_HANDLE;
@@ -742,6 +909,8 @@ namespace detail {
 inline const uint32_t QUEUE_INDEX_MAX_VALUE = UINT32_MAX;
 } // namespace detail
 
+class SwapchainBuilder;
+
 // ---- Device ---- //
 
 struct Device {
@@ -752,6 +921,8 @@ struct Device {
     VkAllocationCallbacks* allocation_callbacks = nullptr;
     PFN_vkGetDeviceProcAddr fp_vkGetDeviceProcAddr = nullptr;
     uint32_t instance_version = VKB_VK_API_VERSION_1_0;
+
+    void destroy_device() const;
 
     Result<uint32_t> get_queue_index(QueueType type) const;
     // Only a compute or transfer queue type is valid. All other queue types do not support a 'dedicated' queue index
@@ -769,11 +940,9 @@ struct Device {
     operator VkDevice() const;
 
     private:
-    struct {
-        PFN_vkGetDeviceQueue fp_vkGetDeviceQueue = nullptr;
-        PFN_vkDestroyDevice fp_vkDestroyDevice = nullptr;
-    } internal_table;
+    detail::DeviceFunctions functions;
     friend class DeviceBuilder;
+    friend class SwapchainBuilder;
     friend void destroy_device(Device const& device);
 };
 
@@ -828,11 +997,13 @@ class DeviceBuilder {
 
     private:
     PhysicalDevice physical_device;
+    detail::DeviceBuilderFunctions functions;
     struct DeviceInfo {
         VkDeviceCreateFlags flags = static_cast<VkDeviceCreateFlags>(0);
         std::vector<void*> pNext_chain;
         std::vector<CustomQueueDescription> queue_descriptions;
         VkAllocationCallbacks* allocation_callbacks = nullptr;
+
     } info;
 };
 
@@ -870,12 +1041,8 @@ struct Swapchain {
     operator VkSwapchainKHR() const;
 
     private:
-    struct {
-        PFN_vkGetSwapchainImagesKHR fp_vkGetSwapchainImagesKHR = nullptr;
-        PFN_vkCreateImageView fp_vkCreateImageView = nullptr;
-        PFN_vkDestroyImageView fp_vkDestroyImageView = nullptr;
-        PFN_vkDestroySwapchainKHR fp_vkDestroySwapchainKHR = nullptr;
-    } internal_table;
+    detail::SwapchainFunctions functions;
+
     friend class SwapchainBuilder;
     friend void destroy_swapchain(Swapchain const& swapchain);
 };
@@ -891,7 +1058,8 @@ class SwapchainBuilder {
     // Construct a SwapchainBuilder with Vulkan handles for the physical device, device, and surface
     // Optionally can provide the uint32_t indices for the graphics and present queue
     // Note: The constructor will query the graphics & present queue if the indices are not provided
-    explicit SwapchainBuilder(VkPhysicalDevice const physical_device,
+    explicit SwapchainBuilder(VkInstance const instance,
+        VkPhysicalDevice const physical_device,
         VkDevice const device,
         VkSurfaceKHR const surface,
         uint32_t graphics_queue_index = detail::QUEUE_INDEX_MAX_VALUE,
@@ -1012,6 +1180,7 @@ class SwapchainBuilder {
         bool clipped = true;
         VkSwapchainKHR old_swapchain = VK_NULL_HANDLE;
         VkAllocationCallbacks* allocation_callbacks = nullptr;
+        detail::SwapchainBuilderFunctions functions;
     } info;
 };
 

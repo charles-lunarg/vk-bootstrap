@@ -93,15 +93,12 @@ if(NOT VK_BOOTSTRAP_DISABLE_WARNINGS)
     endif()
 endif()
 
-if(VK_BOOTSTRAP_SHARED)
-    add_library(vk-bootstrap SHARED src/VkBootstrap.h src/VkBootstrap.cpp src/VkBootstrapDispatch.h src/VkBootstrapFeatureChain.h src/VkBootstrapFeatureChain.inl)
-    add_library(vk-bootstrap::vk-bootstrap ALIAS vk-bootstrap)
+add_library(vk-bootstrap src/VkBootstrap.h src/VkBootstrap.cpp src/VkBootstrapDispatch.h src/VkBootstrapFeatureChain.h src/VkBootstrapFeatureChain.inl)
+add_library(vk-bootstrap::vk-bootstrap ALIAS vk-bootstrap)
 
-    # Tell Code that we are a shared library
-    target_compile_definitions(vk-bootstrap PUBLIC VK_SHARED)
-else()
-    add_library(vk-bootstrap STATIC src/VkBootstrap.h src/VkBootstrap.cpp src/VkBootstrapDispatch.h src/VkBootstrapFeatureChain.h src/VkBootstrapFeatureChain.inl)
-    add_library(vk-bootstrap::vk-bootstrap ALIAS vk-bootstrap)
+# Tell Code that we are a shared library
+if (BUILD_SHARED_LIBS)
+        target_compile_definitions(vk-bootstrap PUBLIC VK_SHARED)
 endif()
 
 target_include_directories(vk-bootstrap PUBLIC

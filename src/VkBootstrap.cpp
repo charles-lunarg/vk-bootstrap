@@ -182,10 +182,13 @@ struct VulkanLibrary {
 #endif
         library = nullptr;
     }
+    ~VulkanLibrary() {
+        unload_vulkan_library();
+    }
 };
 
-GlobalVulkanFunctions::GlobalVulkanFunctions(PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr)
-: fp_vkGetInstanceProcAddr(fp_vkGetInstanceProcAddr) {
+GlobalVulkanFunctions::GlobalVulkanFunctions(PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr, std::shared_ptr<VulkanLibrary> vk_library)
+: vk_library(vk_library), fp_vkGetInstanceProcAddr(fp_vkGetInstanceProcAddr) {
 
     get_proc_addr(fp_vkEnumerateInstanceExtensionProperties, "vkEnumerateInstanceExtensionProperties");
     get_proc_addr(fp_vkEnumerateInstanceLayerProperties, "vkEnumerateInstanceLayerProperties");
@@ -193,8 +196,8 @@ GlobalVulkanFunctions::GlobalVulkanFunctions(PFN_vkGetInstanceProcAddr fp_vkGetI
     get_proc_addr(fp_vkCreateInstance, "vkCreateInstance");
 }
 
-InstanceFunctions::InstanceFunctions(VkInstance instance, PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr)
-: instance(instance), fp_vkGetInstanceProcAddr(fp_vkGetInstanceProcAddr) {
+InstanceFunctions::InstanceFunctions(VkInstance instance, PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr, std::shared_ptr<VulkanLibrary> vk_library)
+: vk_library(vk_library), instance(instance), fp_vkGetInstanceProcAddr(fp_vkGetInstanceProcAddr) {
 
     get_inst_proc_addr(fp_vkDestroyDebugUtilsMessengerEXT, "vkDestroyDebugUtilsMessengerEXT");
     get_inst_proc_addr(fp_vkDestroySurfaceKHR, "vkDestroySurfaceKHR");
@@ -202,8 +205,8 @@ InstanceFunctions::InstanceFunctions(VkInstance instance, PFN_vkGetInstanceProcA
 }
 
 
-PhysicalDeviceSelectorFunctions::PhysicalDeviceSelectorFunctions(VkInstance instance, PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr)
-: instance(instance), fp_vkGetInstanceProcAddr(fp_vkGetInstanceProcAddr) {
+PhysicalDeviceSelectorFunctions::PhysicalDeviceSelectorFunctions(VkInstance instance, PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr, std::shared_ptr<VulkanLibrary> vk_library)
+: vk_library(vk_library), instance(instance), fp_vkGetInstanceProcAddr(fp_vkGetInstanceProcAddr) {
     get_inst_proc_addr(fp_vkEnumeratePhysicalDevices, "vkEnumeratePhysicalDevices");
     get_inst_proc_addr(fp_vkGetPhysicalDeviceFeatures, "vkGetPhysicalDeviceFeatures");
     get_inst_proc_addr(fp_vkGetPhysicalDeviceFeatures2, "vkGetPhysicalDeviceFeatures2");
@@ -219,7 +222,7 @@ PhysicalDeviceSelectorFunctions::PhysicalDeviceSelectorFunctions(VkInstance inst
 }
 
 PhysicalDeviceFunctions::PhysicalDeviceFunctions(PhysicalDeviceSelectorFunctions const& physical_device_selector_functions)
-: instance(physical_device_selector_functions.instance),
+: vk_library(physical_device_selector_functions.vk_library), instance(physical_device_selector_functions.instance),
   fp_vkGetInstanceProcAddr(physical_device_selector_functions.fp_vkGetInstanceProcAddr),
 
   fp_vkGetPhysicalDeviceFeatures(physical_device_selector_functions.fp_vkGetPhysicalDeviceFeatures),
@@ -239,7 +242,7 @@ DeviceBuilderFunctions::DeviceBuilderFunctions(PhysicalDeviceFunctions const& ph
 }
 
 DeviceFunctions::DeviceFunctions(DeviceBuilderFunctions const& device_builder_functions, VkDevice device)
-: instance(device_builder_functions.instance),
+: vk_library(device_builder_functions.vk_library), instance(device_builder_functions.instance),
   fp_vkGetInstanceProcAddr(device_builder_functions.fp_vkGetInstanceProcAddr),
   device(device),
   fp_vkGetDeviceProcAddr(device_builder_functions.fp_vkGetDeviceProcAddr),
@@ -251,7 +254,7 @@ DeviceFunctions::DeviceFunctions(DeviceBuilderFunctions const& device_builder_fu
 }
 
 SwapchainBuilderFunctions::SwapchainBuilderFunctions(DeviceFunctions const& device_functions)
-: instance(device_functions.instance),
+: vk_library(device_functions.vk_library), instance(device_functions.instance),
   fp_vkGetInstanceProcAddr(device_functions.fp_vkGetInstanceProcAddr),
   device(device_functions.device),
   fp_vkGetDeviceProcAddr(device_functions.fp_vkGetDeviceProcAddr) {
@@ -264,11 +267,10 @@ SwapchainBuilderFunctions::SwapchainBuilderFunctions(DeviceFunctions const& devi
     get_device_proc_addr(fp_vkCreateSwapchainKHR, "vkCreateSwapchainKHR");
 }
 SwapchainBuilderFunctions::SwapchainBuilderFunctions(VkInstance const instance, VkDevice const device)
-: instance(instance), device(device) {
-    VulkanLibrary vk_library;
-    fp_vkGetInstanceProcAddr = vk_library.fp_vkGetInstanceProcAddr;
+: vk_library(std::make_shared<VulkanLibrary>()), instance(instance), device(device) {
+    fp_vkGetInstanceProcAddr = vk_library->fp_vkGetInstanceProcAddr;
     fp_vkGetDeviceProcAddr =
-        reinterpret_cast<PFN_vkGetDeviceProcAddr>(vk_library.fp_vkGetInstanceProcAddr(instance, "vkGetDeviceProcAddr"));
+        reinterpret_cast<PFN_vkGetDeviceProcAddr>(vk_library->fp_vkGetInstanceProcAddr(instance, "vkGetDeviceProcAddr"));
     get_inst_proc_addr(fp_vkGetPhysicalDeviceSurfaceSupportKHR, "vkGetPhysicalDeviceSurfaceSupportKHR");
     get_inst_proc_addr(fp_vkGetPhysicalDeviceSurfaceFormatsKHR, "vkGetPhysicalDeviceSurfaceFormatsKHR");
     get_inst_proc_addr(fp_vkGetPhysicalDeviceSurfacePresentModesKHR, "vkGetPhysicalDeviceSurfacePresentModesKHR");
@@ -551,20 +553,20 @@ const char* to_string(SwapchainError err) {
 }
 
 Result<SystemInfo> SystemInfo::get_system_info() {
-    detail::VulkanLibrary vk_library;
-    auto fp_vkGetInstanceProcAddr = vk_library.fp_vkGetInstanceProcAddr;
+    std::shared_ptr<detail::VulkanLibrary> vk_library = std::make_shared<detail::VulkanLibrary>();
+    auto fp_vkGetInstanceProcAddr = vk_library->fp_vkGetInstanceProcAddr;
     if (nullptr == fp_vkGetInstanceProcAddr) {
         return make_error_code(InstanceError::vulkan_unavailable);
     }
-    return SystemInfo(fp_vkGetInstanceProcAddr);
+    return SystemInfo(fp_vkGetInstanceProcAddr, vk_library);
 }
 
-Result<SystemInfo> SystemInfo::get_system_info(PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr) {
+Result<SystemInfo> SystemInfo::get_system_info(PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr, std::shared_ptr<detail::VulkanLibrary> vk_library) {
     // Using externally provided function pointers, assume the loader is available
-    return SystemInfo(fp_vkGetInstanceProcAddr);
+    return SystemInfo(fp_vkGetInstanceProcAddr, vk_library);
 }
 
-SystemInfo::SystemInfo(PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr) : functions(fp_vkGetInstanceProcAddr) {
+SystemInfo::SystemInfo(PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr, std::shared_ptr<detail::VulkanLibrary> vk_library) : functions(fp_vkGetInstanceProcAddr, vk_library) {
     auto available_layers_ret =
         detail::get_vector<VkLayerProperties>(this->available_layers, functions.fp_vkEnumerateInstanceLayerProperties);
     if (available_layers_ret != VK_SUCCESS) {
@@ -624,9 +626,9 @@ bool SystemInfo::is_instance_version_available(uint32_t api_version) { return in
 void destroy_surface(Instance const& instance, VkSurfaceKHR surface) { instance.destroy_surface(surface); }
 void destroy_surface(VkInstance instance, VkSurfaceKHR surface, VkAllocationCallbacks* callbacks) {
     if (instance != VK_NULL_HANDLE && surface != VK_NULL_HANDLE) {
-        detail::VulkanLibrary vk_library;
+        std::shared_ptr<detail::VulkanLibrary> vk_library = std::make_shared<detail::VulkanLibrary>();
         PFN_vkDestroySurfaceKHR fp_vkDestroySurfaceKHR =
-            reinterpret_cast<PFN_vkDestroySurfaceKHR>(vk_library.fp_vkGetInstanceProcAddr(instance, "vkDestroySurfaceKHR"));
+            reinterpret_cast<PFN_vkDestroySurfaceKHR>(vk_library->fp_vkGetInstanceProcAddr(instance, "vkDestroySurfaceKHR"));
         fp_vkDestroySurfaceKHR(instance, surface, callbacks);
     }
 }
@@ -659,12 +661,12 @@ InstanceBuilder::InstanceBuilder(PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcA
 
 Result<Instance> InstanceBuilder::build() const {
     auto fp_vkGetInstanceProcAddr = info.fp_vkGetInstanceProcAddr;
+    std::shared_ptr<detail::VulkanLibrary> vk_library = std::make_shared<detail::VulkanLibrary>();
     if (fp_vkGetInstanceProcAddr == nullptr) {
-        detail::VulkanLibrary library;
-        fp_vkGetInstanceProcAddr = library.fp_vkGetInstanceProcAddr;
+        fp_vkGetInstanceProcAddr = vk_library->fp_vkGetInstanceProcAddr;
     }
 
-    auto sys_info_ret = SystemInfo::get_system_info(fp_vkGetInstanceProcAddr);
+    auto sys_info_ret = SystemInfo::get_system_info(fp_vkGetInstanceProcAddr, vk_library);
     if (!sys_info_ret) return sys_info_ret.error();
     auto system = sys_info_ret.value();
 
@@ -856,7 +858,7 @@ Result<Instance> InstanceBuilder::build() const {
     instance.allocation_callbacks = info.allocation_callbacks;
     instance.instance_version = instance_version;
     instance.api_version = api_version;
-    instance.functions = detail::InstanceFunctions(instance.instance, fp_vkGetInstanceProcAddr);
+    instance.functions = detail::InstanceFunctions(instance.instance, fp_vkGetInstanceProcAddr, vk_library);
     instance.fp_vkGetInstanceProcAddr = instance.functions.fp_vkGetInstanceProcAddr;
     instance.functions.get_inst_proc_addr(instance.fp_vkGetDeviceProcAddr, "vkGetDeviceProcAddr");
     return instance;
@@ -1224,7 +1226,7 @@ PhysicalDeviceSelector::PhysicalDeviceSelector(Instance const& instance)
 : PhysicalDeviceSelector(instance, VK_NULL_HANDLE) {}
 
 PhysicalDeviceSelector::PhysicalDeviceSelector(Instance const& instance, VkSurfaceKHR surface)
-: functions(instance.instance, instance.functions.fp_vkGetInstanceProcAddr) {
+: functions(instance.instance, instance.functions.fp_vkGetInstanceProcAddr, instance.functions.vk_library) {
     instance_info.instance = instance.instance;
     instance_info.version = instance.instance_version;
     instance_info.properties2_ext_enabled = instance.properties2_ext_enabled;

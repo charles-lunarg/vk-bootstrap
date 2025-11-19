@@ -37,6 +37,7 @@
 #include <string>
 #include <system_error>
 #include <variant>
+#include <memory>
 
 #include <vulkan/vulkan_core.h>
 
@@ -70,6 +71,10 @@
 #endif
 
 namespace vkb {
+
+namespace detail {
+struct VulkanLibrary;
+}
 
 // Currently GCC's maybe-uninitialized warning gets tripped when std::variant<> contains a std::vector<>, silence it for the meantime
 #if (defined(__GNUC__) || defined(__GNUG__)) && !defined(__clang__)
@@ -182,13 +187,14 @@ class FeaturesChain {
 };
 
 struct GlobalVulkanFunctions {
+    std::shared_ptr<VulkanLibrary> vk_library;
     PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr = nullptr;
     PFN_vkEnumerateInstanceExtensionProperties fp_vkEnumerateInstanceExtensionProperties = nullptr;
     PFN_vkEnumerateInstanceLayerProperties fp_vkEnumerateInstanceLayerProperties = nullptr;
     PFN_vkEnumerateInstanceVersion fp_vkEnumerateInstanceVersion = nullptr;
     PFN_vkCreateInstance fp_vkCreateInstance = nullptr;
 
-    explicit GlobalVulkanFunctions(PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr);
+    explicit GlobalVulkanFunctions(PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr, std::shared_ptr<VulkanLibrary> vk_library);
 
     template <typename T> void get_proc_addr(T& out_ptr, const char* func_name) {
         out_ptr = reinterpret_cast<T>(fp_vkGetInstanceProcAddr(VK_NULL_HANDLE, func_name));
@@ -197,11 +203,12 @@ struct GlobalVulkanFunctions {
 
 struct InstanceFunctions {
     InstanceFunctions() = default;
-    explicit InstanceFunctions(VkInstance instance, PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr);
+    explicit InstanceFunctions(VkInstance instance, PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr, std::shared_ptr<VulkanLibrary> vk_library);
 
     template <typename T> void get_inst_proc_addr(T& out_ptr, const char* func_name) {
         out_ptr = reinterpret_cast<T>(fp_vkGetInstanceProcAddr(instance, func_name));
     }
+    std::shared_ptr<VulkanLibrary> vk_library;
     VkInstance instance = nullptr;
     PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr = nullptr;
     PFN_vkDestroyDebugUtilsMessengerEXT fp_vkDestroyDebugUtilsMessengerEXT = nullptr;
@@ -212,12 +219,13 @@ struct InstanceFunctions {
 
 struct PhysicalDeviceSelectorFunctions {
     PhysicalDeviceSelectorFunctions() = default;
-    explicit PhysicalDeviceSelectorFunctions(VkInstance instance, PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr);
+    explicit PhysicalDeviceSelectorFunctions(VkInstance instance, PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr, std::shared_ptr<VulkanLibrary> vk_library);
 
     template <typename T> void get_inst_proc_addr(T& out_ptr, const char* func_name) {
         out_ptr = reinterpret_cast<T>(fp_vkGetInstanceProcAddr(instance, func_name));
     }
 
+    std::shared_ptr<VulkanLibrary> vk_library;
     VkInstance instance = nullptr;
     PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr = nullptr;
 
@@ -244,6 +252,7 @@ struct PhysicalDeviceFunctions {
         out_ptr = reinterpret_cast<T>(fp_vkGetInstanceProcAddr(instance, func_name));
     }
 
+    std::shared_ptr<VulkanLibrary> vk_library;
     VkInstance instance = nullptr;
     PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr = nullptr;
 
@@ -264,6 +273,7 @@ struct DeviceBuilderFunctions {
         out_ptr = reinterpret_cast<T>(fp_vkGetInstanceProcAddr(instance, func_name));
     }
 
+    std::shared_ptr<VulkanLibrary> vk_library;
     VkInstance instance = nullptr;
     PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr = nullptr;
     PFN_vkGetDeviceProcAddr fp_vkGetDeviceProcAddr = nullptr;
@@ -285,6 +295,7 @@ struct DeviceFunctions {
         out_ptr = reinterpret_cast<T>(fp_vkGetDeviceProcAddr(device, func_name));
     }
 
+    std::shared_ptr<VulkanLibrary> vk_library;
     VkInstance instance = nullptr;
     PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr = nullptr;
     VkDevice device = nullptr;
@@ -306,6 +317,7 @@ struct SwapchainBuilderFunctions {
         out_ptr = reinterpret_cast<T>(fp_vkGetDeviceProcAddr(device, func_name));
     }
 
+    std::shared_ptr<VulkanLibrary> vk_library;
     VkInstance instance = nullptr;
     PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr = nullptr;
     VkDevice device = nullptr;
@@ -398,12 +410,12 @@ class InstanceBuilder;
 // can use a fallback if it isn't supported but need to know if support is available first.
 struct SystemInfo {
     private:
-    SystemInfo(PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr);
+    SystemInfo(PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr, std::shared_ptr<detail::VulkanLibrary> vk_library);
 
     public:
     // Use get_system_info to create a SystemInfo struct. This is because loading vulkan could fail.
     static Result<SystemInfo> get_system_info();
-    static Result<SystemInfo> get_system_info(PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr);
+    static Result<SystemInfo> get_system_info(PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr, std::shared_ptr<detail::VulkanLibrary> vk_library = nullptr);
 
     // Returns true if a layer is available
     bool is_layer_available(const char* layer_name) const;

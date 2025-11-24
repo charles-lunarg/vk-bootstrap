@@ -39,7 +39,7 @@ jobs:
 
 
         steps:
-            - uses: actions/checkout@v5
+            - uses: actions/checkout@v6
             - uses: lukka/get-cmake@latest
               with:
                 cmakeVersion: 3.22
@@ -79,7 +79,7 @@ jobs:
                     cxx: g++
 
         steps:
-            - uses: actions/checkout@v5
+            - uses: actions/checkout@v6
             - uses: lukka/get-cmake@latest
               with:
                 cmakeVersion: 3.22
@@ -112,7 +112,7 @@ jobs:
                 type: [ Debug, Release ]
 
         steps:
-            - uses: actions/checkout@v5
+            - uses: actions/checkout@v6
             - uses: TheMrMilchmann/setup-msvc-dev@v4
               with:
                 arch: ${{matrix.arch}}
@@ -139,7 +139,7 @@ jobs:
                 cxx: ["clang++"]
 
         steps:
-            - uses: actions/checkout@v5
+            - uses: actions/checkout@v6
             - uses: lukka/get-cmake@latest
               with:
                 cmakeVersion: 3.22
@@ -174,7 +174,7 @@ jobs:
                 cxx: ["clang++"]
 
         steps:
-            - uses: actions/checkout@v5
+            - uses: actions/checkout@v6
             - uses: lukka/get-cmake@latest
               with:
                 cmakeVersion: 3.22

@@ -4479,6 +4479,16 @@ void merge_VkPhysicalDeviceImageAlignmentControlFeaturesMESA(VkPhysicalDeviceIma
     current.imageAlignmentControl = current.imageAlignmentControl || merge_in.imageAlignmentControl;
 }
 #endif //(defined(VK_MESA_image_alignment_control))
+#if (defined(VK_EXT_ray_tracing_invocation_reorder))
+void compare_VkPhysicalDeviceRayTracingInvocationReorderFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceRayTracingInvocationReorderFeaturesEXT const& supported, VkPhysicalDeviceRayTracingInvocationReorderFeaturesEXT const& requested) {
+    if (requested.rayTracingInvocationReorder && !supported.rayTracingInvocationReorder) {
+        error_list.push_back("Missing feature VkPhysicalDeviceRayTracingInvocationReorderFeaturesEXT::rayTracingInvocationReorder");
+    }
+}
+void merge_VkPhysicalDeviceRayTracingInvocationReorderFeaturesEXT(VkPhysicalDeviceRayTracingInvocationReorderFeaturesEXT & current, VkPhysicalDeviceRayTracingInvocationReorderFeaturesEXT const& merge_in) {
+    current.rayTracingInvocationReorder = current.rayTracingInvocationReorder || merge_in.rayTracingInvocationReorder;
+}
+#endif //(defined(VK_EXT_ray_tracing_invocation_reorder))
 #if (defined(VK_EXT_depth_clamp_control))
 void compare_VkPhysicalDeviceDepthClampControlFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceDepthClampControlFeaturesEXT const& supported, VkPhysicalDeviceDepthClampControlFeaturesEXT const& requested) {
     if (requested.depthClampControl && !supported.depthClampControl) {
@@ -4613,6 +4623,16 @@ void merge_VkPhysicalDeviceShader64BitIndexingFeaturesEXT(VkPhysicalDeviceShader
     current.shader64BitIndexing = current.shader64BitIndexing || merge_in.shader64BitIndexing;
 }
 #endif //(defined(VK_EXT_shader_64bit_indexing))
+#if (defined(VK_EXT_custom_resolve))
+void compare_VkPhysicalDeviceCustomResolveFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceCustomResolveFeaturesEXT const& supported, VkPhysicalDeviceCustomResolveFeaturesEXT const& requested) {
+    if (requested.customResolve && !supported.customResolve) {
+        error_list.push_back("Missing feature VkPhysicalDeviceCustomResolveFeaturesEXT::customResolve");
+    }
+}
+void merge_VkPhysicalDeviceCustomResolveFeaturesEXT(VkPhysicalDeviceCustomResolveFeaturesEXT & current, VkPhysicalDeviceCustomResolveFeaturesEXT const& merge_in) {
+    current.customResolve = current.customResolve || merge_in.customResolve;
+}
+#endif //(defined(VK_EXT_custom_resolve))
 #if (defined(VK_QCOM_data_graph_model))
 void compare_VkPhysicalDeviceDataGraphModelFeaturesQCOM(std::vector<std::string> & error_list, VkPhysicalDeviceDataGraphModelFeaturesQCOM const& supported, VkPhysicalDeviceDataGraphModelFeaturesQCOM const& requested) {
     if (requested.dataGraphModel && !supported.dataGraphModel) {
@@ -6086,6 +6106,11 @@ void compare_feature_struct(VkStructureType sType, std::vector<std::string> & er
             compare_VkPhysicalDeviceImageAlignmentControlFeaturesMESA(error_list, *reinterpret_cast<const VkPhysicalDeviceImageAlignmentControlFeaturesMESA*>(supported), *reinterpret_cast<const VkPhysicalDeviceImageAlignmentControlFeaturesMESA*>(requested));
             break;
 #endif
+#if (defined(VK_EXT_ray_tracing_invocation_reorder))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_INVOCATION_REORDER_FEATURES_EXT):
+            compare_VkPhysicalDeviceRayTracingInvocationReorderFeaturesEXT(error_list, *reinterpret_cast<const VkPhysicalDeviceRayTracingInvocationReorderFeaturesEXT*>(supported), *reinterpret_cast<const VkPhysicalDeviceRayTracingInvocationReorderFeaturesEXT*>(requested));
+            break;
+#endif
 #if (defined(VK_EXT_depth_clamp_control))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLAMP_CONTROL_FEATURES_EXT):
             compare_VkPhysicalDeviceDepthClampControlFeaturesEXT(error_list, *reinterpret_cast<const VkPhysicalDeviceDepthClampControlFeaturesEXT*>(supported), *reinterpret_cast<const VkPhysicalDeviceDepthClampControlFeaturesEXT*>(requested));
@@ -6139,6 +6164,11 @@ void compare_feature_struct(VkStructureType sType, std::vector<std::string> & er
 #if (defined(VK_EXT_shader_64bit_indexing))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_64_BIT_INDEXING_FEATURES_EXT):
             compare_VkPhysicalDeviceShader64BitIndexingFeaturesEXT(error_list, *reinterpret_cast<const VkPhysicalDeviceShader64BitIndexingFeaturesEXT*>(supported), *reinterpret_cast<const VkPhysicalDeviceShader64BitIndexingFeaturesEXT*>(requested));
+            break;
+#endif
+#if (defined(VK_EXT_custom_resolve))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_CUSTOM_RESOLVE_FEATURES_EXT):
+            compare_VkPhysicalDeviceCustomResolveFeaturesEXT(error_list, *reinterpret_cast<const VkPhysicalDeviceCustomResolveFeaturesEXT*>(supported), *reinterpret_cast<const VkPhysicalDeviceCustomResolveFeaturesEXT*>(requested));
             break;
 #endif
 #if (defined(VK_QCOM_data_graph_model))
@@ -7535,6 +7565,11 @@ void merge_feature_struct(VkStructureType sType, void* current, const void* merg
             merge_VkPhysicalDeviceImageAlignmentControlFeaturesMESA(*reinterpret_cast<VkPhysicalDeviceImageAlignmentControlFeaturesMESA*>(current), *reinterpret_cast<const VkPhysicalDeviceImageAlignmentControlFeaturesMESA*>(merge_in));
             break;
 #endif
+#if (defined(VK_EXT_ray_tracing_invocation_reorder))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_INVOCATION_REORDER_FEATURES_EXT):
+            merge_VkPhysicalDeviceRayTracingInvocationReorderFeaturesEXT(*reinterpret_cast<VkPhysicalDeviceRayTracingInvocationReorderFeaturesEXT*>(current), *reinterpret_cast<const VkPhysicalDeviceRayTracingInvocationReorderFeaturesEXT*>(merge_in));
+            break;
+#endif
 #if (defined(VK_EXT_depth_clamp_control))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLAMP_CONTROL_FEATURES_EXT):
             merge_VkPhysicalDeviceDepthClampControlFeaturesEXT(*reinterpret_cast<VkPhysicalDeviceDepthClampControlFeaturesEXT*>(current), *reinterpret_cast<const VkPhysicalDeviceDepthClampControlFeaturesEXT*>(merge_in));
@@ -7588,6 +7623,11 @@ void merge_feature_struct(VkStructureType sType, void* current, const void* merg
 #if (defined(VK_EXT_shader_64bit_indexing))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_64_BIT_INDEXING_FEATURES_EXT):
             merge_VkPhysicalDeviceShader64BitIndexingFeaturesEXT(*reinterpret_cast<VkPhysicalDeviceShader64BitIndexingFeaturesEXT*>(current), *reinterpret_cast<const VkPhysicalDeviceShader64BitIndexingFeaturesEXT*>(merge_in));
+            break;
+#endif
+#if (defined(VK_EXT_custom_resolve))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_CUSTOM_RESOLVE_FEATURES_EXT):
+            merge_VkPhysicalDeviceCustomResolveFeaturesEXT(*reinterpret_cast<VkPhysicalDeviceCustomResolveFeaturesEXT*>(current), *reinterpret_cast<const VkPhysicalDeviceCustomResolveFeaturesEXT*>(merge_in));
             break;
 #endif
 #if (defined(VK_QCOM_data_graph_model))

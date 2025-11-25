@@ -1448,6 +1448,9 @@ struct DispatchTable {
 #if (defined(VK_EXT_conditional_rendering))
         fp_vkCmdBeginConditionalRenderingEXT = reinterpret_cast<PFN_vkCmdBeginConditionalRenderingEXT>(procAddr(device, "vkCmdBeginConditionalRenderingEXT"));
 #endif
+#if (defined(VK_EXT_custom_resolve))
+        fp_vkCmdBeginCustomResolveEXT = reinterpret_cast<PFN_vkCmdBeginCustomResolveEXT>(procAddr(device, "vkCmdBeginCustomResolveEXT"));
+#endif
 #if (defined(VK_EXT_debug_utils))
         fp_vkCmdBeginDebugUtilsLabelEXT = reinterpret_cast<PFN_vkCmdBeginDebugUtilsLabelEXT>(procAddr(device, "vkCmdBeginDebugUtilsLabelEXT"));
 #endif
@@ -3215,6 +3218,11 @@ struct DispatchTable {
 #if (defined(VK_EXT_conditional_rendering))
     void cmdBeginConditionalRenderingEXT(VkCommandBuffer commandBuffer, const VkConditionalRenderingBeginInfoEXT* pConditionalRenderingBegin) const noexcept {
         fp_vkCmdBeginConditionalRenderingEXT(commandBuffer, pConditionalRenderingBegin);
+    }
+#endif
+#if (defined(VK_EXT_custom_resolve))
+    void cmdBeginCustomResolveEXT(VkCommandBuffer commandBuffer, const VkBeginCustomResolveInfoEXT* pBeginCustomResolveInfo) const noexcept {
+        fp_vkCmdBeginCustomResolveEXT(commandBuffer, pBeginCustomResolveInfo);
     }
 #endif
 #if (defined(VK_EXT_debug_utils))
@@ -6226,6 +6234,11 @@ struct DispatchTable {
     PFN_vkCmdBeginConditionalRenderingEXT fp_vkCmdBeginConditionalRenderingEXT = nullptr;
 #else
     void * fp_vkCmdBeginConditionalRenderingEXT{};
+#endif
+#if (defined(VK_EXT_custom_resolve))
+    PFN_vkCmdBeginCustomResolveEXT fp_vkCmdBeginCustomResolveEXT = nullptr;
+#else
+    void * fp_vkCmdBeginCustomResolveEXT{};
 #endif
 #if (defined(VK_EXT_debug_utils))
     PFN_vkCmdBeginDebugUtilsLabelEXT fp_vkCmdBeginDebugUtilsLabelEXT = nullptr;

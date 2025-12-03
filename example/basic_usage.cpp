@@ -85,6 +85,6 @@ bool init_vulkan() {
 
 int main() {
     if (init_vulkan()) {
-        std::cout << "Boilerplate done, time to write you application!\n";
+        std::cout << "Boilerplate done, time to write your application!\n";
     }
 }

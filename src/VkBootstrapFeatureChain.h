@@ -673,6 +673,10 @@ void merge_VkPhysicalDeviceShaderImageFootprintFeaturesNV(VkPhysicalDeviceShader
 void compare_VkPhysicalDeviceExclusiveScissorFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceExclusiveScissorFeaturesNV const& supported, VkPhysicalDeviceExclusiveScissorFeaturesNV const& requested);
 void merge_VkPhysicalDeviceExclusiveScissorFeaturesNV(VkPhysicalDeviceExclusiveScissorFeaturesNV & current, VkPhysicalDeviceExclusiveScissorFeaturesNV const& merge_in);
 #endif //(defined(VK_NV_scissor_exclusive))
+#if (defined(VK_EXT_present_timing))
+void compare_VkPhysicalDevicePresentTimingFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDevicePresentTimingFeaturesEXT const& supported, VkPhysicalDevicePresentTimingFeaturesEXT const& requested);
+void merge_VkPhysicalDevicePresentTimingFeaturesEXT(VkPhysicalDevicePresentTimingFeaturesEXT & current, VkPhysicalDevicePresentTimingFeaturesEXT const& merge_in);
+#endif //(defined(VK_EXT_present_timing))
 #if (defined(VK_INTEL_shader_integer_functions2))
 void compare_VkPhysicalDeviceShaderIntegerFunctions2FeaturesINTEL(std::vector<std::string> & error_list, VkPhysicalDeviceShaderIntegerFunctions2FeaturesINTEL const& supported, VkPhysicalDeviceShaderIntegerFunctions2FeaturesINTEL const& requested);
 void merge_VkPhysicalDeviceShaderIntegerFunctions2FeaturesINTEL(VkPhysicalDeviceShaderIntegerFunctions2FeaturesINTEL & current, VkPhysicalDeviceShaderIntegerFunctions2FeaturesINTEL const& merge_in);

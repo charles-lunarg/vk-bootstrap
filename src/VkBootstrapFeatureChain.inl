@@ -2735,6 +2735,24 @@ void merge_VkPhysicalDeviceExclusiveScissorFeaturesNV(VkPhysicalDeviceExclusiveS
     current.exclusiveScissor = current.exclusiveScissor || merge_in.exclusiveScissor;
 }
 #endif //(defined(VK_NV_scissor_exclusive))
+#if (defined(VK_EXT_present_timing))
+void compare_VkPhysicalDevicePresentTimingFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDevicePresentTimingFeaturesEXT const& supported, VkPhysicalDevicePresentTimingFeaturesEXT const& requested) {
+    if (requested.presentTiming && !supported.presentTiming) {
+        error_list.push_back("Missing feature VkPhysicalDevicePresentTimingFeaturesEXT::presentTiming");
+    }
+    if (requested.presentAtAbsoluteTime && !supported.presentAtAbsoluteTime) {
+        error_list.push_back("Missing feature VkPhysicalDevicePresentTimingFeaturesEXT::presentAtAbsoluteTime");
+    }
+    if (requested.presentAtRelativeTime && !supported.presentAtRelativeTime) {
+        error_list.push_back("Missing feature VkPhysicalDevicePresentTimingFeaturesEXT::presentAtRelativeTime");
+    }
+}
+void merge_VkPhysicalDevicePresentTimingFeaturesEXT(VkPhysicalDevicePresentTimingFeaturesEXT & current, VkPhysicalDevicePresentTimingFeaturesEXT const& merge_in) {
+    current.presentTiming = current.presentTiming || merge_in.presentTiming;
+    current.presentAtAbsoluteTime = current.presentAtAbsoluteTime || merge_in.presentAtAbsoluteTime;
+    current.presentAtRelativeTime = current.presentAtRelativeTime || merge_in.presentAtRelativeTime;
+}
+#endif //(defined(VK_EXT_present_timing))
 #if (defined(VK_INTEL_shader_integer_functions2))
 void compare_VkPhysicalDeviceShaderIntegerFunctions2FeaturesINTEL(std::vector<std::string> & error_list, VkPhysicalDeviceShaderIntegerFunctions2FeaturesINTEL const& supported, VkPhysicalDeviceShaderIntegerFunctions2FeaturesINTEL const& requested) {
     if (requested.shaderIntegerFunctions2 && !supported.shaderIntegerFunctions2) {
@@ -5491,6 +5509,11 @@ void compare_feature_struct(VkStructureType sType, std::vector<std::string> & er
             compare_VkPhysicalDeviceExclusiveScissorFeaturesNV(error_list, *reinterpret_cast<const VkPhysicalDeviceExclusiveScissorFeaturesNV*>(supported), *reinterpret_cast<const VkPhysicalDeviceExclusiveScissorFeaturesNV*>(requested));
             break;
 #endif
+#if (defined(VK_EXT_present_timing))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_TIMING_FEATURES_EXT):
+            compare_VkPhysicalDevicePresentTimingFeaturesEXT(error_list, *reinterpret_cast<const VkPhysicalDevicePresentTimingFeaturesEXT*>(supported), *reinterpret_cast<const VkPhysicalDevicePresentTimingFeaturesEXT*>(requested));
+            break;
+#endif
 #if (defined(VK_INTEL_shader_integer_functions2))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_FUNCTIONS_2_FEATURES_INTEL):
             compare_VkPhysicalDeviceShaderIntegerFunctions2FeaturesINTEL(error_list, *reinterpret_cast<const VkPhysicalDeviceShaderIntegerFunctions2FeaturesINTEL*>(supported), *reinterpret_cast<const VkPhysicalDeviceShaderIntegerFunctions2FeaturesINTEL*>(requested));
@@ -6948,6 +6971,11 @@ void merge_feature_struct(VkStructureType sType, void* current, const void* merg
 #if (defined(VK_NV_scissor_exclusive))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXCLUSIVE_SCISSOR_FEATURES_NV):
             merge_VkPhysicalDeviceExclusiveScissorFeaturesNV(*reinterpret_cast<VkPhysicalDeviceExclusiveScissorFeaturesNV*>(current), *reinterpret_cast<const VkPhysicalDeviceExclusiveScissorFeaturesNV*>(merge_in));
+            break;
+#endif
+#if (defined(VK_EXT_present_timing))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_TIMING_FEATURES_EXT):
+            merge_VkPhysicalDevicePresentTimingFeaturesEXT(*reinterpret_cast<VkPhysicalDevicePresentTimingFeaturesEXT*>(current), *reinterpret_cast<const VkPhysicalDevicePresentTimingFeaturesEXT*>(merge_in));
             break;
 #endif
 #if (defined(VK_INTEL_shader_integer_functions2))

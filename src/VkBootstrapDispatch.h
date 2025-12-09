@@ -2785,6 +2785,9 @@ struct DispatchTable {
 #if (defined(VK_NV_partitioned_acceleration_structure))
         fp_vkGetPartitionedAccelerationStructuresBuildSizesNV = reinterpret_cast<PFN_vkGetPartitionedAccelerationStructuresBuildSizesNV>(procAddr(device, "vkGetPartitionedAccelerationStructuresBuildSizesNV"));
 #endif
+#if (defined(VK_EXT_present_timing))
+        fp_vkGetPastPresentationTimingEXT = reinterpret_cast<PFN_vkGetPastPresentationTimingEXT>(procAddr(device, "vkGetPastPresentationTimingEXT"));
+#endif
 #if (defined(VK_GOOGLE_display_timing))
         fp_vkGetPastPresentationTimingGOOGLE = reinterpret_cast<PFN_vkGetPastPresentationTimingGOOGLE>(procAddr(device, "vkGetPastPresentationTimingGOOGLE"));
 #endif
@@ -2895,6 +2898,12 @@ struct DispatchTable {
 #endif
 #if (defined(VK_KHR_shared_presentable_image))
         fp_vkGetSwapchainStatusKHR = reinterpret_cast<PFN_vkGetSwapchainStatusKHR>(procAddr(device, "vkGetSwapchainStatusKHR"));
+#endif
+#if (defined(VK_EXT_present_timing))
+        fp_vkGetSwapchainTimeDomainPropertiesEXT = reinterpret_cast<PFN_vkGetSwapchainTimeDomainPropertiesEXT>(procAddr(device, "vkGetSwapchainTimeDomainPropertiesEXT"));
+#endif
+#if (defined(VK_EXT_present_timing))
+        fp_vkGetSwapchainTimingPropertiesEXT = reinterpret_cast<PFN_vkGetSwapchainTimingPropertiesEXT>(procAddr(device, "vkGetSwapchainTimingPropertiesEXT"));
 #endif
 #if (defined(VK_ARM_tensors))
         fp_vkGetTensorMemoryRequirementsARM = reinterpret_cast<PFN_vkGetTensorMemoryRequirementsARM>(procAddr(device, "vkGetTensorMemoryRequirementsARM"));
@@ -3042,6 +3051,9 @@ struct DispatchTable {
 #endif
 #if (defined(VK_EXT_private_data))
         fp_vkSetPrivateDataEXT = reinterpret_cast<PFN_vkSetPrivateDataEXT>(procAddr(device, "vkSetPrivateDataEXT"));
+#endif
+#if (defined(VK_EXT_present_timing))
+        fp_vkSetSwapchainPresentTimingQueueSizeEXT = reinterpret_cast<PFN_vkSetSwapchainPresentTimingQueueSizeEXT>(procAddr(device, "vkSetSwapchainPresentTimingQueueSizeEXT"));
 #endif
 #if (defined(VK_VERSION_1_2))
         fp_vkSignalSemaphore = reinterpret_cast<PFN_vkSignalSemaphore>(procAddr(device, "vkSignalSemaphore"));
@@ -5575,6 +5587,11 @@ struct DispatchTable {
         fp_vkGetPartitionedAccelerationStructuresBuildSizesNV(device, pInfo, pSizeInfo);
     }
 #endif
+#if (defined(VK_EXT_present_timing))
+    VkResult getPastPresentationTimingEXT(const VkPastPresentationTimingInfoEXT* pPastPresentationTimingInfo, VkPastPresentationTimingPropertiesEXT* pPastPresentationTimingProperties) const noexcept {
+        return fp_vkGetPastPresentationTimingEXT(device, pPastPresentationTimingInfo, pPastPresentationTimingProperties);
+    }
+#endif
 #if (defined(VK_GOOGLE_display_timing))
     VkResult getPastPresentationTimingGOOGLE(VkSwapchainKHR swapchain, uint32_t* pPresentationTimingCount, VkPastPresentationTimingGOOGLE* pPresentationTimings) const noexcept {
         return fp_vkGetPastPresentationTimingGOOGLE(device, swapchain, pPresentationTimingCount, pPresentationTimings);
@@ -5762,6 +5779,16 @@ struct DispatchTable {
 #if (defined(VK_KHR_shared_presentable_image))
     VkResult getSwapchainStatusKHR(VkSwapchainKHR swapchain) const noexcept {
         return fp_vkGetSwapchainStatusKHR(device, swapchain);
+    }
+#endif
+#if (defined(VK_EXT_present_timing))
+    VkResult getSwapchainTimeDomainPropertiesEXT(VkSwapchainKHR swapchain, VkSwapchainTimeDomainPropertiesEXT* pSwapchainTimeDomainProperties, uint64_t* pTimeDomainsCounter) const noexcept {
+        return fp_vkGetSwapchainTimeDomainPropertiesEXT(device, swapchain, pSwapchainTimeDomainProperties, pTimeDomainsCounter);
+    }
+#endif
+#if (defined(VK_EXT_present_timing))
+    VkResult getSwapchainTimingPropertiesEXT(VkSwapchainKHR swapchain, VkSwapchainTimingPropertiesEXT* pSwapchainTimingProperties, uint64_t* pSwapchainTimingPropertiesCounter) const noexcept {
+        return fp_vkGetSwapchainTimingPropertiesEXT(device, swapchain, pSwapchainTimingProperties, pSwapchainTimingPropertiesCounter);
     }
 #endif
 #if (defined(VK_ARM_tensors))
@@ -6023,6 +6050,11 @@ struct DispatchTable {
 #if (defined(VK_EXT_private_data))
     VkResult setPrivateDataEXT(VkObjectType objectType, uint64_t objectHandle, VkPrivateDataSlotEXT privateDataSlot, uint64_t data) const noexcept {
         return fp_vkSetPrivateDataEXT(device, objectType, objectHandle, privateDataSlot, data);
+    }
+#endif
+#if (defined(VK_EXT_present_timing))
+    VkResult setSwapchainPresentTimingQueueSizeEXT(VkSwapchainKHR swapchain, uint32_t size) const noexcept {
+        return fp_vkSetSwapchainPresentTimingQueueSizeEXT(device, swapchain, size);
     }
 #endif
 #if (defined(VK_VERSION_1_2))
@@ -8400,6 +8432,11 @@ struct DispatchTable {
 #else
     void * fp_vkGetPartitionedAccelerationStructuresBuildSizesNV{};
 #endif
+#if (defined(VK_EXT_present_timing))
+    PFN_vkGetPastPresentationTimingEXT fp_vkGetPastPresentationTimingEXT = nullptr;
+#else
+    void * fp_vkGetPastPresentationTimingEXT{};
+#endif
 #if (defined(VK_GOOGLE_display_timing))
     PFN_vkGetPastPresentationTimingGOOGLE fp_vkGetPastPresentationTimingGOOGLE = nullptr;
 #else
@@ -8582,6 +8619,16 @@ struct DispatchTable {
     PFN_vkGetSwapchainStatusKHR fp_vkGetSwapchainStatusKHR = nullptr;
 #else
     void * fp_vkGetSwapchainStatusKHR{};
+#endif
+#if (defined(VK_EXT_present_timing))
+    PFN_vkGetSwapchainTimeDomainPropertiesEXT fp_vkGetSwapchainTimeDomainPropertiesEXT = nullptr;
+#else
+    void * fp_vkGetSwapchainTimeDomainPropertiesEXT{};
+#endif
+#if (defined(VK_EXT_present_timing))
+    PFN_vkGetSwapchainTimingPropertiesEXT fp_vkGetSwapchainTimingPropertiesEXT = nullptr;
+#else
+    void * fp_vkGetSwapchainTimingPropertiesEXT{};
 #endif
 #if (defined(VK_ARM_tensors))
     PFN_vkGetTensorMemoryRequirementsARM fp_vkGetTensorMemoryRequirementsARM = nullptr;
@@ -8819,6 +8866,11 @@ struct DispatchTable {
     PFN_vkSetPrivateDataEXT fp_vkSetPrivateDataEXT = nullptr;
 #else
     void * fp_vkSetPrivateDataEXT{};
+#endif
+#if (defined(VK_EXT_present_timing))
+    PFN_vkSetSwapchainPresentTimingQueueSizeEXT fp_vkSetSwapchainPresentTimingQueueSizeEXT = nullptr;
+#else
+    void * fp_vkSetSwapchainPresentTimingQueueSizeEXT{};
 #endif
 #if (defined(VK_VERSION_1_2))
     PFN_vkSignalSemaphore fp_vkSignalSemaphore = nullptr;

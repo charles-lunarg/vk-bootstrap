@@ -57,7 +57,7 @@ jobs:
         run: echo "::set-output name=git-diff::$(git diff --quiet HEAD~0 || echo true)"
 
       - name: pull-request
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@v8
         if: ${{ steps.git-diff.outputs.git-diff == 'true' }}
         with:
           token: ${{ steps.generate-token.outputs.token }}

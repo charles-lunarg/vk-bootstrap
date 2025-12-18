@@ -403,13 +403,14 @@ bool check_layer_supported(std::vector<VkLayerProperties> const& available_layer
     return false;
 }
 
-bool check_layers_supported(std::vector<VkLayerProperties> const& available_layers, std::vector<const char*> const& layer_names) {
-    bool all_found = true;
+std::vector<std::string> check_layers_supported(
+    std::vector<VkLayerProperties> const& available_layers, std::vector<const char*> const& layer_names) {
+    std::vector<std::string> not_found;
     for (const auto& layer_name : layer_names) {
         bool found = check_layer_supported(available_layers, layer_name);
-        if (!found) all_found = false;
+        if (!found) not_found.push_back(layer_name);
     }
-    return all_found;
+    return not_found;
 }
 
 bool check_extension_supported(std::vector<VkExtensionProperties> const& available_extensions, const char* extension_name) {
@@ -783,9 +784,9 @@ Result<Instance> InstanceBuilder::build() const {
     if (info.enable_validation_layers || (info.request_validation_layers && system.validation_layers_available)) {
         layers.push_back(detail::validation_layer_name);
     }
-    bool all_layers_supported = detail::check_layers_supported(system.available_layers, layers);
-    if (!all_layers_supported) {
-        return make_error_code(InstanceError::requested_layers_not_present);
+    std::vector<std::string> unsupported_layers = detail::check_layers_supported(system.available_layers, layers);
+    if (!unsupported_layers.empty()) {
+        return { make_error_code(InstanceError::requested_layers_not_present), unsupported_layers };
     }
 
     std::vector<void*> pNext_chain;

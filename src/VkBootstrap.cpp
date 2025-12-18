@@ -422,14 +422,14 @@ bool check_extension_supported(std::vector<VkExtensionProperties> const& availab
     return false;
 }
 
-bool check_extensions_supported(
+std::vector<std::string> check_extensions_supported(
     std::vector<VkExtensionProperties> const& available_extensions, std::vector<const char*> const& extension_names) {
-    bool all_found = true;
+    std::vector<std::string> not_found;
     for (const auto& extension_name : extension_names) {
         bool found = check_extension_supported(available_extensions, extension_name);
-        if (!found) all_found = false;
+        if (!found) not_found.push_back(extension_name);
     }
-    return all_found;
+    return not_found;
 }
 
 template <typename T> void setup_pNext_chain(T& structure, std::vector<void*> const& structs) {
@@ -772,9 +772,9 @@ Result<Instance> InstanceBuilder::build() const {
         if (!khr_surface_added || !added_window_exts)
             return make_error_code(InstanceError::windowing_extensions_not_present);
     }
-    bool all_extensions_supported = detail::check_extensions_supported(system.available_extensions, extensions);
-    if (!all_extensions_supported) {
-        return make_error_code(InstanceError::requested_extensions_not_present);
+    std::vector<std::string> unsupported_extensions = detail::check_extensions_supported(system.available_extensions, extensions);
+    if (!unsupported_extensions.empty()) {
+        return { make_error_code(InstanceError::requested_extensions_not_present), unsupported_extensions };
     }
 
     for (auto& layer : info.layers)

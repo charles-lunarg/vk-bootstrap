@@ -1891,6 +1891,9 @@ struct DispatchTable {
 #if (defined(VK_EXT_extended_dynamic_state3) || defined(VK_EXT_shader_object))
         fp_vkCmdSetColorWriteMaskEXT = reinterpret_cast<PFN_vkCmdSetColorWriteMaskEXT>(procAddr(device, "vkCmdSetColorWriteMaskEXT"));
 #endif
+#if (defined(VK_NV_compute_occupancy_priority))
+        fp_vkCmdSetComputeOccupancyPriorityNV = reinterpret_cast<PFN_vkCmdSetComputeOccupancyPriorityNV>(procAddr(device, "vkCmdSetComputeOccupancyPriorityNV"));
+#endif
 #if (defined(VK_EXT_extended_dynamic_state3) || defined(VK_EXT_shader_object))
         fp_vkCmdSetConservativeRasterizationModeEXT = reinterpret_cast<PFN_vkCmdSetConservativeRasterizationModeEXT>(procAddr(device, "vkCmdSetConservativeRasterizationModeEXT"));
 #endif
@@ -4011,6 +4014,11 @@ struct DispatchTable {
 #if (defined(VK_EXT_extended_dynamic_state3) || defined(VK_EXT_shader_object))
     void cmdSetColorWriteMaskEXT(VkCommandBuffer commandBuffer, uint32_t firstAttachment, uint32_t attachmentCount, const VkColorComponentFlags* pColorWriteMasks) const noexcept {
         fp_vkCmdSetColorWriteMaskEXT(commandBuffer, firstAttachment, attachmentCount, pColorWriteMasks);
+    }
+#endif
+#if (defined(VK_NV_compute_occupancy_priority))
+    void cmdSetComputeOccupancyPriorityNV(VkCommandBuffer commandBuffer, const VkComputeOccupancyPriorityParametersNV* pParameters) const noexcept {
+        fp_vkCmdSetComputeOccupancyPriorityNV(commandBuffer, pParameters);
     }
 #endif
 #if (defined(VK_EXT_extended_dynamic_state3) || defined(VK_EXT_shader_object))
@@ -6983,6 +6991,11 @@ struct DispatchTable {
     PFN_vkCmdSetColorWriteMaskEXT fp_vkCmdSetColorWriteMaskEXT = nullptr;
 #else
     void * fp_vkCmdSetColorWriteMaskEXT{};
+#endif
+#if (defined(VK_NV_compute_occupancy_priority))
+    PFN_vkCmdSetComputeOccupancyPriorityNV fp_vkCmdSetComputeOccupancyPriorityNV = nullptr;
+#else
+    void * fp_vkCmdSetComputeOccupancyPriorityNV{};
 #endif
 #if (defined(VK_EXT_extended_dynamic_state3) || defined(VK_EXT_shader_object))
     PFN_vkCmdSetConservativeRasterizationModeEXT fp_vkCmdSetConservativeRasterizationModeEXT = nullptr;

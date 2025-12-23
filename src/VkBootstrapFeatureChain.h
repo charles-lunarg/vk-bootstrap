@@ -1237,6 +1237,10 @@ void merge_VkPhysicalDevicePipelineCacheIncrementalModeFeaturesSEC(VkPhysicalDev
 void compare_VkPhysicalDeviceShaderUniformBufferUnsizedArrayFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceShaderUniformBufferUnsizedArrayFeaturesEXT const& supported, VkPhysicalDeviceShaderUniformBufferUnsizedArrayFeaturesEXT const& requested);
 void merge_VkPhysicalDeviceShaderUniformBufferUnsizedArrayFeaturesEXT(VkPhysicalDeviceShaderUniformBufferUnsizedArrayFeaturesEXT & current, VkPhysicalDeviceShaderUniformBufferUnsizedArrayFeaturesEXT const& merge_in);
 #endif //(defined(VK_EXT_shader_uniform_buffer_unsized_array))
+#if (defined(VK_NV_compute_occupancy_priority))
+void compare_VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV const& supported, VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV const& requested);
+void merge_VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV(VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV & current, VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV const& merge_in);
+#endif //(defined(VK_NV_compute_occupancy_priority))
 #if (defined(VK_KHR_acceleration_structure))
 void compare_VkPhysicalDeviceAccelerationStructureFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceAccelerationStructureFeaturesKHR const& supported, VkPhysicalDeviceAccelerationStructureFeaturesKHR const& requested);
 void merge_VkPhysicalDeviceAccelerationStructureFeaturesKHR(VkPhysicalDeviceAccelerationStructureFeaturesKHR & current, VkPhysicalDeviceAccelerationStructureFeaturesKHR const& merge_in);

@@ -4681,6 +4681,16 @@ void merge_VkPhysicalDeviceShaderUniformBufferUnsizedArrayFeaturesEXT(VkPhysical
     current.shaderUniformBufferUnsizedArray = current.shaderUniformBufferUnsizedArray || merge_in.shaderUniformBufferUnsizedArray;
 }
 #endif //(defined(VK_EXT_shader_uniform_buffer_unsized_array))
+#if (defined(VK_NV_compute_occupancy_priority))
+void compare_VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV const& supported, VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV const& requested) {
+    if (requested.computeOccupancyPriority && !supported.computeOccupancyPriority) {
+        error_list.push_back("Missing feature VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV::computeOccupancyPriority");
+    }
+}
+void merge_VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV(VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV & current, VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV const& merge_in) {
+    current.computeOccupancyPriority = current.computeOccupancyPriority || merge_in.computeOccupancyPriority;
+}
+#endif //(defined(VK_NV_compute_occupancy_priority))
 #if (defined(VK_KHR_acceleration_structure))
 void compare_VkPhysicalDeviceAccelerationStructureFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceAccelerationStructureFeaturesKHR const& supported, VkPhysicalDeviceAccelerationStructureFeaturesKHR const& requested) {
     if (requested.accelerationStructure && !supported.accelerationStructure) {
@@ -6209,6 +6219,11 @@ void compare_feature_struct(VkStructureType sType, std::vector<std::string> & er
             compare_VkPhysicalDeviceShaderUniformBufferUnsizedArrayFeaturesEXT(error_list, *reinterpret_cast<const VkPhysicalDeviceShaderUniformBufferUnsizedArrayFeaturesEXT*>(supported), *reinterpret_cast<const VkPhysicalDeviceShaderUniformBufferUnsizedArrayFeaturesEXT*>(requested));
             break;
 #endif
+#if (defined(VK_NV_compute_occupancy_priority))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COMPUTE_OCCUPANCY_PRIORITY_FEATURES_NV):
+            compare_VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV(error_list, *reinterpret_cast<const VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV*>(supported), *reinterpret_cast<const VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV*>(requested));
+            break;
+#endif
 #if (defined(VK_KHR_acceleration_structure))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ACCELERATION_STRUCTURE_FEATURES_KHR):
             compare_VkPhysicalDeviceAccelerationStructureFeaturesKHR(error_list, *reinterpret_cast<const VkPhysicalDeviceAccelerationStructureFeaturesKHR*>(supported), *reinterpret_cast<const VkPhysicalDeviceAccelerationStructureFeaturesKHR*>(requested));
@@ -7671,6 +7686,11 @@ void merge_feature_struct(VkStructureType sType, void* current, const void* merg
 #if (defined(VK_EXT_shader_uniform_buffer_unsized_array))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_UNIFORM_BUFFER_UNSIZED_ARRAY_FEATURES_EXT):
             merge_VkPhysicalDeviceShaderUniformBufferUnsizedArrayFeaturesEXT(*reinterpret_cast<VkPhysicalDeviceShaderUniformBufferUnsizedArrayFeaturesEXT*>(current), *reinterpret_cast<const VkPhysicalDeviceShaderUniformBufferUnsizedArrayFeaturesEXT*>(merge_in));
+            break;
+#endif
+#if (defined(VK_NV_compute_occupancy_priority))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COMPUTE_OCCUPANCY_PRIORITY_FEATURES_NV):
+            merge_VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV(*reinterpret_cast<VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV*>(current), *reinterpret_cast<const VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV*>(merge_in));
             break;
 #endif
 #if (defined(VK_KHR_acceleration_structure))

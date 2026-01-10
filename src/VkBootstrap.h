@@ -587,7 +587,6 @@ struct PhysicalDevice {
 
 enum class PreferredDeviceType { other = 0, integrated = 1, discrete = 2, virtual_gpu = 3, cpu = 4 };
 
-
 // Enumerates the physical devices on the system, and based on the added criteria, returns a physical device or list of
 // physical devies A device is considered suitable if it meets all the 'required' criteria.
 class PhysicalDeviceSelector {

@@ -21,6 +21,7 @@ VkExtensionProperties get_extension_properties(const char* extName) {
 
 VulkanMock& get_and_setup_default() {
     VulkanMock& mock = *get_vulkan_mock();
+    mock.instance_api_version = VK_API_VERSION_1_0;
     mock.instance_extensions.push_back(get_extension_properties(VK_KHR_SURFACE_EXTENSION_NAME));
 #if defined(_WIN32)
     mock.instance_extensions.push_back(get_extension_properties("VK_KHR_win32_surface"));

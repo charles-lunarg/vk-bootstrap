@@ -119,7 +119,7 @@ TEST_CASE("instance configuration", "[VkBootstrap.bootstrap]") {
 
         auto instance_ret =
             builder.request_validation_layers()
-                .require_api_version(1, 0, 34)
+                .require_api_version(1, 0)
                 .use_default_debug_messenger()
                 .add_validation_feature_enable(VkValidationFeatureEnableEXT::VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT)
                 .add_validation_feature_disable(VkValidationFeatureDisableEXT::VK_VALIDATION_FEATURE_DISABLE_OBJECT_LIFETIMES_EXT)
@@ -318,8 +318,41 @@ TEST_CASE("Select Physical Devices by type", "[VkBootstrap.sort_physical_devices
         auto vector = vector_ret.value();
         REQUIRE(vector.size() == 5);
         REQUIRE(vector[0].properties.deviceID == i);
+
+        vector_ret = phys_device_selector.prefer_gpu_device_type(static_cast<vkb::PreferredDeviceType>(i))
+                         .allow_any_gpu_device_type(false)
+                         .select_devices();
+        REQUIRE(vector_ret.has_value());
+        vector = vector_ret.value();
+        REQUIRE(vector.size() == 1);
+        REQUIRE(vector[0].properties.deviceID == i);
     }
 }
+
+TEST_CASE("Reject Physical Devices by type", "[VkBootstrap.sort_physical_devices]") {
+    VulkanMock& mock = get_and_setup_default();
+    // set the physical device to have a weird type
+    mock.physical_devices_details.back().properties.deviceType = VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU;
+
+    auto instance = get_instance(0);
+    auto surface = mock.get_new_surface(get_basic_surface_details());
+
+    for (uint32_t i = 0; i < 5; i++) {
+
+        vkb::PhysicalDeviceSelector phys_device_selector(instance, surface);
+        auto phys_dev_ret = phys_device_selector.prefer_gpu_device_type(static_cast<vkb::PreferredDeviceType>(i))
+                                .allow_any_gpu_device_type(false)
+                                .select();
+        if (i == VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU) {
+            REQUIRE(phys_dev_ret.has_value());
+        } else {
+            REQUIRE(!phys_dev_ret.has_value());
+            REQUIRE(!phys_dev_ret.full_error().detailed_failure_reasons.empty());
+            std::cout << phys_dev_ret.full_error().detailed_failure_reasons.back() << "\n";
+        }
+    }
+}
+
 
 TEST_CASE("Loading Dispatch Table", "[VkBootstrap.bootstrap]") {
     [[maybe_unused]] VulkanMock& mock = get_and_setup_default();
@@ -1088,8 +1121,8 @@ TEST_CASE("Querying Required Extension Features in 1.1", "[VkBootstrap.version]"
             REQUIRE(device_ret.has_value());
             vkb::destroy_device(device_ret.value());
         }
-        SECTION(
-            "Try to add a custom VkPhysicalDeviceFeatures2 pNext chain to the DeviceBuilder, resulting in an error") {
+        SECTION("Try to add a custom VkPhysicalDeviceFeatures2 pNext chain to the DeviceBuilder, resulting in an "
+                "error") {
             VkPhysicalDeviceDescriptorIndexingFeaturesEXT descriptor_indexing_features{};
             descriptor_indexing_features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT;
             descriptor_indexing_features.runtimeDescriptorArray = true;

@@ -334,6 +334,24 @@ template <typename T, typename F, typename... Ts> auto get_vector_noerror(F&& f,
 }
 } // namespace detail
 
+const char* to_string_device_type(const VkPhysicalDeviceType type) {
+    switch (type) {
+        case VK_PHYSICAL_DEVICE_TYPE_OTHER:
+            return "other";
+        case VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU:
+            return "integrated";
+        case VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU:
+            return "discrete";
+        case VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU:
+            return "virtual_gpu";
+        case VK_PHYSICAL_DEVICE_TYPE_CPU:
+            return "cpu";
+        default:
+            return "unknown";
+    }
+}
+
+
 const char* to_string_message_severity(VkDebugUtilsMessageSeverityFlagBitsEXT s) {
     switch (s) {
         case VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT:
@@ -1214,6 +1232,9 @@ PhysicalDevice::Suitable PhysicalDeviceSelector::is_device_suitable(
             suitable = PhysicalDevice::Suitable::partial;
         } else {
             suitable = PhysicalDevice::Suitable::no;
+            unsuitability_reasons.push_back(
+                std::string("VkPhysicalDeviceType \"") + to_string_device_type(pd.properties.deviceType) + "\" does not match preferred type \"" +
+                to_string_device_type(static_cast<VkPhysicalDeviceType>(criteria.preferred_type)) + "\"");
         }
     }
 

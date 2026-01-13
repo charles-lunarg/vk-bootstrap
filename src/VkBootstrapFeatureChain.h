@@ -769,6 +769,10 @@ void merge_VkPhysicalDeviceDeviceMemoryReportFeaturesEXT(VkPhysicalDeviceDeviceM
 void compare_VkPhysicalDeviceCustomBorderColorFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceCustomBorderColorFeaturesEXT const& supported, VkPhysicalDeviceCustomBorderColorFeaturesEXT const& requested);
 void merge_VkPhysicalDeviceCustomBorderColorFeaturesEXT(VkPhysicalDeviceCustomBorderColorFeaturesEXT & current, VkPhysicalDeviceCustomBorderColorFeaturesEXT const& merge_in);
 #endif //(defined(VK_EXT_custom_border_color))
+#if (defined(VK_EXT_texture_compression_astc_3d))
+void compare_VkPhysicalDeviceTextureCompressionASTC3DFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceTextureCompressionASTC3DFeaturesEXT const& supported, VkPhysicalDeviceTextureCompressionASTC3DFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceTextureCompressionASTC3DFeaturesEXT(VkPhysicalDeviceTextureCompressionASTC3DFeaturesEXT & current, VkPhysicalDeviceTextureCompressionASTC3DFeaturesEXT const& merge_in);
+#endif //(defined(VK_EXT_texture_compression_astc_3d))
 #if (defined(VK_NV_present_barrier))
 void compare_VkPhysicalDevicePresentBarrierFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDevicePresentBarrierFeaturesNV const& supported, VkPhysicalDevicePresentBarrierFeaturesNV const& requested);
 void merge_VkPhysicalDevicePresentBarrierFeaturesNV(VkPhysicalDevicePresentBarrierFeaturesNV & current, VkPhysicalDevicePresentBarrierFeaturesNV const& merge_in);
@@ -1229,6 +1233,10 @@ void merge_VkPhysicalDeviceCustomResolveFeaturesEXT(VkPhysicalDeviceCustomResolv
 void compare_VkPhysicalDeviceDataGraphModelFeaturesQCOM(std::vector<std::string> & error_list, VkPhysicalDeviceDataGraphModelFeaturesQCOM const& supported, VkPhysicalDeviceDataGraphModelFeaturesQCOM const& requested);
 void merge_VkPhysicalDeviceDataGraphModelFeaturesQCOM(VkPhysicalDeviceDataGraphModelFeaturesQCOM & current, VkPhysicalDeviceDataGraphModelFeaturesQCOM const& merge_in);
 #endif //(defined(VK_QCOM_data_graph_model))
+#if (defined(VK_EXT_shader_long_vector))
+void compare_VkPhysicalDeviceShaderLongVectorFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceShaderLongVectorFeaturesEXT const& supported, VkPhysicalDeviceShaderLongVectorFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceShaderLongVectorFeaturesEXT(VkPhysicalDeviceShaderLongVectorFeaturesEXT & current, VkPhysicalDeviceShaderLongVectorFeaturesEXT const& merge_in);
+#endif //(defined(VK_EXT_shader_long_vector))
 #if (defined(VK_SEC_pipeline_cache_incremental_mode))
 void compare_VkPhysicalDevicePipelineCacheIncrementalModeFeaturesSEC(std::vector<std::string> & error_list, VkPhysicalDevicePipelineCacheIncrementalModeFeaturesSEC const& supported, VkPhysicalDevicePipelineCacheIncrementalModeFeaturesSEC const& requested);
 void merge_VkPhysicalDevicePipelineCacheIncrementalModeFeaturesSEC(VkPhysicalDevicePipelineCacheIncrementalModeFeaturesSEC & current, VkPhysicalDevicePipelineCacheIncrementalModeFeaturesSEC const& merge_in);

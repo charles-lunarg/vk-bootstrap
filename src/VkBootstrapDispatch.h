@@ -1388,9 +1388,6 @@ struct DispatchTable {
 #if (defined(VK_EXT_full_screen_exclusive))
         fp_vkAcquireFullScreenExclusiveModeEXT = reinterpret_cast<PFN_vkAcquireFullScreenExclusiveModeEXT>(procAddr(device, "vkAcquireFullScreenExclusiveModeEXT"));
 #endif
-#if (defined(VK_OHOS_native_buffer))
-        fp_vkAcquireImageOHOS = reinterpret_cast<PFN_vkAcquireImageOHOS>(procAddr(device, "vkAcquireImageOHOS"));
-#endif
 #if (defined(VK_KHR_swapchain) || defined(VK_KHR_device_group))
         fp_vkAcquireNextImage2KHR = reinterpret_cast<PFN_vkAcquireNextImage2KHR>(procAddr(device, "vkAcquireNextImage2KHR"));
 #endif
@@ -2893,9 +2890,6 @@ struct DispatchTable {
 #if (defined(VK_EXT_display_control))
         fp_vkGetSwapchainCounterEXT = reinterpret_cast<PFN_vkGetSwapchainCounterEXT>(procAddr(device, "vkGetSwapchainCounterEXT"));
 #endif
-#if (defined(VK_OHOS_native_buffer))
-        fp_vkGetSwapchainGrallocUsageOHOS = reinterpret_cast<PFN_vkGetSwapchainGrallocUsageOHOS>(procAddr(device, "vkGetSwapchainGrallocUsageOHOS"));
-#endif
 #if (defined(VK_KHR_swapchain))
         fp_vkGetSwapchainImagesKHR = reinterpret_cast<PFN_vkGetSwapchainImagesKHR>(procAddr(device, "vkGetSwapchainImagesKHR"));
 #endif
@@ -2974,9 +2968,6 @@ struct DispatchTable {
 #endif
 #if (defined(VK_INTEL_performance_query))
         fp_vkQueueSetPerformanceConfigurationINTEL = reinterpret_cast<PFN_vkQueueSetPerformanceConfigurationINTEL>(procAddr(device, "vkQueueSetPerformanceConfigurationINTEL"));
-#endif
-#if (defined(VK_OHOS_native_buffer))
-        fp_vkQueueSignalReleaseImageOHOS = reinterpret_cast<PFN_vkQueueSignalReleaseImageOHOS>(procAddr(device, "vkQueueSignalReleaseImageOHOS"));
 #endif
         fp_vkQueueSubmit = reinterpret_cast<PFN_vkQueueSubmit>(procAddr(device, "vkQueueSubmit"));
 #if (defined(VK_VERSION_1_3))
@@ -3125,11 +3116,6 @@ struct DispatchTable {
 #if (defined(VK_EXT_full_screen_exclusive))
     VkResult acquireFullScreenExclusiveModeEXT(VkSwapchainKHR swapchain) const noexcept {
         return fp_vkAcquireFullScreenExclusiveModeEXT(device, swapchain);
-    }
-#endif
-#if (defined(VK_OHOS_native_buffer))
-    VkResult acquireImageOHOS(VkImage image, int32_t nativeFenceFd, VkSemaphore semaphore, VkFence fence) const noexcept {
-        return fp_vkAcquireImageOHOS(device, image, nativeFenceFd, semaphore, fence);
     }
 #endif
 #if (defined(VK_KHR_swapchain) || defined(VK_KHR_device_group))
@@ -5774,11 +5760,6 @@ struct DispatchTable {
         return fp_vkGetSwapchainCounterEXT(device, swapchain, counter, pCounterValue);
     }
 #endif
-#if (defined(VK_OHOS_native_buffer))
-    VkResult getSwapchainGrallocUsageOHOS(VkFormat format, VkImageUsageFlags imageUsage, uint64_t* grallocUsage) const noexcept {
-        return fp_vkGetSwapchainGrallocUsageOHOS(device, format, imageUsage, grallocUsage);
-    }
-#endif
 #if (defined(VK_KHR_swapchain))
     VkResult getSwapchainImagesKHR(VkSwapchainKHR swapchain, uint32_t* pSwapchainImageCount, VkImage* pSwapchainImages) const noexcept {
         return fp_vkGetSwapchainImagesKHR(device, swapchain, pSwapchainImageCount, pSwapchainImages);
@@ -5914,11 +5895,6 @@ struct DispatchTable {
 #if (defined(VK_INTEL_performance_query))
     VkResult queueSetPerformanceConfigurationINTEL(VkQueue queue, VkPerformanceConfigurationINTEL configuration) const noexcept {
         return fp_vkQueueSetPerformanceConfigurationINTEL(queue, configuration);
-    }
-#endif
-#if (defined(VK_OHOS_native_buffer))
-    VkResult queueSignalReleaseImageOHOS(VkQueue queue, uint32_t waitSemaphoreCount, const VkSemaphore* pWaitSemaphores, VkImage image, int32_t* pNativeFenceFd) const noexcept {
-        return fp_vkQueueSignalReleaseImageOHOS(queue, waitSemaphoreCount, pWaitSemaphores, image, pNativeFenceFd);
     }
 #endif
     VkResult queueSubmit(VkQueue queue, uint32_t submitCount, const VkSubmitInfo* pSubmits, VkFence fence) const noexcept {
@@ -6178,11 +6154,6 @@ struct DispatchTable {
     PFN_vkAcquireFullScreenExclusiveModeEXT fp_vkAcquireFullScreenExclusiveModeEXT = nullptr;
 #else
     void * fp_vkAcquireFullScreenExclusiveModeEXT{};
-#endif
-#if (defined(VK_OHOS_native_buffer))
-    PFN_vkAcquireImageOHOS fp_vkAcquireImageOHOS = nullptr;
-#else
-    void * fp_vkAcquireImageOHOS{};
 #endif
 #if (defined(VK_KHR_swapchain) || defined(VK_KHR_device_group))
     PFN_vkAcquireNextImage2KHR fp_vkAcquireNextImage2KHR = nullptr;
@@ -8618,11 +8589,6 @@ struct DispatchTable {
 #else
     void * fp_vkGetSwapchainCounterEXT{};
 #endif
-#if (defined(VK_OHOS_native_buffer))
-    PFN_vkGetSwapchainGrallocUsageOHOS fp_vkGetSwapchainGrallocUsageOHOS = nullptr;
-#else
-    void * fp_vkGetSwapchainGrallocUsageOHOS{};
-#endif
 #if (defined(VK_KHR_swapchain))
     PFN_vkGetSwapchainImagesKHR fp_vkGetSwapchainImagesKHR = nullptr;
 #else
@@ -8751,11 +8717,6 @@ struct DispatchTable {
     PFN_vkQueueSetPerformanceConfigurationINTEL fp_vkQueueSetPerformanceConfigurationINTEL = nullptr;
 #else
     void * fp_vkQueueSetPerformanceConfigurationINTEL{};
-#endif
-#if (defined(VK_OHOS_native_buffer))
-    PFN_vkQueueSignalReleaseImageOHOS fp_vkQueueSignalReleaseImageOHOS = nullptr;
-#else
-    void * fp_vkQueueSignalReleaseImageOHOS{};
 #endif
     PFN_vkQueueSubmit fp_vkQueueSubmit = nullptr;
 #if (defined(VK_VERSION_1_3))

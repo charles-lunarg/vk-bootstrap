@@ -159,6 +159,9 @@ struct InstanceDispatchTable {
 #if (defined(VK_NV_cooperative_vector))
         fp_vkGetPhysicalDeviceCooperativeVectorPropertiesNV = reinterpret_cast<PFN_vkGetPhysicalDeviceCooperativeVectorPropertiesNV>(procAddr(instance, "vkGetPhysicalDeviceCooperativeVectorPropertiesNV"));
 #endif
+#if (defined(VK_EXT_descriptor_heap))
+        fp_vkGetPhysicalDeviceDescriptorSizeEXT = reinterpret_cast<PFN_vkGetPhysicalDeviceDescriptorSizeEXT>(procAddr(instance, "vkGetPhysicalDeviceDescriptorSizeEXT"));
+#endif
 #if (defined(VK_EXT_directfb_surface))
         fp_vkGetPhysicalDeviceDirectFBPresentationSupportEXT = reinterpret_cast<PFN_vkGetPhysicalDeviceDirectFBPresentationSupportEXT>(procAddr(instance, "vkGetPhysicalDeviceDirectFBPresentationSupportEXT"));
 #endif
@@ -561,6 +564,11 @@ struct InstanceDispatchTable {
 #if (defined(VK_NV_cooperative_vector))
     VkResult getPhysicalDeviceCooperativeVectorPropertiesNV(VkPhysicalDevice physicalDevice, uint32_t* pPropertyCount, VkCooperativeVectorPropertiesNV* pProperties) const noexcept {
         return fp_vkGetPhysicalDeviceCooperativeVectorPropertiesNV(physicalDevice, pPropertyCount, pProperties);
+    }
+#endif
+#if (defined(VK_EXT_descriptor_heap))
+    VkDeviceSize getPhysicalDeviceDescriptorSizeEXT(VkPhysicalDevice physicalDevice, VkDescriptorType descriptorType) const noexcept {
+        return fp_vkGetPhysicalDeviceDescriptorSizeEXT(physicalDevice, descriptorType);
     }
 #endif
 #if (defined(VK_EXT_directfb_surface))
@@ -1084,6 +1092,11 @@ struct InstanceDispatchTable {
 #else
     void * fp_vkGetPhysicalDeviceCooperativeVectorPropertiesNV{};
 #endif
+#if (defined(VK_EXT_descriptor_heap))
+    PFN_vkGetPhysicalDeviceDescriptorSizeEXT fp_vkGetPhysicalDeviceDescriptorSizeEXT = nullptr;
+#else
+    void * fp_vkGetPhysicalDeviceDescriptorSizeEXT{};
+#endif
 #if (defined(VK_EXT_directfb_surface))
     PFN_vkGetPhysicalDeviceDirectFBPresentationSupportEXT fp_vkGetPhysicalDeviceDirectFBPresentationSupportEXT = nullptr;
 #else
@@ -1507,6 +1520,12 @@ struct DispatchTable {
 #if (defined(VK_NV_device_generated_commands))
         fp_vkCmdBindPipelineShaderGroupNV = reinterpret_cast<PFN_vkCmdBindPipelineShaderGroupNV>(procAddr(device, "vkCmdBindPipelineShaderGroupNV"));
 #endif
+#if (defined(VK_EXT_descriptor_heap))
+        fp_vkCmdBindResourceHeapEXT = reinterpret_cast<PFN_vkCmdBindResourceHeapEXT>(procAddr(device, "vkCmdBindResourceHeapEXT"));
+#endif
+#if (defined(VK_EXT_descriptor_heap))
+        fp_vkCmdBindSamplerHeapEXT = reinterpret_cast<PFN_vkCmdBindSamplerHeapEXT>(procAddr(device, "vkCmdBindSamplerHeapEXT"));
+#endif
 #if (defined(VK_EXT_shader_object))
         fp_vkCmdBindShadersEXT = reinterpret_cast<PFN_vkCmdBindShadersEXT>(procAddr(device, "vkCmdBindShadersEXT"));
 #endif
@@ -1817,6 +1836,9 @@ struct DispatchTable {
 #endif
 #if (defined(VK_KHR_maintenance6))
         fp_vkCmdPushConstants2KHR = reinterpret_cast<PFN_vkCmdPushConstants2KHR>(procAddr(device, "vkCmdPushConstants2KHR"));
+#endif
+#if (defined(VK_EXT_descriptor_heap))
+        fp_vkCmdPushDataEXT = reinterpret_cast<PFN_vkCmdPushDataEXT>(procAddr(device, "vkCmdPushDataEXT"));
 #endif
 #if (defined(VK_VERSION_1_4))
         fp_vkCmdPushDescriptorSet = reinterpret_cast<PFN_vkCmdPushDescriptorSet>(procAddr(device, "vkCmdPushDescriptorSet"));
@@ -2604,6 +2626,9 @@ struct DispatchTable {
 #if (defined(VK_KHR_maintenance4))
         fp_vkGetDeviceBufferMemoryRequirementsKHR = reinterpret_cast<PFN_vkGetDeviceBufferMemoryRequirementsKHR>(procAddr(device, "vkGetDeviceBufferMemoryRequirementsKHR"));
 #endif
+#if (defined(VK_NVX_image_view_handle))
+        fp_vkGetDeviceCombinedImageSamplerIndexNVX = reinterpret_cast<PFN_vkGetDeviceCombinedImageSamplerIndexNVX>(procAddr(device, "vkGetDeviceCombinedImageSamplerIndexNVX"));
+#endif
 #if (defined(VK_EXT_device_fault))
         fp_vkGetDeviceFaultInfoEXT = reinterpret_cast<PFN_vkGetDeviceFaultInfoEXT>(procAddr(device, "vkGetDeviceFaultInfoEXT"));
 #endif
@@ -2701,6 +2726,9 @@ struct DispatchTable {
 #endif
 #if (defined(VK_KHR_get_memory_requirements2))
         fp_vkGetImageMemoryRequirements2KHR = reinterpret_cast<PFN_vkGetImageMemoryRequirements2KHR>(procAddr(device, "vkGetImageMemoryRequirements2KHR"));
+#endif
+#if (defined(VK_EXT_descriptor_heap))
+        fp_vkGetImageOpaqueCaptureDataEXT = reinterpret_cast<PFN_vkGetImageOpaqueCaptureDataEXT>(procAddr(device, "vkGetImageOpaqueCaptureDataEXT"));
 #endif
 #if (defined(VK_EXT_descriptor_buffer))
         fp_vkGetImageOpaqueCaptureDescriptorDataEXT = reinterpret_cast<PFN_vkGetImageOpaqueCaptureDescriptorDataEXT>(procAddr(device, "vkGetImageOpaqueCaptureDescriptorDataEXT"));
@@ -2905,6 +2933,9 @@ struct DispatchTable {
 #if (defined(VK_ARM_tensors))
         fp_vkGetTensorMemoryRequirementsARM = reinterpret_cast<PFN_vkGetTensorMemoryRequirementsARM>(procAddr(device, "vkGetTensorMemoryRequirementsARM"));
 #endif
+#if (defined(VK_EXT_descriptor_heap))
+        fp_vkGetTensorOpaqueCaptureDataARM = reinterpret_cast<PFN_vkGetTensorOpaqueCaptureDataARM>(procAddr(device, "vkGetTensorOpaqueCaptureDataARM"));
+#endif
 #if (defined(VK_ARM_tensors))
         fp_vkGetTensorOpaqueCaptureDescriptorDataARM = reinterpret_cast<PFN_vkGetTensorOpaqueCaptureDescriptorDataARM>(procAddr(device, "vkGetTensorOpaqueCaptureDescriptorDataARM"));
 #endif
@@ -2977,6 +3008,9 @@ struct DispatchTable {
         fp_vkQueueSubmit2KHR = reinterpret_cast<PFN_vkQueueSubmit2KHR>(procAddr(device, "vkQueueSubmit2KHR"));
 #endif
         fp_vkQueueWaitIdle = reinterpret_cast<PFN_vkQueueWaitIdle>(procAddr(device, "vkQueueWaitIdle"));
+#if (defined(VK_EXT_descriptor_heap))
+        fp_vkRegisterCustomBorderColorEXT = reinterpret_cast<PFN_vkRegisterCustomBorderColorEXT>(procAddr(device, "vkRegisterCustomBorderColorEXT"));
+#endif
 #if (defined(VK_EXT_display_control))
         fp_vkRegisterDeviceEventEXT = reinterpret_cast<PFN_vkRegisterDeviceEventEXT>(procAddr(device, "vkRegisterDeviceEventEXT"));
 #endif
@@ -3077,6 +3111,9 @@ struct DispatchTable {
 #if (defined(VK_KHR_map_memory2))
         fp_vkUnmapMemory2KHR = reinterpret_cast<PFN_vkUnmapMemory2KHR>(procAddr(device, "vkUnmapMemory2KHR"));
 #endif
+#if (defined(VK_EXT_descriptor_heap))
+        fp_vkUnregisterCustomBorderColorEXT = reinterpret_cast<PFN_vkUnregisterCustomBorderColorEXT>(procAddr(device, "vkUnregisterCustomBorderColorEXT"));
+#endif
 #if (defined(VK_VERSION_1_1))
         fp_vkUpdateDescriptorSetWithTemplate = reinterpret_cast<PFN_vkUpdateDescriptorSetWithTemplate>(procAddr(device, "vkUpdateDescriptorSetWithTemplate"));
 #endif
@@ -3111,6 +3148,12 @@ struct DispatchTable {
 #endif
 #if (defined(VK_EXT_opacity_micromap))
         fp_vkWriteMicromapsPropertiesEXT = reinterpret_cast<PFN_vkWriteMicromapsPropertiesEXT>(procAddr(device, "vkWriteMicromapsPropertiesEXT"));
+#endif
+#if (defined(VK_EXT_descriptor_heap))
+        fp_vkWriteResourceDescriptorsEXT = reinterpret_cast<PFN_vkWriteResourceDescriptorsEXT>(procAddr(device, "vkWriteResourceDescriptorsEXT"));
+#endif
+#if (defined(VK_EXT_descriptor_heap))
+        fp_vkWriteSamplerDescriptorsEXT = reinterpret_cast<PFN_vkWriteSamplerDescriptorsEXT>(procAddr(device, "vkWriteSamplerDescriptorsEXT"));
 #endif
     }
 #if (defined(VK_EXT_full_screen_exclusive))
@@ -3329,6 +3372,16 @@ struct DispatchTable {
 #if (defined(VK_NV_device_generated_commands))
     void cmdBindPipelineShaderGroupNV(VkCommandBuffer commandBuffer, VkPipelineBindPoint pipelineBindPoint, VkPipeline pipeline, uint32_t groupIndex) const noexcept {
         fp_vkCmdBindPipelineShaderGroupNV(commandBuffer, pipelineBindPoint, pipeline, groupIndex);
+    }
+#endif
+#if (defined(VK_EXT_descriptor_heap))
+    void cmdBindResourceHeapEXT(VkCommandBuffer commandBuffer, const VkBindHeapInfoEXT* pBindInfo) const noexcept {
+        fp_vkCmdBindResourceHeapEXT(commandBuffer, pBindInfo);
+    }
+#endif
+#if (defined(VK_EXT_descriptor_heap))
+    void cmdBindSamplerHeapEXT(VkCommandBuffer commandBuffer, const VkBindHeapInfoEXT* pBindInfo) const noexcept {
+        fp_vkCmdBindSamplerHeapEXT(commandBuffer, pBindInfo);
     }
 #endif
 #if (defined(VK_EXT_shader_object))
@@ -3878,6 +3931,11 @@ struct DispatchTable {
 #if (defined(VK_KHR_maintenance6))
     void cmdPushConstants2KHR(VkCommandBuffer commandBuffer, const VkPushConstantsInfoKHR* pPushConstantsInfo) const noexcept {
         fp_vkCmdPushConstants2KHR(commandBuffer, pPushConstantsInfo);
+    }
+#endif
+#if (defined(VK_EXT_descriptor_heap))
+    void cmdPushDataEXT(VkCommandBuffer commandBuffer, const VkPushDataInfoEXT* pPushDataInfo) const noexcept {
+        fp_vkCmdPushDataEXT(commandBuffer, pPushDataInfo);
     }
 #endif
 #if (defined(VK_VERSION_1_4))
@@ -5270,6 +5328,11 @@ struct DispatchTable {
         fp_vkGetDeviceBufferMemoryRequirementsKHR(device, pInfo, pMemoryRequirements);
     }
 #endif
+#if (defined(VK_NVX_image_view_handle))
+    uint64_t getDeviceCombinedImageSamplerIndexNVX(uint64_t imageViewIndex, uint64_t samplerIndex) const noexcept {
+        return fp_vkGetDeviceCombinedImageSamplerIndexNVX(device, imageViewIndex, samplerIndex);
+    }
+#endif
 #if (defined(VK_EXT_device_fault))
     VkResult getDeviceFaultInfoEXT(VkDeviceFaultCountsEXT* pFaultCounts, VkDeviceFaultInfoEXT* pFaultInfo) const noexcept {
         return fp_vkGetDeviceFaultInfoEXT(device, pFaultCounts, pFaultInfo);
@@ -5438,6 +5501,11 @@ struct DispatchTable {
 #if (defined(VK_KHR_get_memory_requirements2))
     void getImageMemoryRequirements2KHR(const VkImageMemoryRequirementsInfo2KHR* pInfo, VkMemoryRequirements2KHR* pMemoryRequirements) const noexcept {
         fp_vkGetImageMemoryRequirements2KHR(device, pInfo, pMemoryRequirements);
+    }
+#endif
+#if (defined(VK_EXT_descriptor_heap))
+    VkResult getImageOpaqueCaptureDataEXT(uint32_t imageCount, const VkImage* pImages, VkHostAddressRangeEXT* pDatas) const noexcept {
+        return fp_vkGetImageOpaqueCaptureDataEXT(device, imageCount, pImages, pDatas);
     }
 #endif
 #if (defined(VK_EXT_descriptor_buffer))
@@ -5785,6 +5853,11 @@ struct DispatchTable {
         fp_vkGetTensorMemoryRequirementsARM(device, pInfo, pMemoryRequirements);
     }
 #endif
+#if (defined(VK_EXT_descriptor_heap))
+    VkResult getTensorOpaqueCaptureDataARM(uint32_t tensorCount, const VkTensorARM* pTensors, VkHostAddressRangeEXT* pDatas) const noexcept {
+        return fp_vkGetTensorOpaqueCaptureDataARM(device, tensorCount, pTensors, pDatas);
+    }
+#endif
 #if (defined(VK_ARM_tensors))
     VkResult getTensorOpaqueCaptureDescriptorDataARM(const VkTensorCaptureDescriptorDataInfoARM* pInfo, void* pData) const noexcept {
         return fp_vkGetTensorOpaqueCaptureDescriptorDataARM(device, pInfo, pData);
@@ -5913,6 +5986,11 @@ struct DispatchTable {
     VkResult queueWaitIdle(VkQueue queue) const noexcept {
         return fp_vkQueueWaitIdle(queue);
     }
+#if (defined(VK_EXT_descriptor_heap))
+    VkResult registerCustomBorderColorEXT(const VkSamplerCustomBorderColorCreateInfoEXT* pBorderColor, VkBool32 requestIndex, uint32_t* pIndex) const noexcept {
+        return fp_vkRegisterCustomBorderColorEXT(device, pBorderColor, requestIndex, pIndex);
+    }
+#endif
 #if (defined(VK_EXT_display_control))
     VkResult registerDeviceEventEXT(const VkDeviceEventInfoEXT* pDeviceEventInfo, const VkAllocationCallbacks* pAllocator, VkFence* pFence) const noexcept {
         return fp_vkRegisterDeviceEventEXT(device, pDeviceEventInfo, pAllocator, pFence);
@@ -6089,6 +6167,11 @@ struct DispatchTable {
         return fp_vkUnmapMemory2KHR(device, pMemoryUnmapInfo);
     }
 #endif
+#if (defined(VK_EXT_descriptor_heap))
+    void unregisterCustomBorderColorEXT(uint32_t index) const noexcept {
+        fp_vkUnregisterCustomBorderColorEXT(device, index);
+    }
+#endif
 #if (defined(VK_VERSION_1_1))
     void updateDescriptorSetWithTemplate(VkDescriptorSet descriptorSet, VkDescriptorUpdateTemplate descriptorUpdateTemplate, const void* pData) const noexcept {
         fp_vkUpdateDescriptorSetWithTemplate(device, descriptorSet, descriptorUpdateTemplate, pData);
@@ -6148,6 +6231,16 @@ struct DispatchTable {
 #if (defined(VK_EXT_opacity_micromap))
     VkResult writeMicromapsPropertiesEXT(uint32_t micromapCount, const VkMicromapEXT* pMicromaps, VkQueryType queryType, size_t dataSize, void* pData, size_t stride) const noexcept {
         return fp_vkWriteMicromapsPropertiesEXT(device, micromapCount, pMicromaps, queryType, dataSize, pData, stride);
+    }
+#endif
+#if (defined(VK_EXT_descriptor_heap))
+    VkResult writeResourceDescriptorsEXT(uint32_t resourceCount, const VkResourceDescriptorInfoEXT* pResources, const VkHostAddressRangeEXT* pDescriptors) const noexcept {
+        return fp_vkWriteResourceDescriptorsEXT(device, resourceCount, pResources, pDescriptors);
+    }
+#endif
+#if (defined(VK_EXT_descriptor_heap))
+    VkResult writeSamplerDescriptorsEXT(uint32_t samplerCount, const VkSamplerCreateInfo* pSamplers, const VkHostAddressRangeEXT* pDescriptors) const noexcept {
+        return fp_vkWriteSamplerDescriptorsEXT(device, samplerCount, pSamplers, pDescriptors);
     }
 #endif
 #if (defined(VK_EXT_full_screen_exclusive))
@@ -6345,6 +6438,16 @@ struct DispatchTable {
     PFN_vkCmdBindPipelineShaderGroupNV fp_vkCmdBindPipelineShaderGroupNV = nullptr;
 #else
     void * fp_vkCmdBindPipelineShaderGroupNV{};
+#endif
+#if (defined(VK_EXT_descriptor_heap))
+    PFN_vkCmdBindResourceHeapEXT fp_vkCmdBindResourceHeapEXT = nullptr;
+#else
+    void * fp_vkCmdBindResourceHeapEXT{};
+#endif
+#if (defined(VK_EXT_descriptor_heap))
+    PFN_vkCmdBindSamplerHeapEXT fp_vkCmdBindSamplerHeapEXT = nullptr;
+#else
+    void * fp_vkCmdBindSamplerHeapEXT{};
 #endif
 #if (defined(VK_EXT_shader_object))
     PFN_vkCmdBindShadersEXT fp_vkCmdBindShadersEXT = nullptr;
@@ -6848,6 +6951,11 @@ struct DispatchTable {
     PFN_vkCmdPushConstants2KHR fp_vkCmdPushConstants2KHR = nullptr;
 #else
     void * fp_vkCmdPushConstants2KHR{};
+#endif
+#if (defined(VK_EXT_descriptor_heap))
+    PFN_vkCmdPushDataEXT fp_vkCmdPushDataEXT = nullptr;
+#else
+    void * fp_vkCmdPushDataEXT{};
 #endif
 #if (defined(VK_VERSION_1_4))
     PFN_vkCmdPushDescriptorSet fp_vkCmdPushDescriptorSet = nullptr;
@@ -8119,6 +8227,11 @@ struct DispatchTable {
 #else
     void * fp_vkGetDeviceBufferMemoryRequirementsKHR{};
 #endif
+#if (defined(VK_NVX_image_view_handle))
+    PFN_vkGetDeviceCombinedImageSamplerIndexNVX fp_vkGetDeviceCombinedImageSamplerIndexNVX = nullptr;
+#else
+    void * fp_vkGetDeviceCombinedImageSamplerIndexNVX{};
+#endif
 #if (defined(VK_EXT_device_fault))
     PFN_vkGetDeviceFaultInfoEXT fp_vkGetDeviceFaultInfoEXT = nullptr;
 #else
@@ -8278,6 +8391,11 @@ struct DispatchTable {
     PFN_vkGetImageMemoryRequirements2KHR fp_vkGetImageMemoryRequirements2KHR = nullptr;
 #else
     void * fp_vkGetImageMemoryRequirements2KHR{};
+#endif
+#if (defined(VK_EXT_descriptor_heap))
+    PFN_vkGetImageOpaqueCaptureDataEXT fp_vkGetImageOpaqueCaptureDataEXT = nullptr;
+#else
+    void * fp_vkGetImageOpaqueCaptureDataEXT{};
 #endif
 #if (defined(VK_EXT_descriptor_buffer))
     PFN_vkGetImageOpaqueCaptureDescriptorDataEXT fp_vkGetImageOpaqueCaptureDescriptorDataEXT = nullptr;
@@ -8614,6 +8732,11 @@ struct DispatchTable {
 #else
     void * fp_vkGetTensorMemoryRequirementsARM{};
 #endif
+#if (defined(VK_EXT_descriptor_heap))
+    PFN_vkGetTensorOpaqueCaptureDataARM fp_vkGetTensorOpaqueCaptureDataARM = nullptr;
+#else
+    void * fp_vkGetTensorOpaqueCaptureDataARM{};
+#endif
 #if (defined(VK_ARM_tensors))
     PFN_vkGetTensorOpaqueCaptureDescriptorDataARM fp_vkGetTensorOpaqueCaptureDescriptorDataARM = nullptr;
 #else
@@ -8730,6 +8853,11 @@ struct DispatchTable {
     void * fp_vkQueueSubmit2KHR{};
 #endif
     PFN_vkQueueWaitIdle fp_vkQueueWaitIdle = nullptr;
+#if (defined(VK_EXT_descriptor_heap))
+    PFN_vkRegisterCustomBorderColorEXT fp_vkRegisterCustomBorderColorEXT = nullptr;
+#else
+    void * fp_vkRegisterCustomBorderColorEXT{};
+#endif
 #if (defined(VK_EXT_display_control))
     PFN_vkRegisterDeviceEventEXT fp_vkRegisterDeviceEventEXT = nullptr;
 #else
@@ -8892,6 +9020,11 @@ struct DispatchTable {
 #else
     void * fp_vkUnmapMemory2KHR{};
 #endif
+#if (defined(VK_EXT_descriptor_heap))
+    PFN_vkUnregisterCustomBorderColorEXT fp_vkUnregisterCustomBorderColorEXT = nullptr;
+#else
+    void * fp_vkUnregisterCustomBorderColorEXT{};
+#endif
 #if (defined(VK_VERSION_1_1))
     PFN_vkUpdateDescriptorSetWithTemplate fp_vkUpdateDescriptorSetWithTemplate = nullptr;
 #else
@@ -8948,6 +9081,16 @@ struct DispatchTable {
     PFN_vkWriteMicromapsPropertiesEXT fp_vkWriteMicromapsPropertiesEXT = nullptr;
 #else
     void * fp_vkWriteMicromapsPropertiesEXT{};
+#endif
+#if (defined(VK_EXT_descriptor_heap))
+    PFN_vkWriteResourceDescriptorsEXT fp_vkWriteResourceDescriptorsEXT = nullptr;
+#else
+    void * fp_vkWriteResourceDescriptorsEXT{};
+#endif
+#if (defined(VK_EXT_descriptor_heap))
+    PFN_vkWriteSamplerDescriptorsEXT fp_vkWriteSamplerDescriptorsEXT = nullptr;
+#else
+    void * fp_vkWriteSamplerDescriptorsEXT{};
 #endif
     bool is_populated() const { return populated; }
     VkDevice device = VK_NULL_HANDLE;

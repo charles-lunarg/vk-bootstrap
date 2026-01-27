@@ -13,12 +13,12 @@
 
 #include "../src/VkBootstrap.h"
 
-#if defined(__linux__) || defined(__APPLE__)
+#if defined(__linux__) || defined(__APPLE__) || defined(__FreeBSD__)
 #include <dlfcn.h>
 #endif
 
 struct VulkanLibrary {
-#if defined(__linux__) || defined(__APPLE__)
+#if defined(__linux__) || defined(__APPLE__) || defined(__FreeBSD__)
     void* library;
 #elif defined(_WIN32)
 
@@ -26,7 +26,7 @@ struct VulkanLibrary {
 #endif
 
     VulkanLibrary() {
-#if defined(__linux__)
+#if defined(__linux__) || defined(__FreeBSD__)
         library = dlopen("libvulkan.so.1", RTLD_NOW | RTLD_LOCAL);
         if (!library) library = dlopen("libvulkan.so", RTLD_NOW | RTLD_LOCAL);
 #elif defined(__APPLE__)
@@ -38,7 +38,7 @@ struct VulkanLibrary {
         assert(false && "Unsupported platform");
 #endif
         if (!library) return;
-#if defined(__linux__) || defined(__APPLE__)
+#if defined(__linux__) || defined(__APPLE__) || defined(__FreeBSD__)
         vkGetInstanceProcAddr = reinterpret_cast<PFN_vkGetInstanceProcAddr>(dlsym(library, "vkGetInstanceProcAddr"));
 #elif defined(_WIN32)
         vkGetInstanceProcAddr = reinterpret_cast<PFN_vkGetInstanceProcAddr>(GetProcAddress(library, "vkGetInstanceProcAddr"));
@@ -46,7 +46,7 @@ struct VulkanLibrary {
     }
 
     void close() {
-#if defined(__linux__) || defined(__APPLE__)
+#if defined(__linux__) || defined(__APPLE__) || defined(__FreeBSD__)
         dlclose(library);
 #elif defined(_WIN32)
         FreeLibrary(library);

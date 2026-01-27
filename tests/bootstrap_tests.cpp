@@ -481,7 +481,7 @@ TEST_CASE("Swapchain", "[VkBootstrap.bootstrap]") {
         }
         AND_THEN("Swapchain can be created from individual handles") {
             vkb::SwapchainBuilder swapchain_builder(
-                device.physical_device.physical_device, device.device, surface, graphics_queue_index, present_queue_index);
+                instance.instance, device.physical_device.physical_device, device.device, surface, graphics_queue_index, present_queue_index);
             auto swapchain_ret = swapchain_builder.build();
             REQUIRE(swapchain_ret.has_value());
 
@@ -494,7 +494,7 @@ TEST_CASE("Swapchain", "[VkBootstrap.bootstrap]") {
             vkb::destroy_swapchain(recreated_swapchain_ret.value());
         }
         AND_THEN("Swapchain can be create with default gotten handles") {
-            vkb::SwapchainBuilder swapchain_builder(device.physical_device.physical_device, device.device, surface);
+            vkb::SwapchainBuilder swapchain_builder(instance.instance, device.physical_device.physical_device, device.device, surface);
             auto swapchain_ret = swapchain_builder.build();
             REQUIRE(swapchain_ret.has_value());
 

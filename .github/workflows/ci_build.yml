@@ -18,12 +18,13 @@
 
 name: CI Build
 
-on: [push, pull_request, workflow_dispatch]
+on: [push, pull_request]
 
 jobs:
     linux:
         name: Linux
         runs-on: ubuntu-latest
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name != github.event.pull_request.base.repo.full_name
         strategy:
             fail-fast: false
             matrix:
@@ -38,10 +39,10 @@ jobs:
 
 
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v6
             - uses: lukka/get-cmake@latest
               with:
-                cmakeVersion: 3.15
+                cmakeVersion: 3.22
 
             - name: Install build dependencies
               run: |
@@ -49,10 +50,50 @@ jobs:
                 sudo apt-get install -y xorg-dev
 
             - name: CMake Configure
-              run: cmake -S. -B build -DCMAKE_BUILD_TYPE=${{matrix.type}} -DVK_BOOTSTRAP_WERROR=ON -DVK_BOOTSTRAP_TEST=ON
+              run: cmake -S. -B build -DCMAKE_BUILD_TYPE=${{matrix.type}} -DCMAKE_C_COMPILER=${{matrix.cc}} -DCMAKE_CXX_COMPILER=${{matrix.cxx}} -DVK_BOOTSTRAP_WERROR=ON -DVK_BOOTSTRAP_TEST=ON -DENABLE_ADDRESS_SANITIZER=ON
 
             - name: CMake Build
-              run: cmake --build build
+              run: cmake --build build --config ${{matrix.type}}
+
+            - name: Install
+              run: cmake --install build --prefix build/install
+
+            - name: Run tests
+              working-directory: ./build
+              run: ctest --output-on-failure -C ${{matrix.type}}
+
+    linux-thread-sanitizer:
+        name: Linux with Thread Sanitizer
+        runs-on: ubuntu-latest
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name != github.event.pull_request.base.repo.full_name
+        strategy:
+            fail-fast: false
+            matrix:
+              type: ["Release"]
+              cc: ["gcc", "clang"]
+              cxx: ["g++", "clang++"]
+              exclude:
+                  - cc: gcc
+                    cxx: clang++
+                  - cc: clang
+                    cxx: g++
+
+        steps:
+            - uses: actions/checkout@v6
+            - uses: lukka/get-cmake@latest
+              with:
+                cmakeVersion: 3.22
+
+            - name: Install build dependencies
+              run: |
+                sudo apt-get update
+                sudo apt-get install -y xorg-dev
+
+            - name: CMake Configure
+              run: cmake -S. -B build -DCMAKE_BUILD_TYPE=${{matrix.type}}  -DCMAKE_C_COMPILER=${{matrix.cc}} -DCMAKE_CXX_COMPILER=${{matrix.cxx}} -DVK_BOOTSTRAP_WERROR=ON -DVK_BOOTSTRAP_TEST=ON -DENABLE_THREAD_SANITIZER=ON
+
+            - name: CMake Build
+              run: cmake --build build --config ${{matrix.type}}
 
             - name: Install
               run: cmake --install build --prefix build/install
@@ -64,21 +105,94 @@ jobs:
     windows:
         name: Windows
         runs-on: windows-latest
-
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name != github.event.pull_request.base.repo.full_name
         strategy:
             matrix:
                 arch: [ Win32, x64 ]
-                config: [ Debug, Release ]
+                type: [ Debug, Release ]
 
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v6
+            - uses: TheMrMilchmann/setup-msvc-dev@v4
+              with:
+                arch: ${{matrix.arch}}
 
             - name: CMake Configure
-              run: cmake -S. -B build -D CMAKE_BUILD_TYPE=${{matrix.config}} -D VK_BOOTSTRAP_WERROR=ON -D VK_BOOTSTRAP_TEST=ON -A ${{matrix.arch}}
+              run: cmake -S. -B build -D CMAKE_BUILD_TYPE=${{matrix.type}} -D VK_BOOTSTRAP_WERROR=ON -D VK_BOOTSTRAP_TEST=ON -D ENABLE_ADDRESS_SANITIZER=ON -A ${{matrix.arch}}
 
             - name: CMake Build
-              run: cmake --build build
+              run: cmake --build build --config ${{matrix.type}}
 
             - name: Run  tests
               working-directory: ./build
-              run: ctest --output-on-failure -C ${{matrix.config}}
+              run: ctest --output-on-failure -C ${{matrix.type}}
+
+    macos:
+        name: macOS
+        runs-on: macos-latest
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name != github.event.pull_request.base.repo.full_name
+        strategy:
+            fail-fast: false
+            matrix:
+                type: ["Debug", "Release"]
+                cc: ["clang"]
+                cxx: ["clang++"]
+
+        steps:
+            - uses: actions/checkout@v6
+            - uses: lukka/get-cmake@latest
+              with:
+                cmakeVersion: 3.22
+
+            - name: Install build dependencies
+              run: |
+                brew update
+                brew install xorg-server
+
+            - name: CMake Configure
+              run: cmake -S. -B build -DCMAKE_BUILD_TYPE=${{matrix.type}} -DCMAKE_C_COMPILER=${{matrix.cc}} -DCMAKE_CXX_COMPILER=${{matrix.cxx}} -DVK_BOOTSTRAP_WERROR=ON -DVK_BOOTSTRAP_TEST=ON -DENABLE_ADDRESS_SANITIZER=ON
+
+            - name: CMake Build
+              run: cmake --build build --config ${{matrix.type}}
+
+            - name: Install
+              run: cmake --install build --prefix build/install
+
+            - name: Run tests
+              working-directory: ./build
+              run: ctest --output-on-failure -C ${{matrix.type}}
+
+    macos-thread-sanitizer:
+        name: macOS with Thread Sanitizer
+        runs-on: macos-latest
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name != github.event.pull_request.base.repo.full_name
+        strategy:
+            fail-fast: false
+            matrix:
+                type: ["Release"]
+                cc: ["clang"]
+                cxx: ["clang++"]
+
+        steps:
+            - uses: actions/checkout@v6
+            - uses: lukka/get-cmake@latest
+              with:
+                cmakeVersion: 3.22
+
+            - name: Install build dependencies
+              run: |
+                brew update
+                brew install xorg-server
+
+            - name: CMake Configure
+              run: cmake -S. -B build -DCMAKE_BUILD_TYPE=${{matrix.type}} -DCMAKE_C_COMPILER=${{matrix.cc}} -DCMAKE_CXX_COMPILER=${{matrix.cxx}} -DVK_BOOTSTRAP_WERROR=ON -DVK_BOOTSTRAP_TEST=ON -DENABLE_THREAD_SANITIZER=ON
+
+            - name: CMake Build
+              run: cmake --build build --config ${{matrix.type}}
+
+            - name: Install
+              run: cmake --install build --prefix build/install
+
+            - name: Run tests
+              working-directory: ./build
+              run: ctest --output-on-failure -C ${{matrix.type}}

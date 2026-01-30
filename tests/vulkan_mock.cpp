@@ -2,13 +2,7 @@
 
 #include "vulkan_mock.hpp"
 
-#include <cstring>
-
 #include <algorithm>
-
-#if defined(__linux__) || defined(__APPLE__)
-#include <dlfcn.h>
-#endif
 
 #define GPA_IMPL(x)                                                                                                    \
     if (strcmp(pName, #x) == 0) {                                                                                      \
@@ -54,7 +48,7 @@ VKAPI_ATTR VkResult VKAPI_CALL shim_vkEnumerateInstanceVersion(uint32_t* pApiVer
     if (pApiVersion == nullptr) {
         return VK_ERROR_DEVICE_LOST;
     }
-    *pApiVersion = mock.api_version;
+    *pApiVersion = mock.instance_api_version;
     return VK_SUCCESS;
 }
 
@@ -76,13 +70,16 @@ VKAPI_ATTR VkResult VKAPI_CALL shim_vkEnumerateInstanceLayerProperties(uint32_t*
     return fill_out_count_pointer_pair(mock.instance_layers, pPropertyCount, pProperties);
 }
 
-VKAPI_ATTR VkResult VKAPI_CALL shim_vkCreateInstance([[maybe_unused]] const VkInstanceCreateInfo* pCreateInfo,
-    [[maybe_unused]] const VkAllocationCallbacks* pAllocator,
-    VkInstance* pInstance) {
+VKAPI_ATTR VkResult VKAPI_CALL shim_vkCreateInstance(
+    const VkInstanceCreateInfo* pCreateInfo, [[maybe_unused]] const VkAllocationCallbacks* pAllocator, VkInstance* pInstance) {
     if (pInstance == nullptr) {
         return VK_ERROR_INITIALIZATION_FAILED;
     }
     *pInstance = get_handle<VkInstance>(0x0000ABCDU);
+
+    if (pCreateInfo && pCreateInfo->pApplicationInfo && mock.should_save_api_version) {
+        mock.api_version_set_by_vkCreateInstance = pCreateInfo->pApplicationInfo->apiVersion;
+    }
     return VK_SUCCESS;
 }
 VKAPI_ATTR void VKAPI_CALL shim_vkDestroyInstance(
@@ -143,11 +140,11 @@ VKAPI_ATTR void VKAPI_CALL shim_vkGetPhysicalDeviceFeatures2KHR(VkPhysicalDevice
     VkBaseOutStructure* current = static_cast<VkBaseOutStructure*>(pFeatures->pNext);
     while (current) {
         for (const auto& features_pNext : phys_dev.features_pNextChain) {
-            if (features_pNext.sType == current->sType) {
+            VkBaseOutStructure structure_data{};
+            memcpy(&structure_data, features_pNext.data(), sizeof(structure_data));
+            if (structure_data.sType == current->sType) {
                 VkBaseOutStructure* next = static_cast<VkBaseOutStructure*>(current->pNext);
-                std::memcpy(static_cast<void*>(current),
-                    static_cast<const void*>(&features_pNext),
-                    get_pnext_chain_struct_size(features_pNext.sType));
+                std::memcpy(static_cast<void*>(current), features_pNext.data(), features_pNext.size());
                 // Repair pNext void* since we clobbered it in the memcpy
                 current->pNext = next;
                 break;
@@ -189,7 +186,7 @@ VKAPI_ATTR VkResult VKAPI_CALL shim_vkCreateDevice(VkPhysicalDevice physicalDevi
     if (pCreateInfo->pEnabledFeatures) {
         new_feats = *pCreateInfo->pEnabledFeatures;
     }
-    std::vector<vkb::detail::GenericFeaturesPNextNode> new_chain;
+    std::vector<SerializedStruct> new_chain;
     std::vector<const char*> created_extensions;
     for (uint32_t i = 0; i < pCreateInfo->enabledExtensionCount; i++) {
         created_extensions.push_back(pCreateInfo->ppEnabledExtensionNames[i]);
@@ -198,10 +195,9 @@ VKAPI_ATTR VkResult VKAPI_CALL shim_vkCreateDevice(VkPhysicalDevice physicalDevi
     while (pNext_chain) {
         const auto* chain = static_cast<const VkBaseOutStructure*>(pNext_chain);
         const void* next = chain->pNext;
-        if (check_if_features2_struct(chain->sType) > 0) {
-            vkb::detail::GenericFeaturesPNextNode node;
-            std::memcpy(static_cast<void*>(&node), pNext_chain, get_pnext_chain_struct_size(chain->sType));
-            new_chain.push_back(node);
+        SerializedStruct new_struct = create_serialized_struct_from_features2_struct(pNext_chain, chain->sType);
+        if (!new_struct.empty()) {
+            new_chain.emplace_back(new_struct);
         }
         if (chain->sType == VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2) {
             new_feats = static_cast<const VkPhysicalDeviceFeatures2*>(pNext_chain)->features;
@@ -277,13 +273,24 @@ VKAPI_ATTR VkResult VKAPI_CALL shim_vkCreateImageView([[maybe_unused]] VkDevice 
     [[maybe_unused]] const VkImageViewCreateInfo* pCreateInfo,
     [[maybe_unused]] const VkAllocationCallbacks* pAllocator,
     VkImageView* pView) {
+    if (mock.fail_image_creation_on_iteration != std::numeric_limits<uint32_t>::max() &&
+        mock.fail_image_creation_on_iteration == mock.created_image_view_count) {
+        return VK_ERROR_INITIALIZATION_FAILED;
+    }
+
     if (pView) *pView = get_uint64_handle<VkImageView>(0x0000CCCEU);
+    mock.created_image_view_count++;
     return VK_SUCCESS;
 }
 
 VKAPI_ATTR void VKAPI_CALL shim_vkDestroyImageView([[maybe_unused]] VkDevice device,
     [[maybe_unused]] VkImageView imageView,
-    [[maybe_unused]] const VkAllocationCallbacks* pAllocator) {}
+    [[maybe_unused]] const VkAllocationCallbacks* pAllocator) {
+    if (mock.created_image_view_count == 0) {
+        throw std::runtime_error("no created image views to destroy!");
+    }
+    mock.created_image_view_count--;
+}
 
 VKAPI_ATTR void VKAPI_CALL shim_vkDestroySwapchainKHR([[maybe_unused]] VkDevice device,
     [[maybe_unused]] VkSwapchainKHR swapchain,
@@ -402,49 +409,17 @@ PFN_vkVoidFunction shim_vkGetInstanceProcAddr([[maybe_unused]] VkInstance instan
     return nullptr;
 }
 
+#if defined(__GNUC__) && __GNUC__ >= 4
+#define EXPORT_FUNCTION __attribute__((visibility("default")))
+#elif defined(WIN32)
+#define EXPORT_FUNCTION __declspec(dllexport)
+#else
+#define EXPORT_FUNCTION
+#endif
+
+
 extern "C" {
-VKAPI_ATTR PFN_vkVoidFunction VKAPI_CALL vkGetInstanceProcAddr(VkInstance instance, const char* pName) {
+EXPORT_FUNCTION VKAPI_ATTR PFN_vkVoidFunction VKAPI_CALL vkGetInstanceProcAddr(VkInstance instance, const char* pName) {
     return shim_vkGetInstanceProcAddr(instance, pName);
 }
-
-#if defined(__linux__) || defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__GNU__)
-#define DLSYM_FUNC_NAME dlsym
-
-#elif defined(__APPLE__)
-#define DLSYM_FUNC_NAME my_dlsym
-#endif
-
-using PFN_DLSYM = void* (*)(void* handle, const char* symbol);
-
-
-#if defined(__APPLE__)
-#define real_dlsym dlsym
-#else
-PFN_DLSYM real_dlsym = nullptr;
-#endif
-
-void* DLSYM_FUNC_NAME([[maybe_unused]] void* handle, const char* symbol) {
-    if (strcmp(symbol, "vkGetInstanceProcAddr") == 0) {
-        return reinterpret_cast<void*>(shim_vkGetInstanceProcAddr);
-    }
-
-    return nullptr;
-}
-
-/* Shiming functions on apple is limited by the linker prefering to not use functions in the
- * executable in loaded dylibs. By adding an interposer, we redirect the linker to use our
- * version of the function over the real one, thus shimming the system function.
- */
-#if defined(__APPLE__)
-#define MACOS_ATTRIB __attribute__((section("__DATA,__interpose")))
-#define VOIDCP_CAST(_func) reinterpret_cast<const void*>(&_func)
-
-struct Interposer {
-    const void* shim_function;
-    const void* underlying_function;
-};
-
-__attribute__((used)) static Interposer _interpose_dlsym MACOS_ATTRIB = { VOIDCP_CAST(my_dlsym), VOIDCP_CAST(dlsym) };
-
-#endif
 }

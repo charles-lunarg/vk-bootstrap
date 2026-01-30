@@ -2,35 +2,43 @@
 
 #include <assert.h>
 #include <cstdint>
+#include <cstring>
 
+#include <limits>
 #include <memory>
 #include <utility>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
 #include <vulkan/vulkan_core.h>
 
-#include <VkBootstrap.h>
+using SerializedStruct = std::vector<char>;
 
-// Helper function to return the size of the sType if it is a known features struct, otherwise return 0
-// Hand written, must be updated to include any used struct.
-inline size_t check_if_features2_struct(VkStructureType type) {
-    switch (type) {
-        case (VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES):
-            return sizeof(VkPhysicalDeviceDescriptorIndexingFeatures);
-        case (VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES):
-            return sizeof(VkPhysicalDeviceVulkan11Features);
-        case (VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES):
-            return sizeof(VkPhysicalDeviceVulkan12Features);
-        default:
-            return 0;
+template <typename T> SerializedStruct create_serialized_struct_from_object(const T& object) {
+    if (object.sType == 0) {
+        throw std::runtime_error(
+            "create_serialized_struct_from_object being passed in a struct without setting the sType!");
     }
+    SerializedStruct new_struct(sizeof(object));
+    std::memcpy(new_struct.data(), &object, new_struct.size());
+    return new_struct;
 }
 
-inline size_t get_pnext_chain_struct_size(VkStructureType type) {
-    auto size = check_if_features2_struct(type);
-    assert(size > 0 && "Must update get_pnext_chain_struct_size(VkStructureType type) to add type!");
-    return size;
+// Hand written, must be updated to include any used struct.
+inline SerializedStruct create_serialized_struct_from_features2_struct(const void* input_data, VkStructureType type) {
+    switch (type) {
+        case (VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES):
+            return create_serialized_struct_from_object(*static_cast<const VkPhysicalDeviceDescriptorIndexingFeatures*>(input_data));
+        case (VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES):
+            return create_serialized_struct_from_object(*static_cast<const VkPhysicalDeviceVulkan11Features*>(input_data));
+        case (VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES):
+            return create_serialized_struct_from_object(*static_cast<const VkPhysicalDeviceVulkan12Features*>(input_data));
+        case (VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_SIZE_CONTROL_FEATURES):
+            return create_serialized_struct_from_object(*static_cast<const VkPhysicalDeviceSubgroupSizeControlFeatures*>(input_data));
+        default:
+            return SerializedStruct{};
+    }
 }
 
 template <typename T> T get_handle(size_t value) { return reinterpret_cast<T>(value); }
@@ -42,7 +50,7 @@ template <typename T> T get_uint64_handle(uint64_t value) { return reinterpret_c
 #endif
 
 struct VulkanMock {
-    uint32_t api_version = VK_API_VERSION_1_3;
+    uint32_t instance_api_version = VK_API_VERSION_1_3;
     std::vector<VkExtensionProperties> instance_extensions;
     std::vector<VkLayerProperties> instance_layers;
     std::vector<std::vector<VkExtensionProperties>> per_layer_instance_extension_properties;
@@ -75,7 +83,7 @@ struct VulkanMock {
     struct CreatedDeviceDetails {
         VkPhysicalDeviceFeatures features{};
         std::vector<const char*> extensions;
-        std::vector<vkb::detail::GenericFeaturesPNextNode> features_pNextChain;
+        std::vector<SerializedStruct> features_pNextChain;
     };
 
     struct PhysicalDeviceDetails {
@@ -84,12 +92,10 @@ struct VulkanMock {
         VkPhysicalDeviceMemoryProperties memory_properties{};
         std::vector<VkExtensionProperties> extensions;
         std::vector<VkQueueFamilyProperties> queue_family_properties;
-        std::vector<vkb::detail::GenericFeaturesPNextNode> features_pNextChain;
+        std::vector<SerializedStruct> features_pNextChain;
 
         std::vector<VkDevice> created_device_handles;
         std::vector<CreatedDeviceDetails> created_device_details;
-
-        template <typename T> void add_features_pNext_struct(T features) { features_pNextChain.push_back(features); }
     };
 
     std::vector<VkPhysicalDevice> physical_device_handles;
@@ -99,6 +105,15 @@ struct VulkanMock {
         physical_device_handles.push_back(get_handle<VkPhysicalDevice>(0x22334455U + physical_device_handles.size()));
         physical_devices_details.emplace_back(std::move(details));
     }
+
+    uint32_t created_image_view_count = 0;
+    uint32_t fail_image_creation_on_iteration = std::numeric_limits<uint32_t>::max(); // max int means do not fail instance creation
+    // Values set by various Vulkan API calls by the mock. Useful for checking that vk-bootstrap passed the correct
+    // information "into" the API.
+    // Because thread sanitizer yells when the mock writes to api_version_set_by_vkCreateInstance in
+    // multiple threads, only enable writing when needed (aka non-threading tests)
+    bool should_save_api_version = false;
+    uint32_t api_version_set_by_vkCreateInstance = 0;
 };
 
 extern "C" {

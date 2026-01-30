@@ -30,30 +30,37 @@ jobs:
         PR_NUMBER: ${{ github.event.number }}
 
     steps:
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/create-github-app-token@v2
+        id: generate-token
         with:
-            python-version: '3.9'
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
 
-      - name: Install python package 'xmltodict'
-        run: pip install xmltodict
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+            python-version: '3.10'
+
+      - run: pip install vulkan_object
 
       - name: Check out repository code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 2
 
-      - name: Run dispatch generator
-        run: python script/generate_dispatch.py --auto
+      - run: python script/generate_dispatch.py
+
+      - run: python script/generate_features_chain.py
 
       - name: Diff source to see if anything changed
         id: git-diff
         run: echo "::set-output name=git-diff::$(git diff --quiet HEAD~0 || echo true)"
 
       - name: pull-request
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@v8
         if: ${{ steps.git-diff.outputs.git-diff == 'true' }}
         with:
+          token: ${{ steps.generate-token.outputs.token }}
           commit-message: Update to latest Vulkan-Headers
           title: Update to latest Vulkan-Headers
           branch: run-autogen

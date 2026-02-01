@@ -2626,7 +2626,7 @@ struct DispatchTable {
 #if (defined(VK_KHR_maintenance4))
         fp_vkGetDeviceBufferMemoryRequirementsKHR = reinterpret_cast<PFN_vkGetDeviceBufferMemoryRequirementsKHR>(procAddr(device, "vkGetDeviceBufferMemoryRequirementsKHR"));
 #endif
-#if (defined(VK_NVX_image_view_handle))
+#if (defined(VK_NVX_image_view_handle)) && VK_HEADER_VERSION >= 340
         fp_vkGetDeviceCombinedImageSamplerIndexNVX = reinterpret_cast<PFN_vkGetDeviceCombinedImageSamplerIndexNVX>(procAddr(device, "vkGetDeviceCombinedImageSamplerIndexNVX"));
 #endif
 #if (defined(VK_EXT_device_fault))
@@ -2750,10 +2750,10 @@ struct DispatchTable {
 #if (defined(VK_KHR_maintenance5))
         fp_vkGetImageSubresourceLayout2KHR = reinterpret_cast<PFN_vkGetImageSubresourceLayout2KHR>(procAddr(device, "vkGetImageSubresourceLayout2KHR"));
 #endif
-#if (defined(VK_NVX_image_view_handle))
+#if (defined(VK_NVX_image_view_handle)) && VK_HEADER_VERSION >= 137
         fp_vkGetImageViewAddressNVX = reinterpret_cast<PFN_vkGetImageViewAddressNVX>(procAddr(device, "vkGetImageViewAddressNVX"));
 #endif
-#if (defined(VK_NVX_image_view_handle))
+#if (defined(VK_NVX_image_view_handle)) && VK_HEADER_VERSION >= 302
         fp_vkGetImageViewHandle64NVX = reinterpret_cast<PFN_vkGetImageViewHandle64NVX>(procAddr(device, "vkGetImageViewHandle64NVX"));
 #endif
 #if (defined(VK_NVX_image_view_handle))
@@ -5328,7 +5328,7 @@ struct DispatchTable {
         fp_vkGetDeviceBufferMemoryRequirementsKHR(device, pInfo, pMemoryRequirements);
     }
 #endif
-#if (defined(VK_NVX_image_view_handle))
+#if (defined(VK_NVX_image_view_handle)) && VK_HEADER_VERSION >= 340
     uint64_t getDeviceCombinedImageSamplerIndexNVX(uint64_t imageViewIndex, uint64_t samplerIndex) const noexcept {
         return fp_vkGetDeviceCombinedImageSamplerIndexNVX(device, imageViewIndex, samplerIndex);
     }
@@ -5544,12 +5544,12 @@ struct DispatchTable {
         fp_vkGetImageSubresourceLayout2KHR(device, image, pSubresource, pLayout);
     }
 #endif
-#if (defined(VK_NVX_image_view_handle))
+#if (defined(VK_NVX_image_view_handle)) && VK_HEADER_VERSION >= 137
     VkResult getImageViewAddressNVX(VkImageView imageView, VkImageViewAddressPropertiesNVX* pProperties) const noexcept {
         return fp_vkGetImageViewAddressNVX(device, imageView, pProperties);
     }
 #endif
-#if (defined(VK_NVX_image_view_handle))
+#if (defined(VK_NVX_image_view_handle)) && VK_HEADER_VERSION >= 302
     uint64_t getImageViewHandle64NVX(const VkImageViewHandleInfoNVX* pInfo) const noexcept {
         return fp_vkGetImageViewHandle64NVX(device, pInfo);
     }
@@ -8227,7 +8227,7 @@ struct DispatchTable {
 #else
     void * fp_vkGetDeviceBufferMemoryRequirementsKHR{};
 #endif
-#if (defined(VK_NVX_image_view_handle))
+#if (defined(VK_NVX_image_view_handle)) && VK_HEADER_VERSION >= 340
     PFN_vkGetDeviceCombinedImageSamplerIndexNVX fp_vkGetDeviceCombinedImageSamplerIndexNVX = nullptr;
 #else
     void * fp_vkGetDeviceCombinedImageSamplerIndexNVX{};
@@ -8429,12 +8429,12 @@ struct DispatchTable {
 #else
     void * fp_vkGetImageSubresourceLayout2KHR{};
 #endif
-#if (defined(VK_NVX_image_view_handle))
+#if (defined(VK_NVX_image_view_handle)) && VK_HEADER_VERSION >= 137
     PFN_vkGetImageViewAddressNVX fp_vkGetImageViewAddressNVX = nullptr;
 #else
     void * fp_vkGetImageViewAddressNVX{};
 #endif
-#if (defined(VK_NVX_image_view_handle))
+#if (defined(VK_NVX_image_view_handle)) && VK_HEADER_VERSION >= 302
     PFN_vkGetImageViewHandle64NVX fp_vkGetImageViewHandle64NVX = nullptr;
 #else
     void * fp_vkGetImageViewHandle64NVX{};

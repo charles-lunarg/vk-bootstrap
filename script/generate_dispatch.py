@@ -50,6 +50,9 @@ HEADER_VERSION_WORKAROUNDS = {
     'vkCmdDispatchGraphIndirectAMDX': '298', # Changed API parameters
     'vkCmdDispatchGraphIndirectCountAMDX': '298', # Changed API parameters
     'vkCmdDispatchTileQCOM': '316', # Changed API parameters
+    'vkGetImageViewAddressNVX':'137', # Revision of extension added new function
+    'vkGetImageViewHandle64NVX':'302', # Revision of extension added new function
+    'vkGetDeviceCombinedImageSamplerIndexNVX':'340', # Revision of extension added new function
 }
 
 # License

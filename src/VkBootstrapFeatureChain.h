@@ -669,6 +669,10 @@ void merge_VkPhysicalDeviceShadingRateImageFeaturesNV(VkPhysicalDeviceShadingRat
 void compare_VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV const& supported, VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV const& requested);
 void merge_VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV(VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV & current, VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV const& merge_in);
 #endif //(defined(VK_NV_representative_fragment_test))
+#if (defined(VK_QCOM_cooperative_matrix_conversion))
+void compare_VkPhysicalDeviceCooperativeMatrixConversionFeaturesQCOM(std::vector<std::string> & error_list, VkPhysicalDeviceCooperativeMatrixConversionFeaturesQCOM const& supported, VkPhysicalDeviceCooperativeMatrixConversionFeaturesQCOM const& requested);
+void merge_VkPhysicalDeviceCooperativeMatrixConversionFeaturesQCOM(VkPhysicalDeviceCooperativeMatrixConversionFeaturesQCOM & current, VkPhysicalDeviceCooperativeMatrixConversionFeaturesQCOM const& merge_in);
+#endif //(defined(VK_QCOM_cooperative_matrix_conversion))
 #if (defined(VK_NV_mesh_shader))
 void compare_VkPhysicalDeviceMeshShaderFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceMeshShaderFeaturesNV const& supported, VkPhysicalDeviceMeshShaderFeaturesNV const& requested);
 void merge_VkPhysicalDeviceMeshShaderFeaturesNV(VkPhysicalDeviceMeshShaderFeaturesNV & current, VkPhysicalDeviceMeshShaderFeaturesNV const& merge_in);

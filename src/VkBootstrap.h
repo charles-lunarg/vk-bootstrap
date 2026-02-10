@@ -69,6 +69,20 @@
 #define VKB_VK_API_VERSION_1_0 VKB_MAKE_VK_VERSION(0, 1, 0, 0)
 #endif
 
+// If compiled as a shared library, symbols need to be exported
+
+#if !defined(VKB_BUILD_SHARED)
+#define VKB_EXPORT
+#else
+#if defined(__GNUC__) || defined(__GNUG__) || defined(__clang__)
+#define VKB_EXPORT __attribute__((visibility("default")))
+#elif defined(_MSC_VER)
+#define VKB_EXPORT __declspec(dllexport)
+#else
+#define VKB_EXPORT
+#endif
+#endif
+
 namespace vkb {
 
 // Currently GCC's maybe-uninitialized warning gets tripped when std::variant<> contains a std::vector<>, silence it for the meantime
@@ -148,7 +162,7 @@ template <typename T> class Result {
 };
 
 namespace detail {
-class FeaturesChain {
+class VKB_EXPORT FeaturesChain {
     struct StructInfo {
         VkStructureType sType{};
         size_t starting_location{};
@@ -180,6 +194,9 @@ class FeaturesChain {
 
     std::vector<void*> get_pNext_chain_members();
 };
+
+// Export Singleton so it works with shared libraries
+class VKB_EXPORT VulkanFunctions& vulkan_functions();
 
 } // namespace detail
 
@@ -224,25 +241,25 @@ enum class SwapchainError {
     required_usage_not_supported
 };
 
-std::error_code make_error_code(InstanceError instance_error);
-std::error_code make_error_code(PhysicalDeviceError physical_device_error);
-std::error_code make_error_code(QueueError queue_error);
-std::error_code make_error_code(DeviceError device_error);
-std::error_code make_error_code(SwapchainError swapchain_error);
+VKB_EXPORT std::error_code make_error_code(InstanceError instance_error);
+VKB_EXPORT std::error_code make_error_code(PhysicalDeviceError physical_device_error);
+VKB_EXPORT std::error_code make_error_code(QueueError queue_error);
+VKB_EXPORT std::error_code make_error_code(DeviceError device_error);
+VKB_EXPORT std::error_code make_error_code(SwapchainError swapchain_error);
 
-const char* to_string_message_severity(VkDebugUtilsMessageSeverityFlagBitsEXT s);
-const char* to_string_message_type(VkDebugUtilsMessageTypeFlagsEXT s);
+VKB_EXPORT const char* to_string_message_severity(VkDebugUtilsMessageSeverityFlagBitsEXT s);
+VKB_EXPORT const char* to_string_message_type(VkDebugUtilsMessageTypeFlagsEXT s);
 
-const char* to_string(InstanceError err);
-const char* to_string(PhysicalDeviceError err);
-const char* to_string(QueueError err);
-const char* to_string(DeviceError err);
-const char* to_string(SwapchainError err);
+VKB_EXPORT const char* to_string(InstanceError err);
+VKB_EXPORT const char* to_string(PhysicalDeviceError err);
+VKB_EXPORT const char* to_string(QueueError err);
+VKB_EXPORT const char* to_string(DeviceError err);
+VKB_EXPORT const char* to_string(SwapchainError err);
 
 // Gathers useful information about the available vulkan capabilities, like layers and instance
 // extensions. Use this for enabling features conditionally, ie if you would like an extension but
 // can use a fallback if it isn't supported but need to know if support is available first.
-struct SystemInfo {
+struct VKB_EXPORT SystemInfo {
     private:
     SystemInfo();
 
@@ -270,8 +287,8 @@ struct SystemInfo {
 };
 
 // Forward declared - check VkBoostrap.cpp for implementations
-const char* to_string_message_severity(VkDebugUtilsMessageSeverityFlagBitsEXT s);
-const char* to_string_message_type(VkDebugUtilsMessageTypeFlagsEXT s);
+VKB_EXPORT const char* to_string_message_severity(VkDebugUtilsMessageSeverityFlagBitsEXT s);
+VKB_EXPORT const char* to_string_message_type(VkDebugUtilsMessageTypeFlagsEXT s);
 
 // Default debug messenger
 // Feel free to copy-paste it into your own code, change it as needed, then call `set_debug_callback()` to use that instead
@@ -293,7 +310,7 @@ inline VKAPI_ATTR VkBool32 VKAPI_CALL default_debug_callback(VkDebugUtilsMessage
 class InstanceBuilder;
 class PhysicalDeviceSelector;
 
-struct Instance {
+struct VKB_EXPORT Instance {
     VkInstance instance = VK_NULL_HANDLE;
     VkDebugUtilsMessengerEXT debug_messenger = VK_NULL_HANDLE;
     VkAllocationCallbacks* allocation_callbacks = nullptr;
@@ -319,9 +336,9 @@ struct Instance {
     friend class PhysicalDeviceSelector;
 };
 
-void destroy_surface(Instance const& instance, VkSurfaceKHR surface); // release surface handle
-void destroy_surface(VkInstance instance, VkSurfaceKHR surface, VkAllocationCallbacks* callbacks = nullptr); // release surface handle
-void destroy_instance(Instance const& instance); // release instance resources
+VKB_EXPORT void destroy_surface(Instance const& instance, VkSurfaceKHR surface); // release surface handle
+VKB_EXPORT void destroy_surface(VkInstance instance, VkSurfaceKHR surface, VkAllocationCallbacks* callbacks = nullptr); // release surface handle
+VKB_EXPORT void destroy_instance(Instance const& instance); // release instance resources
 
 /* If headless mode is false, by default vk-bootstrap use the following logic to enable the windowing extensions
 
@@ -343,7 +360,7 @@ Use `InstanceBuilder::enable_extension()` to add new extensions without altering
 Feel free to make a PR or raise an issue to include additional platforms.
 */
 
-class InstanceBuilder {
+class VKB_EXPORT InstanceBuilder {
     public:
     // Default constructor, will load vulkan.
     explicit InstanceBuilder();
@@ -490,14 +507,14 @@ VKAPI_ATTR VkBool32 VKAPI_CALL default_debug_callback(VkDebugUtilsMessageSeverit
     const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
     void* pUserData);
 
-void destroy_debug_utils_messenger(
+VKB_EXPORT void destroy_debug_utils_messenger(
     VkInstance const instance, VkDebugUtilsMessengerEXT const messenger, VkAllocationCallbacks* allocation_callbacks = nullptr);
 
 // ---- Physical Device ---- //
 class PhysicalDeviceSelector;
 class DeviceBuilder;
 
-struct PhysicalDevice {
+struct VKB_EXPORT PhysicalDevice {
     std::string name;
     VkPhysicalDevice physical_device = VK_NULL_HANDLE;
     VkSurfaceKHR surface = VK_NULL_HANDLE;
@@ -589,7 +606,7 @@ enum class PreferredDeviceType { other = 0, integrated = 1, discrete = 2, virtua
 
 // Enumerates the physical devices on the system, and based on the added criteria, returns a physical device or list of
 // physical devies A device is considered suitable if it meets all the 'required' criteria.
-class PhysicalDeviceSelector {
+class VKB_EXPORT PhysicalDeviceSelector {
     public:
     // Requires a vkb::Instance to construct, needed to pass instance creation info.
     explicit PhysicalDeviceSelector(Instance const& instance);
@@ -743,7 +760,7 @@ inline const uint32_t QUEUE_INDEX_MAX_VALUE = UINT32_MAX;
 
 // ---- Device ---- //
 
-struct Device {
+struct VKB_EXPORT Device {
     VkDevice device = VK_NULL_HANDLE;
     PhysicalDevice physical_device;
     VkSurfaceKHR surface = VK_NULL_HANDLE;
@@ -797,9 +814,9 @@ struct CustomQueueDescription {
     std::vector<float> priorities;
 };
 
-void destroy_device(Device const& device);
+VKB_EXPORT void destroy_device(Device const& device);
 
-class DeviceBuilder {
+class VKB_EXPORT DeviceBuilder {
     public:
     // Any features and extensions that are requested/required in PhysicalDeviceSelector are automatically enabled.
     explicit DeviceBuilder(PhysicalDevice physical_device);
@@ -836,7 +853,7 @@ class DeviceBuilder {
 };
 
 // ---- Swapchain ---- //
-struct Swapchain {
+struct VKB_EXPORT Swapchain {
     VkDevice device = VK_NULL_HANDLE;
     VkSwapchainKHR swapchain = VK_NULL_HANDLE;
     uint32_t image_count = 0;
@@ -879,9 +896,9 @@ struct Swapchain {
     friend void destroy_swapchain(Swapchain const& swapchain);
 };
 
-void destroy_swapchain(Swapchain const& swapchain);
+VKB_EXPORT void destroy_swapchain(Swapchain const& swapchain);
 
-class SwapchainBuilder {
+class VKB_EXPORT SwapchainBuilder {
     public:
     // Construct a SwapchainBuilder with a `vkb::Device`
     explicit SwapchainBuilder(Device const& device);

@@ -18,8 +18,6 @@ option(VK_BOOTSTRAP_INSTALL "Enable installing of vk-bootstrap" ${PROJECT_IS_TOP
 
 option(VK_BOOTSTRAP_FORCE_FETCH_CONTENT "Forces Vulkan-Headers to be acquired using Fetch Content")
 
-option(VK_BOOTSTRAP_SHARED "Compile Vk Bootstrap as a Shared Library" OFF)
-
 set(VK_BOOTSTRAP_VULKAN_HEADER_DIR "" CACHE FILEPATH "Specify the location of the Vulkan-Headers include directory.")
 mark_as_advanced(VK_BOOTSTRAP_VULKAN_HEADER_DIR)
 
@@ -98,7 +96,7 @@ add_library(vk-bootstrap::vk-bootstrap ALIAS vk-bootstrap)
 
 # Tell Code that we are a shared library
 if (BUILD_SHARED_LIBS)
-        target_compile_definitions(vk-bootstrap PUBLIC VK_SHARED)
+    target_compile_definitions(vk-bootstrap PUBLIC VKB_BUILD_SHARED)
 endif()
 
 target_include_directories(vk-bootstrap PUBLIC

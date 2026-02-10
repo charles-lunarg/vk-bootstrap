@@ -79,6 +79,9 @@ struct InstanceDispatchTable {
 #if (defined(VK_OHOS_surface))
         fp_vkCreateSurfaceOHOS = reinterpret_cast<PFN_vkCreateSurfaceOHOS>(procAddr(instance, "vkCreateSurfaceOHOS"));
 #endif
+#if (defined(VK_SEC_ubm_surface))
+        fp_vkCreateUbmSurfaceSEC = reinterpret_cast<PFN_vkCreateUbmSurfaceSEC>(procAddr(instance, "vkCreateUbmSurfaceSEC"));
+#endif
 #if (defined(VK_NN_vi_surface))
         fp_vkCreateViSurfaceNN = reinterpret_cast<PFN_vkCreateViSurfaceNN>(procAddr(instance, "vkCreateViSurfaceNN"));
 #endif
@@ -307,6 +310,9 @@ struct InstanceDispatchTable {
 #if (defined(VK_EXT_tooling_info))
         fp_vkGetPhysicalDeviceToolPropertiesEXT = reinterpret_cast<PFN_vkGetPhysicalDeviceToolPropertiesEXT>(procAddr(instance, "vkGetPhysicalDeviceToolPropertiesEXT"));
 #endif
+#if (defined(VK_SEC_ubm_surface))
+        fp_vkGetPhysicalDeviceUbmPresentationSupportSEC = reinterpret_cast<PFN_vkGetPhysicalDeviceUbmPresentationSupportSEC>(procAddr(instance, "vkGetPhysicalDeviceUbmPresentationSupportSEC"));
+#endif
 #if (defined(VK_KHR_video_queue))
         fp_vkGetPhysicalDeviceVideoCapabilitiesKHR = reinterpret_cast<PFN_vkGetPhysicalDeviceVideoCapabilitiesKHR>(procAddr(instance, "vkGetPhysicalDeviceVideoCapabilitiesKHR"));
 #endif
@@ -424,6 +430,11 @@ struct InstanceDispatchTable {
 #if (defined(VK_OHOS_surface))
     VkResult createSurfaceOHOS(const VkSurfaceCreateInfoOHOS* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface) const noexcept {
         return fp_vkCreateSurfaceOHOS(instance, pCreateInfo, pAllocator, pSurface);
+    }
+#endif
+#if (defined(VK_SEC_ubm_surface))
+    VkResult createUbmSurfaceSEC(const VkUbmSurfaceCreateInfoSEC* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface) const noexcept {
+        return fp_vkCreateUbmSurfaceSEC(instance, pCreateInfo, pAllocator, pSurface);
     }
 #endif
 #if (defined(VK_NN_vi_surface))
@@ -822,6 +833,11 @@ struct InstanceDispatchTable {
         return fp_vkGetPhysicalDeviceToolPropertiesEXT(physicalDevice, pToolCount, pToolProperties);
     }
 #endif
+#if (defined(VK_SEC_ubm_surface))
+    VkBool32 getPhysicalDeviceUbmPresentationSupportSEC(VkPhysicalDevice physicalDevice, uint32_t queueFamilyIndex, struct ubm_device* ubm_device) const noexcept {
+        return fp_vkGetPhysicalDeviceUbmPresentationSupportSEC(physicalDevice, queueFamilyIndex, ubm_device);
+    }
+#endif
 #if (defined(VK_KHR_video_queue))
     VkResult getPhysicalDeviceVideoCapabilitiesKHR(VkPhysicalDevice physicalDevice, const VkVideoProfileInfoKHR* pVideoProfile, VkVideoCapabilitiesKHR* pCapabilities) const noexcept {
         return fp_vkGetPhysicalDeviceVideoCapabilitiesKHR(physicalDevice, pVideoProfile, pCapabilities);
@@ -961,6 +977,11 @@ struct InstanceDispatchTable {
     PFN_vkCreateSurfaceOHOS fp_vkCreateSurfaceOHOS = nullptr;
 #else
     void * fp_vkCreateSurfaceOHOS{};
+#endif
+#if (defined(VK_SEC_ubm_surface))
+    PFN_vkCreateUbmSurfaceSEC fp_vkCreateUbmSurfaceSEC = nullptr;
+#else
+    void * fp_vkCreateUbmSurfaceSEC{};
 #endif
 #if (defined(VK_NN_vi_surface))
     PFN_vkCreateViSurfaceNN fp_vkCreateViSurfaceNN = nullptr;
@@ -1333,6 +1354,11 @@ struct InstanceDispatchTable {
     PFN_vkGetPhysicalDeviceToolPropertiesEXT fp_vkGetPhysicalDeviceToolPropertiesEXT = nullptr;
 #else
     void * fp_vkGetPhysicalDeviceToolPropertiesEXT{};
+#endif
+#if (defined(VK_SEC_ubm_surface))
+    PFN_vkGetPhysicalDeviceUbmPresentationSupportSEC fp_vkGetPhysicalDeviceUbmPresentationSupportSEC = nullptr;
+#else
+    void * fp_vkGetPhysicalDeviceUbmPresentationSupportSEC{};
 #endif
 #if (defined(VK_KHR_video_queue))
     PFN_vkGetPhysicalDeviceVideoCapabilitiesKHR fp_vkGetPhysicalDeviceVideoCapabilitiesKHR = nullptr;

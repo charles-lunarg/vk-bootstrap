@@ -1568,11 +1568,17 @@ Result<uint32_t> Device::get_queue_index(QueueType type) const {
             break;
         case QueueType::compute:
             index = detail::get_separate_queue_index(queue_families, VK_QUEUE_COMPUTE_BIT, VK_QUEUE_TRANSFER_BIT);
-            if (index == detail::QUEUE_INDEX_MAX_VALUE) return Result<uint32_t>{ QueueError::compute_unavailable };
+            if (index == detail::QUEUE_INDEX_MAX_VALUE) {
+                index = detail::get_first_queue_index(queue_families, VK_QUEUE_COMPUTE_BIT);
+                if (index == detail::QUEUE_INDEX_MAX_VALUE) return Result<uint32_t>{ QueueError::compute_unavailable };
+            }
             break;
         case QueueType::transfer:
             index = detail::get_separate_queue_index(queue_families, VK_QUEUE_TRANSFER_BIT, VK_QUEUE_COMPUTE_BIT);
-            if (index == detail::QUEUE_INDEX_MAX_VALUE) return Result<uint32_t>{ QueueError::transfer_unavailable };
+            if (index == detail::QUEUE_INDEX_MAX_VALUE) {
+                index = detail::get_first_queue_index(queue_families, VK_QUEUE_TRANSFER_BIT);
+                if (index == detail::QUEUE_INDEX_MAX_VALUE) return Result<uint32_t>{ QueueError::transfer_unavailable };
+            }
             break;
         default:
             return Result<uint32_t>{ QueueError::invalid_queue_family_index };

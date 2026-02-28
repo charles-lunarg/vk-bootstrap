@@ -1589,6 +1589,22 @@ Result<VkQueue> Device::get_dedicated_queue(QueueType type) const {
     return out_queue;
 }
 
+Result<std::pair<VkQueue, uint32_t>> Device::get_queue_and_index(QueueType type) const {
+    auto index = get_queue_index(type);
+    if (!index.has_value()) return { index.error() };
+    VkQueue out_queue;
+    internal_table.fp_vkGetDeviceQueue(device, index.value(), 0, &out_queue);
+    return std::pair<VkQueue, uint32_t>(out_queue, index.value());
+}
+
+Result<std::pair<VkQueue, uint32_t>> Device::get_dedicated_queue_and_index(QueueType type) const {
+    auto index = get_dedicated_queue_index(type);
+    if (!index.has_value()) return { index.error() };
+    VkQueue out_queue;
+    internal_table.fp_vkGetDeviceQueue(device, index.value(), 0, &out_queue);
+    return std::pair<VkQueue, uint32_t>(out_queue, index.value());
+}
+
 // ---- Dispatch ---- //
 
 DispatchTable Device::make_table() const { return { device, fp_vkGetDeviceProcAddr }; }

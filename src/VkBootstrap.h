@@ -37,6 +37,7 @@
 #include <string>
 #include <system_error>
 #include <variant>
+#include <utility>
 
 #include <vulkan/vulkan_core.h>
 
@@ -760,6 +761,10 @@ struct Device {
     Result<VkQueue> get_queue(QueueType type) const;
     // Only a compute or transfer queue type is valid. All other queue types do not support a 'dedicated' queue
     Result<VkQueue> get_dedicated_queue(QueueType type) const;
+
+    Result<std::pair<VkQueue, uint32_t>> get_queue_and_index(QueueType type) const;
+    // Only a compute or transfer queue type is valid. All other queue types do not support a 'dedicated' queue
+    Result<std::pair<VkQueue, uint32_t>> get_dedicated_queue_and_index(QueueType type) const;
 
     // Return a loaded dispatch table
     DispatchTable make_table() const;

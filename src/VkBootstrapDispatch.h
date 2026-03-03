@@ -834,8 +834,8 @@ struct InstanceDispatchTable {
     }
 #endif
 #if (defined(VK_SEC_ubm_surface))
-    VkBool32 getPhysicalDeviceUbmPresentationSupportSEC(VkPhysicalDevice physicalDevice, uint32_t queueFamilyIndex, struct ubm_device* ubm_device) const noexcept {
-        return fp_vkGetPhysicalDeviceUbmPresentationSupportSEC(physicalDevice, queueFamilyIndex, ubm_device);
+    VkBool32 getPhysicalDeviceUbmPresentationSupportSEC(VkPhysicalDevice physicalDevice, uint32_t queueFamilyIndex, struct ubm_device* device) const noexcept {
+        return fp_vkGetPhysicalDeviceUbmPresentationSupportSEC(physicalDevice, queueFamilyIndex, device);
     }
 #endif
 #if (defined(VK_KHR_video_queue))

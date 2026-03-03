@@ -4765,6 +4765,28 @@ void merge_VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT(VkPhysicalDevice
     current.shaderSubgroupPartitioned = current.shaderSubgroupPartitioned || merge_in.shaderSubgroupPartitioned;
 }
 #endif //(defined(VK_EXT_shader_subgroup_partitioned))
+#if (defined(VK_VALVE_shader_mixed_float_dot_product))
+void compare_VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE(std::vector<std::string> & error_list, VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE const& supported, VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE const& requested) {
+    if (requested.shaderMixedFloatDotProductFloat16AccFloat32 && !supported.shaderMixedFloatDotProductFloat16AccFloat32) {
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE::shaderMixedFloatDotProductFloat16AccFloat32");
+    }
+    if (requested.shaderMixedFloatDotProductFloat16AccFloat16 && !supported.shaderMixedFloatDotProductFloat16AccFloat16) {
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE::shaderMixedFloatDotProductFloat16AccFloat16");
+    }
+    if (requested.shaderMixedFloatDotProductBFloat16Acc && !supported.shaderMixedFloatDotProductBFloat16Acc) {
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE::shaderMixedFloatDotProductBFloat16Acc");
+    }
+    if (requested.shaderMixedFloatDotProductFloat8AccFloat32 && !supported.shaderMixedFloatDotProductFloat8AccFloat32) {
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE::shaderMixedFloatDotProductFloat8AccFloat32");
+    }
+}
+void merge_VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE(VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE & current, VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE const& merge_in) {
+    current.shaderMixedFloatDotProductFloat16AccFloat32 = current.shaderMixedFloatDotProductFloat16AccFloat32 || merge_in.shaderMixedFloatDotProductFloat16AccFloat32;
+    current.shaderMixedFloatDotProductFloat16AccFloat16 = current.shaderMixedFloatDotProductFloat16AccFloat16 || merge_in.shaderMixedFloatDotProductFloat16AccFloat16;
+    current.shaderMixedFloatDotProductBFloat16Acc = current.shaderMixedFloatDotProductBFloat16Acc || merge_in.shaderMixedFloatDotProductBFloat16Acc;
+    current.shaderMixedFloatDotProductFloat8AccFloat32 = current.shaderMixedFloatDotProductFloat8AccFloat32 || merge_in.shaderMixedFloatDotProductFloat8AccFloat32;
+}
+#endif //(defined(VK_VALVE_shader_mixed_float_dot_product))
 #if (defined(VK_KHR_acceleration_structure))
 void compare_VkPhysicalDeviceAccelerationStructureFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceAccelerationStructureFeaturesKHR const& supported, VkPhysicalDeviceAccelerationStructureFeaturesKHR const& requested) {
     if (requested.accelerationStructure && !supported.accelerationStructure) {
@@ -6333,6 +6355,11 @@ void compare_feature_struct(VkStructureType sType, std::vector<std::string> & er
             compare_VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT(error_list, *reinterpret_cast<const VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT*>(supported), *reinterpret_cast<const VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT*>(requested));
             break;
 #endif
+#if (defined(VK_VALVE_shader_mixed_float_dot_product))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MIXED_FLOAT_DOT_PRODUCT_FEATURES_VALVE):
+            compare_VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE(error_list, *reinterpret_cast<const VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE*>(supported), *reinterpret_cast<const VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE*>(requested));
+            break;
+#endif
 #if (defined(VK_KHR_acceleration_structure))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ACCELERATION_STRUCTURE_FEATURES_KHR):
             compare_VkPhysicalDeviceAccelerationStructureFeaturesKHR(error_list, *reinterpret_cast<const VkPhysicalDeviceAccelerationStructureFeaturesKHR*>(supported), *reinterpret_cast<const VkPhysicalDeviceAccelerationStructureFeaturesKHR*>(requested));
@@ -7835,6 +7862,11 @@ void merge_feature_struct(VkStructureType sType, void* current, const void* merg
 #if (defined(VK_EXT_shader_subgroup_partitioned))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_PARTITIONED_FEATURES_EXT):
             merge_VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT(*reinterpret_cast<VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT*>(current), *reinterpret_cast<const VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT*>(merge_in));
+            break;
+#endif
+#if (defined(VK_VALVE_shader_mixed_float_dot_product))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MIXED_FLOAT_DOT_PRODUCT_FEATURES_VALVE):
+            merge_VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE(*reinterpret_cast<VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE*>(current), *reinterpret_cast<const VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE*>(merge_in));
             break;
 #endif
 #if (defined(VK_KHR_acceleration_structure))

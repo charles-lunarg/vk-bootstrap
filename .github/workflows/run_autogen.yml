@@ -41,7 +41,7 @@ jobs:
         with:
             python-version: '3.10'
 
-      - run: pip install vulkan_object
+      - run: pip install vulkan_object pyparsing
 
       - name: Check out repository code
         uses: actions/checkout@v6

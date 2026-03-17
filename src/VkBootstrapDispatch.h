@@ -124,6 +124,9 @@ struct InstanceDispatchTable {
 #if (defined(VK_KHR_performance_query))
         fp_vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR = reinterpret_cast<PFN_vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR>(procAddr(instance, "vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR"));
 #endif
+#if (defined(VK_ARM_shader_instrumentation))
+        fp_vkEnumeratePhysicalDeviceShaderInstrumentationMetricsARM = reinterpret_cast<PFN_vkEnumeratePhysicalDeviceShaderInstrumentationMetricsARM>(procAddr(instance, "vkEnumeratePhysicalDeviceShaderInstrumentationMetricsARM"));
+#endif
         fp_vkEnumeratePhysicalDevices = reinterpret_cast<PFN_vkEnumeratePhysicalDevices>(procAddr(instance, "vkEnumeratePhysicalDevices"));
 #if (defined(VK_KHR_get_display_properties2))
         fp_vkGetDisplayModeProperties2KHR = reinterpret_cast<PFN_vkGetDisplayModeProperties2KHR>(procAddr(instance, "vkGetDisplayModeProperties2KHR"));
@@ -509,6 +512,11 @@ struct InstanceDispatchTable {
 #if (defined(VK_KHR_performance_query))
     VkResult enumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR(VkPhysicalDevice physicalDevice, uint32_t queueFamilyIndex, uint32_t* pCounterCount, VkPerformanceCounterKHR* pCounters, VkPerformanceCounterDescriptionKHR* pCounterDescriptions) const noexcept {
         return fp_vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR(physicalDevice, queueFamilyIndex, pCounterCount, pCounters, pCounterDescriptions);
+    }
+#endif
+#if (defined(VK_ARM_shader_instrumentation))
+    VkResult enumeratePhysicalDeviceShaderInstrumentationMetricsARM(VkPhysicalDevice physicalDevice, uint32_t* pDescriptionCount, VkShaderInstrumentationMetricDescriptionARM* pDescriptions) const noexcept {
+        return fp_vkEnumeratePhysicalDeviceShaderInstrumentationMetricsARM(physicalDevice, pDescriptionCount, pDescriptions);
     }
 #endif
     VkResult enumeratePhysicalDevices(uint32_t* pPhysicalDeviceCount, VkPhysicalDevice* pPhysicalDevices) const noexcept {
@@ -1051,6 +1059,11 @@ struct InstanceDispatchTable {
 #else
     void * fp_vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR{};
 #endif
+#if (defined(VK_ARM_shader_instrumentation))
+    PFN_vkEnumeratePhysicalDeviceShaderInstrumentationMetricsARM fp_vkEnumeratePhysicalDeviceShaderInstrumentationMetricsARM = nullptr;
+#else
+    void * fp_vkEnumeratePhysicalDeviceShaderInstrumentationMetricsARM{};
+#endif
     PFN_vkEnumeratePhysicalDevices fp_vkEnumeratePhysicalDevices = nullptr;
 #if (defined(VK_KHR_get_display_properties2))
     PFN_vkGetDisplayModeProperties2KHR fp_vkGetDisplayModeProperties2KHR = nullptr;
@@ -1481,6 +1494,9 @@ struct DispatchTable {
 #if (defined(VK_EXT_opacity_micromap))
         fp_vkBuildMicromapsEXT = reinterpret_cast<PFN_vkBuildMicromapsEXT>(procAddr(device, "vkBuildMicromapsEXT"));
 #endif
+#if (defined(VK_ARM_shader_instrumentation))
+        fp_vkClearShaderInstrumentationMetricsARM = reinterpret_cast<PFN_vkClearShaderInstrumentationMetricsARM>(procAddr(device, "vkClearShaderInstrumentationMetricsARM"));
+#endif
 #if (defined(VK_EXT_conditional_rendering))
         fp_vkCmdBeginConditionalRenderingEXT = reinterpret_cast<PFN_vkCmdBeginConditionalRenderingEXT>(procAddr(device, "vkCmdBeginConditionalRenderingEXT"));
 #endif
@@ -1509,6 +1525,9 @@ struct DispatchTable {
 #endif
 #if (defined(VK_KHR_dynamic_rendering))
         fp_vkCmdBeginRenderingKHR = reinterpret_cast<PFN_vkCmdBeginRenderingKHR>(procAddr(device, "vkCmdBeginRenderingKHR"));
+#endif
+#if (defined(VK_ARM_shader_instrumentation))
+        fp_vkCmdBeginShaderInstrumentationARM = reinterpret_cast<PFN_vkCmdBeginShaderInstrumentationARM>(procAddr(device, "vkCmdBeginShaderInstrumentationARM"));
 #endif
 #if (defined(VK_EXT_transform_feedback))
         fp_vkCmdBeginTransformFeedbackEXT = reinterpret_cast<PFN_vkCmdBeginTransformFeedbackEXT>(procAddr(device, "vkCmdBeginTransformFeedbackEXT"));
@@ -1812,6 +1831,9 @@ struct DispatchTable {
 #endif
 #if (defined(VK_KHR_dynamic_rendering))
         fp_vkCmdEndRenderingKHR = reinterpret_cast<PFN_vkCmdEndRenderingKHR>(procAddr(device, "vkCmdEndRenderingKHR"));
+#endif
+#if (defined(VK_ARM_shader_instrumentation))
+        fp_vkCmdEndShaderInstrumentationARM = reinterpret_cast<PFN_vkCmdEndShaderInstrumentationARM>(procAddr(device, "vkCmdEndShaderInstrumentationARM"));
 #endif
 #if (defined(VK_EXT_transform_feedback))
         fp_vkCmdEndTransformFeedbackEXT = reinterpret_cast<PFN_vkCmdEndTransformFeedbackEXT>(procAddr(device, "vkCmdEndTransformFeedbackEXT"));
@@ -2395,6 +2417,9 @@ struct DispatchTable {
         fp_vkCreateSamplerYcbcrConversionKHR = reinterpret_cast<PFN_vkCreateSamplerYcbcrConversionKHR>(procAddr(device, "vkCreateSamplerYcbcrConversionKHR"));
 #endif
         fp_vkCreateSemaphore = reinterpret_cast<PFN_vkCreateSemaphore>(procAddr(device, "vkCreateSemaphore"));
+#if (defined(VK_ARM_shader_instrumentation))
+        fp_vkCreateShaderInstrumentationARM = reinterpret_cast<PFN_vkCreateShaderInstrumentationARM>(procAddr(device, "vkCreateShaderInstrumentationARM"));
+#endif
         fp_vkCreateShaderModule = reinterpret_cast<PFN_vkCreateShaderModule>(procAddr(device, "vkCreateShaderModule"));
 #if (defined(VK_EXT_shader_object))
         fp_vkCreateShadersEXT = reinterpret_cast<PFN_vkCreateShadersEXT>(procAddr(device, "vkCreateShadersEXT"));
@@ -2514,6 +2539,9 @@ struct DispatchTable {
         fp_vkDestroySemaphore = reinterpret_cast<PFN_vkDestroySemaphore>(procAddr(device, "vkDestroySemaphore"));
 #if (defined(VK_EXT_shader_object))
         fp_vkDestroyShaderEXT = reinterpret_cast<PFN_vkDestroyShaderEXT>(procAddr(device, "vkDestroyShaderEXT"));
+#endif
+#if (defined(VK_ARM_shader_instrumentation))
+        fp_vkDestroyShaderInstrumentationARM = reinterpret_cast<PFN_vkDestroyShaderInstrumentationARM>(procAddr(device, "vkDestroyShaderInstrumentationARM"));
 #endif
         fp_vkDestroyShaderModule = reinterpret_cast<PFN_vkDestroyShaderModule>(procAddr(device, "vkDestroyShaderModule"));
 #if (defined(VK_KHR_swapchain))
@@ -2935,6 +2963,9 @@ struct DispatchTable {
 #if (defined(VK_AMD_shader_info))
         fp_vkGetShaderInfoAMD = reinterpret_cast<PFN_vkGetShaderInfoAMD>(procAddr(device, "vkGetShaderInfoAMD"));
 #endif
+#if (defined(VK_ARM_shader_instrumentation))
+        fp_vkGetShaderInstrumentationValuesARM = reinterpret_cast<PFN_vkGetShaderInstrumentationValuesARM>(procAddr(device, "vkGetShaderInstrumentationValuesARM"));
+#endif
 #if (defined(VK_EXT_shader_module_identifier))
         fp_vkGetShaderModuleCreateInfoIdentifierEXT = reinterpret_cast<PFN_vkGetShaderModuleCreateInfoIdentifierEXT>(procAddr(device, "vkGetShaderModuleCreateInfoIdentifierEXT"));
 #endif
@@ -3285,6 +3316,11 @@ struct DispatchTable {
         return fp_vkBuildMicromapsEXT(device, deferredOperation, infoCount, pInfos);
     }
 #endif
+#if (defined(VK_ARM_shader_instrumentation))
+    void clearShaderInstrumentationMetricsARM(VkShaderInstrumentationARM instrumentation) const noexcept {
+        fp_vkClearShaderInstrumentationMetricsARM(device, instrumentation);
+    }
+#endif
 #if (defined(VK_EXT_conditional_rendering))
     void cmdBeginConditionalRenderingEXT(VkCommandBuffer commandBuffer, const VkConditionalRenderingBeginInfoEXT* pConditionalRenderingBegin) const noexcept {
         fp_vkCmdBeginConditionalRenderingEXT(commandBuffer, pConditionalRenderingBegin);
@@ -3334,6 +3370,11 @@ struct DispatchTable {
 #if (defined(VK_KHR_dynamic_rendering))
     void cmdBeginRenderingKHR(VkCommandBuffer commandBuffer, const VkRenderingInfoKHR* pRenderingInfo) const noexcept {
         fp_vkCmdBeginRenderingKHR(commandBuffer, pRenderingInfo);
+    }
+#endif
+#if (defined(VK_ARM_shader_instrumentation))
+    void cmdBeginShaderInstrumentationARM(VkCommandBuffer commandBuffer, VkShaderInstrumentationARM instrumentation) const noexcept {
+        fp_vkCmdBeginShaderInstrumentationARM(commandBuffer, instrumentation);
     }
 #endif
 #if (defined(VK_EXT_transform_feedback))
@@ -3867,6 +3908,11 @@ struct DispatchTable {
 #if (defined(VK_KHR_dynamic_rendering))
     void cmdEndRenderingKHR(VkCommandBuffer commandBuffer) const noexcept {
         fp_vkCmdEndRenderingKHR(commandBuffer);
+    }
+#endif
+#if (defined(VK_ARM_shader_instrumentation))
+    void cmdEndShaderInstrumentationARM(VkCommandBuffer commandBuffer) const noexcept {
+        fp_vkCmdEndShaderInstrumentationARM(commandBuffer);
     }
 #endif
 #if (defined(VK_EXT_transform_feedback))
@@ -4891,6 +4937,11 @@ struct DispatchTable {
     VkResult createSemaphore(const VkSemaphoreCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkSemaphore* pSemaphore) const noexcept {
         return fp_vkCreateSemaphore(device, pCreateInfo, pAllocator, pSemaphore);
     }
+#if (defined(VK_ARM_shader_instrumentation))
+    VkResult createShaderInstrumentationARM(const VkShaderInstrumentationCreateInfoARM* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkShaderInstrumentationARM* pInstrumentation) const noexcept {
+        return fp_vkCreateShaderInstrumentationARM(device, pCreateInfo, pAllocator, pInstrumentation);
+    }
+#endif
     VkResult createShaderModule(const VkShaderModuleCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkShaderModule* pShaderModule) const noexcept {
         return fp_vkCreateShaderModule(device, pCreateInfo, pAllocator, pShaderModule);
     }
@@ -5113,6 +5164,11 @@ struct DispatchTable {
 #if (defined(VK_EXT_shader_object))
     void destroyShaderEXT(VkShaderEXT shader, const VkAllocationCallbacks* pAllocator) const noexcept {
         fp_vkDestroyShaderEXT(device, shader, pAllocator);
+    }
+#endif
+#if (defined(VK_ARM_shader_instrumentation))
+    void destroyShaderInstrumentationARM(VkShaderInstrumentationARM instrumentation, const VkAllocationCallbacks* pAllocator) const noexcept {
+        fp_vkDestroyShaderInstrumentationARM(device, instrumentation, pAllocator);
     }
 #endif
     void destroyShaderModule(VkShaderModule shaderModule, const VkAllocationCallbacks* pAllocator) const noexcept {
@@ -5839,6 +5895,11 @@ struct DispatchTable {
         return fp_vkGetShaderInfoAMD(device, pipeline, shaderStage, infoType, pInfoSize, pInfo);
     }
 #endif
+#if (defined(VK_ARM_shader_instrumentation))
+    VkResult getShaderInstrumentationValuesARM(VkShaderInstrumentationARM instrumentation, uint32_t* pMetricBlockCount, void* pMetricValues, VkShaderInstrumentationValuesFlagsARM flags) const noexcept {
+        return fp_vkGetShaderInstrumentationValuesARM(device, instrumentation, pMetricBlockCount, pMetricValues, flags);
+    }
+#endif
 #if (defined(VK_EXT_shader_module_identifier))
     void getShaderModuleCreateInfoIdentifierEXT(const VkShaderModuleCreateInfo* pCreateInfo, VkShaderModuleIdentifierEXT* pIdentifier) const noexcept {
         fp_vkGetShaderModuleCreateInfoIdentifierEXT(device, pCreateInfo, pIdentifier);
@@ -6360,6 +6421,11 @@ struct DispatchTable {
 #else
     void * fp_vkBuildMicromapsEXT{};
 #endif
+#if (defined(VK_ARM_shader_instrumentation))
+    PFN_vkClearShaderInstrumentationMetricsARM fp_vkClearShaderInstrumentationMetricsARM = nullptr;
+#else
+    void * fp_vkClearShaderInstrumentationMetricsARM{};
+#endif
 #if (defined(VK_EXT_conditional_rendering))
     PFN_vkCmdBeginConditionalRenderingEXT fp_vkCmdBeginConditionalRenderingEXT = nullptr;
 #else
@@ -6406,6 +6472,11 @@ struct DispatchTable {
     PFN_vkCmdBeginRenderingKHR fp_vkCmdBeginRenderingKHR = nullptr;
 #else
     void * fp_vkCmdBeginRenderingKHR{};
+#endif
+#if (defined(VK_ARM_shader_instrumentation))
+    PFN_vkCmdBeginShaderInstrumentationARM fp_vkCmdBeginShaderInstrumentationARM = nullptr;
+#else
+    void * fp_vkCmdBeginShaderInstrumentationARM{};
 #endif
 #if (defined(VK_EXT_transform_feedback))
     PFN_vkCmdBeginTransformFeedbackEXT fp_vkCmdBeginTransformFeedbackEXT = nullptr;
@@ -6897,6 +6968,11 @@ struct DispatchTable {
     PFN_vkCmdEndRenderingKHR fp_vkCmdEndRenderingKHR = nullptr;
 #else
     void * fp_vkCmdEndRenderingKHR{};
+#endif
+#if (defined(VK_ARM_shader_instrumentation))
+    PFN_vkCmdEndShaderInstrumentationARM fp_vkCmdEndShaderInstrumentationARM = nullptr;
+#else
+    void * fp_vkCmdEndShaderInstrumentationARM{};
 #endif
 #if (defined(VK_EXT_transform_feedback))
     PFN_vkCmdEndTransformFeedbackEXT fp_vkCmdEndTransformFeedbackEXT = nullptr;
@@ -7842,6 +7918,11 @@ struct DispatchTable {
     void * fp_vkCreateSamplerYcbcrConversionKHR{};
 #endif
     PFN_vkCreateSemaphore fp_vkCreateSemaphore = nullptr;
+#if (defined(VK_ARM_shader_instrumentation))
+    PFN_vkCreateShaderInstrumentationARM fp_vkCreateShaderInstrumentationARM = nullptr;
+#else
+    void * fp_vkCreateShaderInstrumentationARM{};
+#endif
     PFN_vkCreateShaderModule fp_vkCreateShaderModule = nullptr;
 #if (defined(VK_EXT_shader_object))
     PFN_vkCreateShadersEXT fp_vkCreateShadersEXT = nullptr;
@@ -8029,6 +8110,11 @@ struct DispatchTable {
     PFN_vkDestroyShaderEXT fp_vkDestroyShaderEXT = nullptr;
 #else
     void * fp_vkDestroyShaderEXT{};
+#endif
+#if (defined(VK_ARM_shader_instrumentation))
+    PFN_vkDestroyShaderInstrumentationARM fp_vkDestroyShaderInstrumentationARM = nullptr;
+#else
+    void * fp_vkDestroyShaderInstrumentationARM{};
 #endif
     PFN_vkDestroyShaderModule fp_vkDestroyShaderModule = nullptr;
 #if (defined(VK_KHR_swapchain))
@@ -8717,6 +8803,11 @@ struct DispatchTable {
     PFN_vkGetShaderInfoAMD fp_vkGetShaderInfoAMD = nullptr;
 #else
     void * fp_vkGetShaderInfoAMD{};
+#endif
+#if (defined(VK_ARM_shader_instrumentation))
+    PFN_vkGetShaderInstrumentationValuesARM fp_vkGetShaderInstrumentationValuesARM = nullptr;
+#else
+    void * fp_vkGetShaderInstrumentationValuesARM{};
 #endif
 #if (defined(VK_EXT_shader_module_identifier))
     PFN_vkGetShaderModuleCreateInfoIdentifierEXT fp_vkGetShaderModuleCreateInfoIdentifierEXT = nullptr;

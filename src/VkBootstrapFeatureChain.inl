@@ -4635,6 +4635,16 @@ void merge_VkPhysicalDevicePerformanceCountersByRegionFeaturesARM(VkPhysicalDevi
     current.performanceCountersByRegion = current.performanceCountersByRegion || merge_in.performanceCountersByRegion;
 }
 #endif //(defined(VK_ARM_performance_counters_by_region))
+#if (defined(VK_ARM_shader_instrumentation))
+void compare_VkPhysicalDeviceShaderInstrumentationFeaturesARM(std::vector<std::string> & error_list, VkPhysicalDeviceShaderInstrumentationFeaturesARM const& supported, VkPhysicalDeviceShaderInstrumentationFeaturesARM const& requested) {
+    if (requested.shaderInstrumentation && !supported.shaderInstrumentation) {
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderInstrumentationFeaturesARM::shaderInstrumentation");
+    }
+}
+void merge_VkPhysicalDeviceShaderInstrumentationFeaturesARM(VkPhysicalDeviceShaderInstrumentationFeaturesARM & current, VkPhysicalDeviceShaderInstrumentationFeaturesARM const& merge_in) {
+    current.shaderInstrumentation = current.shaderInstrumentation || merge_in.shaderInstrumentation;
+}
+#endif //(defined(VK_ARM_shader_instrumentation))
 #if (defined(VK_EXT_vertex_attribute_robustness))
 void compare_VkPhysicalDeviceVertexAttributeRobustnessFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceVertexAttributeRobustnessFeaturesEXT const& supported, VkPhysicalDeviceVertexAttributeRobustnessFeaturesEXT const& requested) {
     if (requested.vertexAttributeRobustness && !supported.vertexAttributeRobustness) {
@@ -4665,7 +4675,7 @@ void merge_VkPhysicalDeviceFragmentDensityMapLayeredFeaturesVALVE(VkPhysicalDevi
     current.fragmentDensityMapLayered = current.fragmentDensityMapLayered || merge_in.fragmentDensityMapLayered;
 }
 #endif //(defined(VK_VALVE_fragment_density_map_layered))
-#if defined(VK_ENABLE_BETA_EXTENSIONS) && (defined(VK_NV_present_metering))
+#if (defined(VK_NV_present_metering))
 void compare_VkPhysicalDevicePresentMeteringFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDevicePresentMeteringFeaturesNV const& supported, VkPhysicalDevicePresentMeteringFeaturesNV const& requested) {
     if (requested.presentMetering && !supported.presentMetering) {
         error_list.push_back("Missing feature VkPhysicalDevicePresentMeteringFeaturesNV::presentMetering");
@@ -4674,7 +4684,7 @@ void compare_VkPhysicalDevicePresentMeteringFeaturesNV(std::vector<std::string> 
 void merge_VkPhysicalDevicePresentMeteringFeaturesNV(VkPhysicalDevicePresentMeteringFeaturesNV & current, VkPhysicalDevicePresentMeteringFeaturesNV const& merge_in) {
     current.presentMetering = current.presentMetering || merge_in.presentMetering;
 }
-#endif //defined(VK_ENABLE_BETA_EXTENSIONS) && (defined(VK_NV_present_metering))
+#endif //(defined(VK_NV_present_metering))
 #if (defined(VK_EXT_zero_initialize_device_memory))
 void compare_VkPhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT const& supported, VkPhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT const& requested) {
     if (requested.zeroInitializeDeviceMemory && !supported.zeroInitializeDeviceMemory) {
@@ -6290,6 +6300,11 @@ void compare_feature_struct(VkStructureType sType, std::vector<std::string> & er
             compare_VkPhysicalDevicePerformanceCountersByRegionFeaturesARM(error_list, *reinterpret_cast<const VkPhysicalDevicePerformanceCountersByRegionFeaturesARM*>(supported), *reinterpret_cast<const VkPhysicalDevicePerformanceCountersByRegionFeaturesARM*>(requested));
             break;
 #endif
+#if (defined(VK_ARM_shader_instrumentation))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INSTRUMENTATION_FEATURES_ARM):
+            compare_VkPhysicalDeviceShaderInstrumentationFeaturesARM(error_list, *reinterpret_cast<const VkPhysicalDeviceShaderInstrumentationFeaturesARM*>(supported), *reinterpret_cast<const VkPhysicalDeviceShaderInstrumentationFeaturesARM*>(requested));
+            break;
+#endif
 #if (defined(VK_EXT_vertex_attribute_robustness))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_ROBUSTNESS_FEATURES_EXT):
             compare_VkPhysicalDeviceVertexAttributeRobustnessFeaturesEXT(error_list, *reinterpret_cast<const VkPhysicalDeviceVertexAttributeRobustnessFeaturesEXT*>(supported), *reinterpret_cast<const VkPhysicalDeviceVertexAttributeRobustnessFeaturesEXT*>(requested));
@@ -6305,7 +6320,7 @@ void compare_feature_struct(VkStructureType sType, std::vector<std::string> & er
             compare_VkPhysicalDeviceFragmentDensityMapLayeredFeaturesVALVE(error_list, *reinterpret_cast<const VkPhysicalDeviceFragmentDensityMapLayeredFeaturesVALVE*>(supported), *reinterpret_cast<const VkPhysicalDeviceFragmentDensityMapLayeredFeaturesVALVE*>(requested));
             break;
 #endif
-#if defined(VK_ENABLE_BETA_EXTENSIONS) && (defined(VK_NV_present_metering))
+#if (defined(VK_NV_present_metering))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_METERING_FEATURES_NV):
             compare_VkPhysicalDevicePresentMeteringFeaturesNV(error_list, *reinterpret_cast<const VkPhysicalDevicePresentMeteringFeaturesNV*>(supported), *reinterpret_cast<const VkPhysicalDevicePresentMeteringFeaturesNV*>(requested));
             break;
@@ -7799,6 +7814,11 @@ void merge_feature_struct(VkStructureType sType, void* current, const void* merg
             merge_VkPhysicalDevicePerformanceCountersByRegionFeaturesARM(*reinterpret_cast<VkPhysicalDevicePerformanceCountersByRegionFeaturesARM*>(current), *reinterpret_cast<const VkPhysicalDevicePerformanceCountersByRegionFeaturesARM*>(merge_in));
             break;
 #endif
+#if (defined(VK_ARM_shader_instrumentation))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INSTRUMENTATION_FEATURES_ARM):
+            merge_VkPhysicalDeviceShaderInstrumentationFeaturesARM(*reinterpret_cast<VkPhysicalDeviceShaderInstrumentationFeaturesARM*>(current), *reinterpret_cast<const VkPhysicalDeviceShaderInstrumentationFeaturesARM*>(merge_in));
+            break;
+#endif
 #if (defined(VK_EXT_vertex_attribute_robustness))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_ROBUSTNESS_FEATURES_EXT):
             merge_VkPhysicalDeviceVertexAttributeRobustnessFeaturesEXT(*reinterpret_cast<VkPhysicalDeviceVertexAttributeRobustnessFeaturesEXT*>(current), *reinterpret_cast<const VkPhysicalDeviceVertexAttributeRobustnessFeaturesEXT*>(merge_in));
@@ -7814,7 +7834,7 @@ void merge_feature_struct(VkStructureType sType, void* current, const void* merg
             merge_VkPhysicalDeviceFragmentDensityMapLayeredFeaturesVALVE(*reinterpret_cast<VkPhysicalDeviceFragmentDensityMapLayeredFeaturesVALVE*>(current), *reinterpret_cast<const VkPhysicalDeviceFragmentDensityMapLayeredFeaturesVALVE*>(merge_in));
             break;
 #endif
-#if defined(VK_ENABLE_BETA_EXTENSIONS) && (defined(VK_NV_present_metering))
+#if (defined(VK_NV_present_metering))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_METERING_FEATURES_NV):
             merge_VkPhysicalDevicePresentMeteringFeaturesNV(*reinterpret_cast<VkPhysicalDevicePresentMeteringFeaturesNV*>(current), *reinterpret_cast<const VkPhysicalDevicePresentMeteringFeaturesNV*>(merge_in));
             break;

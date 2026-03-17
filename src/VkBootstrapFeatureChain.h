@@ -1217,6 +1217,10 @@ void merge_VkPhysicalDevicePipelineOpacityMicromapFeaturesARM(VkPhysicalDevicePi
 void compare_VkPhysicalDevicePerformanceCountersByRegionFeaturesARM(std::vector<std::string> & error_list, VkPhysicalDevicePerformanceCountersByRegionFeaturesARM const& supported, VkPhysicalDevicePerformanceCountersByRegionFeaturesARM const& requested);
 void merge_VkPhysicalDevicePerformanceCountersByRegionFeaturesARM(VkPhysicalDevicePerformanceCountersByRegionFeaturesARM & current, VkPhysicalDevicePerformanceCountersByRegionFeaturesARM const& merge_in);
 #endif //(defined(VK_ARM_performance_counters_by_region))
+#if (defined(VK_ARM_shader_instrumentation))
+void compare_VkPhysicalDeviceShaderInstrumentationFeaturesARM(std::vector<std::string> & error_list, VkPhysicalDeviceShaderInstrumentationFeaturesARM const& supported, VkPhysicalDeviceShaderInstrumentationFeaturesARM const& requested);
+void merge_VkPhysicalDeviceShaderInstrumentationFeaturesARM(VkPhysicalDeviceShaderInstrumentationFeaturesARM & current, VkPhysicalDeviceShaderInstrumentationFeaturesARM const& merge_in);
+#endif //(defined(VK_ARM_shader_instrumentation))
 #if (defined(VK_EXT_vertex_attribute_robustness))
 void compare_VkPhysicalDeviceVertexAttributeRobustnessFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceVertexAttributeRobustnessFeaturesEXT const& supported, VkPhysicalDeviceVertexAttributeRobustnessFeaturesEXT const& requested);
 void merge_VkPhysicalDeviceVertexAttributeRobustnessFeaturesEXT(VkPhysicalDeviceVertexAttributeRobustnessFeaturesEXT & current, VkPhysicalDeviceVertexAttributeRobustnessFeaturesEXT const& merge_in);
@@ -1229,10 +1233,10 @@ void merge_VkPhysicalDeviceFormatPackFeaturesARM(VkPhysicalDeviceFormatPackFeatu
 void compare_VkPhysicalDeviceFragmentDensityMapLayeredFeaturesVALVE(std::vector<std::string> & error_list, VkPhysicalDeviceFragmentDensityMapLayeredFeaturesVALVE const& supported, VkPhysicalDeviceFragmentDensityMapLayeredFeaturesVALVE const& requested);
 void merge_VkPhysicalDeviceFragmentDensityMapLayeredFeaturesVALVE(VkPhysicalDeviceFragmentDensityMapLayeredFeaturesVALVE & current, VkPhysicalDeviceFragmentDensityMapLayeredFeaturesVALVE const& merge_in);
 #endif //(defined(VK_VALVE_fragment_density_map_layered))
-#if defined(VK_ENABLE_BETA_EXTENSIONS) && (defined(VK_NV_present_metering))
+#if (defined(VK_NV_present_metering))
 void compare_VkPhysicalDevicePresentMeteringFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDevicePresentMeteringFeaturesNV const& supported, VkPhysicalDevicePresentMeteringFeaturesNV const& requested);
 void merge_VkPhysicalDevicePresentMeteringFeaturesNV(VkPhysicalDevicePresentMeteringFeaturesNV & current, VkPhysicalDevicePresentMeteringFeaturesNV const& merge_in);
-#endif //defined(VK_ENABLE_BETA_EXTENSIONS) && (defined(VK_NV_present_metering))
+#endif //(defined(VK_NV_present_metering))
 #if (defined(VK_EXT_zero_initialize_device_memory))
 void compare_VkPhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT const& supported, VkPhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT const& requested);
 void merge_VkPhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT(VkPhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT & current, VkPhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT const& merge_in);

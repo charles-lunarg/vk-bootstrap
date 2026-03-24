@@ -4727,7 +4727,7 @@ void merge_VkPhysicalDeviceFragmentDensityMapLayeredFeaturesVALVE(VkPhysicalDevi
     current.fragmentDensityMapLayered = current.fragmentDensityMapLayered || merge_in.fragmentDensityMapLayered;
 }
 #endif //(defined(VK_VALVE_fragment_density_map_layered))
-#if (defined(VK_NV_present_metering))
+#if (VK_HEADER_VERSION >= 345 || defined(VK_ENABLE_BETA_EXTENSIONS)) && (defined(VK_NV_present_metering))
 void compare_VkPhysicalDevicePresentMeteringFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDevicePresentMeteringFeaturesNV const& supported, VkPhysicalDevicePresentMeteringFeaturesNV const& requested) {
     if (requested.presentMetering && !supported.presentMetering) {
         error_list.push_back("Missing feature VkPhysicalDevicePresentMeteringFeaturesNV::presentMetering");
@@ -4736,7 +4736,7 @@ void compare_VkPhysicalDevicePresentMeteringFeaturesNV(std::vector<std::string> 
 void merge_VkPhysicalDevicePresentMeteringFeaturesNV(VkPhysicalDevicePresentMeteringFeaturesNV & current, VkPhysicalDevicePresentMeteringFeaturesNV const& merge_in) {
     current.presentMetering = current.presentMetering || merge_in.presentMetering;
 }
-#endif //(defined(VK_NV_present_metering))
+#endif //(VK_HEADER_VERSION >= 345 || defined(VK_ENABLE_BETA_EXTENSIONS)) && (defined(VK_NV_present_metering))
 #if (defined(VK_EXT_zero_initialize_device_memory))
 void compare_VkPhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT const& supported, VkPhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT const& requested) {
     if (requested.zeroInitializeDeviceMemory && !supported.zeroInitializeDeviceMemory) {
@@ -6392,7 +6392,7 @@ void compare_feature_struct(VkStructureType sType, std::vector<std::string> & er
             compare_VkPhysicalDeviceFragmentDensityMapLayeredFeaturesVALVE(error_list, *reinterpret_cast<const VkPhysicalDeviceFragmentDensityMapLayeredFeaturesVALVE*>(supported), *reinterpret_cast<const VkPhysicalDeviceFragmentDensityMapLayeredFeaturesVALVE*>(requested));
             break;
 #endif
-#if (defined(VK_NV_present_metering))
+#if (VK_HEADER_VERSION >= 345 || defined(VK_ENABLE_BETA_EXTENSIONS)) && (defined(VK_NV_present_metering))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_METERING_FEATURES_NV):
             compare_VkPhysicalDevicePresentMeteringFeaturesNV(error_list, *reinterpret_cast<const VkPhysicalDevicePresentMeteringFeaturesNV*>(supported), *reinterpret_cast<const VkPhysicalDevicePresentMeteringFeaturesNV*>(requested));
             break;
@@ -7926,7 +7926,7 @@ void merge_feature_struct(VkStructureType sType, void* current, const void* merg
             merge_VkPhysicalDeviceFragmentDensityMapLayeredFeaturesVALVE(*reinterpret_cast<VkPhysicalDeviceFragmentDensityMapLayeredFeaturesVALVE*>(current), *reinterpret_cast<const VkPhysicalDeviceFragmentDensityMapLayeredFeaturesVALVE*>(merge_in));
             break;
 #endif
-#if (defined(VK_NV_present_metering))
+#if (VK_HEADER_VERSION >= 345 || defined(VK_ENABLE_BETA_EXTENSIONS)) && (defined(VK_NV_present_metering))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_METERING_FEATURES_NV):
             merge_VkPhysicalDevicePresentMeteringFeaturesNV(*reinterpret_cast<VkPhysicalDevicePresentMeteringFeaturesNV*>(current), *reinterpret_cast<const VkPhysicalDevicePresentMeteringFeaturesNV*>(merge_in));
             break;

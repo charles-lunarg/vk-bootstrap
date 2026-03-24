@@ -2115,6 +2115,26 @@ void merge_VkPhysicalDeviceFragmentShadingRateFeaturesKHR(VkPhysicalDeviceFragme
     current.attachmentFragmentShadingRate = current.attachmentFragmentShadingRate || merge_in.attachmentFragmentShadingRate;
 }
 #endif //(defined(VK_KHR_fragment_shading_rate))
+#if (defined(VK_KHR_shader_constant_data))
+void compare_VkPhysicalDeviceShaderConstantDataFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceShaderConstantDataFeaturesKHR const& supported, VkPhysicalDeviceShaderConstantDataFeaturesKHR const& requested) {
+    if (requested.shaderConstantData && !supported.shaderConstantData) {
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderConstantDataFeaturesKHR::shaderConstantData");
+    }
+}
+void merge_VkPhysicalDeviceShaderConstantDataFeaturesKHR(VkPhysicalDeviceShaderConstantDataFeaturesKHR & current, VkPhysicalDeviceShaderConstantDataFeaturesKHR const& merge_in) {
+    current.shaderConstantData = current.shaderConstantData || merge_in.shaderConstantData;
+}
+#endif //(defined(VK_KHR_shader_constant_data))
+#if (defined(VK_KHR_shader_abort))
+void compare_VkPhysicalDeviceShaderAbortFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceShaderAbortFeaturesKHR const& supported, VkPhysicalDeviceShaderAbortFeaturesKHR const& requested) {
+    if (requested.shaderAbort && !supported.shaderAbort) {
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderAbortFeaturesKHR::shaderAbort");
+    }
+}
+void merge_VkPhysicalDeviceShaderAbortFeaturesKHR(VkPhysicalDeviceShaderAbortFeaturesKHR & current, VkPhysicalDeviceShaderAbortFeaturesKHR const& merge_in) {
+    current.shaderAbort = current.shaderAbort || merge_in.shaderAbort;
+}
+#endif //(defined(VK_KHR_shader_abort))
 #if (defined(VK_KHR_shader_quad_control))
 void compare_VkPhysicalDeviceShaderQuadControlFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceShaderQuadControlFeaturesKHR const& supported, VkPhysicalDeviceShaderQuadControlFeaturesKHR const& requested) {
     if (requested.shaderQuadControl && !supported.shaderQuadControl) {
@@ -2155,6 +2175,16 @@ void merge_VkPhysicalDevicePresentIdFeaturesKHR(VkPhysicalDevicePresentIdFeature
     current.presentId = current.presentId || merge_in.presentId;
 }
 #endif //(defined(VK_KHR_present_id))
+#if (defined(VK_KHR_device_address_commands))
+void compare_VkPhysicalDeviceDeviceAddressCommandsFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceDeviceAddressCommandsFeaturesKHR const& supported, VkPhysicalDeviceDeviceAddressCommandsFeaturesKHR const& requested) {
+    if (requested.deviceAddressCommands && !supported.deviceAddressCommands) {
+        error_list.push_back("Missing feature VkPhysicalDeviceDeviceAddressCommandsFeaturesKHR::deviceAddressCommands");
+    }
+}
+void merge_VkPhysicalDeviceDeviceAddressCommandsFeaturesKHR(VkPhysicalDeviceDeviceAddressCommandsFeaturesKHR & current, VkPhysicalDeviceDeviceAddressCommandsFeaturesKHR const& merge_in) {
+    current.deviceAddressCommands = current.deviceAddressCommands || merge_in.deviceAddressCommands;
+}
+#endif //(defined(VK_KHR_device_address_commands))
 #if (defined(VK_KHR_fragment_shader_barycentric))
 void compare_VkPhysicalDeviceFragmentShaderBarycentricFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceFragmentShaderBarycentricFeaturesKHR const& supported, VkPhysicalDeviceFragmentShaderBarycentricFeaturesKHR const& requested) {
     if (requested.fragmentShaderBarycentric && !supported.fragmentShaderBarycentric) {
@@ -2451,6 +2481,28 @@ void merge_VkPhysicalDeviceMaintenance7FeaturesKHR(VkPhysicalDeviceMaintenance7F
     current.maintenance7 = current.maintenance7 || merge_in.maintenance7;
 }
 #endif //(defined(VK_KHR_maintenance7))
+#if (defined(VK_KHR_device_fault))
+void compare_VkPhysicalDeviceFaultFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceFaultFeaturesKHR const& supported, VkPhysicalDeviceFaultFeaturesKHR const& requested) {
+    if (requested.deviceFault && !supported.deviceFault) {
+        error_list.push_back("Missing feature VkPhysicalDeviceFaultFeaturesKHR::deviceFault");
+    }
+    if (requested.deviceFaultVendorBinary && !supported.deviceFaultVendorBinary) {
+        error_list.push_back("Missing feature VkPhysicalDeviceFaultFeaturesKHR::deviceFaultVendorBinary");
+    }
+    if (requested.deviceFaultReportMasked && !supported.deviceFaultReportMasked) {
+        error_list.push_back("Missing feature VkPhysicalDeviceFaultFeaturesKHR::deviceFaultReportMasked");
+    }
+    if (requested.deviceFaultDeviceLostOnMasked && !supported.deviceFaultDeviceLostOnMasked) {
+        error_list.push_back("Missing feature VkPhysicalDeviceFaultFeaturesKHR::deviceFaultDeviceLostOnMasked");
+    }
+}
+void merge_VkPhysicalDeviceFaultFeaturesKHR(VkPhysicalDeviceFaultFeaturesKHR & current, VkPhysicalDeviceFaultFeaturesKHR const& merge_in) {
+    current.deviceFault = current.deviceFault || merge_in.deviceFault;
+    current.deviceFaultVendorBinary = current.deviceFaultVendorBinary || merge_in.deviceFaultVendorBinary;
+    current.deviceFaultReportMasked = current.deviceFaultReportMasked || merge_in.deviceFaultReportMasked;
+    current.deviceFaultDeviceLostOnMasked = current.deviceFaultDeviceLostOnMasked || merge_in.deviceFaultDeviceLostOnMasked;
+}
+#endif //(defined(VK_KHR_device_fault))
 #if (defined(VK_KHR_maintenance8))
 void compare_VkPhysicalDeviceMaintenance8FeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceMaintenance8FeaturesKHR const& supported, VkPhysicalDeviceMaintenance8FeaturesKHR const& requested) {
     if (requested.maintenance8 && !supported.maintenance8) {
@@ -5361,6 +5413,16 @@ void compare_feature_struct(VkStructureType sType, std::vector<std::string> & er
             compare_VkPhysicalDeviceFragmentShadingRateFeaturesKHR(error_list, *reinterpret_cast<const VkPhysicalDeviceFragmentShadingRateFeaturesKHR*>(supported), *reinterpret_cast<const VkPhysicalDeviceFragmentShadingRateFeaturesKHR*>(requested));
             break;
 #endif
+#if (defined(VK_KHR_shader_constant_data))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CONSTANT_DATA_FEATURES_KHR):
+            compare_VkPhysicalDeviceShaderConstantDataFeaturesKHR(error_list, *reinterpret_cast<const VkPhysicalDeviceShaderConstantDataFeaturesKHR*>(supported), *reinterpret_cast<const VkPhysicalDeviceShaderConstantDataFeaturesKHR*>(requested));
+            break;
+#endif
+#if (defined(VK_KHR_shader_abort))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ABORT_FEATURES_KHR):
+            compare_VkPhysicalDeviceShaderAbortFeaturesKHR(error_list, *reinterpret_cast<const VkPhysicalDeviceShaderAbortFeaturesKHR*>(supported), *reinterpret_cast<const VkPhysicalDeviceShaderAbortFeaturesKHR*>(requested));
+            break;
+#endif
 #if (defined(VK_KHR_shader_quad_control))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_QUAD_CONTROL_FEATURES_KHR):
             compare_VkPhysicalDeviceShaderQuadControlFeaturesKHR(error_list, *reinterpret_cast<const VkPhysicalDeviceShaderQuadControlFeaturesKHR*>(supported), *reinterpret_cast<const VkPhysicalDeviceShaderQuadControlFeaturesKHR*>(requested));
@@ -5379,6 +5441,11 @@ void compare_feature_struct(VkStructureType sType, std::vector<std::string> & er
 #if (defined(VK_KHR_present_id))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_ID_FEATURES_KHR):
             compare_VkPhysicalDevicePresentIdFeaturesKHR(error_list, *reinterpret_cast<const VkPhysicalDevicePresentIdFeaturesKHR*>(supported), *reinterpret_cast<const VkPhysicalDevicePresentIdFeaturesKHR*>(requested));
+            break;
+#endif
+#if (defined(VK_KHR_device_address_commands))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_ADDRESS_COMMANDS_FEATURES_KHR):
+            compare_VkPhysicalDeviceDeviceAddressCommandsFeaturesKHR(error_list, *reinterpret_cast<const VkPhysicalDeviceDeviceAddressCommandsFeaturesKHR*>(supported), *reinterpret_cast<const VkPhysicalDeviceDeviceAddressCommandsFeaturesKHR*>(requested));
             break;
 #endif
 #if (defined(VK_KHR_fragment_shader_barycentric))
@@ -5506,6 +5573,11 @@ void compare_feature_struct(VkStructureType sType, std::vector<std::string> & er
 #if (defined(VK_KHR_maintenance7))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_7_FEATURES_KHR):
             compare_VkPhysicalDeviceMaintenance7FeaturesKHR(error_list, *reinterpret_cast<const VkPhysicalDeviceMaintenance7FeaturesKHR*>(supported), *reinterpret_cast<const VkPhysicalDeviceMaintenance7FeaturesKHR*>(requested));
+            break;
+#endif
+#if (defined(VK_KHR_device_fault))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FAULT_FEATURES_KHR):
+            compare_VkPhysicalDeviceFaultFeaturesKHR(error_list, *reinterpret_cast<const VkPhysicalDeviceFaultFeaturesKHR*>(supported), *reinterpret_cast<const VkPhysicalDeviceFaultFeaturesKHR*>(requested));
             break;
 #endif
 #if (defined(VK_KHR_maintenance8))
@@ -6875,6 +6947,16 @@ void merge_feature_struct(VkStructureType sType, void* current, const void* merg
             merge_VkPhysicalDeviceFragmentShadingRateFeaturesKHR(*reinterpret_cast<VkPhysicalDeviceFragmentShadingRateFeaturesKHR*>(current), *reinterpret_cast<const VkPhysicalDeviceFragmentShadingRateFeaturesKHR*>(merge_in));
             break;
 #endif
+#if (defined(VK_KHR_shader_constant_data))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CONSTANT_DATA_FEATURES_KHR):
+            merge_VkPhysicalDeviceShaderConstantDataFeaturesKHR(*reinterpret_cast<VkPhysicalDeviceShaderConstantDataFeaturesKHR*>(current), *reinterpret_cast<const VkPhysicalDeviceShaderConstantDataFeaturesKHR*>(merge_in));
+            break;
+#endif
+#if (defined(VK_KHR_shader_abort))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ABORT_FEATURES_KHR):
+            merge_VkPhysicalDeviceShaderAbortFeaturesKHR(*reinterpret_cast<VkPhysicalDeviceShaderAbortFeaturesKHR*>(current), *reinterpret_cast<const VkPhysicalDeviceShaderAbortFeaturesKHR*>(merge_in));
+            break;
+#endif
 #if (defined(VK_KHR_shader_quad_control))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_QUAD_CONTROL_FEATURES_KHR):
             merge_VkPhysicalDeviceShaderQuadControlFeaturesKHR(*reinterpret_cast<VkPhysicalDeviceShaderQuadControlFeaturesKHR*>(current), *reinterpret_cast<const VkPhysicalDeviceShaderQuadControlFeaturesKHR*>(merge_in));
@@ -6893,6 +6975,11 @@ void merge_feature_struct(VkStructureType sType, void* current, const void* merg
 #if (defined(VK_KHR_present_id))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_ID_FEATURES_KHR):
             merge_VkPhysicalDevicePresentIdFeaturesKHR(*reinterpret_cast<VkPhysicalDevicePresentIdFeaturesKHR*>(current), *reinterpret_cast<const VkPhysicalDevicePresentIdFeaturesKHR*>(merge_in));
+            break;
+#endif
+#if (defined(VK_KHR_device_address_commands))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_ADDRESS_COMMANDS_FEATURES_KHR):
+            merge_VkPhysicalDeviceDeviceAddressCommandsFeaturesKHR(*reinterpret_cast<VkPhysicalDeviceDeviceAddressCommandsFeaturesKHR*>(current), *reinterpret_cast<const VkPhysicalDeviceDeviceAddressCommandsFeaturesKHR*>(merge_in));
             break;
 #endif
 #if (defined(VK_KHR_fragment_shader_barycentric))
@@ -7020,6 +7107,11 @@ void merge_feature_struct(VkStructureType sType, void* current, const void* merg
 #if (defined(VK_KHR_maintenance7))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_7_FEATURES_KHR):
             merge_VkPhysicalDeviceMaintenance7FeaturesKHR(*reinterpret_cast<VkPhysicalDeviceMaintenance7FeaturesKHR*>(current), *reinterpret_cast<const VkPhysicalDeviceMaintenance7FeaturesKHR*>(merge_in));
+            break;
+#endif
+#if (defined(VK_KHR_device_fault))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FAULT_FEATURES_KHR):
+            merge_VkPhysicalDeviceFaultFeaturesKHR(*reinterpret_cast<VkPhysicalDeviceFaultFeaturesKHR*>(current), *reinterpret_cast<const VkPhysicalDeviceFaultFeaturesKHR*>(merge_in));
             break;
 #endif
 #if (defined(VK_KHR_maintenance8))

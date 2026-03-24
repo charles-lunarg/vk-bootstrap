@@ -58,6 +58,12 @@ namespace_decl = '''
 namespace vkb::detail {
 
 '''
+
+# Structures that used to have a protect (like beta ext being moved to non-beta
+HEADER_VERSION_MISSING_DEFINES = {
+    'VkPhysicalDevicePresentMeteringFeaturesNV': {'promoted_version' : '345', 'protect' : 'VK_ENABLE_BETA_EXTENSIONS'},
+}
+
 feature_struct_ext_map = {}
 feature_struct_ext_stype_map = {}
 
@@ -78,6 +84,10 @@ def get_struct_guards(struct, struct_name):
     reqs = []
     if struct.protect is not None:
         reqs.append( f'defined({struct.protect})')
+    if struct_name in HEADER_VERSION_MISSING_DEFINES:
+        version = HEADER_VERSION_MISSING_DEFINES[struct_name]['promoted_version']
+        protect = HEADER_VERSION_MISSING_DEFINES[struct_name]['protect']
+        reqs.append(f'(VK_HEADER_VERSION >= {version} || defined({protect}))')
     enablement = []
     if struct.version is not None:
         enablement.append(f'defined({struct.version.name})')

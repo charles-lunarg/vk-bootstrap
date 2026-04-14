@@ -53,6 +53,8 @@ HEADER_VERSION_WORKAROUNDS = {
     'vkGetImageViewAddressNVX':'137', # Revision of extension added new function
     'vkGetImageViewHandle64NVX':'302', # Revision of extension added new function
     'vkGetDeviceCombinedImageSamplerIndexNVX':'340', # Revision of extension added new function
+    'vkCmdSetDispatchParametersARM':'348', # Revision of extension added new function
+    'VkDispatchParametersARM':'348', # Revision of extension added new function
 }
 
 # Some functions use types other than what the commands vendor tag denotes. These are needed to correctly depromote all types

@@ -3255,6 +3255,16 @@ void merge_VkPhysicalDeviceDiagnosticsConfigFeaturesNV(VkPhysicalDeviceDiagnosti
     current.diagnosticsConfig = current.diagnosticsConfig || merge_in.diagnosticsConfig;
 }
 #endif //(defined(VK_NV_device_diagnostics_config))
+#if (defined(VK_QCOM_queue_perf_hint))
+void compare_VkPhysicalDeviceQueuePerfHintFeaturesQCOM(std::vector<std::string> & error_list, VkPhysicalDeviceQueuePerfHintFeaturesQCOM const& supported, VkPhysicalDeviceQueuePerfHintFeaturesQCOM const& requested) {
+    if (requested.queuePerfHint && !supported.queuePerfHint) {
+        error_list.push_back("Missing feature VkPhysicalDeviceQueuePerfHintFeaturesQCOM::queuePerfHint");
+    }
+}
+void merge_VkPhysicalDeviceQueuePerfHintFeaturesQCOM(VkPhysicalDeviceQueuePerfHintFeaturesQCOM & current, VkPhysicalDeviceQueuePerfHintFeaturesQCOM const& merge_in) {
+    current.queuePerfHint = current.queuePerfHint || merge_in.queuePerfHint;
+}
+#endif //(defined(VK_QCOM_queue_perf_hint))
 #if defined(VK_ENABLE_BETA_EXTENSIONS) && (defined(VK_NV_cuda_kernel_launch))
 void compare_VkPhysicalDeviceCudaKernelLaunchFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceCudaKernelLaunchFeaturesNV const& supported, VkPhysicalDeviceCudaKernelLaunchFeaturesNV const& requested) {
     if (requested.cudaKernelLaunchFeatures && !supported.cudaKernelLaunchFeatures) {
@@ -4777,6 +4787,16 @@ void merge_VkPhysicalDeviceDataGraphModelFeaturesQCOM(VkPhysicalDeviceDataGraphM
     current.dataGraphModel = current.dataGraphModel || merge_in.dataGraphModel;
 }
 #endif //(defined(VK_QCOM_data_graph_model))
+#if (defined(VK_ARM_data_graph_optical_flow))
+void compare_VkPhysicalDeviceDataGraphOpticalFlowFeaturesARM(std::vector<std::string> & error_list, VkPhysicalDeviceDataGraphOpticalFlowFeaturesARM const& supported, VkPhysicalDeviceDataGraphOpticalFlowFeaturesARM const& requested) {
+    if (requested.dataGraphOpticalFlow && !supported.dataGraphOpticalFlow) {
+        error_list.push_back("Missing feature VkPhysicalDeviceDataGraphOpticalFlowFeaturesARM::dataGraphOpticalFlow");
+    }
+}
+void merge_VkPhysicalDeviceDataGraphOpticalFlowFeaturesARM(VkPhysicalDeviceDataGraphOpticalFlowFeaturesARM & current, VkPhysicalDeviceDataGraphOpticalFlowFeaturesARM const& merge_in) {
+    current.dataGraphOpticalFlow = current.dataGraphOpticalFlow || merge_in.dataGraphOpticalFlow;
+}
+#endif //(defined(VK_ARM_data_graph_optical_flow))
 #if (defined(VK_EXT_shader_long_vector))
 void compare_VkPhysicalDeviceShaderLongVectorFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceShaderLongVectorFeaturesEXT const& supported, VkPhysicalDeviceShaderLongVectorFeaturesEXT const& requested) {
     if (requested.longVector && !supported.longVector) {
@@ -4849,6 +4869,16 @@ void merge_VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE(VkPhysicalDev
     current.shaderMixedFloatDotProductFloat8AccFloat32 = current.shaderMixedFloatDotProductFloat8AccFloat32 || merge_in.shaderMixedFloatDotProductFloat8AccFloat32;
 }
 #endif //(defined(VK_VALVE_shader_mixed_float_dot_product))
+#if (defined(VK_EXT_primitive_restart_index))
+void compare_VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT const& supported, VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT const& requested) {
+    if (requested.primitiveRestartIndex && !supported.primitiveRestartIndex) {
+        error_list.push_back("Missing feature VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT::primitiveRestartIndex");
+    }
+}
+void merge_VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT(VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT & current, VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT const& merge_in) {
+    current.primitiveRestartIndex = current.primitiveRestartIndex || merge_in.primitiveRestartIndex;
+}
+#endif //(defined(VK_EXT_primitive_restart_index))
 #if (defined(VK_KHR_acceleration_structure))
 void compare_VkPhysicalDeviceAccelerationStructureFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceAccelerationStructureFeaturesKHR const& supported, VkPhysicalDeviceAccelerationStructureFeaturesKHR const& requested) {
     if (requested.accelerationStructure && !supported.accelerationStructure) {
@@ -5846,6 +5876,11 @@ void compare_feature_struct(VkStructureType sType, std::vector<std::string> & er
             compare_VkPhysicalDeviceDiagnosticsConfigFeaturesNV(error_list, *reinterpret_cast<const VkPhysicalDeviceDiagnosticsConfigFeaturesNV*>(supported), *reinterpret_cast<const VkPhysicalDeviceDiagnosticsConfigFeaturesNV*>(requested));
             break;
 #endif
+#if (defined(VK_QCOM_queue_perf_hint))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_QUEUE_PERF_HINT_FEATURES_QCOM):
+            compare_VkPhysicalDeviceQueuePerfHintFeaturesQCOM(error_list, *reinterpret_cast<const VkPhysicalDeviceQueuePerfHintFeaturesQCOM*>(supported), *reinterpret_cast<const VkPhysicalDeviceQueuePerfHintFeaturesQCOM*>(requested));
+            break;
+#endif
 #if defined(VK_ENABLE_BETA_EXTENSIONS) && (defined(VK_NV_cuda_kernel_launch))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_CUDA_KERNEL_LAUNCH_FEATURES_NV):
             compare_VkPhysicalDeviceCudaKernelLaunchFeaturesNV(error_list, *reinterpret_cast<const VkPhysicalDeviceCudaKernelLaunchFeaturesNV*>(supported), *reinterpret_cast<const VkPhysicalDeviceCudaKernelLaunchFeaturesNV*>(requested));
@@ -6417,6 +6452,11 @@ void compare_feature_struct(VkStructureType sType, std::vector<std::string> & er
             compare_VkPhysicalDeviceDataGraphModelFeaturesQCOM(error_list, *reinterpret_cast<const VkPhysicalDeviceDataGraphModelFeaturesQCOM*>(supported), *reinterpret_cast<const VkPhysicalDeviceDataGraphModelFeaturesQCOM*>(requested));
             break;
 #endif
+#if (defined(VK_ARM_data_graph_optical_flow))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DATA_GRAPH_OPTICAL_FLOW_FEATURES_ARM):
+            compare_VkPhysicalDeviceDataGraphOpticalFlowFeaturesARM(error_list, *reinterpret_cast<const VkPhysicalDeviceDataGraphOpticalFlowFeaturesARM*>(supported), *reinterpret_cast<const VkPhysicalDeviceDataGraphOpticalFlowFeaturesARM*>(requested));
+            break;
+#endif
 #if (defined(VK_EXT_shader_long_vector))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_LONG_VECTOR_FEATURES_EXT):
             compare_VkPhysicalDeviceShaderLongVectorFeaturesEXT(error_list, *reinterpret_cast<const VkPhysicalDeviceShaderLongVectorFeaturesEXT*>(supported), *reinterpret_cast<const VkPhysicalDeviceShaderLongVectorFeaturesEXT*>(requested));
@@ -6445,6 +6485,11 @@ void compare_feature_struct(VkStructureType sType, std::vector<std::string> & er
 #if (defined(VK_VALVE_shader_mixed_float_dot_product))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MIXED_FLOAT_DOT_PRODUCT_FEATURES_VALVE):
             compare_VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE(error_list, *reinterpret_cast<const VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE*>(supported), *reinterpret_cast<const VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE*>(requested));
+            break;
+#endif
+#if (defined(VK_EXT_primitive_restart_index))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIMITIVE_RESTART_INDEX_FEATURES_EXT):
+            compare_VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT(error_list, *reinterpret_cast<const VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT*>(supported), *reinterpret_cast<const VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT*>(requested));
             break;
 #endif
 #if (defined(VK_KHR_acceleration_structure))
@@ -7380,6 +7425,11 @@ void merge_feature_struct(VkStructureType sType, void* current, const void* merg
             merge_VkPhysicalDeviceDiagnosticsConfigFeaturesNV(*reinterpret_cast<VkPhysicalDeviceDiagnosticsConfigFeaturesNV*>(current), *reinterpret_cast<const VkPhysicalDeviceDiagnosticsConfigFeaturesNV*>(merge_in));
             break;
 #endif
+#if (defined(VK_QCOM_queue_perf_hint))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_QUEUE_PERF_HINT_FEATURES_QCOM):
+            merge_VkPhysicalDeviceQueuePerfHintFeaturesQCOM(*reinterpret_cast<VkPhysicalDeviceQueuePerfHintFeaturesQCOM*>(current), *reinterpret_cast<const VkPhysicalDeviceQueuePerfHintFeaturesQCOM*>(merge_in));
+            break;
+#endif
 #if defined(VK_ENABLE_BETA_EXTENSIONS) && (defined(VK_NV_cuda_kernel_launch))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_CUDA_KERNEL_LAUNCH_FEATURES_NV):
             merge_VkPhysicalDeviceCudaKernelLaunchFeaturesNV(*reinterpret_cast<VkPhysicalDeviceCudaKernelLaunchFeaturesNV*>(current), *reinterpret_cast<const VkPhysicalDeviceCudaKernelLaunchFeaturesNV*>(merge_in));
@@ -7951,6 +8001,11 @@ void merge_feature_struct(VkStructureType sType, void* current, const void* merg
             merge_VkPhysicalDeviceDataGraphModelFeaturesQCOM(*reinterpret_cast<VkPhysicalDeviceDataGraphModelFeaturesQCOM*>(current), *reinterpret_cast<const VkPhysicalDeviceDataGraphModelFeaturesQCOM*>(merge_in));
             break;
 #endif
+#if (defined(VK_ARM_data_graph_optical_flow))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DATA_GRAPH_OPTICAL_FLOW_FEATURES_ARM):
+            merge_VkPhysicalDeviceDataGraphOpticalFlowFeaturesARM(*reinterpret_cast<VkPhysicalDeviceDataGraphOpticalFlowFeaturesARM*>(current), *reinterpret_cast<const VkPhysicalDeviceDataGraphOpticalFlowFeaturesARM*>(merge_in));
+            break;
+#endif
 #if (defined(VK_EXT_shader_long_vector))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_LONG_VECTOR_FEATURES_EXT):
             merge_VkPhysicalDeviceShaderLongVectorFeaturesEXT(*reinterpret_cast<VkPhysicalDeviceShaderLongVectorFeaturesEXT*>(current), *reinterpret_cast<const VkPhysicalDeviceShaderLongVectorFeaturesEXT*>(merge_in));
@@ -7979,6 +8034,11 @@ void merge_feature_struct(VkStructureType sType, void* current, const void* merg
 #if (defined(VK_VALVE_shader_mixed_float_dot_product))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MIXED_FLOAT_DOT_PRODUCT_FEATURES_VALVE):
             merge_VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE(*reinterpret_cast<VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE*>(current), *reinterpret_cast<const VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE*>(merge_in));
+            break;
+#endif
+#if (defined(VK_EXT_primitive_restart_index))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIMITIVE_RESTART_INDEX_FEATURES_EXT):
+            merge_VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT(*reinterpret_cast<VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT*>(current), *reinterpret_cast<const VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT*>(merge_in));
             break;
 #endif
 #if (defined(VK_KHR_acceleration_structure))

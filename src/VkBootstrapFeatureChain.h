@@ -809,6 +809,10 @@ void merge_VkPhysicalDevicePresentBarrierFeaturesNV(VkPhysicalDevicePresentBarri
 void compare_VkPhysicalDeviceDiagnosticsConfigFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceDiagnosticsConfigFeaturesNV const& supported, VkPhysicalDeviceDiagnosticsConfigFeaturesNV const& requested);
 void merge_VkPhysicalDeviceDiagnosticsConfigFeaturesNV(VkPhysicalDeviceDiagnosticsConfigFeaturesNV & current, VkPhysicalDeviceDiagnosticsConfigFeaturesNV const& merge_in);
 #endif //(defined(VK_NV_device_diagnostics_config))
+#if (defined(VK_QCOM_queue_perf_hint))
+void compare_VkPhysicalDeviceQueuePerfHintFeaturesQCOM(std::vector<std::string> & error_list, VkPhysicalDeviceQueuePerfHintFeaturesQCOM const& supported, VkPhysicalDeviceQueuePerfHintFeaturesQCOM const& requested);
+void merge_VkPhysicalDeviceQueuePerfHintFeaturesQCOM(VkPhysicalDeviceQueuePerfHintFeaturesQCOM & current, VkPhysicalDeviceQueuePerfHintFeaturesQCOM const& merge_in);
+#endif //(defined(VK_QCOM_queue_perf_hint))
 #if defined(VK_ENABLE_BETA_EXTENSIONS) && (defined(VK_NV_cuda_kernel_launch))
 void compare_VkPhysicalDeviceCudaKernelLaunchFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceCudaKernelLaunchFeaturesNV const& supported, VkPhysicalDeviceCudaKernelLaunchFeaturesNV const& requested);
 void merge_VkPhysicalDeviceCudaKernelLaunchFeaturesNV(VkPhysicalDeviceCudaKernelLaunchFeaturesNV & current, VkPhysicalDeviceCudaKernelLaunchFeaturesNV const& merge_in);
@@ -1269,6 +1273,10 @@ void merge_VkPhysicalDeviceCustomResolveFeaturesEXT(VkPhysicalDeviceCustomResolv
 void compare_VkPhysicalDeviceDataGraphModelFeaturesQCOM(std::vector<std::string> & error_list, VkPhysicalDeviceDataGraphModelFeaturesQCOM const& supported, VkPhysicalDeviceDataGraphModelFeaturesQCOM const& requested);
 void merge_VkPhysicalDeviceDataGraphModelFeaturesQCOM(VkPhysicalDeviceDataGraphModelFeaturesQCOM & current, VkPhysicalDeviceDataGraphModelFeaturesQCOM const& merge_in);
 #endif //(defined(VK_QCOM_data_graph_model))
+#if (defined(VK_ARM_data_graph_optical_flow))
+void compare_VkPhysicalDeviceDataGraphOpticalFlowFeaturesARM(std::vector<std::string> & error_list, VkPhysicalDeviceDataGraphOpticalFlowFeaturesARM const& supported, VkPhysicalDeviceDataGraphOpticalFlowFeaturesARM const& requested);
+void merge_VkPhysicalDeviceDataGraphOpticalFlowFeaturesARM(VkPhysicalDeviceDataGraphOpticalFlowFeaturesARM & current, VkPhysicalDeviceDataGraphOpticalFlowFeaturesARM const& merge_in);
+#endif //(defined(VK_ARM_data_graph_optical_flow))
 #if (defined(VK_EXT_shader_long_vector))
 void compare_VkPhysicalDeviceShaderLongVectorFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceShaderLongVectorFeaturesEXT const& supported, VkPhysicalDeviceShaderLongVectorFeaturesEXT const& requested);
 void merge_VkPhysicalDeviceShaderLongVectorFeaturesEXT(VkPhysicalDeviceShaderLongVectorFeaturesEXT & current, VkPhysicalDeviceShaderLongVectorFeaturesEXT const& merge_in);
@@ -1293,6 +1301,10 @@ void merge_VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT(VkPhysicalDevice
 void compare_VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE(std::vector<std::string> & error_list, VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE const& supported, VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE const& requested);
 void merge_VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE(VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE & current, VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE const& merge_in);
 #endif //(defined(VK_VALVE_shader_mixed_float_dot_product))
+#if (defined(VK_EXT_primitive_restart_index))
+void compare_VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT const& supported, VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT const& requested);
+void merge_VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT(VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT & current, VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT const& merge_in);
+#endif //(defined(VK_EXT_primitive_restart_index))
 #if (defined(VK_KHR_acceleration_structure))
 void compare_VkPhysicalDeviceAccelerationStructureFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceAccelerationStructureFeaturesKHR const& supported, VkPhysicalDeviceAccelerationStructureFeaturesKHR const& requested);
 void merge_VkPhysicalDeviceAccelerationStructureFeaturesKHR(VkPhysicalDeviceAccelerationStructureFeaturesKHR & current, VkPhysicalDeviceAccelerationStructureFeaturesKHR const& merge_in);

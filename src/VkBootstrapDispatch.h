@@ -3649,7 +3649,7 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_NV_ray_tracing))
-    void cmdCopyAccelerationStructureNV(VkCommandBuffer commandBuffer, VkAccelerationStructureNV dst, VkAccelerationStructureNV src, VkCopyAccelerationStructureModeKHR mode) const noexcept {
+    void cmdCopyAccelerationStructureNV(VkCommandBuffer commandBuffer, VkAccelerationStructureNV dst, VkAccelerationStructureNV src, VkCopyAccelerationStructureModeNV mode) const noexcept {
         fp_vkCmdCopyAccelerationStructureNV(commandBuffer, dst, src, mode);
     }
 #endif
@@ -5854,7 +5854,7 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_KHR_external_memory_fd))
-    VkResult getMemoryFdPropertiesKHR(VkExternalMemoryHandleTypeFlagBits handleType, int fd, VkMemoryFdPropertiesKHR* pMemoryFdProperties) const noexcept {
+    VkResult getMemoryFdPropertiesKHR(VkExternalMemoryHandleTypeFlagBitsKHR handleType, int fd, VkMemoryFdPropertiesKHR* pMemoryFdProperties) const noexcept {
         return fp_vkGetMemoryFdPropertiesKHR(device, handleType, fd, pMemoryFdProperties);
     }
 #endif
@@ -5894,7 +5894,7 @@ struct DispatchTable {
     }
 #endif
 #if (defined(VK_KHR_external_memory_win32))
-    VkResult getMemoryWin32HandlePropertiesKHR(VkExternalMemoryHandleTypeFlagBits handleType, HANDLE handle, VkMemoryWin32HandlePropertiesKHR* pMemoryWin32HandleProperties) const noexcept {
+    VkResult getMemoryWin32HandlePropertiesKHR(VkExternalMemoryHandleTypeFlagBitsKHR handleType, HANDLE handle, VkMemoryWin32HandlePropertiesKHR* pMemoryWin32HandleProperties) const noexcept {
         return fp_vkGetMemoryWin32HandlePropertiesKHR(device, handleType, handle, pMemoryWin32HandleProperties);
     }
 #endif

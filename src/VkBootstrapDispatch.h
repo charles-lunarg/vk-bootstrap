@@ -254,6 +254,9 @@ struct InstanceDispatchTable {
 #if (defined(VK_KHR_get_physical_device_properties2))
         fp_vkGetPhysicalDeviceProperties2KHR = reinterpret_cast<PFN_vkGetPhysicalDeviceProperties2KHR>(procAddr(instance, "vkGetPhysicalDeviceProperties2KHR"));
 #endif
+#if (defined(VK_ARM_data_graph_instruction_set_tosa))
+        fp_vkGetPhysicalDeviceQueueFamilyDataGraphEngineOperationPropertiesARM = reinterpret_cast<PFN_vkGetPhysicalDeviceQueueFamilyDataGraphEngineOperationPropertiesARM>(procAddr(instance, "vkGetPhysicalDeviceQueueFamilyDataGraphEngineOperationPropertiesARM"));
+#endif
 #if (defined(VK_ARM_data_graph))
         fp_vkGetPhysicalDeviceQueueFamilyDataGraphProcessingEnginePropertiesARM = reinterpret_cast<PFN_vkGetPhysicalDeviceQueueFamilyDataGraphProcessingEnginePropertiesARM>(procAddr(instance, "vkGetPhysicalDeviceQueueFamilyDataGraphProcessingEnginePropertiesARM"));
 #endif
@@ -738,6 +741,11 @@ struct InstanceDispatchTable {
 #if (defined(VK_KHR_get_physical_device_properties2))
     void getPhysicalDeviceProperties2KHR(VkPhysicalDevice physicalDevice, VkPhysicalDeviceProperties2KHR* pProperties) const noexcept {
         fp_vkGetPhysicalDeviceProperties2KHR(physicalDevice, pProperties);
+    }
+#endif
+#if (defined(VK_ARM_data_graph_instruction_set_tosa))
+    VkResult getPhysicalDeviceQueueFamilyDataGraphEngineOperationPropertiesARM(VkPhysicalDevice physicalDevice, uint32_t queueFamilyIndex, const VkQueueFamilyDataGraphPropertiesARM* pQueueFamilyDataGraphProperties, VkBaseOutStructure* pProperties) const noexcept {
+        return fp_vkGetPhysicalDeviceQueueFamilyDataGraphEngineOperationPropertiesARM(physicalDevice, queueFamilyIndex, pQueueFamilyDataGraphProperties, pProperties);
     }
 #endif
 #if (defined(VK_ARM_data_graph))
@@ -1270,6 +1278,11 @@ struct InstanceDispatchTable {
     PFN_vkGetPhysicalDeviceProperties2KHR fp_vkGetPhysicalDeviceProperties2KHR = nullptr;
 #else
     void * fp_vkGetPhysicalDeviceProperties2KHR{};
+#endif
+#if (defined(VK_ARM_data_graph_instruction_set_tosa))
+    PFN_vkGetPhysicalDeviceQueueFamilyDataGraphEngineOperationPropertiesARM fp_vkGetPhysicalDeviceQueueFamilyDataGraphEngineOperationPropertiesARM = nullptr;
+#else
+    void * fp_vkGetPhysicalDeviceQueueFamilyDataGraphEngineOperationPropertiesARM{};
 #endif
 #if (defined(VK_ARM_data_graph))
     PFN_vkGetPhysicalDeviceQueueFamilyDataGraphProcessingEnginePropertiesARM fp_vkGetPhysicalDeviceQueueFamilyDataGraphProcessingEnginePropertiesARM = nullptr;
@@ -2113,6 +2126,9 @@ struct DispatchTable {
 #if (defined(VK_EXT_discard_rectangles)) && VK_HEADER_VERSION >= 241
         fp_vkCmdSetDiscardRectangleModeEXT = reinterpret_cast<PFN_vkCmdSetDiscardRectangleModeEXT>(procAddr(device, "vkCmdSetDiscardRectangleModeEXT"));
 #endif
+#if (defined(VK_ARM_scheduling_controls))
+        fp_vkCmdSetDispatchParametersARM = reinterpret_cast<PFN_vkCmdSetDispatchParametersARM>(procAddr(device, "vkCmdSetDispatchParametersARM"));
+#endif
         fp_vkCmdSetEvent = reinterpret_cast<PFN_vkCmdSetEvent>(procAddr(device, "vkCmdSetEvent"));
 #if (defined(VK_VERSION_1_3))
         fp_vkCmdSetEvent2 = reinterpret_cast<PFN_vkCmdSetEvent2>(procAddr(device, "vkCmdSetEvent2"));
@@ -2183,6 +2199,9 @@ struct DispatchTable {
 #endif
 #if (defined(VK_EXT_extended_dynamic_state2) || defined(VK_EXT_shader_object))
         fp_vkCmdSetPrimitiveRestartEnableEXT = reinterpret_cast<PFN_vkCmdSetPrimitiveRestartEnableEXT>(procAddr(device, "vkCmdSetPrimitiveRestartEnableEXT"));
+#endif
+#if (defined(VK_EXT_primitive_restart_index))
+        fp_vkCmdSetPrimitiveRestartIndexEXT = reinterpret_cast<PFN_vkCmdSetPrimitiveRestartIndexEXT>(procAddr(device, "vkCmdSetPrimitiveRestartIndexEXT"));
 #endif
 #if (defined(VK_VERSION_1_3))
         fp_vkCmdSetPrimitiveTopology = reinterpret_cast<PFN_vkCmdSetPrimitiveTopology>(procAddr(device, "vkCmdSetPrimitiveTopology"));
@@ -3125,6 +3144,9 @@ struct DispatchTable {
 #endif
 #if (defined(VK_KHR_swapchain))
         fp_vkQueuePresentKHR = reinterpret_cast<PFN_vkQueuePresentKHR>(procAddr(device, "vkQueuePresentKHR"));
+#endif
+#if (defined(VK_QCOM_queue_perf_hint))
+        fp_vkQueueSetPerfHintQCOM = reinterpret_cast<PFN_vkQueueSetPerfHintQCOM>(procAddr(device, "vkQueueSetPerfHintQCOM"));
 #endif
 #if (defined(VK_INTEL_performance_query))
         fp_vkQueueSetPerformanceConfigurationINTEL = reinterpret_cast<PFN_vkQueueSetPerformanceConfigurationINTEL>(procAddr(device, "vkQueueSetPerformanceConfigurationINTEL"));
@@ -4465,6 +4487,11 @@ struct DispatchTable {
         fp_vkCmdSetDiscardRectangleModeEXT(commandBuffer, discardRectangleMode);
     }
 #endif
+#if (defined(VK_ARM_scheduling_controls))
+    void cmdSetDispatchParametersARM(VkCommandBuffer commandBuffer, const VkDispatchParametersARM* pDispatchParameters) const noexcept {
+        fp_vkCmdSetDispatchParametersARM(commandBuffer, pDispatchParameters);
+    }
+#endif
     void cmdSetEvent(VkCommandBuffer commandBuffer, VkEvent event, VkPipelineStageFlags stageMask) const noexcept {
         fp_vkCmdSetEvent(commandBuffer, event, stageMask);
     }
@@ -4584,6 +4611,11 @@ struct DispatchTable {
 #if (defined(VK_EXT_extended_dynamic_state2) || defined(VK_EXT_shader_object))
     void cmdSetPrimitiveRestartEnableEXT(VkCommandBuffer commandBuffer, VkBool32 primitiveRestartEnable) const noexcept {
         fp_vkCmdSetPrimitiveRestartEnableEXT(commandBuffer, primitiveRestartEnable);
+    }
+#endif
+#if (defined(VK_EXT_primitive_restart_index))
+    void cmdSetPrimitiveRestartIndexEXT(VkCommandBuffer commandBuffer, uint32_t primitiveRestartIndex) const noexcept {
+        fp_vkCmdSetPrimitiveRestartIndexEXT(commandBuffer, primitiveRestartIndex);
     }
 #endif
 #if (defined(VK_VERSION_1_3))
@@ -6244,6 +6276,11 @@ struct DispatchTable {
         return fp_vkQueuePresentKHR(queue, pPresentInfo);
     }
 #endif
+#if (defined(VK_QCOM_queue_perf_hint))
+    VkResult queueSetPerfHintQCOM(VkQueue queue, const VkPerfHintInfoQCOM* pPerfHintInfo) const noexcept {
+        return fp_vkQueueSetPerfHintQCOM(queue, pPerfHintInfo);
+    }
+#endif
 #if (defined(VK_INTEL_performance_query))
     VkResult queueSetPerformanceConfigurationINTEL(VkQueue queue, VkPerformanceConfigurationINTEL configuration) const noexcept {
         return fp_vkQueueSetPerformanceConfigurationINTEL(queue, configuration);
@@ -7622,6 +7659,11 @@ struct DispatchTable {
 #else
     void * fp_vkCmdSetDiscardRectangleModeEXT{};
 #endif
+#if (defined(VK_ARM_scheduling_controls))
+    PFN_vkCmdSetDispatchParametersARM fp_vkCmdSetDispatchParametersARM = nullptr;
+#else
+    void * fp_vkCmdSetDispatchParametersARM{};
+#endif
     PFN_vkCmdSetEvent fp_vkCmdSetEvent = nullptr;
 #if (defined(VK_VERSION_1_3))
     PFN_vkCmdSetEvent2 fp_vkCmdSetEvent2 = nullptr;
@@ -7738,6 +7780,11 @@ struct DispatchTable {
     PFN_vkCmdSetPrimitiveRestartEnableEXT fp_vkCmdSetPrimitiveRestartEnableEXT = nullptr;
 #else
     void * fp_vkCmdSetPrimitiveRestartEnableEXT{};
+#endif
+#if (defined(VK_EXT_primitive_restart_index))
+    PFN_vkCmdSetPrimitiveRestartIndexEXT fp_vkCmdSetPrimitiveRestartIndexEXT = nullptr;
+#else
+    void * fp_vkCmdSetPrimitiveRestartIndexEXT{};
 #endif
 #if (defined(VK_VERSION_1_3))
     PFN_vkCmdSetPrimitiveTopology fp_vkCmdSetPrimitiveTopology = nullptr;
@@ -9264,6 +9311,11 @@ struct DispatchTable {
     PFN_vkQueuePresentKHR fp_vkQueuePresentKHR = nullptr;
 #else
     void * fp_vkQueuePresentKHR{};
+#endif
+#if (defined(VK_QCOM_queue_perf_hint))
+    PFN_vkQueueSetPerfHintQCOM fp_vkQueueSetPerfHintQCOM = nullptr;
+#else
+    void * fp_vkQueueSetPerfHintQCOM{};
 #endif
 #if (defined(VK_INTEL_performance_query))
     PFN_vkQueueSetPerformanceConfigurationINTEL fp_vkQueueSetPerformanceConfigurationINTEL = nullptr;

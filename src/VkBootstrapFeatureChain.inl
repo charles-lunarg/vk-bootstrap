@@ -4787,6 +4787,16 @@ void merge_VkPhysicalDeviceDataGraphModelFeaturesQCOM(VkPhysicalDeviceDataGraphM
     current.dataGraphModel = current.dataGraphModel || merge_in.dataGraphModel;
 }
 #endif //(defined(VK_QCOM_data_graph_model))
+#if (defined(VK_ARM_data_graph_optical_flow))
+void compare_VkPhysicalDeviceDataGraphOpticalFlowFeaturesARM(std::vector<std::string> & error_list, VkPhysicalDeviceDataGraphOpticalFlowFeaturesARM const& supported, VkPhysicalDeviceDataGraphOpticalFlowFeaturesARM const& requested) {
+    if (requested.dataGraphOpticalFlow && !supported.dataGraphOpticalFlow) {
+        error_list.push_back("Missing feature VkPhysicalDeviceDataGraphOpticalFlowFeaturesARM::dataGraphOpticalFlow");
+    }
+}
+void merge_VkPhysicalDeviceDataGraphOpticalFlowFeaturesARM(VkPhysicalDeviceDataGraphOpticalFlowFeaturesARM & current, VkPhysicalDeviceDataGraphOpticalFlowFeaturesARM const& merge_in) {
+    current.dataGraphOpticalFlow = current.dataGraphOpticalFlow || merge_in.dataGraphOpticalFlow;
+}
+#endif //(defined(VK_ARM_data_graph_optical_flow))
 #if (defined(VK_EXT_shader_long_vector))
 void compare_VkPhysicalDeviceShaderLongVectorFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceShaderLongVectorFeaturesEXT const& supported, VkPhysicalDeviceShaderLongVectorFeaturesEXT const& requested) {
     if (requested.longVector && !supported.longVector) {
@@ -6442,6 +6452,11 @@ void compare_feature_struct(VkStructureType sType, std::vector<std::string> & er
             compare_VkPhysicalDeviceDataGraphModelFeaturesQCOM(error_list, *reinterpret_cast<const VkPhysicalDeviceDataGraphModelFeaturesQCOM*>(supported), *reinterpret_cast<const VkPhysicalDeviceDataGraphModelFeaturesQCOM*>(requested));
             break;
 #endif
+#if (defined(VK_ARM_data_graph_optical_flow))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DATA_GRAPH_OPTICAL_FLOW_FEATURES_ARM):
+            compare_VkPhysicalDeviceDataGraphOpticalFlowFeaturesARM(error_list, *reinterpret_cast<const VkPhysicalDeviceDataGraphOpticalFlowFeaturesARM*>(supported), *reinterpret_cast<const VkPhysicalDeviceDataGraphOpticalFlowFeaturesARM*>(requested));
+            break;
+#endif
 #if (defined(VK_EXT_shader_long_vector))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_LONG_VECTOR_FEATURES_EXT):
             compare_VkPhysicalDeviceShaderLongVectorFeaturesEXT(error_list, *reinterpret_cast<const VkPhysicalDeviceShaderLongVectorFeaturesEXT*>(supported), *reinterpret_cast<const VkPhysicalDeviceShaderLongVectorFeaturesEXT*>(requested));
@@ -7984,6 +7999,11 @@ void merge_feature_struct(VkStructureType sType, void* current, const void* merg
 #if (defined(VK_QCOM_data_graph_model))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DATA_GRAPH_MODEL_FEATURES_QCOM):
             merge_VkPhysicalDeviceDataGraphModelFeaturesQCOM(*reinterpret_cast<VkPhysicalDeviceDataGraphModelFeaturesQCOM*>(current), *reinterpret_cast<const VkPhysicalDeviceDataGraphModelFeaturesQCOM*>(merge_in));
+            break;
+#endif
+#if (defined(VK_ARM_data_graph_optical_flow))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DATA_GRAPH_OPTICAL_FLOW_FEATURES_ARM):
+            merge_VkPhysicalDeviceDataGraphOpticalFlowFeaturesARM(*reinterpret_cast<VkPhysicalDeviceDataGraphOpticalFlowFeaturesARM*>(current), *reinterpret_cast<const VkPhysicalDeviceDataGraphOpticalFlowFeaturesARM*>(merge_in));
             break;
 #endif
 #if (defined(VK_EXT_shader_long_vector))

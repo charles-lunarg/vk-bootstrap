@@ -254,8 +254,11 @@ struct InstanceDispatchTable {
 #if (defined(VK_KHR_get_physical_device_properties2))
         fp_vkGetPhysicalDeviceProperties2KHR = reinterpret_cast<PFN_vkGetPhysicalDeviceProperties2KHR>(procAddr(instance, "vkGetPhysicalDeviceProperties2KHR"));
 #endif
-#if (defined(VK_ARM_data_graph_instruction_set_tosa))
+#if (defined(VK_ARM_data_graph_instruction_set_tosa) || defined(VK_ARM_data_graph_optical_flow))
         fp_vkGetPhysicalDeviceQueueFamilyDataGraphEngineOperationPropertiesARM = reinterpret_cast<PFN_vkGetPhysicalDeviceQueueFamilyDataGraphEngineOperationPropertiesARM>(procAddr(instance, "vkGetPhysicalDeviceQueueFamilyDataGraphEngineOperationPropertiesARM"));
+#endif
+#if (defined(VK_ARM_data_graph_optical_flow))
+        fp_vkGetPhysicalDeviceQueueFamilyDataGraphOpticalFlowImageFormatsARM = reinterpret_cast<PFN_vkGetPhysicalDeviceQueueFamilyDataGraphOpticalFlowImageFormatsARM>(procAddr(instance, "vkGetPhysicalDeviceQueueFamilyDataGraphOpticalFlowImageFormatsARM"));
 #endif
 #if (defined(VK_ARM_data_graph))
         fp_vkGetPhysicalDeviceQueueFamilyDataGraphProcessingEnginePropertiesARM = reinterpret_cast<PFN_vkGetPhysicalDeviceQueueFamilyDataGraphProcessingEnginePropertiesARM>(procAddr(instance, "vkGetPhysicalDeviceQueueFamilyDataGraphProcessingEnginePropertiesARM"));
@@ -743,9 +746,14 @@ struct InstanceDispatchTable {
         fp_vkGetPhysicalDeviceProperties2KHR(physicalDevice, pProperties);
     }
 #endif
-#if (defined(VK_ARM_data_graph_instruction_set_tosa))
+#if (defined(VK_ARM_data_graph_instruction_set_tosa) || defined(VK_ARM_data_graph_optical_flow))
     VkResult getPhysicalDeviceQueueFamilyDataGraphEngineOperationPropertiesARM(VkPhysicalDevice physicalDevice, uint32_t queueFamilyIndex, const VkQueueFamilyDataGraphPropertiesARM* pQueueFamilyDataGraphProperties, VkBaseOutStructure* pProperties) const noexcept {
         return fp_vkGetPhysicalDeviceQueueFamilyDataGraphEngineOperationPropertiesARM(physicalDevice, queueFamilyIndex, pQueueFamilyDataGraphProperties, pProperties);
+    }
+#endif
+#if (defined(VK_ARM_data_graph_optical_flow))
+    VkResult getPhysicalDeviceQueueFamilyDataGraphOpticalFlowImageFormatsARM(VkPhysicalDevice physicalDevice, uint32_t queueFamilyIndex, const VkQueueFamilyDataGraphPropertiesARM* pQueueFamilyDataGraphProperties, const VkDataGraphOpticalFlowImageFormatInfoARM* pOpticalFlowImageFormatInfo, uint32_t* pFormatCount, VkDataGraphOpticalFlowImageFormatPropertiesARM* pImageFormatProperties) const noexcept {
+        return fp_vkGetPhysicalDeviceQueueFamilyDataGraphOpticalFlowImageFormatsARM(physicalDevice, queueFamilyIndex, pQueueFamilyDataGraphProperties, pOpticalFlowImageFormatInfo, pFormatCount, pImageFormatProperties);
     }
 #endif
 #if (defined(VK_ARM_data_graph))
@@ -1279,10 +1287,15 @@ struct InstanceDispatchTable {
 #else
     void * fp_vkGetPhysicalDeviceProperties2KHR{};
 #endif
-#if (defined(VK_ARM_data_graph_instruction_set_tosa))
+#if (defined(VK_ARM_data_graph_instruction_set_tosa) || defined(VK_ARM_data_graph_optical_flow))
     PFN_vkGetPhysicalDeviceQueueFamilyDataGraphEngineOperationPropertiesARM fp_vkGetPhysicalDeviceQueueFamilyDataGraphEngineOperationPropertiesARM = nullptr;
 #else
     void * fp_vkGetPhysicalDeviceQueueFamilyDataGraphEngineOperationPropertiesARM{};
+#endif
+#if (defined(VK_ARM_data_graph_optical_flow))
+    PFN_vkGetPhysicalDeviceQueueFamilyDataGraphOpticalFlowImageFormatsARM fp_vkGetPhysicalDeviceQueueFamilyDataGraphOpticalFlowImageFormatsARM = nullptr;
+#else
+    void * fp_vkGetPhysicalDeviceQueueFamilyDataGraphOpticalFlowImageFormatsARM{};
 #endif
 #if (defined(VK_ARM_data_graph))
     PFN_vkGetPhysicalDeviceQueueFamilyDataGraphProcessingEnginePropertiesARM fp_vkGetPhysicalDeviceQueueFamilyDataGraphProcessingEnginePropertiesARM = nullptr;

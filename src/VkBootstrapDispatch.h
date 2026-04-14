@@ -2139,7 +2139,7 @@ struct DispatchTable {
 #if (defined(VK_EXT_discard_rectangles)) && VK_HEADER_VERSION >= 241
         fp_vkCmdSetDiscardRectangleModeEXT = reinterpret_cast<PFN_vkCmdSetDiscardRectangleModeEXT>(procAddr(device, "vkCmdSetDiscardRectangleModeEXT"));
 #endif
-#if (defined(VK_ARM_scheduling_controls))
+#if (defined(VK_ARM_scheduling_controls)) && VK_HEADER_VERSION >= 348
         fp_vkCmdSetDispatchParametersARM = reinterpret_cast<PFN_vkCmdSetDispatchParametersARM>(procAddr(device, "vkCmdSetDispatchParametersARM"));
 #endif
         fp_vkCmdSetEvent = reinterpret_cast<PFN_vkCmdSetEvent>(procAddr(device, "vkCmdSetEvent"));
@@ -4500,7 +4500,7 @@ struct DispatchTable {
         fp_vkCmdSetDiscardRectangleModeEXT(commandBuffer, discardRectangleMode);
     }
 #endif
-#if (defined(VK_ARM_scheduling_controls))
+#if (defined(VK_ARM_scheduling_controls)) && VK_HEADER_VERSION >= 348
     void cmdSetDispatchParametersARM(VkCommandBuffer commandBuffer, const VkDispatchParametersARM* pDispatchParameters) const noexcept {
         fp_vkCmdSetDispatchParametersARM(commandBuffer, pDispatchParameters);
     }
@@ -7672,7 +7672,7 @@ struct DispatchTable {
 #else
     void * fp_vkCmdSetDiscardRectangleModeEXT{};
 #endif
-#if (defined(VK_ARM_scheduling_controls))
+#if (defined(VK_ARM_scheduling_controls)) && VK_HEADER_VERSION >= 348
     PFN_vkCmdSetDispatchParametersARM fp_vkCmdSetDispatchParametersARM = nullptr;
 #else
     void * fp_vkCmdSetDispatchParametersARM{};

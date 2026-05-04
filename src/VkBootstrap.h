@@ -820,12 +820,11 @@ class DeviceBuilder {
     DeviceBuilder& custom_queue_setup(std::span<const CustomQueueDescription> queue_descriptions);
 #endif
 
-    // Add a structure to the pNext chain of VkDeviceCreateInfo.
+    // Add a pNext chain structure to the pNext chain of VkDeviceCreateInfo.
     // The structure must be valid when DeviceBuilder::build() is called.
-    template <typename T> DeviceBuilder& add_pNext(T* structure) {
-        info.pNext_chain.push_back(structure);
-        return *this;
-    }
+    // The structure must be a type that is valid to add to the pNext chain of VkDeviceCreateInfo
+    // Any structures chained through the pNext pointer will also be added
+    DeviceBuilder& add_pNext(void* structure_to_add);
 
     // Provide custom allocation callbacks.
     DeviceBuilder& set_allocation_callbacks(VkAllocationCallbacks* callbacks);
@@ -978,10 +977,9 @@ class SwapchainBuilder {
 
     // Add a structure to the pNext chain of VkSwapchainCreateInfoKHR.
     // The structure must be valid when SwapchainBuilder::build() is called.
-    template <typename T> SwapchainBuilder& add_pNext(T* structure) {
-        info.pNext_chain.push_back(structure);
-        return *this;
-    }
+    // The structure must be a type that is valid to add to the pNext chain of VkSwapchainCreateInfoKHR
+    // Any structures chained through the pNext pointer will also be added
+    SwapchainBuilder& add_pNext(void* structure_to_add);
 
     // Provide custom allocation callbacks.
     SwapchainBuilder& set_allocation_callbacks(VkAllocationCallbacks* callbacks);

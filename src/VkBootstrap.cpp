@@ -138,6 +138,16 @@ std::vector<vkb::detail::FeaturesChain::StructInfo>::const_iterator FeaturesChai
     });
 }
 
+void add_all_pnext_structures(std::vector<void*>& pNext_chain, void* structure_to_add) {
+    auto pNext_iter = structure_to_add;
+    while (pNext_iter != nullptr) {
+        pNext_chain.push_back(pNext_iter);
+        VkBaseOutStructure out_structure{};
+        memcpy(&out_structure, pNext_iter, sizeof(VkBaseOutStructure));
+        pNext_iter = out_structure.pNext;
+    }
+}
+
 
 class VulkanFunctions {
     private:
@@ -455,6 +465,17 @@ template <typename T> void setup_pNext_chain(T& structure, std::vector<void*> co
     structure.pNext = nullptr;
     if (structs.empty()) return;
     for (size_t i = 0; i < structs.size() - 1; i++) {
+        // Make sure we aren't adding the same struct more than once. We do not care about duplicate sTypes here.
+        bool is_duplicate = false;
+        for (size_t j = 0; j != i; j++) {
+            if (structs.at(i) == structs.at(j)) {
+                is_duplicate = true;
+                break;
+            }
+        }
+        if (is_duplicate) {
+            continue;
+        }
         VkBaseOutStructure out_structure{};
         memcpy(&out_structure, structs.at(i), sizeof(VkBaseOutStructure));
 #if !defined(NDEBUG)
@@ -1713,8 +1734,8 @@ Result<Device> DeviceBuilder::build() const {
         }
     }
 
-    for (auto& pnext : info.pNext_chain) {
-        final_pnext_chain.push_back(pnext);
+    for (auto& pNext : info.pNext_chain) {
+        final_pnext_chain.push_back(pNext);
     }
 
     detail::setup_pNext_chain(device_create_info, final_pnext_chain);
@@ -1766,6 +1787,10 @@ DeviceBuilder& DeviceBuilder::custom_queue_setup(std::span<const CustomQueueDesc
     return *this;
 }
 #endif
+DeviceBuilder& DeviceBuilder::add_pNext(void* structure_to_add) {
+    detail::add_all_pnext_structures(info.pNext_chain, structure_to_add);
+    return *this;
+}
 
 // ---- Swapchain ---- //
 
@@ -2166,6 +2191,10 @@ SwapchainBuilder& SwapchainBuilder::use_default_present_mode_selection() {
 }
 SwapchainBuilder& SwapchainBuilder::set_allocation_callbacks(VkAllocationCallbacks* callbacks) {
     info.allocation_callbacks = callbacks;
+    return *this;
+}
+SwapchainBuilder& SwapchainBuilder::add_pNext(void* structure_to_add) {
+    detail::add_all_pnext_structures(info.pNext_chain, structure_to_add);
     return *this;
 }
 SwapchainBuilder& SwapchainBuilder::set_image_usage_flags(VkImageUsageFlags usage_flags) {

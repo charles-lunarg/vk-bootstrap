@@ -2637,6 +2637,16 @@ void merge_VkPhysicalDeviceMaintenance10FeaturesKHR(VkPhysicalDeviceMaintenance1
     current.maintenance10 = current.maintenance10 || merge_in.maintenance10;
 }
 #endif //(defined(VK_KHR_maintenance10))
+#if (defined(VK_KHR_maintenance11))
+void compare_VkPhysicalDeviceMaintenance11FeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceMaintenance11FeaturesKHR const& supported, VkPhysicalDeviceMaintenance11FeaturesKHR const& requested) {
+    if (requested.maintenance11 && !supported.maintenance11) {
+        error_list.push_back("Missing feature VkPhysicalDeviceMaintenance11FeaturesKHR::maintenance11");
+    }
+}
+void merge_VkPhysicalDeviceMaintenance11FeaturesKHR(VkPhysicalDeviceMaintenance11FeaturesKHR & current, VkPhysicalDeviceMaintenance11FeaturesKHR const& merge_in) {
+    current.maintenance11 = current.maintenance11 || merge_in.maintenance11;
+}
+#endif //(defined(VK_KHR_maintenance11))
 #if (defined(VK_EXT_transform_feedback))
 void compare_VkPhysicalDeviceTransformFeedbackFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceTransformFeedbackFeaturesEXT const& supported, VkPhysicalDeviceTransformFeedbackFeaturesEXT const& requested) {
     if (requested.transformFeedback && !supported.transformFeedback) {
@@ -4869,6 +4879,26 @@ void merge_VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE(VkPhysicalDev
     current.shaderMixedFloatDotProductFloat8AccFloat32 = current.shaderMixedFloatDotProductFloat8AccFloat32 || merge_in.shaderMixedFloatDotProductFloat8AccFloat32;
 }
 #endif //(defined(VK_VALVE_shader_mixed_float_dot_product))
+#if (defined(VK_SEC_throttle_hint))
+void compare_VkPhysicalDeviceThrottleHintFeaturesSEC(std::vector<std::string> & error_list, VkPhysicalDeviceThrottleHintFeaturesSEC const& supported, VkPhysicalDeviceThrottleHintFeaturesSEC const& requested) {
+    if (requested.throttleHint && !supported.throttleHint) {
+        error_list.push_back("Missing feature VkPhysicalDeviceThrottleHintFeaturesSEC::throttleHint");
+    }
+}
+void merge_VkPhysicalDeviceThrottleHintFeaturesSEC(VkPhysicalDeviceThrottleHintFeaturesSEC & current, VkPhysicalDeviceThrottleHintFeaturesSEC const& merge_in) {
+    current.throttleHint = current.throttleHint || merge_in.throttleHint;
+}
+#endif //(defined(VK_SEC_throttle_hint))
+#if (defined(VK_ARM_data_graph_neural_accelerator_statistics))
+void compare_VkPhysicalDeviceDataGraphNeuralAcceleratorStatisticsFeaturesARM(std::vector<std::string> & error_list, VkPhysicalDeviceDataGraphNeuralAcceleratorStatisticsFeaturesARM const& supported, VkPhysicalDeviceDataGraphNeuralAcceleratorStatisticsFeaturesARM const& requested) {
+    if (requested.dataGraphNeuralAcceleratorStatistics && !supported.dataGraphNeuralAcceleratorStatistics) {
+        error_list.push_back("Missing feature VkPhysicalDeviceDataGraphNeuralAcceleratorStatisticsFeaturesARM::dataGraphNeuralAcceleratorStatistics");
+    }
+}
+void merge_VkPhysicalDeviceDataGraphNeuralAcceleratorStatisticsFeaturesARM(VkPhysicalDeviceDataGraphNeuralAcceleratorStatisticsFeaturesARM & current, VkPhysicalDeviceDataGraphNeuralAcceleratorStatisticsFeaturesARM const& merge_in) {
+    current.dataGraphNeuralAcceleratorStatistics = current.dataGraphNeuralAcceleratorStatistics || merge_in.dataGraphNeuralAcceleratorStatistics;
+}
+#endif //(defined(VK_ARM_data_graph_neural_accelerator_statistics))
 #if (defined(VK_EXT_primitive_restart_index))
 void compare_VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT const& supported, VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT const& requested) {
     if (requested.primitiveRestartIndex && !supported.primitiveRestartIndex) {
@@ -5660,6 +5690,11 @@ void compare_feature_struct(VkStructureType sType, std::vector<std::string> & er
 #if (defined(VK_KHR_maintenance10))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_10_FEATURES_KHR):
             compare_VkPhysicalDeviceMaintenance10FeaturesKHR(error_list, *reinterpret_cast<const VkPhysicalDeviceMaintenance10FeaturesKHR*>(supported), *reinterpret_cast<const VkPhysicalDeviceMaintenance10FeaturesKHR*>(requested));
+            break;
+#endif
+#if (defined(VK_KHR_maintenance11))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_11_FEATURES_KHR):
+            compare_VkPhysicalDeviceMaintenance11FeaturesKHR(error_list, *reinterpret_cast<const VkPhysicalDeviceMaintenance11FeaturesKHR*>(supported), *reinterpret_cast<const VkPhysicalDeviceMaintenance11FeaturesKHR*>(requested));
             break;
 #endif
 #if (defined(VK_EXT_transform_feedback))
@@ -6487,6 +6522,16 @@ void compare_feature_struct(VkStructureType sType, std::vector<std::string> & er
             compare_VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE(error_list, *reinterpret_cast<const VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE*>(supported), *reinterpret_cast<const VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE*>(requested));
             break;
 #endif
+#if (defined(VK_SEC_throttle_hint))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_THROTTLE_HINT_FEATURES_SEC):
+            compare_VkPhysicalDeviceThrottleHintFeaturesSEC(error_list, *reinterpret_cast<const VkPhysicalDeviceThrottleHintFeaturesSEC*>(supported), *reinterpret_cast<const VkPhysicalDeviceThrottleHintFeaturesSEC*>(requested));
+            break;
+#endif
+#if (defined(VK_ARM_data_graph_neural_accelerator_statistics))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DATA_GRAPH_NEURAL_ACCELERATOR_STATISTICS_FEATURES_ARM):
+            compare_VkPhysicalDeviceDataGraphNeuralAcceleratorStatisticsFeaturesARM(error_list, *reinterpret_cast<const VkPhysicalDeviceDataGraphNeuralAcceleratorStatisticsFeaturesARM*>(supported), *reinterpret_cast<const VkPhysicalDeviceDataGraphNeuralAcceleratorStatisticsFeaturesARM*>(requested));
+            break;
+#endif
 #if (defined(VK_EXT_primitive_restart_index))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIMITIVE_RESTART_INDEX_FEATURES_EXT):
             compare_VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT(error_list, *reinterpret_cast<const VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT*>(supported), *reinterpret_cast<const VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT*>(requested));
@@ -7209,6 +7254,11 @@ void merge_feature_struct(VkStructureType sType, void* current, const void* merg
 #if (defined(VK_KHR_maintenance10))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_10_FEATURES_KHR):
             merge_VkPhysicalDeviceMaintenance10FeaturesKHR(*reinterpret_cast<VkPhysicalDeviceMaintenance10FeaturesKHR*>(current), *reinterpret_cast<const VkPhysicalDeviceMaintenance10FeaturesKHR*>(merge_in));
+            break;
+#endif
+#if (defined(VK_KHR_maintenance11))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_11_FEATURES_KHR):
+            merge_VkPhysicalDeviceMaintenance11FeaturesKHR(*reinterpret_cast<VkPhysicalDeviceMaintenance11FeaturesKHR*>(current), *reinterpret_cast<const VkPhysicalDeviceMaintenance11FeaturesKHR*>(merge_in));
             break;
 #endif
 #if (defined(VK_EXT_transform_feedback))
@@ -8034,6 +8084,16 @@ void merge_feature_struct(VkStructureType sType, void* current, const void* merg
 #if (defined(VK_VALVE_shader_mixed_float_dot_product))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MIXED_FLOAT_DOT_PRODUCT_FEATURES_VALVE):
             merge_VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE(*reinterpret_cast<VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE*>(current), *reinterpret_cast<const VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE*>(merge_in));
+            break;
+#endif
+#if (defined(VK_SEC_throttle_hint))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_THROTTLE_HINT_FEATURES_SEC):
+            merge_VkPhysicalDeviceThrottleHintFeaturesSEC(*reinterpret_cast<VkPhysicalDeviceThrottleHintFeaturesSEC*>(current), *reinterpret_cast<const VkPhysicalDeviceThrottleHintFeaturesSEC*>(merge_in));
+            break;
+#endif
+#if (defined(VK_ARM_data_graph_neural_accelerator_statistics))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DATA_GRAPH_NEURAL_ACCELERATOR_STATISTICS_FEATURES_ARM):
+            merge_VkPhysicalDeviceDataGraphNeuralAcceleratorStatisticsFeaturesARM(*reinterpret_cast<VkPhysicalDeviceDataGraphNeuralAcceleratorStatisticsFeaturesARM*>(current), *reinterpret_cast<const VkPhysicalDeviceDataGraphNeuralAcceleratorStatisticsFeaturesARM*>(merge_in));
             break;
 #endif
 #if (defined(VK_EXT_primitive_restart_index))

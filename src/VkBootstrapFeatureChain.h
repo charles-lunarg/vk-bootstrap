@@ -637,6 +637,10 @@ void merge_VkPhysicalDevicePresentModeFifoLatestReadyFeaturesEXT(VkPhysicalDevic
 void compare_VkPhysicalDeviceMaintenance10FeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceMaintenance10FeaturesKHR const& supported, VkPhysicalDeviceMaintenance10FeaturesKHR const& requested);
 void merge_VkPhysicalDeviceMaintenance10FeaturesKHR(VkPhysicalDeviceMaintenance10FeaturesKHR & current, VkPhysicalDeviceMaintenance10FeaturesKHR const& merge_in);
 #endif //(defined(VK_KHR_maintenance10))
+#if (defined(VK_KHR_maintenance11))
+void compare_VkPhysicalDeviceMaintenance11FeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceMaintenance11FeaturesKHR const& supported, VkPhysicalDeviceMaintenance11FeaturesKHR const& requested);
+void merge_VkPhysicalDeviceMaintenance11FeaturesKHR(VkPhysicalDeviceMaintenance11FeaturesKHR & current, VkPhysicalDeviceMaintenance11FeaturesKHR const& merge_in);
+#endif //(defined(VK_KHR_maintenance11))
 #if (defined(VK_EXT_transform_feedback))
 void compare_VkPhysicalDeviceTransformFeedbackFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceTransformFeedbackFeaturesEXT const& supported, VkPhysicalDeviceTransformFeedbackFeaturesEXT const& requested);
 void merge_VkPhysicalDeviceTransformFeedbackFeaturesEXT(VkPhysicalDeviceTransformFeedbackFeaturesEXT & current, VkPhysicalDeviceTransformFeedbackFeaturesEXT const& merge_in);
@@ -1301,6 +1305,14 @@ void merge_VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT(VkPhysicalDevice
 void compare_VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE(std::vector<std::string> & error_list, VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE const& supported, VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE const& requested);
 void merge_VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE(VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE & current, VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE const& merge_in);
 #endif //(defined(VK_VALVE_shader_mixed_float_dot_product))
+#if (defined(VK_SEC_throttle_hint))
+void compare_VkPhysicalDeviceThrottleHintFeaturesSEC(std::vector<std::string> & error_list, VkPhysicalDeviceThrottleHintFeaturesSEC const& supported, VkPhysicalDeviceThrottleHintFeaturesSEC const& requested);
+void merge_VkPhysicalDeviceThrottleHintFeaturesSEC(VkPhysicalDeviceThrottleHintFeaturesSEC & current, VkPhysicalDeviceThrottleHintFeaturesSEC const& merge_in);
+#endif //(defined(VK_SEC_throttle_hint))
+#if (defined(VK_ARM_data_graph_neural_accelerator_statistics))
+void compare_VkPhysicalDeviceDataGraphNeuralAcceleratorStatisticsFeaturesARM(std::vector<std::string> & error_list, VkPhysicalDeviceDataGraphNeuralAcceleratorStatisticsFeaturesARM const& supported, VkPhysicalDeviceDataGraphNeuralAcceleratorStatisticsFeaturesARM const& requested);
+void merge_VkPhysicalDeviceDataGraphNeuralAcceleratorStatisticsFeaturesARM(VkPhysicalDeviceDataGraphNeuralAcceleratorStatisticsFeaturesARM & current, VkPhysicalDeviceDataGraphNeuralAcceleratorStatisticsFeaturesARM const& merge_in);
+#endif //(defined(VK_ARM_data_graph_neural_accelerator_statistics))
 #if (defined(VK_EXT_primitive_restart_index))
 void compare_VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT const& supported, VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT const& requested);
 void merge_VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT(VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT & current, VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT const& merge_in);

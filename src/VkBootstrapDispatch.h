@@ -1535,6 +1535,12 @@ struct DispatchTable {
 #if (defined(VK_EXT_debug_utils))
         fp_vkCmdBeginDebugUtilsLabelEXT = reinterpret_cast<PFN_vkCmdBeginDebugUtilsLabelEXT>(procAddr(device, "vkCmdBeginDebugUtilsLabelEXT"));
 #endif
+#if (defined(VK_AMD_gpa_interface))
+        fp_vkCmdBeginGpaSampleAMD = reinterpret_cast<PFN_vkCmdBeginGpaSampleAMD>(procAddr(device, "vkCmdBeginGpaSampleAMD"));
+#endif
+#if (defined(VK_AMD_gpa_interface))
+        fp_vkCmdBeginGpaSessionAMD = reinterpret_cast<PFN_vkCmdBeginGpaSessionAMD>(procAddr(device, "vkCmdBeginGpaSessionAMD"));
+#endif
 #if (defined(VK_QCOM_tile_shading))
         fp_vkCmdBeginPerTileExecutionQCOM = reinterpret_cast<PFN_vkCmdBeginPerTileExecutionQCOM>(procAddr(device, "vkCmdBeginPerTileExecutionQCOM"));
 #endif
@@ -1687,6 +1693,9 @@ struct DispatchTable {
 #endif
 #if (defined(VK_KHR_copy_commands2))
         fp_vkCmdCopyBufferToImage2KHR = reinterpret_cast<PFN_vkCmdCopyBufferToImage2KHR>(procAddr(device, "vkCmdCopyBufferToImage2KHR"));
+#endif
+#if (defined(VK_AMD_gpa_interface))
+        fp_vkCmdCopyGpaSessionResultsAMD = reinterpret_cast<PFN_vkCmdCopyGpaSessionResultsAMD>(procAddr(device, "vkCmdCopyGpaSessionResultsAMD"));
 #endif
         fp_vkCmdCopyImage = reinterpret_cast<PFN_vkCmdCopyImage>(procAddr(device, "vkCmdCopyImage"));
 #if (defined(VK_VERSION_1_3))
@@ -1882,6 +1891,12 @@ struct DispatchTable {
 #endif
 #if (defined(VK_EXT_debug_utils))
         fp_vkCmdEndDebugUtilsLabelEXT = reinterpret_cast<PFN_vkCmdEndDebugUtilsLabelEXT>(procAddr(device, "vkCmdEndDebugUtilsLabelEXT"));
+#endif
+#if (defined(VK_AMD_gpa_interface))
+        fp_vkCmdEndGpaSampleAMD = reinterpret_cast<PFN_vkCmdEndGpaSampleAMD>(procAddr(device, "vkCmdEndGpaSampleAMD"));
+#endif
+#if (defined(VK_AMD_gpa_interface))
+        fp_vkCmdEndGpaSessionAMD = reinterpret_cast<PFN_vkCmdEndGpaSessionAMD>(procAddr(device, "vkCmdEndGpaSessionAMD"));
 #endif
 #if (defined(VK_QCOM_tile_shading))
         fp_vkCmdEndPerTileExecutionQCOM = reinterpret_cast<PFN_vkCmdEndPerTileExecutionQCOM>(procAddr(device, "vkCmdEndPerTileExecutionQCOM"));
@@ -2464,6 +2479,9 @@ struct DispatchTable {
 #endif
         fp_vkCreateFence = reinterpret_cast<PFN_vkCreateFence>(procAddr(device, "vkCreateFence"));
         fp_vkCreateFramebuffer = reinterpret_cast<PFN_vkCreateFramebuffer>(procAddr(device, "vkCreateFramebuffer"));
+#if (defined(VK_AMD_gpa_interface))
+        fp_vkCreateGpaSessionAMD = reinterpret_cast<PFN_vkCreateGpaSessionAMD>(procAddr(device, "vkCreateGpaSessionAMD"));
+#endif
         fp_vkCreateGraphicsPipelines = reinterpret_cast<PFN_vkCreateGraphicsPipelines>(procAddr(device, "vkCreateGraphicsPipelines"));
         fp_vkCreateImage = reinterpret_cast<PFN_vkCreateImage>(procAddr(device, "vkCreateImage"));
         fp_vkCreateImageView = reinterpret_cast<PFN_vkCreateImageView>(procAddr(device, "vkCreateImageView"));
@@ -2596,6 +2614,9 @@ struct DispatchTable {
 #endif
         fp_vkDestroyFence = reinterpret_cast<PFN_vkDestroyFence>(procAddr(device, "vkDestroyFence"));
         fp_vkDestroyFramebuffer = reinterpret_cast<PFN_vkDestroyFramebuffer>(procAddr(device, "vkDestroyFramebuffer"));
+#if (defined(VK_AMD_gpa_interface))
+        fp_vkDestroyGpaSessionAMD = reinterpret_cast<PFN_vkDestroyGpaSessionAMD>(procAddr(device, "vkDestroyGpaSessionAMD"));
+#endif
         fp_vkDestroyImage = reinterpret_cast<PFN_vkDestroyImage>(procAddr(device, "vkDestroyImage"));
         fp_vkDestroyImageView = reinterpret_cast<PFN_vkDestroyImageView>(procAddr(device, "vkDestroyImageView"));
 #if (defined(VK_EXT_device_generated_commands))
@@ -2874,6 +2895,15 @@ struct DispatchTable {
 #endif
 #if (defined(VK_NV_device_generated_commands))
         fp_vkGetGeneratedCommandsMemoryRequirementsNV = reinterpret_cast<PFN_vkGetGeneratedCommandsMemoryRequirementsNV>(procAddr(device, "vkGetGeneratedCommandsMemoryRequirementsNV"));
+#endif
+#if (defined(VK_AMD_gpa_interface))
+        fp_vkGetGpaDeviceClockInfoAMD = reinterpret_cast<PFN_vkGetGpaDeviceClockInfoAMD>(procAddr(device, "vkGetGpaDeviceClockInfoAMD"));
+#endif
+#if (defined(VK_AMD_gpa_interface))
+        fp_vkGetGpaSessionResultsAMD = reinterpret_cast<PFN_vkGetGpaSessionResultsAMD>(procAddr(device, "vkGetGpaSessionResultsAMD"));
+#endif
+#if (defined(VK_AMD_gpa_interface))
+        fp_vkGetGpaSessionStatusAMD = reinterpret_cast<PFN_vkGetGpaSessionStatusAMD>(procAddr(device, "vkGetGpaSessionStatusAMD"));
 #endif
 #if (defined(VK_EXT_image_drm_format_modifier))
         fp_vkGetImageDrmFormatModifierPropertiesEXT = reinterpret_cast<PFN_vkGetImageDrmFormatModifierPropertiesEXT>(procAddr(device, "vkGetImageDrmFormatModifierPropertiesEXT"));
@@ -3204,6 +3234,9 @@ struct DispatchTable {
         fp_vkResetDescriptorPool = reinterpret_cast<PFN_vkResetDescriptorPool>(procAddr(device, "vkResetDescriptorPool"));
         fp_vkResetEvent = reinterpret_cast<PFN_vkResetEvent>(procAddr(device, "vkResetEvent"));
         fp_vkResetFences = reinterpret_cast<PFN_vkResetFences>(procAddr(device, "vkResetFences"));
+#if (defined(VK_AMD_gpa_interface))
+        fp_vkResetGpaSessionAMD = reinterpret_cast<PFN_vkResetGpaSessionAMD>(procAddr(device, "vkResetGpaSessionAMD"));
+#endif
 #if (defined(VK_VERSION_1_2))
         fp_vkResetQueryPool = reinterpret_cast<PFN_vkResetQueryPool>(procAddr(device, "vkResetQueryPool"));
 #endif
@@ -3226,6 +3259,9 @@ struct DispatchTable {
         fp_vkSetDeviceMemoryPriorityEXT = reinterpret_cast<PFN_vkSetDeviceMemoryPriorityEXT>(procAddr(device, "vkSetDeviceMemoryPriorityEXT"));
 #endif
         fp_vkSetEvent = reinterpret_cast<PFN_vkSetEvent>(procAddr(device, "vkSetEvent"));
+#if (defined(VK_AMD_gpa_interface))
+        fp_vkSetGpaDeviceClockModeAMD = reinterpret_cast<PFN_vkSetGpaDeviceClockModeAMD>(procAddr(device, "vkSetGpaDeviceClockModeAMD"));
+#endif
 #if (defined(VK_EXT_hdr_metadata))
         fp_vkSetHdrMetadataEXT = reinterpret_cast<PFN_vkSetHdrMetadataEXT>(procAddr(device, "vkSetHdrMetadataEXT"));
 #endif
@@ -3446,6 +3482,16 @@ struct DispatchTable {
 #if (defined(VK_EXT_debug_utils))
     void cmdBeginDebugUtilsLabelEXT(VkCommandBuffer commandBuffer, const VkDebugUtilsLabelEXT* pLabelInfo) const noexcept {
         fp_vkCmdBeginDebugUtilsLabelEXT(commandBuffer, pLabelInfo);
+    }
+#endif
+#if (defined(VK_AMD_gpa_interface))
+    VkResult cmdBeginGpaSampleAMD(VkCommandBuffer commandBuffer, VkGpaSessionAMD gpaSession, const VkGpaSampleBeginInfoAMD* pGpaSampleBeginInfo, uint32_t* pSampleID) const noexcept {
+        return fp_vkCmdBeginGpaSampleAMD(commandBuffer, gpaSession, pGpaSampleBeginInfo, pSampleID);
+    }
+#endif
+#if (defined(VK_AMD_gpa_interface))
+    VkResult cmdBeginGpaSessionAMD(VkCommandBuffer commandBuffer, VkGpaSessionAMD gpaSession) const noexcept {
+        return fp_vkCmdBeginGpaSessionAMD(commandBuffer, gpaSession);
     }
 #endif
 #if (defined(VK_QCOM_tile_shading))
@@ -3717,6 +3763,11 @@ struct DispatchTable {
 #if (defined(VK_KHR_copy_commands2))
     void cmdCopyBufferToImage2KHR(VkCommandBuffer commandBuffer, const VkCopyBufferToImageInfo2KHR* pCopyBufferToImageInfo) const noexcept {
         fp_vkCmdCopyBufferToImage2KHR(commandBuffer, pCopyBufferToImageInfo);
+    }
+#endif
+#if (defined(VK_AMD_gpa_interface))
+    void cmdCopyGpaSessionResultsAMD(VkCommandBuffer commandBuffer, VkGpaSessionAMD gpaSession) const noexcept {
+        fp_vkCmdCopyGpaSessionResultsAMD(commandBuffer, gpaSession);
     }
 #endif
     void cmdCopyImage(VkCommandBuffer commandBuffer, VkImage srcImage, VkImageLayout srcImageLayout, VkImage dstImage, VkImageLayout dstImageLayout, uint32_t regionCount, const VkImageCopy* pRegions) const noexcept {
@@ -4054,6 +4105,16 @@ struct DispatchTable {
 #if (defined(VK_EXT_debug_utils))
     void cmdEndDebugUtilsLabelEXT(VkCommandBuffer commandBuffer) const noexcept {
         fp_vkCmdEndDebugUtilsLabelEXT(commandBuffer);
+    }
+#endif
+#if (defined(VK_AMD_gpa_interface))
+    void cmdEndGpaSampleAMD(VkCommandBuffer commandBuffer, VkGpaSessionAMD gpaSession, uint32_t sampleID) const noexcept {
+        fp_vkCmdEndGpaSampleAMD(commandBuffer, gpaSession, sampleID);
+    }
+#endif
+#if (defined(VK_AMD_gpa_interface))
+    VkResult cmdEndGpaSessionAMD(VkCommandBuffer commandBuffer, VkGpaSessionAMD gpaSession) const noexcept {
+        return fp_vkCmdEndGpaSessionAMD(commandBuffer, gpaSession);
     }
 #endif
 #if (defined(VK_QCOM_tile_shading))
@@ -5067,6 +5128,11 @@ struct DispatchTable {
     VkResult createFramebuffer(const VkFramebufferCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkFramebuffer* pFramebuffer) const noexcept {
         return fp_vkCreateFramebuffer(device, pCreateInfo, pAllocator, pFramebuffer);
     }
+#if (defined(VK_AMD_gpa_interface))
+    VkResult createGpaSessionAMD(const VkGpaSessionCreateInfoAMD* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkGpaSessionAMD* pGpaSession) const noexcept {
+        return fp_vkCreateGpaSessionAMD(device, pCreateInfo, pAllocator, pGpaSession);
+    }
+#endif
     VkResult createGraphicsPipelines(VkPipelineCache pipelineCache, uint32_t createInfoCount, const VkGraphicsPipelineCreateInfo* pCreateInfos, const VkAllocationCallbacks* pAllocator, VkPipeline* pPipelines) const noexcept {
         return fp_vkCreateGraphicsPipelines(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
     }
@@ -5311,6 +5377,11 @@ struct DispatchTable {
     void destroyFramebuffer(VkFramebuffer framebuffer, const VkAllocationCallbacks* pAllocator) const noexcept {
         fp_vkDestroyFramebuffer(device, framebuffer, pAllocator);
     }
+#if (defined(VK_AMD_gpa_interface))
+    void destroyGpaSessionAMD(VkGpaSessionAMD gpaSession, const VkAllocationCallbacks* pAllocator) const noexcept {
+        fp_vkDestroyGpaSessionAMD(device, gpaSession, pAllocator);
+    }
+#endif
     void destroyImage(VkImage image, const VkAllocationCallbacks* pAllocator) const noexcept {
         fp_vkDestroyImage(device, image, pAllocator);
     }
@@ -5802,6 +5873,21 @@ struct DispatchTable {
 #if (defined(VK_NV_device_generated_commands))
     void getGeneratedCommandsMemoryRequirementsNV(const VkGeneratedCommandsMemoryRequirementsInfoNV* pInfo, VkMemoryRequirements2* pMemoryRequirements) const noexcept {
         fp_vkGetGeneratedCommandsMemoryRequirementsNV(device, pInfo, pMemoryRequirements);
+    }
+#endif
+#if (defined(VK_AMD_gpa_interface))
+    VkResult getGpaDeviceClockInfoAMD(VkGpaDeviceGetClockInfoAMD* pInfo) const noexcept {
+        return fp_vkGetGpaDeviceClockInfoAMD(device, pInfo);
+    }
+#endif
+#if (defined(VK_AMD_gpa_interface))
+    VkResult getGpaSessionResultsAMD(VkGpaSessionAMD gpaSession, uint32_t sampleID, size_t* pSizeInBytes, void* pData) const noexcept {
+        return fp_vkGetGpaSessionResultsAMD(device, gpaSession, sampleID, pSizeInBytes, pData);
+    }
+#endif
+#if (defined(VK_AMD_gpa_interface))
+    VkResult getGpaSessionStatusAMD(VkGpaSessionAMD gpaSession) const noexcept {
+        return fp_vkGetGpaSessionStatusAMD(device, gpaSession);
     }
 #endif
 #if (defined(VK_EXT_image_drm_format_modifier))
@@ -6375,6 +6461,11 @@ struct DispatchTable {
     VkResult resetFences(uint32_t fenceCount, const VkFence* pFences) const noexcept {
         return fp_vkResetFences(device, fenceCount, pFences);
     }
+#if (defined(VK_AMD_gpa_interface))
+    VkResult resetGpaSessionAMD(VkGpaSessionAMD gpaSession) const noexcept {
+        return fp_vkResetGpaSessionAMD(device, gpaSession);
+    }
+#endif
 #if (defined(VK_VERSION_1_2))
     void resetQueryPool(VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount) const noexcept {
         fp_vkResetQueryPool(device, queryPool, firstQuery, queryCount);
@@ -6413,6 +6504,11 @@ struct DispatchTable {
     VkResult setEvent(VkEvent event) const noexcept {
         return fp_vkSetEvent(device, event);
     }
+#if (defined(VK_AMD_gpa_interface))
+    VkResult setGpaDeviceClockModeAMD(VkGpaDeviceClockModeInfoAMD* pInfo) const noexcept {
+        return fp_vkSetGpaDeviceClockModeAMD(device, pInfo);
+    }
+#endif
 #if (defined(VK_EXT_hdr_metadata))
     void setHdrMetadataEXT(uint32_t swapchainCount, const VkSwapchainKHR* pSwapchains, const VkHdrMetadataEXT* pMetadata) const noexcept {
         fp_vkSetHdrMetadataEXT(device, swapchainCount, pSwapchains, pMetadata);
@@ -6688,6 +6784,16 @@ struct DispatchTable {
 #else
     void * fp_vkCmdBeginDebugUtilsLabelEXT{};
 #endif
+#if (defined(VK_AMD_gpa_interface))
+    PFN_vkCmdBeginGpaSampleAMD fp_vkCmdBeginGpaSampleAMD = nullptr;
+#else
+    void * fp_vkCmdBeginGpaSampleAMD{};
+#endif
+#if (defined(VK_AMD_gpa_interface))
+    PFN_vkCmdBeginGpaSessionAMD fp_vkCmdBeginGpaSessionAMD = nullptr;
+#else
+    void * fp_vkCmdBeginGpaSessionAMD{};
+#endif
 #if (defined(VK_QCOM_tile_shading))
     PFN_vkCmdBeginPerTileExecutionQCOM fp_vkCmdBeginPerTileExecutionQCOM = nullptr;
 #else
@@ -6934,6 +7040,11 @@ struct DispatchTable {
     PFN_vkCmdCopyBufferToImage2KHR fp_vkCmdCopyBufferToImage2KHR = nullptr;
 #else
     void * fp_vkCmdCopyBufferToImage2KHR{};
+#endif
+#if (defined(VK_AMD_gpa_interface))
+    PFN_vkCmdCopyGpaSessionResultsAMD fp_vkCmdCopyGpaSessionResultsAMD = nullptr;
+#else
+    void * fp_vkCmdCopyGpaSessionResultsAMD{};
 #endif
     PFN_vkCmdCopyImage fp_vkCmdCopyImage = nullptr;
 #if (defined(VK_VERSION_1_3))
@@ -7253,6 +7364,16 @@ struct DispatchTable {
     PFN_vkCmdEndDebugUtilsLabelEXT fp_vkCmdEndDebugUtilsLabelEXT = nullptr;
 #else
     void * fp_vkCmdEndDebugUtilsLabelEXT{};
+#endif
+#if (defined(VK_AMD_gpa_interface))
+    PFN_vkCmdEndGpaSampleAMD fp_vkCmdEndGpaSampleAMD = nullptr;
+#else
+    void * fp_vkCmdEndGpaSampleAMD{};
+#endif
+#if (defined(VK_AMD_gpa_interface))
+    PFN_vkCmdEndGpaSessionAMD fp_vkCmdEndGpaSessionAMD = nullptr;
+#else
+    void * fp_vkCmdEndGpaSessionAMD{};
 #endif
 #if (defined(VK_QCOM_tile_shading))
     PFN_vkCmdEndPerTileExecutionQCOM fp_vkCmdEndPerTileExecutionQCOM = nullptr;
@@ -8201,6 +8322,11 @@ struct DispatchTable {
 #endif
     PFN_vkCreateFence fp_vkCreateFence = nullptr;
     PFN_vkCreateFramebuffer fp_vkCreateFramebuffer = nullptr;
+#if (defined(VK_AMD_gpa_interface))
+    PFN_vkCreateGpaSessionAMD fp_vkCreateGpaSessionAMD = nullptr;
+#else
+    void * fp_vkCreateGpaSessionAMD{};
+#endif
     PFN_vkCreateGraphicsPipelines fp_vkCreateGraphicsPipelines = nullptr;
     PFN_vkCreateImage fp_vkCreateImage = nullptr;
     PFN_vkCreateImageView fp_vkCreateImageView = nullptr;
@@ -8409,6 +8535,11 @@ struct DispatchTable {
 #endif
     PFN_vkDestroyFence fp_vkDestroyFence = nullptr;
     PFN_vkDestroyFramebuffer fp_vkDestroyFramebuffer = nullptr;
+#if (defined(VK_AMD_gpa_interface))
+    PFN_vkDestroyGpaSessionAMD fp_vkDestroyGpaSessionAMD = nullptr;
+#else
+    void * fp_vkDestroyGpaSessionAMD{};
+#endif
     PFN_vkDestroyImage fp_vkDestroyImage = nullptr;
     PFN_vkDestroyImageView fp_vkDestroyImageView = nullptr;
 #if (defined(VK_EXT_device_generated_commands))
@@ -8859,6 +8990,21 @@ struct DispatchTable {
     PFN_vkGetGeneratedCommandsMemoryRequirementsNV fp_vkGetGeneratedCommandsMemoryRequirementsNV = nullptr;
 #else
     void * fp_vkGetGeneratedCommandsMemoryRequirementsNV{};
+#endif
+#if (defined(VK_AMD_gpa_interface))
+    PFN_vkGetGpaDeviceClockInfoAMD fp_vkGetGpaDeviceClockInfoAMD = nullptr;
+#else
+    void * fp_vkGetGpaDeviceClockInfoAMD{};
+#endif
+#if (defined(VK_AMD_gpa_interface))
+    PFN_vkGetGpaSessionResultsAMD fp_vkGetGpaSessionResultsAMD = nullptr;
+#else
+    void * fp_vkGetGpaSessionResultsAMD{};
+#endif
+#if (defined(VK_AMD_gpa_interface))
+    PFN_vkGetGpaSessionStatusAMD fp_vkGetGpaSessionStatusAMD = nullptr;
+#else
+    void * fp_vkGetGpaSessionStatusAMD{};
 #endif
 #if (defined(VK_EXT_image_drm_format_modifier))
     PFN_vkGetImageDrmFormatModifierPropertiesEXT fp_vkGetImageDrmFormatModifierPropertiesEXT = nullptr;
@@ -9397,6 +9543,11 @@ struct DispatchTable {
     PFN_vkResetDescriptorPool fp_vkResetDescriptorPool = nullptr;
     PFN_vkResetEvent fp_vkResetEvent = nullptr;
     PFN_vkResetFences fp_vkResetFences = nullptr;
+#if (defined(VK_AMD_gpa_interface))
+    PFN_vkResetGpaSessionAMD fp_vkResetGpaSessionAMD = nullptr;
+#else
+    void * fp_vkResetGpaSessionAMD{};
+#endif
 #if (defined(VK_VERSION_1_2))
     PFN_vkResetQueryPool fp_vkResetQueryPool = nullptr;
 #else
@@ -9433,6 +9584,11 @@ struct DispatchTable {
     void * fp_vkSetDeviceMemoryPriorityEXT{};
 #endif
     PFN_vkSetEvent fp_vkSetEvent = nullptr;
+#if (defined(VK_AMD_gpa_interface))
+    PFN_vkSetGpaDeviceClockModeAMD fp_vkSetGpaDeviceClockModeAMD = nullptr;
+#else
+    void * fp_vkSetGpaDeviceClockModeAMD{};
+#endif
 #if (defined(VK_EXT_hdr_metadata))
     PFN_vkSetHdrMetadataEXT fp_vkSetHdrMetadataEXT = nullptr;
 #else

@@ -2551,6 +2551,16 @@ void merge_VkPhysicalDeviceVideoMaintenance2FeaturesKHR(VkPhysicalDeviceVideoMai
     current.videoMaintenance2 = current.videoMaintenance2 || merge_in.videoMaintenance2;
 }
 #endif //(defined(VK_KHR_video_maintenance2))
+#if (defined(VK_KHR_video_encode_feedback2))
+void compare_VkPhysicalDeviceVideoEncodeFeedback2FeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceVideoEncodeFeedback2FeaturesKHR const& supported, VkPhysicalDeviceVideoEncodeFeedback2FeaturesKHR const& requested) {
+    if (requested.videoEncodeFeedback2 && !supported.videoEncodeFeedback2) {
+        error_list.push_back("Missing feature VkPhysicalDeviceVideoEncodeFeedback2FeaturesKHR::videoEncodeFeedback2");
+    }
+}
+void merge_VkPhysicalDeviceVideoEncodeFeedback2FeaturesKHR(VkPhysicalDeviceVideoEncodeFeedback2FeaturesKHR & current, VkPhysicalDeviceVideoEncodeFeedback2FeaturesKHR const& merge_in) {
+    current.videoEncodeFeedback2 = current.videoEncodeFeedback2 || merge_in.videoEncodeFeedback2;
+}
+#endif //(defined(VK_KHR_video_encode_feedback2))
 #if (defined(VK_KHR_depth_clamp_zero_one))
 void compare_VkPhysicalDeviceDepthClampZeroOneFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceDepthClampZeroOneFeaturesKHR const& supported, VkPhysicalDeviceDepthClampZeroOneFeaturesKHR const& requested) {
     if (requested.depthClampZeroOne && !supported.depthClampZeroOne) {
@@ -2657,6 +2667,16 @@ void merge_VkPhysicalDeviceMaintenance11FeaturesKHR(VkPhysicalDeviceMaintenance1
     current.maintenance11 = current.maintenance11 || merge_in.maintenance11;
 }
 #endif //(defined(VK_KHR_maintenance11))
+#if (defined(VK_KHR_extended_flags))
+void compare_VkPhysicalDeviceExtendedFlagsFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceExtendedFlagsFeaturesKHR const& supported, VkPhysicalDeviceExtendedFlagsFeaturesKHR const& requested) {
+    if (requested.extendedFlags && !supported.extendedFlags) {
+        error_list.push_back("Missing feature VkPhysicalDeviceExtendedFlagsFeaturesKHR::extendedFlags");
+    }
+}
+void merge_VkPhysicalDeviceExtendedFlagsFeaturesKHR(VkPhysicalDeviceExtendedFlagsFeaturesKHR & current, VkPhysicalDeviceExtendedFlagsFeaturesKHR const& merge_in) {
+    current.extendedFlags = current.extendedFlags || merge_in.extendedFlags;
+}
+#endif //(defined(VK_KHR_extended_flags))
 #if (defined(VK_EXT_transform_feedback))
 void compare_VkPhysicalDeviceTransformFeedbackFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceTransformFeedbackFeaturesEXT const& supported, VkPhysicalDeviceTransformFeedbackFeaturesEXT const& requested) {
     if (requested.transformFeedback && !supported.transformFeedback) {
@@ -4837,6 +4857,16 @@ void merge_VkPhysicalDevicePresentMeteringFeaturesNV(VkPhysicalDevicePresentMete
     current.presentMetering = current.presentMetering || merge_in.presentMetering;
 }
 #endif //(VK_HEADER_VERSION >= 345 || defined(VK_ENABLE_BETA_EXTENSIONS)) && (defined(VK_NV_present_metering))
+#if (defined(VK_EXT_multisampled_render_to_swapchain))
+void compare_VkPhysicalDeviceMultisampledRenderToSwapchainFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceMultisampledRenderToSwapchainFeaturesEXT const& supported, VkPhysicalDeviceMultisampledRenderToSwapchainFeaturesEXT const& requested) {
+    if (requested.multisampledRenderToSwapchain && !supported.multisampledRenderToSwapchain) {
+        error_list.push_back("Missing feature VkPhysicalDeviceMultisampledRenderToSwapchainFeaturesEXT::multisampledRenderToSwapchain");
+    }
+}
+void merge_VkPhysicalDeviceMultisampledRenderToSwapchainFeaturesEXT(VkPhysicalDeviceMultisampledRenderToSwapchainFeaturesEXT & current, VkPhysicalDeviceMultisampledRenderToSwapchainFeaturesEXT const& merge_in) {
+    current.multisampledRenderToSwapchain = current.multisampledRenderToSwapchain || merge_in.multisampledRenderToSwapchain;
+}
+#endif //(defined(VK_EXT_multisampled_render_to_swapchain))
 #if (defined(VK_EXT_zero_initialize_device_memory))
 void compare_VkPhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT const& supported, VkPhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT const& requested) {
     if (requested.zeroInitializeDeviceMemory && !supported.zeroInitializeDeviceMemory) {
@@ -5750,6 +5780,11 @@ void compare_feature_struct(VkStructureType sType, std::vector<std::string> & er
             compare_VkPhysicalDeviceVideoMaintenance2FeaturesKHR(error_list, *reinterpret_cast<const VkPhysicalDeviceVideoMaintenance2FeaturesKHR*>(supported), *reinterpret_cast<const VkPhysicalDeviceVideoMaintenance2FeaturesKHR*>(requested));
             break;
 #endif
+#if (defined(VK_KHR_video_encode_feedback2))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VIDEO_ENCODE_FEEDBACK_2_FEATURES_KHR):
+            compare_VkPhysicalDeviceVideoEncodeFeedback2FeaturesKHR(error_list, *reinterpret_cast<const VkPhysicalDeviceVideoEncodeFeedback2FeaturesKHR*>(supported), *reinterpret_cast<const VkPhysicalDeviceVideoEncodeFeedback2FeaturesKHR*>(requested));
+            break;
+#endif
 #if (defined(VK_KHR_depth_clamp_zero_one))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLAMP_ZERO_ONE_FEATURES_KHR):
             compare_VkPhysicalDeviceDepthClampZeroOneFeaturesKHR(error_list, *reinterpret_cast<const VkPhysicalDeviceDepthClampZeroOneFeaturesKHR*>(supported), *reinterpret_cast<const VkPhysicalDeviceDepthClampZeroOneFeaturesKHR*>(requested));
@@ -5790,6 +5825,11 @@ void compare_feature_struct(VkStructureType sType, std::vector<std::string> & er
 #if (defined(VK_KHR_maintenance11))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_11_FEATURES_KHR):
             compare_VkPhysicalDeviceMaintenance11FeaturesKHR(error_list, *reinterpret_cast<const VkPhysicalDeviceMaintenance11FeaturesKHR*>(supported), *reinterpret_cast<const VkPhysicalDeviceMaintenance11FeaturesKHR*>(requested));
+            break;
+#endif
+#if (defined(VK_KHR_extended_flags))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_FLAGS_FEATURES_KHR):
+            compare_VkPhysicalDeviceExtendedFlagsFeaturesKHR(error_list, *reinterpret_cast<const VkPhysicalDeviceExtendedFlagsFeaturesKHR*>(supported), *reinterpret_cast<const VkPhysicalDeviceExtendedFlagsFeaturesKHR*>(requested));
             break;
 #endif
 #if (defined(VK_EXT_transform_feedback))
@@ -6587,6 +6627,11 @@ void compare_feature_struct(VkStructureType sType, std::vector<std::string> & er
             compare_VkPhysicalDevicePresentMeteringFeaturesNV(error_list, *reinterpret_cast<const VkPhysicalDevicePresentMeteringFeaturesNV*>(supported), *reinterpret_cast<const VkPhysicalDevicePresentMeteringFeaturesNV*>(requested));
             break;
 #endif
+#if (defined(VK_EXT_multisampled_render_to_swapchain))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTISAMPLED_RENDER_TO_SWAPCHAIN_FEATURES_EXT):
+            compare_VkPhysicalDeviceMultisampledRenderToSwapchainFeaturesEXT(error_list, *reinterpret_cast<const VkPhysicalDeviceMultisampledRenderToSwapchainFeaturesEXT*>(supported), *reinterpret_cast<const VkPhysicalDeviceMultisampledRenderToSwapchainFeaturesEXT*>(requested));
+            break;
+#endif
 #if (defined(VK_EXT_zero_initialize_device_memory))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ZERO_INITIALIZE_DEVICE_MEMORY_FEATURES_EXT):
             compare_VkPhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT(error_list, *reinterpret_cast<const VkPhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT*>(supported), *reinterpret_cast<const VkPhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT*>(requested));
@@ -7349,6 +7394,11 @@ void merge_feature_struct(VkStructureType sType, void* current, const void* merg
             merge_VkPhysicalDeviceVideoMaintenance2FeaturesKHR(*reinterpret_cast<VkPhysicalDeviceVideoMaintenance2FeaturesKHR*>(current), *reinterpret_cast<const VkPhysicalDeviceVideoMaintenance2FeaturesKHR*>(merge_in));
             break;
 #endif
+#if (defined(VK_KHR_video_encode_feedback2))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VIDEO_ENCODE_FEEDBACK_2_FEATURES_KHR):
+            merge_VkPhysicalDeviceVideoEncodeFeedback2FeaturesKHR(*reinterpret_cast<VkPhysicalDeviceVideoEncodeFeedback2FeaturesKHR*>(current), *reinterpret_cast<const VkPhysicalDeviceVideoEncodeFeedback2FeaturesKHR*>(merge_in));
+            break;
+#endif
 #if (defined(VK_KHR_depth_clamp_zero_one))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLAMP_ZERO_ONE_FEATURES_KHR):
             merge_VkPhysicalDeviceDepthClampZeroOneFeaturesKHR(*reinterpret_cast<VkPhysicalDeviceDepthClampZeroOneFeaturesKHR*>(current), *reinterpret_cast<const VkPhysicalDeviceDepthClampZeroOneFeaturesKHR*>(merge_in));
@@ -7389,6 +7439,11 @@ void merge_feature_struct(VkStructureType sType, void* current, const void* merg
 #if (defined(VK_KHR_maintenance11))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_11_FEATURES_KHR):
             merge_VkPhysicalDeviceMaintenance11FeaturesKHR(*reinterpret_cast<VkPhysicalDeviceMaintenance11FeaturesKHR*>(current), *reinterpret_cast<const VkPhysicalDeviceMaintenance11FeaturesKHR*>(merge_in));
+            break;
+#endif
+#if (defined(VK_KHR_extended_flags))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_FLAGS_FEATURES_KHR):
+            merge_VkPhysicalDeviceExtendedFlagsFeaturesKHR(*reinterpret_cast<VkPhysicalDeviceExtendedFlagsFeaturesKHR*>(current), *reinterpret_cast<const VkPhysicalDeviceExtendedFlagsFeaturesKHR*>(merge_in));
             break;
 #endif
 #if (defined(VK_EXT_transform_feedback))
@@ -8184,6 +8239,11 @@ void merge_feature_struct(VkStructureType sType, void* current, const void* merg
 #if (VK_HEADER_VERSION >= 345 || defined(VK_ENABLE_BETA_EXTENSIONS)) && (defined(VK_NV_present_metering))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_METERING_FEATURES_NV):
             merge_VkPhysicalDevicePresentMeteringFeaturesNV(*reinterpret_cast<VkPhysicalDevicePresentMeteringFeaturesNV*>(current), *reinterpret_cast<const VkPhysicalDevicePresentMeteringFeaturesNV*>(merge_in));
+            break;
+#endif
+#if (defined(VK_EXT_multisampled_render_to_swapchain))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTISAMPLED_RENDER_TO_SWAPCHAIN_FEATURES_EXT):
+            merge_VkPhysicalDeviceMultisampledRenderToSwapchainFeaturesEXT(*reinterpret_cast<VkPhysicalDeviceMultisampledRenderToSwapchainFeaturesEXT*>(current), *reinterpret_cast<const VkPhysicalDeviceMultisampledRenderToSwapchainFeaturesEXT*>(merge_in));
             break;
 #endif
 #if (defined(VK_EXT_zero_initialize_device_memory))

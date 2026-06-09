@@ -50,6 +50,16 @@ HEADER_VERSION_WORKAROUNDS = {
     'vkCmdDispatchGraphIndirectAMDX': '298', # Changed API parameters
     'vkCmdDispatchGraphIndirectCountAMDX': '298', # Changed API parameters
     'vkCmdDispatchTileQCOM': '316', # Changed API parameters
+    'vkGetImageViewAddressNVX':'137', # Revision of extension added new function
+    'vkGetImageViewHandle64NVX':'302', # Revision of extension added new function
+    'vkGetDeviceCombinedImageSamplerIndexNVX':'340', # Revision of extension added new function
+    'vkCmdSetDispatchParametersARM':'348', # Revision of extension added new function
+    'VkDispatchParametersARM':'348', # Revision of extension added new function
+}
+
+# Some functions use types other than what the commands vendor tag denotes. These are needed to correctly depromote all types
+TYPES_NOT_MATCHING_VENDOR_TAGS = {
+    'vkGetAccelerationStructureMemoryRequirementsNV' : { 'pMemoryRequirements' : ['VkMemoryRequirements2', 'VkMemoryRequirements2KHR']}, # 1.4.348
 }
 
 # License
@@ -79,7 +89,6 @@ info += '// https://github.com/charles-lunarg/vk-bootstrap\n\n'
 # # Content
 head = '\n#pragma once\n\n#include <vulkan/vulkan_core.h>\n\n'
 head += 'namespace vkb {\n\n'
-
 
 def get_command_guards(command):
     version_guard = f'defined({command.version.name})' if command.version is not None else ''
@@ -131,20 +140,28 @@ def get_depromotion_map():
             type_alias_map[handle_name] = handle.aliases
 
     for command_name, command in vk.commands.items():
-        if command.alias is not None:
-            command_tag = None
-            for tag in vk.vendorTags:
-                if tag in command_name:
-                    command_tag = tag
-            if command_tag is None:
-                continue
+        command_tags = set()
+        for ext in command.extensions:
+            command_tags.add(vk.extensions[ext].vendorTag)
 
-            for param in command.params:
-                if param.type in type_alias_map:
-                    best_alias_match = [x for x in type_alias_map[param.type] if x.endswith(command_tag)][0]
+        for param in command.params:
+            if param.type in type_alias_map:
+                alias_matches = []
+                for type_alias in type_alias_map[param.type]:
+                    for tag in command_tags:
+                        if type_alias.endswith(tag):
+                            alias_matches.append(type_alias)
+
+                for alias_match in alias_matches:
                     if command_name not in depromotion_map:
                         depromotion_map[command_name] = []
-                    depromotion_map[command_name].append([param.type, best_alias_match])
+                    depromotion_map[command_name].append([param.type, alias_match])
+
+    for command_name, types in TYPES_NOT_MATCHING_VENDOR_TAGS.items():
+        if command_name not in depromotion_map:
+            depromotion_map[command_name] = []
+        for param_types in types.values():
+            depromotion_map[command_name].append([param_types[0], param_types[1]])
 
     return depromotion_map
 

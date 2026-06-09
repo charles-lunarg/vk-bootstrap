@@ -195,12 +195,25 @@ TEST_CASE("Device Configuration", "[VkBootstrap.bootstrap]") {
     }
 
     SECTION("VkPhysicalDeviceFeatures2 in pNext Chain") {
+        VkPhysicalDeviceMultiviewFeatures multiview_features{};
+        multiview_features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES;
+
         VkPhysicalDeviceShaderDrawParameterFeatures shader_draw_features{};
         shader_draw_features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETER_FEATURES;
+        shader_draw_features.pNext = &multiview_features;
 
         vkb::DeviceBuilder device_builder(phys_device_ret.value());
         auto device_ret = device_builder.add_pNext(&shader_draw_features).build();
         REQUIRE(device_ret.has_value());
+
+        // Check that the pNext chain was passed through successfully
+        auto& features_pNextChain = mock.physical_devices_details.at(0).created_device_details.at(0).features_pNextChain;
+        auto* s1 = reinterpret_cast<VkPhysicalDeviceShaderDrawParameterFeatures*>(features_pNextChain.at(0).data());
+        auto* s2 = reinterpret_cast<VkPhysicalDeviceMultiviewFeatures*>(features_pNextChain.at(1).data());
+
+        REQUIRE(s1->sType == VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETER_FEATURES);
+        REQUIRE(s2->sType == VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES);
+
         vkb::destroy_device(device_ret.value());
     }
 

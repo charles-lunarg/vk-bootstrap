@@ -36,6 +36,10 @@ inline SerializedStruct create_serialized_struct_from_features2_struct(const voi
             return create_serialized_struct_from_object(*static_cast<const VkPhysicalDeviceVulkan12Features*>(input_data));
         case (VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_SIZE_CONTROL_FEATURES):
             return create_serialized_struct_from_object(*static_cast<const VkPhysicalDeviceSubgroupSizeControlFeatures*>(input_data));
+        case (VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES):
+            return create_serialized_struct_from_object(*static_cast<const VkPhysicalDeviceMultiviewFeatures*>(input_data));
+        case (VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETER_FEATURES):
+            return create_serialized_struct_from_object(*static_cast<const VkPhysicalDeviceShaderDrawParameterFeatures*>(input_data));
         default:
             return SerializedStruct{};
     }

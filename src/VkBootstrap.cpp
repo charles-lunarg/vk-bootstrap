@@ -2087,9 +2087,17 @@ Result<std::vector<VkImage>> Swapchain::get_images() {
 }
 Result<std::vector<VkImageView>> Swapchain::get_image_views() { return get_image_views(nullptr); }
 Result<std::vector<VkImageView>> Swapchain::get_image_views(const void* pNext) {
-    const auto swapchain_images_ret = get_images();
+    auto images_and_image_views_ret = get_images_and_image_views(pNext);
+    if (!images_and_image_views_ret) return { images_and_image_views_ret.error() };
+    return std::move(images_and_image_views_ret.value().second);
+}
+Result<std::pair<std::vector<VkImage>, std::vector<VkImageView>>> Swapchain::get_images_and_image_views() {
+    return get_images_and_image_views(nullptr);
+}
+Result<std::pair<std::vector<VkImage>, std::vector<VkImageView>>> Swapchain::get_images_and_image_views(const void* pNext) {
+    auto swapchain_images_ret = get_images();
     if (!swapchain_images_ret) return swapchain_images_ret.error();
-    const auto& swapchain_images = swapchain_images_ret.value();
+    auto& swapchain_images = swapchain_images_ret.value();
 
     bool already_contains_image_view_usage = false;
     const void* pNext_iter = pNext;
@@ -2133,10 +2141,11 @@ Result<std::vector<VkImageView>> Swapchain::get_image_views(const void* pNext) {
         if (res != VK_SUCCESS) {
             // Cleanup already created image views
             destroy_image_views(i, views.data());
-            return Result<std::vector<VkImageView>>{ SwapchainError::failed_create_swapchain_image_views, res };
+            return Result<std::pair<std::vector<VkImage>, std::vector<VkImageView>>>{ SwapchainError::failed_create_swapchain_image_views,
+                res };
         }
     }
-    return views;
+    return std::pair{ std::move(swapchain_images), std::move(views) };
 }
 void Swapchain::destroy_image_views(size_t count, VkImageView const* image_views) {
     for (size_t i = 0; i < count; ++i) {

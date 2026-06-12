@@ -862,6 +862,12 @@ struct Swapchain {
     // structure.
     Result<std::vector<VkImageView>> get_image_views();
     Result<std::vector<VkImageView>> get_image_views(const void* pNext);
+
+    // Returns both a vector of VkImage handles to the swapchain and a vector of VkImageViews to said VkImages.
+    // VkImageViews must be destroyed. The pNext chain must be a nullptr or a valid structure.
+    Result<std::pair<std::vector<VkImage>, std::vector<VkImageView>>> get_images_and_image_views();
+    Result<std::pair<std::vector<VkImage>, std::vector<VkImageView>>> get_images_and_image_views(const void* pNext);
+
     void destroy_image_views(size_t count, VkImageView const* image_views);
     void destroy_image_views(std::vector<VkImageView> const& image_views);
 #if VKB_SPAN_OVERLOADS

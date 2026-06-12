@@ -2092,12 +2092,15 @@ Result<std::vector<VkImageView>> Swapchain::get_image_views(const void* pNext) {
     const auto& swapchain_images = swapchain_images_ret.value();
 
     bool already_contains_image_view_usage = false;
-    while (pNext) {
-        if (reinterpret_cast<const VkBaseInStructure*>(pNext)->sType == VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO) {
+    const void* pNext_iter = pNext;
+    while (pNext_iter) {
+        VkBaseOutStructure structure{};
+        memcpy(&structure, pNext, sizeof(VkBaseOutStructure));
+        if (structure.sType == VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO) {
             already_contains_image_view_usage = true;
             break;
         }
-        pNext = reinterpret_cast<const VkBaseInStructure*>(pNext)->pNext;
+        pNext_iter = structure.pNext;
     }
     VkImageViewUsageCreateInfo desired_flags{};
     desired_flags.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO;

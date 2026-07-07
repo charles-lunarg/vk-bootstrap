@@ -4967,6 +4967,28 @@ void merge_VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT(VkPhysicalDevice
     current.shaderSubgroupPartitioned = current.shaderSubgroupPartitioned || merge_in.shaderSubgroupPartitioned;
 }
 #endif //(defined(VK_EXT_shader_subgroup_partitioned))
+#if (defined(VK_EXT_shader_ocp_microscaling_types))
+void compare_VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT const& supported, VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT const& requested) {
+    if (requested.shaderFloat4 && !supported.shaderFloat4) {
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT::shaderFloat4");
+    }
+    if (requested.shaderFloat6 && !supported.shaderFloat6) {
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT::shaderFloat6");
+    }
+    if (requested.shaderFloat8UnsignedE8M0 && !supported.shaderFloat8UnsignedE8M0) {
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT::shaderFloat8UnsignedE8M0");
+    }
+    if (requested.shaderMXInt8 && !supported.shaderMXInt8) {
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT::shaderMXInt8");
+    }
+}
+void merge_VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT(VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT & current, VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT const& merge_in) {
+    current.shaderFloat4 = current.shaderFloat4 || merge_in.shaderFloat4;
+    current.shaderFloat6 = current.shaderFloat6 || merge_in.shaderFloat6;
+    current.shaderFloat8UnsignedE8M0 = current.shaderFloat8UnsignedE8M0 || merge_in.shaderFloat8UnsignedE8M0;
+    current.shaderMXInt8 = current.shaderMXInt8 || merge_in.shaderMXInt8;
+}
+#endif //(defined(VK_EXT_shader_ocp_microscaling_types))
 #if (defined(VK_VALVE_shader_mixed_float_dot_product))
 void compare_VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE(std::vector<std::string> & error_list, VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE const& supported, VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE const& requested) {
     if (requested.shaderMixedFloatDotProductFloat16AccFloat32 && !supported.shaderMixedFloatDotProductFloat16AccFloat32) {
@@ -6682,6 +6704,11 @@ void compare_feature_struct(VkStructureType sType, std::vector<std::string> & er
             compare_VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT(error_list, *reinterpret_cast<const VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT*>(supported), *reinterpret_cast<const VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT*>(requested));
             break;
 #endif
+#if (defined(VK_EXT_shader_ocp_microscaling_types))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_OCP_MICROSCALING_TYPES_FEATURES_EXT):
+            compare_VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT(error_list, *reinterpret_cast<const VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT*>(supported), *reinterpret_cast<const VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT*>(requested));
+            break;
+#endif
 #if (defined(VK_VALVE_shader_mixed_float_dot_product))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MIXED_FLOAT_DOT_PRODUCT_FEATURES_VALVE):
             compare_VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE(error_list, *reinterpret_cast<const VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE*>(supported), *reinterpret_cast<const VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE*>(requested));
@@ -8294,6 +8321,11 @@ void merge_feature_struct(VkStructureType sType, void* current, const void* merg
 #if (defined(VK_EXT_shader_subgroup_partitioned))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_PARTITIONED_FEATURES_EXT):
             merge_VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT(*reinterpret_cast<VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT*>(current), *reinterpret_cast<const VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT*>(merge_in));
+            break;
+#endif
+#if (defined(VK_EXT_shader_ocp_microscaling_types))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_OCP_MICROSCALING_TYPES_FEATURES_EXT):
+            merge_VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT(*reinterpret_cast<VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT*>(current), *reinterpret_cast<const VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT*>(merge_in));
             break;
 #endif
 #if (defined(VK_VALVE_shader_mixed_float_dot_product))

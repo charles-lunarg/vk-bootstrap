@@ -1440,6 +1440,10 @@ PhysicalDeviceSelector& PhysicalDeviceSelector::set_minimum_version(uint32_t maj
     criteria.required_version = VKB_MAKE_VK_VERSION(0, major, minor, 0);
     return *this;
 }
+PhysicalDeviceSelector& PhysicalDeviceSelector::set_minimum_version(uint32_t minimum_api_version) {
+    criteria.required_version = minimum_api_version;
+    return *this;
+}
 PhysicalDeviceSelector& PhysicalDeviceSelector::disable_portability_subset() {
     criteria.enable_portability_subset = false;
     return *this;

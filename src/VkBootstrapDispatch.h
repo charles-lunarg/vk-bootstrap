@@ -156,6 +156,9 @@ struct InstanceDispatchTable {
 #if (defined(VK_NV_cooperative_matrix2))
         fp_vkGetPhysicalDeviceCooperativeMatrixFlexibleDimensionsPropertiesNV = reinterpret_cast<PFN_vkGetPhysicalDeviceCooperativeMatrixFlexibleDimensionsPropertiesNV>(procAddr(instance, "vkGetPhysicalDeviceCooperativeMatrixFlexibleDimensionsPropertiesNV"));
 #endif
+#if (defined(VK_EXT_cooperative_matrix_maintenance1))
+        fp_vkGetPhysicalDeviceCooperativeMatrixProperties2EXT = reinterpret_cast<PFN_vkGetPhysicalDeviceCooperativeMatrixProperties2EXT>(procAddr(instance, "vkGetPhysicalDeviceCooperativeMatrixProperties2EXT"));
+#endif
 #if (defined(VK_KHR_cooperative_matrix))
         fp_vkGetPhysicalDeviceCooperativeMatrixPropertiesKHR = reinterpret_cast<PFN_vkGetPhysicalDeviceCooperativeMatrixPropertiesKHR>(procAddr(instance, "vkGetPhysicalDeviceCooperativeMatrixPropertiesKHR"));
 #endif
@@ -574,6 +577,11 @@ struct InstanceDispatchTable {
 #if (defined(VK_NV_cooperative_matrix2))
     VkResult getPhysicalDeviceCooperativeMatrixFlexibleDimensionsPropertiesNV(VkPhysicalDevice physicalDevice, uint32_t* pPropertyCount, VkCooperativeMatrixFlexibleDimensionsPropertiesNV* pProperties) const noexcept {
         return fp_vkGetPhysicalDeviceCooperativeMatrixFlexibleDimensionsPropertiesNV(physicalDevice, pPropertyCount, pProperties);
+    }
+#endif
+#if (defined(VK_EXT_cooperative_matrix_maintenance1))
+    VkResult getPhysicalDeviceCooperativeMatrixProperties2EXT(VkPhysicalDevice physicalDevice, const VkPhysicalDeviceCooperativeMatrixInfo2EXT* pCooperativeMatrixInfo, uint32_t* pPropertyCount, VkCooperativeMatrixProperties2EXT* pProperties) const noexcept {
+        return fp_vkGetPhysicalDeviceCooperativeMatrixProperties2EXT(physicalDevice, pCooperativeMatrixInfo, pPropertyCount, pProperties);
     }
 #endif
 #if (defined(VK_KHR_cooperative_matrix))
@@ -1126,6 +1134,11 @@ struct InstanceDispatchTable {
     PFN_vkGetPhysicalDeviceCooperativeMatrixFlexibleDimensionsPropertiesNV fp_vkGetPhysicalDeviceCooperativeMatrixFlexibleDimensionsPropertiesNV = nullptr;
 #else
     void * fp_vkGetPhysicalDeviceCooperativeMatrixFlexibleDimensionsPropertiesNV{};
+#endif
+#if (defined(VK_EXT_cooperative_matrix_maintenance1))
+    PFN_vkGetPhysicalDeviceCooperativeMatrixProperties2EXT fp_vkGetPhysicalDeviceCooperativeMatrixProperties2EXT = nullptr;
+#else
+    void * fp_vkGetPhysicalDeviceCooperativeMatrixProperties2EXT{};
 #endif
 #if (defined(VK_KHR_cooperative_matrix))
     PFN_vkGetPhysicalDeviceCooperativeMatrixPropertiesKHR fp_vkGetPhysicalDeviceCooperativeMatrixPropertiesKHR = nullptr;

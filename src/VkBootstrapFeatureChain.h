@@ -1333,6 +1333,10 @@ void merge_VkPhysicalDeviceShaderUniformBufferUnsizedArrayFeaturesEXT(VkPhysical
 void compare_VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV const& supported, VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV const& requested);
 void merge_VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV(VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV & current, VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV const& merge_in);
 #endif //(defined(VK_NV_compute_occupancy_priority))
+#if (defined(VK_EXT_cooperative_matrix_maintenance1))
+void compare_VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT const& supported, VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT const& requested);
+void merge_VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT(VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT & current, VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT const& merge_in);
+#endif //(defined(VK_EXT_cooperative_matrix_maintenance1))
 #if (defined(VK_EXT_shader_subgroup_partitioned))
 void compare_VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT const& supported, VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT const& requested);
 void merge_VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT(VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT & current, VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT const& merge_in);
@@ -1357,6 +1361,10 @@ void merge_VkPhysicalDeviceDataGraphNeuralAcceleratorStatisticsFeaturesARM(VkPhy
 void compare_VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT const& supported, VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT const& requested);
 void merge_VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT(VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT & current, VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT const& merge_in);
 #endif //(defined(VK_EXT_primitive_restart_index))
+#if (defined(VK_EXT_image_tiling_control))
+void compare_VkPhysicalDeviceImageTilingControlFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceImageTilingControlFeaturesEXT const& supported, VkPhysicalDeviceImageTilingControlFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceImageTilingControlFeaturesEXT(VkPhysicalDeviceImageTilingControlFeaturesEXT & current, VkPhysicalDeviceImageTilingControlFeaturesEXT const& merge_in);
+#endif //(defined(VK_EXT_image_tiling_control))
 #if (defined(VK_NV_cooperative_matrix_decode_vector))
 void compare_VkPhysicalDeviceCooperativeMatrixDecodeVectorFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceCooperativeMatrixDecodeVectorFeaturesNV const& supported, VkPhysicalDeviceCooperativeMatrixDecodeVectorFeaturesNV const& requested);
 void merge_VkPhysicalDeviceCooperativeMatrixDecodeVectorFeaturesNV(VkPhysicalDeviceCooperativeMatrixDecodeVectorFeaturesNV & current, VkPhysicalDeviceCooperativeMatrixDecodeVectorFeaturesNV const& merge_in);

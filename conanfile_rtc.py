@@ -3,7 +3,7 @@ from conans import ConanFile
 
 class VkBootstrapConan(ConanFile):
     name = "vk-bootstrap"
-    version = "1.4.353"
+    version = "1.4.360"
     url = "https://github.com/Esri/vk-bootstrap/blob/runtimecore/"
     license = "https://github.com/Esri/vk-bootstrap/blob/runtimecore/LICENSE.md"
     description = "A utility library that jump starts initialization of Vulkan"

@@ -39,7 +39,7 @@ jobs:
 
 
         steps:
-            - uses: actions/checkout@v6
+            - uses: actions/checkout@v7
             - uses: lukka/get-cmake@latest
               with:
                 cmakeVersion: 3.22
@@ -79,7 +79,7 @@ jobs:
                     cxx: g++
 
         steps:
-            - uses: actions/checkout@v6
+            - uses: actions/checkout@v7
             - uses: lukka/get-cmake@latest
               with:
                 cmakeVersion: 3.22
@@ -112,13 +112,17 @@ jobs:
                 type: [ Debug, Release ]
 
         steps:
-            - uses: actions/checkout@v6
+            - uses: actions/checkout@v7
             - uses: TheMrMilchmann/setup-msvc-dev@v4
               with:
                 arch: ${{matrix.arch}}
 
             - name: CMake Configure
               run: cmake -S. -B build -D CMAKE_BUILD_TYPE=${{matrix.type}} -D VK_BOOTSTRAP_WERROR=ON -D VK_BOOTSTRAP_TEST=ON -D ENABLE_ADDRESS_SANITIZER=ON -A ${{matrix.arch}}
+              env:
+                CFLAGS: -fsanitize=address
+                CXXFLAGS: -fsanitize=address
+                LDFLAGS: -fsanitize=address
 
             - name: CMake Build
               run: cmake --build build --config ${{matrix.type}}
@@ -139,7 +143,7 @@ jobs:
                 cxx: ["clang++"]
 
         steps:
-            - uses: actions/checkout@v6
+            - uses: actions/checkout@v7
             - uses: lukka/get-cmake@latest
               with:
                 cmakeVersion: 3.22
@@ -174,7 +178,7 @@ jobs:
                 cxx: ["clang++"]
 
         steps:
-            - uses: actions/checkout@v6
+            - uses: actions/checkout@v7
             - uses: lukka/get-cmake@latest
               with:
                 cmakeVersion: 3.22

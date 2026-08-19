@@ -4957,6 +4957,32 @@ void merge_VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV(VkPhysicalDeviceCo
     current.computeOccupancyPriority = current.computeOccupancyPriority || merge_in.computeOccupancyPriority;
 }
 #endif //(defined(VK_NV_compute_occupancy_priority))
+#if (defined(VK_EXT_cooperative_matrix_maintenance1))
+void compare_VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT const& supported, VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT const& requested) {
+    if (requested.cooperativeMatrixProperties2 && !supported.cooperativeMatrixProperties2) {
+        error_list.push_back("Missing feature VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT::cooperativeMatrixProperties2");
+    }
+    if (requested.cooperativeMatrixReductions && !supported.cooperativeMatrixReductions) {
+        error_list.push_back("Missing feature VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT::cooperativeMatrixReductions");
+    }
+    if (requested.cooperativeMatrixConversions && !supported.cooperativeMatrixConversions) {
+        error_list.push_back("Missing feature VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT::cooperativeMatrixConversions");
+    }
+    if (requested.cooperativeMatrixPerElementOperations && !supported.cooperativeMatrixPerElementOperations) {
+        error_list.push_back("Missing feature VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT::cooperativeMatrixPerElementOperations");
+    }
+    if (requested.cooperativeMatrixGetCoordinate && !supported.cooperativeMatrixGetCoordinate) {
+        error_list.push_back("Missing feature VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT::cooperativeMatrixGetCoordinate");
+    }
+}
+void merge_VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT(VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT & current, VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT const& merge_in) {
+    current.cooperativeMatrixProperties2 = current.cooperativeMatrixProperties2 || merge_in.cooperativeMatrixProperties2;
+    current.cooperativeMatrixReductions = current.cooperativeMatrixReductions || merge_in.cooperativeMatrixReductions;
+    current.cooperativeMatrixConversions = current.cooperativeMatrixConversions || merge_in.cooperativeMatrixConversions;
+    current.cooperativeMatrixPerElementOperations = current.cooperativeMatrixPerElementOperations || merge_in.cooperativeMatrixPerElementOperations;
+    current.cooperativeMatrixGetCoordinate = current.cooperativeMatrixGetCoordinate || merge_in.cooperativeMatrixGetCoordinate;
+}
+#endif //(defined(VK_EXT_cooperative_matrix_maintenance1))
 #if (defined(VK_EXT_shader_subgroup_partitioned))
 void compare_VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT const& supported, VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT const& requested) {
     if (requested.shaderSubgroupPartitioned && !supported.shaderSubgroupPartitioned) {
@@ -4967,6 +4993,28 @@ void merge_VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT(VkPhysicalDevice
     current.shaderSubgroupPartitioned = current.shaderSubgroupPartitioned || merge_in.shaderSubgroupPartitioned;
 }
 #endif //(defined(VK_EXT_shader_subgroup_partitioned))
+#if (defined(VK_EXT_shader_ocp_microscaling_types))
+void compare_VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT const& supported, VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT const& requested) {
+    if (requested.shaderFloat4 && !supported.shaderFloat4) {
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT::shaderFloat4");
+    }
+    if (requested.shaderFloat6 && !supported.shaderFloat6) {
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT::shaderFloat6");
+    }
+    if (requested.shaderFloat8UnsignedE8M0 && !supported.shaderFloat8UnsignedE8M0) {
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT::shaderFloat8UnsignedE8M0");
+    }
+    if (requested.shaderMXInt8 && !supported.shaderMXInt8) {
+        error_list.push_back("Missing feature VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT::shaderMXInt8");
+    }
+}
+void merge_VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT(VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT & current, VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT const& merge_in) {
+    current.shaderFloat4 = current.shaderFloat4 || merge_in.shaderFloat4;
+    current.shaderFloat6 = current.shaderFloat6 || merge_in.shaderFloat6;
+    current.shaderFloat8UnsignedE8M0 = current.shaderFloat8UnsignedE8M0 || merge_in.shaderFloat8UnsignedE8M0;
+    current.shaderMXInt8 = current.shaderMXInt8 || merge_in.shaderMXInt8;
+}
+#endif //(defined(VK_EXT_shader_ocp_microscaling_types))
 #if (defined(VK_VALVE_shader_mixed_float_dot_product))
 void compare_VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE(std::vector<std::string> & error_list, VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE const& supported, VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE const& requested) {
     if (requested.shaderMixedFloatDotProductFloat16AccFloat32 && !supported.shaderMixedFloatDotProductFloat16AccFloat32) {
@@ -5019,6 +5067,16 @@ void merge_VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT(VkPhysicalDevicePrim
     current.primitiveRestartIndex = current.primitiveRestartIndex || merge_in.primitiveRestartIndex;
 }
 #endif //(defined(VK_EXT_primitive_restart_index))
+#if (defined(VK_EXT_image_tiling_control))
+void compare_VkPhysicalDeviceImageTilingControlFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceImageTilingControlFeaturesEXT const& supported, VkPhysicalDeviceImageTilingControlFeaturesEXT const& requested) {
+    if (requested.imageTilingControl && !supported.imageTilingControl) {
+        error_list.push_back("Missing feature VkPhysicalDeviceImageTilingControlFeaturesEXT::imageTilingControl");
+    }
+}
+void merge_VkPhysicalDeviceImageTilingControlFeaturesEXT(VkPhysicalDeviceImageTilingControlFeaturesEXT & current, VkPhysicalDeviceImageTilingControlFeaturesEXT const& merge_in) {
+    current.imageTilingControl = current.imageTilingControl || merge_in.imageTilingControl;
+}
+#endif //(defined(VK_EXT_image_tiling_control))
 #if (defined(VK_NV_cooperative_matrix_decode_vector))
 void compare_VkPhysicalDeviceCooperativeMatrixDecodeVectorFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceCooperativeMatrixDecodeVectorFeaturesNV const& supported, VkPhysicalDeviceCooperativeMatrixDecodeVectorFeaturesNV const& requested) {
     if (requested.cooperativeMatrixDecodeVector && !supported.cooperativeMatrixDecodeVector) {
@@ -6677,9 +6735,19 @@ void compare_feature_struct(VkStructureType sType, std::vector<std::string> & er
             compare_VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV(error_list, *reinterpret_cast<const VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV*>(supported), *reinterpret_cast<const VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV*>(requested));
             break;
 #endif
+#if (defined(VK_EXT_cooperative_matrix_maintenance1))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_MAINTENANCE_1_FEATURES_EXT):
+            compare_VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT(error_list, *reinterpret_cast<const VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT*>(supported), *reinterpret_cast<const VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT*>(requested));
+            break;
+#endif
 #if (defined(VK_EXT_shader_subgroup_partitioned))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_PARTITIONED_FEATURES_EXT):
             compare_VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT(error_list, *reinterpret_cast<const VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT*>(supported), *reinterpret_cast<const VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT*>(requested));
+            break;
+#endif
+#if (defined(VK_EXT_shader_ocp_microscaling_types))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_OCP_MICROSCALING_TYPES_FEATURES_EXT):
+            compare_VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT(error_list, *reinterpret_cast<const VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT*>(supported), *reinterpret_cast<const VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT*>(requested));
             break;
 #endif
 #if (defined(VK_VALVE_shader_mixed_float_dot_product))
@@ -6700,6 +6768,11 @@ void compare_feature_struct(VkStructureType sType, std::vector<std::string> & er
 #if (defined(VK_EXT_primitive_restart_index))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIMITIVE_RESTART_INDEX_FEATURES_EXT):
             compare_VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT(error_list, *reinterpret_cast<const VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT*>(supported), *reinterpret_cast<const VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT*>(requested));
+            break;
+#endif
+#if (defined(VK_EXT_image_tiling_control))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_TILING_CONTROL_FEATURES_EXT):
+            compare_VkPhysicalDeviceImageTilingControlFeaturesEXT(error_list, *reinterpret_cast<const VkPhysicalDeviceImageTilingControlFeaturesEXT*>(supported), *reinterpret_cast<const VkPhysicalDeviceImageTilingControlFeaturesEXT*>(requested));
             break;
 #endif
 #if (defined(VK_NV_cooperative_matrix_decode_vector))
@@ -8291,9 +8364,19 @@ void merge_feature_struct(VkStructureType sType, void* current, const void* merg
             merge_VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV(*reinterpret_cast<VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV*>(current), *reinterpret_cast<const VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV*>(merge_in));
             break;
 #endif
+#if (defined(VK_EXT_cooperative_matrix_maintenance1))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_MAINTENANCE_1_FEATURES_EXT):
+            merge_VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT(*reinterpret_cast<VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT*>(current), *reinterpret_cast<const VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT*>(merge_in));
+            break;
+#endif
 #if (defined(VK_EXT_shader_subgroup_partitioned))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_PARTITIONED_FEATURES_EXT):
             merge_VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT(*reinterpret_cast<VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT*>(current), *reinterpret_cast<const VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT*>(merge_in));
+            break;
+#endif
+#if (defined(VK_EXT_shader_ocp_microscaling_types))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_OCP_MICROSCALING_TYPES_FEATURES_EXT):
+            merge_VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT(*reinterpret_cast<VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT*>(current), *reinterpret_cast<const VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT*>(merge_in));
             break;
 #endif
 #if (defined(VK_VALVE_shader_mixed_float_dot_product))
@@ -8314,6 +8397,11 @@ void merge_feature_struct(VkStructureType sType, void* current, const void* merg
 #if (defined(VK_EXT_primitive_restart_index))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIMITIVE_RESTART_INDEX_FEATURES_EXT):
             merge_VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT(*reinterpret_cast<VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT*>(current), *reinterpret_cast<const VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT*>(merge_in));
+            break;
+#endif
+#if (defined(VK_EXT_image_tiling_control))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_TILING_CONTROL_FEATURES_EXT):
+            merge_VkPhysicalDeviceImageTilingControlFeaturesEXT(*reinterpret_cast<VkPhysicalDeviceImageTilingControlFeaturesEXT*>(current), *reinterpret_cast<const VkPhysicalDeviceImageTilingControlFeaturesEXT*>(merge_in));
             break;
 #endif
 #if (defined(VK_NV_cooperative_matrix_decode_vector))

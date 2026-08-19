@@ -1440,6 +1440,10 @@ PhysicalDeviceSelector& PhysicalDeviceSelector::set_minimum_version(uint32_t maj
     criteria.required_version = VKB_MAKE_VK_VERSION(0, major, minor, 0);
     return *this;
 }
+PhysicalDeviceSelector& PhysicalDeviceSelector::set_minimum_version(uint32_t minimum_api_version) {
+    criteria.required_version = minimum_api_version;
+    return *this;
+}
 PhysicalDeviceSelector& PhysicalDeviceSelector::disable_portability_subset() {
     criteria.enable_portability_subset = false;
     return *this;
@@ -2087,17 +2091,28 @@ Result<std::vector<VkImage>> Swapchain::get_images() {
 }
 Result<std::vector<VkImageView>> Swapchain::get_image_views() { return get_image_views(nullptr); }
 Result<std::vector<VkImageView>> Swapchain::get_image_views(const void* pNext) {
-    const auto swapchain_images_ret = get_images();
+    auto images_and_image_views_ret = get_images_and_image_views(pNext);
+    if (!images_and_image_views_ret) return { images_and_image_views_ret.error() };
+    return std::move(images_and_image_views_ret.value().second);
+}
+Result<std::pair<std::vector<VkImage>, std::vector<VkImageView>>> Swapchain::get_images_and_image_views() {
+    return get_images_and_image_views(nullptr);
+}
+Result<std::pair<std::vector<VkImage>, std::vector<VkImageView>>> Swapchain::get_images_and_image_views(const void* pNext) {
+    auto swapchain_images_ret = get_images();
     if (!swapchain_images_ret) return swapchain_images_ret.error();
-    const auto& swapchain_images = swapchain_images_ret.value();
+    auto& swapchain_images = swapchain_images_ret.value();
 
     bool already_contains_image_view_usage = false;
-    while (pNext) {
-        if (reinterpret_cast<const VkBaseInStructure*>(pNext)->sType == VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO) {
+    const void* pNext_iter = pNext;
+    while (pNext_iter) {
+        VkBaseOutStructure structure{};
+        memcpy(&structure, pNext, sizeof(VkBaseOutStructure));
+        if (structure.sType == VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO) {
             already_contains_image_view_usage = true;
             break;
         }
-        pNext = reinterpret_cast<const VkBaseInStructure*>(pNext)->pNext;
+        pNext_iter = structure.pNext;
     }
     VkImageViewUsageCreateInfo desired_flags{};
     desired_flags.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO;
@@ -2130,10 +2145,11 @@ Result<std::vector<VkImageView>> Swapchain::get_image_views(const void* pNext) {
         if (res != VK_SUCCESS) {
             // Cleanup already created image views
             destroy_image_views(i, views.data());
-            return Result<std::vector<VkImageView>>{ SwapchainError::failed_create_swapchain_image_views, res };
+            return Result<std::pair<std::vector<VkImage>, std::vector<VkImageView>>>{ SwapchainError::failed_create_swapchain_image_views,
+                res };
         }
     }
-    return views;
+    return std::pair{ std::move(swapchain_images), std::move(views) };
 }
 void Swapchain::destroy_image_views(size_t count, VkImageView const* image_views) {
     for (size_t i = 0; i < count; ++i) {

@@ -25,6 +25,7 @@ jobs:
         name: Linux
         runs-on: ubuntu-latest
         if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name != github.event.pull_request.base.repo.full_name
+        timeout-minutes: 15
         strategy:
             fail-fast: false
             matrix:
@@ -66,6 +67,7 @@ jobs:
         name: Linux with Thread Sanitizer
         runs-on: ubuntu-latest
         if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name != github.event.pull_request.base.repo.full_name
+        timeout-minutes: 15
         strategy:
             fail-fast: false
             matrix:
@@ -106,6 +108,7 @@ jobs:
         name: Windows
         runs-on: windows-latest
         if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name != github.event.pull_request.base.repo.full_name
+        timeout-minutes: 15
         strategy:
             matrix:
                 arch: [ Win32, x64 ]
@@ -135,6 +138,7 @@ jobs:
         name: macOS
         runs-on: macos-latest
         if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name != github.event.pull_request.base.repo.full_name
+        timeout-minutes: 15
         strategy:
             fail-fast: false
             matrix:
@@ -170,6 +174,7 @@ jobs:
         name: macOS with Thread Sanitizer
         runs-on: macos-latest
         if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name != github.event.pull_request.base.repo.full_name
+        timeout-minutes: 15
         strategy:
             fail-fast: false
             matrix:

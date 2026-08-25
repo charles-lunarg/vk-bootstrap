@@ -35,6 +35,7 @@
 
 namespace vkb::detail {
 
+uint32_t get_structure_size(VkStructureType sType);
 void compare_VkPhysicalDeviceFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceFeatures const& supported, VkPhysicalDeviceFeatures const& requested);
 void merge_VkPhysicalDeviceFeatures(VkPhysicalDeviceFeatures & current, VkPhysicalDeviceFeatures const& merge_in);
 #if (defined(VK_VERSION_1_1))

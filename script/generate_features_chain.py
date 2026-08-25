@@ -131,6 +131,7 @@ def print_required_platform_defines():
 
 def create_feature_chain_declarations():
     out = ''
+    out += 'uint32_t get_structure_size(VkStructureType sType);\n'
     out += 'void compare_VkPhysicalDeviceFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceFeatures const& supported, VkPhysicalDeviceFeatures const& requested);\n'
     out += 'void merge_VkPhysicalDeviceFeatures(VkPhysicalDeviceFeatures & current, VkPhysicalDeviceFeatures const& merge_in);\n'
 
@@ -148,6 +149,16 @@ def create_feature_chain_declarations():
 
 def create_feature_chain_definitions():
     out = ''
+
+    out += 'uint32_t get_structure_size(VkStructureType sType) {\n'
+    out += '    switch (sType){\n'
+    for feature in [x for x in vk.structs.values() if x.extends is not None and 'VkPhysicalDeviceFeatures2' in x.extends]:
+        out += get_struct_guards_start(feature, feature.name)
+        out += f'        case({feature.sType}): return sizeof({feature.name});\n'
+        out += get_struct_guards_end(feature, feature.name)
+    out += '        default: return 0;'
+    out += '    }\n'
+    out += '}\n'
 
     out += 'void compare_VkPhysicalDeviceFeatures(std::vector<std::string> & error_list, VkPhysicalDeviceFeatures const& supported, VkPhysicalDeviceFeatures const& requested) {\n'
     for member in vk.structs['VkPhysicalDeviceFeatures'].members:

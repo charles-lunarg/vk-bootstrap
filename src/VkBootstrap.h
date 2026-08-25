@@ -664,6 +664,17 @@ class PhysicalDeviceSelector {
     // the pNext chain of VkDeviceCreateInfo.
     template <typename T> PhysicalDeviceSelector& add_required_extension_features(T const& features) {
         criteria.extended_features_chain.add_structure(static_cast<VkStructureType>(features.sType), sizeof(T), &features);
+        void* pNext_struct = features.pNext;
+        while (pNext_struct) {
+            VkBaseOutStructure out_structure{};
+            memcpy(&out_structure, pNext_struct, sizeof(VkBaseOutStructure));
+            uint32_t struct_size = vkb::detail::get_structure_size(out_structure.sType);
+            if (struct_size > 0) {
+                criteria.extended_features_chain.add_structure(out_structure.sType, struct_size, pNext_struct);
+            }
+            pNext_struct = out_structure.pNext;
+        }
+
         return *this;
     }
 

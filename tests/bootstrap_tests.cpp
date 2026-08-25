@@ -848,18 +848,30 @@ TEST_CASE("Querying Required Extension Features", "[VkBootstrap.select_features]
     VulkanMock& mock = get_and_setup_default();
     mock.instance_extensions.push_back(get_extension_properties("VK_KHR_get_physical_device_properties2"));
     mock.physical_devices_details[0].extensions.push_back(get_extension_properties("VK_EXT_descriptor_indexing"));
+    mock.physical_devices_details[0].extensions.push_back(get_extension_properties("VK_KHR_multiview"));
     mock.physical_devices_details[0].extensions.push_back(get_extension_properties("VK_KHR_maintenance3"));
     auto mock_descriptor_indexing_features = VkPhysicalDeviceDescriptorIndexingFeaturesEXT{};
     mock_descriptor_indexing_features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT;
     mock_descriptor_indexing_features.runtimeDescriptorArray = true;
     mock.physical_devices_details[0].features_pNextChain.emplace_back(
         create_serialized_struct_from_object(mock_descriptor_indexing_features));
+    auto mock_multiview_features = VkPhysicalDeviceMultiviewFeatures{};
+    mock_multiview_features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES;
+    mock_multiview_features.multiview = true;
+    mock.physical_devices_details[0].features_pNextChain.emplace_back(create_serialized_struct_from_object(mock_multiview_features));
+
     GIVEN("A working instance") {
         auto instance = get_headless_instance();
         // Requires a device that supports runtime descriptor arrays via descriptor indexing extension.
+        // And that structs chained to other structs are added when passed into add_required_extension_features()
         {
+            VkPhysicalDeviceMultiviewFeatures multiview_features{};
+            multiview_features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES;
+            multiview_features.multiview = true;
+
             VkPhysicalDeviceDescriptorIndexingFeaturesEXT descriptor_indexing_features{};
             descriptor_indexing_features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT;
+            descriptor_indexing_features.pNext = &multiview_features;
             descriptor_indexing_features.runtimeDescriptorArray = true;
 
             vkb::PhysicalDeviceSelector selector(instance);
@@ -870,6 +882,7 @@ TEST_CASE("Querying Required Extension Features", "[VkBootstrap.select_features]
             REQUIRE(phys_dev_ret.has_value());
 
             REQUIRE(phys_dev_ret.value().are_extension_features_present(descriptor_indexing_features));
+            REQUIRE(phys_dev_ret.value().are_extension_features_present(multiview_features));
 
             vkb::DeviceBuilder device_builder(phys_dev_ret.value());
             auto device_ret = device_builder.build();

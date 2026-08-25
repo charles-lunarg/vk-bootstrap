@@ -1304,7 +1304,10 @@ PhysicalDeviceSelector::PhysicalDeviceSelector(Instance const& instance, VkSurfa
 Result<std::vector<PhysicalDevice>> PhysicalDeviceSelector::select_devices() const {
     if (criteria.require_present && !criteria.defer_surface_initialization) {
         if (instance_info.surface == VK_NULL_HANDLE)
-            return Result<std::vector<PhysicalDevice>>{ PhysicalDeviceError::no_surface_provided };
+            return Result<std::vector<PhysicalDevice>>{ PhysicalDeviceError::no_surface_provided,
+                { "PhysicalDeviceSelector was not initialized with a VkSurfaceKHR handle. Please provide one, or if "
+                  "there is no surface to provide, disable surface checks by calling defer_surface_initialization() on "
+                  "the vkb::PhysicalDeviceSelector or calling set_headless() on the vkb::InstanceBuilder" } };
     }
 
     // Get the VkPhysicalDevice handles on the system

@@ -421,10 +421,9 @@ void destroy_debug_utils_messenger(
 }
 
 namespace detail {
-bool check_layer_supported(std::vector<VkLayerProperties> const& available_layers, const char* layer_name) {
-    if (!layer_name) return false;
+bool check_layer_supported(std::vector<VkLayerProperties> const& available_layers, std::string const& layer_name) {
     for (const auto& layer_properties : available_layers) {
-        if (strcmp(layer_name, layer_properties.layerName) == 0) {
+        if (strcmp(layer_name.c_str(), layer_properties.layerName) == 0) {
             return true;
         }
     }
@@ -432,7 +431,7 @@ bool check_layer_supported(std::vector<VkLayerProperties> const& available_layer
 }
 
 std::vector<std::string> check_layers_supported(
-    std::vector<VkLayerProperties> const& available_layers, std::vector<const char*> const& layer_names) {
+    std::vector<VkLayerProperties> const& available_layers, std::vector<std::string> const& layer_names) {
     std::vector<std::string> not_found;
     for (const auto& layer_name : layer_names) {
         bool found = check_layer_supported(available_layers, layer_name);
@@ -441,10 +440,9 @@ std::vector<std::string> check_layers_supported(
     return not_found;
 }
 
-bool check_extension_supported(std::vector<VkExtensionProperties> const& available_extensions, const char* extension_name) {
-    if (!extension_name) return false;
+bool check_extension_supported(std::vector<VkExtensionProperties> const& available_extensions, std::string const& extension_name) {
     for (const auto& extension_properties : available_extensions) {
-        if (strcmp(extension_name, extension_properties.extensionName) == 0) {
+        if (strcmp(extension_name.c_str(), extension_properties.extensionName) == 0) {
             return true;
         }
     }
@@ -452,7 +450,7 @@ bool check_extension_supported(std::vector<VkExtensionProperties> const& availab
 }
 
 std::vector<std::string> check_extensions_supported(
-    std::vector<VkExtensionProperties> const& available_extensions, std::vector<const char*> const& extension_names) {
+    std::vector<VkExtensionProperties> const& available_extensions, std::vector<std::string> const& extension_names) {
     std::vector<std::string> not_found;
     for (const auto& extension_name : extension_names) {
         bool found = check_extension_supported(available_extensions, extension_name);
@@ -754,14 +752,14 @@ Result<Instance> InstanceBuilder::build() const {
     VkApplicationInfo app_info = {};
     app_info.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
     app_info.pNext = nullptr;
-    app_info.pApplicationName = info.app_name != nullptr ? info.app_name : "";
+    app_info.pApplicationName = info.app_name.empty() ? info.app_name.c_str() : "";
     app_info.applicationVersion = info.application_version;
-    app_info.pEngineName = info.engine_name != nullptr ? info.engine_name : "";
+    app_info.pEngineName = info.engine_name.empty() ? info.engine_name.c_str() : "";
     app_info.engineVersion = info.engine_version;
     app_info.apiVersion = api_version;
 
-    std::vector<const char*> extensions;
-    std::vector<const char*> layers;
+    std::vector<std::string> extensions;
+    std::vector<std::string> layers;
 
     for (auto& ext : info.extensions)
         extensions.push_back(ext);
@@ -870,6 +868,18 @@ Result<Instance> InstanceBuilder::build() const {
         pNext_chain.push_back(&layer_settings_ci);
     }
 
+    // Vulkan's C api expects char*'s for the strings.
+    std::vector<const char*> extension_strings;
+    extension_strings.resize(extensions.size());
+    for (size_t i = 0; i < extension_strings.size(); i++) {
+        extension_strings[i] = extensions[i].c_str();
+    }
+    std::vector<const char*> layer_strings;
+    layer_strings.resize(layers.size());
+    for (size_t i = 0; i < layer_strings.size(); i++) {
+        layer_strings[i] = layers[i].c_str();
+    }
+
     VkInstanceCreateInfo instance_create_info = {};
     instance_create_info.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
     detail::setup_pNext_chain(instance_create_info, pNext_chain);
@@ -877,9 +887,9 @@ Result<Instance> InstanceBuilder::build() const {
     instance_create_info.flags = info.flags;
     instance_create_info.pApplicationInfo = &app_info;
     instance_create_info.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
-    instance_create_info.ppEnabledExtensionNames = extensions.data();
+    instance_create_info.ppEnabledExtensionNames = extension_strings.data();
     instance_create_info.enabledLayerCount = static_cast<uint32_t>(layers.size());
-    instance_create_info.ppEnabledLayerNames = layers.data();
+    instance_create_info.ppEnabledLayerNames = layer_strings.data();
 #if defined(VK_KHR_portability_enumeration)
     if (portability_enumeration_support) {
         instance_create_info.flags |= VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
@@ -915,14 +925,11 @@ Result<Instance> InstanceBuilder::build() const {
     instance.fp_vkGetDeviceProcAddr = detail::vulkan_functions().fp_vkGetDeviceProcAddr;
     return instance;
 }
-
-InstanceBuilder& InstanceBuilder::set_app_name(const char* app_name) {
-    if (!app_name) return *this;
+InstanceBuilder& InstanceBuilder::set_app_name(std::string app_name) {
     info.app_name = app_name;
     return *this;
 }
-InstanceBuilder& InstanceBuilder::set_engine_name(const char* engine_name) {
-    if (!engine_name) return *this;
+InstanceBuilder& InstanceBuilder::set_engine_name(std::string engine_name) {
     info.engine_name = engine_name;
     return *this;
 }
@@ -958,13 +965,11 @@ InstanceBuilder& InstanceBuilder::set_minimum_instance_version(uint32_t major, u
     info.minimum_instance_version = VKB_MAKE_VK_VERSION(0, major, minor, patch);
     return *this;
 }
-InstanceBuilder& InstanceBuilder::enable_layer(const char* layer_name) {
-    if (!layer_name) return *this;
+InstanceBuilder& InstanceBuilder::enable_layer(std::string layer_name) {
     info.layers.push_back(layer_name);
     return *this;
 }
-InstanceBuilder& InstanceBuilder::enable_extension(const char* extension_name) {
-    if (!extension_name) return *this;
+InstanceBuilder& InstanceBuilder::enable_extension(std::string extension_name) {
     info.extensions.push_back(extension_name);
     return *this;
 }
@@ -972,6 +977,12 @@ InstanceBuilder& InstanceBuilder::enable_extensions(size_t count, const char* co
     if (!extensions || count == 0) return *this;
     for (size_t i = 0; i < count; i++) {
         info.extensions.push_back(extensions[i]);
+    }
+    return *this;
+}
+InstanceBuilder& InstanceBuilder::enable_extensions(std::vector<std::string> const& extensions) {
+    for (auto const& s : extensions) {
+        info.extensions.push_back(s);
     }
     return *this;
 }
@@ -1511,10 +1522,10 @@ bool PhysicalDevice::has_separate_transfer_queue() const {
 std::vector<VkQueueFamilyProperties> PhysicalDevice::get_queue_families() const { return queue_families; }
 std::vector<std::string> PhysicalDevice::get_extensions() const { return extensions_to_enable; }
 std::vector<std::string> PhysicalDevice::get_available_extensions() const { return available_extensions; }
-bool PhysicalDevice::is_extension_present(const char* ext) const {
+bool PhysicalDevice::is_extension_present(std::string ext) const {
     return std::binary_search(std::begin(available_extensions), std::end(available_extensions), ext);
 }
-bool PhysicalDevice::enable_extension_if_present(const char* extension) {
+bool PhysicalDevice::enable_extension_if_present(std::string extension) {
     if (std::binary_search(std::begin(available_extensions), std::end(available_extensions), extension)) {
         extensions_to_enable.insert(
             std::upper_bound(std::begin(extensions_to_enable), std::end(extensions_to_enable), extension), extension);
@@ -1531,6 +1542,19 @@ bool PhysicalDevice::enable_extensions_if_present(size_t count, const char* cons
     }
 
     for (size_t i = 0; i < count; ++i) {
+        extensions_to_enable.insert(
+            std::upper_bound(std::begin(extensions_to_enable), std::end(extensions_to_enable), extensions[i]), extensions[i]);
+    }
+    return true;
+}
+bool PhysicalDevice::enable_extensions_if_present(std::vector<std::string> const& extensions) {
+    for (size_t i = 0; i < extensions.size(); ++i) {
+        if (!std::binary_search(std::begin(available_extensions), std::end(available_extensions), extensions[i])) {
+            return false;
+        }
+    }
+
+    for (size_t i = 0; i < extensions.size(); ++i) {
         extensions_to_enable.insert(
             std::upper_bound(std::begin(extensions_to_enable), std::end(extensions_to_enable), extensions[i]), extensions[i]);
     }

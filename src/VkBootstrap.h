@@ -355,9 +355,9 @@ class InstanceBuilder {
     Result<Instance> build() const;
 
     // Sets the name of the application. Defaults to "" if none is provided.
-    InstanceBuilder& set_app_name(const char* app_name);
+    InstanceBuilder& set_app_name(std::string app_name);
     // Sets the name of the engine. Defaults to "" if none is provided.
-    InstanceBuilder& set_engine_name(const char* engine_name);
+    InstanceBuilder& set_engine_name(std::string engine_name);
 
     // Sets the version of the application.
     // Should be constructed with VK_MAKE_VERSION or VK_MAKE_API_VERSION.
@@ -384,9 +384,9 @@ class InstanceBuilder {
     InstanceBuilder& set_minimum_instance_version(uint32_t major, uint32_t minor, uint32_t patch = 0);
 
     // Adds a layer to be enabled. Will fail to create an instance if the layer isn't available.
-    InstanceBuilder& enable_layer(const char* layer_name);
+    InstanceBuilder& enable_layer(std::string layer_name);
     // Adds an extension to be enabled. Will fail to create an instance if the extension isn't available.
-    InstanceBuilder& enable_extension(const char* extension_name);
+    InstanceBuilder& enable_extension(std::string extension_name);
 
     // Add extensions to be enabled. Will fail to create an instance if the extension aren't available.
     InstanceBuilder& enable_extensions(size_t count, const char* const* extensions);
@@ -395,6 +395,7 @@ class InstanceBuilder {
     InstanceBuilder& enable_extensions(std::vector<const char*> const& extensions) {
         return enable_extensions(extensions.size(), extensions.data());
     }
+    InstanceBuilder& enable_extensions(std::vector<std::string> const& extensions);
 
 #if VKB_SPAN_OVERLOADS
     // Add extensions to be enabled. Will fail to create an instance if the extension aren't available.
@@ -447,16 +448,16 @@ class InstanceBuilder {
     private:
     struct InstanceInfo {
         // VkApplicationInfo
-        const char* app_name = nullptr;
-        const char* engine_name = nullptr;
+        std::string app_name;
+        std::string engine_name;
         uint32_t application_version = 0;
         uint32_t engine_version = 0;
         uint32_t minimum_instance_version = 0;
         uint32_t required_api_version = VKB_VK_API_VERSION_1_0;
 
         // VkInstanceCreateInfo
-        std::vector<const char*> layers;
-        std::vector<const char*> extensions;
+        std::vector<std::string> layers;
+        std::vector<std::string> extensions;
         VkInstanceCreateFlags flags = static_cast<VkInstanceCreateFlags>(0);
         std::vector<VkLayerSettingEXT> layer_settings;
 
@@ -528,7 +529,7 @@ struct PhysicalDevice {
     std::vector<std::string> get_available_extensions() const;
 
     // Returns true if an extension should be enabled on the device
-    bool is_extension_present(const char* extension) const;
+    bool is_extension_present(std::string extension) const;
 
     // Returns true if all the features are present
     template <typename T> bool are_extension_features_present(T const& features) const {
@@ -537,7 +538,7 @@ struct PhysicalDevice {
 
     // If the given extension is present, make the extension be enabled on the device.
     // Returns true the extension is present.
-    bool enable_extension_if_present(const char* extension);
+    bool enable_extension_if_present(std::string extension);
 
     // If all the given extensions are present, make all the extensions be enabled on the device.
     // Returns true if all the extensions are present.
@@ -545,6 +546,7 @@ struct PhysicalDevice {
     bool enable_extensions_if_present(const std::vector<const char*>& extensions) {
         return enable_extensions_if_present(extensions.size(), extensions.data());
     }
+    bool enable_extensions_if_present(std::vector<std::string> const& extensions);
 
 #if VKB_SPAN_OVERLOADS
     bool enable_extensions_if_present(std::span<const char*> extensions) {

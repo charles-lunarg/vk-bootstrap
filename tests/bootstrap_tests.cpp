@@ -1401,7 +1401,7 @@ TEST_CASE("Test span functions", "[VkBootstrap.cpp20]") {
     mock.physical_devices_details[0].extensions.push_back(get_extension_properties("PhysDevExt3"));
     vkb::InstanceBuilder builder;
     SECTION("InstanceBuilder::enable_extension") {
-        std::array exts = { "VK_EXT_debug_utils", "VK_KHR_surface", "VK_KHR_get_physical_device_properties2" };
+        const std::array exts = { "VK_EXT_debug_utils", "VK_KHR_surface", "VK_KHR_get_physical_device_properties2" };
         builder.enable_extensions(exts);
         builder.enable_extensions(3, exts.data());
     }
@@ -1409,7 +1409,7 @@ TEST_CASE("Test span functions", "[VkBootstrap.cpp20]") {
     REQUIRE(instance_ret.has_value());
     vkb::PhysicalDeviceSelector selector(instance_ret.value());
     SECTION("PhysicalDeviceSelector::add_required_extensions") {
-        std::array exts1 = { "PhysDevExt0", "PhysDevExt1" };
+        const std::array exts1 = { "PhysDevExt0", "PhysDevExt1" };
         selector.add_required_extensions(exts1);
         selector.add_required_extensions(2, exts1.data());
     }
@@ -1417,7 +1417,7 @@ TEST_CASE("Test span functions", "[VkBootstrap.cpp20]") {
     REQUIRE(physical_device_ret.has_value());
     auto physical_device = physical_device_ret.value();
     SECTION("PhysicalDevice::enable_extensions_if_present") {
-        std::array exts2 = { "PhysDevExt2", "PhysDevExt3" };
+        const std::array exts2 = { "PhysDevExt2", "PhysDevExt3" };
         physical_device.enable_extensions_if_present(exts2);
         physical_device.enable_extensions_if_present(2, exts2.data());
     }

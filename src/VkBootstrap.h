@@ -399,7 +399,7 @@ class InstanceBuilder {
 
 #if VKB_SPAN_OVERLOADS
     // Add extensions to be enabled. Will fail to create an instance if the extension aren't available.
-    InstanceBuilder& enable_extensions(std::span<const char*> extensions) {
+    InstanceBuilder& enable_extensions(std::span<const char* const> extensions) {
         return enable_extensions(extensions.size(), extensions.data());
     }
 #endif
@@ -549,7 +549,7 @@ struct PhysicalDevice {
     bool enable_extensions_if_present(std::vector<std::string> const& extensions);
 
 #if VKB_SPAN_OVERLOADS
-    bool enable_extensions_if_present(std::span<const char*> extensions) {
+    bool enable_extensions_if_present(std::span<const char* const> extensions) {
         return enable_extensions_if_present(extensions.size(), extensions.data());
     }
 #endif
@@ -646,7 +646,7 @@ class PhysicalDeviceSelector {
 
 #if VKB_SPAN_OVERLOADS
     // Require a physical device which supports a set of extensions.
-    PhysicalDeviceSelector& add_required_extensions(std::span<const char*> extensions) {
+    PhysicalDeviceSelector& add_required_extensions(std::span<const char* const> extensions) {
         return add_required_extensions(extensions.size(), extensions.data());
     }
 #endif

@@ -1370,6 +1370,10 @@ void merge_VkPhysicalDeviceImageTilingControlFeaturesEXT(VkPhysicalDeviceImageTi
 void compare_VkPhysicalDeviceCooperativeMatrixDecodeVectorFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDeviceCooperativeMatrixDecodeVectorFeaturesNV const& supported, VkPhysicalDeviceCooperativeMatrixDecodeVectorFeaturesNV const& requested);
 void merge_VkPhysicalDeviceCooperativeMatrixDecodeVectorFeaturesNV(VkPhysicalDeviceCooperativeMatrixDecodeVectorFeaturesNV & current, VkPhysicalDeviceCooperativeMatrixDecodeVectorFeaturesNV const& merge_in);
 #endif //(defined(VK_NV_cooperative_matrix_decode_vector))
+#if (defined(VK_NV_private_data_base_handle))
+void compare_VkPhysicalDevicePrivateDataBaseHandleFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDevicePrivateDataBaseHandleFeaturesNV const& supported, VkPhysicalDevicePrivateDataBaseHandleFeaturesNV const& requested);
+void merge_VkPhysicalDevicePrivateDataBaseHandleFeaturesNV(VkPhysicalDevicePrivateDataBaseHandleFeaturesNV & current, VkPhysicalDevicePrivateDataBaseHandleFeaturesNV const& merge_in);
+#endif //(defined(VK_NV_private_data_base_handle))
 #if (defined(VK_KHR_acceleration_structure))
 void compare_VkPhysicalDeviceAccelerationStructureFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceAccelerationStructureFeaturesKHR const& supported, VkPhysicalDeviceAccelerationStructureFeaturesKHR const& requested);
 void merge_VkPhysicalDeviceAccelerationStructureFeaturesKHR(VkPhysicalDeviceAccelerationStructureFeaturesKHR & current, VkPhysicalDeviceAccelerationStructureFeaturesKHR const& merge_in);

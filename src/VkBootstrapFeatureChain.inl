@@ -840,6 +840,9 @@ uint32_t get_structure_size(VkStructureType sType) {
 #if (defined(VK_NV_cooperative_matrix_decode_vector))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_DECODE_VECTOR_FEATURES_NV): return sizeof(VkPhysicalDeviceCooperativeMatrixDecodeVectorFeaturesNV);
 #endif //(defined(VK_NV_cooperative_matrix_decode_vector))
+#if (defined(VK_NV_private_data_base_handle))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIVATE_DATA_BASE_HANDLE_FEATURES_NV): return sizeof(VkPhysicalDevicePrivateDataBaseHandleFeaturesNV);
+#endif //(defined(VK_NV_private_data_base_handle))
 #if (defined(VK_KHR_acceleration_structure))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ACCELERATION_STRUCTURE_FEATURES_KHR): return sizeof(VkPhysicalDeviceAccelerationStructureFeaturesKHR);
 #endif //(defined(VK_KHR_acceleration_structure))
@@ -5916,6 +5919,16 @@ void merge_VkPhysicalDeviceCooperativeMatrixDecodeVectorFeaturesNV(VkPhysicalDev
     current.cooperativeMatrixDecodeVector = current.cooperativeMatrixDecodeVector || merge_in.cooperativeMatrixDecodeVector;
 }
 #endif //(defined(VK_NV_cooperative_matrix_decode_vector))
+#if (defined(VK_NV_private_data_base_handle))
+void compare_VkPhysicalDevicePrivateDataBaseHandleFeaturesNV(std::vector<std::string> & error_list, VkPhysicalDevicePrivateDataBaseHandleFeaturesNV const& supported, VkPhysicalDevicePrivateDataBaseHandleFeaturesNV const& requested) {
+    if (requested.privateDataBaseHandle && !supported.privateDataBaseHandle) {
+        error_list.push_back("Missing feature VkPhysicalDevicePrivateDataBaseHandleFeaturesNV::privateDataBaseHandle");
+    }
+}
+void merge_VkPhysicalDevicePrivateDataBaseHandleFeaturesNV(VkPhysicalDevicePrivateDataBaseHandleFeaturesNV & current, VkPhysicalDevicePrivateDataBaseHandleFeaturesNV const& merge_in) {
+    current.privateDataBaseHandle = current.privateDataBaseHandle || merge_in.privateDataBaseHandle;
+}
+#endif //(defined(VK_NV_private_data_base_handle))
 #if (defined(VK_KHR_acceleration_structure))
 void compare_VkPhysicalDeviceAccelerationStructureFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceAccelerationStructureFeaturesKHR const& supported, VkPhysicalDeviceAccelerationStructureFeaturesKHR const& requested) {
     if (requested.accelerationStructure && !supported.accelerationStructure) {
@@ -7609,6 +7622,11 @@ void compare_feature_struct(VkStructureType sType, std::vector<std::string> & er
             compare_VkPhysicalDeviceCooperativeMatrixDecodeVectorFeaturesNV(error_list, *reinterpret_cast<const VkPhysicalDeviceCooperativeMatrixDecodeVectorFeaturesNV*>(supported), *reinterpret_cast<const VkPhysicalDeviceCooperativeMatrixDecodeVectorFeaturesNV*>(requested));
             break;
 #endif
+#if (defined(VK_NV_private_data_base_handle))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIVATE_DATA_BASE_HANDLE_FEATURES_NV):
+            compare_VkPhysicalDevicePrivateDataBaseHandleFeaturesNV(error_list, *reinterpret_cast<const VkPhysicalDevicePrivateDataBaseHandleFeaturesNV*>(supported), *reinterpret_cast<const VkPhysicalDevicePrivateDataBaseHandleFeaturesNV*>(requested));
+            break;
+#endif
 #if (defined(VK_KHR_acceleration_structure))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ACCELERATION_STRUCTURE_FEATURES_KHR):
             compare_VkPhysicalDeviceAccelerationStructureFeaturesKHR(error_list, *reinterpret_cast<const VkPhysicalDeviceAccelerationStructureFeaturesKHR*>(supported), *reinterpret_cast<const VkPhysicalDeviceAccelerationStructureFeaturesKHR*>(requested));
@@ -9236,6 +9254,11 @@ void merge_feature_struct(VkStructureType sType, void* current, const void* merg
 #if (defined(VK_NV_cooperative_matrix_decode_vector))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_DECODE_VECTOR_FEATURES_NV):
             merge_VkPhysicalDeviceCooperativeMatrixDecodeVectorFeaturesNV(*reinterpret_cast<VkPhysicalDeviceCooperativeMatrixDecodeVectorFeaturesNV*>(current), *reinterpret_cast<const VkPhysicalDeviceCooperativeMatrixDecodeVectorFeaturesNV*>(merge_in));
+            break;
+#endif
+#if (defined(VK_NV_private_data_base_handle))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIVATE_DATA_BASE_HANDLE_FEATURES_NV):
+            merge_VkPhysicalDevicePrivateDataBaseHandleFeaturesNV(*reinterpret_cast<VkPhysicalDevicePrivateDataBaseHandleFeaturesNV*>(current), *reinterpret_cast<const VkPhysicalDevicePrivateDataBaseHandleFeaturesNV*>(merge_in));
             break;
 #endif
 #if (defined(VK_KHR_acceleration_structure))

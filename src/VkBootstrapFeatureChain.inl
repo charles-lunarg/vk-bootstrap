@@ -312,6 +312,9 @@ uint32_t get_structure_size(VkStructureType sType) {
 #if (defined(VK_KHR_maintenance10))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_10_FEATURES_KHR): return sizeof(VkPhysicalDeviceMaintenance10FeaturesKHR);
 #endif //(defined(VK_KHR_maintenance10))
+#if (defined(VK_KHR_pipeline_library_group_handles))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_LIBRARY_GROUP_HANDLES_FEATURES_KHR): return sizeof(VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesKHR);
+#endif //(defined(VK_KHR_pipeline_library_group_handles))
 #if (defined(VK_KHR_maintenance11))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_11_FEATURES_KHR): return sizeof(VkPhysicalDeviceMaintenance11FeaturesKHR);
 #endif //(defined(VK_KHR_maintenance11))
@@ -678,9 +681,6 @@ uint32_t get_structure_size(VkStructureType sType) {
 #if (defined(VK_ARM_shader_core_builtins))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_BUILTINS_FEATURES_ARM): return sizeof(VkPhysicalDeviceShaderCoreBuiltinsFeaturesARM);
 #endif //(defined(VK_ARM_shader_core_builtins))
-#if (defined(VK_EXT_pipeline_library_group_handles))
-        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_LIBRARY_GROUP_HANDLES_FEATURES_EXT): return sizeof(VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT);
-#endif //(defined(VK_EXT_pipeline_library_group_handles))
 #if (defined(VK_EXT_dynamic_rendering_unused_attachments))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_UNUSED_ATTACHMENTS_FEATURES_EXT): return sizeof(VkPhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT);
 #endif //(defined(VK_EXT_dynamic_rendering_unused_attachments))
@@ -843,6 +843,9 @@ uint32_t get_structure_size(VkStructureType sType) {
 #if (defined(VK_NV_private_data_base_handle))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIVATE_DATA_BASE_HANDLE_FEATURES_NV): return sizeof(VkPhysicalDevicePrivateDataBaseHandleFeaturesNV);
 #endif //(defined(VK_NV_private_data_base_handle))
+#if (defined(VK_VALVE_buffer_device_address_allocation_alignment))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_ALLOCATION_ALIGNMENT_FEATURES_VALVE): return sizeof(VkPhysicalDeviceBufferDeviceAddressAllocationAlignmentFeaturesVALVE);
+#endif //(defined(VK_VALVE_buffer_device_address_allocation_alignment))
 #if (defined(VK_KHR_acceleration_structure))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ACCELERATION_STRUCTURE_FEATURES_KHR): return sizeof(VkPhysicalDeviceAccelerationStructureFeaturesKHR);
 #endif //(defined(VK_KHR_acceleration_structure))
@@ -3489,6 +3492,26 @@ void merge_VkPhysicalDeviceMaintenance10FeaturesKHR(VkPhysicalDeviceMaintenance1
     current.maintenance10 = current.maintenance10 || merge_in.maintenance10;
 }
 #endif //(defined(VK_KHR_maintenance10))
+#if (defined(VK_KHR_pipeline_library_group_handles))
+void compare_VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesKHR const& supported, VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesKHR const& requested) {
+    if (requested.pipelineLibraryGroupHandles && !supported.pipelineLibraryGroupHandles) {
+        error_list.push_back("Missing feature VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesKHR::pipelineLibraryGroupHandles");
+    }
+}
+void merge_VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesKHR(VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesKHR & current, VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesKHR const& merge_in) {
+    current.pipelineLibraryGroupHandles = current.pipelineLibraryGroupHandles || merge_in.pipelineLibraryGroupHandles;
+}
+#endif //(defined(VK_KHR_pipeline_library_group_handles))
+#if (defined(VK_EXT_pipeline_library_group_handles))
+void compare_VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT const& supported, VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT const& requested) {
+    if (requested.pipelineLibraryGroupHandles && !supported.pipelineLibraryGroupHandles) {
+        error_list.push_back("Missing feature VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT::pipelineLibraryGroupHandles");
+    }
+}
+void merge_VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT(VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT & current, VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT const& merge_in) {
+    current.pipelineLibraryGroupHandles = current.pipelineLibraryGroupHandles || merge_in.pipelineLibraryGroupHandles;
+}
+#endif //(defined(VK_EXT_pipeline_library_group_handles))
 #if (defined(VK_KHR_maintenance11))
 void compare_VkPhysicalDeviceMaintenance11FeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceMaintenance11FeaturesKHR const& supported, VkPhysicalDeviceMaintenance11FeaturesKHR const& requested) {
     if (requested.maintenance11 && !supported.maintenance11) {
@@ -5287,16 +5310,6 @@ void merge_VkPhysicalDeviceShaderCoreBuiltinsFeaturesARM(VkPhysicalDeviceShaderC
     current.shaderCoreBuiltins = current.shaderCoreBuiltins || merge_in.shaderCoreBuiltins;
 }
 #endif //(defined(VK_ARM_shader_core_builtins))
-#if (defined(VK_EXT_pipeline_library_group_handles))
-void compare_VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT const& supported, VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT const& requested) {
-    if (requested.pipelineLibraryGroupHandles && !supported.pipelineLibraryGroupHandles) {
-        error_list.push_back("Missing feature VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT::pipelineLibraryGroupHandles");
-    }
-}
-void merge_VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT(VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT & current, VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT const& merge_in) {
-    current.pipelineLibraryGroupHandles = current.pipelineLibraryGroupHandles || merge_in.pipelineLibraryGroupHandles;
-}
-#endif //(defined(VK_EXT_pipeline_library_group_handles))
 #if (defined(VK_EXT_dynamic_rendering_unused_attachments))
 void compare_VkPhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT const& supported, VkPhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT const& requested) {
     if (requested.dynamicRenderingUnusedAttachments && !supported.dynamicRenderingUnusedAttachments) {
@@ -5929,6 +5942,16 @@ void merge_VkPhysicalDevicePrivateDataBaseHandleFeaturesNV(VkPhysicalDevicePriva
     current.privateDataBaseHandle = current.privateDataBaseHandle || merge_in.privateDataBaseHandle;
 }
 #endif //(defined(VK_NV_private_data_base_handle))
+#if (defined(VK_VALVE_buffer_device_address_allocation_alignment))
+void compare_VkPhysicalDeviceBufferDeviceAddressAllocationAlignmentFeaturesVALVE(std::vector<std::string> & error_list, VkPhysicalDeviceBufferDeviceAddressAllocationAlignmentFeaturesVALVE const& supported, VkPhysicalDeviceBufferDeviceAddressAllocationAlignmentFeaturesVALVE const& requested) {
+    if (requested.bufferDeviceAddressAllocationAlignment && !supported.bufferDeviceAddressAllocationAlignment) {
+        error_list.push_back("Missing feature VkPhysicalDeviceBufferDeviceAddressAllocationAlignmentFeaturesVALVE::bufferDeviceAddressAllocationAlignment");
+    }
+}
+void merge_VkPhysicalDeviceBufferDeviceAddressAllocationAlignmentFeaturesVALVE(VkPhysicalDeviceBufferDeviceAddressAllocationAlignmentFeaturesVALVE & current, VkPhysicalDeviceBufferDeviceAddressAllocationAlignmentFeaturesVALVE const& merge_in) {
+    current.bufferDeviceAddressAllocationAlignment = current.bufferDeviceAddressAllocationAlignment || merge_in.bufferDeviceAddressAllocationAlignment;
+}
+#endif //(defined(VK_VALVE_buffer_device_address_allocation_alignment))
 #if (defined(VK_KHR_acceleration_structure))
 void compare_VkPhysicalDeviceAccelerationStructureFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceAccelerationStructureFeaturesKHR const& supported, VkPhysicalDeviceAccelerationStructureFeaturesKHR const& requested) {
     if (requested.accelerationStructure && !supported.accelerationStructure) {
@@ -6722,6 +6745,15 @@ void compare_feature_struct(VkStructureType sType, std::vector<std::string> & er
             compare_VkPhysicalDeviceMaintenance10FeaturesKHR(error_list, *reinterpret_cast<const VkPhysicalDeviceMaintenance10FeaturesKHR*>(supported), *reinterpret_cast<const VkPhysicalDeviceMaintenance10FeaturesKHR*>(requested));
             break;
 #endif
+#if (defined(VK_KHR_pipeline_library_group_handles))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_LIBRARY_GROUP_HANDLES_FEATURES_KHR):
+            compare_VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesKHR(error_list, *reinterpret_cast<const VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesKHR*>(supported), *reinterpret_cast<const VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesKHR*>(requested));
+            break;
+#elif (defined(VK_EXT_pipeline_library_group_handles))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_LIBRARY_GROUP_HANDLES_FEATURES_EXT):
+            compare_VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT(error_list, *reinterpret_cast<const VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT*>(supported), *reinterpret_cast<const VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT*>(requested));
+            break;
+#endif
 #if (defined(VK_KHR_maintenance11))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_11_FEATURES_KHR):
             compare_VkPhysicalDeviceMaintenance11FeaturesKHR(error_list, *reinterpret_cast<const VkPhysicalDeviceMaintenance11FeaturesKHR*>(supported), *reinterpret_cast<const VkPhysicalDeviceMaintenance11FeaturesKHR*>(requested));
@@ -7352,11 +7384,6 @@ void compare_feature_struct(VkStructureType sType, std::vector<std::string> & er
             compare_VkPhysicalDeviceShaderCoreBuiltinsFeaturesARM(error_list, *reinterpret_cast<const VkPhysicalDeviceShaderCoreBuiltinsFeaturesARM*>(supported), *reinterpret_cast<const VkPhysicalDeviceShaderCoreBuiltinsFeaturesARM*>(requested));
             break;
 #endif
-#if (defined(VK_EXT_pipeline_library_group_handles))
-        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_LIBRARY_GROUP_HANDLES_FEATURES_EXT):
-            compare_VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT(error_list, *reinterpret_cast<const VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT*>(supported), *reinterpret_cast<const VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT*>(requested));
-            break;
-#endif
 #if (defined(VK_EXT_dynamic_rendering_unused_attachments))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_UNUSED_ATTACHMENTS_FEATURES_EXT):
             compare_VkPhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT(error_list, *reinterpret_cast<const VkPhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT*>(supported), *reinterpret_cast<const VkPhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT*>(requested));
@@ -7625,6 +7652,11 @@ void compare_feature_struct(VkStructureType sType, std::vector<std::string> & er
 #if (defined(VK_NV_private_data_base_handle))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIVATE_DATA_BASE_HANDLE_FEATURES_NV):
             compare_VkPhysicalDevicePrivateDataBaseHandleFeaturesNV(error_list, *reinterpret_cast<const VkPhysicalDevicePrivateDataBaseHandleFeaturesNV*>(supported), *reinterpret_cast<const VkPhysicalDevicePrivateDataBaseHandleFeaturesNV*>(requested));
+            break;
+#endif
+#if (defined(VK_VALVE_buffer_device_address_allocation_alignment))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_ALLOCATION_ALIGNMENT_FEATURES_VALVE):
+            compare_VkPhysicalDeviceBufferDeviceAddressAllocationAlignmentFeaturesVALVE(error_list, *reinterpret_cast<const VkPhysicalDeviceBufferDeviceAddressAllocationAlignmentFeaturesVALVE*>(supported), *reinterpret_cast<const VkPhysicalDeviceBufferDeviceAddressAllocationAlignmentFeaturesVALVE*>(requested));
             break;
 #endif
 #if (defined(VK_KHR_acceleration_structure))
@@ -8356,6 +8388,15 @@ void merge_feature_struct(VkStructureType sType, void* current, const void* merg
             merge_VkPhysicalDeviceMaintenance10FeaturesKHR(*reinterpret_cast<VkPhysicalDeviceMaintenance10FeaturesKHR*>(current), *reinterpret_cast<const VkPhysicalDeviceMaintenance10FeaturesKHR*>(merge_in));
             break;
 #endif
+#if (defined(VK_KHR_pipeline_library_group_handles))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_LIBRARY_GROUP_HANDLES_FEATURES_KHR):
+            merge_VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesKHR(*reinterpret_cast<VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesKHR*>(current), *reinterpret_cast<const VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesKHR*>(merge_in));
+            break;
+#elif (defined(VK_EXT_pipeline_library_group_handles))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_LIBRARY_GROUP_HANDLES_FEATURES_EXT):
+            merge_VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT(*reinterpret_cast<VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT*>(current), *reinterpret_cast<const VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT*>(merge_in));
+            break;
+#endif
 #if (defined(VK_KHR_maintenance11))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_11_FEATURES_KHR):
             merge_VkPhysicalDeviceMaintenance11FeaturesKHR(*reinterpret_cast<VkPhysicalDeviceMaintenance11FeaturesKHR*>(current), *reinterpret_cast<const VkPhysicalDeviceMaintenance11FeaturesKHR*>(merge_in));
@@ -8986,11 +9027,6 @@ void merge_feature_struct(VkStructureType sType, void* current, const void* merg
             merge_VkPhysicalDeviceShaderCoreBuiltinsFeaturesARM(*reinterpret_cast<VkPhysicalDeviceShaderCoreBuiltinsFeaturesARM*>(current), *reinterpret_cast<const VkPhysicalDeviceShaderCoreBuiltinsFeaturesARM*>(merge_in));
             break;
 #endif
-#if (defined(VK_EXT_pipeline_library_group_handles))
-        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_LIBRARY_GROUP_HANDLES_FEATURES_EXT):
-            merge_VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT(*reinterpret_cast<VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT*>(current), *reinterpret_cast<const VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT*>(merge_in));
-            break;
-#endif
 #if (defined(VK_EXT_dynamic_rendering_unused_attachments))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_UNUSED_ATTACHMENTS_FEATURES_EXT):
             merge_VkPhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT(*reinterpret_cast<VkPhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT*>(current), *reinterpret_cast<const VkPhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT*>(merge_in));
@@ -9259,6 +9295,11 @@ void merge_feature_struct(VkStructureType sType, void* current, const void* merg
 #if (defined(VK_NV_private_data_base_handle))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIVATE_DATA_BASE_HANDLE_FEATURES_NV):
             merge_VkPhysicalDevicePrivateDataBaseHandleFeaturesNV(*reinterpret_cast<VkPhysicalDevicePrivateDataBaseHandleFeaturesNV*>(current), *reinterpret_cast<const VkPhysicalDevicePrivateDataBaseHandleFeaturesNV*>(merge_in));
+            break;
+#endif
+#if (defined(VK_VALVE_buffer_device_address_allocation_alignment))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_ALLOCATION_ALIGNMENT_FEATURES_VALVE):
+            merge_VkPhysicalDeviceBufferDeviceAddressAllocationAlignmentFeaturesVALVE(*reinterpret_cast<VkPhysicalDeviceBufferDeviceAddressAllocationAlignmentFeaturesVALVE*>(current), *reinterpret_cast<const VkPhysicalDeviceBufferDeviceAddressAllocationAlignmentFeaturesVALVE*>(merge_in));
             break;
 #endif
 #if (defined(VK_KHR_acceleration_structure))

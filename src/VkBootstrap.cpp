@@ -312,7 +312,7 @@ class VulkanFunctions {
     }
 };
 
-static VulkanFunctions& vulkan_functions() {
+VulkanFunctions& vulkan_functions() {
     static VulkanFunctions v;
     return v;
 }

@@ -115,7 +115,7 @@ void create_descriptor(Init& init, Data& data) {
     pool_info.pPoolSizes = &pool_size;
     init.disp.createDescriptorPool(&pool_info, nullptr, &data.descriptor_pool);
 
-    VkDescriptorSetLayoutBinding binding = { 0, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 2, VK_SHADER_STAGE_ALL, nullptr };
+    VkDescriptorSetLayoutBinding binding = { 0, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 2, VK_SHADER_STAGE_COMPUTE_BIT, nullptr };
     VkDescriptorSetLayoutCreateInfo dsl_info = {};
     dsl_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
     dsl_info.flags = 0;

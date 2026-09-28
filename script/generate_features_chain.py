@@ -2,7 +2,7 @@
 #
 # generate_features_chain.py
 #
-# Copyright © 2025 Charles Giessen (charles@lunarg.com)
+# Copyright © 2025-2026 Charles Giessen (charles@lunarg.com)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 # documentation files (the “Software”), to deal in the Software without restriction, including without
@@ -29,7 +29,7 @@ from vulkan_object import get_vulkan_object
 vk = get_vulkan_object()
 
 header = '''/*
- * Copyright © 2025 Charles Giessen (charles@lunarg.com)
+ * Copyright © 2025-2026 Charles Giessen (charles@lunarg.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
  * documentation files (the “Software”), to deal in the Software without restriction, including without

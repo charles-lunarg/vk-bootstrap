@@ -2963,7 +2963,7 @@ struct DispatchTable {
 #if (defined(VK_EXT_descriptor_buffer))
         fp_vkGetImageViewOpaqueCaptureDescriptorDataEXT = reinterpret_cast<PFN_vkGetImageViewOpaqueCaptureDescriptorDataEXT>(procAddr(device, "vkGetImageViewOpaqueCaptureDescriptorDataEXT"));
 #endif
-#if (defined(VK_NV_low_latency))
+#if (defined(VK_NV_low_latency)) && VK_HEADER_VERSION >= 357
         fp_vkGetLatencyTimingsLegacyNV = reinterpret_cast<PFN_vkGetLatencyTimingsLegacyNV>(procAddr(device, "vkGetLatencyTimingsLegacyNV"));
 #endif
 #if (defined(VK_NV_low_latency2)) && VK_HEADER_VERSION >= 271
@@ -3122,7 +3122,7 @@ struct DispatchTable {
 #if (defined(VK_EXT_shader_module_identifier))
         fp_vkGetShaderModuleIdentifierEXT = reinterpret_cast<PFN_vkGetShaderModuleIdentifierEXT>(procAddr(device, "vkGetShaderModuleIdentifierEXT"));
 #endif
-#if (defined(VK_NV_low_latency))
+#if (defined(VK_NV_low_latency)) && VK_HEADER_VERSION >= 357
         fp_vkGetSleepStatusLegacyNV = reinterpret_cast<PFN_vkGetSleepStatusLegacyNV>(procAddr(device, "vkGetSleepStatusLegacyNV"));
 #endif
 #if (defined(VK_EXT_display_control))
@@ -3177,7 +3177,7 @@ struct DispatchTable {
         fp_vkInitializePerformanceApiINTEL = reinterpret_cast<PFN_vkInitializePerformanceApiINTEL>(procAddr(device, "vkInitializePerformanceApiINTEL"));
 #endif
         fp_vkInvalidateMappedMemoryRanges = reinterpret_cast<PFN_vkInvalidateMappedMemoryRanges>(procAddr(device, "vkInvalidateMappedMemoryRanges"));
-#if (defined(VK_NV_low_latency))
+#if (defined(VK_NV_low_latency)) && VK_HEADER_VERSION >= 357
         fp_vkLatencySleepLegacyNV = reinterpret_cast<PFN_vkLatencySleepLegacyNV>(procAddr(device, "vkLatencySleepLegacyNV"));
 #endif
 #if (defined(VK_NV_low_latency2))
@@ -3204,7 +3204,7 @@ struct DispatchTable {
 #if (defined(VK_EXT_debug_utils))
         fp_vkQueueInsertDebugUtilsLabelEXT = reinterpret_cast<PFN_vkQueueInsertDebugUtilsLabelEXT>(procAddr(device, "vkQueueInsertDebugUtilsLabelEXT"));
 #endif
-#if (defined(VK_NV_low_latency))
+#if (defined(VK_NV_low_latency)) && VK_HEADER_VERSION >= 357
         fp_vkQueueNotifyOutOfBandLegacyNV = reinterpret_cast<PFN_vkQueueNotifyOutOfBandLegacyNV>(procAddr(device, "vkQueueNotifyOutOfBandLegacyNV"));
 #endif
 #if (defined(VK_NV_low_latency2))
@@ -3290,13 +3290,13 @@ struct DispatchTable {
 #if (defined(VK_EXT_hdr_metadata))
         fp_vkSetHdrMetadataEXT = reinterpret_cast<PFN_vkSetHdrMetadataEXT>(procAddr(device, "vkSetHdrMetadataEXT"));
 #endif
-#if (defined(VK_NV_low_latency))
+#if (defined(VK_NV_low_latency)) && VK_HEADER_VERSION >= 357
         fp_vkSetLatencyMarkerLegacyNV = reinterpret_cast<PFN_vkSetLatencyMarkerLegacyNV>(procAddr(device, "vkSetLatencyMarkerLegacyNV"));
 #endif
 #if (defined(VK_NV_low_latency2))
         fp_vkSetLatencyMarkerNV = reinterpret_cast<PFN_vkSetLatencyMarkerNV>(procAddr(device, "vkSetLatencyMarkerNV"));
 #endif
-#if (defined(VK_NV_low_latency))
+#if (defined(VK_NV_low_latency)) && VK_HEADER_VERSION >= 357
         fp_vkSetLatencySleepModeLegacyNV = reinterpret_cast<PFN_vkSetLatencySleepModeLegacyNV>(procAddr(device, "vkSetLatencySleepModeLegacyNV"));
 #endif
 #if (defined(VK_NV_low_latency2))
@@ -3314,7 +3314,7 @@ struct DispatchTable {
 #if (defined(VK_EXT_present_timing))
         fp_vkSetSwapchainPresentTimingQueueSizeEXT = reinterpret_cast<PFN_vkSetSwapchainPresentTimingQueueSizeEXT>(procAddr(device, "vkSetSwapchainPresentTimingQueueSizeEXT"));
 #endif
-#if (defined(VK_NV_low_latency))
+#if (defined(VK_NV_low_latency)) && VK_HEADER_VERSION >= 357
         fp_vkShutdownLatencyDeviceLegacyNV = reinterpret_cast<PFN_vkShutdownLatencyDeviceLegacyNV>(procAddr(device, "vkShutdownLatencyDeviceLegacyNV"));
 #endif
 #if (defined(VK_VERSION_1_2))
@@ -6003,7 +6003,7 @@ struct DispatchTable {
         return fp_vkGetImageViewOpaqueCaptureDescriptorDataEXT(device, pInfo, pData);
     }
 #endif
-#if (defined(VK_NV_low_latency))
+#if (defined(VK_NV_low_latency)) && VK_HEADER_VERSION >= 357
     void getLatencyTimingsLegacyNV(void* pTimings) const noexcept {
         fp_vkGetLatencyTimingsLegacyNV(device, pTimings);
     }
@@ -6272,7 +6272,7 @@ struct DispatchTable {
         fp_vkGetShaderModuleIdentifierEXT(device, shaderModule, pIdentifier);
     }
 #endif
-#if (defined(VK_NV_low_latency))
+#if (defined(VK_NV_low_latency)) && VK_HEADER_VERSION >= 357
     void getSleepStatusLegacyNV(VkBool32* pLowLatencyMode) const noexcept {
         fp_vkGetSleepStatusLegacyNV(device, pLowLatencyMode);
     }
@@ -6365,7 +6365,7 @@ struct DispatchTable {
     VkResult invalidateMappedMemoryRanges(uint32_t memoryRangeCount, const VkMappedMemoryRange* pMemoryRanges) const noexcept {
         return fp_vkInvalidateMappedMemoryRanges(device, memoryRangeCount, pMemoryRanges);
     }
-#if (defined(VK_NV_low_latency))
+#if (defined(VK_NV_low_latency)) && VK_HEADER_VERSION >= 357
     void latencySleepLegacyNV(VkSemaphore signalSemaphore, uint64_t value) const noexcept {
         fp_vkLatencySleepLegacyNV(device, signalSemaphore, value);
     }
@@ -6414,7 +6414,7 @@ struct DispatchTable {
         fp_vkQueueInsertDebugUtilsLabelEXT(queue, pLabelInfo);
     }
 #endif
-#if (defined(VK_NV_low_latency))
+#if (defined(VK_NV_low_latency)) && VK_HEADER_VERSION >= 357
     void queueNotifyOutOfBandLegacyNV(VkQueue queue, uint32_t queueType) const noexcept {
         fp_vkQueueNotifyOutOfBandLegacyNV(queue, queueType);
     }
@@ -6568,7 +6568,7 @@ struct DispatchTable {
         fp_vkSetHdrMetadataEXT(device, swapchainCount, pSwapchains, pMetadata);
     }
 #endif
-#if (defined(VK_NV_low_latency))
+#if (defined(VK_NV_low_latency)) && VK_HEADER_VERSION >= 357
     void setLatencyMarkerLegacyNV(uint64_t frameID, uint32_t marker) const noexcept {
         fp_vkSetLatencyMarkerLegacyNV(device, frameID, marker);
     }
@@ -6578,7 +6578,7 @@ struct DispatchTable {
         fp_vkSetLatencyMarkerNV(device, swapchain, pLatencyMarkerInfo);
     }
 #endif
-#if (defined(VK_NV_low_latency))
+#if (defined(VK_NV_low_latency)) && VK_HEADER_VERSION >= 357
     void setLatencySleepModeLegacyNV(VkBool32 lowLatencyMode, VkBool32 lowLatencyBoost, uint32_t minimumIntervalUs) const noexcept {
         fp_vkSetLatencySleepModeLegacyNV(device, lowLatencyMode, lowLatencyBoost, minimumIntervalUs);
     }
@@ -6608,7 +6608,7 @@ struct DispatchTable {
         return fp_vkSetSwapchainPresentTimingQueueSizeEXT(device, swapchain, size);
     }
 #endif
-#if (defined(VK_NV_low_latency))
+#if (defined(VK_NV_low_latency)) && VK_HEADER_VERSION >= 357
     void shutdownLatencyDeviceLegacyNV() const noexcept {
         fp_vkShutdownLatencyDeviceLegacyNV(device);
     }
@@ -9148,7 +9148,7 @@ struct DispatchTable {
 #else
     void * fp_vkGetImageViewOpaqueCaptureDescriptorDataEXT{};
 #endif
-#if (defined(VK_NV_low_latency))
+#if (defined(VK_NV_low_latency)) && VK_HEADER_VERSION >= 357
     PFN_vkGetLatencyTimingsLegacyNV fp_vkGetLatencyTimingsLegacyNV = nullptr;
 #else
     void * fp_vkGetLatencyTimingsLegacyNV{};
@@ -9411,7 +9411,7 @@ struct DispatchTable {
 #else
     void * fp_vkGetShaderModuleIdentifierEXT{};
 #endif
-#if (defined(VK_NV_low_latency))
+#if (defined(VK_NV_low_latency)) && VK_HEADER_VERSION >= 357
     PFN_vkGetSleepStatusLegacyNV fp_vkGetSleepStatusLegacyNV = nullptr;
 #else
     void * fp_vkGetSleepStatusLegacyNV{};
@@ -9502,7 +9502,7 @@ struct DispatchTable {
     void * fp_vkInitializePerformanceApiINTEL{};
 #endif
     PFN_vkInvalidateMappedMemoryRanges fp_vkInvalidateMappedMemoryRanges = nullptr;
-#if (defined(VK_NV_low_latency))
+#if (defined(VK_NV_low_latency)) && VK_HEADER_VERSION >= 357
     PFN_vkLatencySleepLegacyNV fp_vkLatencySleepLegacyNV = nullptr;
 #else
     void * fp_vkLatencySleepLegacyNV{};
@@ -9545,7 +9545,7 @@ struct DispatchTable {
 #else
     void * fp_vkQueueInsertDebugUtilsLabelEXT{};
 #endif
-#if (defined(VK_NV_low_latency))
+#if (defined(VK_NV_low_latency)) && VK_HEADER_VERSION >= 357
     PFN_vkQueueNotifyOutOfBandLegacyNV fp_vkQueueNotifyOutOfBandLegacyNV = nullptr;
 #else
     void * fp_vkQueueNotifyOutOfBandLegacyNV{};
@@ -9683,7 +9683,7 @@ struct DispatchTable {
 #else
     void * fp_vkSetHdrMetadataEXT{};
 #endif
-#if (defined(VK_NV_low_latency))
+#if (defined(VK_NV_low_latency)) && VK_HEADER_VERSION >= 357
     PFN_vkSetLatencyMarkerLegacyNV fp_vkSetLatencyMarkerLegacyNV = nullptr;
 #else
     void * fp_vkSetLatencyMarkerLegacyNV{};
@@ -9693,7 +9693,7 @@ struct DispatchTable {
 #else
     void * fp_vkSetLatencyMarkerNV{};
 #endif
-#if (defined(VK_NV_low_latency))
+#if (defined(VK_NV_low_latency)) && VK_HEADER_VERSION >= 357
     PFN_vkSetLatencySleepModeLegacyNV fp_vkSetLatencySleepModeLegacyNV = nullptr;
 #else
     void * fp_vkSetLatencySleepModeLegacyNV{};
@@ -9723,7 +9723,7 @@ struct DispatchTable {
 #else
     void * fp_vkSetSwapchainPresentTimingQueueSizeEXT{};
 #endif
-#if (defined(VK_NV_low_latency))
+#if (defined(VK_NV_low_latency)) && VK_HEADER_VERSION >= 357
     PFN_vkShutdownLatencyDeviceLegacyNV fp_vkShutdownLatencyDeviceLegacyNV = nullptr;
 #else
     void * fp_vkShutdownLatencyDeviceLegacyNV{};

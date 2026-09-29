@@ -55,7 +55,17 @@ HEADER_VERSION_WORKAROUNDS = {
     'vkGetDeviceCombinedImageSamplerIndexNVX':'340', # Revision of extension added new function
     'vkCmdSetDispatchParametersARM':'348', # Revision of extension added new function
     'VkDispatchParametersARM':'348', # Revision of extension added new function
+    'vkGetLatencyTimingsLegacyNV':'357', # Revision of extension added new function
+    'vkGetSleepStatusLegacyNV':'357', # Revision of extension added new function
+    'vkLatencySleepLegacyNV':'357', # Revision of extension added new function
+    'vkQueueNotifyOutOfBandLegacyNV':'357', # Revision of extension added new function
+    'vkSetLatencyMarkerLegacyNV':'357', # Revision of extension added new function
+    'vkSetLatencySleepModeLegacyNV':'357', # Revision of extension added new function
+    'vkShutdownLatencyDeviceLegacyNV':'357', # Revision of extension added new function
 }
+
+
+
 
 # Some functions use types other than what the commands vendor tag denotes. These are needed to correctly depromote all types
 TYPES_NOT_MATCHING_VENDOR_TAGS = {

@@ -1346,6 +1346,10 @@ void merge_VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT(VkPhysicalDe
 void compare_VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT const& supported, VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT const& requested);
 void merge_VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT(VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT & current, VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT const& merge_in);
 #endif //(defined(VK_EXT_shader_subgroup_partitioned))
+#if (defined(VK_ARM_cooperative_matrix_layouts))
+void compare_VkPhysicalDeviceCooperativeMatrixLayoutsFeaturesARM(std::vector<std::string> & error_list, VkPhysicalDeviceCooperativeMatrixLayoutsFeaturesARM const& supported, VkPhysicalDeviceCooperativeMatrixLayoutsFeaturesARM const& requested);
+void merge_VkPhysicalDeviceCooperativeMatrixLayoutsFeaturesARM(VkPhysicalDeviceCooperativeMatrixLayoutsFeaturesARM & current, VkPhysicalDeviceCooperativeMatrixLayoutsFeaturesARM const& merge_in);
+#endif //(defined(VK_ARM_cooperative_matrix_layouts))
 #if (defined(VK_EXT_shader_ocp_microscaling_types))
 void compare_VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT const& supported, VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT const& requested);
 void merge_VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT(VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT & current, VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT const& merge_in);

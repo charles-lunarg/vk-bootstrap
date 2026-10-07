@@ -752,9 +752,9 @@ Result<Instance> InstanceBuilder::build() const {
     VkApplicationInfo app_info = {};
     app_info.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
     app_info.pNext = nullptr;
-    app_info.pApplicationName = info.app_name.empty() ? info.app_name.c_str() : "";
+    app_info.pApplicationName = !info.app_name.empty() ? info.app_name.c_str() : "";
     app_info.applicationVersion = info.application_version;
-    app_info.pEngineName = info.engine_name.empty() ? info.engine_name.c_str() : "";
+    app_info.pEngineName = !info.engine_name.empty() ? info.engine_name.c_str() : "";
     app_info.engineVersion = info.engine_version;
     app_info.apiVersion = api_version;
 

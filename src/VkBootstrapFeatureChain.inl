@@ -849,6 +849,9 @@ uint32_t get_structure_size(VkStructureType sType) {
 #if (defined(VK_VALVE_buffer_device_address_allocation_alignment))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_ALLOCATION_ALIGNMENT_FEATURES_VALVE): return sizeof(VkPhysicalDeviceBufferDeviceAddressAllocationAlignmentFeaturesVALVE);
 #endif //(defined(VK_VALVE_buffer_device_address_allocation_alignment))
+#if (defined(VK_GOOGLE_hdr_smpte_st_209450_metadata))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HDR_SMPTE_ST_209450_FEATURES_GOOGLE): return sizeof(VkPhysicalDeviceHdrSmpteSt209450FeaturesGOOGLE);
+#endif //(defined(VK_GOOGLE_hdr_smpte_st_209450_metadata))
 #if (defined(VK_KHR_acceleration_structure))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ACCELERATION_STRUCTURE_FEATURES_KHR): return sizeof(VkPhysicalDeviceAccelerationStructureFeaturesKHR);
 #endif //(defined(VK_KHR_acceleration_structure))
@@ -5965,6 +5968,16 @@ void merge_VkPhysicalDeviceBufferDeviceAddressAllocationAlignmentFeaturesVALVE(V
     current.bufferDeviceAddressAllocationAlignment = current.bufferDeviceAddressAllocationAlignment || merge_in.bufferDeviceAddressAllocationAlignment;
 }
 #endif //(defined(VK_VALVE_buffer_device_address_allocation_alignment))
+#if (defined(VK_GOOGLE_hdr_smpte_st_209450_metadata))
+void compare_VkPhysicalDeviceHdrSmpteSt209450FeaturesGOOGLE(std::vector<std::string> & error_list, VkPhysicalDeviceHdrSmpteSt209450FeaturesGOOGLE const& supported, VkPhysicalDeviceHdrSmpteSt209450FeaturesGOOGLE const& requested) {
+    if (requested.hdrSmpteSt209450 && !supported.hdrSmpteSt209450) {
+        error_list.push_back("Missing feature VkPhysicalDeviceHdrSmpteSt209450FeaturesGOOGLE::hdrSmpteSt209450");
+    }
+}
+void merge_VkPhysicalDeviceHdrSmpteSt209450FeaturesGOOGLE(VkPhysicalDeviceHdrSmpteSt209450FeaturesGOOGLE & current, VkPhysicalDeviceHdrSmpteSt209450FeaturesGOOGLE const& merge_in) {
+    current.hdrSmpteSt209450 = current.hdrSmpteSt209450 || merge_in.hdrSmpteSt209450;
+}
+#endif //(defined(VK_GOOGLE_hdr_smpte_st_209450_metadata))
 #if (defined(VK_KHR_acceleration_structure))
 void compare_VkPhysicalDeviceAccelerationStructureFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceAccelerationStructureFeaturesKHR const& supported, VkPhysicalDeviceAccelerationStructureFeaturesKHR const& requested) {
     if (requested.accelerationStructure && !supported.accelerationStructure) {
@@ -7677,6 +7690,11 @@ void compare_feature_struct(VkStructureType sType, std::vector<std::string> & er
             compare_VkPhysicalDeviceBufferDeviceAddressAllocationAlignmentFeaturesVALVE(error_list, *reinterpret_cast<const VkPhysicalDeviceBufferDeviceAddressAllocationAlignmentFeaturesVALVE*>(supported), *reinterpret_cast<const VkPhysicalDeviceBufferDeviceAddressAllocationAlignmentFeaturesVALVE*>(requested));
             break;
 #endif
+#if (defined(VK_GOOGLE_hdr_smpte_st_209450_metadata))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HDR_SMPTE_ST_209450_FEATURES_GOOGLE):
+            compare_VkPhysicalDeviceHdrSmpteSt209450FeaturesGOOGLE(error_list, *reinterpret_cast<const VkPhysicalDeviceHdrSmpteSt209450FeaturesGOOGLE*>(supported), *reinterpret_cast<const VkPhysicalDeviceHdrSmpteSt209450FeaturesGOOGLE*>(requested));
+            break;
+#endif
 #if (defined(VK_KHR_acceleration_structure))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ACCELERATION_STRUCTURE_FEATURES_KHR):
             compare_VkPhysicalDeviceAccelerationStructureFeaturesKHR(error_list, *reinterpret_cast<const VkPhysicalDeviceAccelerationStructureFeaturesKHR*>(supported), *reinterpret_cast<const VkPhysicalDeviceAccelerationStructureFeaturesKHR*>(requested));
@@ -9323,6 +9341,11 @@ void merge_feature_struct(VkStructureType sType, void* current, const void* merg
 #if (defined(VK_VALVE_buffer_device_address_allocation_alignment))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_ALLOCATION_ALIGNMENT_FEATURES_VALVE):
             merge_VkPhysicalDeviceBufferDeviceAddressAllocationAlignmentFeaturesVALVE(*reinterpret_cast<VkPhysicalDeviceBufferDeviceAddressAllocationAlignmentFeaturesVALVE*>(current), *reinterpret_cast<const VkPhysicalDeviceBufferDeviceAddressAllocationAlignmentFeaturesVALVE*>(merge_in));
+            break;
+#endif
+#if (defined(VK_GOOGLE_hdr_smpte_st_209450_metadata))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HDR_SMPTE_ST_209450_FEATURES_GOOGLE):
+            merge_VkPhysicalDeviceHdrSmpteSt209450FeaturesGOOGLE(*reinterpret_cast<VkPhysicalDeviceHdrSmpteSt209450FeaturesGOOGLE*>(current), *reinterpret_cast<const VkPhysicalDeviceHdrSmpteSt209450FeaturesGOOGLE*>(merge_in));
             break;
 #endif
 #if (defined(VK_KHR_acceleration_structure))

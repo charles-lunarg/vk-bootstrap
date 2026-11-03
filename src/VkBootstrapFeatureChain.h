@@ -662,6 +662,10 @@ void merge_VkPhysicalDeviceMaintenance11FeaturesKHR(VkPhysicalDeviceMaintenance1
 void compare_VkPhysicalDeviceExtendedFlagsFeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceExtendedFlagsFeaturesKHR const& supported, VkPhysicalDeviceExtendedFlagsFeaturesKHR const& requested);
 void merge_VkPhysicalDeviceExtendedFlagsFeaturesKHR(VkPhysicalDeviceExtendedFlagsFeaturesKHR & current, VkPhysicalDeviceExtendedFlagsFeaturesKHR const& merge_in);
 #endif //(defined(VK_KHR_extended_flags))
+#if (defined(VK_KHR_maintenance12))
+void compare_VkPhysicalDeviceMaintenance12FeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceMaintenance12FeaturesKHR const& supported, VkPhysicalDeviceMaintenance12FeaturesKHR const& requested);
+void merge_VkPhysicalDeviceMaintenance12FeaturesKHR(VkPhysicalDeviceMaintenance12FeaturesKHR & current, VkPhysicalDeviceMaintenance12FeaturesKHR const& merge_in);
+#endif //(defined(VK_KHR_maintenance12))
 #if (defined(VK_EXT_transform_feedback))
 void compare_VkPhysicalDeviceTransformFeedbackFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceTransformFeedbackFeaturesEXT const& supported, VkPhysicalDeviceTransformFeedbackFeaturesEXT const& requested);
 void merge_VkPhysicalDeviceTransformFeedbackFeaturesEXT(VkPhysicalDeviceTransformFeedbackFeaturesEXT & current, VkPhysicalDeviceTransformFeedbackFeaturesEXT const& merge_in);

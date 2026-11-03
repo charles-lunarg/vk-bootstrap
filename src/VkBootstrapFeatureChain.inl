@@ -321,6 +321,9 @@ uint32_t get_structure_size(VkStructureType sType) {
 #if (defined(VK_KHR_extended_flags))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_FLAGS_FEATURES_KHR): return sizeof(VkPhysicalDeviceExtendedFlagsFeaturesKHR);
 #endif //(defined(VK_KHR_extended_flags))
+#if (defined(VK_KHR_maintenance12))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_12_FEATURES_KHR): return sizeof(VkPhysicalDeviceMaintenance12FeaturesKHR);
+#endif //(defined(VK_KHR_maintenance12))
 #if (defined(VK_EXT_transform_feedback))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TRANSFORM_FEEDBACK_FEATURES_EXT): return sizeof(VkPhysicalDeviceTransformFeedbackFeaturesEXT);
 #endif //(defined(VK_EXT_transform_feedback))
@@ -3538,6 +3541,16 @@ void merge_VkPhysicalDeviceExtendedFlagsFeaturesKHR(VkPhysicalDeviceExtendedFlag
     current.extendedFlags = current.extendedFlags || merge_in.extendedFlags;
 }
 #endif //(defined(VK_KHR_extended_flags))
+#if (defined(VK_KHR_maintenance12))
+void compare_VkPhysicalDeviceMaintenance12FeaturesKHR(std::vector<std::string> & error_list, VkPhysicalDeviceMaintenance12FeaturesKHR const& supported, VkPhysicalDeviceMaintenance12FeaturesKHR const& requested) {
+    if (requested.maintenance12 && !supported.maintenance12) {
+        error_list.push_back("Missing feature VkPhysicalDeviceMaintenance12FeaturesKHR::maintenance12");
+    }
+}
+void merge_VkPhysicalDeviceMaintenance12FeaturesKHR(VkPhysicalDeviceMaintenance12FeaturesKHR & current, VkPhysicalDeviceMaintenance12FeaturesKHR const& merge_in) {
+    current.maintenance12 = current.maintenance12 || merge_in.maintenance12;
+}
+#endif //(defined(VK_KHR_maintenance12))
 #if (defined(VK_EXT_transform_feedback))
 void compare_VkPhysicalDeviceTransformFeedbackFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceTransformFeedbackFeaturesEXT const& supported, VkPhysicalDeviceTransformFeedbackFeaturesEXT const& requested) {
     if (requested.transformFeedback && !supported.transformFeedback) {
@@ -6790,6 +6803,11 @@ void compare_feature_struct(VkStructureType sType, std::vector<std::string> & er
             compare_VkPhysicalDeviceExtendedFlagsFeaturesKHR(error_list, *reinterpret_cast<const VkPhysicalDeviceExtendedFlagsFeaturesKHR*>(supported), *reinterpret_cast<const VkPhysicalDeviceExtendedFlagsFeaturesKHR*>(requested));
             break;
 #endif
+#if (defined(VK_KHR_maintenance12))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_12_FEATURES_KHR):
+            compare_VkPhysicalDeviceMaintenance12FeaturesKHR(error_list, *reinterpret_cast<const VkPhysicalDeviceMaintenance12FeaturesKHR*>(supported), *reinterpret_cast<const VkPhysicalDeviceMaintenance12FeaturesKHR*>(requested));
+            break;
+#endif
 #if (defined(VK_EXT_transform_feedback))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TRANSFORM_FEEDBACK_FEATURES_EXT):
             compare_VkPhysicalDeviceTransformFeedbackFeaturesEXT(error_list, *reinterpret_cast<const VkPhysicalDeviceTransformFeedbackFeaturesEXT*>(supported), *reinterpret_cast<const VkPhysicalDeviceTransformFeedbackFeaturesEXT*>(requested));
@@ -8441,6 +8459,11 @@ void merge_feature_struct(VkStructureType sType, void* current, const void* merg
 #if (defined(VK_KHR_extended_flags))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_FLAGS_FEATURES_KHR):
             merge_VkPhysicalDeviceExtendedFlagsFeaturesKHR(*reinterpret_cast<VkPhysicalDeviceExtendedFlagsFeaturesKHR*>(current), *reinterpret_cast<const VkPhysicalDeviceExtendedFlagsFeaturesKHR*>(merge_in));
+            break;
+#endif
+#if (defined(VK_KHR_maintenance12))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_12_FEATURES_KHR):
+            merge_VkPhysicalDeviceMaintenance12FeaturesKHR(*reinterpret_cast<VkPhysicalDeviceMaintenance12FeaturesKHR*>(current), *reinterpret_cast<const VkPhysicalDeviceMaintenance12FeaturesKHR*>(merge_in));
             break;
 #endif
 #if (defined(VK_EXT_transform_feedback))

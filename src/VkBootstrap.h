@@ -243,14 +243,17 @@ const char* to_string(SwapchainError err);
 // Gathers useful information about the available vulkan capabilities, like layers and instance
 // extensions. Use this for enabling features conditionally, ie if you would like an extension but
 // can use a fallback if it isn't supported but need to know if support is available first.
+// This only reports extensions provided by the vulkan implementation, implicitly enabled layers
+// and the explicitly requested layers (if they are available).
 struct SystemInfo {
     private:
-    SystemInfo();
+    SystemInfo(const std::vector<std::string>& requested_layers);
 
     public:
     // Use get_system_info to create a SystemInfo struct. This is because loading vulkan could fail.
-    static Result<SystemInfo> get_system_info();
-    static Result<SystemInfo> get_system_info(PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr);
+    static Result<SystemInfo> get_system_info(const std::vector<std::string>& requested_layers = {});
+    static Result<SystemInfo> get_system_info(
+        PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr, const std::vector<std::string>& requested_layers = {});
 
     // Returns true if a layer is available
     bool is_layer_available(const char* layer_name) const;

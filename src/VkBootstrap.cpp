@@ -604,22 +604,23 @@ const char* to_string(SwapchainError err) {
     }
 }
 
-Result<SystemInfo> SystemInfo::get_system_info() {
+Result<SystemInfo> SystemInfo::get_system_info(const std::vector<std::string>& requested_layers) {
     if (!detail::vulkan_functions().init_vulkan_funcs(nullptr)) {
         return make_error_code(InstanceError::vulkan_unavailable);
     }
-    return SystemInfo();
+    return SystemInfo(requested_layers);
 }
 
-Result<SystemInfo> SystemInfo::get_system_info(PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr) {
+Result<SystemInfo> SystemInfo::get_system_info(
+    PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcAddr, const std::vector<std::string>& requested_layers) {
     // Using externally provided function pointers, assume the loader is available
     if (!detail::vulkan_functions().init_vulkan_funcs(fp_vkGetInstanceProcAddr)) {
         return make_error_code(InstanceError::vulkan_unavailable);
     }
-    return SystemInfo();
+    return SystemInfo(requested_layers);
 }
 
-SystemInfo::SystemInfo() {
+SystemInfo::SystemInfo(const std::vector<std::string>& requested_layers) {
     auto available_layers_ret = detail::get_vector<VkLayerProperties>(
         this->available_layers, detail::vulkan_functions().fp_vkEnumerateInstanceLayerProperties);
     if (available_layers_ret != VK_SUCCESS) {
@@ -641,16 +642,18 @@ SystemInfo::SystemInfo() {
         }
     }
 
-    for (auto& layer : this->available_layers) {
-        std::vector<VkExtensionProperties> layer_extensions;
-        auto layer_extensions_ret = detail::get_vector<VkExtensionProperties>(
-            layer_extensions, detail::vulkan_functions().fp_vkEnumerateInstanceExtensionProperties, layer.layerName);
-        if (layer_extensions_ret == VK_SUCCESS) {
-            this->available_extensions.insert(
-                this->available_extensions.end(), layer_extensions.begin(), layer_extensions.end());
-            for (auto& ext : layer_extensions) {
-                if (strcmp(ext.extensionName, VK_EXT_DEBUG_UTILS_EXTENSION_NAME) == 0) {
-                    debug_utils_available = true;
+    for (auto& layer : requested_layers) {
+        if (is_layer_available(layer.c_str())) {
+            std::vector<VkExtensionProperties> layer_extensions;
+            auto layer_extensions_ret = detail::get_vector<VkExtensionProperties>(
+                layer_extensions, detail::vulkan_functions().fp_vkEnumerateInstanceExtensionProperties, layer.c_str());
+            if (layer_extensions_ret == VK_SUCCESS) {
+                this->available_extensions.insert(
+                    this->available_extensions.end(), layer_extensions.begin(), layer_extensions.end());
+                for (auto& ext : layer_extensions) {
+                    if (strcmp(ext.extensionName, VK_EXT_DEBUG_UTILS_EXTENSION_NAME) == 0) {
+                        debug_utils_available = true;
+                    }
                 }
             }
         }
@@ -706,8 +709,11 @@ InstanceBuilder::InstanceBuilder(PFN_vkGetInstanceProcAddr fp_vkGetInstanceProcA
 InstanceBuilder::InstanceBuilder() {}
 
 Result<Instance> InstanceBuilder::build() const {
-
-    auto sys_info_ret = SystemInfo::get_system_info(info.fp_vkGetInstanceProcAddr);
+    auto requested_layers = info.layers;
+    if (info.enable_validation_layers || info.request_validation_layers) {
+        requested_layers.push_back(detail::validation_layer_name);
+    }
+    auto sys_info_ret = SystemInfo::get_system_info(info.fp_vkGetInstanceProcAddr, requested_layers);
     if (!sys_info_ret) return sys_info_ret.error();
     auto system = sys_info_ret.value();
 

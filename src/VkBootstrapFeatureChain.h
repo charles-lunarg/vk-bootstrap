@@ -1374,6 +1374,10 @@ void merge_VkPhysicalDeviceDataGraphNeuralAcceleratorStatisticsFeaturesARM(VkPhy
 void compare_VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT const& supported, VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT const& requested);
 void merge_VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT(VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT & current, VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT const& merge_in);
 #endif //(defined(VK_EXT_primitive_restart_index))
+#if (defined(VK_EXT_vertex_address_binding_unrestricted))
+void compare_VkPhysicalDeviceVertexAddressBindingUnrestrictedFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceVertexAddressBindingUnrestrictedFeaturesEXT const& supported, VkPhysicalDeviceVertexAddressBindingUnrestrictedFeaturesEXT const& requested);
+void merge_VkPhysicalDeviceVertexAddressBindingUnrestrictedFeaturesEXT(VkPhysicalDeviceVertexAddressBindingUnrestrictedFeaturesEXT & current, VkPhysicalDeviceVertexAddressBindingUnrestrictedFeaturesEXT const& merge_in);
+#endif //(defined(VK_EXT_vertex_address_binding_unrestricted))
 #if (defined(VK_EXT_image_tiling_control))
 void compare_VkPhysicalDeviceImageTilingControlFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceImageTilingControlFeaturesEXT const& supported, VkPhysicalDeviceImageTilingControlFeaturesEXT const& requested);
 void merge_VkPhysicalDeviceImageTilingControlFeaturesEXT(VkPhysicalDeviceImageTilingControlFeaturesEXT & current, VkPhysicalDeviceImageTilingControlFeaturesEXT const& merge_in);

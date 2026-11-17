@@ -234,6 +234,9 @@ struct InstanceDispatchTable {
 #if (defined(VK_KHR_get_physical_device_properties2))
         fp_vkGetPhysicalDeviceImageFormatProperties2KHR = reinterpret_cast<PFN_vkGetPhysicalDeviceImageFormatProperties2KHR>(procAddr(instance, "vkGetPhysicalDeviceImageFormatProperties2KHR"));
 #endif
+#if (defined(VK_NV_internal_handle))
+        fp_vkGetPhysicalDeviceInternalHandleNV = reinterpret_cast<PFN_vkGetPhysicalDeviceInternalHandleNV>(procAddr(instance, "vkGetPhysicalDeviceInternalHandleNV"));
+#endif
         fp_vkGetPhysicalDeviceMemoryProperties = reinterpret_cast<PFN_vkGetPhysicalDeviceMemoryProperties>(procAddr(instance, "vkGetPhysicalDeviceMemoryProperties"));
 #if (defined(VK_VERSION_1_1))
         fp_vkGetPhysicalDeviceMemoryProperties2 = reinterpret_cast<PFN_vkGetPhysicalDeviceMemoryProperties2>(procAddr(instance, "vkGetPhysicalDeviceMemoryProperties2"));
@@ -711,6 +714,11 @@ struct InstanceDispatchTable {
 #if (defined(VK_KHR_get_physical_device_properties2))
     VkResult getPhysicalDeviceImageFormatProperties2KHR(VkPhysicalDevice physicalDevice, const VkPhysicalDeviceImageFormatInfo2KHR* pImageFormatInfo, VkImageFormatProperties2KHR* pImageFormatProperties) const noexcept {
         return fp_vkGetPhysicalDeviceImageFormatProperties2KHR(physicalDevice, pImageFormatInfo, pImageFormatProperties);
+    }
+#endif
+#if (defined(VK_NV_internal_handle))
+    void getPhysicalDeviceInternalHandleNV(VkPhysicalDevice physicalDevice, VkInternalHandleNV* pHandle) const noexcept {
+        fp_vkGetPhysicalDeviceInternalHandleNV(physicalDevice, pHandle);
     }
 #endif
     void getPhysicalDeviceMemoryProperties(VkPhysicalDevice physicalDevice, VkPhysicalDeviceMemoryProperties* pMemoryProperties) const noexcept {
@@ -1262,6 +1270,11 @@ struct InstanceDispatchTable {
     PFN_vkGetPhysicalDeviceImageFormatProperties2KHR fp_vkGetPhysicalDeviceImageFormatProperties2KHR = nullptr;
 #else
     void * fp_vkGetPhysicalDeviceImageFormatProperties2KHR{};
+#endif
+#if (defined(VK_NV_internal_handle))
+    PFN_vkGetPhysicalDeviceInternalHandleNV fp_vkGetPhysicalDeviceInternalHandleNV = nullptr;
+#else
+    void * fp_vkGetPhysicalDeviceInternalHandleNV{};
 #endif
     PFN_vkGetPhysicalDeviceMemoryProperties fp_vkGetPhysicalDeviceMemoryProperties = nullptr;
 #if (defined(VK_VERSION_1_1))
@@ -2761,6 +2774,9 @@ struct DispatchTable {
 #if (defined(VK_NV_cluster_acceleration_structure))
         fp_vkGetClusterAccelerationStructureBuildSizesNV = reinterpret_cast<PFN_vkGetClusterAccelerationStructureBuildSizesNV>(procAddr(device, "vkGetClusterAccelerationStructureBuildSizesNV"));
 #endif
+#if (defined(VK_NV_internal_handle))
+        fp_vkGetCommandBufferInternalHandleNV = reinterpret_cast<PFN_vkGetCommandBufferInternalHandleNV>(procAddr(device, "vkGetCommandBufferInternalHandleNV"));
+#endif
 #if (defined(VK_NV_cuda_kernel_launch))
         fp_vkGetCudaModuleCacheNV = reinterpret_cast<PFN_vkGetCudaModuleCacheNV>(procAddr(device, "vkGetCudaModuleCacheNV"));
 #endif
@@ -2856,6 +2872,9 @@ struct DispatchTable {
 #endif
 #if (defined(VK_KHR_maintenance5))
         fp_vkGetDeviceImageSubresourceLayoutKHR = reinterpret_cast<PFN_vkGetDeviceImageSubresourceLayoutKHR>(procAddr(device, "vkGetDeviceImageSubresourceLayoutKHR"));
+#endif
+#if (defined(VK_NV_internal_handle))
+        fp_vkGetDeviceInternalHandleNV = reinterpret_cast<PFN_vkGetDeviceInternalHandleNV>(procAddr(device, "vkGetDeviceInternalHandleNV"));
 #endif
         fp_vkGetDeviceMemoryCommitment = reinterpret_cast<PFN_vkGetDeviceMemoryCommitment>(procAddr(device, "vkGetDeviceMemoryCommitment"));
 #if (defined(VK_VERSION_1_2))
@@ -3063,6 +3082,9 @@ struct DispatchTable {
 #endif
 #if (defined(VK_NV_device_diagnostic_checkpoints))
         fp_vkGetQueueCheckpointDataNV = reinterpret_cast<PFN_vkGetQueueCheckpointDataNV>(procAddr(device, "vkGetQueueCheckpointDataNV"));
+#endif
+#if (defined(VK_NV_internal_handle))
+        fp_vkGetQueueInternalHandleNV = reinterpret_cast<PFN_vkGetQueueInternalHandleNV>(procAddr(device, "vkGetQueueInternalHandleNV"));
 #endif
 #if (defined(VK_KHR_ray_tracing_pipeline))
         fp_vkGetRayTracingCaptureReplayShaderGroupHandlesKHR = reinterpret_cast<PFN_vkGetRayTracingCaptureReplayShaderGroupHandlesKHR>(procAddr(device, "vkGetRayTracingCaptureReplayShaderGroupHandlesKHR"));
@@ -5657,6 +5679,11 @@ struct DispatchTable {
         fp_vkGetClusterAccelerationStructureBuildSizesNV(device, pInfo, pSizeInfo);
     }
 #endif
+#if (defined(VK_NV_internal_handle))
+    void getCommandBufferInternalHandleNV(VkCommandBuffer commandBuffer, VkInternalHandleNV* pHandle) const noexcept {
+        fp_vkGetCommandBufferInternalHandleNV(commandBuffer, pHandle);
+    }
+#endif
 #if (defined(VK_NV_cuda_kernel_launch))
     VkResult getCudaModuleCacheNV(VkCudaModuleNV module, size_t* pCacheSize, void* pCacheData) const noexcept {
         return fp_vkGetCudaModuleCacheNV(device, module, pCacheSize, pCacheData);
@@ -5815,6 +5842,11 @@ struct DispatchTable {
 #if (defined(VK_KHR_maintenance5))
     void getDeviceImageSubresourceLayoutKHR(const VkDeviceImageSubresourceInfoKHR* pInfo, VkSubresourceLayout2KHR* pLayout) const noexcept {
         fp_vkGetDeviceImageSubresourceLayoutKHR(device, pInfo, pLayout);
+    }
+#endif
+#if (defined(VK_NV_internal_handle))
+    void getDeviceInternalHandleNV(VkInternalHandleNV* pHandle) const noexcept {
+        fp_vkGetDeviceInternalHandleNV(device, pHandle);
     }
 #endif
     void getDeviceMemoryCommitment(VkDeviceMemory memory, VkDeviceSize* pCommittedMemoryInBytes) const noexcept {
@@ -6172,6 +6204,11 @@ struct DispatchTable {
 #if (defined(VK_NV_device_diagnostic_checkpoints))
     void getQueueCheckpointDataNV(VkQueue queue, uint32_t* pCheckpointDataCount, VkCheckpointDataNV* pCheckpointData) const noexcept {
         fp_vkGetQueueCheckpointDataNV(queue, pCheckpointDataCount, pCheckpointData);
+    }
+#endif
+#if (defined(VK_NV_internal_handle))
+    void getQueueInternalHandleNV(VkQueue queue, VkInternalHandleNV* pHandle) const noexcept {
+        fp_vkGetQueueInternalHandleNV(queue, pHandle);
     }
 #endif
 #if (defined(VK_KHR_ray_tracing_pipeline))
@@ -8816,6 +8853,11 @@ struct DispatchTable {
 #else
     void * fp_vkGetClusterAccelerationStructureBuildSizesNV{};
 #endif
+#if (defined(VK_NV_internal_handle))
+    PFN_vkGetCommandBufferInternalHandleNV fp_vkGetCommandBufferInternalHandleNV = nullptr;
+#else
+    void * fp_vkGetCommandBufferInternalHandleNV{};
+#endif
 #if (defined(VK_NV_cuda_kernel_launch))
     PFN_vkGetCudaModuleCacheNV fp_vkGetCudaModuleCacheNV = nullptr;
 #else
@@ -8975,6 +9017,11 @@ struct DispatchTable {
     PFN_vkGetDeviceImageSubresourceLayoutKHR fp_vkGetDeviceImageSubresourceLayoutKHR = nullptr;
 #else
     void * fp_vkGetDeviceImageSubresourceLayoutKHR{};
+#endif
+#if (defined(VK_NV_internal_handle))
+    PFN_vkGetDeviceInternalHandleNV fp_vkGetDeviceInternalHandleNV = nullptr;
+#else
+    void * fp_vkGetDeviceInternalHandleNV{};
 #endif
     PFN_vkGetDeviceMemoryCommitment fp_vkGetDeviceMemoryCommitment = nullptr;
 #if (defined(VK_VERSION_1_2))
@@ -9314,6 +9361,11 @@ struct DispatchTable {
     PFN_vkGetQueueCheckpointDataNV fp_vkGetQueueCheckpointDataNV = nullptr;
 #else
     void * fp_vkGetQueueCheckpointDataNV{};
+#endif
+#if (defined(VK_NV_internal_handle))
+    PFN_vkGetQueueInternalHandleNV fp_vkGetQueueInternalHandleNV = nullptr;
+#else
+    void * fp_vkGetQueueInternalHandleNV{};
 #endif
 #if (defined(VK_KHR_ray_tracing_pipeline))
     PFN_vkGetRayTracingCaptureReplayShaderGroupHandlesKHR fp_vkGetRayTracingCaptureReplayShaderGroupHandlesKHR = nullptr;

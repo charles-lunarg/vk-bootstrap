@@ -840,6 +840,9 @@ uint32_t get_structure_size(VkStructureType sType) {
 #if (defined(VK_EXT_primitive_restart_index))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIMITIVE_RESTART_INDEX_FEATURES_EXT): return sizeof(VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT);
 #endif //(defined(VK_EXT_primitive_restart_index))
+#if (defined(VK_EXT_vertex_address_binding_unrestricted))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ADDRESS_BINDING_UNRESTRICTED_FEATURES_EXT): return sizeof(VkPhysicalDeviceVertexAddressBindingUnrestrictedFeaturesEXT);
+#endif //(defined(VK_EXT_vertex_address_binding_unrestricted))
 #if (defined(VK_EXT_image_tiling_control))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_TILING_CONTROL_FEATURES_EXT): return sizeof(VkPhysicalDeviceImageTilingControlFeaturesEXT);
 #endif //(defined(VK_EXT_image_tiling_control))
@@ -5941,6 +5944,16 @@ void merge_VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT(VkPhysicalDevicePrim
     current.primitiveRestartIndex = current.primitiveRestartIndex || merge_in.primitiveRestartIndex;
 }
 #endif //(defined(VK_EXT_primitive_restart_index))
+#if (defined(VK_EXT_vertex_address_binding_unrestricted))
+void compare_VkPhysicalDeviceVertexAddressBindingUnrestrictedFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceVertexAddressBindingUnrestrictedFeaturesEXT const& supported, VkPhysicalDeviceVertexAddressBindingUnrestrictedFeaturesEXT const& requested) {
+    if (requested.vertexAddressBindingUnrestricted && !supported.vertexAddressBindingUnrestricted) {
+        error_list.push_back("Missing feature VkPhysicalDeviceVertexAddressBindingUnrestrictedFeaturesEXT::vertexAddressBindingUnrestricted");
+    }
+}
+void merge_VkPhysicalDeviceVertexAddressBindingUnrestrictedFeaturesEXT(VkPhysicalDeviceVertexAddressBindingUnrestrictedFeaturesEXT & current, VkPhysicalDeviceVertexAddressBindingUnrestrictedFeaturesEXT const& merge_in) {
+    current.vertexAddressBindingUnrestricted = current.vertexAddressBindingUnrestricted || merge_in.vertexAddressBindingUnrestricted;
+}
+#endif //(defined(VK_EXT_vertex_address_binding_unrestricted))
 #if (defined(VK_EXT_image_tiling_control))
 void compare_VkPhysicalDeviceImageTilingControlFeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceImageTilingControlFeaturesEXT const& supported, VkPhysicalDeviceImageTilingControlFeaturesEXT const& requested) {
     if (requested.imageTilingControl && !supported.imageTilingControl) {
@@ -7688,6 +7701,11 @@ void compare_feature_struct(VkStructureType sType, std::vector<std::string> & er
             compare_VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT(error_list, *reinterpret_cast<const VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT*>(supported), *reinterpret_cast<const VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT*>(requested));
             break;
 #endif
+#if (defined(VK_EXT_vertex_address_binding_unrestricted))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ADDRESS_BINDING_UNRESTRICTED_FEATURES_EXT):
+            compare_VkPhysicalDeviceVertexAddressBindingUnrestrictedFeaturesEXT(error_list, *reinterpret_cast<const VkPhysicalDeviceVertexAddressBindingUnrestrictedFeaturesEXT*>(supported), *reinterpret_cast<const VkPhysicalDeviceVertexAddressBindingUnrestrictedFeaturesEXT*>(requested));
+            break;
+#endif
 #if (defined(VK_EXT_image_tiling_control))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_TILING_CONTROL_FEATURES_EXT):
             compare_VkPhysicalDeviceImageTilingControlFeaturesEXT(error_list, *reinterpret_cast<const VkPhysicalDeviceImageTilingControlFeaturesEXT*>(supported), *reinterpret_cast<const VkPhysicalDeviceImageTilingControlFeaturesEXT*>(requested));
@@ -9344,6 +9362,11 @@ void merge_feature_struct(VkStructureType sType, void* current, const void* merg
 #if (defined(VK_EXT_primitive_restart_index))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIMITIVE_RESTART_INDEX_FEATURES_EXT):
             merge_VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT(*reinterpret_cast<VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT*>(current), *reinterpret_cast<const VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT*>(merge_in));
+            break;
+#endif
+#if (defined(VK_EXT_vertex_address_binding_unrestricted))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ADDRESS_BINDING_UNRESTRICTED_FEATURES_EXT):
+            merge_VkPhysicalDeviceVertexAddressBindingUnrestrictedFeaturesEXT(*reinterpret_cast<VkPhysicalDeviceVertexAddressBindingUnrestrictedFeaturesEXT*>(current), *reinterpret_cast<const VkPhysicalDeviceVertexAddressBindingUnrestrictedFeaturesEXT*>(merge_in));
             break;
 #endif
 #if (defined(VK_EXT_image_tiling_control))

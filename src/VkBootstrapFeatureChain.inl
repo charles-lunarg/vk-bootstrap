@@ -816,6 +816,9 @@ uint32_t get_structure_size(VkStructureType sType) {
 #if (defined(VK_NV_compute_occupancy_priority))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COMPUTE_OCCUPANCY_PRIORITY_FEATURES_NV): return sizeof(VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV);
 #endif //(defined(VK_NV_compute_occupancy_priority))
+#if defined(VK_ENABLE_BETA_EXTENSIONS) && (defined(VK_AMDX_multi_level_acceleration_structure))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTI_LEVEL_ACCELERATION_STRUCTURE_FEATURES_AMDX): return sizeof(VkPhysicalDeviceMultiLevelAccelerationStructureFeaturesAMDX);
+#endif //defined(VK_ENABLE_BETA_EXTENSIONS) && (defined(VK_AMDX_multi_level_acceleration_structure))
 #if (defined(VK_EXT_cooperative_matrix_maintenance1))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_MAINTENANCE_1_FEATURES_EXT): return sizeof(VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT);
 #endif //(defined(VK_EXT_cooperative_matrix_maintenance1))
@@ -5824,6 +5827,16 @@ void merge_VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV(VkPhysicalDeviceCo
     current.computeOccupancyPriority = current.computeOccupancyPriority || merge_in.computeOccupancyPriority;
 }
 #endif //(defined(VK_NV_compute_occupancy_priority))
+#if defined(VK_ENABLE_BETA_EXTENSIONS) && (defined(VK_AMDX_multi_level_acceleration_structure))
+void compare_VkPhysicalDeviceMultiLevelAccelerationStructureFeaturesAMDX(std::vector<std::string> & error_list, VkPhysicalDeviceMultiLevelAccelerationStructureFeaturesAMDX const& supported, VkPhysicalDeviceMultiLevelAccelerationStructureFeaturesAMDX const& requested) {
+    if (requested.multiLevelAccelerationStructure && !supported.multiLevelAccelerationStructure) {
+        error_list.push_back("Missing feature VkPhysicalDeviceMultiLevelAccelerationStructureFeaturesAMDX::multiLevelAccelerationStructure");
+    }
+}
+void merge_VkPhysicalDeviceMultiLevelAccelerationStructureFeaturesAMDX(VkPhysicalDeviceMultiLevelAccelerationStructureFeaturesAMDX & current, VkPhysicalDeviceMultiLevelAccelerationStructureFeaturesAMDX const& merge_in) {
+    current.multiLevelAccelerationStructure = current.multiLevelAccelerationStructure || merge_in.multiLevelAccelerationStructure;
+}
+#endif //defined(VK_ENABLE_BETA_EXTENSIONS) && (defined(VK_AMDX_multi_level_acceleration_structure))
 #if (defined(VK_EXT_cooperative_matrix_maintenance1))
 void compare_VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT(std::vector<std::string> & error_list, VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT const& supported, VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT const& requested) {
     if (requested.cooperativeMatrixProperties2 && !supported.cooperativeMatrixProperties2) {
@@ -7661,6 +7674,11 @@ void compare_feature_struct(VkStructureType sType, std::vector<std::string> & er
             compare_VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV(error_list, *reinterpret_cast<const VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV*>(supported), *reinterpret_cast<const VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV*>(requested));
             break;
 #endif
+#if defined(VK_ENABLE_BETA_EXTENSIONS) && (defined(VK_AMDX_multi_level_acceleration_structure))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTI_LEVEL_ACCELERATION_STRUCTURE_FEATURES_AMDX):
+            compare_VkPhysicalDeviceMultiLevelAccelerationStructureFeaturesAMDX(error_list, *reinterpret_cast<const VkPhysicalDeviceMultiLevelAccelerationStructureFeaturesAMDX*>(supported), *reinterpret_cast<const VkPhysicalDeviceMultiLevelAccelerationStructureFeaturesAMDX*>(requested));
+            break;
+#endif
 #if (defined(VK_EXT_cooperative_matrix_maintenance1))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_MAINTENANCE_1_FEATURES_EXT):
             compare_VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT(error_list, *reinterpret_cast<const VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT*>(supported), *reinterpret_cast<const VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT*>(requested));
@@ -9322,6 +9340,11 @@ void merge_feature_struct(VkStructureType sType, void* current, const void* merg
 #if (defined(VK_NV_compute_occupancy_priority))
         case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COMPUTE_OCCUPANCY_PRIORITY_FEATURES_NV):
             merge_VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV(*reinterpret_cast<VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV*>(current), *reinterpret_cast<const VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV*>(merge_in));
+            break;
+#endif
+#if defined(VK_ENABLE_BETA_EXTENSIONS) && (defined(VK_AMDX_multi_level_acceleration_structure))
+        case(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTI_LEVEL_ACCELERATION_STRUCTURE_FEATURES_AMDX):
+            merge_VkPhysicalDeviceMultiLevelAccelerationStructureFeaturesAMDX(*reinterpret_cast<VkPhysicalDeviceMultiLevelAccelerationStructureFeaturesAMDX*>(current), *reinterpret_cast<const VkPhysicalDeviceMultiLevelAccelerationStructureFeaturesAMDX*>(merge_in));
             break;
 #endif
 #if (defined(VK_EXT_cooperative_matrix_maintenance1))

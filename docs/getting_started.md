@@ -23,7 +23,7 @@
 
 # Build Pattern
 
-`vk-bootstrap` uses a "build" pattern to creat the objects.
+`vk-bootstrap` uses a "build" pattern to create the objects.
 
 ```cpp
 vkb::Result<vkb::Wrapper> result = vkb::WrapperBuilder()
